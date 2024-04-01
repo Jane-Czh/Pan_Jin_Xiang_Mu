@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.financial.mapper.FinancialBalanceTableMapper">
+    
+    <resultMap type="FinancialBalanceTable" id="FinancialBalanceTableResult">
+        <result property="fbId"    column="FB_ID"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="InTransitInventory"    column="InTransitInventory"    />
+        <result property="Materials"    column="Materials"    />
+        <result property="MaterialCostVariance"    column="MaterialCostVariance"    />
+        <result property="materialcostvarianceUnallocated"    column="MaterialCostVariance_Unallocated"    />
+        <result property="MonthlyRawMaterialInventory"    column="MonthlyRawMaterialInventory"    />
+        <result property="workinprogressSemifinishedgoods"    column="WorkInProgress_SemiFinishedGoods"    />
+        <result property="productcostvarianceSemifinishedgoods"    column="ProductCostVariance_SemiFinishedGoods"    />
+        <result property="workinprogressEndofmonth"    column="WorkInProgress_EndOfMonth"    />
+        <result property="MonthlyWorkInProgressInventory"    column="MonthlyWorkInProgressInventory"    />
+        <result property="MonthlyInventoryTotalAmount"    column="MonthlyInventoryTotalAmount"    />
+    </resultMap>
+
+    <sql id="selectFinancialBalanceTableVo">
+        select FB_ID, CREATED_BY, CREATED_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, MonthlyInventoryTotalAmount from Financial_Balance_table
+    </sql>
+
+    <select id="selectFinancialBalanceTableList" parameterType="FinancialBalanceTable" resultMap="FinancialBalanceTableResult">
+        <include refid="selectFinancialBalanceTableVo"/>
+        <where>  
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="InTransitInventory != null "> and InTransitInventory = #{InTransitInventory}</if>
+            <if test="Materials != null "> and Materials = #{Materials}</if>
+            <if test="MaterialCostVariance != null "> and MaterialCostVariance = #{MaterialCostVariance}</if>
+            <if test="materialcostvarianceUnallocated != null "> and MaterialCostVariance_Unallocated = #{materialcostvarianceUnallocated}</if>
+            <if test="MonthlyRawMaterialInventory != null "> and MonthlyRawMaterialInventory = #{MonthlyRawMaterialInventory}</if>
+            <if test="workinprogressSemifinishedgoods != null "> and WorkInProgress_SemiFinishedGoods = #{workinprogressSemifinishedgoods}</if>
+            <if test="productcostvarianceSemifinishedgoods != null "> and ProductCostVariance_SemiFinishedGoods = #{productcostvarianceSemifinishedgoods}</if>
+            <if test="workinprogressEndofmonth != null "> and WorkInProgress_EndOfMonth = #{workinprogressEndofmonth}</if>
+            <if test="MonthlyWorkInProgressInventory != null "> and MonthlyWorkInProgressInventory = #{MonthlyWorkInProgressInventory}</if>
+            <if test="MonthlyInventoryTotalAmount != null "> and MonthlyInventoryTotalAmount = #{MonthlyInventoryTotalAmount}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinancialBalanceTableByFbId" parameterType="Long" resultMap="FinancialBalanceTableResult">
+        <include refid="selectFinancialBalanceTableVo"/>
+        where FB_ID = #{fbId}
+    </select>
+        
+    <insert id="insertFinancialBalanceTable" parameterType="FinancialBalanceTable" useGeneratedKeys="true" keyProperty="fbId">
+        insert into Financial_Balance_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="InTransitInventory != null">InTransitInventory,</if>
+            <if test="Materials != null">Materials,</if>
+            <if test="MaterialCostVariance != null">MaterialCostVariance,</if>
+            <if test="materialcostvarianceUnallocated != null">MaterialCostVariance_Unallocated,</if>
+            <if test="MonthlyRawMaterialInventory != null">MonthlyRawMaterialInventory,</if>
+            <if test="workinprogressSemifinishedgoods != null">WorkInProgress_SemiFinishedGoods,</if>
+            <if test="productcostvarianceSemifinishedgoods != null">ProductCostVariance_SemiFinishedGoods,</if>
+            <if test="workinprogressEndofmonth != null">WorkInProgress_EndOfMonth,</if>
+            <if test="MonthlyWorkInProgressInventory != null">MonthlyWorkInProgressInventory,</if>
+            <if test="MonthlyInventoryTotalAmount != null">MonthlyInventoryTotalAmount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="InTransitInventory != null">#{InTransitInventory},</if>
+            <if test="Materials != null">#{Materials},</if>
+            <if test="MaterialCostVariance != null">#{MaterialCostVariance},</if>
+            <if test="materialcostvarianceUnallocated != null">#{materialcostvarianceUnallocated},</if>
+            <if test="MonthlyRawMaterialInventory != null">#{MonthlyRawMaterialInventory},</if>
+            <if test="workinprogressSemifinishedgoods != null">#{workinprogressSemifinishedgoods},</if>
+            <if test="productcostvarianceSemifinishedgoods != null">#{productcostvarianceSemifinishedgoods},</if>
+            <if test="workinprogressEndofmonth != null">#{workinprogressEndofmonth},</if>
+            <if test="MonthlyWorkInProgressInventory != null">#{MonthlyWorkInProgressInventory},</if>
+            <if test="MonthlyInventoryTotalAmount != null">#{MonthlyInventoryTotalAmount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinancialBalanceTable" parameterType="FinancialBalanceTable">
+        update Financial_Balance_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="InTransitInventory != null">InTransitInventory = #{InTransitInventory},</if>
+            <if test="Materials != null">Materials = #{Materials},</if>
+            <if test="MaterialCostVariance != null">MaterialCostVariance = #{MaterialCostVariance},</if>
+            <if test="materialcostvarianceUnallocated != null">MaterialCostVariance_Unallocated = #{materialcostvarianceUnallocated},</if>
+            <if test="MonthlyRawMaterialInventory != null">MonthlyRawMaterialInventory = #{MonthlyRawMaterialInventory},</if>
+            <if test="workinprogressSemifinishedgoods != null">WorkInProgress_SemiFinishedGoods = #{workinprogressSemifinishedgoods},</if>
+            <if test="productcostvarianceSemifinishedgoods != null">ProductCostVariance_SemiFinishedGoods = #{productcostvarianceSemifinishedgoods},</if>
+            <if test="workinprogressEndofmonth != null">WorkInProgress_EndOfMonth = #{workinprogressEndofmonth},</if>
+            <if test="MonthlyWorkInProgressInventory != null">MonthlyWorkInProgressInventory = #{MonthlyWorkInProgressInventory},</if>
+            <if test="MonthlyInventoryTotalAmount != null">MonthlyInventoryTotalAmount = #{MonthlyInventoryTotalAmount},</if>
+        </trim>
+        where FB_ID = #{fbId}
+    </update>
+
+    <delete id="deleteFinancialBalanceTableByFbId" parameterType="Long">
+        delete from Financial_Balance_table where FB_ID = #{fbId}
+    </delete>
+
+    <delete id="deleteFinancialBalanceTableByFbIds" parameterType="String">
+        delete from Financial_Balance_table where FB_ID in 
+        <foreach item="fbId" collection="array" open="(" separator="," close=")">
+            #{fbId}
+        </foreach>
+    </delete>
+</mapper>

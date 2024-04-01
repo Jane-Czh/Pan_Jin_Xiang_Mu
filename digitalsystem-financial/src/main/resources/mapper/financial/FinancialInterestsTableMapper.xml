@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.financial.mapper.FinancialInterestsTableMapper">
+
+    <resultMap type="FinancialInterestsTable" id="FinancialInterestsTableResult">
+        <result property="fiId"    column="FI_ID"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="internalMainRevenue"    column="Internal_MainRevenue"    />
+        <result property="externalMainRevenue"    column="External_MainRevenue"    />
+        <result property="MainRevenue"    column="MainRevenue"    />
+        <result property="cogsProductSalesSd"    column="COGS_ProductSales_SD"    />
+        <result property="cogsFreight"    column="COGS_Freight"    />
+        <result property="cogsVariation"    column="COGS_Variation"    />
+        <result property="COGS"    column="COGS"    />
+        <result property="NetProfit"    column="NetProfit"    />
+        <result property="ManagementExpense"    column="ManagementExpense"    />
+        <result property="rdExpense"    column="RD_Expense"    />
+    </resultMap>
+
+    <sql id="selectFinancialInterestsTableVo">
+        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+    </sql>
+
+    <select id="selectFinancialInterestsTableList" parameterType="FinancialInterestsTable" resultMap="FinancialInterestsTableResult">
+        <include refid="selectFinancialInterestsTableVo"/>
+        <where>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="internalMainRevenue != null "> and Internal_MainRevenue = #{internalMainRevenue}</if>
+            <if test="externalMainRevenue != null "> and External_MainRevenue = #{externalMainRevenue}</if>
+            <if test="MainRevenue != null "> and MainRevenue = #{MainRevenue}</if>
+            <if test="cogsProductSalesSd != null "> and COGS_ProductSales_SD = #{cogsProductSalesSd}</if>
+            <if test="cogsFreight != null "> and COGS_Freight = #{cogsFreight}</if>
+            <if test="cogsVariation != null "> and COGS_Variation = #{cogsVariation}</if>
+            <if test="COGS != null "> and COGS = #{COGS}</if>
+            <if test="NetProfit != null "> and NetProfit = #{NetProfit}</if>
+            <if test="ManagementExpense != null "> and ManagementExpense = #{ManagementExpense}</if>
+            <if test="rdExpense != null "> and RD_Expense = #{rdExpense}</if>
+        </where>
+    </select>
+
+    <select id="selectFinancialInterestsTableByFiId" parameterType="Long" resultMap="FinancialInterestsTableResult">
+        <include refid="selectFinancialInterestsTableVo"/>
+        where FI_ID = #{fiId}
+    </select>
+
+    <insert id="insertFinancialInterestsTable" parameterType="FinancialInterestsTable">
+        insert into Financial_Interests_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fiId != null">FI_ID,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="internalMainRevenue != null">Internal_MainRevenue,</if>
+            <if test="externalMainRevenue != null">External_MainRevenue,</if>
+            <if test="MainRevenue != null">MainRevenue,</if>
+            <if test="cogsProductSalesSd != null">COGS_ProductSales_SD,</if>
+            <if test="cogsFreight != null">COGS_Freight,</if>
+            <if test="cogsVariation != null">COGS_Variation,</if>
+            <if test="COGS != null">COGS,</if>
+            <if test="NetProfit != null">NetProfit,</if>
+            <if test="ManagementExpense != null">ManagementExpense,</if>
+            <if test="rdExpense != null">RD_Expense,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fiId != null">#{fiId},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="internalMainRevenue != null">#{internalMainRevenue},</if>
+            <if test="externalMainRevenue != null">#{externalMainRevenue},</if>
+            <if test="MainRevenue != null">#{MainRevenue},</if>
+            <if test="cogsProductSalesSd != null">#{cogsProductSalesSd},</if>
+            <if test="cogsFreight != null">#{cogsFreight},</if>
+            <if test="cogsVariation != null">#{cogsVariation},</if>
+            <if test="COGS != null">#{COGS},</if>
+            <if test="NetProfit != null">#{NetProfit},</if>
+            <if test="ManagementExpense != null">#{ManagementExpense},</if>
+            <if test="rdExpense != null">#{rdExpense},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFinancialInterestsTable" parameterType="FinancialInterestsTable">
+        update Financial_Interests_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="internalMainRevenue != null">Internal_MainRevenue = #{internalMainRevenue},</if>
+            <if test="externalMainRevenue != null">External_MainRevenue = #{externalMainRevenue},</if>
+            <if test="MainRevenue != null">MainRevenue = #{MainRevenue},</if>
+            <if test="cogsProductSalesSd != null">COGS_ProductSales_SD = #{cogsProductSalesSd},</if>
+            <if test="cogsFreight != null">COGS_Freight = #{cogsFreight},</if>
+            <if test="cogsVariation != null">COGS_Variation = #{cogsVariation},</if>
+            <if test="COGS != null">COGS = #{COGS},</if>
+            <if test="NetProfit != null">NetProfit = #{NetProfit},</if>
+            <if test="ManagementExpense != null">ManagementExpense = #{ManagementExpense},</if>
+            <if test="rdExpense != null">RD_Expense = #{rdExpense},</if>
+        </trim>
+        where FI_ID = #{fiId}
+    </update>
+
+    <delete id="deleteFinancialInterestsTableByFiId" parameterType="Long">
+        delete from Financial_Interests_table where FI_ID = #{fiId}
+    </delete>
+
+    <delete id="deleteFinancialInterestsTableByFiIds" parameterType="String">
+        delete from Financial_Interests_table where FI_ID in
+        <foreach item="fiId" collection="array" open="(" separator="," close=")">
+            #{fiId}
+        </foreach>
+    </delete>
+</mapper>

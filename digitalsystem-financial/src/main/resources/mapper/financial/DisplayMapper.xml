@@ -4,18 +4,163 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heli.financial.mapper.DisplayMapper">
 
-    <resultMap type="DisplayEntity" id="DisplayEntityResult">
-        <result property="yearAndMonth" column="Year_And_Month"/>
-        <result property="data" column="MainRevenue"/>
-    </resultMap>
+    <!--    <resultMap type="DisplayEntity" id="DisplayEntityResult">-->
+    <!--        <result property="yearAndMonth" column="Year_And_Month"/>-->
+    <!--        <result property="data" column="MainRevenue"/>-->
+    <!--    </resultMap>-->
 
-    <sql id="selectDisplayVo">
-        select Year_And_Month,InTransitInventory from Financial_Balance_table
-    </sql>
+    <!--    <sql id="selectDisplayVo">-->
+    <!--        select Year_And_Month,InTransitInventory from Financial_Balance_table-->
+    <!--    </sql>-->
 
-    <select id="selectDisplayData" parameterType="DisplayEntity" resultMap="DisplayEntityResult">
---         select Year_And_Month,InTransitInventory from Financial_Balance_table
-        select Year_And_Month,MainRevenue from Financial_Interests_table
+    <!--    <select id="selectDisplayData" parameterType="DisplayEntity" resultMap="DisplayEntityResult">-->
+    <!--&#45;&#45;         select Year_And_Month,InTransitInventory from Financial_Balance_table-->
+    <!--        select Year_And_Month,MainRevenue from Financial_Interests_table-->
+    <!--    </select>-->
+
+
+    <select id="selectTotalSalesRevenue" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Sales_Revenue from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectExternalGroupSalesRevenue" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,External_Group_Sales_Revenue from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectTotalVehicleProduction" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Vehicle_Production from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectTotalVehicleSales" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Vehicle_Sales from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectNewProductSalesRevenue" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,New_Product_Sales_Revenue from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectSpecialtyProductRevenue" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Specialty_Product_Revenue from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectTotalSalesCost" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Sales_Cost from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectManufacturingExpensesMonth" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Manufacturing_Expenses_Month from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectMonthlyInventoryStockValue" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Monthly_Inventory_Stock_Value from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectCapitalTurnoverRate" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Capital_Turnover_Rate from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectInventoryTurnoverRate" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Inventory_Turnover_Rate from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectRawMaterialTurnoverRate" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Raw_Material_Turnover_Rate from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectInprogressTurnoverRate" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,InProgress_Turnover_Rate from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectLongEstimatedItems" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Long_Estimated_Items from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectInprogressDayrevenue" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,InProgress_DayRevenue from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <select id="selectAddedValueMonthly" parameterType="DisplayEntity" resultType="map">
+        select * from (
+            select Year_And_Month,Added_Value_Monthly from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
     </select>
 
 

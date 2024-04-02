@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="specialtyProductRevenue"    column="Specialty_Product_Revenue"    />
         <result property="totalSalesCost"    column="Total_Sales_Cost"    />
         <result property="manufacturingExpensesMonth"    column="Manufacturing_Expenses_Month"    />
-        <result property="monthlyInventoryStockValue"    column="Monthly_Inventory_Stock_Value"    />
+        <result property="reserveCarAmount"    column="Reserve_Car_Amount"    />
         <result property="capitalTurnoverRate"    column="Capital_Turnover_Rate"    />
         <result property="inventoryTurnoverRate"    column="Inventory_Turnover_Rate"    />
         <result property="rawMaterialTurnoverRate"    column="Raw_Material_Turnover_Rate"    />
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectFinancialIndicatorsHandfillTableVo">
-        select FIHF_id, Total_Sales_Revenue, External_Group_Sales_Revenue, Total_Vehicle_Production, Total_Vehicle_Sales, New_Product_Sales_Revenue, Specialty_Product_Revenue, Total_Sales_Cost, Manufacturing_Expenses_Month, Monthly_Inventory_Stock_Value, Capital_Turnover_Rate, Inventory_Turnover_Rate, Raw_Material_Turnover_Rate, InProgress_Turnover_Rate, Long_Estimated_Items, InProgress_DayRevenue, Added_Value_Monthly, Reporter, Reporting_date, UPDATED_BY, UPDATED_Date from Financial_Indicators_HandFill_table
+        select FIHF_id, Total_Sales_Revenue, External_Group_Sales_Revenue, Total_Vehicle_Production, Total_Vehicle_Sales, New_Product_Sales_Revenue, Specialty_Product_Revenue, Total_Sales_Cost, Manufacturing_Expenses_Month, Reserve_Car_Amount, Capital_Turnover_Rate, Inventory_Turnover_Rate, Raw_Material_Turnover_Rate, InProgress_Turnover_Rate, Long_Estimated_Items, InProgress_DayRevenue, Added_Value_Monthly, Reporter, Reporting_date, UPDATED_BY, UPDATED_Date from Financial_Indicators_HandFill_table
     </sql>
 
     <select id="selectFinancialIndicatorsHandfillTableList" parameterType="FinancialIndicatorsHandfillTable" resultMap="FinancialIndicatorsHandfillTableResult">
@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specialtyProductRevenue != null "> and Specialty_Product_Revenue = #{specialtyProductRevenue}</if>
             <if test="totalSalesCost != null "> and Total_Sales_Cost = #{totalSalesCost}</if>
             <if test="manufacturingExpensesMonth != null "> and Manufacturing_Expenses_Month = #{manufacturingExpensesMonth}</if>
-            <if test="monthlyInventoryStockValue != null "> and Monthly_Inventory_Stock_Value = #{monthlyInventoryStockValue}</if>
+            <if test="reserveCarAmount != null "> and Reserve_Car_Amount = #{reserveCarAmount}</if>
             <if test="capitalTurnoverRate != null "> and Capital_Turnover_Rate = #{capitalTurnoverRate}</if>
             <if test="inventoryTurnoverRate != null "> and Inventory_Turnover_Rate = #{inventoryTurnoverRate}</if>
             <if test="rawMaterialTurnoverRate != null "> and Raw_Material_Turnover_Rate = #{rawMaterialTurnoverRate}</if>
@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specialtyProductRevenue != null">Specialty_Product_Revenue,</if>
             <if test="totalSalesCost != null">Total_Sales_Cost,</if>
             <if test="manufacturingExpensesMonth != null">Manufacturing_Expenses_Month,</if>
-            <if test="monthlyInventoryStockValue != null">Monthly_Inventory_Stock_Value,</if>
+            <if test="reserveCarAmount != null">Reserve_Car_Amount,</if>
             <if test="capitalTurnoverRate != null">Capital_Turnover_Rate,</if>
             <if test="inventoryTurnoverRate != null">Inventory_Turnover_Rate,</if>
             <if test="rawMaterialTurnoverRate != null">Raw_Material_Turnover_Rate,</if>
@@ -98,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specialtyProductRevenue != null">#{specialtyProductRevenue},</if>
             <if test="totalSalesCost != null">#{totalSalesCost},</if>
             <if test="manufacturingExpensesMonth != null">#{manufacturingExpensesMonth},</if>
-            <if test="monthlyInventoryStockValue != null">#{monthlyInventoryStockValue},</if>
+            <if test="reserveCarAmount != null">#{reserveCarAmount},</if>
             <if test="capitalTurnoverRate != null">#{capitalTurnoverRate},</if>
             <if test="inventoryTurnoverRate != null">#{inventoryTurnoverRate},</if>
             <if test="rawMaterialTurnoverRate != null">#{rawMaterialTurnoverRate},</if>
@@ -124,7 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specialtyProductRevenue != null">Specialty_Product_Revenue = #{specialtyProductRevenue},</if>
             <if test="totalSalesCost != null">Total_Sales_Cost = #{totalSalesCost},</if>
             <if test="manufacturingExpensesMonth != null">Manufacturing_Expenses_Month = #{manufacturingExpensesMonth},</if>
-            <if test="monthlyInventoryStockValue != null">Monthly_Inventory_Stock_Value = #{monthlyInventoryStockValue},</if>
+            <if test="reserveCarAmount != null">Reserve_Car_Amount = #{reserveCarAmount},</if>
             <if test="capitalTurnoverRate != null">Capital_Turnover_Rate = #{capitalTurnoverRate},</if>
             <if test="inventoryTurnoverRate != null">Inventory_Turnover_Rate = #{inventoryTurnoverRate},</if>
             <if test="rawMaterialTurnoverRate != null">Raw_Material_Turnover_Rate = #{rawMaterialTurnoverRate},</if>

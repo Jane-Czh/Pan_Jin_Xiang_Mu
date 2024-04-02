@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.excel.ReadExcelCellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-03-31
  */
 @Service
+@DataSource(value = DataSourceType.SLAVE)
 public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTableService {
     @Autowired
     private FinancialInterestsTableMapper financialInterestsTableMapper;

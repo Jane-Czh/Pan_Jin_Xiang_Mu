@@ -10,9 +10,8 @@ import java.util.Date;
 
 /**
  * @Author: hong
- * @CreateTime: 2024-04-01  11:54
+ * @CreateTime: 2024-04-01 11:54
  * @Description: 单个数据展示实体
- * @Version: 1.0
  */
 
 public class DisplayEntity extends BaseEntity  {

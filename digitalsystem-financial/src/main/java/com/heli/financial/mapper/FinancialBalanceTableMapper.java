@@ -6,7 +6,7 @@ import com.heli.financial.domain.FinancialBalanceTable;
 /**
  * 财务-资产负债Mapper接口
  * 
- * @author ruoyi
+ * @author hong
  * @date 2024-03-31
  */
 public interface FinancialBalanceTableMapper 

@@ -43,6 +43,12 @@ public class FinancialInterestsTable extends BaseEntity {
     private Date yearAndMonth;
 
     /**
+     * 营业收入
+     */
+    @RecordTemplate(rowNo = 1, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "营业收入")
+    private BigDecimal operatingRevenue;
+
+    /**
      * 集团内主营业务收入
      */
     @RecordTemplate(rowNo = 2, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "集团内主营业务收入")
@@ -100,135 +106,144 @@ public class FinancialInterestsTable extends BaseEntity {
     @RecordTemplate(rowNo = 87, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "研发费用")
     private BigDecimal rdExpense;
 
-    public void setFiId(Long fiId) {
-        this.fiId = fiId;
-    }
-
     public Long getFiId() {
         return fiId;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setFiId(Long fiId) {
+        this.fiId = fiId;
     }
 
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setYearMonth(Date yearMonth) {
-        this.yearAndMonth = yearMonth;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public Date getYearMonth() {
+    public Date getYearAndMonth() {
         return yearAndMonth;
     }
 
-    public void setInternalMainRevenue(BigDecimal internalMainRevenue) {
-        this.internalMainRevenue = internalMainRevenue;
+    public void setYearAndMonth(Date yearAndMonth) {
+        this.yearAndMonth = yearAndMonth;
+    }
+
+    public BigDecimal getOperatingRevenue() {
+        return operatingRevenue;
+    }
+
+    public void setOperatingRevenue(BigDecimal operatingRevenue) {
+        this.operatingRevenue = operatingRevenue;
     }
 
     public BigDecimal getInternalMainRevenue() {
         return internalMainRevenue;
     }
 
-    public void setExternalMainRevenue(BigDecimal externalMainRevenue) {
-        this.externalMainRevenue = externalMainRevenue;
+    public void setInternalMainRevenue(BigDecimal internalMainRevenue) {
+        this.internalMainRevenue = internalMainRevenue;
     }
 
     public BigDecimal getExternalMainRevenue() {
         return externalMainRevenue;
     }
 
-    public void setMainRevenue(BigDecimal MainRevenue) {
-        this.MainRevenue = MainRevenue;
+    public void setExternalMainRevenue(BigDecimal externalMainRevenue) {
+        this.externalMainRevenue = externalMainRevenue;
     }
 
     public BigDecimal getMainRevenue() {
         return MainRevenue;
     }
 
-    public void setCogsProductSalesSd(BigDecimal cogsProductSalesSd) {
-        this.cogsProductSalesSd = cogsProductSalesSd;
+    public void setMainRevenue(BigDecimal mainRevenue) {
+        MainRevenue = mainRevenue;
     }
 
     public BigDecimal getCogsProductSalesSd() {
         return cogsProductSalesSd;
     }
 
-    public void setCogsFreight(BigDecimal cogsFreight) {
-        this.cogsFreight = cogsFreight;
+    public void setCogsProductSalesSd(BigDecimal cogsProductSalesSd) {
+        this.cogsProductSalesSd = cogsProductSalesSd;
     }
 
     public BigDecimal getCogsFreight() {
         return cogsFreight;
     }
 
-    public void setCogsVariation(BigDecimal cogsVariation) {
-        this.cogsVariation = cogsVariation;
+    public void setCogsFreight(BigDecimal cogsFreight) {
+        this.cogsFreight = cogsFreight;
     }
 
     public BigDecimal getCogsVariation() {
         return cogsVariation;
     }
 
-    public void setCOGS(BigDecimal COGS) {
-        this.COGS = COGS;
+    public void setCogsVariation(BigDecimal cogsVariation) {
+        this.cogsVariation = cogsVariation;
     }
 
     public BigDecimal getCOGS() {
         return COGS;
     }
 
-    public void setNetProfit(BigDecimal NetProfit) {
-        this.NetProfit = NetProfit;
+    public void setCOGS(BigDecimal COGS) {
+        this.COGS = COGS;
     }
 
     public BigDecimal getNetProfit() {
         return NetProfit;
     }
 
-    public void setManagementExpense(BigDecimal ManagementExpense) {
-        this.ManagementExpense = ManagementExpense;
+    public void setNetProfit(BigDecimal netProfit) {
+        NetProfit = netProfit;
     }
 
     public BigDecimal getManagementExpense() {
         return ManagementExpense;
     }
 
-    public void setRdExpense(BigDecimal rdExpense) {
-        this.rdExpense = rdExpense;
+    public void setManagementExpense(BigDecimal managementExpense) {
+        ManagementExpense = managementExpense;
     }
 
     public BigDecimal getRdExpense() {
         return rdExpense;
     }
 
+    public void setRdExpense(BigDecimal rdExpense) {
+        this.rdExpense = rdExpense;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("fiId", getFiId())
-                .append("createdBy", getCreatedBy())
-                .append("createdTime", getCreatedTime())
-                .append("yearAndMonth", getYearMonth())
-                .append("internalMainRevenue", getInternalMainRevenue())
-                .append("externalMainRevenue", getExternalMainRevenue())
-                .append("MainRevenue", getMainRevenue())
-                .append("cogsProductSalesSd", getCogsProductSalesSd())
-                .append("cogsFreight", getCogsFreight())
-                .append("cogsVariation", getCogsVariation())
-                .append("COGS", getCOGS())
-                .append("NetProfit", getNetProfit())
-                .append("ManagementExpense", getManagementExpense())
-                .append("rdExpense", getRdExpense())
-                .toString();
+        return "FinancialInterestsTable{" +
+                "fiId=" + fiId +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdTime=" + createdTime +
+                ", yearAndMonth=" + yearAndMonth +
+                ", operatingRevenue=" + operatingRevenue +
+                ", internalMainRevenue=" + internalMainRevenue +
+                ", externalMainRevenue=" + externalMainRevenue +
+                ", MainRevenue=" + MainRevenue +
+                ", cogsProductSalesSd=" + cogsProductSalesSd +
+                ", cogsFreight=" + cogsFreight +
+                ", cogsVariation=" + cogsVariation +
+                ", COGS=" + COGS +
+                ", NetProfit=" + NetProfit +
+                ", ManagementExpense=" + ManagementExpense +
+                ", rdExpense=" + rdExpense +
+                '}';
     }
 }

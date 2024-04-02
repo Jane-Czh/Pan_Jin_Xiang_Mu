@@ -91,9 +91,9 @@
         order by Year_And_Month ASC
     </select>
 
-    <select id="selectMonthlyInventoryStockValue" parameterType="DisplayEntity" resultType="map">
+    <select id="selectreserveCarAmount" parameterType="DisplayEntity" resultType="map">
         select * from (
-            select Year_And_Month,Monthly_Inventory_Stock_Value from Financial_Indicators_HandFill_table
+            select Year_And_Month,Reserve_Car_Amount from Financial_Indicators_HandFill_table
             order by Year_And_Month DESC
             limit 12
         ) as t

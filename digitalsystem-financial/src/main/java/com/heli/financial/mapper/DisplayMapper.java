@@ -7,22 +7,37 @@ import java.util.List;
 
 public interface DisplayMapper {
 
-    public List<DisplayEntity> selectTotalSalesRevenue(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectExternalGroupSalesRevenue(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectTotalVehicleProduction(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectTotalVehicleSales(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectNewProductSalesRevenue(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectSpecialtyProductRevenue(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectTotalSalesCost(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectManufacturingExpensesMonth(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectMonthlyInventoryStockValue(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectCapitalTurnoverRate(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectInventoryTurnoverRate(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectRawMaterialTurnoverRate(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectInprogressTurnoverRate(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectLongEstimatedItems(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectInprogressDayrevenue(DisplayEntity displayEntity);
-    public List<DisplayEntity> selectAddedValueMonthly(DisplayEntity displayEntity);
+    public List<DisplayEntity> selectTotalSalesRevenue();
+
+    public List<DisplayEntity> selectExternalGroupSalesRevenue();
+
+    public List<DisplayEntity> selectTotalVehicleProduction();
+
+    public List<DisplayEntity> selectTotalVehicleSales();
+
+    public List<DisplayEntity> selectNewProductSalesRevenue();
+
+    public List<DisplayEntity> selectSpecialtyProductRevenue();
+
+    public List<DisplayEntity> selectTotalSalesCost();
+
+    public List<DisplayEntity> selectManufacturingExpensesMonth();
+
+    public List<DisplayEntity> selectreserveCarAmount();
+
+    public List<DisplayEntity> selectCapitalTurnoverRate();
+
+    public List<DisplayEntity> selectInventoryTurnoverRate();
+
+    public List<DisplayEntity> selectRawMaterialTurnoverRate();
+
+    public List<DisplayEntity> selectInprogressTurnoverRate();
+
+    public List<DisplayEntity> selectLongEstimatedItems();
+
+    public List<DisplayEntity> selectInprogressDayrevenue();
+
+    public List<DisplayEntity> selectAddedValueMonthly();
 
 
 }

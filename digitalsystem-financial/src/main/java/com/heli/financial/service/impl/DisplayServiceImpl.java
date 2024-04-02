@@ -12,12 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @BelongsProject: ruoyi
- * @BelongsPackage: com.heli.financial.service.impl
  * @Author: hong
- * @CreateTime: 2024-04-01  12:00
- * @Description: TODO
- * @Version: 1.0
+ * @CreateTime: 2024-04-01 12:00
+ * @Description: 数据展示-服务实现层
+ * @Return: 数据列表
  */
 @Service
 @DataSource(value = DataSourceType.SLAVE)
@@ -28,82 +26,82 @@ public class DisplayServiceImpl implements DisplayService {
 
 
     @Override
-    public List<DisplayEntity> selectTotalSalesRevenue(DisplayEntity displayEntity) {
-        return displayMapper.selectTotalSalesRevenue(displayEntity);
+    public List<DisplayEntity> selectTotalSalesRevenue() {
+        return displayMapper.selectTotalSalesRevenue();
     }
 
     @Override
-    public List<DisplayEntity> selectExternalGroupSalesRevenue(DisplayEntity displayEntity) {
-        return displayMapper.selectExternalGroupSalesRevenue(displayEntity);
+    public List<DisplayEntity> selectExternalGroupSalesRevenue() {
+        return displayMapper.selectExternalGroupSalesRevenue();
     }
 
     @Override
-    public List<DisplayEntity> selectTotalVehicleProduction(DisplayEntity displayEntity) {
-        return displayMapper.selectTotalVehicleProduction(displayEntity);
+    public List<DisplayEntity> selectTotalVehicleProduction() {
+        return displayMapper.selectTotalVehicleProduction();
     }
 
     @Override
-    public List<DisplayEntity> selectTotalVehicleSales(DisplayEntity displayEntity) {
-        return displayMapper.selectTotalVehicleSales(displayEntity);
+    public List<DisplayEntity> selectTotalVehicleSales() {
+        return displayMapper.selectTotalVehicleSales();
     }
 
     @Override
-    public List<DisplayEntity> selectNewProductSalesRevenue(DisplayEntity displayEntity) {
-        return displayMapper.selectNewProductSalesRevenue(displayEntity);
+    public List<DisplayEntity> selectNewProductSalesRevenue() {
+        return displayMapper.selectNewProductSalesRevenue();
     }
 
     @Override
-    public List<DisplayEntity> selectSpecialtyProductRevenue(DisplayEntity displayEntity) {
-        return displayMapper.selectSpecialtyProductRevenue(displayEntity);
+    public List<DisplayEntity> selectSpecialtyProductRevenue() {
+        return displayMapper.selectSpecialtyProductRevenue();
     }
 
     @Override
-    public List<DisplayEntity> selectTotalSalesCost(DisplayEntity displayEntity) {
-        return displayMapper.selectTotalSalesCost(displayEntity);
+    public List<DisplayEntity> selectTotalSalesCost() {
+        return displayMapper.selectTotalSalesCost();
     }
 
     @Override
-    public List<DisplayEntity> selectManufacturingExpensesMonth(DisplayEntity displayEntity) {
-        return displayMapper.selectManufacturingExpensesMonth(displayEntity);
+    public List<DisplayEntity> selectManufacturingExpensesMonth() {
+        return displayMapper.selectManufacturingExpensesMonth();
     }
 
     @Override
-    public List<DisplayEntity> selectMonthlyInventoryStockValue(DisplayEntity displayEntity) {
-        return displayMapper.selectMonthlyInventoryStockValue(displayEntity);
+    public List<DisplayEntity> selectreserveCarAmount() {
+        return displayMapper.selectreserveCarAmount();
     }
 
     @Override
-    public List<DisplayEntity> selectCapitalTurnoverRate(DisplayEntity displayEntity) {
-        return displayMapper.selectCapitalTurnoverRate(displayEntity);
+    public List<DisplayEntity> selectCapitalTurnoverRate() {
+        return displayMapper.selectCapitalTurnoverRate();
     }
 
     @Override
-    public List<DisplayEntity> selectInventoryTurnoverRate(DisplayEntity displayEntity) {
-        return displayMapper.selectInventoryTurnoverRate(displayEntity);
+    public List<DisplayEntity> selectInventoryTurnoverRate() {
+        return displayMapper.selectInventoryTurnoverRate();
     }
 
     @Override
-    public List<DisplayEntity> selectRawMaterialTurnoverRate(DisplayEntity displayEntity) {
-        return displayMapper.selectRawMaterialTurnoverRate(displayEntity);
+    public List<DisplayEntity> selectRawMaterialTurnoverRate() {
+        return displayMapper.selectRawMaterialTurnoverRate();
     }
 
     @Override
-    public List<DisplayEntity> selectInprogressTurnoverRate(DisplayEntity displayEntity) {
-        return displayMapper.selectInprogressTurnoverRate(displayEntity);
+    public List<DisplayEntity> selectInprogressTurnoverRate() {
+        return displayMapper.selectInprogressTurnoverRate();
     }
 
     @Override
-    public List<DisplayEntity> selectLongEstimatedItems(DisplayEntity displayEntity) {
-        return displayMapper.selectLongEstimatedItems(displayEntity);
+    public List<DisplayEntity> selectLongEstimatedItems() {
+        return displayMapper.selectLongEstimatedItems();
     }
 
     @Override
-    public List<DisplayEntity> selectInprogressDayrevenue(DisplayEntity displayEntity) {
-        return displayMapper.selectInprogressDayrevenue(displayEntity);
+    public List<DisplayEntity> selectInprogressDayrevenue() {
+        return displayMapper.selectInprogressDayrevenue();
     }
 
     @Override
-    public List<DisplayEntity> selectAddedValueMonthly(DisplayEntity displayEntity) {
-        return displayMapper.selectAddedValueMonthly(displayEntity);
+    public List<DisplayEntity> selectAddedValueMonthly() {
+        return displayMapper.selectAddedValueMonthly();
     }
 }

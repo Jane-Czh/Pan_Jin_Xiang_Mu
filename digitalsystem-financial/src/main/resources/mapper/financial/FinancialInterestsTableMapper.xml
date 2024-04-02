@@ -9,6 +9,7 @@
         <result property="createdBy"    column="CREATED_BY"    />
         <result property="createdTime"    column="CREATED_TIME"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="operatingRevenue"    column="Operating_Revenue"    />
         <result property="internalMainRevenue"    column="Internal_MainRevenue"    />
         <result property="externalMainRevenue"    column="External_MainRevenue"    />
         <result property="MainRevenue"    column="MainRevenue"    />
@@ -22,7 +23,7 @@
     </resultMap>
 
     <sql id="selectFinancialInterestsTableVo">
-        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
     </sql>
 
     <select id="selectFinancialInterestsTableList" parameterType="FinancialInterestsTable" resultMap="FinancialInterestsTableResult">
@@ -31,6 +32,7 @@
             <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
             <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="operatingRevenue != null "> and Operating_Revenue = #{operatingRevenue}</if>
             <if test="internalMainRevenue != null "> and Internal_MainRevenue = #{internalMainRevenue}</if>
             <if test="externalMainRevenue != null "> and External_MainRevenue = #{externalMainRevenue}</if>
             <if test="MainRevenue != null "> and MainRevenue = #{MainRevenue}</if>
@@ -56,6 +58,7 @@
             <if test="createdBy != null">CREATED_BY,</if>
             <if test="createdTime != null">CREATED_TIME,</if>
             <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="operatingRevenue != null">Operating_Revenue,</if>
             <if test="internalMainRevenue != null">Internal_MainRevenue,</if>
             <if test="externalMainRevenue != null">External_MainRevenue,</if>
             <if test="MainRevenue != null">MainRevenue,</if>
@@ -72,6 +75,7 @@
             <if test="createdBy != null">#{createdBy},</if>
             <if test="createdTime != null">#{createdTime},</if>
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="operatingRevenue != null">#{operatingRevenue},</if>
             <if test="internalMainRevenue != null">#{internalMainRevenue},</if>
             <if test="externalMainRevenue != null">#{externalMainRevenue},</if>
             <if test="MainRevenue != null">#{MainRevenue},</if>
@@ -91,6 +95,7 @@
             <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
             <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="operatingRevenue != null">Operating_Revenue = #{operatingRevenue},</if>
             <if test="internalMainRevenue != null">Internal_MainRevenue = #{internalMainRevenue},</if>
             <if test="externalMainRevenue != null">External_MainRevenue = #{externalMainRevenue},</if>
             <if test="MainRevenue != null">MainRevenue = #{MainRevenue},</if>

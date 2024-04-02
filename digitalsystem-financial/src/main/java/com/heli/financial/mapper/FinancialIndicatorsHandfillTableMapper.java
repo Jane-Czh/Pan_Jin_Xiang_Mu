@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * [财务]手动填报指标Mapper接口
  * 
- * @author loophong
+ * @author hong
  * @date 2024-03-29
  */
 public interface FinancialIndicatorsHandfillTableMapper 

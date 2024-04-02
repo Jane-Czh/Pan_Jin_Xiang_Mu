@@ -36,25 +36,39 @@ public class FinancialIndicatorsHandfillTable extends BaseEntity
     /** 新产品销售收入 */
     private BigDecimal newProductSalesRevenue;
 
-    /** 特色产品收入 */
+    /**
+     * 特色产品收入
+     */
     private BigDecimal specialtyProductRevenue;
 
-    /** 整机销售成本 */
+    /**
+     * 整机销售成本
+     */
     private BigDecimal totalSalesCost;
 
-    /** 当月制造费用 */
+    /**
+     * 当月制造费用
+     */
     private BigDecimal manufacturingExpensesMonth;
 
-    /** 当月库存商品存货额 */
-    private Long monthlyInventoryStockValue;
+    /**
+     * 储备车金额
+     */
+    private BigDecimal reserveCarAmount;
 
-    /** 资金周转率 */
+    /**
+     * 资金周转率
+     */
     private BigDecimal capitalTurnoverRate;
 
-    /** 库存商品周转率 */
+    /**
+     * 库存商品周转率
+     */
     private BigDecimal inventoryTurnoverRate;
 
-    /** 原材料周转率 */
+    /**
+     * 原材料周转率
+     */
     private BigDecimal rawMaterialTurnoverRate;
 
     /** 在制品周转率 */
@@ -155,25 +169,23 @@ public class FinancialIndicatorsHandfillTable extends BaseEntity
     {
         return totalSalesCost;
     }
-    public void setManufacturingExpensesMonth(BigDecimal manufacturingExpensesMonth) 
-    {
+    public void setManufacturingExpensesMonth(BigDecimal manufacturingExpensesMonth) {
         this.manufacturingExpensesMonth = manufacturingExpensesMonth;
     }
 
-    public BigDecimal getManufacturingExpensesMonth() 
-    {
+    public BigDecimal getManufacturingExpensesMonth() {
         return manufacturingExpensesMonth;
     }
-    public void setMonthlyInventoryStockValue(Long monthlyInventoryStockValue) 
-    {
-        this.monthlyInventoryStockValue = monthlyInventoryStockValue;
+
+    public void setReserveCarAmount(BigDecimal reserveCarAmount) {
+        this.reserveCarAmount = reserveCarAmount;
     }
 
-    public Long getMonthlyInventoryStockValue() 
-    {
-        return monthlyInventoryStockValue;
+    public BigDecimal getReserveCarAmount() {
+        return reserveCarAmount;
     }
-    public void setCapitalTurnoverRate(BigDecimal capitalTurnoverRate) 
+
+    public void setCapitalTurnoverRate(BigDecimal capitalTurnoverRate)
     {
         this.capitalTurnoverRate = capitalTurnoverRate;
     }
@@ -275,17 +287,17 @@ public class FinancialIndicatorsHandfillTable extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("fihfId", getFihfId())
-            .append("totalSalesRevenue", getTotalSalesRevenue())
-            .append("externalGroupSalesRevenue", getExternalGroupSalesRevenue())
-            .append("totalVehicleProduction", getTotalVehicleProduction())
-            .append("totalVehicleSales", getTotalVehicleSales())
-            .append("newProductSalesRevenue", getNewProductSalesRevenue())
-            .append("specialtyProductRevenue", getSpecialtyProductRevenue())
-            .append("totalSalesCost", getTotalSalesCost())
-            .append("manufacturingExpensesMonth", getManufacturingExpensesMonth())
-            .append("monthlyInventoryStockValue", getMonthlyInventoryStockValue())
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("fihfId", getFihfId())
+                .append("totalSalesRevenue", getTotalSalesRevenue())
+                .append("externalGroupSalesRevenue", getExternalGroupSalesRevenue())
+                .append("totalVehicleProduction", getTotalVehicleProduction())
+                .append("totalVehicleSales", getTotalVehicleSales())
+                .append("newProductSalesRevenue", getNewProductSalesRevenue())
+                .append("specialtyProductRevenue", getSpecialtyProductRevenue())
+                .append("totalSalesCost", getTotalSalesCost())
+                .append("manufacturingExpensesMonth", getManufacturingExpensesMonth())
+            .append("reserveCarAmount", getReserveCarAmount())
             .append("capitalTurnoverRate", getCapitalTurnoverRate())
             .append("inventoryTurnoverRate", getInventoryTurnoverRate())
             .append("rawMaterialTurnoverRate", getRawMaterialTurnoverRate())

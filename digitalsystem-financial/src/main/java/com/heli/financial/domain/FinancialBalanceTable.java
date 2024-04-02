@@ -2,6 +2,7 @@ package com.heli.financial.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.RecordTemplate;
 import com.ruoyi.common.enums.FillCommentEnum;
@@ -12,63 +13,90 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 财务-资产负债对象 Financial_Balance_table
- * 
+ *
  * @author ruoyi
  * @date 2024-03-31
  */
-public class FinancialBalanceTable extends BaseEntity
-{
+public class FinancialBalanceTable extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** id(主键) */
+    /**
+     * id(主键)
+     */
     private Long fbId;
 
-    /** 导入人 */
+    /**
+     * 导入人
+     */
     private String createdBy;
 
-    /** 导入时间 */
+    /**
+     * 导入时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdTime;
 
-    /** 年月 */
+    /**
+     * 年月
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date yearAndMonth;
 
-    /** 在途物资 */
+    /**
+     * 在途物资
+     */
     @RecordTemplate(rowNo = 29, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "在途物资")
     private BigDecimal inTransitInventory;
 
-    /** 原材料 */
+    /**
+     * 原材料
+     */
     @RecordTemplate(rowNo = 30, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "原材料")
     private BigDecimal materials;
 
-    /** 材料成本差异 */
+    /**
+     * 材料成本差异
+     */
     @RecordTemplate(rowNo = 31, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "材料成本差异")
     private BigDecimal materialCostVariance;
 
-    /** 材料成本差异-差异待分摊 */
+    /**
+     * 材料成本差异-差异待分摊
+     */
     @RecordTemplate(rowNo = 32, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "材料成本差异-差异待分摊")
     private BigDecimal materialCostVarianceUnallocated;
 
-    /** 当月原材料存货额(前四行计算和) */
+    /**
+     * 当月原材料存货额(前四行计算和)
+     */
     private BigDecimal monthlyRawMaterialInventory;
 
-    /** 库存商品-半成品 */
+    /**
+     * 库存商品-半成品
+     */
     @RecordTemplate(rowNo = 33, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "库存商品-半成品")
     private BigDecimal workInProgressSemiFinishedGoods;
 
-    /** 产品成本差异-半成品 */
+    /**
+     * 产品成本差异-半成品
+     */
     @RecordTemplate(rowNo = 35, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "产品成本差异-半成品")
     private BigDecimal productCostVarianceSemiFinishedGoods;
 
-    /** 月末在制品 */
+    /**
+     * 月末在制品
+     */
     @RecordTemplate(rowNo = 45, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "月末在制品")
     private BigDecimal workInProgressEndOfMonth;
 
-    /** 当月在制品存货额(前三行和) */
+    /**
+     * 当月在制品存货额(前三行和)
+     */
     private BigDecimal monthlyWorkInProgressInventory;
 
-    /** 月度存货总金额(导入来源为存货列) */
+    /**
+     * 月度存货总金额(导入来源为存货列)
+     */
     @RecordTemplate(rowNo = 28, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "月度存货总金额(导入来源为存货列)")
     private BigDecimal monthlyInventoryTotalAmount;
 

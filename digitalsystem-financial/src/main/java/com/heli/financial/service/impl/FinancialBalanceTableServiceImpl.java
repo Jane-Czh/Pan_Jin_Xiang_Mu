@@ -16,13 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 财务-资产负债Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-03-31
  */
 @Service
-public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableService 
-{
+public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableService {
     @Autowired
     private FinancialBalanceTableMapper financialBalanceTableMapper;
 
@@ -55,73 +54,67 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
 
     /**
      * 查询财务-资产负债
-     * 
+     *
      * @param fbId 财务-资产负债主键
      * @return 财务-资产负债
      */
     @Override
-    public FinancialBalanceTable selectFinancialBalanceTableByFbId(Long fbId)
-    {
+    public FinancialBalanceTable selectFinancialBalanceTableByFbId(Long fbId) {
         return financialBalanceTableMapper.selectFinancialBalanceTableByFbId(fbId);
     }
 
     /**
      * 查询财务-资产负债列表
-     * 
+     *
      * @param financialBalanceTable 财务-资产负债
      * @return 财务-资产负债
      */
     @Override
-    public List<FinancialBalanceTable> selectFinancialBalanceTableList(FinancialBalanceTable financialBalanceTable)
-    {
+    public List<FinancialBalanceTable> selectFinancialBalanceTableList(FinancialBalanceTable financialBalanceTable) {
         return financialBalanceTableMapper.selectFinancialBalanceTableList(financialBalanceTable);
     }
 
     /**
      * 新增财务-资产负债
-     * 
+     *
      * @param financialBalanceTable 财务-资产负债
      * @return 结果
      */
     @Override
-    public int insertFinancialBalanceTable(FinancialBalanceTable financialBalanceTable)
-    {
+    public int insertFinancialBalanceTable(FinancialBalanceTable financialBalanceTable) {
         return financialBalanceTableMapper.insertFinancialBalanceTable(financialBalanceTable);
     }
 
     /**
      * 修改财务-资产负债
-     * 
+     *
      * @param financialBalanceTable 财务-资产负债
      * @return 结果
      */
     @Override
-    public int updateFinancialBalanceTable(FinancialBalanceTable financialBalanceTable)
-    {
+    public int updateFinancialBalanceTable(FinancialBalanceTable financialBalanceTable) {
         return financialBalanceTableMapper.updateFinancialBalanceTable(financialBalanceTable);
     }
 
     /**
      * 批量删除财务-资产负债
-     * 
+     *
      * @param fbIds 需要删除的财务-资产负债主键
      * @return 结果
      */
     @Override
-    public int deleteFinancialBalanceTableByFbIds(Long[] fbIds)
-    {
+    public int deleteFinancialBalanceTableByFbIds(Long[] fbIds) {
         return financialBalanceTableMapper.deleteFinancialBalanceTableByFbIds(fbIds);
     }
 
     /**
      * 删除财务-资产负债信息
-     * 
+     *
      * @param fbId 财务-资产负债主键
      * @return 结果
      */
     @Override
-    public int deleteFinancialBalanceTableByFbId(Long fbId)
-    {
+    public int deleteFinancialBalanceTableByFbId(Long fbId) {
         return financialBalanceTableMapper.deleteFinancialBalanceTableByFbId(fbId);
     }
 }

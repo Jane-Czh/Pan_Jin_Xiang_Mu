@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,7 +60,7 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 查询财务-利润列表
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:list')")
+    @PreAuthorize("@ss.hasPermi('financial:interests:list')")
     @GetMapping("/list")
     public TableDataInfo list(FinancialInterestsTable financialInterestsTable) {
         startPage();
@@ -70,7 +71,7 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 导出财务-利润列表
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:export')")
+    @PreAuthorize("@ss.hasPermi('financial:interests:export')")
     @Log(title = "财务-利润", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, FinancialInterestsTable financialInterestsTable) {
@@ -82,7 +83,7 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 获取财务-利润详细信息
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:query')")
+    @PreAuthorize("@ss.hasPermi('financial:interests:query')")
     @GetMapping(value = "/{fiId}")
     public AjaxResult getInfo(@PathVariable("fiId") Long fiId) {
         return success(financialInterestsTableService.selectFinancialInterestsTableByFiId(fiId));
@@ -91,7 +92,7 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 新增财务-利润
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:add')")
+    @PreAuthorize("@ss.hasPermi('financial:interests:add')")
     @Log(title = "财务-利润", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FinancialInterestsTable financialInterestsTable) {
@@ -101,7 +102,7 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 修改财务-利润
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:edit')")
+    @PreAuthorize("@ss.hasPermi('financial:interests:edit')")
     @Log(title = "财务-利润", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FinancialInterestsTable financialInterestsTable) {
@@ -111,7 +112,7 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 删除财务-利润
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:remove')")
+    @PreAuthorize("@ss.hasPermi('financial:interests:remove')")
     @Log(title = "财务-利润", businessType = BusinessType.DELETE)
     @DeleteMapping("/{fiIds}")
     public AjaxResult remove(@PathVariable Long[] fiIds) {

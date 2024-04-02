@@ -27,23 +27,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 财务-资产负债Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-03-31
  */
 @RestController
 @RequestMapping("/financial/balance")
-public class FinancialBalanceTableController extends BaseController
-{
+public class FinancialBalanceTableController extends BaseController {
     @Autowired
     private IFinancialBalanceTableService financialBalanceTableService;
-
-
-
-
-
-
-
 
 
     /**
@@ -51,8 +43,7 @@ public class FinancialBalanceTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('financial:balance:list')")
     @GetMapping("/list")
-    public TableDataInfo list(FinancialBalanceTable financialBalanceTable)
-    {
+    public TableDataInfo list(FinancialBalanceTable financialBalanceTable) {
         startPage();
         List<FinancialBalanceTable> list = financialBalanceTableService.selectFinancialBalanceTableList(financialBalanceTable);
         return getDataTable(list);
@@ -64,8 +55,7 @@ public class FinancialBalanceTableController extends BaseController
     @PreAuthorize("@ss.hasPermi('financial:balance:export')")
     @Log(title = "财务-资产负债", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, FinancialBalanceTable financialBalanceTable)
-    {
+    public void export(HttpServletResponse response, FinancialBalanceTable financialBalanceTable) {
         List<FinancialBalanceTable> list = financialBalanceTableService.selectFinancialBalanceTableList(financialBalanceTable);
         ExcelUtil<FinancialBalanceTable> util = new ExcelUtil<FinancialBalanceTable>(FinancialBalanceTable.class);
         util.exportExcel(response, list, "财务-资产负债数据");
@@ -76,8 +66,7 @@ public class FinancialBalanceTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('financial:balance:query')")
     @GetMapping(value = "/{fbId}")
-    public AjaxResult getInfo(@PathVariable("fbId") Long fbId)
-    {
+    public AjaxResult getInfo(@PathVariable("fbId") Long fbId) {
         return success(financialBalanceTableService.selectFinancialBalanceTableByFbId(fbId));
     }
 
@@ -87,8 +76,7 @@ public class FinancialBalanceTableController extends BaseController
     @PreAuthorize("@ss.hasPermi('financial:balance:add')")
     @Log(title = "财务-资产负债", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody FinancialBalanceTable financialBalanceTable)
-    {
+    public AjaxResult add(@RequestBody FinancialBalanceTable financialBalanceTable) {
         return toAjax(financialBalanceTableService.insertFinancialBalanceTable(financialBalanceTable));
     }
 
@@ -98,8 +86,7 @@ public class FinancialBalanceTableController extends BaseController
     @PreAuthorize("@ss.hasPermi('financial:balance:edit')")
     @Log(title = "财务-资产负债", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FinancialBalanceTable financialBalanceTable)
-    {
+    public AjaxResult edit(@RequestBody FinancialBalanceTable financialBalanceTable) {
         return toAjax(financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable));
     }
 
@@ -108,9 +95,8 @@ public class FinancialBalanceTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('financial:balance:remove')")
     @Log(title = "财务-资产负债", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{fbIds}")
-    public AjaxResult remove(@PathVariable Long[] fbIds)
-    {
+    @DeleteMapping("/{fbIds}")
+    public AjaxResult remove(@PathVariable Long[] fbIds) {
         return toAjax(financialBalanceTableService.deleteFinancialBalanceTableByFbIds(fbIds));
     }
 }

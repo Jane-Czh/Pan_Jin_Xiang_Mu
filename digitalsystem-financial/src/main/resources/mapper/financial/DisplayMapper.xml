@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.financial.mapper.DisplayMapper">
+
+    <resultMap type="DisplayEntity" id="DisplayEntityResult">
+        <result property="yearAndMonth" column="Year_And_Month"/>
+        <result property="data" column="MainRevenue"/>
+    </resultMap>
+
+    <sql id="selectDisplayVo">
+        select Year_And_Month,InTransitInventory from Financial_Balance_table
+    </sql>
+
+    <select id="selectDisplayData" parameterType="DisplayEntity" resultMap="DisplayEntityResult">
+--         select Year_And_Month,InTransitInventory from Financial_Balance_table
+        select Year_And_Month,MainRevenue from Financial_Interests_table
+    </select>
+
+
+</mapper>

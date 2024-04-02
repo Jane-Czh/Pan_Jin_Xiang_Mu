@@ -24,14 +24,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * [财务]手动填报指标Controller
- * 
+ *
  * @author loophong
  * @date 2024-03-29
  */
 @RestController
 @RequestMapping("/financial/data")
-public class FinancialIndicatorsHandfillTableController extends BaseController
-{
+public class FinancialIndicatorsHandfillTableController extends BaseController {
     @Autowired
     private IFinancialIndicatorsHandfillTableService financialIndicatorsHandfillTableService;
 
@@ -40,8 +39,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('financial:data:list')")
     @GetMapping("/list")
-    public TableDataInfo list(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable)
-    {
+    public TableDataInfo list(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
         startPage();
         List<FinancialIndicatorsHandfillTable> list = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableList(financialIndicatorsHandfillTable);
         return getDataTable(list);
@@ -53,8 +51,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController
     @PreAuthorize("@ss.hasPermi('financial:data:export')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable)
-    {
+    public void export(HttpServletResponse response, FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
         List<FinancialIndicatorsHandfillTable> list = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableList(financialIndicatorsHandfillTable);
         ExcelUtil<FinancialIndicatorsHandfillTable> util = new ExcelUtil<FinancialIndicatorsHandfillTable>(FinancialIndicatorsHandfillTable.class);
         util.exportExcel(response, list, "[财务]手动填报指标数据");
@@ -65,8 +62,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('financial:data:query')")
     @GetMapping(value = "/{fihfId}")
-    public AjaxResult getInfo(@PathVariable("fihfId") Long fihfId)
-    {
+    public AjaxResult getInfo(@PathVariable("fihfId") Long fihfId) {
         return success(financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByFihfId(fihfId));
     }
 
@@ -76,8 +72,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController
     @PreAuthorize("@ss.hasPermi('financial:data:add')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable)
-    {
+    public AjaxResult add(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
         return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
     }
 
@@ -87,8 +82,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController
     @PreAuthorize("@ss.hasPermi('financial:data:edit')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable)
-    {
+    public AjaxResult edit(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
         return toAjax(financialIndicatorsHandfillTableService.updateFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
     }
 
@@ -97,9 +91,8 @@ public class FinancialIndicatorsHandfillTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('financial:data:remove')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{fihfIds}")
-    public AjaxResult remove(@PathVariable Long[] fihfIds)
-    {
+    @DeleteMapping("/{fihfIds}")
+    public AjaxResult remove(@PathVariable Long[] fihfIds) {
         return toAjax(financialIndicatorsHandfillTableService.deleteFinancialIndicatorsHandfillTableByFihfIds(fihfIds));
     }
 }

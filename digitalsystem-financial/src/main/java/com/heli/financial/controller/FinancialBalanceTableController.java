@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 财务-资产负债Controller
  *
  * @author ruoyi
- * @date 2024-03-31
+ * @date 2024-04-03
  */
 @RestController
 @RequestMapping("/financial/balance")
@@ -37,6 +37,24 @@ public class FinancialBalanceTableController extends BaseController {
     @Autowired
     private IFinancialBalanceTableService financialBalanceTableService;
 
+    /**
+     * @description: 资产负债表导入Controller
+     * @author: hong
+     * @date: 2024/4/3 11:04
+     * @param: [excelFile]
+     * @return: com.ruoyi.common.core.domain.AjaxResult
+     **/
+    @PostMapping("/importTable")
+    public AjaxResult importTable(MultipartFile excelFile) {
+        System.out.println(excelFile);
+        try {
+            financialBalanceTableService.importBalanceTable(excelFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ServiceException("excel上传失败");
+        }
+        return success();
+    }
 
     /**
      * 查询财务-资产负债列表

@@ -1,7 +1,13 @@
 package com.heli.financial.mapper;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+
 import com.heli.financial.domain.FinancialInterestsTable;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 财务-利润Mapper接口
@@ -9,8 +15,18 @@ import com.heli.financial.domain.FinancialInterestsTable;
  * @author hong
  * @date 2024-03-31
  */
-public interface FinancialInterestsTableMapper
-{
+@DataSource(value = DataSourceType.SLAVE)
+public interface FinancialInterestsTableMapper {
+
+    /**
+     *
+     *
+     *
+     */
+
+//    public BigDecimal selectOperatingRevenue(Date yearAndMonth);
+    public BigDecimal selectOperatingRevenueByMonth(@Param("yearAndMonth")Date date);
+
     /**
      * 查询财务-利润
      *
@@ -58,4 +74,6 @@ public interface FinancialInterestsTableMapper
      * @return 结果
      */
     public int deleteFinancialInterestsTableByFiIds(Long[] fiIds);
+
+
 }

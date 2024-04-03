@@ -2,20 +2,18 @@ package com.heli.financial.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.RecordTemplate;
 import com.ruoyi.common.enums.FillCommentEnum;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 财务-资产负债对象 Financial_Balance_table
  *
  * @author ruoyi
- * @date 2024-03-31
+ * @date 2024-04-03
  */
 public class FinancialBalanceTable extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -95,165 +93,227 @@ public class FinancialBalanceTable extends BaseEntity {
     private BigDecimal monthlyWorkInProgressInventory;
 
     /**
+     * 库存商品-整车
+     */
+    @RecordTemplate(rowNo = 34, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "库存商品-整车")
+    private BigDecimal inventoryVehicles;
+
+    /**
+     * 产品成本差异-产成品
+     */
+    @RecordTemplate(rowNo = 36, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "营业收产品成本差异-产成品入")
+    private BigDecimal pcvFinished;
+
+    /**
+     * 当月库存商品存货额(计算)
+     */
+    private BigDecimal monthAmountInStock;
+
+    /**
      * 月度存货总金额(导入来源为存货列)
      */
-    @RecordTemplate(rowNo = 28, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "月度存货总金额(导入来源为存货列)")
+    @RecordTemplate(rowNo = 28, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "月度存货总金额")
     private BigDecimal monthlyInventoryTotalAmount;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    /**
+     * 存货增长率/销售增长率(计算)
+     */
+    private Double growthRateInventorySales;
+
+    /**
+     * 应收账款
+     */
+    @RecordTemplate(rowNo = 10, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "应收账款")
+    private BigDecimal receivables;
+
+    /**
+     * 应收帐款周转率(计算)
+     */
+    private Double turnoverRateReceivable;
+
+    public void setFbId(Long fbId) {
+        this.fbId = fbId;
     }
 
     public Long getFbId() {
         return fbId;
     }
 
-    public void setFbId(Long fbId) {
-        this.fbId = fbId;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
     public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
+    public void setYearAndMonth(Date yearAndMonth) {
+        this.yearAndMonth = yearAndMonth;
     }
 
     public Date getYearAndMonth() {
         return yearAndMonth;
     }
 
-    public void setYearAndMonth(Date yearAndMonth) {
-        this.yearAndMonth = yearAndMonth;
+    public void setInTransitInventory(BigDecimal inTransitInventory) {
+        this.inTransitInventory = inTransitInventory;
     }
 
     public BigDecimal getInTransitInventory() {
         return inTransitInventory;
     }
 
-    public void setInTransitInventory(BigDecimal inTransitInventory) {
-        this.inTransitInventory = inTransitInventory;
+    public void setMaterials(BigDecimal materials) {
+        this.materials = materials;
     }
 
     public BigDecimal getMaterials() {
         return materials;
     }
 
-    public void setMaterials(BigDecimal materials) {
-        this.materials = materials;
+    public void setMaterialCostVariance(BigDecimal materialCostVariance) {
+        this.materialCostVariance = materialCostVariance;
     }
 
     public BigDecimal getMaterialCostVariance() {
         return materialCostVariance;
     }
 
-    public void setMaterialCostVariance(BigDecimal materialCostVariance) {
-        this.materialCostVariance = materialCostVariance;
+    public void setMaterialCostVarianceUnallocated(BigDecimal materialCostVarianceUnallocated) {
+        this.materialCostVarianceUnallocated = materialCostVarianceUnallocated;
     }
 
     public BigDecimal getMaterialCostVarianceUnallocated() {
         return materialCostVarianceUnallocated;
     }
 
-    public void setMaterialCostVarianceUnallocated(BigDecimal materialCostVarianceUnallocated) {
-        this.materialCostVarianceUnallocated = materialCostVarianceUnallocated;
+    public void setMonthlyRawMaterialInventory(BigDecimal monthlyRawMaterialInventory) {
+        this.monthlyRawMaterialInventory = monthlyRawMaterialInventory;
     }
 
     public BigDecimal getMonthlyRawMaterialInventory() {
         return monthlyRawMaterialInventory;
     }
 
-    public void setMonthlyRawMaterialInventory(BigDecimal monthlyRawMaterialInventory) {
-        this.monthlyRawMaterialInventory = monthlyRawMaterialInventory;
+    public void setWorkInProgressSemiFinishedGoods(BigDecimal workInProgressSemiFinishedGoods) {
+        this.workInProgressSemiFinishedGoods = workInProgressSemiFinishedGoods;
     }
 
     public BigDecimal getWorkInProgressSemiFinishedGoods() {
         return workInProgressSemiFinishedGoods;
     }
 
-    public void setWorkInProgressSemiFinishedGoods(BigDecimal workInProgressSemiFinishedGoods) {
-        this.workInProgressSemiFinishedGoods = workInProgressSemiFinishedGoods;
+    public void setProductCostVarianceSemiFinishedGoods(BigDecimal productCostVarianceSemiFinishedGoods) {
+        this.productCostVarianceSemiFinishedGoods = productCostVarianceSemiFinishedGoods;
     }
 
     public BigDecimal getProductCostVarianceSemiFinishedGoods() {
         return productCostVarianceSemiFinishedGoods;
     }
 
-    public void setProductCostVarianceSemiFinishedGoods(BigDecimal productCostVarianceSemiFinishedGoods) {
-        this.productCostVarianceSemiFinishedGoods = productCostVarianceSemiFinishedGoods;
+    public void setWorkInProgressEndOfMonth(BigDecimal workInProgressEndOfMonth) {
+        this.workInProgressEndOfMonth = workInProgressEndOfMonth;
     }
 
     public BigDecimal getWorkInProgressEndOfMonth() {
         return workInProgressEndOfMonth;
     }
 
-    public void setWorkInProgressEndOfMonth(BigDecimal workInProgressEndOfMonth) {
-        this.workInProgressEndOfMonth = workInProgressEndOfMonth;
+    public void setMonthlyWorkInProgressInventory(BigDecimal monthlyWorkInProgressInventory) {
+        this.monthlyWorkInProgressInventory = monthlyWorkInProgressInventory;
     }
 
     public BigDecimal getMonthlyWorkInProgressInventory() {
         return monthlyWorkInProgressInventory;
     }
 
-    public void setMonthlyWorkInProgressInventory(BigDecimal monthlyWorkInProgressInventory) {
-        this.monthlyWorkInProgressInventory = monthlyWorkInProgressInventory;
+    public void setInventoryVehicles(BigDecimal inventoryVehicles) {
+        this.inventoryVehicles = inventoryVehicles;
     }
 
-    public BigDecimal getMonthlyInventoryTotalAmount() {
-        return monthlyInventoryTotalAmount;
+    public BigDecimal getInventoryVehicles() {
+        return inventoryVehicles;
+    }
+
+    public void setPcvFinished(BigDecimal pcvFinished) {
+        this.pcvFinished = pcvFinished;
+    }
+
+    public BigDecimal getPcvFinished() {
+        return pcvFinished;
+    }
+
+    public void setMonthAmountInStock(BigDecimal monthAmountInStock) {
+        this.monthAmountInStock = monthAmountInStock;
+    }
+
+    public BigDecimal getMonthAmountInStock() {
+        return monthAmountInStock;
     }
 
     public void setMonthlyInventoryTotalAmount(BigDecimal monthlyInventoryTotalAmount) {
         this.monthlyInventoryTotalAmount = monthlyInventoryTotalAmount;
     }
 
-    public FinancialBalanceTable() {
+    public BigDecimal getMonthlyInventoryTotalAmount() {
+        return monthlyInventoryTotalAmount;
     }
 
-    public FinancialBalanceTable(Long fbId, String createdBy, Date createdTime, Date yearAndMonth, BigDecimal inTransitInventory, BigDecimal materials, BigDecimal materialCostVariance, BigDecimal materialCostVarianceUnallocated, BigDecimal monthlyRawMaterialInventory, BigDecimal workInProgressSemiFinishedGoods, BigDecimal productCostVarianceSemiFinishedGoods, BigDecimal workInProgressEndOfMonth, BigDecimal monthlyWorkInProgressInventory, BigDecimal monthlyInventoryTotalAmount) {
-        this.fbId = fbId;
-        this.createdBy = createdBy;
-        this.createdTime = createdTime;
-        this.yearAndMonth = yearAndMonth;
-        this.inTransitInventory = inTransitInventory;
-        this.materials = materials;
-        this.materialCostVariance = materialCostVariance;
-        this.materialCostVarianceUnallocated = materialCostVarianceUnallocated;
-        this.monthlyRawMaterialInventory = monthlyRawMaterialInventory;
-        this.workInProgressSemiFinishedGoods = workInProgressSemiFinishedGoods;
-        this.productCostVarianceSemiFinishedGoods = productCostVarianceSemiFinishedGoods;
-        this.workInProgressEndOfMonth = workInProgressEndOfMonth;
-        this.monthlyWorkInProgressInventory = monthlyWorkInProgressInventory;
-        this.monthlyInventoryTotalAmount = monthlyInventoryTotalAmount;
+    public void setGrowthRateInventorySales(Double growthRateInventorySales) {
+        this.growthRateInventorySales = growthRateInventorySales;
     }
 
+    public Double getGrowthRateInventorySales() {
+        return growthRateInventorySales;
+    }
+
+    public void setReceivables(BigDecimal receivables) {
+        this.receivables = receivables;
+    }
+
+    public BigDecimal getReceivables() {
+        return receivables;
+    }
+
+    public void setTurnoverRateReceivable(Double turnoverRateReceivable) {
+        this.turnoverRateReceivable = turnoverRateReceivable;
+    }
+
+    public Double getTurnoverRateReceivable() {
+        return turnoverRateReceivable;
+    }
 
     @Override
     public String toString() {
-        return "FinancialBalanceTable{" +
-                "fbId=" + fbId +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdTime=" + createdTime +
-                ", yearAndMonth=" + yearAndMonth +
-                ", inTransitInventory=" + inTransitInventory +
-                ", materials=" + materials +
-                ", materialCostVariance=" + materialCostVariance +
-                ", materialCostVarianceUnallocated=" + materialCostVarianceUnallocated +
-                ", monthlyRawMaterialInventory=" + monthlyRawMaterialInventory +
-                ", workInProgressSemiFinishedGoods=" + workInProgressSemiFinishedGoods +
-                ", productCostVarianceSemiFinishedGoods=" + productCostVarianceSemiFinishedGoods +
-                ", workInProgressEndOfMonth=" + workInProgressEndOfMonth +
-                ", monthlyWorkInProgressInventory=" + monthlyWorkInProgressInventory +
-                ", monthlyInventoryTotalAmount=" + monthlyInventoryTotalAmount +
-                '}';
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("fbId", getFbId())
+                .append("createdBy", getCreatedBy())
+                .append("createdTime", getCreatedTime())
+                .append("yearAndMonth", getYearAndMonth())
+                .append("inTransitInventory", getInTransitInventory())
+                .append("materials", getMaterials())
+                .append("materialCostVariance", getMaterialCostVariance())
+                .append("materialCostVarianceUnallocated", getMaterialCostVarianceUnallocated())
+                .append("monthlyRawMaterialInventory", getMonthlyRawMaterialInventory())
+                .append("workInProgressSemiFinishedGoods", getWorkInProgressSemiFinishedGoods())
+                .append("productCostVarianceSemiFinishedGoods", getProductCostVarianceSemiFinishedGoods())
+                .append("workInProgressEndOfMonth", getWorkInProgressEndOfMonth())
+                .append("monthlyWorkInProgressInventory", getMonthlyWorkInProgressInventory())
+                .append("inventoryVehicles", getInventoryVehicles())
+                .append("pcvFinished", getPcvFinished())
+                .append("monthAmountInStock", getMonthAmountInStock())
+                .append("monthlyInventoryTotalAmount", getMonthlyInventoryTotalAmount())
+                .append("growthRateInventorySales", getGrowthRateInventorySales())
+                .append("receivables", getReceivables())
+                .append("turnoverRateReceivable", getTurnoverRateReceivable())
+                .toString();
     }
 }

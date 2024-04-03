@@ -44,11 +44,12 @@ public class FinancialInterestsTableController extends BaseController {
      * @date: 2024/3/31 13:42
      * @return: success
      */
+    @Log(title = "[财务]利润表表上传", businessType = BusinessType.INSERT)
     @PostMapping("/importTable")
     public AjaxResult importTable(MultipartFile excelFile) {
         System.out.println(excelFile);
         try {
-            financialInterestsTableService.importInterestsTable(excelFile);
+            financialInterestsTableService.importInterests(excelFile);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel上传失败");

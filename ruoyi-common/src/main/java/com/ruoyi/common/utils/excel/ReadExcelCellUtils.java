@@ -62,16 +62,43 @@ public class ReadExcelCellUtils {
         Row row = sheet.getRow(rowNo);
         //6、获取单元格
         Cell cell = row.getCell(columnNo);
-        //7、读取单元格内容
-        String stringCellValue = getCellValueByType(cell, name);
-        if (comment.getCode() == 0 && StringUtils.isBlank(stringCellValue)) {
+        String stringCellValue;
+        if (comment.getCode() == 0 && cell == null) {
             throw new ServiceException(name + "不能为空");
+        } else if (cell == null) {
+            stringCellValue = "0";
+        } else {
+            //7、读取单元格内容
+            stringCellValue = getCellValueByType(cell, name);
         }
+
 //        logger.info(stringCellValue);
         return stringCellValue;
     }
 
     public static String getCellValueByType(Cell cell, String name) {
+        String cellValue = "";
+        if (cell.getCellType() == CellType.NUMERIC) {
+            if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                cellValue = DateFormatUtils.format(cell.getDateCellValue(), "yyyy-MM-dd");
+            } else {
+                NumberFormat nf = NumberFormat.getInstance();
+                cellValue = String.valueOf(nf.format(cell.getNumericCellValue())).replace(",", "");
+            }
+//            logger.info(cellValue);
+        } else if (cell.getCellType() == CellType.STRING) {
+            cellValue = String.valueOf(cell.getStringCellValue());
+        } else if (cell.getCellType() == CellType.BOOLEAN) {
+            cellValue = String.valueOf(cell.getBooleanCellValue());
+        } else if (cell.getCellType() == CellType.ERROR) {
+            cellValue = "错误类型";
+            throw new ServiceException("单元格" + name + ": " + cellValue);
+        }
+        return cellValue;
+    }
+
+
+    public static String getCellValueByType12345(Cell cell, String name) {
         String cellValue = "";
         if (cell.getCellTypeEnum() == CellType.NUMERIC) {
             if (HSSFDateUtil.isCellDateFormatted(cell)) {

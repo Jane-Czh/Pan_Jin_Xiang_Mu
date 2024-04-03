@@ -1,6 +1,9 @@
 package com.heli.financial.mapper;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
+
 import java.util.List;
 
 
@@ -10,6 +13,7 @@ import java.util.List;
  * @author hong
  * @date 2024-03-29
  */
+@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialIndicatorsHandfillTableMapper 
 {
     /**

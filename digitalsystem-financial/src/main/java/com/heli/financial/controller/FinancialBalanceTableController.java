@@ -1,12 +1,14 @@
 package com.heli.financial.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 财务-资产负债Controller
  *
  * @author ruoyi
- * @date 2024-03-31
+ * @date 2024-04-03
  */
 @RestController
 @RequestMapping("/financial/balance")
@@ -37,6 +39,25 @@ public class FinancialBalanceTableController extends BaseController {
     @Autowired
     private IFinancialBalanceTableService financialBalanceTableService;
 
+    /**
+     * @description: 资产负债表导入Controller
+     * @author: hong
+     * @date: 2024/4/3 11:04
+     * @param: [excelFile]
+     * @return: com.ruoyi.common.core.domain.AjaxResult
+     **/
+    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
+    @PostMapping("/importTable")
+    public AjaxResult importTable(MultipartFile excelFile) {
+        System.out.println(excelFile);
+        try {
+            financialBalanceTableService.importBalance(excelFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ServiceException("excel上传失败");
+        }
+        return success();
+    }
 
     /**
      * 查询财务-资产负债列表

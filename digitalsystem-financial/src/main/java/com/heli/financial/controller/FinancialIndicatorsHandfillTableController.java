@@ -1,10 +1,14 @@
 package com.heli.financial.controller;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
+import com.heli.financial.service.IFinancialBalanceTableService;
 import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
+import com.heli.financial.service.IFinancialInterestsTableService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +25,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * [财务]手动填报指标Controller
@@ -33,6 +38,33 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class FinancialIndicatorsHandfillTableController extends BaseController {
     @Autowired
     private IFinancialIndicatorsHandfillTableService financialIndicatorsHandfillTableService;
+    @Autowired
+    private IFinancialBalanceTableService iFinancialBalanceTableService;
+    @Autowired
+    private IFinancialInterestsTableService iFinancialInterestsTableService;
+
+    /**
+     * @description: 数据填报和表格上传
+     * @author: hong
+     * @date: 2024/4/7 16:17
+     * @param: [FinancialIndicatorsHandfillTable, InterestsFile, BalanceFile]
+     * @return: com.ruoyi.common.core.domain.AjaxResult
+     **/
+    @Log(title = "[财务]数据和文件上传", businessType = BusinessType.INSERT)
+    @PostMapping("/uploadDataAndTable")
+    public AjaxResult uploadDataAndTable(FinancialIndicatorsHandfillTable FITable, MultipartFile InterestsFile, MultipartFile BalanceFile) throws IOException {
+
+
+        financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(FITable);
+        iFinancialInterestsTableService.importInterestsTable(FITable.getReporter(), FITable.getReportingDate(), FITable.getYearAndMonth(), InterestsFile);
+        iFinancialBalanceTableService.importBalanceTable(FITable.getReporter(), FITable.getReportingDate()
+                , FITable.getYearAndMonth(), FITable.getReserveCarAmount(), BalanceFile);
+
+
+        return null;
+//        return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
+    }
+
 
     /**
      * 查询[财务]手动填报指标列表
@@ -72,7 +104,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     @PreAuthorize("@ss.hasPermi('financial:data:add')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+    public AjaxResult add(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
         return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
     }
 

@@ -1,19 +1,34 @@
 package com.heli.financial.mapper;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.heli.financial.domain.FinancialBalanceTable;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 财务-资产负债Mapper接口
- * 
- * @author hong
- * @date 2024-03-31
+ *
+ * @author ruoyi
+ * @date 2024-04-03
  */
-public interface FinancialBalanceTableMapper 
-{
+@DataSource(value = DataSourceType.SLAVE)
+public interface FinancialBalanceTableMapper {
+
+    /**
+     *
+     *
+     */
+
+    public BigDecimal selectLastMonthMonthlyInventoryTotalAmount(@Param("yearAndMonth") Date yearAndMonth);
+
+
+
     /**
      * 查询财务-资产负债
-     * 
+     *
      * @param fbId 财务-资产负债主键
      * @return 财务-资产负债
      */
@@ -21,7 +36,7 @@ public interface FinancialBalanceTableMapper
 
     /**
      * 查询财务-资产负债列表
-     * 
+     *
      * @param financialBalanceTable 财务-资产负债
      * @return 财务-资产负债集合
      */
@@ -29,7 +44,7 @@ public interface FinancialBalanceTableMapper
 
     /**
      * 新增财务-资产负债
-     * 
+     *
      * @param financialBalanceTable 财务-资产负债
      * @return 结果
      */
@@ -37,7 +52,7 @@ public interface FinancialBalanceTableMapper
 
     /**
      * 修改财务-资产负债
-     * 
+     *
      * @param financialBalanceTable 财务-资产负债
      * @return 结果
      */
@@ -45,7 +60,7 @@ public interface FinancialBalanceTableMapper
 
     /**
      * 删除财务-资产负债
-     * 
+     *
      * @param fbId 财务-资产负债主键
      * @return 结果
      */
@@ -53,7 +68,7 @@ public interface FinancialBalanceTableMapper
 
     /**
      * 批量删除财务-资产负债
-     * 
+     *
      * @param fbIds 需要删除的数据主键集合
      * @return 结果
      */

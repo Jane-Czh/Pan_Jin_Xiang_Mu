@@ -63,7 +63,7 @@ public class FinancialInterestsTable extends BaseEntity {
     /**
      * 主营业务收入(上面俩个指标的计算和)
      */
-    private BigDecimal MainRevenue;
+    private BigDecimal mainRevenue;
 
     /**
      * 主营业务成本-产品销售SD
@@ -92,13 +92,13 @@ public class FinancialInterestsTable extends BaseEntity {
      * 净利润
      */
     @RecordTemplate(rowNo = 145, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "净利润")
-    private BigDecimal NetProfit;
+    private BigDecimal netProfit;
 
     /**
      * 管理费用
      */
     @RecordTemplate(rowNo = 33, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "管理费用")
-    private BigDecimal ManagementExpense;
+    private BigDecimal managementExpense;
 
     /**
      * 研发费用
@@ -163,11 +163,11 @@ public class FinancialInterestsTable extends BaseEntity {
     }
 
     public BigDecimal getMainRevenue() {
-        return MainRevenue;
+        return mainRevenue;
     }
 
     public void setMainRevenue(BigDecimal mainRevenue) {
-        MainRevenue = mainRevenue;
+        this.mainRevenue = mainRevenue;
     }
 
     public BigDecimal getCogsProductSalesSd() {
@@ -203,19 +203,19 @@ public class FinancialInterestsTable extends BaseEntity {
     }
 
     public BigDecimal getNetProfit() {
-        return NetProfit;
+        return netProfit;
     }
 
     public void setNetProfit(BigDecimal netProfit) {
-        NetProfit = netProfit;
+        this.netProfit = netProfit;
     }
 
     public BigDecimal getManagementExpense() {
-        return ManagementExpense;
+        return managementExpense;
     }
 
     public void setManagementExpense(BigDecimal managementExpense) {
-        ManagementExpense = managementExpense;
+        this.managementExpense = managementExpense;
     }
 
     public BigDecimal getRdExpense() {
@@ -236,13 +236,13 @@ public class FinancialInterestsTable extends BaseEntity {
                 ", operatingRevenue=" + operatingRevenue +
                 ", internalMainRevenue=" + internalMainRevenue +
                 ", externalMainRevenue=" + externalMainRevenue +
-                ", MainRevenue=" + MainRevenue +
+                ", mainRevenue=" + mainRevenue +
                 ", cogsProductSalesSd=" + cogsProductSalesSd +
                 ", cogsFreight=" + cogsFreight +
                 ", cogsVariation=" + cogsVariation +
                 ", COGS=" + COGS +
-                ", NetProfit=" + NetProfit +
-                ", ManagementExpense=" + ManagementExpense +
+                ", netProfit=" + netProfit +
+                ", managementExpense=" + managementExpense +
                 ", rdExpense=" + rdExpense +
                 '}';
     }

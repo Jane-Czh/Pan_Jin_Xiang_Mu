@@ -12,13 +12,13 @@
         <result property="operatingRevenue"    column="Operating_Revenue"    />
         <result property="internalMainRevenue"    column="Internal_MainRevenue"    />
         <result property="externalMainRevenue"    column="External_MainRevenue"    />
-        <result property="MainRevenue"    column="MainRevenue"    />
+        <result property="mainRevenue"    column="MainRevenue"    />
         <result property="cogsProductSalesSd"    column="COGS_ProductSales_SD"    />
         <result property="cogsFreight"    column="COGS_Freight"    />
         <result property="cogsVariation"    column="COGS_Variation"    />
         <result property="COGS"    column="COGS"    />
-        <result property="NetProfit"    column="NetProfit"    />
-        <result property="ManagementExpense"    column="ManagementExpense"    />
+        <result property="netProfit"    column="NetProfit"    />
+        <result property="managementExpense"    column="ManagementExpense"    />
         <result property="rdExpense"    column="RD_Expense"    />
     </resultMap>
 
@@ -35,13 +35,13 @@
             <if test="operatingRevenue != null "> and Operating_Revenue = #{operatingRevenue}</if>
             <if test="internalMainRevenue != null "> and Internal_MainRevenue = #{internalMainRevenue}</if>
             <if test="externalMainRevenue != null "> and External_MainRevenue = #{externalMainRevenue}</if>
-            <if test="MainRevenue != null "> and MainRevenue = #{MainRevenue}</if>
+            <if test="mainRevenue != null "> and MainRevenue = #{mainRevenue}</if>
             <if test="cogsProductSalesSd != null "> and COGS_ProductSales_SD = #{cogsProductSalesSd}</if>
             <if test="cogsFreight != null "> and COGS_Freight = #{cogsFreight}</if>
             <if test="cogsVariation != null "> and COGS_Variation = #{cogsVariation}</if>
             <if test="COGS != null "> and COGS = #{COGS}</if>
-            <if test="NetProfit != null "> and NetProfit = #{NetProfit}</if>
-            <if test="ManagementExpense != null "> and ManagementExpense = #{ManagementExpense}</if>
+            <if test="netProfit != null "> and NetProfit = #{netProfit}</if>
+            <if test="managementExpense != null "> and ManagementExpense = #{managementExpense}</if>
             <if test="rdExpense != null "> and RD_Expense = #{rdExpense}</if>
         </where>
     </select>
@@ -49,6 +49,14 @@
     <select id="selectFinancialInterestsTableByFiId" parameterType="Long" resultMap="FinancialInterestsTableResult">
         <include refid="selectFinancialInterestsTableVo"/>
         where FI_ID = #{fiId}
+    </select>
+
+    <!-- 查询当月营业收入   -->
+    <select id="selectOperatingRevenueByMonth" resultType="java.math.BigDecimal">
+
+        select Operating_Revenue from Financial_Interests_table
+        where date_format(Year_And_Month,'%y-%m') = date_format(#{yearAndMonth},'%y-%m')
+
     </select>
 
     <insert id="insertFinancialInterestsTable" parameterType="FinancialInterestsTable">
@@ -61,13 +69,13 @@
             <if test="operatingRevenue != null">Operating_Revenue,</if>
             <if test="internalMainRevenue != null">Internal_MainRevenue,</if>
             <if test="externalMainRevenue != null">External_MainRevenue,</if>
-            <if test="MainRevenue != null">MainRevenue,</if>
+            <if test="mainRevenue != null">MainRevenue,</if>
             <if test="cogsProductSalesSd != null">COGS_ProductSales_SD,</if>
             <if test="cogsFreight != null">COGS_Freight,</if>
             <if test="cogsVariation != null">COGS_Variation,</if>
             <if test="COGS != null">COGS,</if>
-            <if test="NetProfit != null">NetProfit,</if>
-            <if test="ManagementExpense != null">ManagementExpense,</if>
+            <if test="netProfit != null">NetProfit,</if>
+            <if test="managementExpense != null">ManagementExpense,</if>
             <if test="rdExpense != null">RD_Expense,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -78,13 +86,13 @@
             <if test="operatingRevenue != null">#{operatingRevenue},</if>
             <if test="internalMainRevenue != null">#{internalMainRevenue},</if>
             <if test="externalMainRevenue != null">#{externalMainRevenue},</if>
-            <if test="MainRevenue != null">#{MainRevenue},</if>
+            <if test="mainRevenue != null">#{mainRevenue},</if>
             <if test="cogsProductSalesSd != null">#{cogsProductSalesSd},</if>
             <if test="cogsFreight != null">#{cogsFreight},</if>
             <if test="cogsVariation != null">#{cogsVariation},</if>
             <if test="COGS != null">#{COGS},</if>
-            <if test="NetProfit != null">#{NetProfit},</if>
-            <if test="ManagementExpense != null">#{ManagementExpense},</if>
+            <if test="netProfit != null">#{netProfit},</if>
+            <if test="managementExpense != null">#{managementExpense},</if>
             <if test="rdExpense != null">#{rdExpense},</if>
         </trim>
     </insert>
@@ -98,13 +106,13 @@
             <if test="operatingRevenue != null">Operating_Revenue = #{operatingRevenue},</if>
             <if test="internalMainRevenue != null">Internal_MainRevenue = #{internalMainRevenue},</if>
             <if test="externalMainRevenue != null">External_MainRevenue = #{externalMainRevenue},</if>
-            <if test="MainRevenue != null">MainRevenue = #{MainRevenue},</if>
+            <if test="mainRevenue != null">MainRevenue = #{mainRevenue},</if>
             <if test="cogsProductSalesSd != null">COGS_ProductSales_SD = #{cogsProductSalesSd},</if>
             <if test="cogsFreight != null">COGS_Freight = #{cogsFreight},</if>
             <if test="cogsVariation != null">COGS_Variation = #{cogsVariation},</if>
             <if test="COGS != null">COGS = #{COGS},</if>
-            <if test="NetProfit != null">NetProfit = #{NetProfit},</if>
-            <if test="ManagementExpense != null">ManagementExpense = #{ManagementExpense},</if>
+            <if test="netProfit != null">NetProfit = #{netProfit},</if>
+            <if test="managementExpense != null">ManagementExpense = #{managementExpense},</if>
             <if test="rdExpense != null">RD_Expense = #{rdExpense},</if>
         </trim>
         where FI_ID = #{fiId}

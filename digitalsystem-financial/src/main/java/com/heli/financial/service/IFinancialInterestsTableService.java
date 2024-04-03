@@ -1,6 +1,8 @@
 package com.heli.financial.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.heli.financial.domain.FinancialInterestsTable;
@@ -20,7 +22,11 @@ public interface IFinancialInterestsTableService {
      * @author: hong
      * @date: 2024/3/31 13:48
      */
-    public int importInterestsTable(MultipartFile excelFile) throws IOException;
+    public int importInterestsTable(String createdBy, Date createdTime, Date yearAndMonth, MultipartFile excelFile) throws IOException;
+
+    public int importInterests(MultipartFile excelFile) throws IOException;
+
+    public BigDecimal selectOperatingRevenueByMonth(Date date);
 
 
     /**

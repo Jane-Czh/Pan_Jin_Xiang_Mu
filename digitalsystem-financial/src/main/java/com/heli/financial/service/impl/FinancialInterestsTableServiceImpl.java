@@ -2,6 +2,8 @@ package com.heli.financial.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.annotation.DataSource;
@@ -36,7 +38,53 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
      * @return: 影响的行数
      **/
     @Override
-    public int importInterestsTable(MultipartFile excelFile) throws IOException {
+    public int importInterestsTable(String createdBy, Date createdTime, Date yearAndMonth, MultipartFile excelFile) throws IOException {
+        FinancialInterestsTable financialInterestsTable;
+        InputStream is = null;
+        try {
+            System.out.println(excelFile);
+            is = excelFile.getInputStream();
+            financialInterestsTable = (FinancialInterestsTable) ReadExcelCellUtils.parseExcelToModel("com.heli.financial.domain.FinancialInterestsTable", is, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ServiceException("excel解析失败");
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        /**
+         * @description: 导入时间和导入者
+         **/
+
+
+        System.out.println(financialInterestsTable);
+
+        financialInterestsTable.setCreatedBy(createdBy);
+        financialInterestsTable.setCreatedTime(createdTime);
+        financialInterestsTable.setYearAndMonth(yearAndMonth);
+
+        System.out.println(financialInterestsTable);
+
+        financialInterestsTable.setMainRevenue(financialInterestsTable.getInternalMainRevenue().add(financialInterestsTable.getExternalMainRevenue()));
+        financialInterestsTable.setCOGS(financialInterestsTable.getCogsProductSalesSd().add(financialInterestsTable.getCogsFreight()).add(financialInterestsTable.getCogsVariation()));
+        return financialInterestsTableMapper.insertFinancialInterestsTable(financialInterestsTable);
+    }
+
+
+
+
+
+    /**
+     * @description: 利润表导入
+     * @author: hong
+     * @date: 2024/3/31 13:50
+     * @param: excel文件
+     * @return: 影响的行数
+     **/
+    @Override
+    public int importInterests(MultipartFile excelFile) throws IOException {
         FinancialInterestsTable financialInterestsTable;
         InputStream is = null;
         try {
@@ -54,6 +102,20 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         financialInterestsTable.setMainRevenue(financialInterestsTable.getInternalMainRevenue().add(financialInterestsTable.getExternalMainRevenue()));
         financialInterestsTable.setCOGS(financialInterestsTable.getCogsProductSalesSd().add(financialInterestsTable.getCogsFreight()).add(financialInterestsTable.getCogsVariation()));
         return financialInterestsTableMapper.insertFinancialInterestsTable(financialInterestsTable);
+    }
+
+
+
+
+    /**
+     * 查询营业收入
+     * @author: hong
+     * @date: 2024/4/7 20:34
+     * @param date 月份
+     * @return 营业收入
+     */
+    public BigDecimal selectOperatingRevenueByMonth(Date date) {
+        return financialInterestsTableMapper.selectOperatingRevenueByMonth(date);
     }
 
 

@@ -38,10 +38,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class FinancialIndicatorsHandfillTableController extends BaseController {
     @Autowired
     private IFinancialIndicatorsHandfillTableService financialIndicatorsHandfillTableService;
-    @Autowired
-    private IFinancialBalanceTableService iFinancialBalanceTableService;
-    @Autowired
-    private IFinancialInterestsTableService iFinancialInterestsTableService;
+//    @Autowired
+//    private IFinancialBalanceTableService financialBalanceTableService;
+//    @Autowired
+//    private IFinancialInterestsTableService financialInterestsTableService;
 
     /**
      * @description: 数据填报和表格上传
@@ -50,20 +50,18 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
      * @param: [FinancialIndicatorsHandfillTable, InterestsFile, BalanceFile]
      * @return: com.ruoyi.common.core.domain.AjaxResult
      **/
-    @Log(title = "[财务]数据和文件上传", businessType = BusinessType.INSERT)
-    @PostMapping("/uploadDataAndTable")
-    public AjaxResult uploadDataAndTable(FinancialIndicatorsHandfillTable FITable, MultipartFile InterestsFile, MultipartFile BalanceFile) throws IOException {
-
-
-        financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(FITable);
-        iFinancialInterestsTableService.importInterestsTable(FITable.getReporter(), FITable.getReportingDate(), FITable.getYearAndMonth(), InterestsFile);
-        iFinancialBalanceTableService.importBalanceTable(FITable.getReporter(), FITable.getReportingDate()
-                , FITable.getYearAndMonth(), FITable.getReserveCarAmount(), BalanceFile);
-
-
-        return null;
-//        return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
-    }
+//    @Log(title = "[财务]数据和文件上传", businessType = BusinessType.INSERT)
+//    @PostMapping("/uploadDataAndTable")
+//    public AjaxResult uploadDataAndTable(FinancialIndicatorsHandfillTable FITable, MultipartFile InterestsFile, MultipartFile BalanceFile) throws IOException {
+//
+//
+//        financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(FITable);
+//        financialInterestsTableService.importInterestsTable(FITable.getReporter(), FITable.getReportingDate(), FITable.getYearAndMonth(), InterestsFile);
+//        return toAjax(financialBalanceTableService.importBalanceTable(FITable.getReporter(), FITable.getReportingDate()
+//                , FITable.getYearAndMonth(), FITable.getReserveCarAmount(), BalanceFile));
+//
+//
+//    }
 
 
     /**

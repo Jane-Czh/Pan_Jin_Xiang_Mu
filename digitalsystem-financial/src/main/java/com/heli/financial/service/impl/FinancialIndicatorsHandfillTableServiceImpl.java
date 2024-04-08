@@ -1,5 +1,6 @@
 package com.heli.financial.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
@@ -18,10 +19,14 @@ import org.springframework.stereotype.Service;
  * @date 2024-03-29
  */
 @Service
-@DataSource(value = DataSourceType.SLAVE)
 public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIndicatorsHandfillTableService {
     @Autowired
     private FinancialIndicatorsHandfillTableMapper financialIndicatorsHandfillTableMapper;
+
+    @Override
+    public List<Date> selectExistedYearAndMonth() {
+        return financialIndicatorsHandfillTableMapper.selectExistedYearAndMonth();
+    }
 
     /**
      * 查询[财务]手动填报指标

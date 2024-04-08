@@ -37,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-04-03
  */
 @Service
-@DataSource(value = DataSourceType.SLAVE)
 public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableService {
     @Autowired
     private FinancialBalanceTableMapper financialBalanceTableMapper;
@@ -117,10 +116,8 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
                         .divide(financialBalanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
         );
 
-        financialBalanceTableMapper.insertFinancialBalanceTable(countGrowthRateInventorySales(financialBalanceTable));
-//        financialBalanceTableMapper.insertFinancialBalanceTable(financialBalanceTable);
 
-        return 1;
+        return financialBalanceTableMapper.insertFinancialBalanceTable(countGrowthRateInventorySales(financialBalanceTable));
     }
 
 

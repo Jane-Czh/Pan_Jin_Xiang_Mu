@@ -2,6 +2,7 @@ package com.heli.financial.service;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -11,8 +12,10 @@ import java.util.List;
  * @author loophong
  * @date 2024-03-29
  */
-public interface IFinancialIndicatorsHandfillTableService 
-{
+public interface IFinancialIndicatorsHandfillTableService {
+
+    List<Date> selectExistedYearAndMonth();
+
     /**
      * 查询[财务]手动填报指标
      * 
@@ -60,4 +63,6 @@ public interface IFinancialIndicatorsHandfillTableService
      * @return 结果
      */
     public int deleteFinancialIndicatorsHandfillTableByFihfId(Long fihfId);
+
+
 }

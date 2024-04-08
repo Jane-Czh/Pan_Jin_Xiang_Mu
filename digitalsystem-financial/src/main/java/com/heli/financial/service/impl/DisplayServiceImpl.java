@@ -18,7 +18,6 @@ import java.util.List;
  * @Return: 数据列表
  */
 @Service
-@DataSource(value = DataSourceType.SLAVE)
 public class DisplayServiceImpl implements DisplayService {
 
     @Autowired
@@ -26,82 +25,133 @@ public class DisplayServiceImpl implements DisplayService {
 
 
     @Override
-    public List<DisplayEntity> selectTotalSalesRevenue() {
-        return displayMapper.selectTotalSalesRevenue();
+    public List<DisplayEntity> selectMainRevenue(String year) {
+        return displayMapper.selectMainRevenue(year);
     }
 
     @Override
-    public List<DisplayEntity> selectExternalGroupSalesRevenue() {
-        return displayMapper.selectExternalGroupSalesRevenue();
+    public List<DisplayEntity> selectTotalSalesRevenue(String year) {
+        return displayMapper.selectTotalSalesRevenue(year);
     }
 
     @Override
-    public List<DisplayEntity> selectTotalVehicleProduction() {
-        return displayMapper.selectTotalVehicleProduction();
+    public List<DisplayEntity> selectExternalGroupSalesRevenue(String year) {
+        return displayMapper.selectExternalGroupSalesRevenue(year);
     }
 
     @Override
-    public List<DisplayEntity> selectTotalVehicleSales() {
-        return displayMapper.selectTotalVehicleSales();
+    public List<DisplayEntity> selectTotalVehicleProduction(String year) {
+        return displayMapper.selectTotalVehicleProduction(year);
     }
 
     @Override
-    public List<DisplayEntity> selectNewProductSalesRevenue() {
-        return displayMapper.selectNewProductSalesRevenue();
+    public List<DisplayEntity> selectTotalVehicleSales(String year) {
+        return displayMapper.selectTotalVehicleSales(year);
     }
 
     @Override
-    public List<DisplayEntity> selectSpecialtyProductRevenue() {
-        return displayMapper.selectSpecialtyProductRevenue();
+    public List<DisplayEntity> selectNewProductSalesRevenue(String year) {
+        return displayMapper.selectNewProductSalesRevenue(year);
     }
 
     @Override
-    public List<DisplayEntity> selectTotalSalesCost() {
-        return displayMapper.selectTotalSalesCost();
+    public List<DisplayEntity> selectSpecialtyProductRevenue(String year) {
+        return displayMapper.selectSpecialtyProductRevenue(year);
     }
 
     @Override
-    public List<DisplayEntity> selectManufacturingExpensesMonth() {
-        return displayMapper.selectManufacturingExpensesMonth();
+    public List<DisplayEntity> COGS(String year) {
+        return displayMapper.COGS(year);
     }
 
     @Override
-    public List<DisplayEntity> selectreserveCarAmount() {
-        return displayMapper.selectreserveCarAmount();
+    public List<DisplayEntity> selectTotalSalesCost(String year) {
+        return displayMapper.selectTotalSalesCost(year);
     }
 
     @Override
-    public List<DisplayEntity> selectCapitalTurnoverRate() {
-        return displayMapper.selectCapitalTurnoverRate();
+    public List<DisplayEntity> selectNetProfit(String year) {
+        return displayMapper.selectNetProfit(year);
     }
 
     @Override
-    public List<DisplayEntity> selectInventoryTurnoverRate() {
-        return displayMapper.selectInventoryTurnoverRate();
+    public List<DisplayEntity> selectManagementExpense(String year) {
+        return displayMapper.selectManagementExpense(year);
     }
 
     @Override
-    public List<DisplayEntity> selectRawMaterialTurnoverRate() {
-        return displayMapper.selectRawMaterialTurnoverRate();
+    public List<DisplayEntity> selectRdExpense(String year) {
+        return displayMapper.selectRdExpense(year);
     }
 
     @Override
-    public List<DisplayEntity> selectInprogressTurnoverRate() {
-        return displayMapper.selectInprogressTurnoverRate();
+    public List<DisplayEntity> selectManufacturingExpensesMonth(String year) {
+        return displayMapper.selectManufacturingExpensesMonth(year);
     }
 
     @Override
-    public List<DisplayEntity> selectLongEstimatedItems() {
-        return displayMapper.selectLongEstimatedItems();
+    public List<DisplayEntity> selectMonthlyRawMaterialInventory(String year) {
+        return displayMapper.selectMonthlyRawMaterialInventory(year);
     }
 
     @Override
-    public List<DisplayEntity> selectInprogressDayrevenue() {
-        return displayMapper.selectInprogressDayrevenue();
+    public List<DisplayEntity> selectMonthlyWorkInProgressInventory(String year) {
+        return displayMapper.selectMonthlyWorkInProgressInventory(year);
     }
 
     @Override
-    public List<DisplayEntity> selectAddedValueMonthly() {
-        return displayMapper.selectAddedValueMonthly();
+    public List<DisplayEntity> selectMonthAmountInStock(String year) {
+        return displayMapper.selectMonthAmountInStock(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectGrowthRateInventorySales(String year) {
+        return displayMapper.selectGrowthRateInventorySales(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectTurnoverRateReceivable(String year) {
+        return displayMapper.selectTurnoverRateReceivable(year);
+    }
+
+
+    @Override
+    public List<DisplayEntity> selectCapitalTurnoverRate(String year) {
+        return displayMapper.selectCapitalTurnoverRate(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectInventoryTurnoverRate(String year) {
+        return displayMapper.selectInventoryTurnoverRate(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectRawMaterialTurnoverRate(String year) {
+        return displayMapper.selectRawMaterialTurnoverRate(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectInprogressTurnoverRate(String year) {
+        return displayMapper.selectInprogressTurnoverRate(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectLongEstimatedItems(String year) {
+        return displayMapper.selectLongEstimatedItems(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectInprogressDayrevenue(String year) {
+        return displayMapper.selectInprogressDayrevenue(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectMonthlyInventoryTotalAmount(String year) {
+        return displayMapper.selectMonthlyInventoryTotalAmount(year);
+    }
+
+    @Override
+    public List<DisplayEntity> selectAddedValueMonthly(String year) {
+        return displayMapper.selectAddedValueMonthly(year);
     }
 }

@@ -55,6 +55,18 @@
         from Financial_Indicators_HandFill_table
     </sql>
 
+
+
+
+    <select id="selectExistedYearAndMonth" parameterType="Date" resultType="map">
+        select * from (
+            select Year_And_Month from Financial_Indicators_HandFill_table
+            order by Year_And_Month DESC
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
     <select id="selectFinancialIndicatorsHandfillTableList" parameterType="FinancialIndicatorsHandfillTable"
             resultMap="FinancialIndicatorsHandfillTableResult">
         <include refid="selectFinancialIndicatorsHandfillTableVo"/>

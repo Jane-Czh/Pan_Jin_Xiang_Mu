@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-03-31
  */
 @Service
-@DataSource(value = DataSourceType.SLAVE)
 public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTableService {
     @Autowired
     private FinancialInterestsTableMapper financialInterestsTableMapper;

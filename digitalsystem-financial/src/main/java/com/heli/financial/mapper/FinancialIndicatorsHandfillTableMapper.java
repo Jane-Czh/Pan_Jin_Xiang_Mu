@@ -4,6 +4,7 @@ import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -14,8 +15,10 @@ import java.util.List;
  * @date 2024-03-29
  */
 @DataSource(value = DataSourceType.SLAVE)
-public interface FinancialIndicatorsHandfillTableMapper 
-{
+public interface FinancialIndicatorsHandfillTableMapper {
+
+    List<Date> selectExistedYearAndMonth();
+
     /**
      * 查询[财务]手动填报指标
      * 
@@ -63,4 +66,6 @@ public interface FinancialIndicatorsHandfillTableMapper
      * @return 结果
      */
     public int deleteFinancialIndicatorsHandfillTableByFihfIds(Long[] fihfIds);
+
+
 }

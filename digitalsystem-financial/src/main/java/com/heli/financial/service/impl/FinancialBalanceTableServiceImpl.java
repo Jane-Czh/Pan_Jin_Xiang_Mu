@@ -120,6 +120,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         return financialBalanceTableMapper.insertFinancialBalanceTable(countGrowthRateInventorySales(financialBalanceTable));
     }
 
+    @Override
+    public int deleteFinancialBalanceTableByYearAndMonth(Date yearAndMonth) {
+        return 0;
+    }
+
 
     @Override
     public int importBalance(MultipartFile excelFile) throws IOException {

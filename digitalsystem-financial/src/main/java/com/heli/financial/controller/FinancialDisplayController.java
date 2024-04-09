@@ -23,7 +23,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/financial/display")
-public class DisplayController extends BaseController {
+public class FinancialDisplayController extends BaseController {
     @Autowired
     private DisplayService displayService;
 

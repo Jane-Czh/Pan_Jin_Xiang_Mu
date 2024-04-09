@@ -23,7 +23,16 @@ public interface IFinancialBalanceTableService {
      * @param: [excelFile]
      * @return: int
      **/
-    public int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, BigDecimal reserveCarAmount, MultipartFile excelFile) throws IOException;
+    int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, BigDecimal reserveCarAmount, MultipartFile excelFile) throws IOException;
+
+    /**
+     * @description: 通过月份删除资产负债表单条信息
+     * @author: hong
+     * @date: 2024/4/9 10:06
+     * @param: [yearAndMonth]
+     * @return: void
+     **/
+    int deleteFinancialBalanceTableByYearAndMonth(Date yearAndMonth);
 
     public int importBalance(MultipartFile excelFile) throws IOException;
 
@@ -74,4 +83,6 @@ public interface IFinancialBalanceTableService {
      * @return 结果
      */
     public int deleteFinancialBalanceTableByFbId(Long fbId);
+
+
 }

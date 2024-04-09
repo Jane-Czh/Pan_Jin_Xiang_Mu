@@ -117,6 +117,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         return financialInterestsTableMapper.selectOperatingRevenueByMonth(date);
     }
 
+    @Override
+    public void deleteFinancialInterestsTableByYearAndMonth(Date yearAndMonth) {
+
+    }
+
 
     /**
      * 查询财务-利润

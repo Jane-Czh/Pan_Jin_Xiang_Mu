@@ -168,6 +168,22 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-tech</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-partybuilding</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-safety</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
 
 
 
@@ -182,6 +198,9 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>digitalsystem-financial</module>
+        <module>digitalsystem-tech</module>
+        <module>digitalsystem-partybuilding</module>
+        <module>digitalsystem-safety</module>
 
     </modules>
     <packaging>pom</packaging>

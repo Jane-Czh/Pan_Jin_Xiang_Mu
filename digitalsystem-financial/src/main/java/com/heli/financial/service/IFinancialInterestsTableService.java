@@ -26,7 +26,15 @@ public interface IFinancialInterestsTableService {
 
     public int importInterests(MultipartFile excelFile) throws IOException;
 
+    /**
+     * @description: 查询营业收入
+     * @author: hong
+     * @date: 2024/4/9 10:14
+     * @param: [date]
+     **/
     public BigDecimal selectOperatingRevenueByMonth(Date date);
+
+    void deleteFinancialInterestsTableByYearAndMonth(Date yearAndMonth);
 
 
     /**

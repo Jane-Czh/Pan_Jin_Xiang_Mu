@@ -67,7 +67,23 @@
             <artifactId>digitalsystem-financial</artifactId>
         </dependency>
 
+        <!-- 技术-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-tech</artifactId>
+        </dependency>
 
+        <!-- 党建-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-partybuilding</artifactId>
+        </dependency>
+
+        <!-- 安环-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-safety</artifactId>
+        </dependency>
 
 
     </dependencies>

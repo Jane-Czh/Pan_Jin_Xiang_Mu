@@ -1,6 +1,5 @@
 package com.heli.financial.controller;
 
-import com.heli.financial.domain.DisplayEntity;
 import com.heli.financial.domain.FinancialBalanceTable;
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.domain.FinancialInterestsTable;
@@ -13,7 +12,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,6 +85,23 @@ public class DataController extends BaseController {
         System.out.println(getDataTable(list));
         return getDataTable(list);
     }
+
+
+    /**
+     * @description: 删除单条财务的全部信息
+     * @author: hong
+     * @date: 2024/4/8 15:07
+     * @param: 月份
+     **/
+
+//    @DeleteMapping("/{yearAndMonth}")
+//    public AjaxResult getInfoByYearMonth(@PathVariable() Date yearAndMonth) {
+//        financialBalanceTableService.deleteFinancialBalanceTableByYearAndMonth(yearAndMonth);
+//        financialInterestsTableService.deleteFinancialInterestsTableByYearAndMonth(yearAndMonth);
+//        return financialIndicatorsHandfillTableService.deleteFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
+//
+//    }
+
 
 
 

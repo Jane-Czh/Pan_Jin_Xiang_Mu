@@ -167,7 +167,12 @@
                 <artifactId>digitalsystem-financial</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
-
+            <!-- 市场-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-market</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>digitalsystem-tech</artifactId>
@@ -197,6 +202,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>digitalsystem-financial</module>
+        <module>digitalsystem-market</module>
         <module>digitalsystem-tech</module>
         <module>digitalsystem-partybuilding</module>
         <module>digitalsystem-safety</module>

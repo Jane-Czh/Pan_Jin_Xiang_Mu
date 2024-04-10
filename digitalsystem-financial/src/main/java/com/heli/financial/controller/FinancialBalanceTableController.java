@@ -46,7 +46,7 @@ public class FinancialBalanceTableController extends BaseController {
      * @param: [excelFile]
      * @return: com.ruoyi.common.core.domain.AjaxResult
      **/
-    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
+//    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
     @PostMapping("/importTable")
     public AjaxResult importTable(MultipartFile excelFile) {
         System.out.println(excelFile);

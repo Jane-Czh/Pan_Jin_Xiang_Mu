@@ -1,19 +1,11 @@
-
-import org.apache.poi.ss.formula.functions.Now;
+//import com.spire.xls.FileFormat;
+//import com.spire.xls.Workbook;
+import jdk.internal.instrumentation.TypeMapping;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * @BelongsProject: ruoyi
@@ -59,42 +51,4 @@ public class lodingTest {
 
 
     }
-
-    @Test
-    public void getLastMonth() {
-
-
-
-//        Calendar calendar=Calendar.getInstance();
-//        calendar.set(2024,1,1);
-//        Date date=(Date) calendar.set(2024,4,4);
-//        System.out.println(date);
-
-
-        LocalDateTime today = DateUtil.toLocalDateTime(new Date(2024-1900,12,10));
-
-        System.out.println(today);
-
-        today = today.minusMonths(1);
-        DateTimeFormatter formatters = DateTimeFormatter.ofPattern("yyyy-MM");
-        System.out.println(formatters.format(today));
-
-
-
-        LocalDateTime dateTime = LocalDateTime.now();
-        System.out.println(dateTime);
-
-
-
-
-        Date date = new Date();
-//        Instant instant = date.toInstant();
-//        ZoneId zoneId = ZoneId.systemDefault();
-
-        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        System.out.println("Date = " + date);
-        System.out.println("LocalDateTime = " + localDateTime);
-
-    }
-
 }

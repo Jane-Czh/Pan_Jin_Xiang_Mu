@@ -19,6 +19,11 @@ import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi";
+//流程模块
+import 'element-ui/lib/theme-chalk/index.css'
+import '@/views/process/ef/index.css'
+Vue.use(Element, {size: 'small'})
+
 // 分页组件
 import Pagination from "@/components/Pagination";
 // 自定义表格工具组件
@@ -37,6 +42,16 @@ import DictTag from '@/components/DictTag'
 import VueMeta from 'vue-meta'
 // 字典数据组件
 import DictData from '@/components/DictData'
+// // 引入axios
+// import axios from 'axios';
+// // 挂载到vue原型链上
+// Vue.prototype.axios = axios;
+
+// Vue.config.productionTip = false;
+
+// new Vue({
+//   render: h => h(App),
+// }).$mount('#app');
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts

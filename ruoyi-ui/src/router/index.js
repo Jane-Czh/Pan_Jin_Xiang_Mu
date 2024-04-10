@@ -28,6 +28,10 @@ import Layout from '@/layout'
   }
  */
 
+
+
+
+
 // 公共路由
 export const constantRoutes = [
   {
@@ -161,7 +165,33 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
-  }
+  },
+
+  //流程模块
+  {
+    path: '/ef',
+    component: Layout,
+    hidden: true,
+    permissions: ['system:user:edit'],
+    children: [
+      {
+        path: 'ef',
+        component: () => import('@/views/process/ef/panel'),
+        name: '流程',
+        meta: { title: '流程模块', activeMenu: '/process/ef' }
+      }
+    ]
+  },
+  //流程模块
+  {
+    path: '/project',
+    component: Layout,
+    hidden: true,
+    permissions: ['system:user:edit'],
+ 
+  },
+
+
 ]
 
 // 防止连续点击多次路由报错

@@ -85,6 +85,12 @@
             <artifactId>digitalsystem-safety</artifactId>
         </dependency>
 
+        <!-- 生产-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-production</artifactId>
+        </dependency>
+
 
     </dependencies>
 

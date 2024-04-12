@@ -14,7 +14,7 @@ import java.util.List;
  * @author hong
  * @date 2024-03-29
  */
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialIndicatorsHandfillTableMapper {
 
     List<Date> selectExistedYearAndMonth();

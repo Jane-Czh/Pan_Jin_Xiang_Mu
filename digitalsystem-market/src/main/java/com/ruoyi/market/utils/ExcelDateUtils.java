@@ -21,7 +21,7 @@ public class ExcelDateUtils {
     private static Date convertExcelDateToJavaDate(double excelDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(EXCEL_DATE_BASE_YEAR, EXCEL_DATE_BASE_MONTH - 1, EXCEL_DATE_BASE_DAY);
-        calendar.add(Calendar.DATE, (int) excelDate - 1); // 注意减去1天
+        calendar.add(Calendar.DATE, (int) excelDate - 2); // 减去2天修正 Excel 日期计算错误
         return calendar.getTime();
     }
 

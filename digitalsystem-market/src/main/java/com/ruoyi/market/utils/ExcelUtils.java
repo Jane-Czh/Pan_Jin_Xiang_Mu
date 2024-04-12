@@ -1,6 +1,6 @@
 package com.ruoyi.market.utils;
 
-import com.ruoyi.market.domain.MarketSalesTable;
+import com.ruoyi.market.domain.*;
 
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,6 +90,55 @@ public class ExcelUtils {
 
 
             dataList.add(marketSalesTable);
+        }
+
+
+
+        workbook.close();
+
+        return dataList;
+    }
+
+    public static List<MarketInventoryCarDetail> parseExcel2MarketInventoryCarDetail(MultipartFile file)throws IOException {
+        List<MarketInventoryCarDetail> dataList = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            MarketInventoryCarDetail marketInventoryCarDetail = new MarketInventoryCarDetail();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            int count = 0;
+
+
+            count++;
+            //2、车号
+            marketInventoryCarDetail.setWagonNumber(getStringCellValue(row.getCell(count++)));
+            //3、车型
+            marketInventoryCarDetail.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            //4、门架
+            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(count++)));
+            //5、属具
+            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(count++)));
+            //6、阀片数
+            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(count++)));
+            //7、配置
+            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(count++)));
+            //8、计划完工期
+            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+
+            dataList.add(marketInventoryCarDetail);
         }
 
 

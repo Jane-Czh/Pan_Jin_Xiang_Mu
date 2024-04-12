@@ -265,15 +265,18 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
 
         //先删除数据库中所有快报
         List<MarketFunctionQuickReport> list1 = selectMarketFunctionQuickReportList(marketFunctionQuickReport1);
-        int x = 0;
-        Long[] deleteId = new Long[list1.size()];
-        while (x < list1.size()){
-            MarketFunctionQuickReport value = list1.get(x);
-            deleteId[x] = value.getMfqrId();
-            x++;
+        if (list1.size() > 0){
+            int x = 0;
+            Long[] deleteId = new Long[list1.size()];
+            while (x < list1.size()){
+                MarketFunctionQuickReport value = list1.get(x);
+                deleteId[x] = value.getMfqrId();
+                x++;
+            }
+            deleteMarketFunctionQuickReportByMfqrIds(deleteId);
+            System.out.println("删除成功");
         }
-        deleteMarketFunctionQuickReportByMfqrIds(deleteId);
-        System.out.println("删除成功");
+
         //依次插入新生成的快报
         Long id = 0L;
         for (Map.Entry<String, MarketFunctionQuickReport> entry : result.entrySet()){

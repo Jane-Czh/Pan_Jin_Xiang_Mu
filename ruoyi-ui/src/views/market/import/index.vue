@@ -275,13 +275,24 @@
         >导出</el-button>
       </el-col>
 
-      <el-col>
+      <el-col :span="1.5">
         <!--Excel 参数导入 -->
-        <el-button
+
+        <!-- <el-button
           type="primary"
           @click="showDialog = true"
         ><i class="fa fa-download"></i>导入Excel文件
-        </el-button>
+        </el-button> -->
+
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="showDialog = true"
+          v-hasPermi="['market:import:export']"
+        >导入Excel文件</el-button>
+
         <el-dialog
           title="导入Excel文件"
           :visible.sync="showDialog"
@@ -388,7 +399,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

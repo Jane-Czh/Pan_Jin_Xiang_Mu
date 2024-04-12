@@ -38,7 +38,6 @@ public class MarketSalesTableController extends BaseController
     @PostMapping("/import")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");
-        System.out.println("excelFile" + excelFile);
         try {
             marketSalesTableService.importInterests(excelFile);
         } catch (IOException e) {

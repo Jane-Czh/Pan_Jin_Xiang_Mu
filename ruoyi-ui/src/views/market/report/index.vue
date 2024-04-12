@@ -286,7 +286,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -516,7 +516,7 @@ export default {
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
 
-        
+
       // 初始化饼状图
       this.orderReceivedTodayPieChart();
       this.ordersReceivedThisMonthPieChart();
@@ -531,13 +531,13 @@ export default {
 
     },
   methods: {
-    /** 显示饼状图 */ 
-    /** 今日接单 */ 
+    /** 显示饼状图 */
+    /** 今日接单 */
     orderReceivedTodayPieChart(){
       // 饼状图配置项
       const option = {
         title: {
-          text: '不同网点今日接单',
+          text: '网点今日接单',
           left: 'center'
         },
         tooltip: {
@@ -560,12 +560,12 @@ export default {
         myChart.resize();
       });
     },
-    /** 本月累计接单 */ 
+    /** 本月累计接单 */
     ordersReceivedThisMonthPieChart(){
       // 饼状图配置项
       const option = {
         title: {
-          text: '不同网点本月累计接单',
+          text: '网点本月累计接单',
           left: 'center'
         },
         tooltip: {
@@ -588,12 +588,12 @@ export default {
         myChart.resize();
       });
     },
-    /** 本年累计接单 */ 
+    /** 本年累计接单 */
     orderAccumulationThisYearPieChart(){
       // 饼状图配置项
       const option = {
         title: {
-          text: '不同网点本年累计接单',
+          text: '网点本年累计接单',
           left: 'center'
         },
         tooltip: {
@@ -616,12 +616,12 @@ export default {
         myChart.resize();
       });
     },
-    /** 本日交货 */ 
+    /** 本日交货 */
     deliveryTodayPieChart(){
         // 饼状图配置项
         const option = {
         title: {
-          text: '不同网点本日交货',
+          text: '网点本日交货',
           left: 'center'
         },
         tooltip: {
@@ -644,12 +644,12 @@ export default {
         myChart.resize();
       });
     },
-    /** 本月系统内交货 */ 
+    /** 本月系统内交货 */
     deliveryWithinTheSystemThisMonthPieChart(){
         // 饼状图配置项
         const option = {
         title: {
-          text: '不同网点本月交货',
+          text: '网点本月交货',
           left: 'center'
         },
         tooltip: {
@@ -672,12 +672,12 @@ export default {
         myChart.resize();
       });
     },
-    /** 本年累计系统交货数 */ 
+    /** 本年累计系统交货数 */
     cumulativeSystemDeliveriesForTheYearPieChart(){
         // 饼状图配置项
         const option = {
         title: {
-          text: '不同网点本年交货',
+          text: '网点本年交货',
           left: 'center'
         },
         tooltip: {
@@ -705,7 +705,7 @@ export default {
         // 饼状图配置项
         const option = {
         title: {
-          text: '不同网点今日实发',
+          text: '网点今日实发',
           left: 'center'
         },
         tooltip: {
@@ -733,7 +733,7 @@ export default {
         // 饼状图配置项
         const option = {
         title: {
-          text: '不同网点本月实发',
+          text: '网点本月实发',
           left: 'center'
         },
         tooltip: {
@@ -761,7 +761,7 @@ export default {
         // 饼状图配置项
         const option = {
         title: {
-          text: '不同网点本年实发',
+          text: '网点本年实发',
           left: 'center'
         },
         tooltip: {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketUnsoldCarMapper">
+    
+    <resultMap type="MarketUnsoldCar" id="MarketUnsoldCarResult">
+        <result property="ucId"    column="UC_id"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="Number"    column="Number"    />
+    </resultMap>
+
+    <sql id="selectMarketUnsoldCarVo">
+        select UC_id, Vehicle_Model, Number from Market_Unsold_Car
+    </sql>
+
+    <select id="selectMarketUnsoldCarList" parameterType="MarketUnsoldCar" resultMap="MarketUnsoldCarResult">
+        <include refid="selectMarketUnsoldCarVo"/>
+        <where>  
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="Number != null "> and Number = #{Number}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarketUnsoldCarByUcId" parameterType="Long" resultMap="MarketUnsoldCarResult">
+        <include refid="selectMarketUnsoldCarVo"/>
+        where UC_id = #{ucId}
+    </select>
+        
+    <insert id="insertMarketUnsoldCar" parameterType="MarketUnsoldCar" useGeneratedKeys="true" keyProperty="ucId">
+        insert into Market_Unsold_Car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="Number != null">Number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="Number != null">#{Number},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketUnsoldCar" parameterType="MarketUnsoldCar">
+        update Market_Unsold_Car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="Number != null">Number = #{Number},</if>
+        </trim>
+        where UC_id = #{ucId}
+    </update>
+
+    <delete id="deleteMarketUnsoldCarByUcId" parameterType="Long">
+        delete from Market_Unsold_Car where UC_id = #{ucId}
+    </delete>
+
+    <delete id="deleteMarketUnsoldCarByUcIds" parameterType="String">
+        delete from Market_Unsold_Car where UC_id in 
+        <foreach item="ucId" collection="array" open="(" separator="," close=")">
+            #{ucId}
+        </foreach>
+    </delete>
+</mapper>

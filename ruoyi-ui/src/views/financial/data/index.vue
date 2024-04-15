@@ -3,10 +3,10 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="年月" prop="yearAndMonth">
         <el-date-picker clearable
-                        v-model="queryParams.yearAndMonth"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择年月">
+          v-model="queryParams.yearAndMonth"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择年月">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="整机销售收入" prop="totalSalesRevenue">
@@ -147,10 +147,10 @@
       </el-form-item>
       <el-form-item label="填报时间" prop="reportingDate">
         <el-date-picker clearable
-                        v-model="queryParams.reportingDate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择填报时间">
+          v-model="queryParams.reportingDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择填报时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="更新人" prop="updatedBy">
@@ -163,10 +163,10 @@
       </el-form-item>
       <el-form-item label="跟新时间" prop="updatedDate">
         <el-date-picker clearable
-                        v-model="queryParams.updatedDate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择跟新时间">
+          v-model="queryParams.updatedDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择跟新时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -174,98 +174,115 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
+    
+  <div>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['financial:data:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['financial:data:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['financial:data:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+           <!--Excel 参数导入 -->
+      <el-button
+        type="primary"
+        @click="showDialog = true"
 
-    <div>
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-            v-hasPermi="['financial:data:add']"
-          >新增</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-            v-hasPermi="['financial:data:edit']"
-          >修改</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-            v-hasPermi="['financial:data:remove']"
-          >删除</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <!--Excel 参数导入 -->
-          <el-button
-            type="primary"
-            @click="showDialog = true"
+        v-if="true"
 
-            v-if="true"
+        ><i class="fa fa-download"></i>导入Excel文件
+      </el-button>
 
-          ><i class="fa fa-download"></i>导入Excel文件
-          </el-button>
+      <el-dialog
+        title="导入Excel文件"
+        :visible.sync="showDialog"
+        width="30%"
+        :before-close="handleClose"
+        @close="resetFileInput"
+      >
+<el-form :model="form1" ref="form1" label-width="90px">
+    
+         <el-form-item label="填报时间" prop="reportingDate">
+        <el-date-picker clearable
+          v-model="form1.reportingDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择填报时间">
+        </el-date-picker>
+      </el-form-item>
+      
+    </el-form>
 
-          <el-dialog
-            title="导入Excel文件"
-            :visible.sync="showDialog"
-            width="30%"
-            :before-close="handleClose"
-            @close="resetFileInput"
-          >
-            <!-- 下拉框 -->
-            <el-form :model="form" ref="form" label-width="90px">
-              <el-form-item label="选择表类型">
-                <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                  <el-option label="利润表" value="profit"></el-option>
-                  <el-option label="资产负债表" value="balance"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
+       <!-- 下拉框 -->
+  <el-form :model="form" ref="form" label-width="90px">
+    <el-form-item label="选择表类型">
+      <el-select v-model="selectedType" placeholder="请选择Excel类型">
+        <el-option label="利润表" value="profit"></el-option>
+        <el-option label="资产负债表" value="balance"></el-option>
+        <el-option label="多选" value="common"></el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  
+        <i class="el-icon-upload"></i>
+        <input type="file" id="inputFile" ref="fileInput" @change="checkFile"  multiple/>
 
-            <i class="el-icon-upload"></i>
-            <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+        <!-- 进度动画条 -->
+        <div v-if="progress > 0">
+          <el-progress
+            :percentage="progress"
+            color="rgb(19, 194, 194)"
+          ></el-progress>
+        </div>
 
-            <!-- 进度动画条 -->
-            <div v-if="progress > 0">
-              <el-progress
-                :percentage="progress"
-                color="rgb(19, 194, 194)"
-              ></el-progress>
-            </div>
-
-            <span slot="footer" class="dialog-footer">
+        <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
           <el-button type="primary" @click="fileSend()">确 定</el-button>
         </span>
-          </el-dialog>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="warning"
-            plain
-            icon="el-icon-download"
-            size="mini"
-            @click="handleExport"
-            v-hasPermi="['financial:data:export']"
-          >导出</el-button>
-        </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-      </el-row>
+      </el-dialog>
+      
+
+      
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['financial:data:export']"
+        >导出</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
     </div>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
@@ -323,7 +340,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -337,10 +354,10 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable
-                          v-model="form.yearAndMonth"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择年月">
+            v-model="form.yearAndMonth"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="整机销售收入" prop="totalSalesRevenue">
@@ -396,10 +413,10 @@
         </el-form-item>
         <el-form-item label="填报时间" prop="reportingDate">
           <el-date-picker clearable
-                          v-model="form.reportingDate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择填报时间">
+            v-model="form.reportingDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择填报时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="更新人" prop="updatedBy">
@@ -407,10 +424,10 @@
         </el-form-item>
         <el-form-item label="跟新时间" prop="updatedDate">
           <el-date-picker clearable
-                          v-model="form.updatedDate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择跟新时间">
+            v-model="form.updatedDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择跟新时间">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -439,9 +456,9 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      showDialog: false,
+       showDialog: false,
 
-      progress: 0,
+       progress: 0,
       selectedType: '',
 
       // 非单个禁用
@@ -458,6 +475,32 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //表单参数
+     form1: {
+  fihfId: '',
+  yearAndMonth: '',
+  totalSalesRevenue: '',
+  externalGroupSalesRevenue: '',
+  totalVehicleProduction: '',
+  totalVehicleSales: '',
+  newProductSalesRevenue: '',
+  specialtyProductRevenue: '',
+  totalSalesCost: '',
+  manufacturingExpensesMonth: '',
+  reserveCarAmount: '',
+  capitalTurnoverRate: '',
+  inventoryTurnoverRate: '',
+  rawMaterialTurnoverRate: '',
+  inprogressTurnoverRate: '',
+  longEstimatedItems: '',
+  inprogressDayrevenue: '',
+  addedValueMonthly: '',
+  reportingDate: '',
+  updatedBy: '',
+  updatedDate: '',
+  reporter: '',
+},
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -599,7 +642,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },
-    checkFile() {
+     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
@@ -609,92 +652,108 @@ export default {
         this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     },
-    //导入excel，取消按钮绑定取消所选的xlsx
+     //导入excel，取消按钮绑定取消所选的xlsx
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
-    handleClose(done) {
+     handleClose(done) {
       // 在关闭对话框之前，你可以执行任何必要的操作
       // 例如，你可能希望在关闭之前与用户进行确认
       if (confirm("确定要关闭吗？")) {
         done(); // 调用 done() 方法来关闭对话框
       }
     },
-    /** 导入按钮 */
-    fileSend() {
+     /** 导入按钮 */
+     fileSend() {
       const formData = new FormData();
+      const files = document.getElementById("inputFile").files;
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      const file1 = document.getElementById("inputFile").files[1]; // 获取文件对象
+      const fileCount = files.length; // 文件数量
+
+      
+
+       // 根据用户选择的 Excel 类型执行不同的操作
+  if (this.selectedType === 'profit') {
       formData.append("excelFile", file);
-
-
-      // 根据用户选择的 Excel 类型执行不同的操作
-      if (this.selectedType === 'profit') {
-        axios({
-          method: "post",
-          // url: this.$http.url('/financial/data/upload'),
+      axios({
+        method: "post",
+        // url: this.$http.url('/financial/data/upload'),
           url:"http://localhost:8080/financial/interests/importTable",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        });
-        console.log("利润表")
-      } else if (this.selectedType === 'balance') {
-        axios({
-          method: "post",
-          // url: this.$http.url('/financial/data/upload'),
+        // params: this.$http.adornParams({
+        //   userName: this.$store.state.user.name,
+        // }),
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+        data: formData,
+        onUploadProgress: (progressEvent) => {
+          this.progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+        },
+      });
+    console.log("利润表")
+  } else if (this.selectedType === 'balance') {
+      formData.append("excelFile", file);
+       axios({
+        method: "post",
+        // url: this.$http.url('/financial/data/upload'),
           url:"http://localhost:8080/financial/balance/importTable",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        });
-        //  axios.post('financial/balance/importTable', formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   },
-        //   onUploadProgress: (progressEvent) => {
-        //     this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        //   }
-        // });
-        console.log("资产负债表类型")
-      }
-      // axios({
-      //   method: "post",
-      //   // url: this.$http.url('/financial/data/upload'),
-      //     url:"http://localhost:8080/financial/interests/importTable",
-      //   // params: this.$http.adornParams({
-      //   //   userName: this.$store.state.user.name,
-      //   // }),
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      //   withCredentials: true,
-      //   data: formData,
-      //   onUploadProgress: (progressEvent) => {
-      //     this.progress = Math.round(
-      //       (progressEvent.loaded * 100) / progressEvent.total
-      //     );
-      //   },
-      // });
+        // params: this.$http.adornParams({
+        //   userName: this.$store.state.user.name,
+        // }),
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+        data: formData,
+        onUploadProgress: (progressEvent) => {
+          this.progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+        },
+      });
+    //  axios.post('financial/balance/importTable', formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   },
+    //   onUploadProgress: (progressEvent) => {
+    //     this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+    //   }
+    // });
+    console.log("资产负债表类型")
+  }else if (fileCount>1)
+  {
+      formData.append("InterestsFile", file);
+       formData.append("BalanceFile", file1);
+        formData.append("FITable", this.form1.reportingDate);
+    //     const formData = {
+    //       InterestsFile:file,
+    //       BalanceFile:file1,
+    // fihfId: this.form1.reportingDate
+    // }
+      // formData.append("FITable",)
+      axios({
+        method: "post",
+        // url: this.$http.url('/financial/data/upload'),
+          url:"http://localhost:8080/financial/uploadDataAndTable",
+        // params: this.$http.adornParams({
+        //   userName: this.$store.state.user.name,
+        // }),
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+        data: formData,
+        onUploadProgress: (progressEvent) => {
+          this.progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+        },
+      });
+  }
       this.$message.success("上传成功");
 
       // .then((response) => {

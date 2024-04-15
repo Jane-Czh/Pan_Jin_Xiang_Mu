@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketFunctionQuickReportMapper">
+    
+    <resultMap type="MarketFunctionQuickReport" id="MarketFunctionQuickReportResult">
+        <result property="mfqrId"    column="MFQR_id"    />
+        <result property="lastMonthBalanceOrder"    column="Last_Month_Balance_Order"    />
+        <result property="commercialNetworks"    column="Commercial_Networks"    />
+        <result property="orderReceivedToday"    column="Order_Received_Today"    />
+        <result property="ordersReceivedThisMonth"    column="Orders_Received_This_Month"    />
+        <result property="orderAccumulationThisYear"    column="Order_Accumulation_This_Year"    />
+        <result property="deliveryToday"    column="Delivery_Today"    />
+        <result property="deliveryWithinTheSystemThisMonth"    column="Delivery_Within_The_System_This_Month"    />
+        <result property="cumulativeSystemDeliveriesForTheYear"    column="Cumulative_System_Deliveries_For_The_Year"    />
+        <result property="unfilledOrders"    column="Unfilled_Orders"    />
+        <result property="issuedThisDay"    column="Issued_This_Day"    />
+        <result property="issuedThisMonth"    column="Issued_This_Month"    />
+        <result property="cumulativeIssuedThisMonth"    column="Cumulative_Issued_This_Month"    />
+        <result property="physicalDeliveryOfTheSystemWasNotMentioned"    column="Physical_Delivery_Of_The_System_Was_Not_Mentioned"    />
+        <result property="theNetworkHasNoOrders"    column="The_Network_Has_No_Orders"    />
+        <result property="uploadDate"    column="Upload_Date"    />
+    </resultMap>
+
+    <sql id="selectMarketFunctionQuickReportVo">
+        select MFQR_id, Last_Month_Balance_Order, Commercial_Networks, Order_Received_Today, Orders_Received_This_Month, Order_Accumulation_This_Year, Delivery_Today, Delivery_Within_The_System_This_Month, Cumulative_System_Deliveries_For_The_Year, Unfilled_Orders, Issued_This_Day, Issued_This_Month, Cumulative_Issued_This_Month, Physical_Delivery_Of_The_System_Was_Not_Mentioned, The_Network_Has_No_Orders, Upload_Date from Market_function_quick_report
+    </sql>
+
+    <select id="selectMarketFunctionQuickReportList" parameterType="MarketFunctionQuickReport" resultMap="MarketFunctionQuickReportResult">
+        <include refid="selectMarketFunctionQuickReportVo"/>
+        <where>  
+            <if test="lastMonthBalanceOrder != null "> and Last_Month_Balance_Order = #{lastMonthBalanceOrder}</if>
+            <if test="commercialNetworks != null  and commercialNetworks != ''"> and Commercial_Networks = #{commercialNetworks}</if>
+            <if test="orderReceivedToday != null "> and Order_Received_Today = #{orderReceivedToday}</if>
+            <if test="ordersReceivedThisMonth != null "> and Orders_Received_This_Month = #{ordersReceivedThisMonth}</if>
+            <if test="orderAccumulationThisYear != null "> and Order_Accumulation_This_Year = #{orderAccumulationThisYear}</if>
+            <if test="deliveryToday != null "> and Delivery_Today = #{deliveryToday}</if>
+            <if test="deliveryWithinTheSystemThisMonth != null "> and Delivery_Within_The_System_This_Month = #{deliveryWithinTheSystemThisMonth}</if>
+            <if test="cumulativeSystemDeliveriesForTheYear != null "> and Cumulative_System_Deliveries_For_The_Year = #{cumulativeSystemDeliveriesForTheYear}</if>
+            <if test="unfilledOrders != null "> and Unfilled_Orders = #{unfilledOrders}</if>
+            <if test="issuedThisDay != null "> and Issued_This_Day = #{issuedThisDay}</if>
+            <if test="issuedThisMonth != null "> and Issued_This_Month = #{issuedThisMonth}</if>
+            <if test="cumulativeIssuedThisMonth != null "> and Cumulative_Issued_This_Month = #{cumulativeIssuedThisMonth}</if>
+            <if test="physicalDeliveryOfTheSystemWasNotMentioned != null "> and Physical_Delivery_Of_The_System_Was_Not_Mentioned = #{physicalDeliveryOfTheSystemWasNotMentioned}</if>
+            <if test="theNetworkHasNoOrders != null "> and The_Network_Has_No_Orders = #{theNetworkHasNoOrders}</if>
+            <if test="uploadDate != null "> and Upload_Date = #{uploadDate}</if>
+        </where>
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MFQR_id
+    FROM Market_function_quick_report
+    WHERE MFQR_id = (SELECT MAX(MFQR_id) FROM Market_function_quick_report);
+    </select>
+
+
+
+    <select id="selectMarketFunctionQuickReportByMfqrId" parameterType="Long" resultMap="MarketFunctionQuickReportResult">
+        <include refid="selectMarketFunctionQuickReportVo"/>
+        where MFQR_id = #{mfqrId}
+    </select>
+        
+    <insert id="insertMarketFunctionQuickReport" parameterType="MarketFunctionQuickReport" useGeneratedKeys="true" keyProperty="mfqrId">
+        insert into Market_function_quick_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lastMonthBalanceOrder != null">Last_Month_Balance_Order,</if>
+            <if test="commercialNetworks != null and commercialNetworks != ''">Commercial_Networks,</if>
+            <if test="orderReceivedToday != null">Order_Received_Today,</if>
+            <if test="ordersReceivedThisMonth != null">Orders_Received_This_Month,</if>
+            <if test="orderAccumulationThisYear != null">Order_Accumulation_This_Year,</if>
+            <if test="deliveryToday != null">Delivery_Today,</if>
+            <if test="deliveryWithinTheSystemThisMonth != null">Delivery_Within_The_System_This_Month,</if>
+            <if test="cumulativeSystemDeliveriesForTheYear != null">Cumulative_System_Deliveries_For_The_Year,</if>
+            <if test="unfilledOrders != null">Unfilled_Orders,</if>
+            <if test="issuedThisDay != null">Issued_This_Day,</if>
+            <if test="issuedThisMonth != null">Issued_This_Month,</if>
+            <if test="cumulativeIssuedThisMonth != null">Cumulative_Issued_This_Month,</if>
+            <if test="physicalDeliveryOfTheSystemWasNotMentioned != null">Physical_Delivery_Of_The_System_Was_Not_Mentioned,</if>
+            <if test="theNetworkHasNoOrders != null">The_Network_Has_No_Orders,</if>
+            <if test="uploadDate != null">Upload_Date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lastMonthBalanceOrder != null">#{lastMonthBalanceOrder},</if>
+            <if test="commercialNetworks != null and commercialNetworks != ''">#{commercialNetworks},</if>
+            <if test="orderReceivedToday != null">#{orderReceivedToday},</if>
+            <if test="ordersReceivedThisMonth != null">#{ordersReceivedThisMonth},</if>
+            <if test="orderAccumulationThisYear != null">#{orderAccumulationThisYear},</if>
+            <if test="deliveryToday != null">#{deliveryToday},</if>
+            <if test="deliveryWithinTheSystemThisMonth != null">#{deliveryWithinTheSystemThisMonth},</if>
+            <if test="cumulativeSystemDeliveriesForTheYear != null">#{cumulativeSystemDeliveriesForTheYear},</if>
+            <if test="unfilledOrders != null">#{unfilledOrders},</if>
+            <if test="issuedThisDay != null">#{issuedThisDay},</if>
+            <if test="issuedThisMonth != null">#{issuedThisMonth},</if>
+            <if test="cumulativeIssuedThisMonth != null">#{cumulativeIssuedThisMonth},</if>
+            <if test="physicalDeliveryOfTheSystemWasNotMentioned != null">#{physicalDeliveryOfTheSystemWasNotMentioned},</if>
+            <if test="theNetworkHasNoOrders != null">#{theNetworkHasNoOrders},</if>
+            <if test="uploadDate != null">#{uploadDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketFunctionQuickReport" parameterType="MarketFunctionQuickReport">
+        update Market_function_quick_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lastMonthBalanceOrder != null">Last_Month_Balance_Order = #{lastMonthBalanceOrder},</if>
+            <if test="commercialNetworks != null and commercialNetworks != ''">Commercial_Networks = #{commercialNetworks},</if>
+            <if test="orderReceivedToday != null">Order_Received_Today = #{orderReceivedToday},</if>
+            <if test="ordersReceivedThisMonth != null">Orders_Received_This_Month = #{ordersReceivedThisMonth},</if>
+            <if test="orderAccumulationThisYear != null">Order_Accumulation_This_Year = #{orderAccumulationThisYear},</if>
+            <if test="deliveryToday != null">Delivery_Today = #{deliveryToday},</if>
+            <if test="deliveryWithinTheSystemThisMonth != null">Delivery_Within_The_System_This_Month = #{deliveryWithinTheSystemThisMonth},</if>
+            <if test="cumulativeSystemDeliveriesForTheYear != null">Cumulative_System_Deliveries_For_The_Year = #{cumulativeSystemDeliveriesForTheYear},</if>
+            <if test="unfilledOrders != null">Unfilled_Orders = #{unfilledOrders},</if>
+            <if test="issuedThisDay != null">Issued_This_Day = #{issuedThisDay},</if>
+            <if test="issuedThisMonth != null">Issued_This_Month = #{issuedThisMonth},</if>
+            <if test="cumulativeIssuedThisMonth != null">Cumulative_Issued_This_Month = #{cumulativeIssuedThisMonth},</if>
+            <if test="physicalDeliveryOfTheSystemWasNotMentioned != null">Physical_Delivery_Of_The_System_Was_Not_Mentioned = #{physicalDeliveryOfTheSystemWasNotMentioned},</if>
+            <if test="theNetworkHasNoOrders != null">The_Network_Has_No_Orders = #{theNetworkHasNoOrders},</if>
+            <if test="uploadDate != null">Upload_Date = #{uploadDate},</if>
+        </trim>
+        where MFQR_id = #{mfqrId}
+    </update>
+
+    <delete id="deleteMarketFunctionQuickReportByMfqrId" parameterType="Long">
+        delete from Market_function_quick_report where MFQR_id = #{mfqrId}
+    </delete>
+
+    <delete id="deleteMarketFunctionQuickReportByMfqrIds" parameterType="String">
+        delete from Market_function_quick_report where MFQR_id in 
+        <foreach item="mfqrId" collection="array" open="(" separator="," close=")">
+            #{mfqrId}
+        </foreach>
+    </delete>
+</mapper>

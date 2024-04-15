@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketInventoryCarDetailMapper">
+    
+    <resultMap type="MarketInventoryCarDetail" id="MarketInventoryCarDetailResult">
+        <result property="micdId"    column="MICD_ID"    />
+        <result property="onlineTime"    column="Online_Time"    />
+        <result property="wagonNumber"    column="Wagon_Number"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="doorFrame"    column="Door_Frame"    />
+        <result property="Accessory"    column="Accessory"    />
+        <result property="valveBlockNumber"    column="Valve_Block_Number"    />
+        <result property="Configuration"    column="Configuration"    />
+        <result property="planndeCompletionTime"    column="Plannde_Completion_Time"    />
+    </resultMap>
+
+    <sql id="selectMarketInventoryCarDetailVo">
+        select MICD_ID, Online_Time, Wagon_Number, Vehicle_Model, Door_Frame, Accessory, Valve_Block_Number, Configuration, Plannde_Completion_Time from Market_Inventory_Car_Detail
+    </sql>
+
+    <select id="selectMarketInventoryCarDetailList" parameterType="MarketInventoryCarDetail" resultMap="MarketInventoryCarDetailResult">
+        <include refid="selectMarketInventoryCarDetailVo"/>
+        <where>  
+            <if test="onlineTime != null "> and Online_Time = #{onlineTime}</if>
+            <if test="wagonNumber != null  and wagonNumber != ''"> and Wagon_Number = #{wagonNumber}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="doorFrame != null  and doorFrame != ''"> and Door_Frame = #{doorFrame}</if>
+            <if test="Accessory != null  and Accessory != ''"> and Accessory = #{Accessory}</if>
+            <if test="valveBlockNumber != null "> and Valve_Block_Number = #{valveBlockNumber}</if>
+            <if test="Configuration != null  and Configuration != ''"> and Configuration = #{Configuration}</if>
+            <if test="planndeCompletionTime != null "> and Plannde_Completion_Time = #{planndeCompletionTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarketInventoryCarDetailByMicdId" parameterType="Long" resultMap="MarketInventoryCarDetailResult">
+        <include refid="selectMarketInventoryCarDetailVo"/>
+        where MICD_ID = #{micdId}
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MICD_ID
+    FROM Market_Inventory_Car_Detail
+    WHERE MICD_ID = (SELECT MAX(MICD_ID) FROM Market_Inventory_Car_Detail);
+    </select>
+
+    <insert id="insertMarketInventoryCarDetail" parameterType="MarketInventoryCarDetail">
+        insert into Market_Inventory_Car_Detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="micdId != null">MICD_ID,</if>
+            <if test="onlineTime != null">Online_Time,</if>
+            <if test="wagonNumber != null and wagonNumber != ''">Wagon_Number,</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="doorFrame != null">Door_Frame,</if>
+            <if test="Accessory != null">Accessory,</if>
+            <if test="valveBlockNumber != null">Valve_Block_Number,</if>
+            <if test="Configuration != null">Configuration,</if>
+            <if test="planndeCompletionTime != null">Plannde_Completion_Time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="micdId != null">#{micdId},</if>
+            <if test="onlineTime != null">#{onlineTime},</if>
+            <if test="wagonNumber != null and wagonNumber != ''">#{wagonNumber},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="doorFrame != null">#{doorFrame},</if>
+            <if test="Accessory != null">#{Accessory},</if>
+            <if test="valveBlockNumber != null">#{valveBlockNumber},</if>
+            <if test="Configuration != null">#{Configuration},</if>
+            <if test="planndeCompletionTime != null">#{planndeCompletionTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketInventoryCarDetail" parameterType="MarketInventoryCarDetail">
+        update Market_Inventory_Car_Detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onlineTime != null">Online_Time = #{onlineTime},</if>
+            <if test="wagonNumber != null and wagonNumber != ''">Wagon_Number = #{wagonNumber},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="doorFrame != null">Door_Frame = #{doorFrame},</if>
+            <if test="Accessory != null">Accessory = #{Accessory},</if>
+            <if test="valveBlockNumber != null">Valve_Block_Number = #{valveBlockNumber},</if>
+            <if test="Configuration != null">Configuration = #{Configuration},</if>
+            <if test="planndeCompletionTime != null">Plannde_Completion_Time = #{planndeCompletionTime},</if>
+        </trim>
+        where MICD_ID = #{micdId}
+    </update>
+
+    <delete id="deleteMarketInventoryCarDetailByMicdId" parameterType="Long">
+        delete from Market_Inventory_Car_Detail where MICD_ID = #{micdId}
+    </delete>
+
+    <delete id="deleteMarketInventoryCarDetailByMicdIds" parameterType="String">
+        delete from Market_Inventory_Car_Detail where MICD_ID in 
+        <foreach item="micdId" collection="array" open="(" separator="," close=")">
+            #{micdId}
+        </foreach>
+    </delete>
+</mapper>

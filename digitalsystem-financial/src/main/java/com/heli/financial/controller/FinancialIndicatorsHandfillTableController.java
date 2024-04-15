@@ -3,6 +3,7 @@ package com.heli.financial.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
@@ -11,14 +12,7 @@ import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
 import com.heli.financial.service.IFinancialInterestsTableService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -64,12 +58,61 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //    }
 
 
+    @PostMapping("/upload")
+//    @OperationLog(logType = "1",operationName = "hihi", content = "excel上传")
+    public String importExcel(@RequestParam("file") MultipartFile file, @RequestParam Map<String, Object> params) {
+
+//        LogUtils.get().setLog("operationName", (String) params.get("userName"));
+
+//        LogUtils.get().setLog("content", "上传航标参数Excel文件");//操作or修改的内容
+        System.out.println(file+"_______________--------------------");
+        if (file.isEmpty()) {
+            return "上传失败，请选择文件";
+        }
+//        try {
+//            List<DBExcelEntity> dbExcelEntities = ExcelUtils.parseExcel(file);
+//
+//            for (DBExcelEntity data : dbExcelEntities) {
+//                System.out.println("No.data===" + data);
+//                dbExcelService.insertData(data);
+//            }
+//
+//            //第一次的文件导入后，自动生成编码填写到库中Message_HB_subTLVA00N
+//            try {
+//                Statement s = ConnectDBUtils.JdbcConnect().createStatement();
+//                //只插入没有插入过的记录，将其转化为编码
+//                String sql = "select HB_ID from Message_BuoyInformation where HB_ID not in (select HB_ID from Message_HB_subTLVA00N)";
+//                ResultSet resultSet = s.executeQuery(sql);
+//                while (resultSet.next()) {
+//                    Long id = Long.valueOf(resultSet.getString("HB_ID"));
+//                    SetArgs.setArgs(id);
+//                }
+//                //关闭数据库连接
+//                s.close();
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//            LogUtils.get().setLog("module","上传成功");
+//
+//            return "导入成功";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "导入失败";
+//        }
+
+        return "待返回";
+
+}
+
     /**
      * 查询[财务]手动填报指标列表
      */
     @PreAuthorize("@ss.hasPermi('financial:data:list')")
     @GetMapping("/list")
     public TableDataInfo list(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+        System.out.println("-------------test___________________");
         startPage();
         List<FinancialIndicatorsHandfillTable> list = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableList(financialIndicatorsHandfillTable);
         return getDataTable(list);

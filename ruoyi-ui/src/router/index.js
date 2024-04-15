@@ -30,8 +30,6 @@ import Layout from '@/layout'
 
 
 
-
-
 // 公共路由
 export const constantRoutes = [
   {
@@ -65,6 +63,7 @@ export const constantRoutes = [
     component: () => import('@/views/error/401'),
     hidden: true
   },
+ 
   {
     path: '',
     component: Layout,
@@ -91,9 +90,358 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  {
+    path: '/financial',
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'mainRevenue',
+        component: () => import('@/views/financial/display/indexChart/mainRevenue'),
+        name: 'MainRevenue',
+        meta: { title: '指标1：主营业务收入' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'totalSalesRevenue',
+        component: () => import('@/views/financial/display/indexChart/totalSalesRevenue'),
+        name: 'TotalSalesRevenue',
+        meta: { title: '指标2：整机销售收入' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'externalGroupSalesRevenue',
+        component: () => import('@/views/financial/display/indexChart/externalGroupSalesRevenue'),
+        name: 'ExternalGroupSalesRevenue',
+        meta: { title: '指标3：集团外部销售收入' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'totalVehicleProduction',
+        component: () => import('@/views/financial/display/indexChart/totalVehicleProduction'),
+        name: 'TotalVehicleProduction',
+        meta: { title: '指标4：整车产量' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'totalVehicleSales',
+        component: () => import('@/views/financial/display/indexChart/totalVehicleSales'),
+        name: 'TotalVehicleSales',
+        meta: { title: '指标5：整车销量' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'newProductSalesRevenue',
+        component: () => import('@/views/financial/display/indexChart/newProductSalesRevenue'),
+        name: 'NewProductSalesRevenue',
+        meta: { title: '指标6：新产品销售收入' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'specialtyProductRevenue',
+        component: () => import('@/views/financial/display/indexChart/specialtyProductRevenue'),
+        name: 'SpecialtyProductRevenue',
+        meta: { title: '指标7：特色产品收入' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'COGS',
+        component: () => import('@/views/financial/display/indexChart/COGS'),
+        name: 'COGS',
+        meta: { title: '指标8：主营业务成本' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'totalSalesCost',
+        component: () => import('@/views/financial/display/indexChart/totalSalesCost'),
+        name: 'TotalSalesCost',
+        meta: { title: '指标9：整机销售成本' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'netProfit',
+        component: () => import('@/views/financial/display/indexChart/netProfit'),
+        name: 'NetProfit',
+        meta: { title: '指标10：净利润' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'managementExpense',
+        component: () => import('@/views/financial/display/indexChart/managementExpense'),
+        name: 'ManagementExpense',
+        meta: { title: '指标20：当月管理费用' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'rdExpense',
+        component: () => import('@/views/financial/display/indexChart/rdExpense'),
+        name: 'RdExpense',
+        meta: { title: '指标21：当月研发费用' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'manufacturingExpensesMonth',
+        component: () => import('@/views/financial/display/indexChart/manufacturingExpensesMonth'),
+        name: 'ManufacturingExpensesMonth',
+        meta: { title: '指标22：当月制造费用' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'monthlyRawMaterialInventory',
+        component: () => import('@/views/financial/display/indexChart/monthlyRawMaterialInventory'),
+        name: 'MonthlyRawMaterialInventory',
+        meta: { title: '指标26：当月原材料存货额' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'monthlyWorkInProgressInventory',
+        component: () => import('@/views/financial/display/indexChart/monthlyWorkInProgressInventory'),
+        name: 'MonthlyWorkInProgressInventory',
+        meta: { title: '指标27：当月在制品存货额' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'growthRateInventorySales',
+        component: () => import('@/views/financial/display/indexChart/growthRateInventorySales'),
+        name: 'GrowthRateInventorySales',
+        meta: { title: '指标30：存货增长率/销售增长率' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'turnoverRateReceivable',
+        component: () => import('@/views/financial/display/indexChart/turnoverRateReceivable'),
+        name: 'TurnoverRateReceivable',
+        meta: { title: '指标32：应收账款周转率' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'capitalTurnoverRate',
+        component: () => import('@/views/financial/display/indexChart/capitalTurnoverRate'),
+        name: 'CapitalTurnoverRate',
+        meta: { title: '指标33：资金周转率' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'inventoryTurnoverRate',
+        component: () => import('@/views/financial/display/indexChart/inventoryTurnoverRate'),
+        name: 'InventoryTurnoverRate',
+        meta: { title: '指标34：库存商品周转率' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'rawMaterialTurnoverRate',
+        component: () => import('@/views/financial/display/indexChart/rawMaterialTurnoverRate'),
+        name: 'RawMaterialTurnoverRate',
+        meta: { title: '指标35：原材料周转率' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'inprogressTurnoverRate',
+        component: () => import('@/views/financial/display/indexChart/inprogressTurnoverRate'),
+        name: 'InprogressTurnoverRate',
+        meta: { title: '指标36：在制品周转率' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'longEstimatedItems',
+        component: () => import('@/views/financial/display/indexChart/longEstimatedItems'),
+        name: 'LongEstimatedItems',
+        meta: { title: '指标66：一年以上暂估行项目' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'inprogressDayrevenue',
+        component: () => import('@/views/financial/display/indexChart/inprogressDayrevenue'),
+        name: 'InprogressDayrevenue',
+        meta: { title: '指标70：当日在制品金额' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'monthlyInventoryTotalAmount',
+        component: () => import('@/views/financial/display/indexChart/monthlyInventoryTotalAmount'),
+        name: 'MonthlyInventoryTotalAmount',
+        meta: { title: '指标77：月度存货总金额' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'addedValueMonthly',
+        component: () => import('@/views/financial/display/indexChart/addedValueMonthly'),
+        name: 'AddedValueMonthly',
+        meta: { title: '指标78：当月经济增加值' }
+      }
+    ]
   }
 ]
-
+//
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [
   {
@@ -110,6 +458,9 @@ export const dynamicRoutes = [
       }
     ]
   },
+
+  
+  
   {
     path: '/system/role-auth',
     component: Layout,
@@ -188,10 +539,9 @@ export const dynamicRoutes = [
     component: Layout,
     hidden: true,
     permissions: ['system:user:edit'],
- 
+
   },
-
-
+  
 ]
 
 // 防止连续点击多次路由报错

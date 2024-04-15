@@ -67,6 +67,12 @@
             <artifactId>digitalsystem-financial</artifactId>
         </dependency>
 
+        <!-- 市场-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-market</artifactId>
+        </dependency>
+
         <!-- 技术-->
         <dependency>
             <groupId>com.ruoyi</groupId>
@@ -84,14 +90,11 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>digitalsystem-safety</artifactId>
         </dependency>
-
-        <!-- 生产-->
         <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>digitalsystem-production</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>2.5.15</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -111,15 +114,15 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>   
-                <groupId>org.apache.maven.plugins</groupId>   
-                <artifactId>maven-war-plugin</artifactId>   
-                <version>3.1.0</version>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${project.artifactId}</warName>
-                </configuration>   
-           </plugin>   
+                </configuration>
+           </plugin>
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>

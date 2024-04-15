@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketSalesTableMapper">
+    
+    <resultMap type="MarketSalesTable" id="MarketSalesTableResult">
+        <result property="msId"    column="MS_ID"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="Branch"    column="Branch"    />
+        <result property="contractNumber"    column="Contract_Number"    />
+        <result property="orderNumber"    column="Order_Number"    />
+        <result property="orderAcceptanceTime"    column="Order_Acceptance_Time"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="Number"    column="Number"    />
+        <result property="valveBlock"    column="Valve_Block"    />
+        <result property="Fork"    column="Fork"    />
+        <result property="doorFrame"    column="Door_Frame"    />
+        <result property="airFilter"    column="Air_Filter"    />
+        <result property="Accessory"    column="Accessory"    />
+        <result property="Tyre"    column="Tyre"    />
+        <result property="Configuration"    column="Configuration"    />
+        <result property="carNumber"    column="Car_Number"    />
+        <result property="Remarks"    column="Remarks"    />
+        <result property="deliveryForm"    column="Delivery_Form"    />
+        <result property="deliveryLocation"    column="Delivery_Location"    />
+        <result property="Contacts"    column="Contacts"    />
+        <result property="Telephone"    column="Telephone"    />
+        <result property="orderSystemDeliveryTime"    column="Order_System_Delivery_Time"    />
+        <result property="orderOverdueWarning"    column="Order_Overdue_Warning"    />
+        <result property="plannedDepartureDate"    column="Planned_Departure_Date"    />
+        <result property="actualDepartureDate"    column="Actual_Departure_Date"    />
+        <result property="systemDeliveryTime"    column="System_Delivery_Time"    />
+        <result property="deliveryNoteNumber"    column="Delivery_Note_Number"    />
+        <result property="technicalPreparationCompletionTime"    column="Technical_Preparation_Completion_Time"    />
+    </resultMap>
+
+    <sql id="selectMarketSalesTableVo">
+        select MS_ID, CREATED_BY, CREATED_TIME, Branch, Contract_Number, Order_Number, Order_Acceptance_Time, Vehicle_Model, Number, Valve_Block, Fork, Door_Frame, Air_Filter, Accessory, Tyre, Configuration, Car_Number, Remarks, Delivery_Form, Delivery_Location, Contacts, Telephone, Order_System_Delivery_Time, Order_Overdue_Warning, Planned_Departure_Date, Actual_Departure_Date, System_Delivery_Time, Delivery_Note_Number, Technical_Preparation_Completion_Time from Market_Sales_table
+    </sql>
+
+    <select id="selectMarketSalesTableList" parameterType="MarketSalesTable" resultMap="MarketSalesTableResult">
+        <include refid="selectMarketSalesTableVo"/>
+        <where>  
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="Branch != null  and Branch != ''"> and Branch = #{Branch}</if>
+            <if test="contractNumber != null  and contractNumber != ''"> and Contract_Number = #{contractNumber}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and Order_Number = #{orderNumber}</if>
+            <if test="orderAcceptanceTime != null "> and Order_Acceptance_Time = #{orderAcceptanceTime}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="valveBlock != null  and valveBlock != ''"> and Valve_Block = #{valveBlock}</if>
+            <if test="Fork != null  and Fork != ''"> and Fork = #{Fork}</if>
+            <if test="doorFrame != null  and doorFrame != ''"> and Door_Frame = #{doorFrame}</if>
+            <if test="airFilter != null  and airFilter != ''"> and Air_Filter = #{airFilter}</if>
+            <if test="Accessory != null  and Accessory != ''"> and Accessory = #{Accessory}</if>
+            <if test="Tyre != null  and Tyre != ''"> and Tyre = #{Tyre}</if>
+            <if test="Configuration != null  and Configuration != ''"> and Configuration = #{Configuration}</if>
+            <if test="carNumber != null  and carNumber != ''"> and Car_Number = #{carNumber}</if>
+            <if test="Remarks != null  and Remarks != ''"> and Remarks = #{Remarks}</if>
+            <if test="deliveryForm != null  and deliveryForm != ''"> and Delivery_Form = #{deliveryForm}</if>
+            <if test="deliveryLocation != null  and deliveryLocation != ''"> and Delivery_Location = #{deliveryLocation}</if>
+            <if test="Contacts != null  and Contacts != ''"> and Contacts = #{Contacts}</if>
+            <if test="Telephone != null  and Telephone != ''"> and Telephone = #{Telephone}</if>
+            <if test="orderSystemDeliveryTime != null "> and Order_System_Delivery_Time = #{orderSystemDeliveryTime}</if>
+            <if test="orderOverdueWarning != null  and orderOverdueWarning != ''"> and Order_Overdue_Warning = #{orderOverdueWarning}</if>
+            <if test="plannedDepartureDate != null "> and Planned_Departure_Date = #{plannedDepartureDate}</if>
+            <if test="actualDepartureDate != null "> and Actual_Departure_Date = #{actualDepartureDate}</if>
+            <if test="systemDeliveryTime != null "> and System_Delivery_Time = #{systemDeliveryTime}</if>
+            <if test="deliveryNoteNumber != null  and deliveryNoteNumber != ''"> and Delivery_Note_Number = #{deliveryNoteNumber}</if>
+            <if test="technicalPreparationCompletionTime != null "> and Technical_Preparation_Completion_Time = #{technicalPreparationCompletionTime}</if>
+        </where>
+    </select>
+
+<!--    <select id="selectMarketSalesTableList1" parameterType="QueryContent">-->
+<!--         select * from Market_Sales_table-->
+<!--    </select>-->
+
+    <select id="selectMarketSalesTableList1" parameterType="MarketSalesTable" resultMap="MarketSalesTableResult">
+        <include refid="selectMarketSalesTableVo"/>
+        <where>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="Branch != null  and Branch != ''"> and Branch = #{Branch}</if>
+            <if test="contractNumber != null  and contractNumber != ''"> and Contract_Number = #{contractNumber}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and Order_Number = #{orderNumber}</if>
+            <if test="orderAcceptanceTime != null "> and Order_Acceptance_Time = #{orderAcceptanceTime}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="valveBlock != null  and valveBlock != ''"> and Valve_Block = #{valveBlock}</if>
+            <if test="Fork != null  and Fork != ''"> and Fork = #{Fork}</if>
+            <if test="doorFrame != null  and doorFrame != ''"> and Door_Frame = #{doorFrame}</if>
+            <if test="airFilter != null  and airFilter != ''"> and Air_Filter = #{airFilter}</if>
+            <if test="Accessory != null  and Accessory != ''"> and Accessory = #{Accessory}</if>
+            <if test="Tyre != null  and Tyre != ''"> and Tyre = #{Tyre}</if>
+            <if test="Configuration != null  and Configuration != ''"> and Configuration = #{Configuration}</if>
+            <if test="carNumber != null  and carNumber != ''"> and Car_Number = #{carNumber}</if>
+            <if test="Remarks != null  and Remarks != ''"> and Remarks = #{Remarks}</if>
+            <if test="deliveryForm != null  and deliveryForm != ''"> and Delivery_Form = #{deliveryForm}</if>
+            <if test="deliveryLocation != null  and deliveryLocation != ''"> and Delivery_Location = #{deliveryLocation}</if>
+            <if test="Contacts != null  and Contacts != ''"> and Contacts = #{Contacts}</if>
+            <if test="Telephone != null  and Telephone != ''"> and Telephone = #{Telephone}</if>
+            <if test="orderSystemDeliveryTime != null "> and Order_System_Delivery_Time = #{orderSystemDeliveryTime}</if>
+            <if test="orderOverdueWarning != null  and orderOverdueWarning != ''"> and Order_Overdue_Warning = #{orderOverdueWarning}</if>
+            <if test="plannedDepartureDate != null "> and Planned_Departure_Date = #{plannedDepartureDate}</if>
+            <if test="actualDepartureDate != null "> and Actual_Departure_Date = #{actualDepartureDate}</if>
+            <if test="systemDeliveryTime != null "> and System_Delivery_Time = #{systemDeliveryTime}</if>
+            <if test="deliveryNoteNumber != null  and deliveryNoteNumber != ''"> and Delivery_Note_Number = #{deliveryNoteNumber}</if>
+            <if test="technicalPreparationCompletionTime != null "> and Technical_Preparation_Completion_Time = #{technicalPreparationCompletionTime}</if>
+        </where>
+
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MS_ID
+    FROM Market_Sales_table
+    WHERE MS_ID = (SELECT MAX(MS_ID) FROM Market_Sales_table);
+    </select>
+
+
+    <select id="selectMarketSalesTableByMsId" parameterType="Long" resultMap="MarketSalesTableResult">
+        <include refid="selectMarketSalesTableVo"/>
+        where MS_ID = #{msId}
+    </select>
+        
+    <insert id="insertMarketSalesTable" parameterType="MarketSalesTable">
+        insert into Market_Sales_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msId != null">MS_ID,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="Branch != null and Branch != ''">Branch,</if>
+            <if test="contractNumber != null and contractNumber != ''">Contract_Number,</if>
+            <if test="orderNumber != null and orderNumber != ''">Order_Number,</if>
+            <if test="orderAcceptanceTime != null">Order_Acceptance_Time,</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="Number != null">Number,</if>
+            <if test="valveBlock != null and valveBlock != ''">Valve_Block,</if>
+            <if test="Fork != null and Fork != ''">Fork,</if>
+            <if test="doorFrame != null and doorFrame != ''">Door_Frame,</if>
+            <if test="airFilter != null">Air_Filter,</if>
+            <if test="Accessory != null">Accessory,</if>
+            <if test="Tyre != null and Tyre != ''">Tyre,</if>
+            <if test="Configuration != null and Configuration != ''">Configuration,</if>
+            <if test="carNumber != null">Car_Number,</if>
+            <if test="Remarks != null">Remarks,</if>
+            <if test="deliveryForm != null and deliveryForm != ''">Delivery_Form,</if>
+            <if test="deliveryLocation != null and deliveryLocation != ''">Delivery_Location,</if>
+            <if test="Contacts != null and Contacts != ''">Contacts,</if>
+            <if test="Telephone != null">Telephone,</if>
+            <if test="orderSystemDeliveryTime != null">Order_System_Delivery_Time,</if>
+            <if test="orderOverdueWarning != null and orderOverdueWarning != ''">Order_Overdue_Warning,</if>
+            <if test="plannedDepartureDate != null">Planned_Departure_Date,</if>
+            <if test="actualDepartureDate != null">Actual_Departure_Date,</if>
+            <if test="systemDeliveryTime != null">System_Delivery_Time,</if>
+            <if test="deliveryNoteNumber != null">Delivery_Note_Number,</if>
+            <if test="technicalPreparationCompletionTime != null">Technical_Preparation_Completion_Time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msId != null">#{msId},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="Branch != null and Branch != ''">#{Branch},</if>
+            <if test="contractNumber != null and contractNumber != ''">#{contractNumber},</if>
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="orderAcceptanceTime != null">#{orderAcceptanceTime},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="valveBlock != null and valveBlock != ''">#{valveBlock},</if>
+            <if test="Fork != null and Fork != ''">#{Fork},</if>
+            <if test="doorFrame != null and doorFrame != ''">#{doorFrame},</if>
+            <if test="airFilter != null">#{airFilter},</if>
+            <if test="Accessory != null">#{Accessory},</if>
+            <if test="Tyre != null and Tyre != ''">#{Tyre},</if>
+            <if test="Configuration != null and Configuration != ''">#{Configuration},</if>
+            <if test="carNumber != null">#{carNumber},</if>
+            <if test="Remarks != null">#{Remarks},</if>
+            <if test="deliveryForm != null and deliveryForm != ''">#{deliveryForm},</if>
+            <if test="deliveryLocation != null and deliveryLocation != ''">#{deliveryLocation},</if>
+            <if test="Contacts != null and Contacts != ''">#{Contacts},</if>
+            <if test="Telephone != null">#{Telephone},</if>
+            <if test="orderSystemDeliveryTime != null">#{orderSystemDeliveryTime},</if>
+            <if test="orderOverdueWarning != null and orderOverdueWarning != ''">#{orderOverdueWarning},</if>
+            <if test="plannedDepartureDate != null">#{plannedDepartureDate},</if>
+            <if test="actualDepartureDate != null">#{actualDepartureDate},</if>
+            <if test="systemDeliveryTime != null">#{systemDeliveryTime},</if>
+            <if test="deliveryNoteNumber != null">#{deliveryNoteNumber},</if>
+            <if test="technicalPreparationCompletionTime != null">#{technicalPreparationCompletionTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketSalesTable" parameterType="MarketSalesTable">
+        update Market_Sales_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="Branch != null and Branch != ''">Branch = #{Branch},</if>
+            <if test="contractNumber != null and contractNumber != ''">Contract_Number = #{contractNumber},</if>
+            <if test="orderNumber != null and orderNumber != ''">Order_Number = #{orderNumber},</if>
+            <if test="orderAcceptanceTime != null">Order_Acceptance_Time = #{orderAcceptanceTime},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="valveBlock != null and valveBlock != ''">Valve_Block = #{valveBlock},</if>
+            <if test="Fork != null and Fork != ''">Fork = #{Fork},</if>
+            <if test="doorFrame != null and doorFrame != ''">Door_Frame = #{doorFrame},</if>
+            <if test="airFilter != null">Air_Filter = #{airFilter},</if>
+            <if test="Accessory != null">Accessory = #{Accessory},</if>
+            <if test="Tyre != null and Tyre != ''">Tyre = #{Tyre},</if>
+            <if test="Configuration != null and Configuration != ''">Configuration = #{Configuration},</if>
+            <if test="carNumber != null">Car_Number = #{carNumber},</if>
+            <if test="Remarks != null">Remarks = #{Remarks},</if>
+            <if test="deliveryForm != null and deliveryForm != ''">Delivery_Form = #{deliveryForm},</if>
+            <if test="deliveryLocation != null and deliveryLocation != ''">Delivery_Location = #{deliveryLocation},</if>
+            <if test="Contacts != null and Contacts != ''">Contacts = #{Contacts},</if>
+            <if test="Telephone != null">Telephone = #{Telephone},</if>
+            <if test="orderSystemDeliveryTime != null">Order_System_Delivery_Time = #{orderSystemDeliveryTime},</if>
+            <if test="orderOverdueWarning != null and orderOverdueWarning != ''">Order_Overdue_Warning = #{orderOverdueWarning},</if>
+            <if test="plannedDepartureDate != null">Planned_Departure_Date = #{plannedDepartureDate},</if>
+            <if test="actualDepartureDate != null">Actual_Departure_Date = #{actualDepartureDate},</if>
+            <if test="systemDeliveryTime != null">System_Delivery_Time = #{systemDeliveryTime},</if>
+            <if test="deliveryNoteNumber != null">Delivery_Note_Number = #{deliveryNoteNumber},</if>
+            <if test="technicalPreparationCompletionTime != null">Technical_Preparation_Completion_Time = #{technicalPreparationCompletionTime},</if>
+        </trim>
+        where MS_ID = #{msId}
+    </update>
+
+    <delete id="deleteMarketSalesTableByMsId" parameterType="Long">
+        delete from Market_Sales_table where MS_ID = #{msId}
+    </delete>
+
+    <delete id="deleteMarketSalesTableByMsIds" parameterType="String">
+        delete from Market_Sales_table where MS_ID in 
+        <foreach item="msId" collection="array" open="(" separator="," close=")">
+            #{msId}
+        </foreach>
+    </delete>
+</mapper>

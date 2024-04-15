@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Param;
  * @author hong
  * @date 2024-03-31
  */
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialInterestsTableMapper {
 
     /**

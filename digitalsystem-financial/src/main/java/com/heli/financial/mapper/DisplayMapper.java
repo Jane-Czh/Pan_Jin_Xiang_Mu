@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface DisplayMapper {
     /**
      * 主营业务收入 指标1

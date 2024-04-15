@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.production.mapper.ProductionFillingMapper">
+    
+    <resultMap type="ProductionFilling" id="ProductionResult">
+        <result property="productionId"    column="Production_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+        <result property="curNonBomMaterialCost"    column="Cur_Non_BOM_Material_Cost"    />
+        <result property="curLowValueConsumables"    column="Cur_Low_Value_Consumables"    />
+        <result property="inventoryTurnoverdays"    column="Inventory_TurnoverDays"    />
+        <result property="outputPercapitacounts"    column="Output_PerCapitaCounts"    />
+        <result property="outputPercapitavalue"    column="Output_PerCapitaValue"    />
+        <result property="onlineOntimerate"    column="Online_OnTimeRate"    />
+        <result property="overtimeFrontlinemonth"    column="Overtime_FrontlineMonth"    />
+    </resultMap>
+
+    <sql id="selectProductionVo">
+        select Production_ID, Year_And_Month, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, Cur_Non_BOM_Material_Cost, Cur_Low_Value_Consumables, Inventory_TurnoverDays, Output_PerCapitaCounts, Output_PerCapitaValue, Online_OnTimeRate, Overtime_FrontlineMonth from Production
+    </sql>
+
+    <select id="selectProductionList" parameterType="ProductionFilling" resultMap="ProductionResult">
+        <include refid="selectProductionVo"/>
+        <where>  
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
+            <if test="updatedTime != null "> and UPDATED_TIME = #{updatedTime}</if>
+            <if test="curNonBomMaterialCost != null "> and Cur_Non_BOM_Material_Cost = #{curNonBomMaterialCost}</if>
+            <if test="curLowValueConsumables != null "> and Cur_Low_Value_Consumables = #{curLowValueConsumables}</if>
+            <if test="inventoryTurnoverdays != null "> and Inventory_TurnoverDays = #{inventoryTurnoverdays}</if>
+            <if test="outputPercapitacounts != null "> and Output_PerCapitaCounts = #{outputPercapitacounts}</if>
+            <if test="outputPercapitavalue != null "> and Output_PerCapitaValue = #{outputPercapitavalue}</if>
+            <if test="onlineOntimerate != null "> and Online_OnTimeRate = #{onlineOntimerate}</if>
+            <if test="overtimeFrontlinemonth != null "> and Overtime_FrontlineMonth = #{overtimeFrontlinemonth}</if>
+        </where>
+    </select>
+    
+    <select id="selectProductionByProductionId" parameterType="Long" resultMap="ProductionResult">
+        <include refid="selectProductionVo"/>
+        where Production_ID = #{productionId}
+    </select>
+        
+    <insert id="insertProduction" parameterType="ProductionFilling" useGeneratedKeys="true" keyProperty="productionId">
+        insert into Production
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+            <if test="curNonBomMaterialCost != null">Cur_Non_BOM_Material_Cost,</if>
+            <if test="curLowValueConsumables != null">Cur_Low_Value_Consumables,</if>
+            <if test="inventoryTurnoverdays != null">Inventory_TurnoverDays,</if>
+            <if test="outputPercapitacounts != null">Output_PerCapitaCounts,</if>
+            <if test="outputPercapitavalue != null">Output_PerCapitaValue,</if>
+            <if test="onlineOntimerate != null">Online_OnTimeRate,</if>
+            <if test="overtimeFrontlinemonth != null">Overtime_FrontlineMonth,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+            <if test="curNonBomMaterialCost != null">#{curNonBomMaterialCost},</if>
+            <if test="curLowValueConsumables != null">#{curLowValueConsumables},</if>
+            <if test="inventoryTurnoverdays != null">#{inventoryTurnoverdays},</if>
+            <if test="outputPercapitacounts != null">#{outputPercapitacounts},</if>
+            <if test="outputPercapitavalue != null">#{outputPercapitavalue},</if>
+            <if test="onlineOntimerate != null">#{onlineOntimerate},</if>
+            <if test="overtimeFrontlinemonth != null">#{overtimeFrontlinemonth},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProduction" parameterType="ProductionFilling">
+        update Production
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+            <if test="curNonBomMaterialCost != null">Cur_Non_BOM_Material_Cost = #{curNonBomMaterialCost},</if>
+            <if test="curLowValueConsumables != null">Cur_Low_Value_Consumables = #{curLowValueConsumables},</if>
+            <if test="inventoryTurnoverdays != null">Inventory_TurnoverDays = #{inventoryTurnoverdays},</if>
+            <if test="outputPercapitacounts != null">Output_PerCapitaCounts = #{outputPercapitacounts},</if>
+            <if test="outputPercapitavalue != null">Output_PerCapitaValue = #{outputPercapitavalue},</if>
+            <if test="onlineOntimerate != null">Online_OnTimeRate = #{onlineOntimerate},</if>
+            <if test="overtimeFrontlinemonth != null">Overtime_FrontlineMonth = #{overtimeFrontlinemonth},</if>
+        </trim>
+        where Production_ID = #{productionId}
+    </update>
+
+    <delete id="deleteProductionByProductionId" parameterType="Long">
+        delete from Production where Production_ID = #{productionId}
+    </delete>
+
+    <delete id="deleteProductionByProductionIds" parameterType="String">
+        delete from Production where Production_ID in 
+        <foreach item="productionId" collection="array" open="(" separator="," close=")">
+            #{productionId}
+        </foreach>
+    </delete>
+</mapper>

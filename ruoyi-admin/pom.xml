@@ -67,6 +67,12 @@
             <artifactId>digitalsystem-financial</artifactId>
         </dependency>
 
+        <!-- 市场-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-market</artifactId>
+        </dependency>
+
         <!-- 技术-->
         <dependency>
             <groupId>com.ruoyi</groupId>

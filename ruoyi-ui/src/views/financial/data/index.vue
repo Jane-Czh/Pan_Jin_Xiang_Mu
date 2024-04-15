@@ -174,7 +174,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
   <div>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -228,7 +228,7 @@
         @close="resetFileInput"
       >
 <el-form :model="form1" ref="form1" label-width="90px">
-    
+
          <el-form-item label="填报时间" prop="reportingDate">
         <el-date-picker clearable
           v-model="form1.reportingDate"
@@ -237,7 +237,7 @@
           placeholder="请选择填报时间">
         </el-date-picker>
       </el-form-item>
-      
+
     </el-form>
 
        <!-- 下拉框 -->
@@ -250,7 +250,7 @@
       </el-select>
     </el-form-item>
   </el-form>
-  
+
         <i class="el-icon-upload"></i>
         <input type="file" id="inputFile" ref="fileInput" @change="checkFile"  multiple/>
 
@@ -267,9 +267,9 @@
           <el-button type="primary" @click="fileSend()">确 定</el-button>
         </span>
       </el-dialog>
-      
 
-      
+
+
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -340,7 +340,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -671,7 +671,7 @@ export default {
       const file1 = document.getElementById("inputFile").files[1]; // 获取文件对象
       const fileCount = files.length; // 文件数量
 
-      
+
 
        // 根据用户选择的 Excel 类型执行不同的操作
   if (this.selectedType === 'profit') {

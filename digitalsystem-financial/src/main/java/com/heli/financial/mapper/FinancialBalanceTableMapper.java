@@ -17,6 +17,15 @@ import org.apache.ibatis.annotations.Param;
 //@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialBalanceTableMapper {
 
+
+
+    /**
+     * @description: 检查当月资产负债表数据是否存在
+     * @author: hong
+     * @date: 2024/4/15 14:59
+     **/
+    boolean checkBalanceDataIsExisted(@Param("date") Date date);
+
     /**
      *
      *

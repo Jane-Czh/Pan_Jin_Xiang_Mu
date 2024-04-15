@@ -103,7 +103,26 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         return financialInterestsTableMapper.insertFinancialInterestsTable(financialInterestsTable);
     }
 
+    @Override
+    public List<FinancialInterestsTable> selectFinancialInterestsTableByYear(String year) {
+        return financialInterestsTableMapper.selectFinancialInterestsTableByYear(year);
+    }
 
+    @Override
+    public List<FinancialInterestsTable> selectFinancialInterestsTableByTime(Date beginTime, Date endTime) {
+        return financialInterestsTableMapper.selectFinancialInterestsTableByTime(beginTime,endTime);
+    }
+
+
+    /**
+     * @description: 检查利润表数据是否存在
+     * @author: hong
+     * @date: 2024/4/15 14:53
+     **/
+    @Override
+    public boolean checkInterestsDataIsExisted(Date date) {
+        return financialInterestsTableMapper.checkInterestsDataIsExisted(date);
+    }
 
 
     /**

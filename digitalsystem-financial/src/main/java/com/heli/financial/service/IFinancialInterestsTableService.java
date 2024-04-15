@@ -26,6 +26,14 @@ public interface IFinancialInterestsTableService {
 
     public int importInterests(MultipartFile excelFile) throws IOException;
 
+
+    List<FinancialInterestsTable> selectFinancialInterestsTableByYear(String year);
+
+    List<FinancialInterestsTable> selectFinancialInterestsTableByTime(Date beginTime,Date endTime);
+
+    boolean checkInterestsDataIsExisted(Date date);
+
+
     /**
      * @description: 查询营业收入
      * @author: hong

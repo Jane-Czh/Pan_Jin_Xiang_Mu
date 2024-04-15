@@ -26,6 +26,33 @@
         select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
     </sql>
 
+
+    <!-- 按年查询利润指标的全部数据 -->
+    <select id="selectFinancialInterestsTableByYear" resultMap="FinancialInterestsTableResult">
+        select * from (
+        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+        where Year_And_Month like concat('%',#{year},'%')
+        order by Year_And_Month DESC
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 按时间段查询利润指标的全部数据 -->
+    <select id="selectFinancialInterestsTableByTime" resultMap="FinancialInterestsTableResult">
+        select * from (
+        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+        where Year_And_Month between #{beginTime} and #{endTime}
+        order by Year_And_Month DESC
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
+
+    <select id="checkInterestsDataIsExisted" parameterType="Date" >
+        SELECT EXISTS(SELECT 1 FROM Financial_Interests_table WHERE Year_And_Month=#{date})
+    </select>
+
     <select id="selectFinancialInterestsTableList" parameterType="FinancialInterestsTable" resultMap="FinancialInterestsTableResult">
         <include refid="selectFinancialInterestsTableVo"/>
         <where>

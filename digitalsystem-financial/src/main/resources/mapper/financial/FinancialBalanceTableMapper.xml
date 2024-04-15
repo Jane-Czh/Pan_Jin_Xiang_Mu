@@ -56,18 +56,20 @@
         </where>
     </select>
 
-    <select id="selectFinancialBalanceTableByFbId" parameterType="Long" resultMap="FinancialBalanceTableResult">
-        <include refid="selectFinancialBalanceTableVo"/>
-        where FB_ID = #{fbId}
-    </select>
-
-
 
     <!--  查询上个月MonthlyInventoryTotalAmount  -->
     <select id="selectLastMonthMonthlyInventoryTotalAmount" resultType="java.math.BigDecimal">
         select MonthlyInventoryTotalAmount from Financial_Balance_table
         where date_format(Year_And_Month,'%y-%m') = date_format(#{yearAndMonth},'%y-%m')
     </select>
+
+    <select id="checkBalanceDataIsExisted" parameterType="Date" >
+        SELECT EXISTS(SELECT 1 FROM Financial_Balance_table WHERE Year_And_Month=#{date})
+    </select>
+
+
+
+
 
 
     <insert id="insertFinancialBalanceTable" parameterType="FinancialBalanceTable" useGeneratedKeys="true" keyProperty="fbId">

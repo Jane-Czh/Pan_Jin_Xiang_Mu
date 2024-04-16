@@ -2,7 +2,9 @@ package com.ruoyi.market.service.impl;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.domain.MarketSalesTable;
+import com.ruoyi.market.domain.MarketSalesTableStorage;
 import com.ruoyi.market.mapper.MarketSalesTableMapper;
+import com.ruoyi.market.mapper.MarketSalesTableStorageMapper;
 import com.ruoyi.market.service.IMarketSalesTableService;
 import com.ruoyi.market.utils.*;
 
@@ -28,7 +30,8 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
 {
     @Autowired
     private MarketSalesTableMapper marketSalesTableMapper;
-
+    @Autowired
+    private MarketSalesTableStorageMapper marketSalesTableStorageMapper;
 
     /**
      * @description: 利润表导入
@@ -40,6 +43,7 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
     @Override
     public int importInterests(MultipartFile excelFile) throws IOException {
         MarketSalesTable marketSalesTable;
+        MarketSalesTableStorage marketSalesTableStorage = new MarketSalesTableStorage();
         InputStream is = null;
         try {
             List<MarketSalesTable> marketSalesTables = ExcelUtils.parseExcel(excelFile);
@@ -57,8 +61,71 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
                     continue;
                 }
                 marketSalesTableMapper.insertMarketSalesTable(marketSalesTable);
+                //查看当天的台账信息，单独存储
+                if (getTime.isSameDay(marketSalesTable.getOrderAcceptanceTime(),getTime.getCurrentDate())) {
+                    //接单日期为今日，进行存储
+                    System.out.println("记录当日台账");
+                    Long Storagelastid = marketSalesTableStorageMapper.selectLastId();
+                    if (Storagelastid == null){
+                        marketSalesTableStorage.setMstsId(GenerateId.getNextId(0L));
+                    }else {
+                        marketSalesTableStorage.setMstsId(GenerateId.getNextId(Storagelastid));
+                    } //主键
+                    marketSalesTableStorage.setBranch(marketSalesTable.getBranch()); //网点
+                    marketSalesTableStorage.setContractNumber(marketSalesTable.getContractNumber()); //合同号
+                    marketSalesTableStorage.setOrderNumber(marketSalesTable.getOrderNumber()); //订单号
+                    marketSalesTableStorage.setOrderAcceptanceTime(marketSalesTable.getOrderAcceptanceTime()); //接单日期
+                    marketSalesTableStorage.setVehicleModel(marketSalesTable.getVehicleModel()); //车型
+                    marketSalesTableStorage.setNumber(marketSalesTable.getNumber()); //数量
+                    marketSalesTableStorage.setValveBlock(marketSalesTable.getValveBlock()); //阀片
+                    marketSalesTableStorage.setFork(marketSalesTable.getFork()); //货叉
+                    marketSalesTableStorage.setDoorFrame(marketSalesTable.getDoorFrame()); //门架
+                    marketSalesTableStorage.setAirFilter(marketSalesTable.getAirFilter()); //空滤
+                    marketSalesTableStorage.setAccessory(marketSalesTable.getAccessory()); //属具
+                    marketSalesTableStorage.setTyre(marketSalesTable.getTyre()); //轮胎
+                    marketSalesTableStorage.setConfiguration(marketSalesTable.getConfiguration()); //配置
+                    marketSalesTableStorage.setCarNumber(marketSalesTable.getCarNumber()); //车号
+                    marketSalesTableStorage.setOrderSystemDeliveryTime(marketSalesTable.getOrderSystemDeliveryTime()); //订单系统交货期
+
+                    marketSalesTableStorageMapper.insertMarketSalesTableStorage(marketSalesTableStorage);
+                }
                 i++;
             }
+
+            //查看当天的台账信息，单独存储
+//            i = 0;
+//            while (i < marketSalesTables.size()){
+//                MarketSalesTableStorage marketSalesTableStorage = new MarketSalesTableStorage();
+//                marketSalesTable = marketSalesTables.get(i);
+//                if (marketSalesTable.getOrderAcceptanceTime().equals(getTime.getCurrentDate())){
+//                    //接单日期为今日，进行存储
+//                    Long lastid = marketSalesTableStorageMapper.selectLastId();
+//                    if (lastid == null){
+//                        marketSalesTableStorage.setMstsId(GenerateId.getNextId(0L));
+//                    }else {
+//                        marketSalesTableStorage.setMstsId(GenerateId.getNextId(lastid));
+//                    }
+//                    marketSalesTableStorage.setBranch(marketSalesTable.getBranch()); //网点
+//                    marketSalesTableStorage.setContractNumber(marketSalesTable.getContractNumber()); //合同号
+//                    marketSalesTableStorage.setOrderNumber(marketSalesTable.getOrderNumber()); //订单号
+//                    marketSalesTableStorage.setOrderAcceptanceTime(marketSalesTable.getOrderAcceptanceTime()); //接单日期
+//                    marketSalesTableStorage.setVehicleModel(marketSalesTable.getVehicleModel()); //车型
+//                    marketSalesTableStorage.setNumber(marketSalesTable.getNumber()); //数量
+//                    marketSalesTableStorage.setValveBlock(marketSalesTable.getValveBlock()); //阀片
+//                    marketSalesTableStorage.setFork(marketSalesTable.getFork()); //货叉
+//                    marketSalesTableStorage.setDoorFrame(marketSalesTable.getDoorFrame()); //门架
+//                    marketSalesTableStorage.setAirFilter(marketSalesTable.getAirFilter()); //空滤
+//                    marketSalesTableStorage.setAccessory(marketSalesTable.getAccessory()); //属具
+//                    marketSalesTableStorage.setTyre(marketSalesTable.getTyre()); //轮胎
+//                    marketSalesTableStorage.setConfiguration(marketSalesTable.getConfiguration()); //配置
+//                    marketSalesTableStorage.setCarNumber(marketSalesTable.getCarNumber()); //车号
+//                    marketSalesTableStorage.setOrderSystemDeliveryTime(marketSalesTable.getOrderSystemDeliveryTime()); //订单系统交货期
+//
+//                    marketSalesTableStorageMapper.insertMarketSalesTableStorage(marketSalesTableStorage);
+//                }
+//                i++;
+//            }
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel解析失败");

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketAfterSaleLedgerMapper">
+    
+    <resultMap type="MarketAfterSaleLedger" id="MarketAfterSaleLedgerResult">
+        <result property="maslId"    column="MASL_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="userUnit"    column="User_Unit"    />
+        <result property="Contacts"    column="Contacts"    />
+        <result property="Phone"    column="Phone"    />
+        <result property="feedbackDate"    column="Feedback_Date"    />
+        <result property="vehicleProductionUnit"    column="Vehicle_Production_Unit"    />
+        <result property="Vehicle"    column="Vehicle"    />
+        <result property="Ton"    column="Ton"    />
+        <result property="Launch"    column="Launch"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="wagonNumber"    column="Wagon_Number"    />
+        <result property="sellingTime"    column="Selling_Time"    />
+        <result property="useHours"    column="Use_Hours"    />
+        <result property="newOrNot"    column="New_Or_Not"    />
+        <result property="existingProblem"    column="Existing_Problem"    />
+        <result property="primaryClassification"    column="Primary_Classification"    />
+        <result property="secondaryClassification"    column="Secondary_Classification"    />
+        <result property="finalTreatmentMethod"    column="Final_Treatment_Method"    />
+        <result property="Indemnity"    column="Indemnity"    />
+        <result property="partNumber"    column="Part_Number"    />
+        <result property="Supplier"    column="Supplier"    />
+        <result property="Quantity"    column="Quantity"    />
+        <result property="accountabilityUnit"    column="Accountability_Unit"    />
+        <result property="faultLevel"    column="Fault_Level"    />
+        <result property="Score"    column="Score"    />
+        <result property="sendingMethod"    column="Sending_Method"    />
+        <result property="primaryBranch"    column="Primary_Branch"    />
+        <result property="secondaryBranch"    column="Secondary_Branch"    />
+        <result property="despatchMode"    column="Despatch_Mode"    />
+        <result property="paymentsMode"    column="Payments_Mode"    />
+        <result property="feedbackMode"    column="Feedback_Mode"    />
+        <result property="reservationNumber"    column="Reservation_Number"    />
+        <result property="assessmentSituation"    column="Assessment_Situation"    />
+    </resultMap>
+
+    <sql id="selectMarketAfterSaleLedgerVo">
+        select MASL_ID, Number, User_Unit, Contacts, Phone, Feedback_Date, Vehicle_Production_Unit, Vehicle, Ton, Launch, Vehicle_Model, Wagon_Number, Selling_Time, Use_Hours, New_Or_Not, Existing_Problem, Primary_Classification, Secondary_Classification, Final_Treatment_Method, Indemnity, Part_Number, Supplier, Quantity, Accountability_Unit, Fault_Level, Score, Sending_Method, Primary_Branch, Secondary_Branch, Despatch_Mode, Payments_Mode, Feedback_Mode, Reservation_Number, Assessment_Situation from Market_After_Sale_Ledger
+    </sql>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MASL_ID
+    FROM Market_After_Sale_Ledger
+    WHERE MASL_ID = (SELECT MAX(MASL_ID) FROM Market_After_Sale_Ledger);
+    </select>
+
+
+    <select id="selectMarketAfterSaleLedgerList" parameterType="MarketAfterSaleLedger" resultMap="MarketAfterSaleLedgerResult">
+        <include refid="selectMarketAfterSaleLedgerVo"/>
+        <where>  
+            <if test="Number != null  and Number != ''"> and Number = #{Number}</if>
+            <if test="userUnit != null  and userUnit != ''"> and User_Unit = #{userUnit}</if>
+            <if test="Contacts != null  and Contacts != ''"> and Contacts = #{Contacts}</if>
+            <if test="Phone != null  and Phone != ''"> and Phone = #{Phone}</if>
+            <if test="feedbackDate != null "> and Feedback_Date = #{feedbackDate}</if>
+            <if test="vehicleProductionUnit != null  and vehicleProductionUnit != ''"> and Vehicle_Production_Unit = #{vehicleProductionUnit}</if>
+            <if test="Vehicle != null  and Vehicle != ''"> and Vehicle = #{Vehicle}</if>
+            <if test="Ton != null "> and Ton = #{Ton}</if>
+            <if test="Launch != null  and Launch != ''"> and Launch = #{Launch}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="wagonNumber != null  and wagonNumber != ''"> and Wagon_Number = #{wagonNumber}</if>
+            <if test="sellingTime != null "> and Selling_Time = #{sellingTime}</if>
+            <if test="useHours != null "> and Use_Hours = #{useHours}</if>
+            <if test="newOrNot != null  and newOrNot != ''"> and New_Or_Not = #{newOrNot}</if>
+            <if test="existingProblem != null  and existingProblem != ''"> and Existing_Problem = #{existingProblem}</if>
+            <if test="primaryClassification != null  and primaryClassification != ''"> and Primary_Classification = #{primaryClassification}</if>
+            <if test="secondaryClassification != null  and secondaryClassification != ''"> and Secondary_Classification = #{secondaryClassification}</if>
+            <if test="finalTreatmentMethod != null  and finalTreatmentMethod != ''"> and Final_Treatment_Method = #{finalTreatmentMethod}</if>
+            <if test="Indemnity != null  and Indemnity != ''"> and Indemnity = #{Indemnity}</if>
+            <if test="partNumber != null  and partNumber != ''"> and Part_Number = #{partNumber}</if>
+            <if test="Supplier != null  and Supplier != ''"> and Supplier = #{Supplier}</if>
+            <if test="Quantity != null "> and Quantity = #{Quantity}</if>
+            <if test="accountabilityUnit != null  and accountabilityUnit != ''"> and Accountability_Unit = #{accountabilityUnit}</if>
+            <if test="faultLevel != null  and faultLevel != ''"> and Fault_Level = #{faultLevel}</if>
+            <if test="Score != null "> and Score = #{Score}</if>
+            <if test="sendingMethod != null  and sendingMethod != ''"> and Sending_Method = #{sendingMethod}</if>
+            <if test="primaryBranch != null  and primaryBranch != ''"> and Primary_Branch = #{primaryBranch}</if>
+            <if test="secondaryBranch != null  and secondaryBranch != ''"> and Secondary_Branch = #{secondaryBranch}</if>
+            <if test="despatchMode != null  and despatchMode != ''"> and Despatch_Mode = #{despatchMode}</if>
+            <if test="paymentsMode != null  and paymentsMode != ''"> and Payments_Mode = #{paymentsMode}</if>
+            <if test="feedbackMode != null  and feedbackMode != ''"> and Feedback_Mode = #{feedbackMode}</if>
+            <if test="reservationNumber != null  and reservationNumber != ''"> and Reservation_Number = #{reservationNumber}</if>
+            <if test="assessmentSituation != null  and assessmentSituation != ''"> and Assessment_Situation = #{assessmentSituation}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarketAfterSaleLedgerByMaslId" parameterType="Long" resultMap="MarketAfterSaleLedgerResult">
+        <include refid="selectMarketAfterSaleLedgerVo"/>
+        where MASL_ID = #{maslId}
+    </select>
+        
+    <insert id="insertMarketAfterSaleLedger" parameterType="MarketAfterSaleLedger" useGeneratedKeys="true" keyProperty="maslId">
+        insert into Market_After_Sale_Ledger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Number != null">Number,</if>
+            <if test="userUnit != null">User_Unit,</if>
+            <if test="Contacts != null">Contacts,</if>
+            <if test="Phone != null">Phone,</if>
+            <if test="feedbackDate != null">Feedback_Date,</if>
+            <if test="vehicleProductionUnit != null">Vehicle_Production_Unit,</if>
+            <if test="Vehicle != null">Vehicle,</if>
+            <if test="Ton != null">Ton,</if>
+            <if test="Launch != null">Launch,</if>
+            <if test="vehicleModel != null">Vehicle_Model,</if>
+            <if test="wagonNumber != null">Wagon_Number,</if>
+            <if test="sellingTime != null">Selling_Time,</if>
+            <if test="useHours != null">Use_Hours,</if>
+            <if test="newOrNot != null">New_Or_Not,</if>
+            <if test="existingProblem != null">Existing_Problem,</if>
+            <if test="primaryClassification != null">Primary_Classification,</if>
+            <if test="secondaryClassification != null">Secondary_Classification,</if>
+            <if test="finalTreatmentMethod != null">Final_Treatment_Method,</if>
+            <if test="Indemnity != null">Indemnity,</if>
+            <if test="partNumber != null">Part_Number,</if>
+            <if test="Supplier != null">Supplier,</if>
+            <if test="Quantity != null">Quantity,</if>
+            <if test="accountabilityUnit != null">Accountability_Unit,</if>
+            <if test="faultLevel != null">Fault_Level,</if>
+            <if test="Score != null">Score,</if>
+            <if test="sendingMethod != null">Sending_Method,</if>
+            <if test="primaryBranch != null">Primary_Branch,</if>
+            <if test="secondaryBranch != null">Secondary_Branch,</if>
+            <if test="despatchMode != null">Despatch_Mode,</if>
+            <if test="paymentsMode != null">Payments_Mode,</if>
+            <if test="feedbackMode != null">Feedback_Mode,</if>
+            <if test="reservationNumber != null">Reservation_Number,</if>
+            <if test="assessmentSituation != null">Assessment_Situation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Number != null">#{Number},</if>
+            <if test="userUnit != null">#{userUnit},</if>
+            <if test="Contacts != null">#{Contacts},</if>
+            <if test="Phone != null">#{Phone},</if>
+            <if test="feedbackDate != null">#{feedbackDate},</if>
+            <if test="vehicleProductionUnit != null">#{vehicleProductionUnit},</if>
+            <if test="Vehicle != null">#{Vehicle},</if>
+            <if test="Ton != null">#{Ton},</if>
+            <if test="Launch != null">#{Launch},</if>
+            <if test="vehicleModel != null">#{vehicleModel},</if>
+            <if test="wagonNumber != null">#{wagonNumber},</if>
+            <if test="sellingTime != null">#{sellingTime},</if>
+            <if test="useHours != null">#{useHours},</if>
+            <if test="newOrNot != null">#{newOrNot},</if>
+            <if test="existingProblem != null">#{existingProblem},</if>
+            <if test="primaryClassification != null">#{primaryClassification},</if>
+            <if test="secondaryClassification != null">#{secondaryClassification},</if>
+            <if test="finalTreatmentMethod != null">#{finalTreatmentMethod},</if>
+            <if test="Indemnity != null">#{Indemnity},</if>
+            <if test="partNumber != null">#{partNumber},</if>
+            <if test="Supplier != null">#{Supplier},</if>
+            <if test="Quantity != null">#{Quantity},</if>
+            <if test="accountabilityUnit != null">#{accountabilityUnit},</if>
+            <if test="faultLevel != null">#{faultLevel},</if>
+            <if test="Score != null">#{Score},</if>
+            <if test="sendingMethod != null">#{sendingMethod},</if>
+            <if test="primaryBranch != null">#{primaryBranch},</if>
+            <if test="secondaryBranch != null">#{secondaryBranch},</if>
+            <if test="despatchMode != null">#{despatchMode},</if>
+            <if test="paymentsMode != null">#{paymentsMode},</if>
+            <if test="feedbackMode != null">#{feedbackMode},</if>
+            <if test="reservationNumber != null">#{reservationNumber},</if>
+            <if test="assessmentSituation != null">#{assessmentSituation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketAfterSaleLedger" parameterType="MarketAfterSaleLedger">
+        update Market_After_Sale_Ledger
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="userUnit != null">User_Unit = #{userUnit},</if>
+            <if test="Contacts != null">Contacts = #{Contacts},</if>
+            <if test="Phone != null">Phone = #{Phone},</if>
+            <if test="feedbackDate != null">Feedback_Date = #{feedbackDate},</if>
+            <if test="vehicleProductionUnit != null">Vehicle_Production_Unit = #{vehicleProductionUnit},</if>
+            <if test="Vehicle != null">Vehicle = #{Vehicle},</if>
+            <if test="Ton != null">Ton = #{Ton},</if>
+            <if test="Launch != null">Launch = #{Launch},</if>
+            <if test="vehicleModel != null">Vehicle_Model = #{vehicleModel},</if>
+            <if test="wagonNumber != null">Wagon_Number = #{wagonNumber},</if>
+            <if test="sellingTime != null">Selling_Time = #{sellingTime},</if>
+            <if test="useHours != null">Use_Hours = #{useHours},</if>
+            <if test="newOrNot != null">New_Or_Not = #{newOrNot},</if>
+            <if test="existingProblem != null">Existing_Problem = #{existingProblem},</if>
+            <if test="primaryClassification != null">Primary_Classification = #{primaryClassification},</if>
+            <if test="secondaryClassification != null">Secondary_Classification = #{secondaryClassification},</if>
+            <if test="finalTreatmentMethod != null">Final_Treatment_Method = #{finalTreatmentMethod},</if>
+            <if test="Indemnity != null">Indemnity = #{Indemnity},</if>
+            <if test="partNumber != null">Part_Number = #{partNumber},</if>
+            <if test="Supplier != null">Supplier = #{Supplier},</if>
+            <if test="Quantity != null">Quantity = #{Quantity},</if>
+            <if test="accountabilityUnit != null">Accountability_Unit = #{accountabilityUnit},</if>
+            <if test="faultLevel != null">Fault_Level = #{faultLevel},</if>
+            <if test="Score != null">Score = #{Score},</if>
+            <if test="sendingMethod != null">Sending_Method = #{sendingMethod},</if>
+            <if test="primaryBranch != null">Primary_Branch = #{primaryBranch},</if>
+            <if test="secondaryBranch != null">Secondary_Branch = #{secondaryBranch},</if>
+            <if test="despatchMode != null">Despatch_Mode = #{despatchMode},</if>
+            <if test="paymentsMode != null">Payments_Mode = #{paymentsMode},</if>
+            <if test="feedbackMode != null">Feedback_Mode = #{feedbackMode},</if>
+            <if test="reservationNumber != null">Reservation_Number = #{reservationNumber},</if>
+            <if test="assessmentSituation != null">Assessment_Situation = #{assessmentSituation},</if>
+        </trim>
+        where MASL_ID = #{maslId}
+    </update>
+
+    <delete id="deleteMarketAfterSaleLedgerByMaslId" parameterType="Long">
+        delete from Market_After_Sale_Ledger where MASL_ID = #{maslId}
+    </delete>
+
+    <delete id="deleteMarketAfterSaleLedgerByMaslIds" parameterType="String">
+        delete from Market_After_Sale_Ledger where MASL_ID in 
+        <foreach item="maslId" collection="array" open="(" separator="," close=")">
+            #{maslId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.production.mapper.ProductionStandardJobRegistrationFormMapper">
+    
+    <resultMap type="ProductionStandardJobRegistrationForm" id="ProductionStandardJobRegistrationFormResult">
+        <result property="psjrfId"    column="PSJRF_ID"    />
+        <result property="Keyword"    column="Keyword"    />
+        <result property="deliverObject"    column="Deliver_Object"    />
+        <result property="deliveryTime"    column="Delivery_Time"    />
+        <result property="fileName"    column="File_Name"    />
+    </resultMap>
+
+    <sql id="selectProductionStandardJobRegistrationFormVo">
+        select PSJRF_ID, Keyword, Deliver_Object, Delivery_Time, File_Name from Production_Standard_Job_Registration_Form
+    </sql>
+
+    <select id="selectProductionStandardJobRegistrationFormList" parameterType="ProductionStandardJobRegistrationForm" resultMap="ProductionStandardJobRegistrationFormResult">
+        <include refid="selectProductionStandardJobRegistrationFormVo"/>
+        <where>  
+            <if test="Keyword != null  and Keyword != ''"> and Keyword = #{Keyword}</if>
+            <if test="deliverObject != null  and deliverObject != ''"> and Deliver_Object = #{deliverObject}</if>
+            <if test="deliveryTime != null "> and Delivery_Time = #{deliveryTime}</if>
+            <if test="fileName != null  and fileName != ''"> and File_Name like concat('%', #{fileName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectProductionStandardJobRegistrationFormByPsjrfId" parameterType="Long" resultMap="ProductionStandardJobRegistrationFormResult">
+        <include refid="selectProductionStandardJobRegistrationFormVo"/>
+        where PSJRF_ID = #{psjrfId}
+    </select>
+        
+    <insert id="insertProductionStandardJobRegistrationForm" parameterType="ProductionStandardJobRegistrationForm" useGeneratedKeys="true" keyProperty="psjrfId">
+        insert into Production_Standard_Job_Registration_Form
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Keyword != null">Keyword,</if>
+            <if test="deliverObject != null">Deliver_Object,</if>
+            <if test="deliveryTime != null">Delivery_Time,</if>
+            <if test="fileName != null">File_Name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Keyword != null">#{Keyword},</if>
+            <if test="deliverObject != null">#{deliverObject},</if>
+            <if test="deliveryTime != null">#{deliveryTime},</if>
+            <if test="fileName != null">#{fileName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductionStandardJobRegistrationForm" parameterType="ProductionStandardJobRegistrationForm">
+        update Production_Standard_Job_Registration_Form
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Keyword != null">Keyword = #{Keyword},</if>
+            <if test="deliverObject != null">Deliver_Object = #{deliverObject},</if>
+            <if test="deliveryTime != null">Delivery_Time = #{deliveryTime},</if>
+            <if test="fileName != null">File_Name = #{fileName},</if>
+        </trim>
+        where PSJRF_ID = #{psjrfId}
+    </update>
+
+    <delete id="deleteProductionStandardJobRegistrationFormByPsjrfId" parameterType="Long">
+        delete from Production_Standard_Job_Registration_Form where PSJRF_ID = #{psjrfId}
+    </delete>
+
+    <delete id="deleteProductionStandardJobRegistrationFormByPsjrfIds" parameterType="String">
+        delete from Production_Standard_Job_Registration_Form where PSJRF_ID in 
+        <foreach item="psjrfId" collection="array" open="(" separator="," close=")">
+            #{psjrfId}
+        </foreach>
+    </delete>
+</mapper>

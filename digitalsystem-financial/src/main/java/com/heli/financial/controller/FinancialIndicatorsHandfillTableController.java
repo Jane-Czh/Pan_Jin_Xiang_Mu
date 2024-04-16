@@ -106,6 +106,14 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 
 }
 
+
+
+
+
+
+
+
+
     /**
      * 查询[财务]手动填报指标列表
      */
@@ -145,7 +153,9 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     @PreAuthorize("@ss.hasPermi('financial:data:add')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+    public AjaxResult add(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+
+        System.out.println(financialIndicatorsHandfillTable);
         return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
     }
 

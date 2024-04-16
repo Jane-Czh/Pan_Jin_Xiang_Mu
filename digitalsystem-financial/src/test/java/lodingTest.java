@@ -1,11 +1,15 @@
 //import com.spire.xls.FileFormat;
 //import com.spire.xls.Workbook;
+import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
 import jdk.internal.instrumentation.TypeMapping;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.web.servlet.headers.HttpPublicKeyPinningDsl;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Date;
 
 /**
  * @BelongsProject: ruoyi
@@ -18,6 +22,26 @@ import java.io.FileNotFoundException;
 
 
 public class lodingTest {
+    @Autowired
+    IFinancialIndicatorsHandfillTableService financialIndicatorsHandfillTableService;
+
+    @Test
+    public void checkDataIsExisted(){
+//        financialIndicatorsHandfillTableService.checkHandFillDataIsExisted( "2024-02");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Test
     public void load() throws Exception {
 

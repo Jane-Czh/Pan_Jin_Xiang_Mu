@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IFinancialBalanceTableService {
 
+
+    boolean checkBalanceDataIsExisted(Date date);
+
     /**
      * @description: 资产负债表导入
      * @author: hong

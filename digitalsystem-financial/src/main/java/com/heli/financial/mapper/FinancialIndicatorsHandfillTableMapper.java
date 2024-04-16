@@ -3,6 +3,7 @@ package com.heli.financial.mapper;
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -14,10 +15,18 @@ import java.util.List;
  * @author hong
  * @date 2024-03-29
  */
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialIndicatorsHandfillTableMapper {
 
     List<Date> selectExistedYearAndMonth();
+
+
+    /**
+     * @description: 检查当月手动填报数据是否存在
+     * @author: hong
+     * @date: 2024/4/15 14:59
+     **/
+    boolean checkHandFillDataIsExisted(@Param("date") Date date);
 
     /**
      * 查询[财务]手动填报指标

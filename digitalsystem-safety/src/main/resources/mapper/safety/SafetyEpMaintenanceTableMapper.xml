@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.safety.mapper.SafetyEpMaintenanceTableMapper">
+    
+    <resultMap type="SafetyEpMaintenanceTable" id="SafetyEpMaintenanceTableResult">
+        <result property="semId"    column="SEM_ID"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="equipmentNumber"    column="Equipment_Number"    />
+        <result property="equipmentName"    column="Equipment_Name"    />
+        <result property="workOrderStatus"    column="Work_Order_Status"    />
+        <result property="problemType"    column="Problem_Type"    />
+        <result property="maintenanceDepartment"    column="Maintenance_Department"    />
+        <result property="applicant"    column="Applicant"    />
+        <result property="applicationDepartment"    column="Application_Department"    />
+        <result property="maintenancePersonnel"    column="Maintenance_Personnel"    />
+        <result property="faultPhenomenon"    column="Fault_Phenomenon"    />
+        <result property="maintenanceAnalysis"    column="Maintenance_Analysis"    />
+        <result property="maintenanceContent"    column="Maintenance_Content"    />
+        <result property="maintenanceDuration"    column="Maintenance_Duration"    />
+        <result property="faultDuration"    column="Fault_Duration"    />
+        <result property="maintenanceTime"    column="Maintenance_Time"    />
+        <result property="pendingStatus"    column="Pending_Status"    />
+        <result property="waitingStartTime"    column="Waiting_Start_Time"    />
+        <result property="waitingEndTime"    column="Waiting_End_Time"    />
+        <result property="waitingTime"    column="Waiting_Time"    />
+        <result property="maintenanceApplicationNumber"    column="Maintenance_Application_Number"    />
+        <result property="acceptancePerson"    column="Acceptance_Person"    />
+        <result property="acceptanceResults"    column="Acceptance_Results"    />
+        <result property="acceptanceEvaluation"    column="Acceptance_Evaluation"    />
+        <result property="accumulatedNumberOfFailures"    column="Accumulated_Number_Of_Failures"    />
+        <result property="workOrderSendingFlag"    column="Work_Order_Sending_Flag"    />
+        <result property="workOrderSendingTime"    column="Work_Order_Sending_Time"    />
+        <result property="workOrderSendingResults"    column="Work_Order_Sending_Results"    />
+        <result property="whetherToShutdown"    column="Whether_To_ShutDown"    />
+    </resultMap>
+
+    <sql id="selectSafetyEpMaintenanceTableVo">
+        select SEM_ID, CREATED_BY, CREATED_TIME, Equipment_Number, Equipment_Name, Work_Order_Status, Problem_Type, Maintenance_Department, Applicant, Application_Department, Maintenance_Personnel, Fault_Phenomenon, Maintenance_Analysis, Maintenance_Content, Maintenance_Duration, Fault_Duration, Maintenance_Time, Pending_Status, Waiting_Start_Time, Waiting_End_Time, Waiting_Time, Maintenance_Application_Number, Acceptance_Person, Acceptance_Results, Acceptance_Evaluation, Accumulated_Number_Of_Failures, Work_Order_Sending_Flag, Work_Order_Sending_Time, Work_Order_Sending_Results, Whether_To_ShutDown from Safety_EP_Maintenance_table
+    </sql>
+
+    <select id="selectSafetyEpMaintenanceTableList" parameterType="SafetyEpMaintenanceTable" resultMap="SafetyEpMaintenanceTableResult">
+        <include refid="selectSafetyEpMaintenanceTableVo"/>
+        <where>  
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="equipmentNumber != null  and equipmentNumber != ''"> and Equipment_Number = #{equipmentNumber}</if>
+            <if test="equipmentName != null  and equipmentName != ''"> and Equipment_Name like concat('%', #{equipmentName}, '%')</if>
+            <if test="workOrderStatus != null  and workOrderStatus != ''"> and Work_Order_Status = #{workOrderStatus}</if>
+            <if test="problemType != null  and problemType != ''"> and Problem_Type = #{problemType}</if>
+            <if test="maintenanceDepartment != null  and maintenanceDepartment != ''"> and Maintenance_Department = #{maintenanceDepartment}</if>
+            <if test="applicant != null  and applicant != ''"> and Applicant = #{applicant}</if>
+            <if test="applicationDepartment != null  and applicationDepartment != ''"> and Application_Department = #{applicationDepartment}</if>
+            <if test="maintenancePersonnel != null  and maintenancePersonnel != ''"> and Maintenance_Personnel = #{maintenancePersonnel}</if>
+            <if test="faultPhenomenon != null  and faultPhenomenon != ''"> and Fault_Phenomenon = #{faultPhenomenon}</if>
+            <if test="maintenanceAnalysis != null  and maintenanceAnalysis != ''"> and Maintenance_Analysis = #{maintenanceAnalysis}</if>
+            <if test="maintenanceContent != null  and maintenanceContent != ''"> and Maintenance_Content = #{maintenanceContent}</if>
+            <if test="maintenanceDuration != null "> and Maintenance_Duration = #{maintenanceDuration}</if>
+            <if test="faultDuration != null "> and Fault_Duration = #{faultDuration}</if>
+            <if test="maintenanceTime != null "> and Maintenance_Time = #{maintenanceTime}</if>
+            <if test="pendingStatus != null  and pendingStatus != ''"> and Pending_Status = #{pendingStatus}</if>
+            <if test="waitingStartTime != null "> and Waiting_Start_Time = #{waitingStartTime}</if>
+            <if test="waitingEndTime != null "> and Waiting_End_Time = #{waitingEndTime}</if>
+            <if test="waitingTime != null "> and Waiting_Time = #{waitingTime}</if>
+            <if test="maintenanceApplicationNumber != null  and maintenanceApplicationNumber != ''"> and Maintenance_Application_Number = #{maintenanceApplicationNumber}</if>
+            <if test="acceptancePerson != null  and acceptancePerson != ''"> and Acceptance_Person = #{acceptancePerson}</if>
+            <if test="acceptanceResults != null  and acceptanceResults != ''"> and Acceptance_Results = #{acceptanceResults}</if>
+            <if test="acceptanceEvaluation != null  and acceptanceEvaluation != ''"> and Acceptance_Evaluation = #{acceptanceEvaluation}</if>
+            <if test="accumulatedNumberOfFailures != null "> and Accumulated_Number_Of_Failures = #{accumulatedNumberOfFailures}</if>
+            <if test="workOrderSendingFlag != null  and workOrderSendingFlag != ''"> and Work_Order_Sending_Flag = #{workOrderSendingFlag}</if>
+            <if test="workOrderSendingTime != null "> and Work_Order_Sending_Time = #{workOrderSendingTime}</if>
+            <if test="workOrderSendingResults != null  and workOrderSendingResults != ''"> and Work_Order_Sending_Results = #{workOrderSendingResults}</if>
+            <if test="whetherToShutdown != null  and whetherToShutdown != ''"> and Whether_To_ShutDown = #{whetherToShutdown}</if>
+        </where>
+    </select>
+    
+    <select id="selectSafetyEpMaintenanceTableBySemId" parameterType="String" resultMap="SafetyEpMaintenanceTableResult">
+        <include refid="selectSafetyEpMaintenanceTableVo"/>
+        where SEM_ID = #{semId}
+    </select>
+
+
+
+
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertSafetyEpMaintenanceTable" parameterType="java.util.List">
+        insert into Safety_EP_Maintenance_table(CREATED_BY,CREATED_TIME,Equipment_Number,Equipment_Name,
+        Work_Order_Status,Problem_Type,Maintenance_Department,Applicant,Application_Department,Maintenance_Personnel,
+        Fault_Phenomenon,Maintenance_Analysis,Maintenance_Content,Maintenance_Duration,Fault_Duration,Maintenance_Time,
+        Pending_Status,Waiting_Start_Time,Waiting_End_Time,Waiting_Time,Maintenance_Application_Number,Acceptance_Person,
+        Acceptance_Results,Acceptance_Evaluation,Accumulated_Number_Of_Failures,Work_Order_Sending_Flag,Work_Order_Sending_Time,
+        Work_Order_Sending_Results,Whether_To_ShutDown)
+        values
+        <foreach collection="safetyEpMaintenanceTableList" item="e" separator=",">
+            (#{e.createdBy},#{e.createdTime},#{e.equipmentNumber},#{e.equipmentName},#{e.workOrderStatus},#{e.problemType},
+            #{e.maintenanceDepartment},#{e.applicant},#{e.applicationDepartment},#{e.maintenancePersonnel},#{e.faultPhenomenon},
+            #{e.maintenanceAnalysis},#{e.maintenanceContent},#{e.maintenanceDuration},#{e.faultDuration},#{e.maintenanceTime},
+            #{e.pendingStatus},#{e.waitingStartTime},#{e.waitingEndTime},#{e.waitingTime},#{e.maintenanceApplicationNumber},
+            #{e.acceptancePerson},#{e.acceptanceResults},#{e.acceptanceEvaluation},#{e.accumulatedNumberOfFailures},
+            #{e.workOrderSendingFlag},#{e.workOrderSendingTime},#{e.workOrderSendingResults},#{e.whetherToShutdown})
+        </foreach>
+    </insert>
+
+
+
+
+
+
+
+
+        
+    <insert id="insertSafetyEpMaintenanceTable" parameterType="SafetyEpMaintenanceTable">
+        insert into Safety_EP_Maintenance_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="semId != null">SEM_ID,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="equipmentNumber != null">Equipment_Number,</if>
+            <if test="equipmentName != null">Equipment_Name,</if>
+            <if test="workOrderStatus != null">Work_Order_Status,</if>
+            <if test="problemType != null">Problem_Type,</if>
+            <if test="maintenanceDepartment != null">Maintenance_Department,</if>
+            <if test="applicant != null">Applicant,</if>
+            <if test="applicationDepartment != null">Application_Department,</if>
+            <if test="maintenancePersonnel != null">Maintenance_Personnel,</if>
+            <if test="faultPhenomenon != null">Fault_Phenomenon,</if>
+            <if test="maintenanceAnalysis != null">Maintenance_Analysis,</if>
+            <if test="maintenanceContent != null">Maintenance_Content,</if>
+            <if test="maintenanceDuration != null">Maintenance_Duration,</if>
+            <if test="faultDuration != null">Fault_Duration,</if>
+            <if test="maintenanceTime != null">Maintenance_Time,</if>
+            <if test="pendingStatus != null">Pending_Status,</if>
+            <if test="waitingStartTime != null">Waiting_Start_Time,</if>
+            <if test="waitingEndTime != null">Waiting_End_Time,</if>
+            <if test="waitingTime != null">Waiting_Time,</if>
+            <if test="maintenanceApplicationNumber != null">Maintenance_Application_Number,</if>
+            <if test="acceptancePerson != null">Acceptance_Person,</if>
+            <if test="acceptanceResults != null">Acceptance_Results,</if>
+            <if test="acceptanceEvaluation != null">Acceptance_Evaluation,</if>
+            <if test="accumulatedNumberOfFailures != null">Accumulated_Number_Of_Failures,</if>
+            <if test="workOrderSendingFlag != null">Work_Order_Sending_Flag,</if>
+            <if test="workOrderSendingTime != null">Work_Order_Sending_Time,</if>
+            <if test="workOrderSendingResults != null">Work_Order_Sending_Results,</if>
+            <if test="whetherToShutdown != null">Whether_To_ShutDown,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="semId != null">#{semId},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="equipmentNumber != null">#{equipmentNumber},</if>
+            <if test="equipmentName != null">#{equipmentName},</if>
+            <if test="workOrderStatus != null">#{workOrderStatus},</if>
+            <if test="problemType != null">#{problemType},</if>
+            <if test="maintenanceDepartment != null">#{maintenanceDepartment},</if>
+            <if test="applicant != null">#{applicant},</if>
+            <if test="applicationDepartment != null">#{applicationDepartment},</if>
+            <if test="maintenancePersonnel != null">#{maintenancePersonnel},</if>
+            <if test="faultPhenomenon != null">#{faultPhenomenon},</if>
+            <if test="maintenanceAnalysis != null">#{maintenanceAnalysis},</if>
+            <if test="maintenanceContent != null">#{maintenanceContent},</if>
+            <if test="maintenanceDuration != null">#{maintenanceDuration},</if>
+            <if test="faultDuration != null">#{faultDuration},</if>
+            <if test="maintenanceTime != null">#{maintenanceTime},</if>
+            <if test="pendingStatus != null">#{pendingStatus},</if>
+            <if test="waitingStartTime != null">#{waitingStartTime},</if>
+            <if test="waitingEndTime != null">#{waitingEndTime},</if>
+            <if test="waitingTime != null">#{waitingTime},</if>
+            <if test="maintenanceApplicationNumber != null">#{maintenanceApplicationNumber},</if>
+            <if test="acceptancePerson != null">#{acceptancePerson},</if>
+            <if test="acceptanceResults != null">#{acceptanceResults},</if>
+            <if test="acceptanceEvaluation != null">#{acceptanceEvaluation},</if>
+            <if test="accumulatedNumberOfFailures != null">#{accumulatedNumberOfFailures},</if>
+            <if test="workOrderSendingFlag != null">#{workOrderSendingFlag},</if>
+            <if test="workOrderSendingTime != null">#{workOrderSendingTime},</if>
+            <if test="workOrderSendingResults != null">#{workOrderSendingResults},</if>
+            <if test="whetherToShutdown != null">#{whetherToShutdown},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSafetyEpMaintenanceTable" parameterType="SafetyEpMaintenanceTable">
+        update Safety_EP_Maintenance_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="equipmentNumber != null">Equipment_Number = #{equipmentNumber},</if>
+            <if test="equipmentName != null">Equipment_Name = #{equipmentName},</if>
+            <if test="workOrderStatus != null">Work_Order_Status = #{workOrderStatus},</if>
+            <if test="problemType != null">Problem_Type = #{problemType},</if>
+            <if test="maintenanceDepartment != null">Maintenance_Department = #{maintenanceDepartment},</if>
+            <if test="applicant != null">Applicant = #{applicant},</if>
+            <if test="applicationDepartment != null">Application_Department = #{applicationDepartment},</if>
+            <if test="maintenancePersonnel != null">Maintenance_Personnel = #{maintenancePersonnel},</if>
+            <if test="faultPhenomenon != null">Fault_Phenomenon = #{faultPhenomenon},</if>
+            <if test="maintenanceAnalysis != null">Maintenance_Analysis = #{maintenanceAnalysis},</if>
+            <if test="maintenanceContent != null">Maintenance_Content = #{maintenanceContent},</if>
+            <if test="maintenanceDuration != null">Maintenance_Duration = #{maintenanceDuration},</if>
+            <if test="faultDuration != null">Fault_Duration = #{faultDuration},</if>
+            <if test="maintenanceTime != null">Maintenance_Time = #{maintenanceTime},</if>
+            <if test="pendingStatus != null">Pending_Status = #{pendingStatus},</if>
+            <if test="waitingStartTime != null">Waiting_Start_Time = #{waitingStartTime},</if>
+            <if test="waitingEndTime != null">Waiting_End_Time = #{waitingEndTime},</if>
+            <if test="waitingTime != null">Waiting_Time = #{waitingTime},</if>
+            <if test="maintenanceApplicationNumber != null">Maintenance_Application_Number = #{maintenanceApplicationNumber},</if>
+            <if test="acceptancePerson != null">Acceptance_Person = #{acceptancePerson},</if>
+            <if test="acceptanceResults != null">Acceptance_Results = #{acceptanceResults},</if>
+            <if test="acceptanceEvaluation != null">Acceptance_Evaluation = #{acceptanceEvaluation},</if>
+            <if test="accumulatedNumberOfFailures != null">Accumulated_Number_Of_Failures = #{accumulatedNumberOfFailures},</if>
+            <if test="workOrderSendingFlag != null">Work_Order_Sending_Flag = #{workOrderSendingFlag},</if>
+            <if test="workOrderSendingTime != null">Work_Order_Sending_Time = #{workOrderSendingTime},</if>
+            <if test="workOrderSendingResults != null">Work_Order_Sending_Results = #{workOrderSendingResults},</if>
+            <if test="whetherToShutdown != null">Whether_To_ShutDown = #{whetherToShutdown},</if>
+        </trim>
+        where SEM_ID = #{semId}
+    </update>
+
+    <delete id="deleteSafetyEpMaintenanceTableBySemId" parameterType="String">
+        delete from Safety_EP_Maintenance_table where SEM_ID = #{semId}
+    </delete>
+
+    <delete id="deleteSafetyEpMaintenanceTableBySemIds" parameterType="String">
+        delete from Safety_EP_Maintenance_table where SEM_ID in 
+        <foreach item="semId" collection="array" open="(" separator="," close=")">
+            #{semId}
+        </foreach>
+    </delete>
+</mapper>

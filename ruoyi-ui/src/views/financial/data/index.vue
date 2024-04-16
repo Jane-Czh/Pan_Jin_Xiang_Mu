@@ -174,7 +174,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
   <div>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -227,18 +227,32 @@
         :before-close="handleClose"
         @close="resetFileInput"
       >
+<el-form :model="form1" ref="form1" label-width="90px">
+
+         <el-form-item label="填报时间" prop="reportingDate">
+        <el-date-picker clearable
+          v-model="form1.reportingDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择填报时间">
+        </el-date-picker>
+      </el-form-item>
+
+    </el-form>
+
        <!-- 下拉框 -->
   <el-form :model="form" ref="form" label-width="90px">
     <el-form-item label="选择表类型">
       <el-select v-model="selectedType" placeholder="请选择Excel类型">
         <el-option label="利润表" value="profit"></el-option>
         <el-option label="资产负债表" value="balance"></el-option>
+        <el-option label="多选" value="common"></el-option>
       </el-select>
     </el-form-item>
   </el-form>
 
         <i class="el-icon-upload"></i>
-        <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+        <input type="file" id="inputFile" ref="fileInput" @change="checkFile"  multiple/>
 
         <!-- 进度动画条 -->
         <div v-if="progress > 0">
@@ -253,6 +267,9 @@
           <el-button type="primary" @click="fileSend()">确 定</el-button>
         </span>
       </el-dialog>
+
+
+
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -323,7 +340,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -458,6 +475,32 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //表单参数
+     form1: {
+  fihfId: '',
+  yearAndMonth: '',
+  totalSalesRevenue: '',
+  externalGroupSalesRevenue: '',
+  totalVehicleProduction: '',
+  totalVehicleSales: '',
+  newProductSalesRevenue: '',
+  specialtyProductRevenue: '',
+  totalSalesCost: '',
+  manufacturingExpensesMonth: '',
+  reserveCarAmount: '',
+  capitalTurnoverRate: '',
+  inventoryTurnoverRate: '',
+  rawMaterialTurnoverRate: '',
+  inprogressTurnoverRate: '',
+  longEstimatedItems: '',
+  inprogressDayrevenue: '',
+  addedValueMonthly: '',
+  reportingDate: '',
+  updatedBy: '',
+  updatedDate: '',
+  reporter: '',
+},
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -623,12 +666,16 @@ export default {
      /** 导入按钮 */
      fileSend() {
       const formData = new FormData();
+      const files = document.getElementById("inputFile").files;
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      
+      const file1 = document.getElementById("inputFile").files[1]; // 获取文件对象
+      const fileCount = files.length; // 文件数量
+
+
 
        // 根据用户选择的 Excel 类型执行不同的操作
   if (this.selectedType === 'profit') {
+      formData.append("excelFile", file);
       axios({
         method: "post",
         // url: this.$http.url('/financial/data/upload'),
@@ -649,6 +696,7 @@ export default {
       });
     console.log("利润表")
   } else if (this.selectedType === 'balance') {
+      formData.append("excelFile", file);
        axios({
         method: "post",
         // url: this.$http.url('/financial/data/upload'),
@@ -676,25 +724,36 @@ export default {
     //   }
     // });
     console.log("资产负债表类型")
+  }else if (fileCount>1)
+  {
+      formData.append("InterestsFile", file);
+       formData.append("BalanceFile", file1);
+        formData.append("FITable", this.form1.reportingDate);
+    //     const formData = {
+    //       InterestsFile:file,
+    //       BalanceFile:file1,
+    // fihfId: this.form1.reportingDate
+    // }
+      // formData.append("FITable",)
+      axios({
+        method: "post",
+        // url: this.$http.url('/financial/data/upload'),
+          url:"http://localhost:8080/financial/uploadDataAndTable",
+        // params: this.$http.adornParams({
+        //   userName: this.$store.state.user.name,
+        // }),
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+        data: formData,
+        onUploadProgress: (progressEvent) => {
+          this.progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+        },
+      });
   }
-      // axios({
-      //   method: "post",
-      //   // url: this.$http.url('/financial/data/upload'),
-      //     url:"http://localhost:8080/financial/interests/importTable",
-      //   // params: this.$http.adornParams({
-      //   //   userName: this.$store.state.user.name,
-      //   // }),
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      //   withCredentials: true,
-      //   data: formData,
-      //   onUploadProgress: (progressEvent) => {
-      //     this.progress = Math.round(
-      //       (progressEvent.loaded * 100) / progressEvent.total
-      //     );
-      //   },
-      // });
       this.$message.success("上传成功");
 
       // .then((response) => {

@@ -15,8 +15,19 @@ import org.apache.ibatis.annotations.Param;
  * @author hong
  * @date 2024-03-31
  */
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialInterestsTableMapper {
+
+
+    /**
+     * @description: 检查当月利润表数据是否存在
+     * @author: hong
+     * @date: 2024/4/15 14:59
+     **/
+    boolean checkInterestsDataIsExisted(@Param("date") Date date);
+
+
+
 
     /**
      *
@@ -26,6 +37,16 @@ public interface FinancialInterestsTableMapper {
 
 //    public BigDecimal selectOperatingRevenue(Date yearAndMonth);
     public BigDecimal selectOperatingRevenueByMonth(@Param("yearAndMonth")Date date);
+
+//    按年查询利润表的全部数据
+    List<FinancialInterestsTable> selectFinancialInterestsTableByYear(@Param("year") String year);
+
+//    按时间段查询利润表数据
+    List<FinancialInterestsTable> selectFinancialInterestsTableByTime(@Param("beginTime") Date beginTime,
+                                                                      @Param("endTime") Date endTime);
+
+
+
 
     /**
      * 查询财务-利润

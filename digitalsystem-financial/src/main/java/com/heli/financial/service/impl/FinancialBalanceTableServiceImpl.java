@@ -45,6 +45,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     @Autowired
     private IFinancialInterestsTableService iFinancialInterestsTableService;
 
+    @Override
+    public boolean checkBalanceDataIsExisted(Date date) {
+        return financialBalanceTableMapper.checkBalanceDataIsExisted(date);
+    }
+
     /**
      * @description: 资产负债表导入
      * @author: hong
@@ -119,6 +124,7 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
 
         return financialBalanceTableMapper.insertFinancialBalanceTable(countGrowthRateInventorySales(financialBalanceTable));
     }
+
 
     @Override
     public int deleteFinancialBalanceTableByYearAndMonth(Date yearAndMonth) {
@@ -203,6 +209,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         );
         return financialBalanceTable;
     }
+
+
+
+
+
 
 
     /**

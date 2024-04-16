@@ -23,6 +23,19 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
     @Autowired
     private FinancialIndicatorsHandfillTableMapper financialIndicatorsHandfillTableMapper;
 
+    /**
+     * @description: 检查手动填报数据是否存在
+     * @author: hong
+     * @date: 2024/4/15 14:53
+     **/
+    @Override
+    public boolean checkHandFillDataIsExisted(Date date) {
+        return financialIndicatorsHandfillTableMapper.checkHandFillDataIsExisted(date);
+    }
+
+
+
+
     @Override
     public List<Date> selectExistedYearAndMonth() {
         return financialIndicatorsHandfillTableMapper.selectExistedYearAndMonth();

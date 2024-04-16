@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.production.mapper.ProductionTableMapper">
+
+    <resultMap type="ProductionTable" id="ProductionTableResult">
+        <result property="mcvId" column="MCV_ID"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdTime" column="CREATED_TIME"/>
+        <result property="acceptanceDate" column="Acceptance_Date"/>
+        <result property="launchDate" column="Launch_Date"/>
+        <result property="orderNumber" column="Order_Number"/>
+        <result property="contractNumber" column="Contract_Number"/>
+        <result property="carNumber" column="Car_Number"/>
+        <result property="vehicleModel" column="Vehicle_Model"/>
+        <result property="doorFrameHeight" column="Door_Frame_Height"/>
+        <result property="amount" column="Amount"/>
+        <result property="accessory" column="Accessory"/>
+        <result property="valveBlock" column="Valve_Block"/>
+        <result property="configuration" column="Configuration"/>
+        <result property="plannedCompletionPeriod" column="Planned_Completion_Period"/>
+        <result property="customer" column="Customer"/>
+        <result property="vehicleLaunchDate" column="Vehicle_Launch_Date"/>
+        <result property="completionPeriodOfDoorFrameAssembly" column="Completion_Period_Of_Door_Frame_Assembly"/>
+        <result property="trialCompletionPeriod" column="Trial_Completion_Period"/>
+        <result property="specialOperations" column="Special_Operations"/>
+        <result property="precisionCompletionPeriod" column="Precision_Completion_Period"/>
+        <result property="productionSiteIssues" column="Production_SiteIssues"/>
+        <result property="procurementOfOnSiteAbnormalIssues" column="Procurement_Of_On_site_Abnormal_Issues"/>
+        <result property="qualityOfOnSiteAbnormalIssues" column="Quality_Of_On_site_Abnormal_Issues"/>
+        <result property="goLive" column="Go_Live"/>
+        <result property="warehousing" column="Warehousing"/>
+        <result property="productionCycle" column="Production_Cycle"/>
+    </resultMap>
+
+    <sql id="selectProductionTableVo">
+        select MCV_ID, CREATED_BY, CREATED_TIME, Acceptance_Date, Launch_Date, Order_Number, Contract_Number, Car_Number, Vehicle_Model, Door_Frame_Height, Amount, Accessory, Valve_Block, Configuration, Planned_Completion_Period, Customer, Vehicle_Launch_Date, Completion_Period_Of_Door_Frame_Assembly, Trial_Completion_Period, Special_Operations, Precision_Completion_Period, Production_SiteIssues, Procurement_Of_On_site_Abnormal_Issues, Quality_Of_On_site_Abnormal_Issues, Go_Live, Warehousing, Production_Cycle from Production_Table
+    </sql>
+
+    <select id="selectProductionTableList" parameterType="ProductionTable" resultMap="ProductionTableResult">
+        <include refid="selectProductionTableVo"/>
+        <where>
+            <if test="createdBy != null  and createdBy != ''">and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null ">and CREATED_TIME = #{createdTime}</if>
+            <if test="acceptanceDate != null ">and Acceptance_Date = #{acceptanceDate}</if>
+            <if test="launchDate != null ">and Launch_Date = #{launchDate}</if>
+            <if test="orderNumber != null  and orderNumber != ''">and Order_Number = #{orderNumber}</if>
+            <if test="contractNumber != null  and contractNumber != ''">and Contract_Number = #{contractNumber}</if>
+            <if test="carNumber != null  and carNumber != ''">and Car_Number = #{carNumber}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''">and Vehicle_Model = #{vehicleModel}</if>
+            <if test="doorFrameHeight != null  and doorFrameHeight != ''">and Door_Frame_Height = #{doorFrameHeight}</if>
+            <if test="amount != null ">and Amount = #{amount}</if>
+            <if test="accessory != null  and accessory != ''">and Accessory = #{accessory}</if>
+            <if test="valveBlock != null  and valveBlock != ''">and Valve_Block = #{valveBlock}</if>
+            <if test="configuration != null  and configuration != ''">and Configuration = #{configuration}</if>
+            <if test="plannedCompletionPeriod != null ">and Planned_Completion_Period = #{plannedCompletionPeriod}</if>
+            <if test="customer != null  and customer != ''">and Customer = #{customer}</if>
+            <if test="vehicleLaunchDate != null ">and Vehicle_Launch_Date = #{vehicleLaunchDate}</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null ">and Completion_Period_Of_Door_Frame_Assembly =#{completionPeriodOfDoorFrameAssembly}</if>
+            <if test="trialCompletionPeriod != null ">and Trial_Completion_Period = #{trialCompletionPeriod}</if>
+            <if test="specialOperations != null ">and Special_Operations = #{specialOperations}</if>
+            <if test="precisionCompletionPeriod != null ">and Precision_Completion_Period =#{precisionCompletionPeriod}</if>
+            <if test="productionSiteIssues != null  and productionSiteIssues != ''">and Production_SiteIssues =#{productionSiteIssues}</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null  and procurementOfOnSiteAbnormalIssues != ''">andProcurement_Of_On_site_Abnormal_Issues = #{procurementOfOnSiteAbnormalIssues}</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null  and qualityOfOnSiteAbnormalIssues != ''">andQuality_Of_On_site_Abnormal_Issues = #{qualityOfOnSiteAbnormalIssues}</if>
+            <if test="goLive != null ">and Go_Live = #{goLive}</if>
+            <if test="warehousing != null ">and Warehousing = #{warehousing}</if>
+            <if test="productionCycle != null  and productionCycle != ''">and Production_Cycle = #{productionCycle}</if>
+        </where>
+    </select>
+
+    <select id="selectProductionTableByMcvId" parameterType="Long" resultMap="ProductionTableResult">
+        <include refid="selectProductionTableVo"/>
+        where MCV_ID = #{mcvId}
+    </select>
+
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertProductionTable" parameterType="java.util.List">
+        insert into Production_Table(CREATED_BY,CREATED_TIME,Acceptance_Date,Launch_Date,
+        Order_Number,Contract_Number,Car_Number,Vehicle_Model,
+        Door_Frame_Height,Amount,Accessory,Valve_Block,
+        Car_Configuration,Planned_Completion_Period,Customer,
+        Vehicle_Launch_Date,Completion_Period_Of_Door_Frame_Assembly,
+        Trial_Completion_Period,Special_Operations,Precision_Completion_Period,
+        Production_SiteIssues,Procurement_Of_On_site_Abnormal_Issues,
+        Quality_Of_On_site_Abnormal_Issues,Go_Live,Warehousing,Production_Cycle)
+        values
+        <foreach collection="productionTableList" item="e" separator=",">
+            (#{e.createdBy},#{e.createdTime},#{e.acceptanceDate},
+            #{e.launchDate},#{e.orderNumber},#{e.contractNumber},
+            #{e.carNumber},#{e.vehicleModel},#{e.doorFrameHeight},
+            #{e.amount},#{e.accessory},#{e.valveBlock},#{e.configuration},
+            #{e.plannedCompletionPeriod},#{e.customer},#{e.vehicleLaunchDate},
+            #{e.completionPeriodOfDoorFrameAssembly},#{e.trialCompletionPeriod},
+            #{e.specialOperations},#{e.precisionCompletionPeriod},#{e.productionSiteIssues},
+            #{e.procurementOfOnSiteAbnormalIssues},#{e.qualityOfOnSiteAbnormalIssues},
+            #{e.goLive},#{e.warehousing},#{e.productionCycle})
+        </foreach>
+    </insert>
+
+
+    <select id="selectLaunchNumGroupByDate" resultType="com.heli.production.domain.ProductionCountNumberEntity">
+        select Launch_Date as realTime,count('Launch_Date') as num
+        from Production_Table
+        group by Launch_Date
+    </select>
+
+    <select id="selectCompletionNumGroupByDate" resultType="com.heli.production.domain.ProductionCountNumberEntity">
+        select Planned_Completion_Period as realTime,count('Planned_Completion_Period') as num
+        from Production_Table
+        group by Planned_Completion_Period
+    </select>
+
+    <insert id="batchInsertOrUpdateLaunch">
+        insert into Production_LunchAndCompletionNumber(Real_Time,Launch_Number)
+        VALUES
+        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.num})</foreach>
+        ON DUPLICATE KEY UPDATE
+        Launch_Number = values(Launch_Number)
+    </insert>
+
+    <insert id="batchInsertOrUpdateCompletion">
+        insert into Production_LunchAndCompletionNumber(Real_Time,Completion_Number)
+        VALUES
+        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.num})</foreach>
+        ON DUPLICATE KEY UPDATE
+        Completion_Number = values(Completion_Number)
+    </insert>
+
+
+
+
+<!--    <insert id="batchUserRole">-->
+<!--        insert into sys_user_role(user_id, role_id) values-->
+<!--        <foreach item="item" index="index" collection="list" separator=",">-->
+<!--            (#{item.userId},#{item.roleId})-->
+<!--        </foreach>-->
+<!--    </insert>-->
+
+<!--    <insert id="insertOrUpdateBatch">-->
+<!--        insert into t_employee_info-->
+<!--        (code, name, six, age, description)-->
+<!--        VALUES-->
+<!--        <foreach collection="list" index="index" item="item" separator=",">-->
+<!--            (#{item.code,jdbcType=VARCHAR}-->
+<!--            , #{item.name,jdbcType=VARCHAR}-->
+<!--            , #{item.six,jdbcType=VARCHAR}-->
+<!--            , #{item.age,jdbcType=INTEGER}-->
+<!--            , #{item.description,jdbcType=VARCHAR})-->
+<!--        </foreach>-->
+<!--        ON DUPLICATE KEY UPDATE-->
+<!--        code = values(code),-->
+<!--        name = values(name),-->
+<!--        six = values(six),-->
+<!--        age = values(age),-->
+<!--        description = values(description)-->
+<!--    </insert>-->
+
+
+    <insert id="insertProductionTable" parameterType="ProductionTable" useGeneratedKeys="true" keyProperty="mcvId">
+        insert into Production_Table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="acceptanceDate != null">Acceptance_Date,</if>
+            <if test="launchDate != null">Launch_Date,</if>
+            <if test="orderNumber != null">Order_Number,</if>
+            <if test="contractNumber != null">Contract_Number,</if>
+            <if test="carNumber != null">Car_Number,</if>
+            <if test="vehicleModel != null">Vehicle_Model,</if>
+            <if test="doorFrameHeight != null">Door_Frame_Height,</if>
+            <if test="amount != null">Amount,</if>
+            <if test="accessory != null">Accessory,</if>
+            <if test="valveBlock != null">Valve_Block,</if>
+            <if test="configuration != null">Configuration,</if>
+            <if test="plannedCompletionPeriod != null">Planned_Completion_Period,</if>
+            <if test="customer != null">Customer,</if>
+            <if test="vehicleLaunchDate != null">Vehicle_Launch_Date,</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null">Completion_Period_Of_Door_Frame_Assembly,</if>
+            <if test="trialCompletionPeriod != null">Trial_Completion_Period,</if>
+            <if test="specialOperations != null">Special_Operations,</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period,</if>
+            <if test="productionSiteIssues != null">Production_SiteIssues,</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null">Procurement_Of_On_site_Abnormal_Issues,</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null">Quality_Of_On_site_Abnormal_Issues,</if>
+            <if test="goLive != null">Go_Live,</if>
+            <if test="warehousing != null">Warehousing,</if>
+            <if test="productionCycle != null">Production_Cycle,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="acceptanceDate != null">#{acceptanceDate},</if>
+            <if test="launchDate != null">#{launchDate},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="contractNumber != null">#{contractNumber},</if>
+            <if test="carNumber != null">#{carNumber},</if>
+            <if test="vehicleModel != null">#{vehicleModel},</if>
+            <if test="doorFrameHeight != null">#{doorFrameHeight},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="accessory != null">#{accessory},</if>
+            <if test="valveBlock != null">#{valveBlock},</if>
+            <if test="configuration != null">#{configuration},</if>
+            <if test="plannedCompletionPeriod != null">#{plannedCompletionPeriod},</if>
+            <if test="customer != null">#{customer},</if>
+            <if test="vehicleLaunchDate != null">#{vehicleLaunchDate},</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null">#{completionPeriodOfDoorFrameAssembly},</if>
+            <if test="trialCompletionPeriod != null">#{trialCompletionPeriod},</if>
+            <if test="specialOperations != null">#{specialOperations},</if>
+            <if test="precisionCompletionPeriod != null">#{precisionCompletionPeriod},</if>
+            <if test="productionSiteIssues != null">#{productionSiteIssues},</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null">#{procurementOfOnSiteAbnormalIssues},</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null">#{qualityOfOnSiteAbnormalIssues},</if>
+            <if test="goLive != null">#{goLive},</if>
+            <if test="warehousing != null">#{warehousing},</if>
+            <if test="productionCycle != null">#{productionCycle},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductionTable" parameterType="ProductionTable">
+        update Production_Table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="acceptanceDate != null">Acceptance_Date = #{acceptanceDate},</if>
+            <if test="launchDate != null">Launch_Date = #{launchDate},</if>
+            <if test="orderNumber != null">Order_Number = #{orderNumber},</if>
+            <if test="contractNumber != null">Contract_Number = #{contractNumber},</if>
+            <if test="carNumber != null">Car_Number = #{carNumber},</if>
+            <if test="vehicleModel != null">Vehicle_Model = #{vehicleModel},</if>
+            <if test="doorFrameHeight != null">Door_Frame_Height = #{doorFrameHeight},</if>
+            <if test="amount != null">Amount = #{amount},</if>
+            <if test="accessory != null">Accessory = #{accessory},</if>
+            <if test="valveBlock != null">Valve_Block = #{valveBlock},</if>
+            <if test="configuration != null">Configuration = #{configuration},</if>
+            <if test="plannedCompletionPeriod != null">Planned_Completion_Period = #{plannedCompletionPeriod},</if>
+            <if test="customer != null">Customer = #{customer},</if>
+            <if test="vehicleLaunchDate != null">Vehicle_Launch_Date = #{vehicleLaunchDate},</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null">Completion_Period_Of_Door_Frame_Assembly =#{completionPeriodOfDoorFrameAssembly},</if>
+            <if test="trialCompletionPeriod != null">Trial_Completion_Period = #{trialCompletionPeriod},</if>
+            <if test="specialOperations != null">Special_Operations = #{specialOperations},</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period = #{precisionCompletionPeriod},</if>
+            <if test="productionSiteIssues != null">Production_SiteIssues = #{productionSiteIssues},</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null">Procurement_Of_On_site_Abnormal_Issues = #{procurementOfOnSiteAbnormalIssues},</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null">Quality_Of_On_site_Abnormal_Issues = #{qualityOfOnSiteAbnormalIssues},</if>
+            <if test="goLive != null">Go_Live = #{goLive},</if>
+            <if test="warehousing != null">Warehousing = #{warehousing},</if>
+            <if test="productionCycle != null">Production_Cycle = #{productionCycle},</if>
+        </trim>
+        where MCV_ID = #{mcvId}
+    </update>
+
+    <delete id="deleteProductionTableByMcvId" parameterType="Long">
+        delete from Production_Table where MCV_ID = #{mcvId}
+    </delete>
+
+    <delete id="deleteProductionTableByMcvIds" parameterType="String">
+        delete from Production_Table where MCV_ID in
+        <foreach item="mcvId" collection="array" open="(" separator="," close=")">
+            #{mcvId}
+        </foreach>
+    </delete>
+</mapper>

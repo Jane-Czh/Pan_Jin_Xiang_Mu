@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketAfterSaleProblemClassificationMapper">
+    
+    <resultMap type="MarketAfterSaleProblemClassification" id="MarketAfterSaleProblemClassificationResult">
+        <result property="maspcId"    column="MASPC_ID"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="problemRecurrenceRate"    column="Problem_Recurrence_Rate"    />
+        <result property="differentProblemOccurrenceRate"    column="Different_Problem_Occurrence_Rate"    />
+        <result property="Branch"    column="Branch"    />
+    </resultMap>
+
+    <sql id="selectMarketAfterSaleProblemClassificationVo">
+        select MASPC_ID, Vehicle_Model, Problem_Recurrence_Rate, Different_Problem_Occurrence_Rate, Branch from Market_After_Sale_Problem_Classification
+    </sql>
+
+    <select id="selectMarketAfterSaleProblemClassificationList" parameterType="MarketAfterSaleProblemClassification" resultMap="MarketAfterSaleProblemClassificationResult">
+        <include refid="selectMarketAfterSaleProblemClassificationVo"/>
+        <where>  
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="problemRecurrenceRate != null "> and Problem_Recurrence_Rate = #{problemRecurrenceRate}</if>
+            <if test="differentProblemOccurrenceRate != null "> and Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate}</if>
+            <if test="Branch != null  and Branch != ''"> and Branch = #{Branch}</if>
+        </where>
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MASPC_ID
+    FROM Market_After_Sale_Problem_Classification
+    WHERE MASPC_ID = (SELECT MAX(MASPC_ID) FROM Market_After_Sale_Problem_Classification);
+    </select>
+
+    <select id="selectMarketAfterSaleProblemClassificationByMaspcId" parameterType="Long" resultMap="MarketAfterSaleProblemClassificationResult">
+        <include refid="selectMarketAfterSaleProblemClassificationVo"/>
+        where MASPC_ID = #{maspcId}
+    </select>
+        
+    <insert id="insertMarketAfterSaleProblemClassification" parameterType="MarketAfterSaleProblemClassification" useGeneratedKeys="true" keyProperty="maspcId">
+        insert into Market_After_Sale_Problem_Classification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate,</if>
+            <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate,</if>
+            <if test="Branch != null">Branch,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="problemRecurrenceRate != null">#{problemRecurrenceRate},</if>
+            <if test="differentProblemOccurrenceRate != null">#{differentProblemOccurrenceRate},</if>
+            <if test="Branch != null">#{Branch},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketAfterSaleProblemClassification" parameterType="MarketAfterSaleProblemClassification">
+        update Market_After_Sale_Problem_Classification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate = #{problemRecurrenceRate},</if>
+            <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate},</if>
+            <if test="Branch != null">Branch = #{Branch},</if>
+        </trim>
+        where MASPC_ID = #{maspcId}
+    </update>
+
+    <delete id="deleteMarketAfterSaleProblemClassificationByMaspcId" parameterType="Long">
+        delete from Market_After_Sale_Problem_Classification where MASPC_ID = #{maspcId}
+    </delete>
+
+    <delete id="deleteMarketAfterSaleProblemClassificationByMaspcIds" parameterType="String">
+        delete from Market_After_Sale_Problem_Classification where MASPC_ID in 
+        <foreach item="maspcId" collection="array" open="(" separator="," close=")">
+            #{maspcId}
+        </foreach>
+    </delete>
+</mapper>

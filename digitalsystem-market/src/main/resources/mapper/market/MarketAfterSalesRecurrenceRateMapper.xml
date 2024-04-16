@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketAfterSalesRecurrenceRateMapper">
+    
+    <resultMap type="MarketAfterSalesRecurrenceRate" id="MarketAfterSalesRecurrenceRateResult">
+        <result property="masrrId"    column="MASRR_ID"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="problemRecurrenceRate"    column="Problem_Recurrence_Rate"    />
+        <result property="differentProblemOccurrenceRate"    column="Different_Problem_Occurrence_Rate"    />
+    </resultMap>
+
+    <sql id="selectMarketAfterSalesRecurrenceRateVo">
+        select MASRR_ID, Vehicle_Model, Problem_Recurrence_Rate, Different_Problem_Occurrence_Rate from Market_After_Sales_Recurrence_Rate
+    </sql>
+
+    <select id="selectMarketAfterSalesRecurrenceRateList" parameterType="MarketAfterSalesRecurrenceRate" resultMap="MarketAfterSalesRecurrenceRateResult">
+        <include refid="selectMarketAfterSalesRecurrenceRateVo"/>
+        <where>  
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="problemRecurrenceRate != null "> and Problem_Recurrence_Rate = #{problemRecurrenceRate}</if>
+            <if test="differentProblemOccurrenceRate != null "> and Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate}</if>
+        </where>
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MASRR_ID
+    FROM Market_After_Sales_Recurrence_Rate
+    WHERE MASRR_ID = (SELECT MAX(MASRR_ID) FROM Market_After_Sales_Recurrence_Rate);
+    </select>
+
+    <select id="selectMarketAfterSalesRecurrenceRateByMasrrId" parameterType="Long" resultMap="MarketAfterSalesRecurrenceRateResult">
+        <include refid="selectMarketAfterSalesRecurrenceRateVo"/>
+        where MASRR_ID = #{masrrId}
+    </select>
+        
+    <insert id="insertMarketAfterSalesRecurrenceRate" parameterType="MarketAfterSalesRecurrenceRate">
+        insert into Market_After_Sales_Recurrence_Rate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="masrrId != null">MASRR_ID,</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate,</if>
+            <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="masrrId != null">#{masrrId},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="problemRecurrenceRate != null">#{problemRecurrenceRate},</if>
+            <if test="differentProblemOccurrenceRate != null">#{differentProblemOccurrenceRate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketAfterSalesRecurrenceRate" parameterType="MarketAfterSalesRecurrenceRate">
+        update Market_After_Sales_Recurrence_Rate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate = #{problemRecurrenceRate},</if>
+            <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate},</if>
+        </trim>
+        where MASRR_ID = #{masrrId}
+    </update>
+
+    <delete id="deleteMarketAfterSalesRecurrenceRateByMasrrId" parameterType="Long">
+        delete from Market_After_Sales_Recurrence_Rate where MASRR_ID = #{masrrId}
+    </delete>
+
+    <delete id="deleteMarketAfterSalesRecurrenceRateByMasrrIds" parameterType="String">
+        delete from Market_After_Sales_Recurrence_Rate where MASRR_ID in 
+        <foreach item="masrrId" collection="array" open="(" separator="," close=")">
+            #{masrrId}
+        </foreach>
+    </delete>
+</mapper>

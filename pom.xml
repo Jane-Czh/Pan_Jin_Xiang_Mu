@@ -188,6 +188,11 @@
                 <artifactId>digitalsystem-safety</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-production</artifactId>
+                <version>3.8.7</version>
+            </dependency>
 
 
 
@@ -206,6 +211,7 @@
         <module>digitalsystem-tech</module>
         <module>digitalsystem-partybuilding</module>
         <module>digitalsystem-safety</module>
+        <module>digitalsystem-production</module>
 
     </modules>
     <packaging>pom</packaging>

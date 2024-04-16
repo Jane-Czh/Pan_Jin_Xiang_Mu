@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketAfterSaleRegionalClassificationMapper">
+    
+    <resultMap type="MarketAfterSaleRegionalClassification" id="MarketAfterSaleRegionalClassificationResult">
+        <result property="masrcId"    column="MASRC_ID"    />
+        <result property="Area"    column="Area"    />
+        <result property="regionalProblemsProportion"    column="Regional_Problems_Proportion"    />
+        <result property="unprocessedNmber"    column="Unprocessed_Nmber"    />
+    </resultMap>
+
+    <sql id="selectMarketAfterSaleRegionalClassificationVo">
+        select MASRC_ID, Area, Regional_Problems_Proportion, Unprocessed_Nmber from Market_After_Sale_Regional_Classification
+    </sql>
+
+    <select id="selectMarketAfterSaleRegionalClassificationList" parameterType="MarketAfterSaleRegionalClassification" resultMap="MarketAfterSaleRegionalClassificationResult">
+        <include refid="selectMarketAfterSaleRegionalClassificationVo"/>
+        <where>  
+            <if test="Area != null  and Area != ''"> and Area = #{Area}</if>
+            <if test="regionalProblemsProportion != null "> and Regional_Problems_Proportion = #{regionalProblemsProportion}</if>
+            <if test="unprocessedNmber != null "> and Unprocessed_Nmber = #{unprocessedNmber}</if>
+        </where>
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MASRC_ID
+    FROM Market_After_Sale_Regional_Classification
+    WHERE MASRC_ID = (SELECT MAX(MASRC_ID) FROM Market_After_Sale_Regional_Classification);
+    </select>
+
+
+    <select id="selectMarketAfterSaleRegionalClassificationByMasrcId" parameterType="Long" resultMap="MarketAfterSaleRegionalClassificationResult">
+        <include refid="selectMarketAfterSaleRegionalClassificationVo"/>
+        where MASRC_ID = #{masrcId}
+    </select>
+        
+    <insert id="insertMarketAfterSaleRegionalClassification" parameterType="MarketAfterSaleRegionalClassification" useGeneratedKeys="true" keyProperty="masrcId">
+        insert into Market_After_Sale_Regional_Classification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Area != null and Area != ''">Area,</if>
+            <if test="regionalProblemsProportion != null">Regional_Problems_Proportion,</if>
+            <if test="unprocessedNmber != null">Unprocessed_Nmber,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Area != null and Area != ''">#{Area},</if>
+            <if test="regionalProblemsProportion != null">#{regionalProblemsProportion},</if>
+            <if test="unprocessedNmber != null">#{unprocessedNmber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketAfterSaleRegionalClassification" parameterType="MarketAfterSaleRegionalClassification">
+        update Market_After_Sale_Regional_Classification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Area != null and Area != ''">Area = #{Area},</if>
+            <if test="regionalProblemsProportion != null">Regional_Problems_Proportion = #{regionalProblemsProportion},</if>
+            <if test="unprocessedNmber != null">Unprocessed_Nmber = #{unprocessedNmber},</if>
+        </trim>
+        where MASRC_ID = #{masrcId}
+    </update>
+
+    <delete id="deleteMarketAfterSaleRegionalClassificationByMasrcId" parameterType="Long">
+        delete from Market_After_Sale_Regional_Classification where MASRC_ID = #{masrcId}
+    </delete>
+
+    <delete id="deleteMarketAfterSaleRegionalClassificationByMasrcIds" parameterType="String">
+        delete from Market_After_Sale_Regional_Classification where MASRC_ID in 
+        <foreach item="masrcId" collection="array" open="(" separator="," close=")">
+            #{masrcId}
+        </foreach>
+    </delete>
+</mapper>

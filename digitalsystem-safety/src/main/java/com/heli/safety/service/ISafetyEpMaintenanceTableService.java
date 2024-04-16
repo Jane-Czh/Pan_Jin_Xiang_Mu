@@ -1,6 +1,7 @@
 package com.heli.safety.service;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import com.heli.safety.domain.SafetyEpMaintenanceTable;
@@ -16,9 +17,10 @@ import com.ruoyi.common.core.domain.R;
 public interface ISafetyEpMaintenanceTableService {
 
 
-    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream);
+    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date);
 
 
+    boolean checkSafetyEpMaintenanceTableIsExisted(Date date);
 
 
     /**

@@ -1,11 +1,15 @@
 package com.heli.safety.service.impl;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import com.alibaba.excel.EasyExcel;
 import com.heli.safety.controller.SafetyEpMaintenanceTableController;
+import com.heli.safety.domain.SafetyEp;
+import com.heli.safety.domain.SafetyEpDeviceFaultData;
 import com.heli.safety.listener.MaintainTableListener;
+import com.heli.safety.mapper.SafetyEpMapper;
 import com.ruoyi.common.core.domain.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +30,37 @@ import com.heli.safety.service.ISafetyEpMaintenanceTableService;
 public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenanceTableService {
     @Autowired
     private SafetyEpMaintenanceTableMapper safetyEpMaintenanceTableMapper;
+    @Autowired
+    private SafetyEpMapper  safetyEpMapper;
     private static final Logger log = LoggerFactory.getLogger(SafetyEpMaintenanceTableServiceImpl.class);
 
 
     @Override
-    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream) {
+    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date) {
+
+        //清空维修数据表
+        safetyEpMaintenanceTableMapper.truncateTable();
+
         try {
             // 读取文件内容
             EasyExcel.read(inputStream, SafetyEpMaintenanceTable.class, new MaintainTableListener(safetyEpMaintenanceTableMapper)).sheet().doRead();
 
+            //按问题类别统计
+            List<SafetyEpDeviceFaultData> list = safetyEpMaintenanceTableMapper.countDeviceFaultData();
+            log.info("当月维修分类统计" + list.toString());
+            //插入到-设备故障类别次数分布表中
+            safetyEpMaintenanceTableMapper.deviceFaultCategoryCountDataForDistribution(list, date);
+
+            //统计当月主要设备故障总次数
+            int count = safetyEpMaintenanceTableMapper.countMajorEquipmentFailuresInCurrentMonth();
+
+            SafetyEp safetyEp = new SafetyEp();
+            safetyEp.setKeyEquipmentTotalFailureCount(count);
+            safetyEp.setYearAndMonth(date);
+            System.out.println(date);
+            System.out.println(count + "----12312312312312312312");
+
+            safetyEpMapper.InsertOrUpdateSafetyEp(safetyEp);
 
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
@@ -42,6 +68,13 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
             return R.fail("读取文件失败,您需要上传商品车台账,当前上传的文件为：" + fileName);
         }
     }
+
+    // 检查当月维修数据表是否上传
+    @Override
+    public boolean checkSafetyEpMaintenanceTableIsExisted(Date date) {
+        return safetyEpMaintenanceTableMapper.checkSafetyFillingDataIsExisted(date);
+    }
+
 
     /**
      * 查询安环科

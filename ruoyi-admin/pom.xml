@@ -90,6 +90,15 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>digitalsystem-safety</artifactId>
         </dependency>
+
+        <!-- 安环-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-production</artifactId>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>

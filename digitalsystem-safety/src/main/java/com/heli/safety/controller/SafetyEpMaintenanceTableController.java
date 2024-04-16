@@ -1,6 +1,7 @@
 package com.heli.safety.controller;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,23 +37,25 @@ public class SafetyEpMaintenanceTableController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(SafetyEpMaintenanceTableController.class);
 
 
-    /**
-     * @description: 上传 商品车台账excel，并存入数据库
-     * @author: hong
-     * @date: 2024/4/11 16:38
-     *
-     * @return*/
-    @PostMapping("/simpleRead")
-    public R<String> simpleRead(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream);
-        } catch (Exception e) {
-            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
-            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
-        }
-    }
-
-
+//    /**
+//     * @return
+//     * @description: 上传 维修数据表excel，并存入数据库
+//     * @author: hong
+//     * @date: 2024/4/11 16:38
+//     */
+//    @PostMapping("/simpleRead")
+//    public R<String> simpleRead(Date yearAndMonth, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
+//        //检查当月数据是否上传
+//        if (safetyEpMaintenanceTableService.checkSafetyEpMaintenanceTableIsExisted(yearAndMonth)){
+//            return R.fail("当月数据已上传");
+//        }
+//        try (InputStream inputStream = multipartFile.getInputStream()) {
+//            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
+//        } catch (Exception e) {
+//            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
+//            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
+//        }
+//    }
 
 
     /**

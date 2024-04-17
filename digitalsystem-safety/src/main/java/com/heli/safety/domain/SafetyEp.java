@@ -32,31 +32,6 @@ public class SafetyEp extends BaseEntity {
     @Excel(name = "年月", width = 30, dateFormat = "yyyy-MM-dd")
     private Date yearAndMonth;
 
-    /**
-     * 创建人
-     */
-    @Excel(name = "创建人")
-    private String createdBy;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = "yyyy-MM")
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM")
-    private Date createdTime;
-
-    /**
-     * 更新人
-     */
-    @Excel(name = "更新人")
-    private String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date updatedTime;
 
     /**
      * 当月设备维修总费用

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.heli.safety.service.ISafetyEpMaintenanceTableService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,11 +68,14 @@ public class SafetyEpDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('safety:data:add')")
     @Log(title = "[安全环保]指标填报", businessType = BusinessType.INSERT)
-    @PostMapping("fillingData")
+    @PostMapping("/fillingData")
     public AjaxResult add(@RequestBody SafetyEp safetyEp) {
         if(safetyEpService.checkSafetyFillingDataIsExisted(safetyEp.getYearAndMonth()))
             return AjaxResult.error("当月数据已填报");
 //        return toAjax(safetyEpService.insertSafetyEp(safetyEp));
+        safetyEp.setCreateBy(getUsername());
+        safetyEp.setCreateBy(SecurityUtils.getUsername());
+        log.info(getUsername());
         return toAjax(safetyEpService.InsertOrUpdateSafetyEp(safetyEp));
     }
 

@@ -20,7 +20,7 @@
               @click="deleteElement"
               :disabled="!this.activeElement.type"
             ></el-button>
-            <!-- 
+            <!--
           <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
@@ -118,7 +118,7 @@
     </div>
   </el-dialog>
 </template>
-  
+
   <script>
 import draggable from "vuedraggable";
 // import { jsPlumb } from 'jsplumb'
@@ -679,6 +679,7 @@ export default {
             console.error("Error saving project:", error);
           });
 
+
         // 节点数据
         for (var i = 0; i < nodeData.length; i++) {
           // console.log("type data state===>",typeof(nodeData[i].state))
@@ -709,10 +710,11 @@ export default {
           type: "success",
           message: "流程更新成功！",
         });
+
         this.reload();
         // this.easyFlowVisible = false;
-        
-       
+
+
       }
     },
 
@@ -732,7 +734,7 @@ export default {
         left: node.left,
         top: node.top,
         ico: node.ico,
-        state: node.state != 'no' ?   JSON.stringify(node.state) : (node.state),
+        state: node.state != 'no' ? JSON.stringify(node.state) : node.state,
       }));
 
       const lineData = data.lineList.map((line) => ({
@@ -748,4 +750,3 @@ export default {
   },
 };
 </script>
-  

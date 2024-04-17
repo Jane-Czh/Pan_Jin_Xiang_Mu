@@ -36,7 +36,7 @@
         v-else
         class="item"
         @mouseover="hoverPanel = true"
-
+        
       >
         <li
           class="el-icon-link ef-node-file-yes"
@@ -48,7 +48,7 @@
           <ul>
             <li v-for="(file, index) in this.nodeFileNames" :key="index">
               <a target="_blank"
-              :href="`baseUrl +'/' + this.fileHyperLinks[index]`" dowmnload>{{ file }}</a>
+              :href="baseUrl + file" dowmnload>{{ file }}</a>
             </li>
           </ul>
         </div>
@@ -93,7 +93,7 @@
     </el-dialog>
   </div>
 </template>
-
+  
   <script>
 import FlowNodeForm from "./node_form";
 import { listFilemanagement } from "@/api/file/filemanagement";
@@ -235,7 +235,7 @@ export default {
   },
 };
 </script>
-
+    
     <style scoped>
 .item {
   position: relative;

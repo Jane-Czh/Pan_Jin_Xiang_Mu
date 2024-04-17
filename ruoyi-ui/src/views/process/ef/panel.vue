@@ -109,8 +109,6 @@
               </el-form-item>
             </el-form>
 
-            <!-- TODO 绑定文件 -->
-
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible = false">取消</el-button>
               <el-button type="primary" @click="save">保存</el-button>
@@ -119,11 +117,13 @@
         </div>
       </el-col>
     </el-row>
-    <!-- 左侧 nodeMenu -->
+    <!-- 主体部分 -->
     <div style="display: flex; height: calc(100% - 47px)">
+      <!-- 左侧 nodeMenu -->
       <div style="width: 230px; border-right: 1px solid #dce3e8">
         <node-menu @addNode="addNode" ref="nodeMenu"></node-menu>
       </div>
+      <!-- 流程部分 -->
       <div id="efContainer" ref="efContainer" class="container" v-flowDrag>
         <template v-for="node in data.nodeList">
           <flow-node
@@ -565,7 +565,7 @@ export default {
     clickNode(nodeId) {
       this.activeElement.type = "node";
       this.activeElement.nodeId = nodeId;
-      
+
       this.$refs.nodeForm.nodeInit(this.data, nodeId);
     },
 
@@ -704,9 +704,8 @@ export default {
     //保存流程
     save() {
       console.log("this.data ===>", this.data);
-      //填写 项目流程名称  TODO绑定文件
+      //填写 项目流程名称
       this.openDialog();
-
 
       this.project_Id = nanoid();
       // //将date分解为project、node、line
@@ -715,7 +714,6 @@ export default {
         this.project_Id
       );
 
-      console.log("this.data.project ===>", projectData);
       // 发送项目数据到后端
       axios
         .post("http://localhost:8081/project/saveProject", projectData)
@@ -729,7 +727,7 @@ export default {
       // // 发送节点数据到后端
       for (var i = 0; i < nodeData.length; i++) {
         // console.log("this.data.node ===>", nodeData[i]);
-        console.log("this.data.node ===>", nodeData[i]);
+        console.log("this.data.node.state ===>", nodeData[i].state);
         // console.log("type data state===>",typeof(nodeData[i].state))
         axios
           .post("http://localhost:8081/node/saveNode", nodeData[i])
@@ -743,7 +741,6 @@ export default {
 
       // // 发送连线数据到后端
       for (var i = 0; i < lineData.length; i++) {
-        console.log("this.data.line ===>", lineData[i]);
         axios
           .post("http://localhost:8081/line/saveLine", lineData[i])
           .then((response) => {
@@ -770,7 +767,6 @@ export default {
         id: id, //随机id
         // name: data.name, // 使用流程的名称作为项目名称
         name: this.formData.project_Name, // 使用流程的名称作为项目名称
-        // json: data,
         // create_date: ,
         // create_by: ,
       };
@@ -784,7 +780,7 @@ export default {
         top: node.top,
         ico: node.ico,
         // state: node.state,
-        state: node.state != 'no' ?   JSON.stringify(node.state) : (node.state),
+        state: node.state != 'no' ? JSON.stringify(node.state) : node.state,
       }));
 
       const lineData = data.lineList.map((line) => ({

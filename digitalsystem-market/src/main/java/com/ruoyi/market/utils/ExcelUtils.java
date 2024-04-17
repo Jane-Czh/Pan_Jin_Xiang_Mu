@@ -148,6 +148,56 @@ public class ExcelUtils {
         return dataList;
     }
 
+    public static List<MarketAfterSaleLedger> parseExcel2MarketAfterSaleLedger(MultipartFile file)throws IOException{
+        List<MarketAfterSaleLedger> dataList = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            MarketAfterSaleLedger marketAfterSaleLedger = new MarketAfterSaleLedger();
+
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            int count = 0;
+
+            //5、反馈日期
+            if (row.getCell(4).getCellType() == CellType.NUMERIC)
+            {
+                marketAfterSaleLedger.setFeedbackDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(4)))));
+            }
+            else if (row.getCell(4).getCellType() == CellType.STRING)
+            {
+                marketAfterSaleLedger.setFeedbackDate(getDateCellValue(getStringCellValue(row.getCell(4))));
+            }
+            //10、车型
+            marketAfterSaleLedger.setVehicleModel(getStringCellValue(row.getCell(9)));
+            //16、一级分类
+            marketAfterSaleLedger.setPrimaryClassification(getStringCellValue(row.getCell(15)));
+            //17、二级分类
+            marketAfterSaleLedger.setSecondaryClassification(getStringCellValue(row.getCell(16)));
+            //18、最终处理办法
+            marketAfterSaleLedger.setFinalTreatmentMethod(getStringCellValue(row.getCell(17)));
+            //27、一级网点
+            marketAfterSaleLedger.setPrimaryBranch(getStringCellValue(row.getCell(26)));
+
+            dataList.add(marketAfterSaleLedger);
+        }
+
+        workbook.close();
+
+        return dataList;
+    }
+
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {
             return null;

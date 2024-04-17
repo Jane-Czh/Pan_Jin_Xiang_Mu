@@ -14,6 +14,10 @@ import java.util.List;
  */
 public interface IFinancialIndicatorsHandfillTableService {
 
+
+    boolean checkHandFillDataIsExisted(Date date);
+
+
     List<Date> selectExistedYearAndMonth();
 
     /**

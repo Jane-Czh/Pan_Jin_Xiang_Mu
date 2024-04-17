@@ -54,7 +54,6 @@ public class MarketFunctionQuickReportController extends BaseController
         List<MarketSalesTable> list = marketSalesTableService.selectMarketSalesTableList1();
         marketFunctionQuickReportService.Synchronization(list, marketFunctionQuickReport1);
         System.out.println("-----------同步-------同步------------");
-
     }
 
 

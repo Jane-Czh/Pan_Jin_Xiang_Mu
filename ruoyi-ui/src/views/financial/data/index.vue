@@ -9,7 +9,7 @@
           placeholder="请选择年月">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="整机销售收入" prop="totalSalesRevenue">
+      <!-- <el-form-item label="整机销售收入" prop="totalSalesRevenue">
         <el-input
           v-model="queryParams.totalSalesRevenue"
           placeholder="请输入整机销售收入"
@@ -159,8 +159,8 @@
           placeholder="请输入更新人"
           clearable
           @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+        /> -->
+      <!-- </el-form-item> -->
       <el-form-item label="跟新时间" prop="updatedDate">
         <el-date-picker clearable
           v-model="queryParams.updatedDate"
@@ -214,9 +214,7 @@
       <el-button
         type="primary"
         @click="showDialog = true"
-
         v-if="true"
-
         ><i class="fa fa-download"></i>导入Excel文件
       </el-button>
 
@@ -287,7 +285,7 @@
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="fihfId" />
+      <!-- <el-table-column label="主键" align="center" prop="fihfId" /> -->
       <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -309,13 +307,13 @@
       <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" />
       <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" />
       <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" />
-      <el-table-column label="填报人" align="center" prop="Reporter" />
-      <el-table-column label="填报时间" align="center" prop="reportingDate" width="180">
+      <!-- <el-table-column label="填报人" align="center" prop="Reporter" /> -->
+      <!-- <el-table-column label="填报时间" align="center" prop="reportingDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportingDate, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="更新人" align="center" prop="updatedBy" />
+      </el-table-column> -->
+      <!-- <el-table-column label="更新人" align="center" prop="updatedBy" /> -->
       <el-table-column label="跟新时间" align="center" prop="updatedDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updatedDate, '{y}-{m}-{d}') }}</span>
@@ -408,20 +406,20 @@
         <el-form-item label="当月经济增加值" prop="addedValueMonthly">
           <el-input v-model="form.addedValueMonthly" placeholder="请输入当月经济增加值" />
         </el-form-item>
-        <el-form-item label="填报人" prop="Reporter">
+        <!-- <el-form-item label="填报人" prop="Reporter">
           <el-input v-model="form.Reporter" placeholder="请输入填报人" />
-        </el-form-item>
-        <el-form-item label="填报时间" prop="reportingDate">
+        </el-form-item> -->
+        <!-- <el-form-item label="填报时间" prop="reportingDate">
           <el-date-picker clearable
             v-model="form.reportingDate"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择填报时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="更新人" prop="updatedBy">
-          <el-input v-model="form.updatedBy" placeholder="请输入更新人" />
-        </el-form-item>
+        </el-form-item> -->
+        <!-- <el-form-item label="更新人" prop="updatedBy">
+          <el-input v-model="form.updatedBy" placeholder="请输入更新人" /> -->
+        <!-- </el-form-item> -->
         <el-form-item label="跟新时间" prop="updatedDate">
           <el-date-picker clearable
             v-model="form.updatedDate"

@@ -1,11 +1,8 @@
 package com.heli.financial.service.impl;
 
-import com.heli.financial.domain.DisplayEntity;
-import com.heli.financial.domain.FinancialBalanceTable;
-import com.heli.financial.mapper.DisplayMapper;
-import com.heli.financial.service.DisplayService;
-import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.heli.financial.mapper.FinancialDisplayMapper;
+import com.heli.financial.service.IFinancialDisplayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,140 +16,140 @@ import java.util.List;
  * @Return: 数据列表
  */
 @Service
-public class DisplayServiceImpl implements DisplayService {
+public class FinancialDisplayServiceImpl implements IFinancialDisplayService {
 
     @Autowired
-    private DisplayMapper displayMapper;
+    private FinancialDisplayMapper financialDisplayMapper;
 
 
     @Override
     public List<DisplayEntity> selectMainRevenue(Date startTime, Date endTime) {
-        return displayMapper.selectMainRevenue(startTime, endTime);
+        return financialDisplayMapper.selectMainRevenue(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectTotalSalesRevenue(Date startTime, Date endTime) {
-        return displayMapper.selectTotalSalesRevenue(startTime, endTime);
+        return financialDisplayMapper.selectTotalSalesRevenue(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectExternalGroupSalesRevenue(Date startTime, Date endTime) {
-        return displayMapper.selectExternalGroupSalesRevenue(startTime, endTime);
+        return financialDisplayMapper.selectExternalGroupSalesRevenue(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectTotalVehicleProduction(Date startTime, Date endTime) {
-        return displayMapper.selectTotalVehicleProduction(startTime, endTime);
+        return financialDisplayMapper.selectTotalVehicleProduction(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectTotalVehicleSales(Date startTime, Date endTime) {
-        return displayMapper.selectTotalVehicleSales(startTime, endTime);
+        return financialDisplayMapper.selectTotalVehicleSales(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectNewProductSalesRevenue(Date startTime, Date endTime) {
-        return displayMapper.selectNewProductSalesRevenue(startTime, endTime);
+        return financialDisplayMapper.selectNewProductSalesRevenue(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectSpecialtyProductRevenue(Date startTime, Date endTime) {
-        return displayMapper.selectSpecialtyProductRevenue(startTime, endTime);
+        return financialDisplayMapper.selectSpecialtyProductRevenue(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> COGS(Date startTime, Date endTime) {
-        return displayMapper.COGS(startTime, endTime);
+        return financialDisplayMapper.COGS(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectTotalSalesCost(Date startTime, Date endTime) {
-        return displayMapper.selectTotalSalesCost(startTime, endTime);
+        return financialDisplayMapper.selectTotalSalesCost(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectNetProfit(Date startTime, Date endTime) {
-        return displayMapper.selectNetProfit(startTime, endTime);
+        return financialDisplayMapper.selectNetProfit(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectManagementExpense(Date startTime, Date endTime) {
-        return displayMapper.selectManagementExpense(startTime, endTime);
+        return financialDisplayMapper.selectManagementExpense(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectRdExpense(Date startTime, Date endTime) {
-        return displayMapper.selectRdExpense(startTime, endTime);
+        return financialDisplayMapper.selectRdExpense(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectManufacturingExpensesMonth(Date startTime, Date endTime) {
-        return displayMapper.selectManufacturingExpensesMonth(startTime, endTime);
+        return financialDisplayMapper.selectManufacturingExpensesMonth(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectMonthlyRawMaterialInventory(Date startTime, Date endTime) {
-        return displayMapper.selectMonthlyRawMaterialInventory(startTime, endTime);
+        return financialDisplayMapper.selectMonthlyRawMaterialInventory(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectMonthlyWorkInProgressInventory(Date startTime, Date endTime) {
-        return displayMapper.selectMonthlyWorkInProgressInventory(startTime, endTime);
+        return financialDisplayMapper.selectMonthlyWorkInProgressInventory(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectMonthAmountInStock(Date startTime, Date endTime) {
-        return displayMapper.selectMonthAmountInStock(startTime, endTime);
+        return financialDisplayMapper.selectMonthAmountInStock(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectGrowthRateInventorySales(Date startTime, Date endTime) {
-        return displayMapper.selectGrowthRateInventorySales(startTime, endTime);
+        return financialDisplayMapper.selectGrowthRateInventorySales(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectTurnoverRateReceivable(Date startTime, Date endTime) {
-        return displayMapper.selectTurnoverRateReceivable(startTime, endTime);
+        return financialDisplayMapper.selectTurnoverRateReceivable(startTime, endTime);
     }
 
 
     @Override
     public List<DisplayEntity> selectCapitalTurnoverRate(Date startTime, Date endTime) {
-        return displayMapper.selectCapitalTurnoverRate(startTime, endTime);
+        return financialDisplayMapper.selectCapitalTurnoverRate(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectInventoryTurnoverRate(Date startTime, Date endTime) {
-        return displayMapper.selectInventoryTurnoverRate(startTime, endTime);
+        return financialDisplayMapper.selectInventoryTurnoverRate(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectRawMaterialTurnoverRate(Date startTime, Date endTime) {
-        return displayMapper.selectRawMaterialTurnoverRate(startTime, endTime);
+        return financialDisplayMapper.selectRawMaterialTurnoverRate(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectInprogressTurnoverRate(Date startTime, Date endTime) {
-        return displayMapper.selectInprogressTurnoverRate(startTime, endTime);
+        return financialDisplayMapper.selectInprogressTurnoverRate(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectLongEstimatedItems(Date startTime, Date endTime) {
-        return displayMapper.selectLongEstimatedItems(startTime, endTime);
+        return financialDisplayMapper.selectLongEstimatedItems(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectInprogressDayrevenue(Date startTime, Date endTime) {
-        return displayMapper.selectInprogressDayrevenue(startTime, endTime);
+        return financialDisplayMapper.selectInprogressDayrevenue(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectMonthlyInventoryTotalAmount(Date startTime, Date endTime) {
-        return displayMapper.selectMonthlyInventoryTotalAmount(startTime, endTime);
+        return financialDisplayMapper.selectMonthlyInventoryTotalAmount(startTime, endTime);
     }
 
     @Override
     public List<DisplayEntity> selectAddedValueMonthly(Date startTime, Date endTime) {
-        return displayMapper.selectAddedValueMonthly(startTime, endTime);
+        return financialDisplayMapper.selectAddedValueMonthly(startTime, endTime);
     }
 }

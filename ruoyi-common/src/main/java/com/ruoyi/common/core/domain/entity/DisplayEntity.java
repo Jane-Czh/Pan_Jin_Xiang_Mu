@@ -1,11 +1,9 @@
-package com.heli.financial.domain;
+package com.ruoyi.common.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.Date;
 
 /**

@@ -84,8 +84,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
+    <!--  清空维修数据表  -->
+    <update id="truncateTable">
+        TRUNCATE TABLE Safety_EP_Maintenance_table
+    </update>
 
-    <!--  批量插入数据库  -->
+    <!--  维修数据表批量插入数据库  -->
     <insert id="batchInsertSafetyEpMaintenanceTable" parameterType="java.util.List">
         insert into Safety_EP_Maintenance_table(CREATED_BY,CREATED_TIME,Equipment_Number,Equipment_Name,
         Work_Order_Status,Problem_Type,Maintenance_Department,Applicant,Application_Department,Maintenance_Personnel,
@@ -104,10 +108,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </insert>
 
+    <!--  查询当月设备故障类别次数分布  -->
+    <select id="countDeviceFaultData" resultType="com.heli.safety.domain.SafetyEpDeviceFaultData">
+        select Problem_Type as problemType,count(*) as num
+        from Safety_EP_Maintenance_table
+        group by Problem_Type
+    </select>
+    <!--  当月设备故障类别次数分布 + 时间  -->
+    <insert id="deviceFaultCategoryCountDataForDistribution">
+        insert into Safety_EP_Equipment_Failure_Category_Distribution(Year_And_Month,Problem_Type,Failure_Count)
+        values
+        <foreach collection="deviceFaultDataList" item="e" separator=",">
+            (#{date},#{e.problemType},#{e.num})
+        </foreach>
+    </insert>
 
+    <!--  检查当月手动填报数据是否存在  -->
+    <select id="checkSafetyFillingDataIsExisted" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1 FROM Safety_EP_Equipment_Failure_Category_Distribution WHERE Year_And_Month=#{date})
+    </select>
 
-
-
+    <!--  统计主要设备故障总次数  -->
+    <select id="countMajorEquipmentFailuresInCurrentMonth" resultType="java.lang.Integer">
+        select count(*) from Safety_EP_Maintenance_table
+        where Equipment_Number in (
+            select * from Safety_EP_Key_Equipment_index
+            )
+    </select>
 
 
 
@@ -215,6 +242,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where SEM_ID = #{semId}
     </update>
+
+
 
     <delete id="deleteSafetyEpMaintenanceTableBySemId" parameterType="String">
         delete from Safety_EP_Maintenance_table where SEM_ID = #{semId}

@@ -37,7 +37,7 @@
             select Year_And_Month,MainRevenue from Financial_Interests_table
             where Year_And_Month between #{startTime} and #{endTime}
             order by Year_And_Month DESC
-            limit 12
+#             limit 12
         ) as t
         order by Year_And_Month ASC
     </select>

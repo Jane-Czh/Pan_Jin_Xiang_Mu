@@ -1,7 +1,9 @@
 package com.heli.safety.mapper;
 
+import java.util.Date;
 import java.util.List;
 
+import com.heli.safety.domain.SafetyEpDeviceFaultData;
 import com.heli.safety.domain.SafetyEpMaintenanceTable;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,10 +17,21 @@ import org.apache.ibatis.annotations.Param;
 public interface SafetyEpMaintenanceTableMapper {
 
 
-
-
     int batchInsertSafetyEpMaintenanceTable(@Param("safetyEpMaintenanceTableList") List<SafetyEpMaintenanceTable> safetyEpMaintenanceTableList);
 
+    List<SafetyEpDeviceFaultData> countDeviceFaultData();
+
+    int deviceFaultCategoryCountDataForDistribution(@Param("deviceFaultDataList") List<SafetyEpDeviceFaultData> deviceFaultDataList,
+                                                    @Param("date") Date date);
+
+    Boolean checkSafetyFillingDataIsExisted(@Param("date") Date date);
+
+
+    void truncateTable();
+
+
+
+    int countMajorEquipmentFailuresInCurrentMonth();
 
 
     /**

@@ -7,10 +7,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -34,7 +31,7 @@ public class FinancialDisplayController extends BaseController {
      * 主营业务收入 指标1
      */
     @GetMapping("/mainRevenue")
-    public TableDataInfo mainRevenue(Date startTime, Date endTime) {
+    public TableDataInfo mainRevenue(@RequestParam("startTime") Date startTime,@RequestParam("endTime") Date endTime) {
         List<DisplayEntity> list = displayService.selectMainRevenue(startTime,endTime);
         return getDataTable(list);
     }
@@ -44,7 +41,7 @@ public class FinancialDisplayController extends BaseController {
      * 整机销售收入 指标2
      */
     @GetMapping("/totalSalesRevenue")
-    public TableDataInfo totalSalesRevenue(Date startTime, Date endTime) {
+    public TableDataInfo totalSalesRevenue(@RequestParam("startTime") Date startTime,@RequestParam("endTime") Date endTime) {
         List<DisplayEntity> list = displayService.selectTotalSalesRevenue(startTime,endTime);
         return getDataTable(list);
     }

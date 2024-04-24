@@ -18,7 +18,8 @@
     </div>
     <!-- 节点状态图标 -> 改为文件绑定(制度、表单、文档)  -->
     <div class="ef-node-right-ico">
-      <!-- 1、如果节点状态为 'no',悬浮效果为可绑定文件,显示链接文件图标 -->
+      <!-- 如果节点状态为 'no',悬浮效果为可绑定文件,显示链接文件图标 -->
+
       <el-tooltip
         v-if="node.state === 'no'"
         class="item"
@@ -32,64 +33,93 @@
         ></li>
       </el-tooltip>
 
-      <!-- 2、否则，显示已链接文件图标 -->
-      <el-tooltip
+      <!-- 否则，显示已链接文件图标 -->
+
+      <div
         v-else
         class="item"
-        effect="dark"
-        :content="`已绑定文件【 ${this.selectedFileNames} 】`"
-        placement="top"
+        @mouseover="hoverPanel = true"
+        @mouseleave="hoverPanel = false"
       >
         <li
-          class="el-icon-files ef-node-file-yes"
-          @click="(dialogMoreVisible = true), tempFile(node)"
+          class="el-icon-link ef-node-file-yes"
+          @click="dialogVisible = true"
         ></li>
-      </el-tooltip>
+        <!-- 悬浮时显示的面板，展示绑定的文件list -->
+        <div v-if="hoverPanel" class="tooltip-panel">
+          <p>已绑定文件</p>
+          <ul v-if="this.selectedFileNames">
+            <li
+              v-for="(fileName, index) in this.selectedFileNames"
+              :key="index"
+            >
+              {{ fileName }}
+            </li>
+          </ul>
+        </div>
+        <!-- 提示可继续文件的绑定或取消绑定 -->
+        <el-tooltip
+          v-if="node.state !== 'no'"
+          class="item"
+          effect="dark"
+          content="已绑定文件,点击继续绑定或取消！"
+          placement="top"
+        >
+          <li
+            class="el-icon-files ef-node-file-yes"
+            @click="(dialogMoreVisible = true), tempFile(node)"
+          ></li>
+        </el-tooltip>
+      </div>
     </div>
-    <!-- ---------------------------------------------- -->
-    <!-- 1、绑定文件的dialog -->
+
+    <!-- 绑定文件的dialog -->
     <el-dialog
-      title="流程节点绑定文件(请选择需要绑定的文件)"
+      title="流程节点绑定文件"
       :visible.sync="dialogVisible"
-      width="60%"
-      style="height: 1000px"
+      width="30%"
       :before-close="handleClose"
       destroy-on-close="true"
-      :append-to-body="true"
     >
-      <!-- ref 组件 el-table 显示制度文件的数据 -->
-      <div>
-        <custom-tabs
-          ref="customTabs"
-          @selection-change="handleSelectionChange"
-        ></custom-tabs>
-      </div>
+      <span>请选择需要绑定的文件</span>
+      <li
+        class="el-icon-link ef-node-file-no-temp"
+        @click="openFileDialog(node)"
+      ></li>
+      <br />
       <!-- 展示选择的表单名 -->
       <!-- <span v-if="selectedFileName">{{ selectedFileName }}</span> -->
+      <ul v-if="this.selectedFileNames">
+        <li v-for="(fileName, index) in this.selectedFileNames" :key="index">
+          {{ fileName }}
+        </li>
+      </ul>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancle()">取消选择</el-button>
         <el-button type="primary" @click="confirmDialog(node)">确 定</el-button>
       </span>
     </el-dialog>
-
-    <!-- 2、继续绑定文件的dialog -->
+    <!-- 继续绑定文件的dialog -->
     <el-dialog
-      title="继续绑定文件"
+      title="请继续绑定文件"
       :visible.sync="dialogMoreVisible"
-      width="60%"
-      style="height: 1000px"
+      width="30%"
       :before-close="handleClose"
       destroy-on-close="true"
-      :append-to-body="true"
     >
-      <!-- ref 组件 el-table 显示制度文件的数据 -->
-      <div>
-        <custom-tabs
-          ref="customTabs"
-          @selection-change="handleSelectionChange"
-          :selected-file-names="selectedFileNames"
-        ></custom-tabs>
-      </div>
+      <span>请选择需要绑定的文件</span>
+      <li
+        class="el-icon-link ef-node-file-no-temp"
+        @click="openFileDialog(node)"
+      ></li>
+      <br />
+      <!-- 展示选择的表单名 -->
+      <!-- <span v-if="selectedFileName">{{ selectedFileName }}</span> -->
+      <ul v-if="this.selectedFileNames">
+        <li v-for="(fileName, index) in this.selectedFileNames" :key="index">
+          {{ fileName }} <br />
+        </li>
+      </ul>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancleBand(node)">取消绑定</el-button>
         <el-button type="primary" @click="confirmDialog(node)">确 定</el-button>
@@ -97,11 +127,10 @@
     </el-dialog>
   </div>
 </template>
-
+  
   <script>
 import FlowNodeForm from "./node_form";
-import CustomTabs from "./CustomTabs.vue";
-import { listFilemanagement } from "@/api/file/filemanagement";
+
 export default {
   props: {
     node: Object,
@@ -113,6 +142,8 @@ export default {
       dialogVisible: false,
       //继续绑定文件dialog
       dialogMoreVisible: false,
+      //悬浮面板
+      hoverPanel: false,
       //存储绑定表单文件名称
       //清零
       selectedFileName: [],
@@ -120,18 +151,10 @@ export default {
       selectedFileNames: [],
       //临时
       selectedTemp: [],
-
-      // 选中数组
-      ids: [],
-      names: [],
-
-      // 制度文件数据,为了初始加载selectedFileNames
-      filemanagementList: [],
     };
   },
   components: {
     FlowNodeForm,
-    CustomTabs,
   },
   computed: {
     nodeContainerClass() {
@@ -158,36 +181,7 @@ export default {
       return nodeIcoClass;
     },
   },
-  created() {
-    this.getRegularFileData();
-  },
   methods: {
-    /** 查询制度文件列表 */
-    getRegularFileData() {
-      this.selectedFileNames = [];
-
-      listFilemanagement(this.queryParams)
-        .then((response) => {
-          this.filemanagementList = response.rows;
-          // console.log(" this.filemanagementList ==>", this.filemanagementList);
-        })
-        .then(() => {
-          // 制度文件数据filemanagementList 进行筛选 id==node.state的数据,将其赋值给selectedFileNames
-          if (this.node.state != "no") {
-            JSON.parse(this.node.state).forEach((stateId) => {
-              let row = this.filemanagementList.find(
-                (item) =>
-                  JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
-              );
-              if (row != null) {
-                this.selectedFileNames.push(row.fileName);
-              }
-            });
-          }
-        });
-      // console.log("this.selectedFileNames:", this.selectedFileNames);
-    },
-
     //节点绑定文件
     /**
      * @param state 当前节点是否绑定文件
@@ -202,13 +196,11 @@ export default {
      *
      * 节点可以绑定多个文件，此外还能解绑文件
      */
-    //取消选择-对应节点还未绑定文件时
+    //openFileDialog中的取消button
     cancle() {
       this.dialogVisible = false;
       this.selectedFileNames = this.selectedFileName;
-      this.selectedTemp = this.selectedFileName;
     },
-    //取消绑定-对应节点已经绑定了文件想要取绑
     cancleBand(node) {
       this.dialogMoreVisible = false;
       this.selectedFileNames = this.selectedFileName;
@@ -220,25 +212,47 @@ export default {
     },
 
     //绑定文件
-    tempFile(node) {
-      if (JSON.stringify(node.state) != JSON.stringify("no")) {
-        //提示还需要绑定表单吗？或者对绑定的文件进行解绑
-        // this.selectedFileNames = this.selectedTemp;
-        // console.log("this.selectedFileNames++====:", this.selectedFileNames);
-        // 确认绑定文件操作后，将已绑定的文件信息传递给 CustomTabs 组件
-        // console.log("this.selectedFileNames:", node.state)
-        this.$refs.customTabs.setSelectedFileNames(this.selectedFileNames);
-      }
+    chooseFiles() {
+      //扩充一次能绑定多个文件,且不选择重复的文件
+      const input = document.createElement("input");
+      input.type = "file";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          // 获取文件名
+          const fileName = file.name;
+          console.log("fileName==>", fileName);
+          // 检查文件名是否已经存在于数组中
+          if (!this.selectedFileNames.includes(fileName)) {
+            // 将文件名存储在组件数据中
+            this.selectedFileNames.push(fileName);
+          } else {
+            // 如果文件名已经存在于数组中，则给出提示
+            this.$message.warning("文件已经在选定列表中,请勿重复添加!!!");
+          }
+        } else {
+          // 如果用户取消选择文件，则给出提示
+          this.$message.warning("未选择文件");
+        }
+        // 触发下一次文件选择对话框
+        input.click();
+      };
+      // 触发文件选择对话框
+      input.click();
     },
 
-    // handleSelectionChange(data) {
-    //   // 在这里可以访问到子组件传递过来的 ids 和 names 数据
-    //   const ids = data.ids;
-    //   const names = data.names;
-    //   // console.log('选中的ids:', ids);
-    //   // console.log('选中的names:', names);
-    // },
-    //展示选择的文件名的dialog 点击确定后进行[绑定文件]
+    openFileDialog(node) {
+      this.chooseFiles();
+    },
+
+    tempFile(node) {
+      if (node.state != "no") {
+        //提示还需要绑定表单吗？或者对绑定的文件进行解绑
+        this.selectedFileNames = this.selectedTemp;
+        // console.log("this.selectedFileNames++====:", this.selectedFileNames);
+      }
+    },
+    //展示选择的文件名的dialog
     confirmDialog(node) {
       this.$confirm("确认进行绑定？", "提示", {
         confirmButtonText: "确定",
@@ -246,21 +260,13 @@ export default {
         type: "warning",
       })
         .then(() => {
-          // 调用 CustomTabs 组件的方法来获取 ids 和 names 数据
-          const { ids, names } = this.$refs.customTabs.getSelectedIdsAndNames();
-          // 在这里处理 ids 和 names 数据
-          // console.log("选中的ids:", ids);
-          // console.log("选中的names:", names);
-
-          // 将获取到的filenames给本地的展示变量：this.selectedFileNames
-          this.selectedFileNames = names;
-
           if (this.selectedFileNames.length === 0) {
             this.$message.warning("未选择文件,无法绑定！请先选择文件再绑定！");
           } else {
+            //将文件名绑定到 node.state, 并进行更新节点信息
             this.selectedTemp = this.selectedFileNames;
-            //将文件名[ids]绑定到 node.state, 并进行更新节点信息
-            node.state = ids;
+            node.state = this.selectedFileNames;
+            console.log("this.selectedTemp==>", this.selectedTemp);
             this.$refs.nodeForm.save(this.data, node.id);
             // 进行画布节点信息的更新
             this.$emit("repaintEverything");
@@ -298,3 +304,31 @@ export default {
   },
 };
 </script>
+  
+  <style scoped>
+.item {
+  position: relative;
+}
+
+.tooltip-panel {
+  position: absolute;
+  width: 178px;
+  height: auto;
+  background-color: #ffffff; /* 白色背景 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  display: none;
+  top: calc(100%); /* 让面板位于节点下方 */
+  left: calc(100% - 78px); /* 水平居中 */
+  transform: translateX(-50%); /* 水平居中 */
+  font-size: 10px; /* 设置字体大小为 12px */
+  color: black; /* 设置字体颜色为蓝色 */
+}
+
+.item:hover .tooltip-panel {
+  display: block;
+}
+</style>

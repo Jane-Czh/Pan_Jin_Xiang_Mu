@@ -12,13 +12,13 @@
     <artifactId>digitalsystem-financial</artifactId>
 
 
-    <repositories>
-        <repository>
-            <id>com.e-iceblue</id>
-            <name>e-iceblue</name>
-            <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>com.e-iceblue</id>-->
+<!--            <name>e-iceblue</name>-->
+<!--            <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <!-- 通用工具-->
     <dependencies>
@@ -34,11 +34,11 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>e-iceblue</groupId>
-            <artifactId>spire.xls</artifactId>
-            <version>14.3.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>e-iceblue</groupId>-->
+<!--            <artifactId>spire.xls</artifactId>-->
+<!--            <version>14.3.0</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 

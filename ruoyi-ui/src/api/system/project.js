@@ -19,6 +19,14 @@ export function getProject(id) {
   })
 }
 
+// 查询指定id流程的 历史相关流程列表
+export function historyListProject(id) {
+  return request({
+    url: 'http://localhost:8081/project/historyList/' + id,
+    method: 'get',
+  })
+}
+
 // 新增流程
 // export function addProject(data) {
 //   return request({
@@ -41,6 +49,14 @@ export function updateProject(data) {
 export function delProject(id) {
   return request({
     url: 'http://localhost:8081/project/delete/' + id,
+    method: 'delete'
+  })
+}
+
+// 删除流程: 删除指定id得流程project
+export function delHistoryProject(id) {
+  return request({
+    url: 'http://localhost:8081/project/deleteHistory/' + id,
     method: 'delete'
   })
 }

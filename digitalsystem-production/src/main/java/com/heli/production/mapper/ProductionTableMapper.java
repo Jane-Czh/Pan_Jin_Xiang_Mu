@@ -70,4 +70,6 @@ public interface ProductionTableMapper {
      * @return 结果
      */
     public int deleteProductionTableByMcvIds(Long[] mcvIds);
+
+    List<ProductionTable> selectProductionTableList1();
 }

@@ -43,27 +43,33 @@ export function delData(fihfId) {
   })
 }
 
+
+
 // 主营业务收入
-export function getMainRevenueData(fihfId) {
+export function getMainRevenueData(data) {
   return request({
-    url: '/financial/display/mainRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/mainRevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 
 // 整机销售
-export function getTotalSalesRevenueData(fihfId) {
+export function getTotalSalesRevenueData(startTime, endTime) {
   return request({
-    url: '/financial/display/totalSalesRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/totalSalesRevenue/?startTime=${startTime}&endTime=${endTime}`,
+    method: 'post'
   })
 }
 
 // 集团外部销售收入
 export function getExternalGroupSalesRevenueData(fihfId) {
   return request({
-    url: '/financial/display/externalGroupSalesRevenue/2024?fihfId=' + fihfId,
+    url: `/financial/display/externalGroupSalesRevenue/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -72,7 +78,7 @@ export function getExternalGroupSalesRevenueData(fihfId) {
 // 整车产量
 export function getTotalVehicleProductionData(fihfId) {
   return request({
-    url: '/financial/display/totalVehicleProduction/2024?fihfId=' + fihfId,
+    url: `/financial/display/totalVehicleProduction/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -80,7 +86,7 @@ export function getTotalVehicleProductionData(fihfId) {
 // 整车销量
 export function getTotalVehicleSalesData(fihfId) {
   return request({
-    url: '/financial/display/totalVehicleSales/2024?fihfId=' + fihfId,
+    url: `/financial/display/totalVehicleSales/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -88,7 +94,7 @@ export function getTotalVehicleSalesData(fihfId) {
 // 新产品销售收入
 export function getNewProductSalesRevenueData(fihfId) {
   return request({
-    url: '/financial/display/newProductSalesRevenue/2024?fihfId=' + fihfId,
+    url: `/financial/display/newProductSalesRevenue/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -96,7 +102,7 @@ export function getNewProductSalesRevenueData(fihfId) {
 // 特色产品收入
 export function getSpecialtyProductRevenueData(fihfId) {
   return request({
-    url: '/financial/display/specialtyProductRevenue/2024?fihfId=' + fihfId,
+    url: `/financial/display/specialtyProductRevenue/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -104,7 +110,7 @@ export function getSpecialtyProductRevenueData(fihfId) {
 // 主营业务成本
 export function getCOGSData(fihfId) {
   return request({
-    url: '/financial/display/COGS/2024?fihfId=' + fihfId,
+    url: `/financial/display/COGS/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -112,7 +118,7 @@ export function getCOGSData(fihfId) {
 // 整机销售成本
 export function getTotalSalesCostData(fihfId) {
   return request({
-    url: '/financial/display/totalSalesCost/2024?fihfId=' + fihfId,
+    url: `/financial/display/totalSalesCost/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -120,15 +126,15 @@ export function getTotalSalesCostData(fihfId) {
 // 净利润
 export function getNetProfitData(fihfId) {
   return request({
-    url: '/financial/display/netProfit/2024?fihfId=' + fihfId,
+    url: `/financial/display/netProfit/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
 
-//20当月管理费用 
+//20当月管理费用
 export function getManagementExpenseMonthData(fihfId) {
   return request({
-    url: '/financial/display/managementExpense/2024?fihfId=' + fihfId,
+    url: `/financial/display/managementExpenseMonth/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -136,7 +142,7 @@ export function getManagementExpenseMonthData(fihfId) {
 //21 当月研发费用
 export function getRdExpenseData(fihfId) {
   return request({
-    url: '/financial/display/rdExpense/2024?fihfId=' + fihfId,
+    url: `/financial/display/rdExpense/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -144,7 +150,7 @@ export function getRdExpenseData(fihfId) {
 // 当月制造费用
 export function getManufacturingExpensesMonthData(fihfId) {
   return request({
-    url: '/financial/display/manufacturingExpensesMonth/2024?fihfId=' + fihfId,
+    url: `/financial/display/manufacturingExpensesMonth/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -152,7 +158,7 @@ export function getManufacturingExpensesMonthData(fihfId) {
 // 当月原材料存货额
 export function getMonthlyRawMaterialInventoryData(fihfId) {
   return request({
-    url: '/financial/display/monthlyRawMaterialInventory/2024?fihfId=' + fihfId,
+    url: `/financial/display/monthlyRawMaterialInventory/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -160,7 +166,7 @@ export function getMonthlyRawMaterialInventoryData(fihfId) {
 // 当月在制品存货额
 export function getMonthlyWorkInProgressInventoryData(fihfId) {
   return request({
-    url: '/financial/display/monthlyWorkInProgressInventory/2024?fihfId=' + fihfId,
+    url: `/financial/display/monthlyWorkInProgressInventory/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -168,7 +174,7 @@ export function getMonthlyWorkInProgressInventoryData(fihfId) {
 // 存货增长率/销售增长率
 export function getGrowthRateInventorySalesInventoryData(fihfId) {
   return request({
-    url: '/financial/display/growthRateInventorySales/2024?fihfId=' + fihfId,
+    url: `/financial/display/growthRateInventorySalesInventory/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -176,7 +182,7 @@ export function getGrowthRateInventorySalesInventoryData(fihfId) {
 // 应收账款周转率
 export function getTurnoverRateReceivableInventoryData(fihfId) {
   return request({
-    url: '/financial/display/turnoverRateReceivable/2024?fihfId=' + fihfId,
+    url: `/financial/display/turnoverRateReceivableInventory/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -184,7 +190,7 @@ export function getTurnoverRateReceivableInventoryData(fihfId) {
 //33 当月资金周转率
 export function getCapitalTurnoverRateData(fihfId) {
   return request({
-    url: '/financial/display/capitalTurnoverRate/2024?fihfId=' + fihfId,
+    url: `/financial/display/capitalTurnoverRate/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -192,7 +198,7 @@ export function getCapitalTurnoverRateData(fihfId) {
 // 库存商品周转率
 export function getInventoryTurnoverRateData(fihfId) {
   return request({
-    url: '/financial/display/inventoryTurnoverRate/2024?fihfId=' + fihfId,
+    url: `/financial/display/inventoryTurnoverRate/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -200,7 +206,7 @@ export function getInventoryTurnoverRateData(fihfId) {
 // 原材料周转率
 export function getRawMaterialTurnoverRateData(fihfId) {
   return request({
-    url: '/financial/display/rawMaterialTurnoverRate/2024?fihfId=' + fihfId,
+    url: `/financial/display/rawMaterialTurnoverRate/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -208,7 +214,7 @@ export function getRawMaterialTurnoverRateData(fihfId) {
 // 在制品周转率
 export function getInprogressTurnoverRateData(fihfId) {
   return request({
-    url: '/financial/display/inprogressTurnoverRate/2024?fihfId=' + fihfId,
+    url: `/financial/display/inprogressTurnoverRate/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -216,7 +222,7 @@ export function getInprogressTurnoverRateData(fihfId) {
 // 一年以上暂估行项目
 export function getLongEstimatedItemsData(fihfId) {
   return request({
-    url: '/financial/display/longEstimatedItems/2024?fihfId=' + fihfId,
+    url: `/financial/display/longEstimatedItems/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -224,7 +230,7 @@ export function getLongEstimatedItemsData(fihfId) {
 // 当日在制品金额
 export function getInprogressDayrevenueData(fihfId) {
   return request({
-    url: '/financial/display/inprogressDayrevenue/2024?fihfId=' + fihfId,
+    url: `/financial/display/inprogressDayrevenue/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -232,7 +238,7 @@ export function getInprogressDayrevenueData(fihfId) {
 // 月度存货总金额
 export function getMonthlyInventoryTotalAmountData(fihfId) {
   return request({
-    url: '/financial/display/monthlyInventoryTotalAmount/2024?fihfId=' + fihfId,
+    url: `/financial/display/monthlyInventoryTotalAmount/?fihfId=${fihfId}`,
     method: 'get'
   })
 }
@@ -240,7 +246,7 @@ export function getMonthlyInventoryTotalAmountData(fihfId) {
 // 当日经济增加值
 export function getAddedValueMonthlyData(fihfId) {
   return request({
-    url: '/financial/display/addedValueMonthly/2024?fihfId=' + fihfId,
+    url: `/financial/display/addedValueMonthly/?fihfId=${fihfId}`,
     method: 'get'
   })
 }

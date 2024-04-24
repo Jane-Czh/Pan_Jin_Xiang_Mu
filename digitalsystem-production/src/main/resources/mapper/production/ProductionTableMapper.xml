@@ -70,11 +70,44 @@
         </where>
     </select>
 
+
+    <select id="selectProductionTableList1" parameterType="ProductionTable" resultMap="ProductionTableResult">
+        <include refid="selectProductionTableVo"/>
+        <where>
+            <if test="createdBy != null  and createdBy != ''">and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null ">and CREATED_TIME = #{createdTime}</if>
+            <if test="acceptanceDate != null ">and Acceptance_Date = #{acceptanceDate}</if>
+            <if test="launchDate != null ">and Launch_Date = #{launchDate}</if>
+            <if test="orderNumber != null  and orderNumber != ''">and Order_Number = #{orderNumber}</if>
+            <if test="contractNumber != null  and contractNumber != ''">and Contract_Number = #{contractNumber}</if>
+            <if test="carNumber != null  and carNumber != ''">and Car_Number = #{carNumber}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''">and Vehicle_Model = #{vehicleModel}</if>
+            <if test="doorFrameHeight != null  and doorFrameHeight != ''">and Door_Frame_Height = #{doorFrameHeight}</if>
+            <if test="amount != null ">and Amount = #{amount}</if>
+            <if test="accessory != null  and accessory != ''">and Accessory = #{accessory}</if>
+            <if test="valveBlock != null  and valveBlock != ''">and Valve_Block = #{valveBlock}</if>
+            <if test="configuration != null  and configuration != ''">and Configuration = #{configuration}</if>
+            <if test="plannedCompletionPeriod != null ">and Planned_Completion_Period = #{plannedCompletionPeriod}</if>
+            <if test="customer != null  and customer != ''">and Customer = #{customer}</if>
+            <if test="vehicleLaunchDate != null ">and Vehicle_Launch_Date = #{vehicleLaunchDate}</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null ">and Completion_Period_Of_Door_Frame_Assembly =#{completionPeriodOfDoorFrameAssembly}</if>
+            <if test="trialCompletionPeriod != null ">and Trial_Completion_Period = #{trialCompletionPeriod}</if>
+            <if test="specialOperations != null ">and Special_Operations = #{specialOperations}</if>
+            <if test="precisionCompletionPeriod != null ">and Precision_Completion_Period =#{precisionCompletionPeriod}</if>
+            <if test="productionSiteIssues != null  and productionSiteIssues != ''">and Production_SiteIssues =#{productionSiteIssues}</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null  and procurementOfOnSiteAbnormalIssues != ''">andProcurement_Of_On_site_Abnormal_Issues = #{procurementOfOnSiteAbnormalIssues}</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null  and qualityOfOnSiteAbnormalIssues != ''">andQuality_Of_On_site_Abnormal_Issues = #{qualityOfOnSiteAbnormalIssues}</if>
+            <if test="goLive != null ">and Go_Live = #{goLive}</if>
+            <if test="warehousing != null ">and Warehousing = #{warehousing}</if>
+            <if test="productionCycle != null  and productionCycle != ''">and Production_Cycle = #{productionCycle}</if>
+        </where>
+    </select>
+
+
     <select id="selectProductionTableByMcvId" parameterType="Long" resultMap="ProductionTableResult">
         <include refid="selectProductionTableVo"/>
         where MCV_ID = #{mcvId}
     </select>
-
 
     <!--  批量插入数据库  -->
     <insert id="batchInsertProductionTable" parameterType="java.util.List">

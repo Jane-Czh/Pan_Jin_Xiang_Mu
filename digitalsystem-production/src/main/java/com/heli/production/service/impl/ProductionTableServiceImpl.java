@@ -80,6 +80,11 @@ public class ProductionTableServiceImpl implements IProductionTableService {
         return productionTableMapper.selectProductionTableList(productionTable);
     }
 
+    @Override
+    public List<ProductionTable> selectProductionTableList() {
+        return productionTableMapper.selectProductionTableList1();
+    }
+
     /**
      * 新增商品车台账
      *

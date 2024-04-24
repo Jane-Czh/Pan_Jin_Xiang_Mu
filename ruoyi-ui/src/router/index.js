@@ -93,6 +93,7 @@ export const constantRoutes = [
   },
   {
     path: '/financial',
+    component: Layout,
     hidden: true,
     redirect: 'noredirect',
     children: [
@@ -437,6 +438,146 @@ export const constantRoutes = [
         component: () => import('@/views/financial/display/indexChart/addedValueMonthly'),
         name: 'AddedValueMonthly',
         meta: { title: '指标78：当月经济增加值' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index11',
+        component: () => import('@/views/market/display/indexChart/index11'),
+        name: 'Index11',
+        meta: { title: '指标11：各销售网点月度(I类)电车盘锦区域内订单占比' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index12',
+        component: () => import('@/views/market/display/indexChart/index12'),
+        name: 'Index12',
+        meta: { title: '指标12：各销售网点月度(IV-V类)内燃车盘锦区域内订单占比' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index13',
+        component: () => import('@/views/market/display/indexChart/index13'),
+        name: 'Index13',
+        meta: { title: '指标13：各主要车型产量月度比率' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index14',
+        component: () => import('@/views/market/display/indexChart/index14'),
+        name: 'Index14',
+        meta: { title: '指标14：各主要车型同比增长比例' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index15',
+        component: () => import('@/views/market/display/indexChart/index15'),
+        name: 'Index15',
+        meta: { title: '指标15：各销售网点月度各主要车型分布表' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index16',
+        component: () => import('@/views/market/display/indexChart/index16'),
+        name: 'Index16',
+        meta: { title: '指标16：各网点已接单未发车总台数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index17',
+        component: () => import('@/views/market/display/indexChart/index17'),
+        name: 'Index17',
+        meta: { title: '指标17：各网点未排产订单台数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index18',
+        component: () => import('@/views/market/display/indexChart/index18'),
+        name: 'Index18',
+        meta: { title: '指标18：各网点已完工未发车订单数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index72',
+        component: () => import('@/views/market/display/indexChart/index72'),
+        name: 'Index72',
+        meta: { title: '指标72：日/月/年接单数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index73',
+        component: () => import('@/views/market/display/indexChart/index73'),
+        name: 'Index73',
+        meta: { title: '指标73：日/月/年交货数' }
       }
     ]
   }

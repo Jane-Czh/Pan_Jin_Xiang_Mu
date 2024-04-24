@@ -180,6 +180,11 @@
             </dependency>
             <dependency>
                 <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-file</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
                 <artifactId>digitalsystem-partybuilding</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
@@ -218,6 +223,7 @@
         <module>digitalsystem-safety</module>
         <module>digitalsystem-production</module>
         <module>digitalsystem-supply</module>
+        <module>ruoyi-file</module>
 
     </modules>
     <packaging>pom</packaging>

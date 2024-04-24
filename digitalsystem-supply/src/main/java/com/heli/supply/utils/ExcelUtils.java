@@ -1,6 +1,7 @@
 package com.heli.supply.utils;
 
 import com.heli.supply.domain.SupplyPurchaseorderTable;
+import com.heli.supply.domain.SupplyRatioFormulaTable;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,14 +39,14 @@ public class ExcelUtils {
 
             //1、凭证日期
 //            System.out.println("============"+row.getCell(0));
-//            if (row.getCell(0).getCellType() == CellType.NUMERIC)
-//            {
-//                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(0)))));
-//            }
-//            else if (row.getCell(0).getCellType() == CellType.STRING)
-//            {
-//                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(getStringCellValue(row.getCell(0))));
-//            }
+            if (row.getCell(0).getCellType() == CellType.NUMERIC)
+            {
+                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(0)))));
+            }
+            else if (row.getCell(0).getCellType() == CellType.STRING)
+            {
+                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(getStringCellValue(row.getCell(0))));
+            }
             //5、物料号
             if (getStringCellValue(row.getCell(4)) == null || getStringCellValue(row.getCell(4)).equals("")){
                 continue;
@@ -66,7 +67,57 @@ public class ExcelUtils {
         return dataList;
     }
 
+    public static List<SupplyRatioFormulaTable> parseExcel2SupplyRatioFormulaTable(MultipartFile file)throws IOException{
+        List<SupplyRatioFormulaTable> dataList = new ArrayList<>();
 
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            SupplyRatioFormulaTable supplyRatioFormulaTable = new SupplyRatioFormulaTable();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            int count = 0;
+
+            //1、凭证日期
+//            if (row.getCell(0).getCellType() == CellType.NUMERIC)
+//            {
+//                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(0)))));
+//            }
+//            else if (row.getCell(0).getCellType() == CellType.STRING)
+//            {
+//                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(getStringCellValue(row.getCell(0))));
+//            }
+            //2、物料类别
+            supplyRatioFormulaTable.setMaterialClass(getStringCellValue(row.getCell(1)));
+            //3、供应商代码
+            supplyRatioFormulaTable.setSupplierCode(getStringCellValue(row.getCell(2))); //取物料前缀
+            //4、供应商名称
+            supplyRatioFormulaTable.setSupplierName(getStringCellValue(row.getCell(3)));
+            //5、供货比例
+            System.out.println(row.getCell(4));
+            supplyRatioFormulaTable.setSupplyProportion(getStringCellValue(row.getCell(4)));
+            //6、付款方式
+            supplyRatioFormulaTable.setPaymentMethod(getStringCellValue(row.getCell(5)));
+            //7、比例统计方式
+            supplyRatioFormulaTable.setProportionStatisticalMethod(getStringCellValue(row.getCell(6)));
+
+            dataList.add(supplyRatioFormulaTable);
+        }
+
+        workbook.close();
+
+        return dataList;
+    }
 
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {

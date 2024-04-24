@@ -39,6 +39,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where MICD_ID = #{micdId}
     </select>
 
+    <select id="selectAllData" resultMap="MarketInventoryCarDetailResult">
+    SELECT *
+    FROM Market_Inventory_Car_Detail
+    </select>
+
     <select id="selectLastId" resultType="java.lang.Long">
     SELECT MICD_ID
     FROM Market_Inventory_Car_Detail

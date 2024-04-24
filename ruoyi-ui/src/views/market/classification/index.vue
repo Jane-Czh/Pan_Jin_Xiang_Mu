@@ -33,6 +33,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="周数" prop="Week">
+        <el-input
+          v-model="queryParams.Week"
+          placeholder="请输入周数"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -101,6 +109,7 @@
       <el-table-column label="相同问题复发率" align="center" prop="problemRecurrenceRate" />
       <el-table-column label="不同问题出现率" align="center" prop="differentProblemOccurrenceRate" />
       <el-table-column label="一级网点" align="center" prop="branch" />
+      <el-table-column label="周数" align="center" prop="week" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -144,6 +153,9 @@
         <el-form-item label="一级网点" prop="Branch">
           <el-input v-model="form.Branch" placeholder="请输入一级网点" />
         </el-form-item>
+        <el-form-item label="周数" prop="Week">
+          <el-input v-model="form.Week" placeholder="请输入周数" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -185,7 +197,8 @@ export default {
         vehicleModel: null,
         problemRecurrenceRate: null,
         differentProblemOccurrenceRate: null,
-        Branch: null
+        Branch: null,
+        Week: null
       },
       // 表单参数
       form: {},
@@ -222,7 +235,8 @@ export default {
         vehicleModel: null,
         problemRecurrenceRate: null,
         differentProblemOccurrenceRate: null,
-        Branch: null
+        Branch: null,
+        Week: null
       };
       this.resetForm("form");
     },

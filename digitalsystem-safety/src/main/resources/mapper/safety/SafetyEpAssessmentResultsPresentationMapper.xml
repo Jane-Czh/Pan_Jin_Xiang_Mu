@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.safety.mapper.SafetyEpAssessmentResultsPresentationMapper">
+    
+    <resultMap type="SafetyEpAssessmentResultsPresentation" id="SafetyEpAssessmentResultsPresentationResult">
+        <result property="searpId"    column="SEARP_ID"    />
+        <result property="checkTeam"    column="Check_Team"    />
+        <result property="januaryResults"    column="January_Results"    />
+        <result property="februaryResults"    column="February_Results"    />
+        <result property="marchResults"    column="March_Results"    />
+        <result property="aprilResults"    column="April_Results"    />
+        <result property="mayResults"    column="May_Results"    />
+        <result property="juneResults"    column="June_Results"    />
+        <result property="julyResults"    column="July_Results"    />
+        <result property="augustResults"    column="August_Results"    />
+        <result property="septemberResults"    column="September_Results"    />
+        <result property="octoberResults"    column="October_Results"    />
+        <result property="novemberResults"    column="November_Results"    />
+        <result property="decemberResults"    column="December_Results"    />
+        <result property="firstQuarterResults"    column="First_Quarter_Results"    />
+        <result property="secondQuarterResults"    column="Second_Quarter_Results"    />
+        <result property="thirdQuarterResults"    column="Third_Quarter_Results"    />
+        <result property="fourthQuarterResults"    column="Fourth_Quarter_Results"    />
+        <result property="annualResults"    column="Annual_Results"    />
+    </resultMap>
+
+    <sql id="selectSafetyEpAssessmentResultsPresentationVo">
+        select SEARP_ID, Check_Team, January_Results, February_Results, March_Results, April_Results, May_Results, June_Results, July_Results, August_Results, September_Results, October_Results, November_Results, December_Results, First_Quarter_Results, Second_Quarter_Results, Third_Quarter_Results, Fourth_Quarter_Results, Annual_Results from Safety_EP_Assessment_Results_Presentation
+    </sql>
+
+    <select id="selectSafetyEpAssessmentResultsPresentationList" parameterType="SafetyEpAssessmentResultsPresentation" resultMap="SafetyEpAssessmentResultsPresentationResult">
+        <include refid="selectSafetyEpAssessmentResultsPresentationVo"/>
+        <where>  
+            <if test="checkTeam != null  and checkTeam != ''"> and Check_Team = #{checkTeam}</if>
+            <if test="januaryResults != null "> and January_Results = #{januaryResults}</if>
+            <if test="februaryResults != null "> and February_Results = #{februaryResults}</if>
+            <if test="marchResults != null "> and March_Results = #{marchResults}</if>
+            <if test="aprilResults != null "> and April_Results = #{aprilResults}</if>
+            <if test="mayResults != null "> and May_Results = #{mayResults}</if>
+            <if test="juneResults != null "> and June_Results = #{juneResults}</if>
+            <if test="julyResults != null "> and July_Results = #{julyResults}</if>
+            <if test="augustResults != null "> and August_Results = #{augustResults}</if>
+            <if test="septemberResults != null "> and September_Results = #{septemberResults}</if>
+            <if test="octoberResults != null "> and October_Results = #{octoberResults}</if>
+            <if test="novemberResults != null "> and November_Results = #{novemberResults}</if>
+            <if test="decemberResults != null "> and December_Results = #{decemberResults}</if>
+            <if test="firstQuarterResults != null "> and First_Quarter_Results = #{firstQuarterResults}</if>
+            <if test="secondQuarterResults != null "> and Second_Quarter_Results = #{secondQuarterResults}</if>
+            <if test="thirdQuarterResults != null "> and Third_Quarter_Results = #{thirdQuarterResults}</if>
+            <if test="fourthQuarterResults != null "> and Fourth_Quarter_Results = #{fourthQuarterResults}</if>
+            <if test="annualResults != null "> and Annual_Results = #{annualResults}</if>
+        </where>
+    </select>
+    
+    <select id="selectSafetyEpAssessmentResultsPresentationBySearpId" parameterType="Long" resultMap="SafetyEpAssessmentResultsPresentationResult">
+        <include refid="selectSafetyEpAssessmentResultsPresentationVo"/>
+        where SEARP_ID = #{searpId}
+    </select>
+        
+    <insert id="insertSafetyEpAssessmentResultsPresentation" parameterType="SafetyEpAssessmentResultsPresentation">
+        insert into Safety_EP_Assessment_Results_Presentation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="searpId != null">SEARP_ID,</if>
+            <if test="checkTeam != null and checkTeam != ''">Check_Team,</if>
+            <if test="januaryResults != null">January_Results,</if>
+            <if test="februaryResults != null">February_Results,</if>
+            <if test="marchResults != null">March_Results,</if>
+            <if test="aprilResults != null">April_Results,</if>
+            <if test="mayResults != null">May_Results,</if>
+            <if test="juneResults != null">June_Results,</if>
+            <if test="julyResults != null">July_Results,</if>
+            <if test="augustResults != null">August_Results,</if>
+            <if test="septemberResults != null">September_Results,</if>
+            <if test="octoberResults != null">October_Results,</if>
+            <if test="novemberResults != null">November_Results,</if>
+            <if test="decemberResults != null">December_Results,</if>
+            <if test="firstQuarterResults != null">First_Quarter_Results,</if>
+            <if test="secondQuarterResults != null">Second_Quarter_Results,</if>
+            <if test="thirdQuarterResults != null">Third_Quarter_Results,</if>
+            <if test="fourthQuarterResults != null">Fourth_Quarter_Results,</if>
+            <if test="annualResults != null">Annual_Results,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="searpId != null">#{searpId},</if>
+            <if test="checkTeam != null and checkTeam != ''">#{checkTeam},</if>
+            <if test="januaryResults != null">#{januaryResults},</if>
+            <if test="februaryResults != null">#{februaryResults},</if>
+            <if test="marchResults != null">#{marchResults},</if>
+            <if test="aprilResults != null">#{aprilResults},</if>
+            <if test="mayResults != null">#{mayResults},</if>
+            <if test="juneResults != null">#{juneResults},</if>
+            <if test="julyResults != null">#{julyResults},</if>
+            <if test="augustResults != null">#{augustResults},</if>
+            <if test="septemberResults != null">#{septemberResults},</if>
+            <if test="octoberResults != null">#{octoberResults},</if>
+            <if test="novemberResults != null">#{novemberResults},</if>
+            <if test="decemberResults != null">#{decemberResults},</if>
+            <if test="firstQuarterResults != null">#{firstQuarterResults},</if>
+            <if test="secondQuarterResults != null">#{secondQuarterResults},</if>
+            <if test="thirdQuarterResults != null">#{thirdQuarterResults},</if>
+            <if test="fourthQuarterResults != null">#{fourthQuarterResults},</if>
+            <if test="annualResults != null">#{annualResults},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSafetyEpAssessmentResultsPresentation" parameterType="SafetyEpAssessmentResultsPresentation">
+        update Safety_EP_Assessment_Results_Presentation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkTeam != null and checkTeam != ''">Check_Team = #{checkTeam},</if>
+            <if test="januaryResults != null">January_Results = #{januaryResults},</if>
+            <if test="februaryResults != null">February_Results = #{februaryResults},</if>
+            <if test="marchResults != null">March_Results = #{marchResults},</if>
+            <if test="aprilResults != null">April_Results = #{aprilResults},</if>
+            <if test="mayResults != null">May_Results = #{mayResults},</if>
+            <if test="juneResults != null">June_Results = #{juneResults},</if>
+            <if test="julyResults != null">July_Results = #{julyResults},</if>
+            <if test="augustResults != null">August_Results = #{augustResults},</if>
+            <if test="septemberResults != null">September_Results = #{septemberResults},</if>
+            <if test="octoberResults != null">October_Results = #{octoberResults},</if>
+            <if test="novemberResults != null">November_Results = #{novemberResults},</if>
+            <if test="decemberResults != null">December_Results = #{decemberResults},</if>
+            <if test="firstQuarterResults != null">First_Quarter_Results = #{firstQuarterResults},</if>
+            <if test="secondQuarterResults != null">Second_Quarter_Results = #{secondQuarterResults},</if>
+            <if test="thirdQuarterResults != null">Third_Quarter_Results = #{thirdQuarterResults},</if>
+            <if test="fourthQuarterResults != null">Fourth_Quarter_Results = #{fourthQuarterResults},</if>
+            <if test="annualResults != null">Annual_Results = #{annualResults},</if>
+        </trim>
+        where SEARP_ID = #{searpId}
+    </update>
+
+    <delete id="deleteSafetyEpAssessmentResultsPresentationBySearpId" parameterType="Long">
+        delete from Safety_EP_Assessment_Results_Presentation where SEARP_ID = #{searpId}
+    </delete>
+
+    <delete id="deleteSafetyEpAssessmentResultsPresentationBySearpIds" parameterType="String">
+        delete from Safety_EP_Assessment_Results_Presentation where SEARP_ID in 
+        <foreach item="searpId" collection="array" open="(" separator="," close=")">
+            #{searpId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAllData"> delete from Safety_EP_Assessment_Results_Presentation </delete>
+</mapper>

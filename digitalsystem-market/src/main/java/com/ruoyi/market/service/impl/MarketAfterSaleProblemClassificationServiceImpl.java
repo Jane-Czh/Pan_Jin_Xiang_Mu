@@ -1,16 +1,15 @@
 package com.ruoyi.market.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 import com.ruoyi.market.domain.MarketAfterSaleLedger;
 import com.ruoyi.market.utils.GenerateId;
+import com.ruoyi.market.utils.StringUtils;
 import com.ruoyi.market.utils.getTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.MarketAfterSaleProblemClassificationMapper;
 import com.ruoyi.market.domain.MarketAfterSaleProblemClassification;
@@ -20,14 +19,13 @@ import com.ruoyi.market.service.IMarketAfterSaleProblemClassificationService;
  * 售后问题分类Service业务层处理
  * 
  * @author ruoyi
- * @date 2024-04-15
+ * @date 2024-04-18
  */
 @Service
 public class MarketAfterSaleProblemClassificationServiceImpl implements IMarketAfterSaleProblemClassificationService 
 {
     @Autowired
     private MarketAfterSaleProblemClassificationMapper marketAfterSaleProblemClassificationMapper;
-
 
     @Override
     public void Synchronization(List<MarketAfterSaleLedger> list){
@@ -48,7 +46,7 @@ public class MarketAfterSaleProblemClassificationServiceImpl implements IMarketA
 //        HashMap<String, HashMap<String,List<MarketAfterSaleLedger>>> hashMap = new HashMap<>();
         i = 0;
         while (i < marketAfterSaleLedgers.size()){
-            String Vehicle_Model = marketAfterSaleLedgers.get(i).getVehicleModel();
+            String Vehicle_Model = StringUtils.getPrefix(marketAfterSaleLedgers.get(i).getVehicleModel());
             if (!hashMap.containsKey(Vehicle_Model)){
                 //hashmap中不存在当前车型
                 List<MarketAfterSaleLedger> marketAfterSaleLedgers1 = new ArrayList<>();
@@ -92,6 +90,9 @@ public class MarketAfterSaleProblemClassificationServiceImpl implements IMarketA
 
         for (Map.Entry<String,HashMap<String,List<MarketAfterSaleLedger>>> entry : result.entrySet()){
             String Vehicle_Model = entry.getKey();
+            if (Vehicle_Model.equals("")){
+                continue;
+            }
             HashMap<String,List<MarketAfterSaleLedger>> branch = entry.getValue();
 //            List<MarketAfterSaleLedger> problem = entry.getValue();
             //拆分网点
@@ -153,6 +154,11 @@ public class MarketAfterSaleProblemClassificationServiceImpl implements IMarketA
                 marketAfterSaleProblemClassification.setBranch(PrimaryBranch);
                 marketAfterSaleProblemClassification.setProblemRecurrenceRate(BigDecimal.valueOf(Recurrence_Rate));
                 marketAfterSaleProblemClassification.setDifferentProblemOccurrenceRate(BigDecimal.valueOf(Different_Problem_Occurrence_Rate));
+                LocalDate currentDate = LocalDate.now();
+                // 获取当前日期所在的周数
+                int weekOfYear = currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+                marketAfterSaleProblemClassification.setWeek(weekOfYear);
+
                 System.out.println(marketAfterSaleProblemClassification);
                 marketAfterSaleProblemClassificationMapper.insertMarketAfterSaleProblemClassification(marketAfterSaleProblemClassification);
                 System.out.println("插入-------成功");

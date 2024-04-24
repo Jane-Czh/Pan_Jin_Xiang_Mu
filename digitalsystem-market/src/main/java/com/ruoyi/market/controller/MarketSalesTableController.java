@@ -59,7 +59,14 @@ public class MarketSalesTableController extends BaseController
         System.out.println(list);
         return getDataTable(list);
     }
-
+//    @GetMapping("/list1")
+//    public TableDataInfo list1(MarketSalesTable marketSalesTable)
+//    {
+////        startPage();
+//        List<MarketSalesTable> list = marketSalesTableService.selectMarketSalesTableList(marketSalesTable);
+//        System.out.println("测试list"+list.size());
+//        return getDataTable(list);
+//    }
     /**
      * 导出市场科销售台账列表
      */

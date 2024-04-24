@@ -7,10 +7,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 售后问题复发率对象 Market_After_Sales_Recurrence_Rate
+ * 售后台账问题复发率对象 Market_After_Sales_Recurrence_Rate
  * 
  * @author ruoyi
- * @date 2024-04-15
+ * @date 2024-04-17
  */
 public class MarketAfterSalesRecurrenceRate extends BaseEntity
 {
@@ -30,6 +30,10 @@ public class MarketAfterSalesRecurrenceRate extends BaseEntity
     /** 不同问题出现率 */
     @Excel(name = "不同问题出现率")
     private BigDecimal differentProblemOccurrenceRate;
+
+    /** 月份 */
+    @Excel(name = "月份")
+    private Integer Month;
 
     public void setMasrrId(Long masrrId) 
     {
@@ -67,6 +71,15 @@ public class MarketAfterSalesRecurrenceRate extends BaseEntity
     {
         return differentProblemOccurrenceRate;
     }
+    public void setMonth(Integer Month) 
+    {
+        this.Month = Month;
+    }
+
+    public Integer getMonth() 
+    {
+        return Month;
+    }
 
     @Override
     public String toString() {
@@ -75,6 +88,7 @@ public class MarketAfterSalesRecurrenceRate extends BaseEntity
             .append("vehicleModel", getVehicleModel())
             .append("problemRecurrenceRate", getProblemRecurrenceRate())
             .append("differentProblemOccurrenceRate", getDifferentProblemOccurrenceRate())
+            .append("Month", getMonth())
             .toString();
     }
 }

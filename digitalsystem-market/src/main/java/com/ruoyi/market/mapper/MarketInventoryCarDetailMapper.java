@@ -19,6 +19,7 @@ public interface MarketInventoryCarDetailMapper
      */
     public MarketInventoryCarDetail selectMarketInventoryCarDetailByMicdId(Long micdId);
 
+    public List<MarketInventoryCarDetail> selectAllData();
 
     //查询数据库最后一条数据id
     public Long selectLastId();

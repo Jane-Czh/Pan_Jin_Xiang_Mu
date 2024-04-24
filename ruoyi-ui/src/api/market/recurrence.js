@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询售后问题复发率列表
+// 查询售后台账问题复发率列表
 export function listRecurrence(query) {
   return request({
     url: '/market/recurrence/list',
@@ -9,7 +9,7 @@ export function listRecurrence(query) {
   })
 }
 
-// 查询售后问题复发率详细
+// 查询售后台账问题复发率详细
 export function getRecurrence(masrrId) {
   return request({
     url: '/market/recurrence/' + masrrId,
@@ -17,7 +17,7 @@ export function getRecurrence(masrrId) {
   })
 }
 
-// 新增售后问题复发率
+// 新增售后台账问题复发率
 export function addRecurrence(data) {
   return request({
     url: '/market/recurrence',
@@ -26,7 +26,7 @@ export function addRecurrence(data) {
   })
 }
 
-// 修改售后问题复发率
+// 修改售后台账问题复发率
 export function updateRecurrence(data) {
   return request({
     url: '/market/recurrence',
@@ -35,7 +35,7 @@ export function updateRecurrence(data) {
   })
 }
 
-// 删除售后问题复发率
+// 删除售后台账问题复发率
 export function delRecurrence(masrrId) {
   return request({
     url: '/market/recurrence/' + masrrId,

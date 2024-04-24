@@ -88,7 +88,7 @@
     <el-table v-loading="loading" :data="registerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="psjrfId" />
-      <el-table-column label="关键字" align="center" prop="Keyword" />
+      <el-table-column label="关键字" align="center" prop="keyword" />
       <el-table-column label="下发对象" align="center" prop="deliverObject" />
       <el-table-column label="下发时间" align="center" prop="deliveryTime" width="180">
         <template slot-scope="scope">

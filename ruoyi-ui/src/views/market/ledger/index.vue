@@ -372,7 +372,7 @@
         </template>
       </el-table-column>
       <el-table-column label="整车生产单位" align="center" prop="vehicleProductionUnit" />
-      <el-table-column label="车" align="center" prop="Vehicle" />
+      <el-table-column label="车" align="center" prop="vehicle" />
       <el-table-column label="吨" align="center" prop="Ton" />
       <el-table-column label="发" align="center" prop="Launch" />
       <el-table-column label="车型" align="center" prop="vehicleModel" />

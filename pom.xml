@@ -193,6 +193,11 @@
                 <artifactId>digitalsystem-production</artifactId>
                 <version>3.8.7</version>
             </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-supply</artifactId>
+                <version>3.8.7</version>
+            </dependency>
 
 
 
@@ -212,6 +217,7 @@
         <module>digitalsystem-partybuilding</module>
         <module>digitalsystem-safety</module>
         <module>digitalsystem-production</module>
+        <module>digitalsystem-supply</module>
 
     </modules>
     <packaging>pom</packaging>

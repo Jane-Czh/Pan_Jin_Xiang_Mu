@@ -66,6 +66,15 @@
           v-hasPermi="['market:unsoldcar:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+        type="warning"
+        plain
+        icon="el-icon-download"
+        size="mini"
+        @click="syncReport"
+      >同步数据</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -159,7 +168,10 @@ export default {
         vehicleModel: [
           { required: true, message: "车型不能为空", trigger: "blur" }
         ],
-      }
+      },
+      pageIndex:1,
+      pagesize: 10,
+      totalPage:0
     };
   },
   created() {
@@ -168,12 +180,19 @@ export default {
   methods: {
     /** 查询统计库存车数量列表 */
     getList() {
+      this.unsoldcarList = [];
       this.loading = true;
       listUnsoldcar(this.queryParams).then(response => {
         this.unsoldcarList = response.rows;
         this.total = response.total;
-        this.loading = false;
-      });
+      
+
+      });  this.loading = false;
+      //数据分页
+      this.unsoldcarList = this.unsoldcarList.slice(
+      (this.pageIndex - 1) * this.pageSize,
+      this.pageIndex * this.pageSize
+      );
     },
     // 取消按钮
     cancel() {
@@ -256,6 +275,24 @@ export default {
       this.download('market/unsoldcar/export', {
         ...this.queryParams
       }, `unsoldcar_${new Date().getTime()}.xlsx`)
+    },
+    syncReport() {
+      // 使用 Fetch API 发送 POST 请求到后端
+      fetch('http://localhost:8080/market/unsoldcar/synchronization', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // 如果请求成功，可以进行下一步操作
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
     }
   }
 };

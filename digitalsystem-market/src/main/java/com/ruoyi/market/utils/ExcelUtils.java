@@ -179,6 +179,8 @@ public class ExcelUtils {
             {
                 marketAfterSaleLedger.setFeedbackDate(getDateCellValue(getStringCellValue(row.getCell(4))));
             }
+            //7、车
+            marketAfterSaleLedger.setVehicle(getStringCellValue(row.getCell(6)));
             //10、车型
             marketAfterSaleLedger.setVehicleModel(getStringCellValue(row.getCell(9)));
             //16、一级分类
@@ -197,6 +199,45 @@ public class ExcelUtils {
 
         return dataList;
     }
+
+    public static List<MarketCarType> parseExcel2MarketCarType(MultipartFile file)throws IOException{
+        List<MarketCarType> dataList = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+
+            MarketCarType marketCarType = new MarketCarType();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            int count = 0;
+
+            //1、类别
+            marketCarType.setCategory(getStringCellValue(row.getCell(count++)));
+            //2、车型
+            marketCarType.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            //3、关系
+            marketCarType.setRelation(getStringCellValue(row.getCell(count++)));
+
+
+            dataList.add(marketCarType);
+        }
+
+        workbook.close();
+
+        return dataList;
+    }
+
 
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {

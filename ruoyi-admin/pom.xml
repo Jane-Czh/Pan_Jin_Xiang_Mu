@@ -109,6 +109,12 @@
             <artifactId>digitalsystem-quality</artifactId>
         </dependency>
 
+        <!-- 企管-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-enterprise</artifactId>
+        </dependency>
+
         <!--         项目模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>

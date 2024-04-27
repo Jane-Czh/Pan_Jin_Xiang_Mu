@@ -20,4 +20,5 @@ public class DisplayRequestParam {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     Date endTime;
+    
 }

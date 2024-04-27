@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -200,5 +201,16 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
 
         //利用localDateTime工具得到当前月份的上一个月，并且重新转化为Date类型
         return Date.from(localDateTime.minusMonths(1).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * @description: 得到当前月份的上一个月
+     * @author: hong
+     * @date: 2024/4/23 11:32
+     **/
+    public static Integer getYear(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.YEAR);
     }
 }

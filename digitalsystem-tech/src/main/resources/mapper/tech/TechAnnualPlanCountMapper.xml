@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.tech.mapper.TechAnnualPlanCountMapper">
+
+    <resultMap type="TechAnnualPlanCount" id="TechAnnualPlanCountResult">
+        <result property="tapcId"    column="TAPC_id"    />
+        <result property="naturalYear"    column="Natural_Year"    />
+        <result property="annualPlancounts"    column="Annual_PlanCounts"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectTechAnnualPlanCountVo">
+        select TAPC_id, Natural_Year, Annual_PlanCounts, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Tech_Annual_Plan_Count
+    </sql>
+
+
+    <!--检查本年数据是否上传-->
+    <select id="checkTechAnnualDataIsExisted" parameterType="int" >
+        SELECT EXISTS(SELECT 1 FROM Tech_Annual_Plan_Count WHERE Natural_Year=#{naturalYear})
+    </select>
+
+    <!--查询年度计划    -->
+    <select id="selectTechAnnualNumberByYear" resultType="java.lang.Long">
+        select Annual_PlanCounts from Tech_Annual_Plan_Count
+        where Natural_Year=#{naturalYear}
+    </select>
+
+
+
+    <select id="selectTechAnnualPlanCountList" parameterType="TechAnnualPlanCount" resultMap="TechAnnualPlanCountResult">
+        <include refid="selectTechAnnualPlanCountVo"/>
+        <where>
+            <if test="naturalYear != null "> and Natural_Year = #{naturalYear}</if>
+            <if test="annualPlancounts != null  and annualPlancounts != ''"> and Annual_PlanCounts = #{annualPlancounts}</if>
+        </where>
+    </select>
+
+    <select id="selectTechAnnualPlanCountByTapcId" parameterType="Long" resultMap="TechAnnualPlanCountResult">
+        <include refid="selectTechAnnualPlanCountVo"/>
+        where TAPC_id = #{tapcId}
+    </select>
+
+
+
+    <insert id="insertTechAnnualPlanCount" parameterType="TechAnnualPlanCount">
+        insert into Tech_Annual_Plan_Count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tapcId != null">TAPC_id,</if>
+            <if test="naturalYear != null">Natural_Year,</if>
+            <if test="annualPlancounts != null">Annual_PlanCounts,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tapcId != null">#{tapcId},</if>
+            <if test="naturalYear != null">#{naturalYear},</if>
+            <if test="annualPlancounts != null">#{annualPlancounts},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTechAnnualPlanCount" parameterType="TechAnnualPlanCount">
+        update Tech_Annual_Plan_Count
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="naturalYear != null">Natural_Year = #{naturalYear},</if>
+            <if test="annualPlancounts != null">Annual_PlanCounts = #{annualPlancounts},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where TAPC_id = #{tapcId}
+    </update>
+
+    <delete id="deleteTechAnnualPlanCountByTapcId" parameterType="Long">
+        delete from Tech_Annual_Plan_Count where TAPC_id = #{tapcId}
+    </delete>
+
+    <delete id="deleteTechAnnualPlanCountByTapcIds" parameterType="String">
+        delete from Tech_Annual_Plan_Count where TAPC_id in
+        <foreach item="tapcId" collection="array" open="(" separator="," close=")">
+            #{tapcId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.project.mapper.ProjectInfoTableMapper">
+    
+    <resultMap type="ProjectInfoTable" id="ProjectInfoTableResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="category"    column="category"    />
+        <result property="level"    column="level"    />
+        <result property="department"    column="department"    />
+        <result property="attribute"    column="attribute"    />
+        <result property="description"    column="description"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="progressAlloverProgress"    column="progress_allover_progress"    />
+        <result property="importDate"    column="import_date"    />
+        <result property="remake"    column="remake"    />
+        <result property="oldProjectId"    column="old_project_id"    />
+        <result property="associationDate"    column="association_date"    />
+    </resultMap>
+
+    <sql id="selectProjectInfoTableVo">
+        select project_id, project_name, category, level, department, attribute, description, start_date, progress_allover_progress, import_date, remake, old_project_id, association_date from Project_Info_table
+    </sql>
+
+    <select id="selectProjectInfoTableList" parameterType="ProjectInfoTable" resultMap="ProjectInfoTableResult">
+        <include refid="selectProjectInfoTableVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="level != null  and level != ''"> and level = #{level}</if>
+            <if test="department != null  and department != ''"> and department = #{department}</if>
+            <if test="attribute != null  and attribute != ''"> and attribute = #{attribute}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="progressAlloverProgress != null  and progressAlloverProgress != ''"> and progress_allover_progress = #{progressAlloverProgress}</if>
+            <if test="importDate != null "> and import_date = #{importDate}</if>
+            <if test="remake != null  and remake != ''"> and remake = #{remake}</if>
+            <if test="oldProjectId != null "> and old_project_id = #{oldProjectId}</if>
+            <if test="associationDate != null "> and association_date = #{associationDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectInfoTableByProjectId" parameterType="Long" resultMap="ProjectInfoTableResult">
+        <include refid="selectProjectInfoTableVo"/>
+        where project_id = #{projectId}
+    </select>
+        
+    <insert id="insertProjectInfoTable" parameterType="ProjectInfoTable" useGeneratedKeys="true" keyProperty="projectId">
+        insert into Project_Info_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="level != null and level != ''">level,</if>
+            <if test="department != null and department != ''">department,</if>
+            <if test="attribute != null and attribute != ''">attribute,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">progress_allover_progress,</if>
+            <if test="importDate != null">import_date,</if>
+            <if test="remake != null">remake,</if>
+            <if test="oldProjectId != null">old_project_id,</if>
+            <if test="associationDate != null">association_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="level != null and level != ''">#{level},</if>
+            <if test="department != null and department != ''">#{department},</if>
+            <if test="attribute != null and attribute != ''">#{attribute},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">#{progressAlloverProgress},</if>
+            <if test="importDate != null">#{importDate},</if>
+            <if test="remake != null">#{remake},</if>
+            <if test="oldProjectId != null">#{oldProjectId},</if>
+            <if test="associationDate != null">#{associationDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectInfoTable" parameterType="ProjectInfoTable">
+        update Project_Info_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="level != null and level != ''">level = #{level},</if>
+            <if test="department != null and department != ''">department = #{department},</if>
+            <if test="attribute != null and attribute != ''">attribute = #{attribute},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">progress_allover_progress = #{progressAlloverProgress},</if>
+            <if test="importDate != null">import_date = #{importDate},</if>
+            <if test="remake != null">remake = #{remake},</if>
+            <if test="oldProjectId != null">old_project_id = #{oldProjectId},</if>
+            <if test="associationDate != null">association_date = #{associationDate},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteProjectInfoTableByProjectId" parameterType="Long">
+        delete from Project_Info_table where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteProjectInfoTableByProjectIds" parameterType="String">
+        delete from Project_Info_table where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+</mapper>

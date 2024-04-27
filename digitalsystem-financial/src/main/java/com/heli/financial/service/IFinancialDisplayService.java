@@ -1,6 +1,6 @@
 package com.heli.financial.service;
 
-import com.heli.financial.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.entity.DisplayEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * @date: 2024/4/2 14:16
  **/
 
-public interface DisplayService {
+public interface IFinancialDisplayService {
     /**
      * 主营业务收入 指标1
      */
@@ -95,7 +95,7 @@ public interface DisplayService {
     /**
      * 存货增长率/销售增长率 指标30
      */
-    List<DisplayEntity> selectGrowthRateInventorySales(Date startTime, Date endTime);
+    List<DisplayEntity> selectGrowthRateInventoryAndSales(Date startTime, Date endTime);
 
     /**
      * 应收帐款周转率 指标32

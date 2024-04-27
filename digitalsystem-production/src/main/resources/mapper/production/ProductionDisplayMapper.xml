@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.production.mapper.ProductionDisplayMapper">
+
+    <!-- 当月单台非BOM物料费用 指标24 -->
+    <select id="selectCurNonBomMaterialCost" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Cur_Non_BOM_Material_Cost as curNonBomMaterialCost from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 当月单台低值易耗费用 指标25 -->
+    <select id="selectCurLowValueConsumables" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Cur_Low_Value_Consumables as curLowValueConsumables from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 在制物资年化周转天数 指标29 -->
+    <select id="selectInventoryTurnoverdays" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Inventory_TurnoverDays as inventoryTurnoverdays from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 人均生产台数 指标37 -->
+    <select id="selectOutputPercapitacounts" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Output_PerCapitaCounts as outputPercapitacounts from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 人均产值 指标38 -->
+    <select id="selectOutputPercapitavalue" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Output_PerCapitaValue as outputPercapitavalue from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 上线及时率 指标41 -->
+    <select id="selectOnlineOntimerate" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Online_OnTimeRate as onlineOntimerate from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 一线当月加班时长 指标48 -->
+    <select id="selectOvertimeFrontlinemonth" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Overtime_FrontlineMonth as overtimeFrontlinemonth from Production
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+</mapper>

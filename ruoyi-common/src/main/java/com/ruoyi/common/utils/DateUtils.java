@@ -188,4 +188,17 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
     }
+
+    /**
+     * @description: 得到当前月份的上一个月
+     * @author: hong
+     * @date: 2024/4/23 11:32
+     **/
+    public static Date getLastMonth(Date date){
+        //将date转化为localDateTime
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        //利用localDateTime工具得到当前月份的上一个月，并且重新转化为Date类型
+        return Date.from(localDateTime.minusMonths(1).atZone(ZoneId.systemDefault()).toInstant());
+    }
 }

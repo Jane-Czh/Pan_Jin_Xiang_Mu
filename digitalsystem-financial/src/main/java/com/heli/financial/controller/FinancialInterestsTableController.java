@@ -1,6 +1,7 @@
 package com.heli.financial.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,6 +56,13 @@ public class FinancialInterestsTableController extends BaseController {
             throw new ServiceException("excel上传失败");
         }
         return success();
+    }
+
+    @GetMapping("/selectByYearAndMonth")
+    public void selectByYearAndMonth(Date yearAndMonth){
+        System.out.println("controller"+yearAndMonth);
+        FinancialInterestsTable financialInterestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
+        System.out.println(financialInterestsTable);
     }
 
 

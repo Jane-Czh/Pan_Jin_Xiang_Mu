@@ -1,16 +1,15 @@
 package com.heli.financial.controller;
 
-import com.heli.financial.domain.DisplayEntity;
-import com.heli.financial.domain.FinancialInterestsTable;
-import com.heli.financial.service.DisplayService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.heli.financial.service.IFinancialDisplayService;
+import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.entity.DisplayRequestParam;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -24,15 +23,15 @@ import java.util.List;
 @RequestMapping("/financial/display")
 public class FinancialDisplayController extends BaseController {
     @Autowired
-    private DisplayService displayService;
+    private IFinancialDisplayService IFinancialDisplayService;
 
 
     /**
      * 主营业务收入 指标1
      */
-    @GetMapping("/mainRevenue")
-    public TableDataInfo mainRevenue(@RequestParam("startTime") Date startTime,@RequestParam("endTime") Date endTime) {
-        List<DisplayEntity> list = displayService.selectMainRevenue(startTime,endTime);
+    @PostMapping("/mainRevenue")
+    public TableDataInfo mainRevenue(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectMainRevenue(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
@@ -40,54 +39,56 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 整机销售收入 指标2
      */
-    @GetMapping("/totalSalesRevenue")
-    public TableDataInfo totalSalesRevenue(@RequestParam("startTime") Date startTime,@RequestParam("endTime") Date endTime) {
-        List<DisplayEntity> list = displayService.selectTotalSalesRevenue(startTime,endTime);
+    @PostMapping("/totalSalesRevenue")
+    public TableDataInfo totalSalesRevenue(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectTotalSalesRevenue(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 集团外部销售收入 指标3
      */
-    @GetMapping("/externalGroupSalesRevenue")
-    public TableDataInfo externalGroupSalesRevenue(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectExternalGroupSalesRevenue(startTime,endTime);
+    @PostMapping("/externalGroupSalesRevenue")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public TableDataInfo externalGroupSalesRevenue(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectExternalGroupSalesRevenue(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 整车产量 指标4
      */
-    @GetMapping("/totalVehicleProduction")
-    public TableDataInfo totalVehicleProduction(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectTotalVehicleProduction(startTime,endTime);
+    @PostMapping("/totalVehicleProduction")
+    public TableDataInfo totalVehicleProduction(@RequestBody DisplayRequestParam time) {
+
+        List<DisplayEntity> list = IFinancialDisplayService.selectTotalVehicleProduction(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 整车销量 指标5
      */
-    @GetMapping("/totalVehicleSales")
-    public TableDataInfo totalVehicleSales(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectTotalVehicleSales(startTime,endTime);
+    @PostMapping("/totalVehicleSales")
+    public TableDataInfo totalVehicleSales(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectTotalVehicleSales(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 新产品销售收入 指标6
      */
-    @GetMapping("/newProductSalesRevenue")
-    public TableDataInfo newProductSalesRevenue(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectNewProductSalesRevenue(startTime,endTime);
+    @PostMapping("/newProductSalesRevenue")
+    public TableDataInfo newProductSalesRevenue(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectNewProductSalesRevenue(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 特色产品收入 指标7
      */
-    @GetMapping("/specialtyProductRevenue")
-    public TableDataInfo specialtyProductRevenue(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectSpecialtyProductRevenue(startTime,endTime);
+    @PostMapping("/specialtyProductRevenue")
+    public TableDataInfo specialtyProductRevenue(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectSpecialtyProductRevenue(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
@@ -95,9 +96,9 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 主营业务成本 指标8
      */
-    @GetMapping("/COGS")
-    public TableDataInfo COGS(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.COGS(startTime,endTime);
+    @PostMapping("/COGS")
+    public TableDataInfo COGS(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.COGS(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
@@ -105,162 +106,162 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 整机销售成本 指标9
      */
-    @GetMapping("/totalSalesCost")
-    public TableDataInfo totalSalesCost(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectTotalSalesCost(startTime,endTime);
+    @PostMapping("/totalSalesCost")
+    public TableDataInfo totalSalesCost(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectTotalSalesCost(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 净利润 指标10
      */
-    @GetMapping("/netProfit")
-    public TableDataInfo netProfit(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectNetProfit(startTime,endTime);
+    @PostMapping("/netProfit")
+    public TableDataInfo netProfit(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectNetProfit(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月管理费用 指标20
      */
-    @GetMapping("/managementExpense")
-    public TableDataInfo managementExpense(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectManagementExpense(startTime,endTime);
+    @PostMapping("/managementExpense")
+    public TableDataInfo managementExpense(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectManagementExpense(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月研发费用 指标21
      */
-    @GetMapping("/rdExpense")
-    public TableDataInfo rdExpense(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectRdExpense(startTime,endTime);
+    @PostMapping("/rdExpense")
+    public TableDataInfo rdExpense(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectRdExpense(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月制造费用 指标22
      */
-    @GetMapping("/manufacturingExpensesMonth")
-    public TableDataInfo manufacturingExpensesMonth(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectManufacturingExpensesMonth(startTime,endTime);
+    @PostMapping("/manufacturingExpensesMonth")
+    public TableDataInfo manufacturingExpensesMonth(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectManufacturingExpensesMonth(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月原材料存货额 指标26
      */
-    @GetMapping("/monthlyRawMaterialInventory")
-    public TableDataInfo monthlyRawMaterialInventory(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectMonthlyRawMaterialInventory(startTime,endTime);
+    @PostMapping("/monthlyRawMaterialInventory")
+    public TableDataInfo monthlyRawMaterialInventory(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyRawMaterialInventory(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月在制品存货额 指标27
      */
-    @GetMapping("/monthlyWorkInProgressInventory")
-    public TableDataInfo monthlyWorkInProgressInventory(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectMonthlyWorkInProgressInventory(startTime,endTime);
+    @PostMapping("/monthlyWorkInProgressInventory")
+    public TableDataInfo monthlyWorkInProgressInventory(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyWorkInProgressInventory(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月库存商品存货额 指标28
      */
-    @GetMapping("/monthAmountInStock")
-    public TableDataInfo monthAmountInStock(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectMonthAmountInStock(startTime,endTime);
+    @PostMapping("/monthAmountInStock")
+    public TableDataInfo monthAmountInStock(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectMonthAmountInStock(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 存货增长率/销售增长率 指标30
      */
-    @GetMapping("/growthRateInventorySales")
-    public TableDataInfo growthRateInventorySales(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectGrowthRateInventorySales(startTime,endTime);
+    @PostMapping("/growthRateInventoryAndSales")
+    public TableDataInfo growthRateInventoryAndSales(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectGrowthRateInventoryAndSales(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 应收帐款周转率 指标32
      */
-    @GetMapping("/turnoverRateReceivable")
-    public TableDataInfo turnoverRateReceivable(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectTurnoverRateReceivable(startTime,endTime);
+    @PostMapping("/turnoverRateReceivable")
+    public TableDataInfo turnoverRateReceivable(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectTurnoverRateReceivable(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 资金周转率 指标33
      */
-    @GetMapping("/capitalTurnoverRate")
-    public TableDataInfo capitalTurnoverRate(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectCapitalTurnoverRate(startTime,endTime);
+    @PostMapping("/capitalTurnoverRate")
+    public TableDataInfo capitalTurnoverRate(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectCapitalTurnoverRate(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 库存商品周转率 指标34
      */
-    @GetMapping("/inventoryTurnoverRate")
-    public TableDataInfo inventoryTurnoverRate(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectInventoryTurnoverRate(startTime,endTime);
+    @PostMapping("/inventoryTurnoverRate")
+    public TableDataInfo inventoryTurnoverRate(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectInventoryTurnoverRate(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 原材料周转率 指标35
      */
-    @GetMapping("/rawMaterialTurnoverRate")
-    public TableDataInfo rawMaterialTurnoverRate(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectRawMaterialTurnoverRate(startTime,endTime);
+    @PostMapping("/rawMaterialTurnoverRate")
+    public TableDataInfo rawMaterialTurnoverRate(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectRawMaterialTurnoverRate(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 在制品周转率 指标36
      */
-    @GetMapping("/inprogressTurnoverRate")
-    public TableDataInfo inprogressTurnoverRate(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectInprogressTurnoverRate(startTime,endTime);
+    @PostMapping("/inprogressTurnoverRate")
+    public TableDataInfo inprogressTurnoverRate(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectInprogressTurnoverRate(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 一年以上暂估行项目 指标66
      */
-    @GetMapping("/longEstimatedItems")
-    public TableDataInfo longEstimatedItems(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectLongEstimatedItems(startTime,endTime);
+    @PostMapping("/longEstimatedItems")
+    public TableDataInfo longEstimatedItems(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectLongEstimatedItems(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当日在制品金额 指标70
      */
-    @GetMapping("/inprogressDayrevenue")
-    public TableDataInfo inprogressDayrevenue(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectInprogressDayrevenue(startTime,endTime);
+    @PostMapping("/inprogressDayrevenue")
+    public TableDataInfo inprogressDayrevenue(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectInprogressDayrevenue(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 月度存货总金额 指标77
      */
-    @GetMapping("/monthlyInventoryTotalAmount")
-    public TableDataInfo monthlyInventoryTotalAmount(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectMonthlyInventoryTotalAmount(startTime,endTime);
+    @PostMapping("/monthlyInventoryTotalAmount")
+    public TableDataInfo monthlyInventoryTotalAmount(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyInventoryTotalAmount(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
     /**
      * 当月经济增加值 指标78
      */
-    @GetMapping("/addedValueMonthly")
-    public TableDataInfo addedValueMonthly(Date startTime, Date endTime) {
-        List<DisplayEntity> list = displayService.selectAddedValueMonthly(startTime,endTime);
+    @PostMapping("/addedValueMonthly")
+    public TableDataInfo addedValueMonthly(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectAddedValueMonthly(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 
@@ -270,7 +271,7 @@ public class FinancialDisplayController extends BaseController {
 ////     */
 //    @GetMapping("/mainRevenue/{year}")
 //    public TableDataInfo mainRevenue(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectMainRevenue(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectMainRevenue(year);
 //        return getDataTable(list);
 //    }
 //
@@ -280,7 +281,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/totalSalesRevenue/{year}")
 //    public TableDataInfo totalSalesRevenue(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectTotalSalesRevenue(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectTotalSalesRevenue(year);
 //        return getDataTable(list);
 //    }
 //
@@ -289,7 +290,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/externalGroupSalesRevenue/{year}")
 //    public TableDataInfo externalGroupSalesRevenue(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectExternalGroupSalesRevenue(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectExternalGroupSalesRevenue(year);
 //        return getDataTable(list);
 //    }
 //
@@ -298,7 +299,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/totalVehicleProduction/{year}")
 //    public TableDataInfo totalVehicleProduction(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectTotalVehicleProduction(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectTotalVehicleProduction(year);
 //        return getDataTable(list);
 //    }
 //
@@ -307,7 +308,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/totalVehicleSales/{year}")
 //    public TableDataInfo totalVehicleSales(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectTotalVehicleSales(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectTotalVehicleSales(year);
 //        return getDataTable(list);
 //    }
 //
@@ -316,7 +317,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/newProductSalesRevenue/{year}")
 //    public TableDataInfo newProductSalesRevenue(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectNewProductSalesRevenue(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectNewProductSalesRevenue(year);
 //        return getDataTable(list);
 //    }
 //
@@ -325,7 +326,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/specialtyProductRevenue/{year}")
 //    public TableDataInfo specialtyProductRevenue(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectSpecialtyProductRevenue(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectSpecialtyProductRevenue(year);
 //        return getDataTable(list);
 //    }
 //
@@ -335,7 +336,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/COGS/{year}")
 //    public TableDataInfo COGS(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.COGS(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.COGS(year);
 //        return getDataTable(list);
 //    }
 //
@@ -345,7 +346,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/totalSalesCost/{year}")
 //    public TableDataInfo totalSalesCost(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectTotalSalesCost(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectTotalSalesCost(year);
 //        return getDataTable(list);
 //    }
 //
@@ -354,7 +355,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/netProfit/{year}")
 //    public TableDataInfo netProfit(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectNetProfit(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectNetProfit(year);
 //        return getDataTable(list);
 //    }
 //
@@ -363,7 +364,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/managementExpense/{year}")
 //    public TableDataInfo managementExpense(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectManagementExpense(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectManagementExpense(year);
 //        return getDataTable(list);
 //    }
 //
@@ -372,7 +373,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/rdExpense/{year}")
 //    public TableDataInfo rdExpense(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectRdExpense(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectRdExpense(year);
 //        return getDataTable(list);
 //    }
 //
@@ -381,7 +382,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/manufacturingExpensesMonth/{year}")
 //    public TableDataInfo manufacturingExpensesMonth(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectManufacturingExpensesMonth(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectManufacturingExpensesMonth(year);
 //        return getDataTable(list);
 //    }
 //
@@ -390,7 +391,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/monthlyRawMaterialInventory/{year}")
 //    public TableDataInfo monthlyRawMaterialInventory(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectMonthlyRawMaterialInventory(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyRawMaterialInventory(year);
 //        return getDataTable(list);
 //    }
 //
@@ -399,7 +400,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/monthlyWorkInProgressInventory/{year}")
 //    public TableDataInfo monthlyWorkInProgressInventory(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectMonthlyWorkInProgressInventory(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyWorkInProgressInventory(year);
 //        return getDataTable(list);
 //    }
 //
@@ -408,7 +409,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/monthAmountInStock/{year}")
 //    public TableDataInfo monthAmountInStock(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectMonthAmountInStock(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectMonthAmountInStock(year);
 //        return getDataTable(list);
 //    }
 //
@@ -417,7 +418,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/growthRateInventorySales/{year}")
 //    public TableDataInfo growthRateInventorySales(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectGrowthRateInventorySales(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectGrowthRateInventorySales(year);
 //        return getDataTable(list);
 //    }
 //
@@ -426,7 +427,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/turnoverRateReceivable/{year}")
 //    public TableDataInfo turnoverRateReceivable(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectTurnoverRateReceivable(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectTurnoverRateReceivable(year);
 //        return getDataTable(list);
 //    }
 //
@@ -435,7 +436,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/capitalTurnoverRate/{year}")
 //    public TableDataInfo capitalTurnoverRate(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectCapitalTurnoverRate(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectCapitalTurnoverRate(year);
 //        return getDataTable(list);
 //    }
 //
@@ -444,7 +445,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/inventoryTurnoverRate/{year}")
 //    public TableDataInfo inventoryTurnoverRate(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectInventoryTurnoverRate(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectInventoryTurnoverRate(year);
 //        return getDataTable(list);
 //    }
 //
@@ -453,7 +454,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/rawMaterialTurnoverRate/{year}")
 //    public TableDataInfo rawMaterialTurnoverRate(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectRawMaterialTurnoverRate(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectRawMaterialTurnoverRate(year);
 //        return getDataTable(list);
 //    }
 //
@@ -462,7 +463,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/inprogressTurnoverRate/{year}")
 //    public TableDataInfo inprogressTurnoverRate(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectInprogressTurnoverRate(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectInprogressTurnoverRate(year);
 //        return getDataTable(list);
 //    }
 //
@@ -471,7 +472,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/longEstimatedItems/{year}")
 //    public TableDataInfo longEstimatedItems(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectLongEstimatedItems(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectLongEstimatedItems(year);
 //        return getDataTable(list);
 //    }
 //
@@ -480,7 +481,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/inprogressDayrevenue/{year}")
 //    public TableDataInfo inprogressDayrevenue(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectInprogressDayrevenue(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectInprogressDayrevenue(year);
 //        return getDataTable(list);
 //    }
 //
@@ -489,7 +490,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/monthlyInventoryTotalAmount/{year}")
 //    public TableDataInfo monthlyInventoryTotalAmount(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectMonthlyInventoryTotalAmount(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyInventoryTotalAmount(year);
 //        return getDataTable(list);
 //    }
 //
@@ -498,7 +499,7 @@ public class FinancialDisplayController extends BaseController {
 //     */
 //    @GetMapping("/addedValueMonthly/{year}")
 //    public TableDataInfo addedValueMonthly(@PathVariable("year") String year) {
-//        List<DisplayEntity> list = displayService.selectAddedValueMonthly(year);
+//        List<DisplayEntity> list = IFinancialDisplayService.selectAddedValueMonthly(year);
 //        return getDataTable(list);
 //    }
 

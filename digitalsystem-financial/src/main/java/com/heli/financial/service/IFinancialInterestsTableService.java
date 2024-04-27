@@ -22,17 +22,20 @@ public interface IFinancialInterestsTableService {
      * @author: hong
      * @date: 2024/3/31 13:48
      */
-    public int importInterestsTable(String createdBy, Date createdTime, Date yearAndMonth, MultipartFile excelFile) throws IOException;
+    int importInterestsTable(String createdBy, Date createdTime, Date yearAndMonth, MultipartFile excelFile) throws IOException;
 
-    public int importInterests(MultipartFile excelFile) throws IOException;
+    int importInterests(MultipartFile excelFile) throws IOException;
+
+    FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(Date yearAndMonth);
 
 
     List<FinancialInterestsTable> selectFinancialInterestsTableByYear(String year);
 
-    List<FinancialInterestsTable> selectFinancialInterestsTableByTime(Date beginTime,Date endTime);
+    List<FinancialInterestsTable> selectFinancialInterestsTableByTime(Date beginTime, Date endTime);
 
     boolean checkInterestsDataIsExisted(Date date);
 
+    List<Date> selectAllInterestsYearAndMonth();
 
     /**
      * @description: 查询营业收入

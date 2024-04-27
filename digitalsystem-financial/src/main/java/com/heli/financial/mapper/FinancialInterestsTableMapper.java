@@ -24,19 +24,17 @@ public interface FinancialInterestsTableMapper {
      * @author: hong
      * @date: 2024/4/15 14:59
      **/
-    boolean checkInterestsDataIsExisted(@Param("date") Date date);
+    boolean checkInterestsDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
 
 
-
+    FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
 
     /**
-     *
-     *
      *
      */
 
 //    public BigDecimal selectOperatingRevenue(Date yearAndMonth);
-    public BigDecimal selectOperatingRevenueByMonth(@Param("yearAndMonth")Date date);
+    public BigDecimal selectOperatingRevenueByMonth(@Param("yearAndMonth") Date yearAndMonth);
 
 //    按年查询利润表的全部数据
     List<FinancialInterestsTable> selectFinancialInterestsTableByYear(@Param("year") String year);
@@ -45,7 +43,7 @@ public interface FinancialInterestsTableMapper {
     List<FinancialInterestsTable> selectFinancialInterestsTableByTime(@Param("beginTime") Date beginTime,
                                                                       @Param("endTime") Date endTime);
 
-
+    List<Date> selectAllInterestsYearAndMonth();
 
 
     /**

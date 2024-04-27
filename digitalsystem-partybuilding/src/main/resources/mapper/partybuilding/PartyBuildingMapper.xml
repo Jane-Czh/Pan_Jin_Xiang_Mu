@@ -19,6 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select PB_ID, Year_And_Month, Ranking, score, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from PartyBuilding
     </sql>
 
+
+    <select id="checkPartyBuildingDataIsExisted" parameterType="Date" >
+        SELECT EXISTS(SELECT 1 FROM PartyBuilding WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
     <!--  按年查询党建数据  -->
     <select id="selectPartyBuildingListByYear" resultMap="PartyBuildingResult">
         <include refid="selectPartyBuildingVo"/>

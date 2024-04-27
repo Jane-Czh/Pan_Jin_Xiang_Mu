@@ -205,11 +205,14 @@
             </dependency>
             <dependency>
                 <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-quality</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-project</artifactId>
                 <version>3.8.7</version>
             </dependency>
-
-
 
         </dependencies>
     </dependencyManagement>
@@ -228,6 +231,7 @@
         <module>digitalsystem-safety</module>
         <module>digitalsystem-production</module>
         <module>digitalsystem-supply</module>
+        <module>digitalsystem-quality</module>
         <module>ruoyi-file</module>
         <module>ruoyi-project</module>
 

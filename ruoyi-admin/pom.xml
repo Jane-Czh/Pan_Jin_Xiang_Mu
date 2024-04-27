@@ -79,12 +79,6 @@
             <artifactId>digitalsystem-production</artifactId>
         </dependency>
 
-        <!-- 供应-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>digitalsystem-supply</artifactId>
-        </dependency>
-
         <!-- 技术-->
         <dependency>
             <groupId>com.ruoyi</groupId>
@@ -103,16 +97,16 @@
             <artifactId>digitalsystem-safety</artifactId>
         </dependency>
 
-        <!-- 安环-->
+        <!-- 生产-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>digitalsystem-production</artifactId>
         </dependency>
 
-<!--         文件模块-->
+        <!-- 质量-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-file</artifactId>
+            <artifactId>digitalsystem-quality</artifactId>
         </dependency>
 
         <!--         项目模块-->
@@ -120,6 +114,7 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-project</artifactId>
         </dependency>
+
 
 
         <dependency>

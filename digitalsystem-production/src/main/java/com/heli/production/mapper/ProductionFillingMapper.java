@@ -1,8 +1,10 @@
 package com.heli.production.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.production.domain.ProductionFilling;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @description: [生产]手动填报指标功能Mapper接口
@@ -10,6 +12,13 @@ import com.heli.production.domain.ProductionFilling;
  * @date: 2024/4/11 20:13
  **/
 public interface ProductionFillingMapper {
+
+
+    Boolean checkProductionFillingDataIsExisted(@Param("date") Date date);
+
+    List<Date> selectExistedYearAndMonth();
+
+
     /**
      * 查询[生产]手动填报指标功能
      *

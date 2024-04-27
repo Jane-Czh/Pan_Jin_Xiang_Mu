@@ -1,15 +1,13 @@
 package com.heli.financial.mapper;
 
-import com.heli.financial.domain.DisplayEntity;
-import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.core.domain.entity.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
 
 //@DataSource(value = DataSourceType.SLAVE)
-public interface DisplayMapper {
+public interface FinancialDisplayMapper {
     /**
      * 主营业务收入 指标1
      */
@@ -109,7 +107,7 @@ public interface DisplayMapper {
     /**
      * 存货增长率/销售增长率 指标30
      */
-    List<DisplayEntity> selectGrowthRateInventorySales(@Param("startTime") Date startTime,
+    List<DisplayEntity> selectGrowthRateInventoryAndSales(@Param("startTime") Date startTime,
                                                        @Param("endTime") Date endTime);
 
     /**

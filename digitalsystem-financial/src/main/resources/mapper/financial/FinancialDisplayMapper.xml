@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.heli.financial.mapper.DisplayMapper">
+<mapper namespace="com.heli.financial.mapper.FinancialDisplayMapper">
 
 
 <!--    <select id="selectFinancialBalanceTableByYear" parameterType="Long" resultMap="FinancialBalanceTableResult">-->
@@ -208,9 +208,9 @@
     </select>
 
     <!-- 存货增长率/销售增长率 指标30 -->
-    <select id="selectGrowthRateInventorySales" resultType="map">
+    <select id="selectGrowthRateInventoryAndSales" resultType="map">
         select * from (
-            select Year_And_Month,GrowthRate_Inventory_Sales from Financial_Balance_table
+            select Year_And_Month,GrowthRate_Inventory,GrowthRate_Sales from Financial_Balance_table
             where Year_And_Month between #{startTime} and #{endTime}
             order by Year_And_Month DESC
             limit 12

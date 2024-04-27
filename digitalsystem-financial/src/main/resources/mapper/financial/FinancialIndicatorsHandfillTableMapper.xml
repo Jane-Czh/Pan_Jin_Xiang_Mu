@@ -23,10 +23,10 @@
         <result property="longEstimatedItems" column="Long_Estimated_Items"/>
         <result property="inprogressDayrevenue" column="InProgress_DayRevenue"/>
         <result property="addedValueMonthly" column="Added_Value_Monthly"/>
-        <result property="reporter" column="Reporter"/>
-        <result property="reportingDate" column="Reporting_date"/>
-        <result property="updatedBy" column="UPDATED_BY"/>
-        <result property="updatedDate" column="UPDATED_Date"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
     </resultMap>
 
     <sql id="selectFinancialIndicatorsHandfillTableVo">
@@ -48,15 +48,15 @@
                Long_Estimated_Items,
                InProgress_DayRevenue,
                Added_Value_Monthly,
-               Reporter,
-               Reporting_date,
-               UPDATED_BY,
-               UPDATED_Date
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME
         from Financial_Indicators_HandFill_table
     </sql>
 
 
-    <select id="selectExistedYearAndMonth" parameterType="Date" resultType="map">
+    <select id="selectAllHandFillYearAndMonth" parameterType="Date" resultType="map">
         select * from (
             select Year_And_Month from Financial_Indicators_HandFill_table
             order by Year_And_Month DESC
@@ -66,7 +66,13 @@
 
 
     <select id="checkHandFillDataIsExisted" parameterType="Date" >
-        SELECT EXISTS(SELECT 1 FROM Financial_Indicators_HandFill_table WHERE Year_And_Month=#{date})
+        SELECT EXISTS(SELECT 1 FROM Financial_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+    <!--  按年月查询手动填报数据  -->
+    <select id="selectFinancialIndicatorsHandfillTableByYearAndMonth" parameterType="Date" resultMap="FinancialIndicatorsHandfillTableResult">
+        <include refid="selectFinancialIndicatorsHandfillTableVo"/>
+        where Year_And_Month=#{yearAndMonth}
     </select>
 
 
@@ -90,10 +96,10 @@
             <if test="longEstimatedItems != null ">and Long_Estimated_Items = #{longEstimatedItems}</if>
             <if test="inprogressDayrevenue != null ">and InProgress_DayRevenue = #{inprogressDayrevenue}</if>
             <if test="addedValueMonthly != null ">and Added_Value_Monthly = #{addedValueMonthly}</if>
-            <if test="reporter != null  and Reporter != ''">and Reporter = #{reporter}</if>
-            <if test="reportingDate != null ">and Reporting_date = #{reportingDate}</if>
-            <if test="updatedBy != null  and updatedBy != ''">and UPDATED_BY = #{updatedBy}</if>
-            <if test="updatedDate != null ">and UPDATED_Date = #{updatedDate}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
         </where>
     </select>
 
@@ -124,10 +130,10 @@
             <if test="longEstimatedItems != null">Long_Estimated_Items,</if>
             <if test="inprogressDayrevenue != null">InProgress_DayRevenue,</if>
             <if test="addedValueMonthly != null">Added_Value_Monthly,</if>
-            <if test="reporter != null">Reporter,</if>
-            <if test="reportingDate != null">Reporting_date,</if>
-            <if test="updatedBy != null">UPDATED_BY,</if>
-            <if test="updatedDate != null">UPDATED_Date,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fihfId != null">#{fihfId},</if>
@@ -148,10 +154,10 @@
             <if test="longEstimatedItems != null">#{longEstimatedItems},</if>
             <if test="inprogressDayrevenue != null">#{inprogressDayrevenue},</if>
             <if test="addedValueMonthly != null">#{addedValueMonthly},</if>
-            <if test="reporter != null">#{reporter},</if>
-            <if test="reportingDate != null">#{reportingDate},</if>
-            <if test="updatedBy != null">#{updatedBy},</if>
-            <if test="updatedDate != null">#{updatedDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
         </trim>
     </insert>
 
@@ -175,10 +181,10 @@
             <if test="longEstimatedItems != null">Long_Estimated_Items = #{longEstimatedItems},</if>
             <if test="inprogressDayrevenue != null">InProgress_DayRevenue = #{inprogressDayrevenue},</if>
             <if test="addedValueMonthly != null">Added_Value_Monthly = #{addedValueMonthly},</if>
-            <if test="reporter != null">Reporter = #{reporter},</if>
-            <if test="reportingDate != null">Reporting_date = #{reportingDate},</if>
-            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
-            <if test="updatedDate != null">UPDATED_Date = #{updatedDate},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
         </trim>
         where FIHF_id = #{fihfId}
     </update>

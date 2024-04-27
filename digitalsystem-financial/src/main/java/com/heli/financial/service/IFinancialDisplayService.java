@@ -95,7 +95,7 @@ public interface IFinancialDisplayService {
     /**
      * 存货增长率/销售增长率 指标30
      */
-    List<DisplayEntity> selectGrowthRateInventorySales(Date startTime, Date endTime);
+    List<DisplayEntity> selectGrowthRateInventoryAndSales(Date startTime, Date endTime);
 
     /**
      * 应收帐款周转率 指标32

@@ -1,5 +1,6 @@
 package com.heli.partybuilding.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.partybuilding.domain.PartyBuilding;
@@ -10,6 +11,9 @@ import com.heli.partybuilding.domain.PartyBuilding;
  * @date: 2024/4/9 15:40
  **/
 public interface IPartyBuildingService {
+
+    Boolean checkPartyBuildingDataIsExisted(Date yearAndMonth);
+
 
     /**
      * @description: 按年查询数据

@@ -107,7 +107,7 @@ public interface FinancialDisplayMapper {
     /**
      * 存货增长率/销售增长率 指标30
      */
-    List<DisplayEntity> selectGrowthRateInventorySales(@Param("startTime") Date startTime,
+    List<DisplayEntity> selectGrowthRateInventoryAndSales(@Param("startTime") Date startTime,
                                                        @Param("endTime") Date endTime);
 
     /**

@@ -103,8 +103,8 @@ public class FinancialDisplayServiceImpl implements IFinancialDisplayService {
     }
 
     @Override
-    public List<DisplayEntity> selectGrowthRateInventorySales(Date startTime, Date endTime) {
-        return financialDisplayMapper.selectGrowthRateInventorySales(startTime, endTime);
+    public List<DisplayEntity> selectGrowthRateInventoryAndSales(Date startTime, Date endTime) {
+        return financialDisplayMapper.selectGrowthRateInventoryAndSales(startTime, endTime);
     }
 
     @Override

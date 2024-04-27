@@ -178,9 +178,9 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 存货增长率/销售增长率 指标30
      */
-    @PostMapping("/growthRateInventorySales")
-    public TableDataInfo growthRateInventorySales(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = IFinancialDisplayService.selectGrowthRateInventorySales(time.getStartTime(),time.getEndTime());
+    @PostMapping("/growthRateInventoryAndSales")
+    public TableDataInfo growthRateInventoryAndSales(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = IFinancialDisplayService.selectGrowthRateInventoryAndSales(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
     }
 

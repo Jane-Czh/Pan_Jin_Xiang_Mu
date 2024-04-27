@@ -6,8 +6,8 @@
 
     <resultMap type="FinancialBalanceTable" id="FinancialBalanceTableResult">
         <result property="fbId"    column="FB_ID"    />
-        <result property="createdBy"    column="CREATED_BY"    />
-        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
         <result property="inTransitInventory"    column="InTransitInventory"    />
         <result property="materials"    column="Materials"    />
@@ -22,20 +22,21 @@
         <result property="pcvFinished"    column="PCV_Finished"    />
         <result property="monthAmountInStock"    column="Month_Amount_InStock"    />
         <result property="monthlyInventoryTotalAmount"    column="MonthlyInventoryTotalAmount"    />
-        <result property="growthRateInventorySales"    column="GrowthRate_Inventory_Sales"    />
+        <result property="growthRateInventory"    column="GrowthRate_Inventory"    />
+        <result property="growthRateSales"    column="GrowthRate_Sales"    />
         <result property="receivables"    column="Receivables"    />
         <result property="turnoverRateReceivable"    column="TurnoverRate_Receivable"    />
     </resultMap>
 
     <sql id="selectFinancialBalanceTableVo">
-        select FB_ID, CREATED_BY, CREATED_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, Inventory_Vehicles, PCV_Finished, Month_Amount_InStock, MonthlyInventoryTotalAmount, GrowthRate_Inventory_Sales, Receivables, TurnoverRate_Receivable from Financial_Balance_table
+        select FB_ID, CREATE_BY, CREATE_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, Inventory_Vehicles, PCV_Finished, Month_Amount_InStock, MonthlyInventoryTotalAmount, GrowthRate_Inventory, GrowthRate_Sales, Receivables, TurnoverRate_Receivable from Financial_Balance_table
     </sql>
 
     <select id="selectFinancialBalanceTableList" parameterType="FinancialBalanceTable" resultMap="FinancialBalanceTableResult">
         <include refid="selectFinancialBalanceTableVo"/>
         <where>
-            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
-            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
             <if test="inTransitInventory != null "> and InTransitInventory = #{inTransitInventory}</if>
             <if test="materials != null "> and Materials = #{materials}</if>
@@ -50,33 +51,46 @@
             <if test="pcvFinished != null "> and PCV_Finished = #{pcvFinished}</if>
             <if test="monthAmountInStock != null "> and Month_Amount_InStock = #{monthAmountInStock}</if>
             <if test="monthlyInventoryTotalAmount != null "> and MonthlyInventoryTotalAmount = #{monthlyInventoryTotalAmount}</if>
-            <if test="growthRateInventorySales != null "> and GrowthRate_Inventory_Sales = #{growthRateInventorySales}</if>
+            <if test="growthRateInventory != null "> and GrowthRate_Inventory = #{growthRateInventory}</if>
+            <if test="growthRateSales != null "> and GrowthRate_Sales = #{growthRateSales}</if>
             <if test="receivables != null "> and Receivables = #{receivables}</if>
             <if test="turnoverRateReceivable != null "> and TurnoverRate_Receivable = #{turnoverRateReceivable}</if>
         </where>
     </select>
 
 
-    <!--  查询上个月MonthlyInventoryTotalAmount  -->
-    <select id="selectLastMonthMonthlyInventoryTotalAmount" resultType="java.math.BigDecimal">
+    <!--  按月查询MonthlyInventoryTotalAmount  -->
+    <select id="selectMonthlyInventoryTotalAmountByYearAndMonth" resultType="java.math.BigDecimal">
         select MonthlyInventoryTotalAmount from Financial_Balance_table
         where date_format(Year_And_Month,'%y-%m') = date_format(#{yearAndMonth},'%y-%m')
     </select>
 
     <select id="checkBalanceDataIsExisted" parameterType="Date" >
-        SELECT EXISTS(SELECT 1 FROM Financial_Balance_table WHERE Year_And_Month=#{date})
+        SELECT EXISTS(SELECT 1 FROM Financial_Balance_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
+    <!--  按年月查询  -->
+    <select id="selectFinancialBalanceTableByYearAndMonth" parameterType="Date" resultMap="FinancialBalanceTableResult">
+        <include refid="selectFinancialBalanceTableVo"/>
+        where Year_And_Month = #{yearAndMonth}
+    </select>
 
-
+    <!--  查询资产负债表已上传的全部月份  -->
+    <select id="selectAllBalanceYearAndMonth" parameterType="Date" resultType="map">
+        select * from (
+            select Year_And_Month from Financial_Balance_table
+            order by Year_And_Month DESC
+        ) as t
+        order by Year_And_Month ASC
+    </select>
 
 
 
     <insert id="insertFinancialBalanceTable" parameterType="FinancialBalanceTable" useGeneratedKeys="true" keyProperty="fbId">
         insert into Financial_Balance_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="createdBy != null">CREATED_BY,</if>
-            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
             <if test="yearAndMonth != null">Year_And_Month,</if>
             <if test="inTransitInventory != null">InTransitInventory,</if>
             <if test="materials != null">Materials,</if>
@@ -91,13 +105,14 @@
             <if test="pcvFinished != null">PCV_Finished,</if>
             <if test="monthAmountInStock != null">Month_Amount_InStock,</if>
             <if test="monthlyInventoryTotalAmount != null">MonthlyInventoryTotalAmount,</if>
-            <if test="growthRateInventorySales != null">GrowthRate_Inventory_Sales,</if>
+            <if test="growthRateInventory != null">GrowthRate_Inventory,</if>
+            <if test="growthRateSales != null">GrowthRate_Sales,</if>
             <if test="receivables != null">Receivables,</if>
             <if test="turnoverRateReceivable != null">TurnoverRate_Receivable,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="createdBy != null">#{createdBy},</if>
-            <if test="createdTime != null">#{createdTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
             <if test="inTransitInventory != null">#{inTransitInventory},</if>
             <if test="materials != null">#{materials},</if>
@@ -112,7 +127,8 @@
             <if test="pcvFinished != null">#{pcvFinished},</if>
             <if test="monthAmountInStock != null">#{monthAmountInStock},</if>
             <if test="monthlyInventoryTotalAmount != null">#{monthlyInventoryTotalAmount},</if>
-            <if test="growthRateInventorySales != null">#{growthRateInventorySales},</if>
+            <if test="growthRateInventory != null">#{growthRateInventory},</if>
+            <if test="growthRateSales != null">#{growthRateSales},</if>
             <if test="receivables != null">#{receivables},</if>
             <if test="turnoverRateReceivable != null">#{turnoverRateReceivable},</if>
         </trim>
@@ -121,8 +137,8 @@
     <update id="updateFinancialBalanceTable" parameterType="FinancialBalanceTable">
         update Financial_Balance_table
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
-            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
             <if test="inTransitInventory != null">InTransitInventory = #{inTransitInventory},</if>
             <if test="materials != null">Materials = #{materials},</if>
@@ -134,10 +150,11 @@
             <if test="workInProgressEndOfMonth != null">WorkInProgress_EndOfMonth = #{workInProgressEndOfMonth},</if>
             <if test="monthlyWorkInProgressInventory != null">MonthlyWorkInProgressInventory = #{monthlyWorkInProgressInventory},</if>
             <if test="inventoryVehicles != null">Inventory_Vehicles = #{inventoryVehicles},</if>
-            <if test="pcvFinished != null">PCV_ Finished = #{pcvFinished},</if>
+            <if test="pcvFinished != null">PCV_Finished = #{pcvFinished},</if>
             <if test="monthAmountInStock != null">Month_Amount_InStock = #{monthAmountInStock},</if>
             <if test="monthlyInventoryTotalAmount != null">MonthlyInventoryTotalAmount = #{monthlyInventoryTotalAmount},</if>
-            <if test="growthRateInventorySales != null">GrowthRate_ Inventory_Sales = #{growthRateInventorySales},</if>
+            <if test="growthRateInventory != null">GrowthRate_Inventory = #{growthRateInventory},</if>
+            <if test="growthRateSales != null">GrowthRate_Sales = #{growthRateSales},</if>
             <if test="receivables != null">Receivables = #{receivables},</if>
             <if test="turnoverRateReceivable != null">TurnoverRate_Receivable = #{turnoverRateReceivable},</if>
         </trim>

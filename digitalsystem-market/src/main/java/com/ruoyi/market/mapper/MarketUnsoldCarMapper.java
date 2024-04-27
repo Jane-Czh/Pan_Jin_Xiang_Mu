@@ -28,6 +28,14 @@ public interface MarketUnsoldCarMapper
     public List<MarketUnsoldCar> selectMarketUnsoldCarList(MarketUnsoldCar marketUnsoldCar);
 
     /**
+     * 查询统计全部库存车数量列表
+     *
+     *
+     *
+     */
+    public List<MarketUnsoldCar> selectAllData();
+
+    /**
      * 新增统计库存车数量
      * 
      * @param marketUnsoldCar 统计库存车数量
@@ -58,4 +66,6 @@ public interface MarketUnsoldCarMapper
      * @return 结果
      */
     public int deleteMarketUnsoldCarByUcIds(Long[] ucIds);
+
+    void deleteAllMarketUnsoldCar();
 }

@@ -1,25 +1,24 @@
 package com.ruoyi.market.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
-import com.ruoyi.market.domain.*;
+import com.ruoyi.market.domain.MarketAfterSaleLedger;
 import com.ruoyi.market.utils.GenerateId;
 import com.ruoyi.market.utils.getTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.MarketAfterSaleRegionalClassificationMapper;
+import com.ruoyi.market.domain.MarketAfterSaleRegionalClassification;
 import com.ruoyi.market.service.IMarketAfterSaleRegionalClassificationService;
 
 /**
  * 售后区域分类Service业务层处理
  * 
  * @author ruoyi
- * @date 2024-04-16
+ * @date 2024-04-18
  */
 @Service
 public class MarketAfterSaleRegionalClassificationServiceImpl implements IMarketAfterSaleRegionalClassificationService 
@@ -59,26 +58,29 @@ public class MarketAfterSaleRegionalClassificationServiceImpl implements IMarket
             i++;
         }
 
-        //删除数据库中旧数据
-        MarketAfterSaleRegionalClassification marketAfterSaleRegionalClassification1 = new MarketAfterSaleRegionalClassification();
-        List<MarketAfterSaleRegionalClassification> list1 = selectMarketAfterSaleRegionalClassificationList(marketAfterSaleRegionalClassification1);
-        if (list1.size() > 0){
-            int x = 0;
-            Long[] deleteId = new Long[list1.size()];
-            while (x < list1.size()){
-                MarketAfterSaleRegionalClassification value = list1.get(x);
-                deleteId[x] = value.getMasrcId();
-                x++;
-            }
-            deleteMarketAfterSaleRegionalClassificationByMasrcIds(deleteId);
-            System.out.println("删除成功");
-        }
+//        //删除数据库中旧数据
+//        MarketAfterSaleRegionalClassification marketAfterSaleRegionalClassification1 = new MarketAfterSaleRegionalClassification();
+//        List<MarketAfterSaleRegionalClassification> list1 = selectMarketAfterSaleRegionalClassificationList(marketAfterSaleRegionalClassification1);
+//        if (list1.size() > 0){
+//            int x = 0;
+//            Long[] deleteId = new Long[list1.size()];
+//            while (x < list1.size()){
+//                MarketAfterSaleRegionalClassification value = list1.get(x);
+//                deleteId[x] = value.getMasrcId();
+//                x++;
+//            }
+//            deleteMarketAfterSaleRegionalClassificationByMasrcIds(deleteId);
+//            System.out.println("删除成功");
+//        }
 
         //本周总问题数
         int Problem_Number = marketAfterSaleLedgers.size();
         //分类完成后对网点内问题进行统计
         for (Map.Entry<String, List<MarketAfterSaleLedger>> entry : hashMap.entrySet()){
             String Primary_Branch = entry.getKey();
+            if (Primary_Branch.equals("")){
+                continue;
+            }
             List<MarketAfterSaleLedger> problem = entry.getValue();
             //循环变量
             int j = 0;
@@ -107,13 +109,15 @@ public class MarketAfterSaleRegionalClassificationServiceImpl implements IMarket
             }
 
             System.out.println(Primary_Branch);
-            if (Primary_Branch == null || Primary_Branch.equals("")){
-                continue;
-            }
+
             marketAfterSaleRegionalClassification.setMasrcId(GenerateId.getNextId(last_id));
             marketAfterSaleRegionalClassification.setArea(Primary_Branch);
             marketAfterSaleRegionalClassification.setRegionalProblemsProportion(BigDecimal.valueOf(proportion));
             marketAfterSaleRegionalClassification.setUnprocessedNmber((long)count);
+            LocalDate currentDate = LocalDate.now();
+            // 获取当前日期所在的周数
+            int weekOfYear = currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+            marketAfterSaleRegionalClassification.setWeek(weekOfYear);
             marketAfterSaleRegionalClassificationMapper.insertMarketAfterSaleRegionalClassification(marketAfterSaleRegionalClassification);
             System.out.println("插入-------成功");
         }

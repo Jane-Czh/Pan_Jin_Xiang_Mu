@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 售后问题分类对象 Market_After_Sale_Problem_Classification
  * 
  * @author ruoyi
- * @date 2024-04-15
+ * @date 2024-04-18
  */
 public class MarketAfterSaleProblemClassification extends BaseEntity
 {
@@ -34,6 +34,10 @@ public class MarketAfterSaleProblemClassification extends BaseEntity
     /** 一级网点 */
     @Excel(name = "一级网点")
     private String Branch;
+
+    /** 周数 */
+    @Excel(name = "周数")
+    private Integer Week;
 
     public void setMaspcId(Long maspcId) 
     {
@@ -80,6 +84,15 @@ public class MarketAfterSaleProblemClassification extends BaseEntity
     {
         return Branch;
     }
+    public void setWeek(Integer Week) 
+    {
+        this.Week = Week;
+    }
+
+    public Integer getWeek() 
+    {
+        return Week;
+    }
 
     @Override
     public String toString() {
@@ -89,6 +102,7 @@ public class MarketAfterSaleProblemClassification extends BaseEntity
             .append("problemRecurrenceRate", getProblemRecurrenceRate())
             .append("differentProblemOccurrenceRate", getDifferentProblemOccurrenceRate())
             .append("Branch", getBranch())
+            .append("Week", getWeek())
             .toString();
     }
 }

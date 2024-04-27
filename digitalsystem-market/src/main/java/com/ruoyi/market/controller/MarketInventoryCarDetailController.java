@@ -56,6 +56,7 @@ public class MarketInventoryCarDetailController extends BaseController
     {
         startPage();
         List<MarketInventoryCarDetail> list = marketInventoryCarDetailService.selectMarketInventoryCarDetailList(marketInventoryCarDetail);
+        System.out.println(list.size());
         return getDataTable(list);
     }
 

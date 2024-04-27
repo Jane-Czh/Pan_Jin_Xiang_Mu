@@ -4,7 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.market.domain.MarketAfterSaleLedger;
-import com.ruoyi.market.domain.MarketAfterSalesRecurrenceRate;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 售后问题分类Controller
  * 
  * @author ruoyi
- * @date 2024-04-15
+ * @date 2024-04-18
  */
 @RestController
 @RequestMapping("/market/classification")
@@ -37,6 +36,7 @@ public class MarketAfterSaleProblemClassificationController extends BaseControll
 {
     @Autowired
     private IMarketAfterSaleProblemClassificationService marketAfterSaleProblemClassificationService;
+
     @Autowired
     private IMarketAfterSaleLedgerService marketAfterSaleLedgerService;
 
@@ -50,8 +50,6 @@ public class MarketAfterSaleProblemClassificationController extends BaseControll
         List<MarketAfterSaleLedger> list = marketAfterSaleLedgerService.selectMarketAfterSaleLedgerList(marketAfterSaleLedger);
         marketAfterSaleProblemClassificationService.Synchronization(list);
     }
-
-
     /**
      * 查询售后问题分类列表
      */

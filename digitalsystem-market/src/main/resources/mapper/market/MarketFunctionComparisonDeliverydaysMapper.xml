@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketFunctionComparisonDeliverydaysMapper">
+
+    <resultMap type="MarketFunctionComparisonDeliverydays" id="MarketFunctionComparisonDeliverydaysResult">
+        <result property="mfcdId"    column="MFCD_id"    />
+        <result property="numberOfWeekDelivery"    column="Number_of_week_delivery"    />
+        <result property="numberOfDayDelivery"    column="Number_of_day_delivery"    />
+        <result property="carNumberDay"    column="Car_number_day"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="precisionCompletionPeriod"    column="Precision_Completion_Period"    />
+        <result property="acceptanceDate"    column="Acceptance_Date"    />
+        <result property="launchDate"    column="Launch_Date"    />
+        <result property="tonnage"    column="tonnage"    />
+        <result property="carNumberWeek"    column="Car_number_week"    />
+        <result property="cumulativeNumberOfDays"    column="Cumulative_number_of_days"    />
+        <result property="cumulativeNumberOfWeek"    column="Cumulative_number_of_week"    />
+        <result property="createTime"    column="Create_time"    />
+    </resultMap>
+
+    <sql id="selectMarketFunctionComparisonDeliverydaysVo">
+        select MFCD_id, Number_of_week_delivery, Number_of_day_delivery, Car_number_day, Vehicle_Model, Precision_Completion_Period, Acceptance_Date, Launch_Date, tonnage, Car_number_week, Cumulative_number_of_days, Cumulative_number_of_week, Create_time from Market_function_Comparison_deliverydays
+    </sql>
+
+    <select id="selectMarketFunctionComparisonDeliverydaysList" parameterType="MarketFunctionComparisonDeliverydays" resultMap="MarketFunctionComparisonDeliverydaysResult">
+        <include refid="selectMarketFunctionComparisonDeliverydaysVo"/>
+        <where>
+            <if test="numberOfWeekDelivery != null "> and Number_of_week_delivery = #{numberOfWeekDelivery}</if>
+            <if test="numberOfDayDelivery != null "> and Number_of_day_delivery = #{numberOfDayDelivery}</if>
+            <if test="carNumberDay != null "> and Car_number_day = #{carNumberDay}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="precisionCompletionPeriod != null "> and Precision_Completion_Period = #{precisionCompletionPeriod}</if>
+            <if test="acceptanceDate != null "> and Acceptance_Date = #{acceptanceDate}</if>
+            <if test="launchDate != null "> and Launch_Date = #{launchDate}</if>
+            <if test="tonnage != null "> and tonnage = #{tonnage}</if>
+            <if test="carNumberWeek != null "> and Car_number_week = #{carNumberWeek}</if>
+            <if test="cumulativeNumberOfDays != null "> and Cumulative_number_of_days = #{cumulativeNumberOfDays}</if>
+            <if test="cumulativeNumberOfWeek != null "> and Cumulative_number_of_week = #{cumulativeNumberOfWeek}</if>
+            <if test="createTime != null "> and Create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectMarketFunctionComparisonDeliverydaysByMfcdId" parameterType="Long" resultMap="MarketFunctionComparisonDeliverydaysResult">
+        <include refid="selectMarketFunctionComparisonDeliverydaysVo"/>
+        where MFCD_id = #{mfcdId}
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT MFCD_id
+        FROM Market_function_Comparison_deliverydays
+        WHERE MFCD_id = (SELECT MAX(MFCD_id) FROM Market_function_Comparison_deliverydays);
+    </select>
+
+    <insert id="insertMarketFunctionComparisonDeliverydays" parameterType="MarketFunctionComparisonDeliverydays">
+        insert into Market_function_Comparison_deliverydays
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mfcdId != null">MFCD_id,</if>
+            <if test="numberOfWeekDelivery != null">Number_of_week_delivery,</if>
+            <if test="numberOfDayDelivery != null">Number_of_day_delivery,</if>
+            <if test="carNumberDay != null">Car_number_day,</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period,</if>
+            <if test="acceptanceDate != null">Acceptance_Date,</if>
+            <if test="launchDate != null">Launch_Date,</if>
+            <if test="tonnage != null">tonnage,</if>
+            <if test="carNumberWeek != null">Car_number_week,</if>
+            <if test="cumulativeNumberOfDays != null">Cumulative_number_of_days,</if>
+            <if test="cumulativeNumberOfWeek != null">Cumulative_number_of_week,</if>
+            <if test="createTime != null">Create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mfcdId != null">#{mfcdId},</if>
+            <if test="numberOfWeekDelivery != null">#{numberOfWeekDelivery},</if>
+            <if test="numberOfDayDelivery != null">#{numberOfDayDelivery},</if>
+            <if test="carNumberDay != null">#{carNumberDay},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="precisionCompletionPeriod != null">#{precisionCompletionPeriod},</if>
+            <if test="acceptanceDate != null">#{acceptanceDate},</if>
+            <if test="launchDate != null">#{launchDate},</if>
+            <if test="tonnage != null">#{tonnage},</if>
+            <if test="carNumberWeek != null">#{carNumberWeek},</if>
+            <if test="cumulativeNumberOfDays != null">#{cumulativeNumberOfDays},</if>
+            <if test="cumulativeNumberOfWeek != null">#{cumulativeNumberOfWeek},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMarketFunctionComparisonDeliverydays" parameterType="MarketFunctionComparisonDeliverydays">
+        update Market_function_Comparison_deliverydays
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="numberOfWeekDelivery != null">Number_of_week_delivery = #{numberOfWeekDelivery},</if>
+            <if test="numberOfDayDelivery != null">Number_of_day_delivery = #{numberOfDayDelivery},</if>
+            <if test="carNumberDay != null">Car_number_day = #{carNumberDay},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period = #{precisionCompletionPeriod},</if>
+            <if test="acceptanceDate != null">Acceptance_Date = #{acceptanceDate},</if>
+            <if test="launchDate != null">Launch_Date = #{launchDate},</if>
+            <if test="tonnage != null">tonnage = #{tonnage},</if>
+            <if test="carNumberWeek != null">Car_number_week = #{carNumberWeek},</if>
+            <if test="cumulativeNumberOfDays != null">Cumulative_number_of_days = #{cumulativeNumberOfDays},</if>
+            <if test="cumulativeNumberOfWeek != null">Cumulative_number_of_week = #{cumulativeNumberOfWeek},</if>
+            <if test="createTime != null">Create_time = #{createTime},</if>
+        </trim>
+        where MFCD_id = #{mfcdId}
+    </update>
+
+    <delete id="deleteMarketFunctionComparisonDeliverydaysByMfcdId" parameterType="Long">
+        delete from Market_function_Comparison_deliverydays where MFCD_id = #{mfcdId}
+    </delete>
+
+    <delete id="deleteMarketFunctionComparisonDeliverydaysByMfcdIds" parameterType="String">
+        delete from Market_function_Comparison_deliverydays where MFCD_id in
+        <foreach item="mfcdId" collection="array" open="(" separator="," close=")">
+            #{mfcdId}
+        </foreach>
+    </delete>
+</mapper>

@@ -17,7 +17,7 @@
 
 .jtk-overlay {
     cursor: pointer;
-    color: #4A4A4A;
+    color: #080808;
 }
 
 
@@ -65,7 +65,7 @@
 .ef-node-container {
     position: absolute;
     display: flex;
-    width: 170px;
+    width: 200px;
     height: 32px;
     border: 1px solid #E0E3E7;
     border-radius: 5px;
@@ -73,16 +73,35 @@
     /* border: #000 10px solid; */
 }
 
-/*添加的隔开虚线*/
+/*添加的隔开虚线1*/
 .ef-node-container::before {
     content: '';
     position: absolute;
-    left: 135px; /* 虚竖线的位置 */
+    left: 132px;
+    /* 虚竖线的位置 */
     top: 0;
-    width: 2px; /* 虚竖线的宽度 */
-    height: 100%; /* 虚竖线的高度，这里假设节点容器高度为 100% */
-    border-left: 1px dashed #ccc; /* 虚线的样式和颜色 */
-  }
+    width: 2px;
+    /* 虚竖线的宽度 */
+    height: 100%;
+    /* 虚竖线的高度，这里假设节点容器高度为 after100% */
+    border-left: 2px dashed #ccc;
+    /* 虚线的样式和颜色 */
+}
+
+/*添加的隔开虚线2*/
+.ef-node-container::after {
+    content: '';
+    position: absolute;
+    left: 165px;
+    /* 虚竖线的位置 */
+    top: 0;
+    width: 2px;
+    /* 虚竖线的宽度 */
+    height: 100%;
+    /* 虚竖线的高度，这里假设节点容器高度为 100% */
+    border-left: 2px dashed #ccc;
+    /* 虚线的样式和颜色 */
+}
 
 .ef-node-container:hover {
     /* 设置移动样式*/
@@ -108,8 +127,8 @@
     border-radius: 4px 0 0 4px;
 }
 
-/*绑定文件*/
-.ef-node-file-yes{ 
+/*绑定制度文件 yes & no*/
+.ef-node-file-yes {
     line-height: 32px;
     position: absolute;
     right: 5px;
@@ -117,22 +136,39 @@
     color: #84CF65;
 }
 
-.ef-node-file-no{ 
+.ef-node-file-no {
     line-height: 32px;
     position: absolute;
     right: 5px;
     cursor: pointer;
     color: #1b28e1;
 }
-
-.ef-node-file-no-temp{ 
+/*绑定表单 yes & no*/
+.ef-node-form-yes {
     line-height: 32px;
     position: absolute;
-   
+    right: 32px;
+    cursor: pointer;
+    color: #84CF65;
+}
+
+.ef-node-form-no {
+    line-height: 32px;
+    position: absolute;
+    right: 32px;
     cursor: pointer;
     color: #1b28e1;
 }
-  
+
+
+.ef-node-file-no-temp {
+    line-height: 32px;
+    position: absolute;
+
+    cursor: pointer;
+    color: #1b28e1;
+}
+
 /*节点左侧的图标*/
 .ef-node-left-ico {
     line-height: 32px;
@@ -158,9 +194,8 @@
     text-align: center;
 }
 
-/*节点右侧的图标*/
+/*节点右侧的图标-制度*/
 .ef-node-right-ico {
-
     line-height: 32px;
     position: absolute;
     right: 5px;
@@ -168,6 +203,17 @@
     color: #84CF65;
     cursor: default;
 }
+
+/*节点右侧的图标-表单*/
+.ef-node-rightform-ico {
+    line-height: 32px;
+    position: absolute;
+    right: 35px;
+    margin-left: 160px;
+    color: #84CF65;
+    cursor: default;
+}
+
 
 /*节点的几种状态样式*/
 .el-node-state-success {
@@ -231,8 +277,7 @@
 }
 
 /* label 为空的样式 */
-.emptyFlowLabel {
-}
+.emptyFlowLabel {}
 
 
 .ef-dot {
@@ -252,13 +297,11 @@
     background-color: red;
 }
 
-.ef-img {
-}
+.ef-img {}
 
-.ef-img-hover {
-}
+.ef-img-hover {}
 
 
-.ef-drop-hover{
+.ef-drop-hover {
     border: 1px dashed #1879FF;
 }

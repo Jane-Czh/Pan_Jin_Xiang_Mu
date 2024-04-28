@@ -1224,6 +1224,21 @@ export const dynamicRoutes = [
     permissions: ['system:user:edit'],
 
   },
+  //文件模块
+  // { 
+  //   path: '/file/filemanagement/index',
+  //   component: Layout,
+  //   hidden: true,
+  //   permissions: ['file:filemanagement:list'],
+  //   children: [
+  //     {
+  //       path: '/file/filemanagement/historyVersions/:regulationsId(\\d+)', // 路由路径
+  //       component: () => import('@/views/file/filemanagement/historyVersions'), // 对应的组件
+  //       name: 'historyVersions', // 路由名称
+  //       meta: { title: '历史版本管理' } // 元信息，用于设置标题等
+  //     }
+  //   ]
+  // },
 
 ]
 

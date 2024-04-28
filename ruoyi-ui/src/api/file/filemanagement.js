@@ -9,6 +9,15 @@ export function listFilemanagement(query) {
   })
 }
 
+// 查询历史文件列表
+export function getRegulationsHistory(currentId) {
+  return request({
+    url: '/file/filemanagement/history/' + currentId,
+    method: 'get',
+    // params: query
+  });
+}
+
 // 查询文件管理详细
 export function getFilemanagement(regulationsId) {
   return request({
@@ -42,3 +51,22 @@ export function delFilemanagement(regulationsId) {
     method: 'delete'
   })
 }
+
+// 修改文件管理
+export function getLastId(data) {
+  return request({
+    url: '/file/filemanagement',
+    method: 'put',
+    data: data
+  })
+}
+
+// word转pdf
+export function word2Pdf(inPath, outPath) {
+  return request({
+    url: '/file/filemanagement/convert',
+    method: 'post',
+    params: { inPath, outPath }
+  });
+}
+

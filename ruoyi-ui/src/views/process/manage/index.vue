@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+
     <!-- 查看流程数据详情-->
     <show-panel ref="ShowPanel" v-if="showPanelVisible"></show-panel>
     <!-- 编辑流程数据详情  -->
@@ -111,7 +112,6 @@
         width="180"
       >
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
           <span>{{
             parseTime(scope.row.createDate, "{y}-{m}-{d}  {h}:{i}:{s}")
           }}</span>
@@ -211,9 +211,10 @@ import axios from "axios";
 
 export default {
   name: "Project",
-  inject: ["reload"],
+  inject:['reload'],
   data() {
     return {
+
       // 控制查看的流程数据显示与隐藏
       showPanelVisible: false,
       // 控制可编辑的的流程数据显示与隐藏
@@ -274,6 +275,7 @@ export default {
   methods: {
     //可编辑流程
     edit(row) {
+   
       //加载流程面板可见
       this.editPanelVisible = true;
       //getProject 从后端读取数据
@@ -281,9 +283,10 @@ export default {
         // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
         this.$refs.EditPanel.dataReload(response.data);
       });
-      if (this.easyFlowVisible) {
-        this.reload();
-      }
+      if(this.easyFlowVisible){
+          this.reload();
+        }
+      
     },
 
     //查看流程
@@ -301,18 +304,10 @@ export default {
     getList() {
       this.loading = true;
       listProject(this.queryParams).then((response) => {
-        // console.log("manage/index从后端获取的response===>", response);
+        console.log("manage/index从后端获取的response===>", response);
         for (var i = 0; i < response.length; i++) {
           this.projectList.push(response[i]);
         }
-
-        // 按照updateDate字段进行排序
-        this.projectList.sort((a, b) => {
-
-            // 按照updateDate字段从小到大排序
-            return new Date(a.createDate) - new Date(b.createDate);
-
-        });
         //TODO 分页功能、分科室搜索功能等
         // this.total = response.total;
         this.loading = false;
@@ -362,6 +357,7 @@ export default {
         this.open = true;
         this.title = "修改流程名称";
       });
+
     },
     /** 修改流程的提交按钮 */
     submitForm() {
@@ -388,9 +384,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal
-        .confirm(
-          `是否确认删除流程[ ${row.name} ]？这会删除与此流程相关的所有历史流程！`
-        )
+        .confirm(`是否确认删除流程[ ${row.name} ]？`)
         .then(
           delProject(ids).then((response) => {})
           // function () { return delProject(ids);}

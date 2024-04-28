@@ -52,14 +52,6 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件路径" prop="filePath">
-              <el-input
-                v-model="queryParams.filePath"
-                placeholder="请输入文件路径"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
             <el-form-item label="文件类型" prop="fileType">
               <el-input
                 v-model="queryParams.fileType"
@@ -215,7 +207,6 @@
       </el-table-column>
       <el-table-column label="制度内容" align="center" prop="regulationsAddress" />
       <el-table-column label="文件名称" align="center" prop="fileName" />
-      <el-table-column label="文件路径" align="center" prop="filePath" />
       <el-table-column label="文件类型" align="center" prop="fileType" />
       <el-table-column label="文件大小" align="center" prop="fileSize" />
       <el-table-column label="制度创建日期" align="center" prop="createDate" width="180">
@@ -264,124 +255,99 @@
     />
 
     <!-- 添加或修改文件管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="110px" >
-        <el-row>
-          <el-col :span="24">
-            <!-- 使用Flex布局将上传文件按钮水平居中 -->
-            <div style="display: flex; justify-content: center;height: 100px;">
-              <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-change="handleFileChange"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                multiple
-                :limit="3"
-                :auto-upload="false"
-                :on-exceed="handleExceed"
-                :file-list="fileList"
-              >
-                <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="制度标题" prop="regulationsTitle">
-              <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="适用范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入适用范围" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="上传日期" prop="uploadDate" >
-              <el-date-picker clearable
-                              v-model="form.uploadDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择上传日期">
-                              :disabled="true"
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="生效日期" prop="effectiveDate">
-              <el-date-picker clearable
-                              v-model="form.effectiveDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择生效日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="文件名称" prop="fileName" >
-              <el-input v-model="form.fileName" placeholder="请输入文件名称" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="文件路径" prop="filePath" >
-              <el-input v-model="form.filePath" placeholder="文件名显示区域" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="文件类型" prop="fileType" >
-              <el-input v-model="form.fileType" placeholder="请输入文件类型" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="文件大小" prop="fileSize" >
-              <el-input v-model="form.fileSize" placeholder="请输入文件大小" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度创建日期" prop="createDate">
-              <el-date-picker clearable
-                              v-model="form.createDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择制度创建日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度创建人" prop="createUsername">
-              <el-input v-model="form.createUsername" placeholder="请输入制度创建人" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度使用状态" prop="useState">
-              <el-input v-model="form.useState" placeholder="请输入制度使用状态" />
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度所属科室" prop="departmentCategory">
-              <el-input v-model="form.departmentCategory" placeholder="请输入制度所属科室" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-change="handleFileChange"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple:true
+          :limit="3"
+          :auto-upload="false"
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+        >
+          <el-button size="small" type="primary">点击上传</el-button>
+          <!--                <div slot="tip" class="el-upload__tip">只能上传 word/pdf 文件</div>-->
+        </el-upload>
+        <el-form-item label="制度标题" prop="regulationsTitle">
+          <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题" />
+        </el-form-item>
+        <el-form-item label="适用范围" prop="useScope">
+          <el-input v-model="form.useScope" placeholder="请输入适用范围" />
+        </el-form-item>
+        <el-form-item label="上传日期" prop="uploadDate">
+          <el-date-picker clearable
+                          v-model="form.uploadDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择上传日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="生效日期" prop="effectiveDate">
+          <el-date-picker clearable
+                          v-model="form.effectiveDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择生效日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="制度内容" prop="regulationsAddress">
+          <el-input v-model="form.regulationsAddress" placeholder="请输入制度内容" />
+        </el-form-item>
+        <el-form-item label="文件名称" prop="fileName">
+          <el-input :value="input" placeholder="请输入文件名称" />
+        </el-form-item>
+        <el-form-item label="文件路径" prop="fileAddr">
+          <el-input :value="input" placeholder="文件名显示区域">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="文件类型" prop="fileType">
+          <el-input v-model="form.fileType" placeholder="请输入文件类型" />
+        </el-form-item>
+        <el-form-item label="文件大小" prop="fileSize">
+          <el-input v-model="form.fileSize" placeholder="请输入文件大小" />
+        </el-form-item>
+        <el-form-item label="制度创建日期" prop="createDate">
+          <el-date-picker clearable
+                          v-model="form.createDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择制度创建日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="制度创建人" prop="createUsername">
+          <el-input v-model="form.createUsername" placeholder="请输入制度创建人" />
+        </el-form-item>
+        <el-form-item label="制度使用状态" prop="useState">
+          <el-input v-model="form.useState" placeholder="请输入制度使用状态" />
+        </el-form-item>
+        <el-form-item label="制度所属科室" prop="departmentCategory">
+          <el-input v-model="form.departmentCategory" placeholder="请输入制度所属科室" />
+        </el-form-item>
+        <el-form-item label="制度标签名称" prop="fileTag">
+          <el-input v-model="form.fileTag" placeholder="请输入制度标签名称" />
+        </el-form-item>
+        <el-form-item label="历史版本制度" prop="oldRegulationsId">
+          <el-input v-model="form.oldRegulationsId" placeholder="请输入历史版本制度" />
+        </el-form-item>
+        <el-form-item label="修订时间" prop="revisionDate">
+          <el-date-picker clearable
+                          v-model="form.revisionDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择修订时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="修订内容">
+          <editor v-model="form.revisionContent" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="修订人" prop="reviser">
+          <el-input v-model="form.reviser" placeholder="请输入修订人" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -427,7 +393,6 @@
           effectiveDate: null,
           regulationsAddress: null,
           fileName: null,
-          filePath: null,
           fileType: null,
           fileSize: null,
           createDate: null,
@@ -448,8 +413,7 @@
           useScope: null,
           effectiveDate: null,
           regulationsAddress: null,
-          fileName: null,
-          filePath:null,
+          fileAddr:null,
           fileType: null,
           fileSize: null,
           createDate: null,
@@ -482,7 +446,7 @@
           fileName: [
             { required: true, message: "文件名称不能为空", trigger: "blur" }
           ],
-          filePath: [
+          fileAddr: [
             { required: true, message: "文件路径不能为空", trigger: "blur" }
           ],
           fileType: [
@@ -524,7 +488,6 @@
           this.total = response.total;
           this.loading = false;
         });
-      
       },
       // 取消按钮
       cancel() {
@@ -541,7 +504,6 @@
           effectiveDate: null,
           regulationsAddress: null,
           fileName:null,
-          filePath: null,
           fileType: null,
           fileSize: null,
           createDate: null,
@@ -624,41 +586,8 @@
           ...this.queryParams
         }, `filemanagement_${new Date().getTime()}.xlsx`)
       },
-      // handleFileChange(file, fileList) {
-      //   this.input = file.name;
-      // },
       handleFileChange(file, fileList) {
-        const uploadedFile = file.raw; // 获取上传的文件对象
-
-        // 将文件名填充到对应的输入框
-        this.form.fileName = uploadedFile.name;
-        // //将文件路径填充到对应的输入框
-        // this.form.filePath = uploadedFile.webkitRelativePath || uploadedFile.relativePath || "文件路径不可用";
-        // 将文件类型填充到对应的输入框
-        this.form.fileType = this.getFileType(uploadedFile.type);
-
-        // 将文件大小填充到对应的输入框
-        this.form.fileSize = this.formatFileSize(uploadedFile.size);
-
-        // 获取当前时间作为上传日期，并填充到对应的输入框
-        const currentDate = new Date();
-        this.form.uploadDate = currentDate.toISOString().split('T')[0];
-      },
-      // 文件大小自动转换单位
-      formatFileSize(sizeInBytes) {
-        const KB = 1024;
-        const MB = KB * 1024;
-        const GB = MB * 1024;
-
-        if (sizeInBytes < KB) {
-          return sizeInBytes + "KB";
-        } else if (sizeInBytes < MB) {
-          return (sizeInBytes / KB).toFixed(2) + "KB";
-        } else if (sizeInBytes < GB) {
-          return (sizeInBytes / MB).toFixed(2) + "MB";
-        } else {
-          return (sizeInBytes / GB).toFixed(2) + "GB";
-        }
+        this.input = file.name;
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -675,18 +604,6 @@
       // handleChange(val) {
       //   console.log(val);
       // }
-
-      getFileType(fullType) {  //获取详细的文件类型
-        // 根据完整的文件类型(fullType)获取简短的文件类型
-        if (fullType.includes('pdf')) {
-          return 'pdf';
-        } else if (fullType.includes('word')) {
-          return 'word';
-        } else {
-          // 其他类型的文件处理方式
-          return 'other';
-        }
-      }
     }
   };
 </script>

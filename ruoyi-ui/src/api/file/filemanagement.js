@@ -42,32 +42,3 @@ export function delFilemanagement(regulationsId) {
     method: 'delete'
   })
 }
-
-
-function submitHandler() {
-  if ($.validate.form()) {
-    uploadFile();
-  }
-}
-
-function uploadFile() {
-  var formData = new FormData();
-  if ($('#filePath')[0].files[0] == null) {
-    $.modal.alertWarning("请先选择文件路径");
-    return false;
-  }
-  formData.append('fileName', $("#fileName").val());
-  formData.append('file', $('#filePath')[0].files[0]);
-  $.ajax({
-    url: prefix + "/add",
-    type: 'post',
-    cache: false,
-    data: formData,
-    processData: false,
-    contentType: false,
-    dataType: "json",
-    success: function(result) {
-      $.operate.successCallback(result);
-    }
-  });
-}

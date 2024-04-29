@@ -114,6 +114,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>digitalsystem-enterprise</artifactId>
         </dependency>
+         
+        <!--供应-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-supply</artifactId>
+        </dependency>
 
         <!--         项目模块-->
         <dependency>

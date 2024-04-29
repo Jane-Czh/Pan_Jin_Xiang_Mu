@@ -27,7 +27,7 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
     /**
      * 年月
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
     private Date yearAndMonth;
 
     /**

@@ -1,5 +1,6 @@
 package com.ruoyi.file.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,30 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
         return regulationsInfoTableMapper.selectRegulationsInfoTableList(regulationsInfoTable);
     }
 
+
+    /**
+     * 查询历史版本文件列表
+     *
+     * @param currentId 文件管理
+     * @return 文件管理
+     */
+    @Override
+    public List<RegulationsInfoTable> getRegulationsHistory(Long currentId) {
+        //返回结果
+        List<RegulationsInfoTable> historyList = new ArrayList<>();
+        Long oldId = regulationsInfoTableMapper.selectRegulationsInfoTableByRegulationsId(currentId).getOldRegulationsId();
+        while (oldId != null) {
+            RegulationsInfoTable record = regulationsInfoTableMapper.selectRegulationsInfoTableByRegulationsId(oldId);
+            if (record != null) {
+                historyList.add(record);
+                oldId = record.getOldRegulationsId();
+            } else {
+                break;
+            }
+        }
+        return historyList;
+    }
+
     /**
      * 新增文件管理
      *
@@ -52,7 +77,9 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
     @Override
     public int insertRegulationsInfoTable(RegulationsInfoTable regulationsInfoTable)
     {
-        return regulationsInfoTableMapper.insertRegulationsInfoTable(regulationsInfoTable);
+        regulationsInfoTableMapper.insertRegulationsInfoTable(regulationsInfoTable);
+        Long rId = regulationsInfoTable.getRegulationsId();
+        return Math.toIntExact(rId);
     }
 
     /**

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementDisplayMapper">
+
+    <!-- 一线从业人数(实习生单列) 指标49 -->
+    <select id="selectEmployeesNumber" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Employees_Number as employeesNumber
+              from Enterprise_Management_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+
+    <!-- 公司平均从业人数（月度） 指标51 -->
+    <select id="selectEmployeesAVGMonthlyNumber" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Employees_AVG_Monthly_Number as employeesAVGMonthlyNumber
+              from Enterprise_Management_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+
+
+
+</mapper>

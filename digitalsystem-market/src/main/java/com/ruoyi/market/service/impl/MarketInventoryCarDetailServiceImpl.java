@@ -48,24 +48,6 @@ public class MarketInventoryCarDetailServiceImpl implements IMarketInventoryCarD
             //获取表格数据
             List<MarketInventoryCarDetail> marketInventoryCarDetails = ExcelUtils.parseExcel2MarketInventoryCarDetail(excelFile);
 
-//            // 使用 BufferedReader 逐行读取文件内容
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(excelFile.getInputStream(), StandardCharsets.UTF_8));
-//            String line;
-//            System.out.println("File Content:");
-//            while ((line = reader.readLine()) != null) {
-//                System.out.println(line);
-//                System.out.println("----------------------------");
-//            }
-//            reader.close();
-
-//            System.out.println(marketInventoryCarDetails);
-//            int res = 0;
-//            while (res < marketInventoryCarDetails.size()){
-//                System.out.println(marketInventoryCarDetails.get(res));
-//                System.out.println("-----------importlist------importlist-----------");
-//                res++;
-//            }
-
             //先删除数据库中所有数据
             List<MarketInventoryCarDetail> need_delete = selectMarketInventoryCarDetailList(marketInventoryCarDetail);
             if (need_delete.size() > 0){

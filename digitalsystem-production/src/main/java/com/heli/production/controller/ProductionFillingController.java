@@ -1,5 +1,6 @@
 package com.heli.production.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,7 +32,20 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/production/FillingInIndicators")
 public class ProductionFillingController extends BaseController {
     @Autowired
-    private IProductionFillingService productionService;
+    private IProductionFillingService productionFillingService;
+
+
+    /**
+     * @description: 获取已上传数据的月份,防止重复上传
+     * @author: hong
+     * @date: 2024/4/8 14:55
+     **/
+    @GetMapping("/getExistedYearAndMonth")
+    public TableDataInfo getAllYearAndMonth() {
+        List<Date> list = productionFillingService.selectExistedYearAndMonth();
+        return getDataTable(list);
+    }
+
 
     /**
      * 查询[生产]手动填报指标功能列表
@@ -40,7 +54,7 @@ public class ProductionFillingController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ProductionFilling ProductionFilling) {
         startPage();
-        List<ProductionFilling> list = productionService.selectProductionList(ProductionFilling);
+        List<ProductionFilling> list = productionFillingService.selectProductionList(ProductionFilling);
         return getDataTable(list);
     }
 
@@ -51,7 +65,7 @@ public class ProductionFillingController extends BaseController {
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ProductionFilling ProductionFilling) {
-        List<ProductionFilling> list = productionService.selectProductionList(ProductionFilling);
+        List<ProductionFilling> list = productionFillingService.selectProductionList(ProductionFilling);
         ExcelUtil<ProductionFilling> util = new ExcelUtil<ProductionFilling>(ProductionFilling.class);
         util.exportExcel(response, list, "[生产]手动填报指标功能数据");
     }
@@ -62,7 +76,7 @@ public class ProductionFillingController extends BaseController {
     @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:query')")
     @GetMapping(value = "/{productionId}")
     public AjaxResult getInfo(@PathVariable("productionId") Long productionId) {
-        return success(productionService.selectProductionByProductionId(productionId));
+        return success(productionFillingService.selectProductionByProductionId(productionId));
     }
 
     /**
@@ -72,7 +86,9 @@ public class ProductionFillingController extends BaseController {
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ProductionFilling ProductionFilling) {
-        return toAjax(productionService.insertProduction(ProductionFilling));
+        if (productionFillingService.checkProductionFillingDataIsExisted(ProductionFilling.getYearAndMonth()))
+            return AjaxResult.error("当月数据已填报");
+        return toAjax(productionFillingService.insertProduction(ProductionFilling));
     }
 
     /**
@@ -82,7 +98,7 @@ public class ProductionFillingController extends BaseController {
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ProductionFilling ProductionFilling) {
-        return toAjax(productionService.updateProduction(ProductionFilling));
+        return toAjax(productionFillingService.updateProduction(ProductionFilling));
     }
 
     /**
@@ -92,6 +108,6 @@ public class ProductionFillingController extends BaseController {
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.DELETE)
     @DeleteMapping("/{productionIds}")
     public AjaxResult remove(@PathVariable Long[] productionIds) {
-        return toAjax(productionService.deleteProductionByProductionIds(productionIds));
+        return toAjax(productionFillingService.deleteProductionByProductionIds(productionIds));
     }
 }

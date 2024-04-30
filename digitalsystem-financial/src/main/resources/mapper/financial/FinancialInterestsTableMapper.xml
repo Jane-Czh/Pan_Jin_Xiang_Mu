@@ -6,8 +6,8 @@
 
     <resultMap type="FinancialInterestsTable" id="FinancialInterestsTableResult">
         <result property="fiId"    column="FI_ID"    />
-        <result property="createdBy"    column="CREATED_BY"    />
-        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
         <result property="operatingRevenue"    column="Operating_Revenue"    />
         <result property="internalMainRevenue"    column="Internal_MainRevenue"    />
@@ -23,14 +23,14 @@
     </resultMap>
 
     <sql id="selectFinancialInterestsTableVo">
-        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+        select FI_ID, CREATE_BY, CREATE_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
     </sql>
 
 
     <!-- 按年查询利润指标的全部数据 -->
     <select id="selectFinancialInterestsTableByYear" resultMap="FinancialInterestsTableResult">
         select * from (
-        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+        select FI_ID, CREATE_BY, CREATE_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
         where Year_And_Month like concat('%',#{year},'%')
         order by Year_And_Month DESC
         ) as t
@@ -40,7 +40,7 @@
     <!-- 按时间段查询利润指标的全部数据 -->
     <select id="selectFinancialInterestsTableByTime" resultMap="FinancialInterestsTableResult">
         select * from (
-        select FI_ID, CREATED_BY, CREATED_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
+        select FI_ID, CREATE_BY, CREATE_TIME, Year_And_Month, Operating_Revenue, Internal_MainRevenue, External_MainRevenue, MainRevenue, COGS_ProductSales_SD, COGS_Freight, COGS_Variation, COGS, NetProfit, ManagementExpense, RD_Expense from Financial_Interests_table
         where Year_And_Month between #{beginTime} and #{endTime}
         order by Year_And_Month DESC
         ) as t
@@ -48,16 +48,31 @@
     </select>
 
 
+    <!--  查询利润表已上传的全部月份  -->
+    <select id="selectAllInterestsYearAndMonth" parameterType="Date" resultType="map">
+        select * from (
+            select Year_And_Month from Financial_Interests_table
+            order by Year_And_Month DESC
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
 
     <select id="checkInterestsDataIsExisted" parameterType="Date" >
-        SELECT EXISTS(SELECT 1 FROM Financial_Interests_table WHERE Year_And_Month=#{date})
+        SELECT EXISTS(SELECT 1 FROM Financial_Interests_table WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+    <select id="selectFinancialInterestsTableByYearAndMonth" parameterType="Date" resultMap="FinancialInterestsTableResult">
+        <include refid="selectFinancialInterestsTableVo"/>
+        where Year_And_Month=#{yearAndMonth}
     </select>
 
     <select id="selectFinancialInterestsTableList" parameterType="FinancialInterestsTable" resultMap="FinancialInterestsTableResult">
         <include refid="selectFinancialInterestsTableVo"/>
         <where>
-            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
-            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
             <if test="operatingRevenue != null "> and Operating_Revenue = #{operatingRevenue}</if>
             <if test="internalMainRevenue != null "> and Internal_MainRevenue = #{internalMainRevenue}</if>
@@ -90,8 +105,8 @@
         insert into Financial_Interests_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="fiId != null">FI_ID,</if>
-            <if test="createdBy != null">CREATED_BY,</if>
-            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
             <if test="yearAndMonth != null">Year_And_Month,</if>
             <if test="operatingRevenue != null">Operating_Revenue,</if>
             <if test="internalMainRevenue != null">Internal_MainRevenue,</if>
@@ -107,8 +122,8 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fiId != null">#{fiId},</if>
-            <if test="createdBy != null">#{createdBy},</if>
-            <if test="createdTime != null">#{createdTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
             <if test="operatingRevenue != null">#{operatingRevenue},</if>
             <if test="internalMainRevenue != null">#{internalMainRevenue},</if>
@@ -127,8 +142,8 @@
     <update id="updateFinancialInterestsTable" parameterType="FinancialInterestsTable">
         update Financial_Interests_table
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
-            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
             <if test="operatingRevenue != null">Operating_Revenue = #{operatingRevenue},</if>
             <if test="internalMainRevenue != null">Internal_MainRevenue = #{internalMainRevenue},</if>

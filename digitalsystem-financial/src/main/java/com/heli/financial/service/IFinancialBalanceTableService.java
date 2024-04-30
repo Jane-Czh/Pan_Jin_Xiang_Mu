@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.financial.domain.FinancialBalanceTable;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IFinancialBalanceTableService {
 
+    List<Date> selectAllBalanceYearAndMonth();
 
     boolean checkBalanceDataIsExisted(Date date);
 
@@ -26,7 +28,9 @@ public interface IFinancialBalanceTableService {
      * @param: [excelFile]
      * @return: int
      **/
-    int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, BigDecimal reserveCarAmount, MultipartFile excelFile) throws IOException;
+//    int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, BigDecimal reserveCarAmount, MultipartFile excelFile) throws IOException;
+//  先不做计算，当全部文件都导入后才做计算
+    int importBalanceTable(String createBy, Date createTime, Date yearAndMonth, MultipartFile excelFile) throws IOException;
 
     /**
      * @description: 通过月份删除资产负债表单条信息
@@ -36,6 +40,18 @@ public interface IFinancialBalanceTableService {
      * @return: void
      **/
     int deleteFinancialBalanceTableByYearAndMonth(Date yearAndMonth);
+
+
+    FinancialBalanceTable selectFinancialBalanceTableByYearAndMonth(Date yearAndMonth);
+
+    /**
+     * @description: 按月查询-月度存货总金额
+     * @author: hong
+     * @date: 2024/4/23 11:24
+     **/
+    BigDecimal selectMonthlyInventoryTotalAmountByYearAndMonth(Date yearAndMonth);
+
+
 
     public int importBalance(MultipartFile excelFile) throws IOException;
 

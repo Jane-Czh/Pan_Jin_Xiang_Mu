@@ -9,13 +9,12 @@ import com.ruoyi.market.domain.MarketAfterSaleProblemClassification;
  * 售后问题分类Service接口
  * 
  * @author ruoyi
- * @date 2024-04-15
+ * @date 2024-04-18
  */
 public interface IMarketAfterSaleProblemClassificationService 
 {
 
     public void Synchronization(List<MarketAfterSaleLedger> list);
-
     /**
      * 查询售后问题分类
      * 

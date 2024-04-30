@@ -18,7 +18,15 @@ import java.util.List;
 //@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialIndicatorsHandfillTableMapper {
 
-    List<Date> selectExistedYearAndMonth();
+    List<Date> selectAllHandFillYearAndMonth();
+
+
+    /**
+     * @description: 按月查询手动填报数据
+     * @author: hong
+     * @date: 2024/4/23 11:09
+     **/
+    FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
 
 
     /**
@@ -26,7 +34,7 @@ public interface FinancialIndicatorsHandfillTableMapper {
      * @author: hong
      * @date: 2024/4/15 14:59
      **/
-    boolean checkHandFillDataIsExisted(@Param("date") Date date);
+    boolean checkHandFillDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
 
     /**
      * 查询[财务]手动填报指标

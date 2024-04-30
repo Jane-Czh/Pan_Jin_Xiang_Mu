@@ -53,15 +53,9 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
             }
         }
 
-        /**
-         * @description: 导入时间和导入者
-         **/
-
-
-        System.out.println(financialInterestsTable);
-
-        financialInterestsTable.setCreatedBy(createdBy);
-        financialInterestsTable.setCreatedTime(createdTime);
+        // 设置导入时间、导入人、年月
+        financialInterestsTable.setCreateBy(createdBy);
+        financialInterestsTable.setCreateTime(createdTime);
         financialInterestsTable.setYearAndMonth(yearAndMonth);
 
         System.out.println(financialInterestsTable);
@@ -103,6 +97,18 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         return financialInterestsTableMapper.insertFinancialInterestsTable(financialInterestsTable);
     }
 
+
+    /**
+     * @description: 按月查询利润表
+     * @author: hong
+     * @date: 2024/4/23 11:16
+     **/
+    @Override
+    public FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(Date yearAndMonth) {
+        System.out.println("service"+yearAndMonth);
+        return financialInterestsTableMapper.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
+    }
+
     @Override
     public List<FinancialInterestsTable> selectFinancialInterestsTableByYear(String year) {
         return financialInterestsTableMapper.selectFinancialInterestsTableByYear(year);
@@ -122,6 +128,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     @Override
     public boolean checkInterestsDataIsExisted(Date date) {
         return financialInterestsTableMapper.checkInterestsDataIsExisted(date);
+    }
+
+    @Override
+    public List<Date> selectAllInterestsYearAndMonth() {
+        return financialInterestsTableMapper.selectAllInterestsYearAndMonth();
     }
 
 

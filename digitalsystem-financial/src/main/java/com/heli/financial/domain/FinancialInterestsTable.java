@@ -6,6 +6,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.RecordTemplate;
 import com.ruoyi.common.enums.FillCommentEnum;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -17,6 +18,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author hong
  * @date 2024-03-31
  */
+@Data
 public class FinancialInterestsTable extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -24,17 +26,6 @@ public class FinancialInterestsTable extends BaseEntity {
      * id(主键)
      */
     private Long fiId;
-
-    /**
-     * 导入人
-     */
-    private String createdBy;
-
-    /**
-     * 导入时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date createdTime;
 
     /**
      * 年月
@@ -106,144 +97,4 @@ public class FinancialInterestsTable extends BaseEntity {
     @RecordTemplate(rowNo = 87, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "研发费用")
     private BigDecimal rdExpense;
 
-    public Long getFiId() {
-        return fiId;
-    }
-
-    public void setFiId(Long fiId) {
-        this.fiId = fiId;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public Date getYearAndMonth() {
-        return yearAndMonth;
-    }
-
-    public void setYearAndMonth(Date yearAndMonth) {
-        this.yearAndMonth = yearAndMonth;
-    }
-
-    public BigDecimal getOperatingRevenue() {
-        return operatingRevenue;
-    }
-
-    public void setOperatingRevenue(BigDecimal operatingRevenue) {
-        this.operatingRevenue = operatingRevenue;
-    }
-
-    public BigDecimal getInternalMainRevenue() {
-        return internalMainRevenue;
-    }
-
-    public void setInternalMainRevenue(BigDecimal internalMainRevenue) {
-        this.internalMainRevenue = internalMainRevenue;
-    }
-
-    public BigDecimal getExternalMainRevenue() {
-        return externalMainRevenue;
-    }
-
-    public void setExternalMainRevenue(BigDecimal externalMainRevenue) {
-        this.externalMainRevenue = externalMainRevenue;
-    }
-
-    public BigDecimal getMainRevenue() {
-        return mainRevenue;
-    }
-
-    public void setMainRevenue(BigDecimal mainRevenue) {
-        this.mainRevenue = mainRevenue;
-    }
-
-    public BigDecimal getCogsProductSalesSd() {
-        return cogsProductSalesSd;
-    }
-
-    public void setCogsProductSalesSd(BigDecimal cogsProductSalesSd) {
-        this.cogsProductSalesSd = cogsProductSalesSd;
-    }
-
-    public BigDecimal getCogsFreight() {
-        return cogsFreight;
-    }
-
-    public void setCogsFreight(BigDecimal cogsFreight) {
-        this.cogsFreight = cogsFreight;
-    }
-
-    public BigDecimal getCogsVariation() {
-        return cogsVariation;
-    }
-
-    public void setCogsVariation(BigDecimal cogsVariation) {
-        this.cogsVariation = cogsVariation;
-    }
-
-    public BigDecimal getCOGS() {
-        return COGS;
-    }
-
-    public void setCOGS(BigDecimal COGS) {
-        this.COGS = COGS;
-    }
-
-    public BigDecimal getNetProfit() {
-        return netProfit;
-    }
-
-    public void setNetProfit(BigDecimal netProfit) {
-        this.netProfit = netProfit;
-    }
-
-    public BigDecimal getManagementExpense() {
-        return managementExpense;
-    }
-
-    public void setManagementExpense(BigDecimal managementExpense) {
-        this.managementExpense = managementExpense;
-    }
-
-    public BigDecimal getRdExpense() {
-        return rdExpense;
-    }
-
-    public void setRdExpense(BigDecimal rdExpense) {
-        this.rdExpense = rdExpense;
-    }
-
-    @Override
-    public String toString() {
-        return "FinancialInterestsTable{" +
-                "fiId=" + fiId +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdTime=" + createdTime +
-                ", yearAndMonth=" + yearAndMonth +
-                ", operatingRevenue=" + operatingRevenue +
-                ", internalMainRevenue=" + internalMainRevenue +
-                ", externalMainRevenue=" + externalMainRevenue +
-                ", mainRevenue=" + mainRevenue +
-                ", cogsProductSalesSd=" + cogsProductSalesSd +
-                ", cogsFreight=" + cogsFreight +
-                ", cogsVariation=" + cogsVariation +
-                ", COGS=" + COGS +
-                ", netProfit=" + netProfit +
-                ", managementExpense=" + managementExpense +
-                ", rdExpense=" + rdExpense +
-                '}';
-    }
 }

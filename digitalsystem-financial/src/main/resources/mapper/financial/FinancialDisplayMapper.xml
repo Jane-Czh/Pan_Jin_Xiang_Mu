@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.financial.mapper.FinancialDisplayMapper">
+
+
+<!--    <select id="selectFinancialBalanceTableByYear" parameterType="Long" resultMap="FinancialBalanceTableResult">-->
+<!--        select * from (-->
+<!--        select FB_ID, CREATED_BY, CREATED_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, Inventory_Vehicles, PCV_Finished, Month_Amount_InStock, MonthlyInventoryTotalAmount, GrowthRate_Inventory_Sales, Receivables, TurnoverRate_Receivable from Financial_Indicators_HandFill_table-->
+<!--        where Year_And_Month like concat('%',#{year},'%')-->
+<!--        order by Year_And_Month DESC-->
+<!--        limit 12-->
+<!--        ) as t-->
+<!--        order by Year_And_Month ASC-->
+<!--    </select>-->
+
+<!--    <select id="selectFinancialIndicatorsHandfillTableByYear" parameterType="Long" resultMap="FinancialBalanceTableResult">-->
+<!--        select * from (-->
+<!--        select FB_ID, CREATED_BY, CREATED_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, Inventory_Vehicles, PCV_Finished, Month_Amount_InStock, MonthlyInventoryTotalAmount, GrowthRate_Inventory_Sales, Receivables, TurnoverRate_Receivable from Financial_Indicators_HandFill_table-->
+<!--        where Year_And_Month like concat('%',#{year},'%')-->
+<!--        order by Year_And_Month DESC-->
+<!--        limit 12-->
+<!--        ) as t-->
+<!--        order by Year_And_Month ASC-->
+<!--    </select>-->
+
+
+
+
+
+
+
+    <!-- 主营业务收入 指标1 -->
+    <select id="selectMainRevenue" resultType="map">
+        select * from (
+            select Year_And_Month,MainRevenue from Financial_Interests_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+#             limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 整机销售收入 指标2 -->
+    <select id="selectTotalSalesRevenue" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Sales_Revenue from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 集团外部销售收入 指标3 -->
+    <select id="selectExternalGroupSalesRevenue" resultType="map">
+        select * from (
+            select Year_And_Month,External_Group_Sales_Revenue from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 整车产量 指标4 -->
+    <select id="selectTotalVehicleProduction" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Vehicle_Production from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 整车销量 指标5 -->
+    <select id="selectTotalVehicleSales" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Vehicle_Sales from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 新产品销售收入 指标6 -->
+    <select id="selectNewProductSalesRevenue" resultType="map">
+        select * from (
+            select Year_And_Month,New_Product_Sales_Revenue from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 特色产品收入 指标7 -->
+    <select id="selectSpecialtyProductRevenue" resultType="map">
+        select * from (
+            select Year_And_Month,Specialty_Product_Revenue from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 主营业务成本 指标8 -->
+    <select id="COGS" resultType="map">
+        select * from (
+            select Year_And_Month,COGS from Financial_Interests_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 整机销售成本 指标9 -->
+    <select id="selectTotalSalesCost" resultType="map">
+        select * from (
+            select Year_And_Month,Total_Sales_Cost from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 净利润 指标10 -->
+    <select id="selectNetProfit" resultType="map">
+        select * from (
+            select Year_And_Month,NetProfit from Financial_Interests_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月管理费用 指标20 -->
+    <select id="selectManagementExpense" resultType="map">
+        select * from (
+            select Year_And_Month,ManagementExpense from Financial_Interests_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月研发费用 指标21 -->
+    <select id="selectRdExpense" resultType="map">
+        select * from (
+            select Year_And_Month,RD_Expense from Financial_Interests_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月制造费用 指标22 -->
+    <select id="selectManufacturingExpensesMonth" resultType="map">
+        select * from (
+            select Year_And_Month,Manufacturing_Expenses_Month from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月原材料存货额 指标26 -->
+    <select id="selectMonthlyRawMaterialInventory" resultType="map">
+        select * from (
+            select Year_And_Month,MonthlyRawMaterialInventory from Financial_Balance_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月在制品存货额 指标27 -->
+    <select id="selectMonthlyWorkInProgressInventory" resultType="map">
+        select * from (
+            select Year_And_Month,MonthlyWorkInProgressInventory from Financial_Balance_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月库存商品存货额 指标28 -->
+    <select id="selectMonthAmountInStock" resultType="map">
+        select * from (
+            select Year_And_Month,Month_Amount_InStock from Financial_Balance_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 存货增长率/销售增长率 指标30 -->
+    <select id="selectGrowthRateInventoryAndSales" resultType="map">
+        select * from (
+            select Year_And_Month,GrowthRate_Inventory,GrowthRate_Sales from Financial_Balance_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 应收帐款周转率 指标32 -->
+    <select id="selectTurnoverRateReceivable" resultType="map">
+        select * from (
+            select Year_And_Month,TurnoverRate_Receivable from Financial_Balance_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 资金周转率 指标33 -->
+    <select id="selectCapitalTurnoverRate" resultType="map">
+        select * from (
+            select Year_And_Month,Capital_Turnover_Rate from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 库存商品周转率 指标34 -->
+    <select id="selectInventoryTurnoverRate" resultType="map">
+        select * from (
+            select Year_And_Month,Inventory_Turnover_Rate from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 原材料周转率 指标35 -->
+    <select id="selectRawMaterialTurnoverRate" resultType="map">
+        select * from (
+            select Year_And_Month,Raw_Material_Turnover_Rate from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 在制品周转率 指标36 -->
+    <select id="selectInprogressTurnoverRate" resultType="map">
+        select * from (
+            select Year_And_Month,InProgress_Turnover_Rate from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 一年以上暂估行项目 指标66 -->
+    <select id="selectLongEstimatedItems" resultType="map">
+        select * from (
+            select Year_And_Month,Long_Estimated_Items from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当日在制品金额 指标70  -->
+    <select id="selectInprogressDayrevenue" resultType="map">
+        select * from (
+            select Year_And_Month,InProgress_DayRevenue from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 月度存货总金额 指标77 -->
+    <select id="selectMonthlyInventoryTotalAmount" resultType="map">
+        select * from (
+            select Year_And_Month,MonthlyInventoryTotalAmount from Financial_Balance_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+    <!-- 当月经济增加值 指标78 -->
+    <select id="selectAddedValueMonthly" resultType="map">
+        select * from (
+            select Year_And_Month,Added_Value_Monthly from Financial_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+            limit 12
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
+</mapper>

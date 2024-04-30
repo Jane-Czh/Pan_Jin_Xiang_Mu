@@ -37,8 +37,18 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
 
 
     @Override
-    public List<Date> selectExistedYearAndMonth() {
-        return financialIndicatorsHandfillTableMapper.selectExistedYearAndMonth();
+    public List<Date> selectAllHandFillYearAndMonth() {
+        return financialIndicatorsHandfillTableMapper.selectAllHandFillYearAndMonth();
+    }
+
+    /**
+     * @description: 按月查询手动填报数据
+     * @author: hong
+     * @date: 2024/4/23 11:11
+     **/
+    @Override
+    public FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(Date yearAndMonth) {
+        return financialIndicatorsHandfillTableMapper.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
     }
 
     /**

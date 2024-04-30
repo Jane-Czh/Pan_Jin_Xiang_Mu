@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketCarTypeMapper">
+    
+    <resultMap type="MarketCarType" id="MarketCarTypeResult">
+        <result property="mctId"    column="MCT_ID"    />
+        <result property="Category"    column="Category"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="Relation"    column="Relation"    />
+    </resultMap>
+
+    <sql id="selectMarketCarTypeVo">
+        select MCT_ID, Category, Vehicle_Model, Relation from Market_Car_Type
+    </sql>
+
+    <select id="selectMarketCarTypeList" parameterType="MarketCarType" resultMap="MarketCarTypeResult">
+        <include refid="selectMarketCarTypeVo"/>
+        <where>  
+            <if test="Category != null  and Category != ''"> and Category = #{Category}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="Relation != null  and Relation != ''"> and Relation = #{Relation}</if>
+        </where>
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT MCT_ID
+    FROM Market_Car_Type
+    WHERE MCT_ID = (SELECT MAX(MCT_ID) FROM Market_Car_Type);
+    </select>
+
+    <select id="selectMarketCarTypeByMctId" parameterType="Long" resultMap="MarketCarTypeResult">
+        <include refid="selectMarketCarTypeVo"/>
+        where MCT_ID = #{mctId}
+    </select>
+        
+    <insert id="insertMarketCarType" parameterType="MarketCarType">
+        insert into Market_Car_Type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mctId != null">MCT_ID,</if>
+            <if test="Category != null">Category,</if>
+            <if test="vehicleModel != null">Vehicle_Model,</if>
+            <if test="Relation != null">Relation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mctId != null">#{mctId},</if>
+            <if test="Category != null">#{Category},</if>
+            <if test="vehicleModel != null">#{vehicleModel},</if>
+            <if test="Relation != null">#{Relation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketCarType" parameterType="MarketCarType">
+        update Market_Car_Type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Category != null">Category = #{Category},</if>
+            <if test="vehicleModel != null">Vehicle_Model = #{vehicleModel},</if>
+            <if test="Relation != null">Relation = #{Relation},</if>
+        </trim>
+        where MCT_ID = #{mctId}
+    </update>
+
+    <delete id="deleteMarketCarTypeByMctId" parameterType="Long">
+        delete from Market_Car_Type where MCT_ID = #{mctId}
+    </delete>
+
+    <delete id="deleteMarketCarTypeByMctIds" parameterType="String">
+        delete from Market_Car_Type where MCT_ID in 
+        <foreach item="mctId" collection="array" open="(" separator="," close=")">
+            #{mctId}
+        </foreach>
+    </delete>
+</mapper>

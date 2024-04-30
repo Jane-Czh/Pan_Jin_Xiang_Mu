@@ -86,6 +86,9 @@ public class PartyBuildingController extends BaseController {
     @Log(title = "[党建]指标填报", businessType = BusinessType.INSERT)
     @PostMapping("/data")
     public AjaxResult add(@RequestBody PartyBuilding partyBuilding) {
+        if (partyBuildingService.checkPartyBuildingDataIsExisted(partyBuilding.getYearAndMonth())){
+            return AjaxResult.error("当月党建排名数据已填报");
+        }
         return toAjax(partyBuildingService.insertPartyBuilding(partyBuilding));
     }
 

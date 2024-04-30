@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ExcelUtils {
@@ -179,6 +180,8 @@ public class ExcelUtils {
             {
                 marketAfterSaleLedger.setFeedbackDate(getDateCellValue(getStringCellValue(row.getCell(4))));
             }
+            //7、车
+            marketAfterSaleLedger.setVehicle(getStringCellValue(row.getCell(6)));
             //10、车型
             marketAfterSaleLedger.setVehicleModel(getStringCellValue(row.getCell(9)));
             //16、一级分类
@@ -197,6 +200,45 @@ public class ExcelUtils {
 
         return dataList;
     }
+
+    public static List<MarketCarType> parseExcel2MarketCarType(MultipartFile file)throws IOException{
+        List<MarketCarType> dataList = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+
+            MarketCarType marketCarType = new MarketCarType();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            int count = 0;
+
+            //1、类别
+            marketCarType.setCategory(getStringCellValue(row.getCell(count++)));
+            //2、车型
+            marketCarType.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            //3、关系
+            marketCarType.setRelation(getStringCellValue(row.getCell(count++)));
+
+
+            dataList.add(marketCarType);
+        }
+
+        workbook.close();
+
+        return dataList;
+    }
+
 
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {
@@ -231,6 +273,138 @@ public class ExcelUtils {
         }
     }
 
+    public static List<MarketCommercialVehicleTable> CVparseExcel(MultipartFile file) throws IOException {
+        List<MarketCommercialVehicleTable> CVdataList = new ArrayList<>();
 
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        LocalDate myDate = LocalDate.of(2000, 1, 1);
+        // 转换为Date类型
+        Date date = java.sql.Date.valueOf(myDate);
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            MarketCommercialVehicleTable MarketCommercialVehicleTable = new MarketCommercialVehicleTable();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            /*            MarketCommercialVehicleTable.setMcvId(String.valueOf(getUUid()));*/
+
+            int count = 0;
+            //1、接单日期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setAcceptanceDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //2.上线日期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setLaunchDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //3、订单号
+            MarketCommercialVehicleTable.setOrderNumber(getStringCellValue(row.getCell(count++)));
+            //4、合同号
+            MarketCommercialVehicleTable.setContractNumber(getStringCellValue(row.getCell(count++)));
+            //5、车号
+            MarketCommercialVehicleTable.setCarNumber(getStringCellValue(row.getCell(count++)));
+            //6、车型
+            MarketCommercialVehicleTable.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            //7、门架高度
+            MarketCommercialVehicleTable.setDoorFrameHeight(getStringCellValue(row.getCell(count++)));
+            //8、数量
+            MarketCommercialVehicleTable.setNumber(getIntegerCellValue(row.getCell(count++)));
+            //9、属具
+            MarketCommercialVehicleTable.setAccessory(getStringCellValue(row.getCell(count++)));
+            //10、阀片
+            MarketCommercialVehicleTable.setValveBlock(getStringCellValue(row.getCell(count++)));
+            //11、配置
+            MarketCommercialVehicleTable.setConfiguration(getStringCellValue(row.getCell(count++)));
+            //12.计划完工期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setPlannedCompletionPeriod(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //13.客户
+            MarketCommercialVehicleTable.setCustomer(getStringCellValue(row.getCell(count++)));
+            //14、车体上线日期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setVehicleLaunchDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //15、门架合装完工期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setCompletionPeriodOfDoorFrameAssembly(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //16、试车完工期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setTrialCompletionPeriod(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //17、特种作业
+            MarketCommercialVehicleTable.setSpecialOperations(getStringCellValue(row.getCell(count++)));
+            //18、精整完工期
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                MarketCommercialVehicleTable.setPrecisionCompletionPeriod(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            //19、生产现场问题
+            MarketCommercialVehicleTable.setProductionSiteissues(getStringCellValue(row.getCell(count++)));
+            //20、现场问题采购
+            MarketCommercialVehicleTable.setProcurementOfOnSiteAbnormalIssues(getStringCellValue(row.getCell(count++)));
+            //21、现场异常问题质量
+            MarketCommercialVehicleTable.setQualityOfOnSiteAbnormalIssues(getStringCellValue(row.getCell(count++)));
+            //22、上线
+            MarketCommercialVehicleTable.setGoLive(getStringCellValue(row.getCell(count++)));
+            //23、入库
+            MarketCommercialVehicleTable.setWarehousing(getStringCellValue(row.getCell(count++)));
+            //24、生产周期
+            MarketCommercialVehicleTable.setProductionCycle(getStringCellValue(row.getCell(count++)));
+
+
+            CVdataList.add(MarketCommercialVehicleTable);
+        }
+
+
+
+        workbook.close();
+
+        return CVdataList;
+    }
 
 }

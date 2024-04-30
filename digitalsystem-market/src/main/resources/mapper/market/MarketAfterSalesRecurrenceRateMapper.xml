@@ -9,10 +9,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="vehicleModel"    column="Vehicle_Model"    />
         <result property="problemRecurrenceRate"    column="Problem_Recurrence_Rate"    />
         <result property="differentProblemOccurrenceRate"    column="Different_Problem_Occurrence_Rate"    />
+        <result property="Month"    column="Month"    />
     </resultMap>
 
     <sql id="selectMarketAfterSalesRecurrenceRateVo">
-        select MASRR_ID, Vehicle_Model, Problem_Recurrence_Rate, Different_Problem_Occurrence_Rate from Market_After_Sales_Recurrence_Rate
+        select MASRR_ID, Vehicle_Model, Problem_Recurrence_Rate, Different_Problem_Occurrence_Rate, Month from Market_After_Sales_Recurrence_Rate
     </sql>
 
     <select id="selectMarketAfterSalesRecurrenceRateList" parameterType="MarketAfterSalesRecurrenceRate" resultMap="MarketAfterSalesRecurrenceRateResult">
@@ -21,20 +22,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
             <if test="problemRecurrenceRate != null "> and Problem_Recurrence_Rate = #{problemRecurrenceRate}</if>
             <if test="differentProblemOccurrenceRate != null "> and Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate}</if>
+            <if test="Month != null "> and Month = #{Month}</if>
         </where>
     </select>
-
-    <select id="selectLastId" resultType="java.lang.Long">
-    SELECT MASRR_ID
-    FROM Market_After_Sales_Recurrence_Rate
-    WHERE MASRR_ID = (SELECT MAX(MASRR_ID) FROM Market_After_Sales_Recurrence_Rate);
-    </select>
-
+    
     <select id="selectMarketAfterSalesRecurrenceRateByMasrrId" parameterType="Long" resultMap="MarketAfterSalesRecurrenceRateResult">
         <include refid="selectMarketAfterSalesRecurrenceRateVo"/>
         where MASRR_ID = #{masrrId}
     </select>
-        
+
+    <select id="selectLastId" resultType="java.lang.Long"> SELECT MASRR_ID FROM Market_After_Sales_Recurrence_Rate WHERE MASRR_ID = (SELECT MAX(MASRR_ID) FROM Market_After_Sales_Recurrence_Rate); </select>
+
     <insert id="insertMarketAfterSalesRecurrenceRate" parameterType="MarketAfterSalesRecurrenceRate">
         insert into Market_After_Sales_Recurrence_Rate
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -42,12 +40,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
             <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate,</if>
             <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate,</if>
+            <if test="Month != null">Month,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="masrrId != null">#{masrrId},</if>
             <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
             <if test="problemRecurrenceRate != null">#{problemRecurrenceRate},</if>
             <if test="differentProblemOccurrenceRate != null">#{differentProblemOccurrenceRate},</if>
+            <if test="Month != null">#{Month},</if>
          </trim>
     </insert>
 
@@ -57,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
             <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate = #{problemRecurrenceRate},</if>
             <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate},</if>
+            <if test="Month != null">Month = #{Month},</if>
         </trim>
         where MASRR_ID = #{masrrId}
     </update>

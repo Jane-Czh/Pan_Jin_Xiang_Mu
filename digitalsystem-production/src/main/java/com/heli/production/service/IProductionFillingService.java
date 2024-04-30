@@ -1,8 +1,10 @@
 package com.heli.production.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.production.domain.ProductionFilling;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * [生产]手动填报指标功能Service接口
@@ -11,6 +13,13 @@ import com.heli.production.domain.ProductionFilling;
  * @date 2024-04-10
  */
 public interface IProductionFillingService {
+
+
+
+    Boolean checkProductionFillingDataIsExisted(Date date);
+
+    List<Date> selectExistedYearAndMonth();
+
     /**
      * 查询[生产]手动填报指标功能
      *

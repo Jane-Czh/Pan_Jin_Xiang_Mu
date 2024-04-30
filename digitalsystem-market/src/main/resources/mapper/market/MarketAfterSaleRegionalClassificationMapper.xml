@@ -9,11 +9,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="Area"    column="Area"    />
         <result property="regionalProblemsProportion"    column="Regional_Problems_Proportion"    />
         <result property="unprocessedNmber"    column="Unprocessed_Nmber"    />
+        <result property="Week"    column="Week"    />
     </resultMap>
 
     <sql id="selectMarketAfterSaleRegionalClassificationVo">
-        select MASRC_ID, Area, Regional_Problems_Proportion, Unprocessed_Nmber from Market_After_Sale_Regional_Classification
+        select MASRC_ID, Area, Regional_Problems_Proportion, Unprocessed_Nmber, Week from Market_After_Sale_Regional_Classification
     </sql>
+
+    <select id="selectLastId" resultType="java.lang.Long"> SELECT MASRC_ID FROM Market_After_Sale_Regional_Classification WHERE MASRC_ID = (SELECT MAX(MASRC_ID) FROM Market_After_Sale_Regional_Classification); </select>
 
     <select id="selectMarketAfterSaleRegionalClassificationList" parameterType="MarketAfterSaleRegionalClassification" resultMap="MarketAfterSaleRegionalClassificationResult">
         <include refid="selectMarketAfterSaleRegionalClassificationVo"/>
@@ -21,16 +24,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="Area != null  and Area != ''"> and Area = #{Area}</if>
             <if test="regionalProblemsProportion != null "> and Regional_Problems_Proportion = #{regionalProblemsProportion}</if>
             <if test="unprocessedNmber != null "> and Unprocessed_Nmber = #{unprocessedNmber}</if>
+            <if test="Week != null "> and Week = #{Week}</if>
         </where>
     </select>
-
-    <select id="selectLastId" resultType="java.lang.Long">
-    SELECT MASRC_ID
-    FROM Market_After_Sale_Regional_Classification
-    WHERE MASRC_ID = (SELECT MAX(MASRC_ID) FROM Market_After_Sale_Regional_Classification);
-    </select>
-
-
+    
     <select id="selectMarketAfterSaleRegionalClassificationByMasrcId" parameterType="Long" resultMap="MarketAfterSaleRegionalClassificationResult">
         <include refid="selectMarketAfterSaleRegionalClassificationVo"/>
         where MASRC_ID = #{masrcId}
@@ -42,11 +39,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="Area != null and Area != ''">Area,</if>
             <if test="regionalProblemsProportion != null">Regional_Problems_Proportion,</if>
             <if test="unprocessedNmber != null">Unprocessed_Nmber,</if>
+            <if test="Week != null">Week,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="Area != null and Area != ''">#{Area},</if>
             <if test="regionalProblemsProportion != null">#{regionalProblemsProportion},</if>
             <if test="unprocessedNmber != null">#{unprocessedNmber},</if>
+            <if test="Week != null">#{Week},</if>
          </trim>
     </insert>
 
@@ -56,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="Area != null and Area != ''">Area = #{Area},</if>
             <if test="regionalProblemsProportion != null">Regional_Problems_Proportion = #{regionalProblemsProportion},</if>
             <if test="unprocessedNmber != null">Unprocessed_Nmber = #{unprocessedNmber},</if>
+            <if test="Week != null">Week = #{Week},</if>
         </trim>
         where MASRC_ID = #{masrcId}
     </update>

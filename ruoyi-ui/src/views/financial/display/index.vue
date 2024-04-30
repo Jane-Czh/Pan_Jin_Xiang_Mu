@@ -1,49 +1,50 @@
 <template>
   <div class="current-page">
     <el-tabs v-model="activeName" type="border-card">
-      <el-tab-pane label="财务指标类" name="first">
-        <div class="financialIndex">
-          <div v-for="(item, index) in financialIndex" :key="index" class="financialIndex-item">
-            <div class="financialIndex-item__body">
+      <el-tab-pane label="企业运营指标" name="first">
+        <div class="enterpriseOperatingIndicators">
+          <div v-for="(item, index) in enterpriseOperatingIndicators" :key="index"
+            class="enterpriseOperatingIndicators-item">
+            <div class="enterpriseOperatingIndicators-item__body">
               <i :class="item.icon" />
               <div class="main-content">
                 <h3>{{ item.title }}</h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
-            <div class="financialIndex-item__footer">
+            <div class="enterpriseOperatingIndicators-item__footer">
               <el-button type="text" style="font-size: 18px;" @click="toDetail(item, index)">指标数据图</el-button>
             </div>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="销售指标类" name="second">
-        <div class="SalesIndex">
-          <div v-for="(item, index) in SalesIndex" :key="index" class="SalesIndex-item">
-            <div class="SalesIndex-item__body">
+      <el-tab-pane label="成本指标" name="second">
+        <div class="costIndicators">
+          <div v-for="(item, index) in costIndicators" :key="index" class="costIndicators-item">
+            <div class="costIndicators-item__body">
               <i :class="item.icon" />
               <div class="main-content">
                 <h3>{{ item.title }}</h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
-            <div class="SalesIndex-item__footer">
+            <div class="costIndicators-item__footer">
               <el-button type="text" style="font-size: 18px;" @click="toDetail(item, index)">指标数据图</el-button>
             </div>
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="经营指标类" name="third">
-        <div class="OperatingEfficiencyIndex">
-          <div v-for="(item, index) in OperatingEfficiencyIndex" :key="index" class="OperatingEfficiencyIndex-item">
-            <div class="OperatingEfficiencyIndex-item__body">
+      <el-tab-pane label="效率指标" name="third">
+        <div class="efficiencyIndicators">
+          <div v-for="(item, index) in efficiencyIndicators" :key="index" class="efficiencyIndicators-item">
+            <div class="efficiencyIndicators-item__body">
               <i :class="item.icon" />
               <div class="main-content">
                 <h3>{{ item.title }}</h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
-            <div class="OperatingEfficiencyIndex-item__footer">
+            <div class="efficiencyIndicators-item__footer">
               <el-button type="text" style="font-size: 18px;" @click="toDetail(item, index)">指标数据图</el-button>
             </div>
           </div>
@@ -81,65 +82,65 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '1', icon: 'el-icon-s-data', title: '主营业务收入', content: '企业主要营业产品财务收入', path: '/financial/mainRevenue' },
-        { id: '2', icon: 'el-icon-s-data', title: '整机销售收入', content: '企业主要营业产品财务收入', path: '/financial/totalSalesRevenue' },
-        { id: '3', icon: 'el-icon-s-data', title: '集团外部销售收入', content: '企业主要营业产品财务收入', path: '/financial/externalGroupSalesRevenue' },
-        { id: '4', icon: 'el-icon-s-data', title: '整车产量', content: '企业主要营业产品财务收入', path: '/financial/totalVehicleProduction' },
-        { id: '5', icon: 'el-icon-s-data', title: '整车销量', content: '企业主要营业产品财务收入', path: '/financial/totalVehicleSales' },
-        { id: '6', icon: 'el-icon-s-data', title: '新产品销售收入', content: '企业主要营业产品财务收入', path: '/financial/newProductSalesRevenue' },
-        { id: '7', icon: 'el-icon-s-data', title: '特色产品收入', content: '企业主要营业产品财务收入', path: '/financial/specialtyProductRevenue' },
-        { id: '8', icon: 'el-icon-s-data', title: '主营业务成本', content: '企业主要营业产品财务收入', path: '/financial/COGS' },
-        { id: '9', icon: 'el-icon-s-data', title: '整机销售成本', content: '企业主要营业产品财务收入', path: '/financial/totalSalesCost' },
-        { id: '10', icon: 'el-icon-s-data', title: '净利润', content: '企业主要营业产品财务收入', path: '/financial/netProfit' },
-        { id: '20', icon: 'el-icon-s-data', title: '当月管理费用', content: '企业主要营业产品财务收入', path: '/financial/managementExpense' },
-        { id: '21', icon: 'el-icon-s-data', title: '当月研发费用', content: '企业主要营业产品财务收入', path: '/financial/rdExpense' },
-        { id: '22', icon: 'el-icon-s-data', title: '当月制造费用', content: '企业主要营业产品财务收入', path: '/financial/manufacturingExpensesMonth' },
-        { id: '26', icon: 'el-icon-s-data', title: '当月原材料存货额', content: '企业主要营业产品财务收入', path: '/financial/monthlyRawMaterialInventory' },
-        { id: '27', icon: 'el-icon-s-data', title: '当月在制品存货额', content: '企业主要营业产品财务收入', path: '/financial/monthlyWorkInProgressInventory' },
-        { id: '30', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', content: '企业主要营业产品财务收入', path: '/financial/growthRateInventorySales' },
-        { id: '32', icon: 'el-icon-s-data', title: '应收账款周转率', content: '企业主要营业产品财务收入', path: '/financial/turnoverRateReceivable' },
-        { id: '33', icon: 'el-icon-s-data', title: '资金周转率', content: '企业主要营业产品财务收入', path: '/financial/capitalTurnoverRate' },
-        { id: '34', icon: 'el-icon-s-data', title: '库存商品周转率', content: '企业主要营业产品财务收入', path: '/financial/inventoryTurnoverRate' },
-        { id: '35', icon: 'el-icon-s-data', title: '原材料周转率', content: '企业主要营业产品财务收入', path: '/financial/rawMaterialTurnoverRate' },
-        { id: '36', icon: 'el-icon-s-data', title: '在制品周转率', content: '企业主要营业产品财务收入', path: '/financial/inprogressTurnoverRate' },
-        { id: '66', icon: 'el-icon-s-data', title: '一年以上暂估行项目', content: '企业主要营业产品财务收入', path: '/financial/longEstimatedItems' },
-        { id: '70', icon: 'el-icon-s-data', title: '当日在制品金额', content: '企业主要营业产品财务收入', path: '/financial/inprogressDayrevenue' },
-        { id: '77', icon: 'el-icon-s-data', title: '月度存货金额', content: '企业主要营业产品财务收入', path: '/financial/monthlyInventoryTotalAmount' },
-        { id: '78', icon: 'el-icon-s-data', title: '当月经济增加值', content: '企业主要营业产品财务收入', path: '/financial/addedValueMonthly' },
+        { id: '1', icon: 'el-icon-s-data', title: '主营业务收入', content: '企业主要营业产品财务收入', path: '/financial/indicators1' },
+        { id: '2', icon: 'el-icon-s-data', title: '整机销售收入', content: '企业主要营业产品财务收入', path: '/financial/indicators2' },
+        { id: '3', icon: 'el-icon-s-data', title: '集团外部销售收入', content: '企业主要营业产品财务收入', path: '/financial/indicators3' },
+        { id: '4', icon: 'el-icon-s-data', title: '整车产量', content: '企业主要营业产品财务收入', path: '/financial/indicators4' },
+        { id: '5', icon: 'el-icon-s-data', title: '整车销量', content: '企业主要营业产品财务收入', path: '/financial/indicators5' },
+        { id: '6', icon: 'el-icon-s-data', title: '新产品销售收入', content: '企业主要营业产品财务收入', path: '/financial/indicators6' },
+        { id: '7', icon: 'el-icon-s-data', title: '特色产品收入', content: '企业主要营业产品财务收入', path: '/financial/indicators7' },
+        { id: '8', icon: 'el-icon-s-data', title: '主营业务成本', content: '企业主要营业产品财务收入', path: '/financial/indicators8' },
+        { id: '9', icon: 'el-icon-s-data', title: '整机销售成本', content: '企业主要营业产品财务收入', path: '/financial/indicators9' },
+        { id: '10', icon: 'el-icon-s-data', title: '净利润', content: '企业主要营业产品财务收入', path: '/financial/indicators10' },
+        { id: '20', icon: 'el-icon-s-data', title: '当月管理费用', content: '企业主要营业产品财务收入', path: '/financial/indicators20' },
+        { id: '21', icon: 'el-icon-s-data', title: '当月研发费用', content: '企业主要营业产品财务收入', path: '/financial/indicators21' },
+        { id: '22', icon: 'el-icon-s-data', title: '当月制造费用', content: '企业主要营业产品财务收入', path: '/financial/indicators22' },
+        { id: '26', icon: 'el-icon-s-data', title: '当月原材料存货额', content: '企业主要营业产品财务收入', path: '/financial/indicators26' },
+        { id: '27', icon: 'el-icon-s-data', title: '当月在制品存货额', content: '企业主要营业产品财务收入', path: '/financial/indicators27' },
+        { id: '28', icon: 'el-icon-s-data', title: '当月库存商品存货额', content: '企业主要营业产品财务收入', path: '/financial/indicators28' },
+        { id: '30', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', content: '企业主要营业产品财务收入', path: '/financial/indicators30' },
+        { id: '32', icon: 'el-icon-s-data', title: '应收账款周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators32' },
+        { id: '33', icon: 'el-icon-s-data', title: '资金周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators33' },
+        { id: '34', icon: 'el-icon-s-data', title: '库存商品周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators34' },
+        { id: '35', icon: 'el-icon-s-data', title: '原材料周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators35' },
+        { id: '36', icon: 'el-icon-s-data', title: '在制品周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators36' },
+        { id: '66', icon: 'el-icon-s-data', title: '一年以上暂估行项目', content: '企业主要营业产品财务收入', path: '/financial/indicators66' },
+        { id: '70', icon: 'el-icon-s-data', title: '当日在制品金额', content: '企业主要营业产品财务收入', path: '/financial/indicators70' },
+        { id: '77', icon: 'el-icon-s-data', title: '月度存货金额', content: '企业主要营业产品财务收入', path: '/financial/indicators77' },
+        { id: '78', icon: 'el-icon-s-data', title: '当月经济增加值', content: '企业主要营业产品财务收入', path: '/financial/indicators78' },
       ],
-      financialIndex: [
-        { id: '1', icon: 'el-icon-s-data', title: '主营业务收入', content: '企业主要营业产品财务收入', path: '/financial/mainRevenue' },
-        { id: '2', icon: 'el-icon-s-data', title: '整机销售收入', content: '企业主要营业产品财务收入', path: '/financial/totalSalesRevenue' },
-        { id: '3', icon: 'el-icon-s-data', title: '集团外部销售收入', content: '企业主要营业产品财务收入', path: '/financial/externalGroupSalesRevenue' },
-        { id: '6', icon: 'el-icon-s-data', title: '新产品销售收入', content: '企业主要营业产品财务收入', path: '/financial/newProductSalesRevenue' },
-        { id: '7', icon: 'el-icon-s-data', title: '特色产品收入', content: '企业主要营业产品财务收入', path: '/financial/specialtyProductRevenue' },
-        { id: '8', icon: 'el-icon-s-data', title: '主营业务成本', content: '企业主要营业产品财务收入', path: '/financial/COGS' },
-        { id: '9', icon: 'el-icon-s-data', title: '整机销售成本', content: '企业主要营业产品财务收入', path: '/financial/totalSalesCost' },
-        { id: '10', icon: 'el-icon-s-data', title: '净利润', content: '企业主要营业产品财务收入', path: '/financial/netProfit' },
-        { id: '20', icon: 'el-icon-s-data', title: '当月管理费用', content: '企业主要营业产品财务收入', path: '/financial/managementExpense' },
-        { id: '21', icon: 'el-icon-s-data', title: '当月研发费用', content: '企业主要营业产品财务收入', path: '/financial/rdExpense' },
-        { id: '22', icon: 'el-icon-s-data', title: '当月制造费用', content: '企业主要营业产品财务收入', path: '/financial/manufacturingExpensesMonth' },
-        { id: '70', icon: 'el-icon-s-data', title: '当日在制品金额', content: '企业主要营业产品财务收入', path: '/financial/inprogressDayrevenue' },
-        { id: '77', icon: 'el-icon-s-data', title: '月度存货金额', content: '企业主要营业产品财务收入', path: '/financial/monthlyInventoryTotalAmount' },
+      enterpriseOperatingIndicators: [
+        { id: '1', icon: 'el-icon-s-data', title: '主营业务收入', content: '企业主要营业产品财务收入', path: '/financial/indicators1' },
+        { id: '2', icon: 'el-icon-s-data', title: '整机销售收入', content: '企业主要营业产品财务收入', path: '/financial/indicators2' },
+        { id: '3', icon: 'el-icon-s-data', title: '集团外部销售收入', content: '企业主要营业产品财务收入', path: '/financial/indicators3' },
+        { id: '4', icon: 'el-icon-s-data', title: '整车产量', content: '企业主要营业产品财务收入', path: '/financial/indicators4' },
+        { id: '5', icon: 'el-icon-s-data', title: '整车销量', content: '企业主要营业产品财务收入', path: '/financial/indicators5' },
+        { id: '6', icon: 'el-icon-s-data', title: '新产品销售收入', content: '企业主要营业产品财务收入', path: '/financial/indicators6' },
+        { id: '7', icon: 'el-icon-s-data', title: '特色产品收入', content: '企业主要营业产品财务收入', path: '/financial/indicators7' },
+        { id: '8', icon: 'el-icon-s-data', title: '主营业务成本', content: '企业主要营业产品财务收入', path: '/financial/indicators8' },
+        { id: '9', icon: 'el-icon-s-data', title: '整机销售成本', content: '企业主要营业产品财务收入', path: '/financial/indicators9' },
+        { id: '10', icon: 'el-icon-s-data', title: '净利润', content: '企业主要营业产品财务收入', path: '/financial/indicators10' },
+        { id: '78', icon: 'el-icon-s-data', title: '当月经济增加值', content: '企业主要营业产品财务收入', path: '/financial/indicators78' },
       ],
-      SalesIndex: [
-        { id: '4', icon: 'el-icon-s-data', title: '整车产量', content: '企业主要营业产品财务收入', path: '/financial/totalVehicleProduction' },
-        { id: '5', icon: 'el-icon-s-data', title: '整车销量', content: '企业主要营业产品财务收入', path: '/financial/totalVehicleSales' },
-        { id: '26', icon: 'el-icon-s-data', title: '当月原材料存货额', content: '企业主要营业产品财务收入', path: '/financial/monthlyRawMaterialInventory' },
-        { id: '27', icon: 'el-icon-s-data', title: '当月在制品存货额', content: '企业主要营业产品财务收入', path: '/financial/monthlyWorkInProgressInventory' },
-        { id: '66', icon: 'el-icon-s-data', title: '一年以上暂估行项目', content: '企业主要营业产品财务收入', path: '/financial/longEstimatedItems' },
+      costIndicators: [
+        { id: '20', icon: 'el-icon-s-data', title: '当月管理费用', content: '企业主要营业产品财务收入', path: '/financial/indicators20' },
+        { id: '21', icon: 'el-icon-s-data', title: '当月研发费用', content: '企业主要营业产品财务收入', path: '/financial/indicators21' },
+        { id: '22', icon: 'el-icon-s-data', title: '当月制造费用', content: '企业主要营业产品财务收入', path: '/financial/indicators22' },
+        { id: '26', icon: 'el-icon-s-data', title: '当月原材料存货额', content: '企业主要营业产品财务收入', path: '/financial/indicators26' },
+        { id: '27', icon: 'el-icon-s-data', title: '当月在制品存货额', content: '企业主要营业产品财务收入', path: '/financial/indicators27' },
+        { id: '28', icon: 'el-icon-s-data', title: '当月库存商品存货额', content: '企业主要营业产品财务收入', path: '/financial/indicators28' },
+        { id: '30', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', content: '企业主要营业产品财务收入', path: '/financial/indicators30' },
+        { id: '70', icon: 'el-icon-s-data', title: '当日在制品金额', content: '企业主要营业产品财务收入', path: '/financial/indicators70' },
+        { id: '77', icon: 'el-icon-s-data', title: '月度存货金额', content: '企业主要营业产品财务收入', path: '/financial/indicators77' },
       ],
-      OperatingEfficiencyIndex: [
-        { id: '30', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', content: '企业主要营业产品财务收入', path: '/financial/growthRateInventorySales' },
-        { id: '32', icon: 'el-icon-s-data', title: '应收账款周转率', content: '企业主要营业产品财务收入', path: '/financial/turnoverRateReceivable' },
-        { id: '33', icon: 'el-icon-s-data', title: '资金周转率', content: '企业主要营业产品财务收入', path: '/financial/capitalTurnoverRate' },
-        { id: '34', icon: 'el-icon-s-data', title: '库存商品周转率', content: '企业主要营业产品财务收入', path: '/financial/inventoryTurnoverRate' },
-        { id: '35', icon: 'el-icon-s-data', title: '原材料周转率', content: '企业主要营业产品财务收入', path: '/financial/rawMaterialTurnoverRate' },
-        { id: '36', icon: 'el-icon-s-data', title: '在制品周转率', content: '企业主要营业产品财务收入', path: '/financial/inprogressTurnoverRate' },
-        { id: '78', icon: 'el-icon-s-data', title: '当月经济增加值', content: '企业主要营业产品财务收入', path: '/financial/addedValueMonthly' },
+      efficiencyIndicators: [
+        { id: '32', icon: 'el-icon-s-data', title: '应收账款周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators32' },
+        { id: '33', icon: 'el-icon-s-data', title: '资金周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators33' },
+        { id: '34', icon: 'el-icon-s-data', title: '库存商品周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators34' },
+        { id: '35', icon: 'el-icon-s-data', title: '原材料周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators35' },
+        { id: '36', icon: 'el-icon-s-data', title: '在制品周转率', content: '企业主要营业产品财务收入', path: '/financial/indicators36' },
+        { id: '66', icon: 'el-icon-s-data', title: '一年以上暂估行项目', content: '企业主要营业产品财务收入', path: '/financial/indicators66' },
       ],
-
-
       formData: {
       },
       rules: {
@@ -152,7 +153,7 @@ export default {
   },
   mounted() { },
   methods: {
-    toDetail(item, index) {
+    toDetail(item) {
       this.$router.push(item.path)
     }
   }
@@ -164,116 +165,116 @@ export default {
   padding: 16px;
 }
 
-.financialIndex {
+.enterpriseOperatingIndicators {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 
-  .financialIndex-item {
+  .enterpriseOperatingIndicators-item {
     /* width: calc(100% / 3); */
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   }
 
-  .financialIndex-item__body,
-  .financialIndex-item__footer {
+  .enterpriseOperatingIndicators-item__body,
+  .enterpriseOperatingIndicators-item__footer {
     padding: 16px;
   }
 
-  .financialIndex-item__body {
+  .enterpriseOperatingIndicators-item__body {
     display: flex;
   }
 
-  .financialIndex-item__body h3 {
+  .enterpriseOperatingIndicators-item__body h3 {
     margin-top: 0;
     font-weight: bold;
   }
 
-  .financialIndex-item__body i {
+  .enterpriseOperatingIndicators-item__body i {
     font-size: 30px;
   }
 
-  .financialIndex-item__body i+.main-content {
+  .enterpriseOperatingIndicators-item__body i+.main-content {
     margin-left: 10px;
   }
 
-  .financialIndex-item__footer {
+  .enterpriseOperatingIndicators-item__footer {
     border-top: 1px solid #eee;
     text-align: right;
   }
 }
 
-.SalesIndex {
+.costIndicators {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 
-  .SalesIndex-item {
+  .costIndicators-item {
     /* width: calc(100% / 3); */
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   }
 
-  .SalesIndex-item__body,
-  .SalesIndex-item__footer {
+  .costIndicators-item__body,
+  .costIndicators-item__footer {
     padding: 16px;
   }
 
-  .SalesIndex-item__body {
+  .costIndicators-item__body {
     display: flex;
   }
 
-  .SalesIndex-item__body h3 {
+  .costIndicators-item__body h3 {
     margin-top: 0;
     font-weight: bold;
   }
 
-  .SalesIndex-item__body i {
+  .costIndicators-item__body i {
     font-size: 30px;
   }
 
-  .SalesIndex-item__body i+.main-content {
+  .costIndicators-item__body i+.main-content {
     margin-left: 10px;
   }
 
-  .SalesIndex-item__footer {
+  .costIndicators-item__footer {
     border-top: 1px solid #eee;
     text-align: right;
 
   }
 }
 
-.OperatingEfficiencyIndex {
+.efficiencyIndicators {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 
-  .OperatingEfficiencyIndex-item {
+  .efficiencyIndicators-item {
     /* width: calc(100% / 3); */
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   }
 
-  .OperatingEfficiencyIndex-item__body,
-  .OperatingEfficiencyIndex-item__footer {
+  .efficiencyIndicators-item__body,
+  .efficiencyIndicators-item__footer {
     padding: 16px;
   }
 
-  .OperatingEfficiencyIndex-item__body {
+  .efficiencyIndicators-item__body {
     display: flex;
   }
 
-  .OperatingEfficiencyIndex-item__body h3 {
+  .efficiencyIndicators-item__body h3 {
     margin-top: 0;
     font-weight: bold;
   }
 
-  .OperatingEfficiencyIndex-item__body i {
+  .efficiencyIndicators-item__body i {
     font-size: 30px;
   }
 
-  .OperatingEfficiencyIndex-item__body i+.main-content {
+  .efficiencyIndicators-item__body i+.main-content {
     margin-left: 10px;
   }
 
-  .OperatingEfficiencyIndex-item__footer {
+  .efficiencyIndicators-item__footer {
     border-top: 1px solid #eee;
     text-align: right;
 

@@ -24,10 +24,20 @@
         </dependency>
 
         <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi</artifactId>
+            <version>3.8.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-market</artifactId>
         </dependency>
     </dependencies>
 

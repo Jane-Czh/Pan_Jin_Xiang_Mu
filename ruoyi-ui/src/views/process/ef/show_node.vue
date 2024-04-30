@@ -16,81 +16,106 @@
     <div class="ef-node-text" :show-overflow-tooltip="true">
       {{ node.name }}
     </div>
-    <!-- 节点状态图标 -> 改为表单绑定  -->
-    <div class="ef-node-right-ico">
-      <!-- 如果节点状态为 'no',悬浮效果为可绑定文件,显示链接文件图标 -->
 
+    <!--功能开发: 节点状态state & 类型type -> 改为文件绑定(制度、表单)  -->
+
+    <!-- 1.1 右侧的[制度文件]显示-->
+    <div class="ef-node-right-ico">
+      <!-- 1、如果节点状态为 'no',悬浮效果为"无文件绑定",icon 显示链接文件的图标 -->
       <el-tooltip
         v-if="node.state === 'no'"
         class="item"
         effect="dark"
-        content="无文件绑定"
+        content="无制度文件绑定"
         placement="top"
       >
         <li class="el-icon-link ef-node-file-no"></li>
       </el-tooltip>
 
-      <!-- 否则，显示已链接文件图标 -->
-
-      <div
-        v-else
-        class="item"
-        @mouseover="hoverPanel = true"
-
-      >
-        <li
-          class="el-icon-link ef-node-file-yes"
-          @click="dialogVisible = true"
-        ></li>
+      <!-- 2、否则，显示icon已链接文件图标, 且悬浮效果为 已绑定的制度文件list -->
+      <div v-else class="item" @mouseover="hoverPanel = true">
+        <li class="el-icon-files ef-node-file-yes"></li>
         <!-- 悬浮时显示的面板，展示绑定的文件list  JSON.parse(this.fileHyperLinks[index]) -->
-        <div v-if="hoverPanel" class="tooltip-panel" @mouseleave="hoverPanel = false">
-          <p>--已绑定文件--</p>
+        <div
+          v-if="hoverPanel"
+          class="tooltip-panel"
+          @mouseleave="hoverPanel = false"
+        >
+          <p>--已绑定制度文件如下--</p>
           <ul>
             <li v-for="(file, index) in this.nodeFileNames" :key="index">
-              <a target="_blank"
-              :href="`baseUrl +'/' + this.fileHyperLinks[index]`" dowmnload>{{ file }}</a>
+              {{ file }}
+              <el-divider direction="vertical"></el-divider>
+              <!-- 下载文件  -->
+              <!-- <a target="_blank"  download :href="`baseUrl +'/' + this.fileHyperLinks[index]`"> </a -->
+              <i
+                class="el-icon-download download-icon"
+                @click.prevent="
+                  downloadRegularFile(index, this.fileHyperLinks[index])
+                "
+              ></i>
+
+              <el-divider direction="vertical"></el-divider>
+              <!-- 预览文件 -->
+              <i class="el-icon-view preview-icon"></i>
             </li>
           </ul>
         </div>
-
-        <!-- 提示可继续文件的绑定或取消绑定 -->
-        <el-tooltip
-          v-if="node.state !== 'no'"
-          class="item"
-          effect="dark"
-          content="已绑定如下文件"
-          placement="top"
-        >
-          <li
-            class="el-icon-files ef-node-file-yes"
-            @click="(dialogMoreVisible = true), tempFile(node)"
-          ></li>
-        </el-tooltip>
       </div>
     </div>
 
-    <!-- 绑定文件的dialog -->
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <span>请选择需要绑定的表单</span>
-      <li
-        class="el-icon-link ef-node-file-no-temp"
-        @click="openFileDialog(node)"
-      ></li>
-      <br />
-      <!-- 展示选择的表单名 -->
-      <span v-if="selectedFileName">{{ selectedFileName }}</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="(dialogVisible = false), (selectedFileName = null)"
-          >取 消</el-button
+    <!-- ---------------------------------------------- -->
+    <!-- 1.2 右侧的[表单文件]绑定-->
+    <div class="ef-node-rightform-ico">
+      <!-- 1、如果节点状态为 'no',悬浮效果为可绑定文件,显示链接文件图标 -->
+      <el-tooltip
+        v-if="node.type === 'no'"
+        class="item"
+        effect="dark"
+        content="无表单文件绑定"
+        placement="top"
+      >
+        <li class="el-icon-paperclip ef-node-file-no"></li>
+      </el-tooltip>
+
+      <!-- 2、否则，icon显示已链接表单图标, 且悬浮效果为 已绑定的表单文件的list -->
+      <div v-else class="item" @mouseover="hoverPanel = true">
+        <li class="el-icon-tickets ef-node-file-yes"></li>
+        <!-- 悬浮时显示的面板，展示绑定的文件list  JSON.parse(this.fileHyperLinks[index]) -->
+        <div
+          v-if="hoverPanel"
+          class="tooltip-panel"
+          @mouseleave="hoverFormPanel = false"
         >
-        <el-button type="primary" @click="confirmDialog(node)">确 定</el-button>
-      </span>
-    </el-dialog>
+          <p>--已绑定表单文件如下--</p>
+          <ul>
+            <li v-for="(file, index) in this.nodeFormNames" :key="index">
+              <!-- <a
+                target="_blank"
+                :href="`baseUrl +'/' + this.formHyperLinks[index]`"
+                dowmnload
+                >{{ file }}</a
+              > -->
+              {{ file }}
+              <el-divider direction="vertical"></el-divider>
+              <!-- 下载文件  -->
+              <!-- <a target="_blank"  download :href="`baseUrl +'/' + this.fileHyperLinks[index]`"> </a -->
+              <i
+                class="el-icon-download download-icon"
+                @click.prevent="
+                  downloadRegularFile(index, this.fileHyperLinks[index])
+                "
+              ></i>
+
+              <el-divider direction="vertical"></el-divider>
+              <!-- 预览文件 -->
+              <i class="el-icon-view preview-icon"></i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- over ---------------------------------------------- over -->
   </div>
 </template>
 
@@ -104,24 +129,53 @@ export default {
   },
   data() {
     return {
-
       baseUrl: process.env.VUE_APP_BASE_API,
 
-      //表单绑定的dialog
-      dialogVisible: false,
-      //存储绑定表单文件名称
-      selectedFileName: null,
-      //悬浮面板
+      //[制度文件]的悬浮面板
       hoverPanel: false,
 
-      // 制度文件数据
+      //Restful 获取的 [制度文件]数据
       filemanagementList: [],
-      // 表单文件数据
-      // node.state展示数据
+      // 制度文件名称, 悬浮面板的展示数据
       nodeFileNames: [],
-
-      // 文件下载链接
+      // 制度文件下载链接
       fileHyperLinks: [],
+
+      // <!-- ---------------------------------------------- -->
+      //表单文件悬浮面板
+      hoverFormPanel: false,
+
+      //Restful 获取的 [表单文件]数据
+      formList: [],
+      // 表单文件名称, 悬浮面板的展示数据
+      nodeFormNames: [],
+      // 表单文件下载链接
+      formHyperLinks: [],
+
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        regulationsTitle: null,
+        useScope: null,
+        uploadDate: null,
+        effectiveDate: null,
+        regulationsAddress: null,
+        fileName: null,
+        filePath: null,
+        fileType: null,
+        fileSize: null,
+        createDate: null,
+        uploadUsername: null,
+        useState: null,
+        departmentCategory: null,
+        fileTag: null,
+        oldRegulationsId: null,
+        revisionDate: null,
+        revisionContent: null,
+        reviser: null,
+        newFlag: null,
+        oldFlag: null,
+      },
     };
   },
   components: {
@@ -154,45 +208,51 @@ export default {
   },
   created() {
     this.getRegularFileData();
+    this.getFormFileData();
   },
   methods: {
-    /** 查询制度文件列表 */
-    // getRegularFileData() {
-    //   this.nodeFileNames = [];
-    //   this.fileHyperLinks = [];
-    //   //查询数据
-    //   listFilemanagement(this.queryParams)
-    //     .then((response) => {
-    //       this.filemanagementList = response.rows;
-    //     })
-    //     .then(() => {
-    //       // 制度文件数据filemanagementList 进行筛选 id==node.state的数据,将其赋值给selectedFileNames
-    //       JSON.parse(this.node.state).forEach((stateId) => {
-    //         let row = this.filemanagementList.find(
-    //           (item) =>
-    //             JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
-    //         );
-    //         console.log("this show node row-===->",row)
-    //         //将匹配的记录的文件名、链接保存 (nodeFileNames、fileHyperLinks)
-    //         this.nodeFileNames.push(row.fileName);
-    //         this.fileHyperLinks.push(row.filePath);
-    //       });
-    //     });
-    //   console.log("show_pane==>nodeFileNames==>", this.nodeFileNames);
-    //   console.log("show_pane==>fileHyperLinks==>", this.fileHyperLinks);
-    // },
+    //下载制度文件
+    downloadRegularFile(index, url) {
+      // const downloadUrl = `${this.baseUrl}/${this.fileHyperLinks[index]}`;
+      // // 创建一个隐藏的链接并设置其下载属性
+      // const link = document.createElement("a");
+      // link.href = downloadUrl;
+      // link.download = true;
+      // // 将链接添加到文档中并触发点击事件
+      // document.body.appendChild(link);
+      // link.click();
+      // // 清理掉创建的链接
+      // document.body.removeChild(link);
+    },
+    //下载表单文件
+    downloadFormFile(index, url) {
+      // const downloadUrl = `${this.baseUrl}/${this.fileHyperLinks[index]}`;
+      // // 创建一个隐藏的链接并设置其下载属性
+      // const link = document.createElement("a");
+      // link.href = downloadUrl;
+      // link.download = true;
+      // // 将链接添加到文档中并触发点击事件
+      // document.body.appendChild(link);
+      // link.click();
+      // // 清理掉创建的链接
+      // document.body.removeChild(link);
+    },
 
+    // 正对绑定的文件id，去文件管理 查找其地址，使得提供的文件能够 下载/预览
+
+    /** 查询制度文件列表 */
     getRegularFileData() {
+      //存储制度文件名称
       this.nodeFileNames = [];
+      //存储相应的下载地址
       this.fileHyperLinks = [];
 
       listFilemanagement(this.queryParams)
         .then((response) => {
           this.filemanagementList = response.rows;
-          // console.log(" this.filemanagementList ==>", this.filemanagementList);
         })
         .then(() => {
-          // 制度文件数据filemanagementList 进行筛选 id==node.state的数据,将其赋值给selectedFileNames
+          // 制度文件数据filemanagementList 进行筛选 id==node.state的数据,将其赋值给nodeFileNames
           if (this.node.state != "no") {
             JSON.parse(this.node.state).forEach((stateId) => {
               let row = this.filemanagementList.find(
@@ -207,8 +267,35 @@ export default {
             });
           }
         });
-      // console.log("show_pane==>nodeFileNames==>", this.nodeFileNames);
-      // console.log("show_pane==>fileHyperLinks==>", this.fileHyperLinks);
+    },
+
+    /** 查询表单文件列表 */
+    getFormFileData() {
+      //存储表单文件名称
+      this.nodeFormNames = [];
+      //存储相应的下载地址
+      this.formHyperLinks = [];
+
+      listFilemanagement(this.queryParams)
+        .then((response) => {
+          this.formList = response.rows;
+        })
+        .then(() => {
+          // 表单文件数据formList 进行筛选 id==node.type 的数据,将其赋值给 nodeFormNames
+          if (this.node.type != "no") {
+            JSON.parse(this.node.type).forEach((stateId) => {
+              let row = this.formList.find(
+                (item) =>
+                  JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+              );
+              if (row != null) {
+                //将匹配的记录的文件名、链接保存 (nodeFileNames、fileHyperLinks)
+                this.nodeFormNames.push(row.fileName);
+                this.formHyperLinks.push(row.filePath);
+              }
+            });
+          }
+        });
     },
 
     // 点击节点
@@ -230,20 +317,18 @@ export default {
         top: this.$refs.node.style.top,
       });
     },
-
-    //TODO 正对node.state中的绑定文件名，去文件查找其地址，使得提供的文件能够下载/预览
   },
 };
 </script>
 
-    <style scoped>
+<style scoped>
 .item {
   position: relative;
 }
-
+/**制度文件面板 */
 .tooltip-panel {
   position: absolute;
-  width: 178px;
+  width: 250px;
   height: auto;
   background-color: #ffffff; /* 白色背景 */
   padding: 10px;

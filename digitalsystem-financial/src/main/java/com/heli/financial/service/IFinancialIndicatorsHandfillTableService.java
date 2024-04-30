@@ -18,7 +18,10 @@ public interface IFinancialIndicatorsHandfillTableService {
     boolean checkHandFillDataIsExisted(Date date);
 
 
-    List<Date> selectExistedYearAndMonth();
+    List<Date> selectAllHandFillYearAndMonth();
+
+
+    FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(Date yearAndMonth);
 
     /**
      * 查询[财务]手动填报指标

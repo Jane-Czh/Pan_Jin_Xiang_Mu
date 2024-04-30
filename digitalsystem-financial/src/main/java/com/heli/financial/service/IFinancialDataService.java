@@ -2,17 +2,15 @@ package com.heli.financial.service;
 
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
+import org.aspectj.lang.JoinPoint;
 
 import java.util.Date;
 
 public interface IFinancialDataService {
 
-    int importInterestsTable();
+    boolean checkDataUploadedForCurrentMonth(Date yearAndMonth);
 
-    int importBalanceTable();
-
-    int handFillData(FinancialIndicatorsHandfillTable FITable);
-
-    int computeIndicator(Date date);
+    int calculateCurrentMonthFinancialData(Date yearAndMonth);
+//    int calculateCurrentMonthFinancialData(JoinPoint joinPoint);
 
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.quality.mapper.QualityIndicatorsHandfillTableMapper">
+    
+    <resultMap type="QualityIndicatorsHandfillTable" id="QualityIndicatorsHandfillTableResult">
+        <result property="qihfId"    column="QIHF_id"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="moleculeExternalMassLossRate"    column="Molecule_External_Mass_Loss_Rate"    />
+        <result property="externalMassLossRate"    column="External_Mass_Loss_Rate"    />
+        <result property="quarterlyRank"    column="Quarterly_Rank"    />
+        <result property="meantimeWithoutFailure"    column="Meantime_Without_Failure"    />
+        <result property="intimeReturnrate"    column="InTime_ReturnRate"    />
+        <result property="selfcheckPassrate"    column="SelfCheck_PassRate"    />
+        <result property="nextprocessFeedbackPassrate"    column="NextProcess_Feedback_PassRate"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectQualityIndicatorsHandfillTableVo">
+        select QIHF_id, Year_And_Month, Molecule_External_Mass_Loss_Rate, External_Mass_Loss_Rate, Quarterly_Rank, Meantime_Without_Failure, InTime_ReturnRate, SelfCheck_PassRate, NextProcess_Feedback_PassRate, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_Indicators_HandFill_table
+    </sql>
+
+
+
+    <!-- 根据月份，检查当月数据是否上传 -->
+    <select id="checkQualityFillingDataIsExisted" parameterType="Date" >
+        SELECT EXISTS(SELECT 1 FROM Quality_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+
+
+    <select id="selectQualityIndicatorsHandfillTableList" parameterType="QualityIndicatorsHandfillTable" resultMap="QualityIndicatorsHandfillTableResult">
+        <include refid="selectQualityIndicatorsHandfillTableVo"/>
+        <where>  
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="moleculeExternalMassLossRate != null "> and Molecule_External_Mass_Loss_Rate = #{moleculeExternalMassLossRate}</if>
+            <if test="externalMassLossRate != null "> and External_Mass_Loss_Rate = #{externalMassLossRate}</if>
+            <if test="quarterlyRank != null "> and Quarterly_Rank = #{quarterlyRank}</if>
+            <if test="meantimeWithoutFailure != null "> and Meantime_Without_Failure = #{meantimeWithoutFailure}</if>
+            <if test="intimeReturnrate != null "> and InTime_ReturnRate = #{intimeReturnrate}</if>
+            <if test="selfcheckPassrate != null "> and SelfCheck_PassRate = #{selfcheckPassrate}</if>
+            <if test="nextprocessFeedbackPassrate != null "> and NextProcess_Feedback_PassRate = #{nextprocessFeedbackPassrate}</if>
+        </where>
+    </select>
+    
+    <select id="selectQualityIndicatorsHandfillTableByQihfId" parameterType="Long" resultMap="QualityIndicatorsHandfillTableResult">
+        <include refid="selectQualityIndicatorsHandfillTableVo"/>
+        where QIHF_id = #{qihfId}
+    </select>
+        
+    <insert id="insertQualityIndicatorsHandfillTable" parameterType="QualityIndicatorsHandfillTable">
+        insert into Quality_Indicators_HandFill_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qihfId != null">QIHF_id,</if>
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="moleculeExternalMassLossRate != null">Molecule_External_Mass_Loss_Rate,</if>
+            <if test="externalMassLossRate != null">External_Mass_Loss_Rate,</if>
+            <if test="quarterlyRank != null">Quarterly_Rank,</if>
+            <if test="meantimeWithoutFailure != null">Meantime_Without_Failure,</if>
+            <if test="intimeReturnrate != null">InTime_ReturnRate,</if>
+            <if test="selfcheckPassrate != null">SelfCheck_PassRate,</if>
+            <if test="nextprocessFeedbackPassrate != null">NextProcess_Feedback_PassRate,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qihfId != null">#{qihfId},</if>
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="moleculeExternalMassLossRate != null">#{moleculeExternalMassLossRate},</if>
+            <if test="externalMassLossRate != null">#{externalMassLossRate},</if>
+            <if test="quarterlyRank != null">#{quarterlyRank},</if>
+            <if test="meantimeWithoutFailure != null">#{meantimeWithoutFailure},</if>
+            <if test="intimeReturnrate != null">#{intimeReturnrate},</if>
+            <if test="selfcheckPassrate != null">#{selfcheckPassrate},</if>
+            <if test="nextprocessFeedbackPassrate != null">#{nextprocessFeedbackPassrate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQualityIndicatorsHandfillTable" parameterType="QualityIndicatorsHandfillTable">
+        update Quality_Indicators_HandFill_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="moleculeExternalMassLossRate != null">Molecule_External_Mass_Loss_Rate = #{moleculeExternalMassLossRate},</if>
+            <if test="externalMassLossRate != null">External_Mass_Loss_Rate = #{externalMassLossRate},</if>
+            <if test="quarterlyRank != null">Quarterly_Rank = #{quarterlyRank},</if>
+            <if test="meantimeWithoutFailure != null">Meantime_Without_Failure = #{meantimeWithoutFailure},</if>
+            <if test="intimeReturnrate != null">InTime_ReturnRate = #{intimeReturnrate},</if>
+            <if test="selfcheckPassrate != null">SelfCheck_PassRate = #{selfcheckPassrate},</if>
+            <if test="nextprocessFeedbackPassrate != null">NextProcess_Feedback_PassRate = #{nextprocessFeedbackPassrate},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where QIHF_id = #{qihfId}
+    </update>
+
+    <delete id="deleteQualityIndicatorsHandfillTableByQihfId" parameterType="Long">
+        delete from Quality_Indicators_HandFill_table where QIHF_id = #{qihfId}
+    </delete>
+
+    <delete id="deleteQualityIndicatorsHandfillTableByQihfIds" parameterType="String">
+        delete from Quality_Indicators_HandFill_table where QIHF_id in 
+        <foreach item="qihfId" collection="array" open="(" separator="," close=")">
+            #{qihfId}
+        </foreach>
+    </delete>
+</mapper>

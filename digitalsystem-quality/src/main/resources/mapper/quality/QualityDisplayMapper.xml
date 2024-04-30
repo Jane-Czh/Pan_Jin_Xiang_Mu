@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.quality.mapper.QualityDisplayMapper">
+
+    <!-- 质量考核季度排名 指标63 -->
+    <select id="selectQuarterlyRank" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Quarterly_Rank as quarterlyRank from Quality_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 当月单台非BOM物料费用 指标24 -->
+    <select id="selectMeantimeWithoutFailure" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Meantime_Without_Failure as meantimeWithoutFailure from Quality_Indicators_HandFill_table
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+
+</mapper>

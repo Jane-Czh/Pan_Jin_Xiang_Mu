@@ -42,7 +42,7 @@
           prop="regulationsTitle"
         />
       </el-table>
-      
+
       <!-- 分页功能 -->
       <pagination
         v-show="total > 0"
@@ -51,17 +51,6 @@
         :limit.sync="queryParams.pageSize"
         @pagination="getRegularFileData"
       />
-    </el-tab-pane>
-    <!-- 2 -->
-    <el-tab-pane label="表单文件" name="second">
-      <!-- 表单文件table -->
-      <el-table :data="configData" style="width: 100%">
-        <el-table-column prop="date" label="文件名称" width="180">
-        </el-table-column>
-        <el-table-column prop="name" label="表单所属科室" width="180">
-        </el-table-column>
-        <el-table-column prop="address" label="表单标题"> </el-table-column>
-      </el-table>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -90,7 +79,7 @@ export default {
       ids: [],
       names: [],
       // 从node传来的 已绑定的文件信息
-      selectedFileNames: [],
+      // selectedFileNames: [],
 
       // 制度查询参数
       queryParams: {
@@ -126,9 +115,17 @@ export default {
   },
   mounted() {
     // 当组件挂载时，设置已绑定的文件信息为选中状态
-    this.setSelectedFileNames(this.props.selectedFileNames);
+    // this.setSelectedFileNames(this.props.selectedFileNames);
   },
+
+  destroyed() {
+    this.$destroy();
+  },
+
   methods: {
+    hello() {
+      console.log("hello");
+    },
     /** 查询制度文件列表 */
     getRegularFileData() {
       listFilemanagement(this.queryParams).then((response) => {
@@ -142,9 +139,6 @@ export default {
         this.pageIndex * this.pageSize
       );
     },
-
-    /** 查询表单文件列表 */
-    getFormFileData() {},
 
     handleClick(tab, event) {
       console.log(tab, event);
@@ -167,24 +161,26 @@ export default {
     },
 
     //接收node的数据
-    setSelectedFileNames(names) {
+    setSelectedFileNames(name) {
       // 接收父组件传递的已绑定的文件信息
-      this.selectedFileNames = names;
+      // this.props.selectedFileNames = names;
       // 设置已绑定的文件信息为已选状态
-      this.setFilesSelected();
+      this.setFilesSelected(name);
     },
-    setFilesSelected() {
-      // 将已绑定的文件信息设置为已选状态
-      this.$nextTick(() => {
-        this.selectedFileNames.forEach((name) => {
-          const row = this.filemanagementList.find(
-            (item) => item.fileName === name
-          );
-          if (row) {
-            this.$refs.multipleTable.toggleRowSelection(row, true);
-          }
+    setFilesSelected(name) {
+      if (name != null) {
+        // 将已绑定的文件信息设置为已选状态
+        this.$nextTick(() => {
+          name.forEach((name) => {
+            const row = this.filemanagementList.find(
+              (item) => item.fileName === name
+            );
+            if (row) {
+              this.$refs.multipleTable.toggleRowSelection(row, true);
+            }
+          });
         });
-      });
+      }
     },
 
     //分页功能相关

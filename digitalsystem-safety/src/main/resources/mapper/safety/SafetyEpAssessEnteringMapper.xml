@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.safety.mapper.SafetyEpAssessEnteringMapper">
+    
+    <resultMap type="SafetyEpAssessEntering" id="SafetyEpAssessEnteringResult">
+        <result property="seaeId"    column="SEAE_ID"    />
+        <result property="checkTime"    column="Check_Time"    />
+        <result property="checkTeam"    column="Check_Team"    />
+        <result property="equipmentProblemSpot"    column="Equipment_Problem_Spot"    />
+        <result property="chargePerson"    column="Charge_Person"    />
+        <result property="rectificationCompletionTime"    column="Rectification_Completion_Time"    />
+        <result property="preRectificationPhoto"    column="Pre_Rectification_Photo"    />
+        <result property="postRectificationPhoto"    column="Post_Rectification_Photo"    />
+        <result property="assessmentScore"    column="Assessment_Score"    />
+        <result property="Accepter"    column="Accepter"    />
+    </resultMap>
+
+    <sql id="selectSafetyEpAssessEnteringVo">
+        select SEAE_ID, Check_Time, Check_Team, Equipment_Problem_Spot, Charge_Person, Rectification_Completion_Time, Pre_Rectification_Photo, Post_Rectification_Photo, Assessment_Score, Accepter from Safety_EP_Assess_Entering
+    </sql>
+
+    <select id="selectLastId" resultType="java.lang.Long"> SELECT SEAE_ID FROM Safety_EP_Assess_Entering WHERE SEAE_ID = (SELECT MAX(SEAE_ID) FROM Safety_EP_Assess_Entering); </select>
+
+    <select id="selectSafetyEpAssessEnteringList" parameterType="SafetyEpAssessEntering" resultMap="SafetyEpAssessEnteringResult">
+        <include refid="selectSafetyEpAssessEnteringVo"/>
+        <where>  
+            <if test="checkTime != null "> and Check_Time = #{checkTime}</if>
+            <if test="checkTeam != null  and checkTeam != ''"> and Check_Team = #{checkTeam}</if>
+            <if test="equipmentProblemSpot != null  and equipmentProblemSpot != ''"> and Equipment_Problem_Spot = #{equipmentProblemSpot}</if>
+            <if test="chargePerson != null  and chargePerson != ''"> and Charge_Person = #{chargePerson}</if>
+            <if test="rectificationCompletionTime != null "> and Rectification_Completion_Time = #{rectificationCompletionTime}</if>
+            <if test="preRectificationPhoto != null  and preRectificationPhoto != ''"> and Pre_Rectification_Photo = #{preRectificationPhoto}</if>
+            <if test="postRectificationPhoto != null  and postRectificationPhoto != ''"> and Post_Rectification_Photo = #{postRectificationPhoto}</if>
+            <if test="assessmentScore != null "> and Assessment_Score = #{assessmentScore}</if>
+            <if test="Accepter != null  and Accepter != ''"> and Accepter = #{Accepter}</if>
+        </where>
+    </select>
+    
+    <select id="selectSafetyEpAssessEnteringBySeaeId" parameterType="Long" resultMap="SafetyEpAssessEnteringResult">
+        <include refid="selectSafetyEpAssessEnteringVo"/>
+        where SEAE_ID = #{seaeId}
+    </select>
+        
+    <insert id="insertSafetyEpAssessEntering" parameterType="SafetyEpAssessEntering">
+        insert into Safety_EP_Assess_Entering
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seaeId != null">SEAE_ID,</if>
+            <if test="checkTime != null">Check_Time,</if>
+            <if test="checkTeam != null">Check_Team,</if>
+            <if test="equipmentProblemSpot != null">Equipment_Problem_Spot,</if>
+            <if test="chargePerson != null and chargePerson != ''">Charge_Person,</if>
+            <if test="rectificationCompletionTime != null">Rectification_Completion_Time,</if>
+            <if test="preRectificationPhoto != null">Pre_Rectification_Photo,</if>
+            <if test="postRectificationPhoto != null">Post_Rectification_Photo,</if>
+            <if test="assessmentScore != null">Assessment_Score,</if>
+            <if test="Accepter != null and Accepter != ''">Accepter,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seaeId != null">#{seaeId},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="checkTeam != null">#{checkTeam},</if>
+            <if test="equipmentProblemSpot != null">#{equipmentProblemSpot},</if>
+            <if test="chargePerson != null and chargePerson != ''">#{chargePerson},</if>
+            <if test="rectificationCompletionTime != null">#{rectificationCompletionTime},</if>
+            <if test="preRectificationPhoto != null">#{preRectificationPhoto},</if>
+            <if test="postRectificationPhoto != null">#{postRectificationPhoto},</if>
+            <if test="assessmentScore != null">#{assessmentScore},</if>
+            <if test="Accepter != null and Accepter != ''">#{Accepter},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSafetyEpAssessEntering" parameterType="SafetyEpAssessEntering">
+        update Safety_EP_Assess_Entering
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkTime != null">Check_Time = #{checkTime},</if>
+            <if test="checkTeam != null">Check_Team = #{checkTeam},</if>
+            <if test="equipmentProblemSpot != null">Equipment_Problem_Spot = #{equipmentProblemSpot},</if>
+            <if test="chargePerson != null and chargePerson != ''">Charge_Person = #{chargePerson},</if>
+            <if test="rectificationCompletionTime != null">Rectification_Completion_Time = #{rectificationCompletionTime},</if>
+            <if test="preRectificationPhoto != null">Pre_Rectification_Photo = #{preRectificationPhoto},</if>
+            <if test="postRectificationPhoto != null">Post_Rectification_Photo = #{postRectificationPhoto},</if>
+            <if test="assessmentScore != null">Assessment_Score = #{assessmentScore},</if>
+            <if test="Accepter != null and Accepter != ''">Accepter = #{Accepter},</if>
+        </trim>
+        where SEAE_ID = #{seaeId}
+    </update>
+
+    <delete id="deleteSafetyEpAssessEnteringBySeaeId" parameterType="Long">
+        delete from Safety_EP_Assess_Entering where SEAE_ID = #{seaeId}
+    </delete>
+
+    <delete id="deleteSafetyEpAssessEnteringBySeaeIds" parameterType="String">
+        delete from Safety_EP_Assess_Entering where SEAE_ID in 
+        <foreach item="seaeId" collection="array" open="(" separator="," close=")">
+            #{seaeId}
+        </foreach>
+    </delete>
+</mapper>

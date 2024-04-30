@@ -10,10 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="problemRecurrenceRate"    column="Problem_Recurrence_Rate"    />
         <result property="differentProblemOccurrenceRate"    column="Different_Problem_Occurrence_Rate"    />
         <result property="Branch"    column="Branch"    />
+        <result property="Week"    column="Week"    />
     </resultMap>
 
     <sql id="selectMarketAfterSaleProblemClassificationVo">
-        select MASPC_ID, Vehicle_Model, Problem_Recurrence_Rate, Different_Problem_Occurrence_Rate, Branch from Market_After_Sale_Problem_Classification
+        select MASPC_ID, Vehicle_Model, Problem_Recurrence_Rate, Different_Problem_Occurrence_Rate, Branch, Week from Market_After_Sale_Problem_Classification
     </sql>
 
     <select id="selectMarketAfterSaleProblemClassificationList" parameterType="MarketAfterSaleProblemClassification" resultMap="MarketAfterSaleProblemClassificationResult">
@@ -23,20 +24,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="problemRecurrenceRate != null "> and Problem_Recurrence_Rate = #{problemRecurrenceRate}</if>
             <if test="differentProblemOccurrenceRate != null "> and Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate}</if>
             <if test="Branch != null  and Branch != ''"> and Branch = #{Branch}</if>
+            <if test="Week != null "> and Week = #{Week}</if>
         </where>
     </select>
-
-    <select id="selectLastId" resultType="java.lang.Long">
-    SELECT MASPC_ID
-    FROM Market_After_Sale_Problem_Classification
-    WHERE MASPC_ID = (SELECT MAX(MASPC_ID) FROM Market_After_Sale_Problem_Classification);
-    </select>
-
+    
     <select id="selectMarketAfterSaleProblemClassificationByMaspcId" parameterType="Long" resultMap="MarketAfterSaleProblemClassificationResult">
         <include refid="selectMarketAfterSaleProblemClassificationVo"/>
         where MASPC_ID = #{maspcId}
     </select>
-        
+
+    <select id="selectLastId" resultType="java.lang.Long"> SELECT MASPC_ID FROM Market_After_Sale_Problem_Classification WHERE MASPC_ID = (SELECT MAX(MASPC_ID) FROM Market_After_Sale_Problem_Classification); </select>
+
     <insert id="insertMarketAfterSaleProblemClassification" parameterType="MarketAfterSaleProblemClassification" useGeneratedKeys="true" keyProperty="maspcId">
         insert into Market_After_Sale_Problem_Classification
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -44,12 +42,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate,</if>
             <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate,</if>
             <if test="Branch != null">Branch,</if>
+            <if test="Week != null">Week,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
             <if test="problemRecurrenceRate != null">#{problemRecurrenceRate},</if>
             <if test="differentProblemOccurrenceRate != null">#{differentProblemOccurrenceRate},</if>
             <if test="Branch != null">#{Branch},</if>
+            <if test="Week != null">#{Week},</if>
          </trim>
     </insert>
 
@@ -60,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="problemRecurrenceRate != null">Problem_Recurrence_Rate = #{problemRecurrenceRate},</if>
             <if test="differentProblemOccurrenceRate != null">Different_Problem_Occurrence_Rate = #{differentProblemOccurrenceRate},</if>
             <if test="Branch != null">Branch = #{Branch},</if>
+            <if test="Week != null">Week = #{Week},</if>
         </trim>
         where MASPC_ID = #{maspcId}
     </update>

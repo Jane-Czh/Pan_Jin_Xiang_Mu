@@ -7,7 +7,7 @@ import com.ruoyi.file.domain.RegulationsInfoTable;
  * 文件管理Service接口
  *
  * @author ruoyi
- * @date 2024-04-10
+ * @date 2024-04-17
  */
 public interface IRegulationsInfoTableService
 {
@@ -26,6 +26,15 @@ public interface IRegulationsInfoTableService
      * @return 文件管理集合
      */
     public List<RegulationsInfoTable> selectRegulationsInfoTableList(RegulationsInfoTable regulationsInfoTable);
+
+
+    /**
+     * 查询历史版本文件管理列表
+     *
+     * @param currentId 文件管理
+     * @return 文件管理集合
+     */
+    public List<RegulationsInfoTable> getRegulationsHistory(Long currentId);
 
     /**
      * 新增文件管理

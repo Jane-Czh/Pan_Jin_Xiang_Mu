@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.supply.mapper.SupplyPurchaseorderTableMapper">
+    
+    <resultMap type="SupplyPurchaseorderTable" id="SupplyPurchaseorderTableResult">
+        <result property="spId"    column="SP_ID"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="documentDate"    column="Document_Date"    />
+        <result property="purchasingDocuments"    column="Purchasing_Documents"    />
+        <result property="materialNumber"    column="Material_Number"    />
+        <result property="collectiveProcurement"    column="Collective_Procurement"    />
+        <result property="ShortText"    column="ShortText"    />
+        <result property="Unit"    column="Unit"    />
+        <result property="Quantity"    column="Quantity"    />
+        <result property="orderNetvalue"    column="Order_NetValue"    />
+        <result property="Supplier"    column="Supplier"    />
+    </resultMap>
+
+    <sql id="selectSupplyPurchaseorderTableVo">
+        select SP_ID, CREATED_BY, CREATED_TIME, Document_Date, Purchasing_Documents, Material_Number, Collective_Procurement, ShortText, Unit, Quantity, Order_NetValue, Supplier from Supply_PurchaseOrder_table
+    </sql>
+
+    <select id="selectSupplyPurchaseorderTableList" parameterType="SupplyPurchaseorderTable" resultMap="SupplyPurchaseorderTableResult">
+        <include refid="selectSupplyPurchaseorderTableVo"/>
+        <where>  
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="documentDate != null "> and Document_Date = #{documentDate}</if>
+            <if test="purchasingDocuments != null  and purchasingDocuments != ''"> and Purchasing_Documents = #{purchasingDocuments}</if>
+            <if test="materialNumber != null  and materialNumber != ''"> and Material_Number = #{materialNumber}</if>
+            <if test="collectiveProcurement != null "> and Collective_Procurement = #{collectiveProcurement}</if>
+            <if test="ShortText != null  and ShortText != ''"> and ShortText = #{ShortText}</if>
+            <if test="Unit != null  and Unit != ''"> and Unit = #{Unit}</if>
+            <if test="Quantity != null "> and Quantity = #{Quantity}</if>
+            <if test="orderNetvalue != null "> and Order_NetValue = #{orderNetvalue}</if>
+            <if test="Supplier != null  and Supplier != ''"> and Supplier = #{Supplier}</if>
+        </where>
+    </select>
+    
+    <select id="selectSupplyPurchaseorderTableBySpId" parameterType="Long" resultMap="SupplyPurchaseorderTableResult">
+        <include refid="selectSupplyPurchaseorderTableVo"/>
+        where SP_ID = #{spId}
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long"> SELECT SP_ID FROM Supply_PurchaseOrder_table WHERE SP_ID = (SELECT MAX(SP_ID) FROM Supply_PurchaseOrder_table); </select>
+
+    <insert id="insertSupplyPurchaseorderTable" parameterType="SupplyPurchaseorderTable">
+        insert into Supply_PurchaseOrder_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="spId != null">SP_ID,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="documentDate != null">Document_Date,</if>
+            <if test="purchasingDocuments != null">Purchasing_Documents,</if>
+            <if test="materialNumber != null and materialNumber != ''">Material_Number,</if>
+            <if test="collectiveProcurement != null">Collective_Procurement,</if>
+            <if test="ShortText != null">ShortText,</if>
+            <if test="Unit != null">Unit,</if>
+            <if test="Quantity != null">Quantity,</if>
+            <if test="orderNetvalue != null">Order_NetValue,</if>
+            <if test="Supplier != null and Supplier != ''">Supplier,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="spId != null">#{spId},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="documentDate != null">#{documentDate},</if>
+            <if test="purchasingDocuments != null">#{purchasingDocuments},</if>
+            <if test="materialNumber != null and materialNumber != ''">#{materialNumber},</if>
+            <if test="collectiveProcurement != null">#{collectiveProcurement},</if>
+            <if test="ShortText != null">#{ShortText},</if>
+            <if test="Unit != null">#{Unit},</if>
+            <if test="Quantity != null">#{Quantity},</if>
+            <if test="orderNetvalue != null">#{orderNetvalue},</if>
+            <if test="Supplier != null and Supplier != ''">#{Supplier},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplyPurchaseorderTable" parameterType="SupplyPurchaseorderTable">
+        update Supply_PurchaseOrder_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="documentDate != null">Document_Date = #{documentDate},</if>
+            <if test="purchasingDocuments != null">Purchasing_Documents = #{purchasingDocuments},</if>
+            <if test="materialNumber != null and materialNumber != ''">Material_Number = #{materialNumber},</if>
+            <if test="collectiveProcurement != null">Collective_Procurement = #{collectiveProcurement},</if>
+            <if test="ShortText != null">ShortText = #{ShortText},</if>
+            <if test="Unit != null">Unit = #{Unit},</if>
+            <if test="Quantity != null">Quantity = #{Quantity},</if>
+            <if test="orderNetvalue != null">Order_NetValue = #{orderNetvalue},</if>
+            <if test="Supplier != null and Supplier != ''">Supplier = #{Supplier},</if>
+        </trim>
+        where SP_ID = #{spId}
+    </update>
+
+    <delete id="deleteSupplyPurchaseorderTableBySpId" parameterType="Long">
+        delete from Supply_PurchaseOrder_table where SP_ID = #{spId}
+    </delete>
+
+    <delete id="deleteSupplyPurchaseorderTableBySpIds" parameterType="String">
+        delete from Supply_PurchaseOrder_table where SP_ID in 
+        <foreach item="spId" collection="array" open="(" separator="," close=")">
+            #{spId}
+        </foreach>
+    </delete>
+</mapper>

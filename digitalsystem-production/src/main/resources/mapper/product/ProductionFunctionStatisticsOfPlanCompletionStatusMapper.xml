@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductionFunctionStatisticsOfPlanCompletionStatusMapper">
+
+    <resultMap type="ProductionFunctionStatisticsOfPlanCompletionStatus" id="ProductionFunctionStatisticsOfPlanCompletionStatusResult">
+        <result property="mpcId"    column="MPC_ID"    />
+        <result property="carNumber"    column="Car_Number"    />
+        <result property="acceptanceDate"    column="Acceptance_Date"    />
+        <result property="launchDate"    column="Launch_Date"    />
+        <result property="waitingTimeForProduction"    column="Waiting_time_for_production"    />
+        <result property="vehicleLaunchDate"    column="Vehicle_Launch_Date"    />
+        <result property="plannedCompletionPeriod"    column="Planned_Completion_Period"    />
+        <result property="productionCycle"    column="Production_Cycle"    />
+        <result property="precisionCompletionPeriod"    column="Precision_Completion_Period"    />
+        <result property="overdueDays"    column="Overdue_days"    />
+        <result property="totalNumberWaitingTimeForProduction"    column="Total_number_Waiting_time_for_production"    />
+        <result property="totalNumberCompletionPeriodOfDoorFrameAssembly"    column="Total_number_Completion_Period_Of_Door_Frame_Assembly"    />
+        <result property="totalNumberTrialCompletionPeriod"    column="Total_number_Trial_Completion_Period"    />
+        <result property="totalNumberSpecialOperations"    column="Total_number_Special_Operations"    />
+        <result property="totalNumberPrecisionCompletionPeriod"    column="Total_number_Precision_Completion_Period"    />
+        <result property="planRate"    column="Plan_rate"    />
+    </resultMap>
+
+    <sql id="selectProductionFunctionStatisticsOfPlanCompletionStatusVo">
+        select MPC_ID, Car_Number, Acceptance_Date, Launch_Date, Waiting_time_for_production, Vehicle_Launch_Date, Planned_Completion_Period, Production_Cycle, Precision_Completion_Period, Overdue_days, Total_number_Waiting_time_for_production, Total_number_Completion_Period_Of_Door_Frame_Assembly, Total_number_Trial_Completion_Period, Total_number_Special_Operations, Total_number_Precision_Completion_Period, Plan_rate from Production_function_Statistics_of_plan_completion_status
+    </sql>
+
+    <select id="selectProductionFunctionStatisticsOfPlanCompletionStatusList" parameterType="ProductionFunctionStatisticsOfPlanCompletionStatus" resultMap="ProductionFunctionStatisticsOfPlanCompletionStatusResult">
+        <include refid="selectProductionFunctionStatisticsOfPlanCompletionStatusVo"/>
+        <where>
+            <if test="carNumber != null  and carNumber != ''"> and Car_Number = #{carNumber}</if>
+            <if test="acceptanceDate != null "> and Acceptance_Date = #{acceptanceDate}</if>
+            <if test="launchDate != null "> and Launch_Date = #{launchDate}</if>
+            <if test="waitingTimeForProduction != null "> and Waiting_time_for_production = #{waitingTimeForProduction}</if>
+            <if test="vehicleLaunchDate != null "> and Vehicle_Launch_Date = #{vehicleLaunchDate}</if>
+            <if test="plannedCompletionPeriod != null "> and Planned_Completion_Period = #{plannedCompletionPeriod}</if>
+            <if test="productionCycle != null  and productionCycle != ''"> and Production_Cycle = #{productionCycle}</if>
+            <if test="precisionCompletionPeriod != null "> and Precision_Completion_Period = #{precisionCompletionPeriod}</if>
+            <if test="overdueDays != null "> and Overdue_days = #{overdueDays}</if>
+            <if test="totalNumberWaitingTimeForProduction != null "> and Total_number_Waiting_time_for_production = #{totalNumberWaitingTimeForProduction}</if>
+            <if test="totalNumberCompletionPeriodOfDoorFrameAssembly != null "> and Total_number_Completion_Period_Of_Door_Frame_Assembly = #{totalNumberCompletionPeriodOfDoorFrameAssembly}</if>
+            <if test="totalNumberTrialCompletionPeriod != null "> and Total_number_Trial_Completion_Period = #{totalNumberTrialCompletionPeriod}</if>
+            <if test="totalNumberSpecialOperations != null "> and Total_number_Special_Operations = #{totalNumberSpecialOperations}</if>
+            <if test="totalNumberPrecisionCompletionPeriod != null "> and Total_number_Precision_Completion_Period = #{totalNumberPrecisionCompletionPeriod}</if>
+            <if test="planRate != null "> and Plan_rate = #{planRate}</if>
+        </where>
+    </select>
+
+    <select id="selectProductionFunctionStatisticsOfPlanCompletionStatusByMpcId" parameterType="Long" resultMap="ProductionFunctionStatisticsOfPlanCompletionStatusResult">
+        <include refid="selectProductionFunctionStatisticsOfPlanCompletionStatusVo"/>
+        where MPC_ID = #{mpcId}
+    </select>
+
+    <insert id="insertProductionFunctionStatisticsOfPlanCompletionStatus" parameterType="ProductionFunctionStatisticsOfPlanCompletionStatus">
+        insert into Production_function_Statistics_of_plan_completion_status
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mpcId != null">MPC_ID,</if>
+            <if test="carNumber != null">Car_Number,</if>
+            <if test="acceptanceDate != null">Acceptance_Date,</if>
+            <if test="launchDate != null">Launch_Date,</if>
+            <if test="waitingTimeForProduction != null">Waiting_time_for_production,</if>
+            <if test="vehicleLaunchDate != null">Vehicle_Launch_Date,</if>
+            <if test="plannedCompletionPeriod != null">Planned_Completion_Period,</if>
+            <if test="productionCycle != null">Production_Cycle,</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period,</if>
+            <if test="overdueDays != null">Overdue_days,</if>
+            <if test="totalNumberWaitingTimeForProduction != null">Total_number_Waiting_time_for_production,</if>
+            <if test="totalNumberCompletionPeriodOfDoorFrameAssembly != null">Total_number_Completion_Period_Of_Door_Frame_Assembly,</if>
+            <if test="totalNumberTrialCompletionPeriod != null">Total_number_Trial_Completion_Period,</if>
+            <if test="totalNumberSpecialOperations != null">Total_number_Special_Operations,</if>
+            <if test="totalNumberPrecisionCompletionPeriod != null">Total_number_Precision_Completion_Period,</if>
+            <if test="planRate != null">Plan_rate,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mpcId != null">#{mpcId},</if>
+            <if test="carNumber != null">#{carNumber},</if>
+            <if test="acceptanceDate != null">#{acceptanceDate},</if>
+            <if test="launchDate != null">#{launchDate},</if>
+            <if test="waitingTimeForProduction != null">#{waitingTimeForProduction},</if>
+            <if test="vehicleLaunchDate != null">#{vehicleLaunchDate},</if>
+            <if test="plannedCompletionPeriod != null">#{plannedCompletionPeriod},</if>
+            <if test="productionCycle != null">#{productionCycle},</if>
+            <if test="precisionCompletionPeriod != null">#{precisionCompletionPeriod},</if>
+            <if test="overdueDays != null">#{overdueDays},</if>
+            <if test="totalNumberWaitingTimeForProduction != null">#{totalNumberWaitingTimeForProduction},</if>
+            <if test="totalNumberCompletionPeriodOfDoorFrameAssembly != null">#{totalNumberCompletionPeriodOfDoorFrameAssembly},</if>
+            <if test="totalNumberTrialCompletionPeriod != null">#{totalNumberTrialCompletionPeriod},</if>
+            <if test="totalNumberSpecialOperations != null">#{totalNumberSpecialOperations},</if>
+            <if test="totalNumberPrecisionCompletionPeriod != null">#{totalNumberPrecisionCompletionPeriod},</if>
+            <if test="planRate != null">#{planRate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductionFunctionStatisticsOfPlanCompletionStatus" parameterType="ProductionFunctionStatisticsOfPlanCompletionStatus">
+        update Production_function_Statistics_of_plan_completion_status
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="carNumber != null">Car_Number = #{carNumber},</if>
+            <if test="acceptanceDate != null">Acceptance_Date = #{acceptanceDate},</if>
+            <if test="launchDate != null">Launch_Date = #{launchDate},</if>
+            <if test="waitingTimeForProduction != null">Waiting_time_for_production = #{waitingTimeForProduction},</if>
+            <if test="vehicleLaunchDate != null">Vehicle_Launch_Date = #{vehicleLaunchDate},</if>
+            <if test="plannedCompletionPeriod != null">Planned_Completion_Period = #{plannedCompletionPeriod},</if>
+            <if test="productionCycle != null">Production_Cycle = #{productionCycle},</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period = #{precisionCompletionPeriod},</if>
+            <if test="overdueDays != null">Overdue_days = #{overdueDays},</if>
+            <if test="totalNumberWaitingTimeForProduction != null">Total_number_Waiting_time_for_production = #{totalNumberWaitingTimeForProduction},</if>
+            <if test="totalNumberCompletionPeriodOfDoorFrameAssembly != null">Total_number_Completion_Period_Of_Door_Frame_Assembly = #{totalNumberCompletionPeriodOfDoorFrameAssembly},</if>
+            <if test="totalNumberTrialCompletionPeriod != null">Total_number_Trial_Completion_Period = #{totalNumberTrialCompletionPeriod},</if>
+            <if test="totalNumberSpecialOperations != null">Total_number_Special_Operations = #{totalNumberSpecialOperations},</if>
+            <if test="totalNumberPrecisionCompletionPeriod != null">Total_number_Precision_Completion_Period = #{totalNumberPrecisionCompletionPeriod},</if>
+            <if test="planRate != null">Plan_rate = #{planRate},</if>
+        </trim>
+        where MPC_ID = #{mpcId}
+    </update>
+
+    <delete id="deleteProductionFunctionStatisticsOfPlanCompletionStatusByMpcId" parameterType="Long">
+        delete from Production_function_Statistics_of_plan_completion_status where MPC_ID = #{mpcId}
+    </delete>
+
+    <delete id="deleteProductionFunctionStatisticsOfPlanCompletionStatusByMpcIds" parameterType="String">
+        delete from Production_function_Statistics_of_plan_completion_status where MPC_ID in
+        <foreach item="mpcId" collection="array" open="(" separator="," close=")">
+            #{mpcId}
+        </foreach>
+    </delete>
+
+</mapper>

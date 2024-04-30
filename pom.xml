@@ -180,6 +180,11 @@
             </dependency>
             <dependency>
                 <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-file</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
                 <artifactId>digitalsystem-partybuilding</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
@@ -193,8 +198,26 @@
                 <artifactId>digitalsystem-production</artifactId>
                 <version>3.8.7</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-supply</artifactId>
+                <version>3.8.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-quality</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>digitalsystem-enterprise</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-project</artifactId>
+                <version>3.8.7</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -206,12 +229,18 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-project</module>
+        <module>ruoyi-file</module>
         <module>digitalsystem-financial</module>
         <module>digitalsystem-market</module>
         <module>digitalsystem-tech</module>
         <module>digitalsystem-partybuilding</module>
         <module>digitalsystem-safety</module>
         <module>digitalsystem-production</module>
+        <module>digitalsystem-supply</module>
+        <module>digitalsystem-quality</module>
+        <module>digitalsystem-enterprise</module>
+
 
     </modules>
     <packaging>pom</packaging>

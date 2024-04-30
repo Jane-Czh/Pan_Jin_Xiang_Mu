@@ -121,13 +121,14 @@ export default {
       ],
       SalesIndex: [
         { id: '11', icon: 'el-icon-s-data', title: '各销售网点月度(I类)电车盘锦区域内订单占比 ', content: '各销售网点月度(I类)电车盘锦区域内订单占比', path: '/market/index11' },
+         { id: '18', icon: 'el-icon-s-data', title: '各网点已完工未发车订单数', content: '各网点已完工未发车订单数', path: '/market/index18' },
         { id: '12', icon: 'el-icon-s-data', title: '各销售网点月度(IV-V类)内燃车盘锦区域内订单占比', content: '各销售网点月度(IV-V类)内燃车盘锦区域内订单占比', path: '/market/index12' },
         { id: '13', icon: 'el-icon-s-data', title: '各主要车型产量月度比率', content: '各主要车型产量月度比率', path: '/market/index13' },
         { id: '14', icon: 'el-icon-s-data', title: '各主要车型同比增长比例', content: '各主要车型同比增长比例', path: '/market/index14' },
         { id: '15', icon: 'el-icon-s-data', title: '各销售网点月度各主要车型分布表', content: '各销售网点月度各主要车型分布表', path: '/market/index15' },
         { id: '16', icon: 'el-icon-s-data', title: '各网点已接单未发车总台数', content: '各网点已接单未发车总台数', path: '/market/index16' },
         { id: '17', icon: 'el-icon-s-data', title: '各网点未排产订单台数', content: '各网点未排产订单台数', path: '/market/index17' },
-        { id: '18', icon: 'el-icon-s-data', title: '各网点已完工未发车订单数', content: '各网点已完工未发车订单数', path: '/market/index18' },
+       
         { id: '19', icon: 'el-icon-s-data', title: '各网点已到期未完工订单数', content: '企业主要营业产品财务收入', path: '/financial/totalSalesCost' },
       ],
       OperatingEfficiencyIndex: [

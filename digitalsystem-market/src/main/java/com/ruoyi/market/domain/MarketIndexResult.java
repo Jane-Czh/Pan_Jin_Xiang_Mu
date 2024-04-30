@@ -9,12 +9,14 @@ import java.util.Map;
 
 @Data
 public class MarketIndexResult {
-//        private  String Branch;
-//        private  Long Number;
+
+
+        private List<VoEntity> VoEntity;
         private Map<String,Long> map;
         private  Map<Date, Long> Datemap;
         private Map<String, Map<String, Long>> mapMap;
         private Map<String, Map<Integer, Long>> IntegerMap;
         private List<Map<String, Map<Integer, Long>>> ListMap;
+        private Map<String, Map<Date, Long>> DatemapMap;
 //        private JSON json;
 }

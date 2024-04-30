@@ -27,9 +27,14 @@ import { getIndex11 } from '@/api/market/index'
 export default {
     data() {
         return {
-            result:null,
+            branchmonthIdx:[],
+            seriesData :[],
+            branches :[],
+         months : [],
+        numbers : [],
+            result:[],
             provinces: [],
-            months: [],
+          
             quantities: [],
              quantitiesForMonth3: [], // 针对月份3的数量数组
             numberInput:null,
@@ -67,30 +72,43 @@ export default {
     },
     methods: {
 
-    splitData() {
-        const integerMap = this.result.integerMap;
+   splitData() {
+    // 初始化空数组用来存放拆分后的数据
 
-        // 拆分地名
-        this.provinces = Object.keys(integerMap);
 
-        // 拆分月份和数量
-    for (let province in integerMap) {
-            if (integerMap.hasOwnProperty(province)) {
-                const monthsForProvince = Object.keys(integerMap[province]);
-                this.months.push(...monthsForProvince);
-                monthsForProvince.forEach(month => {
-                    if (month === '3') {
-                        this.quantitiesForMonth3.push(integerMap[province][month]);
-                    } else {
-                        this.quantities.push(integerMap[province][month]);
-                    }
-                });
-            }
-        }
+    // 遍历后端传来的数据
+    this.result.forEach(item => {
+        // 拆分地名、月份和数量
+        this.branches.push(item.branch);
+        this.months.push(item.yearMonth);
+        this.numbers.push(item.number);
+    });
 
-        // 数组去重
-        this.months = Array.from(new Set(this.months));
-    },
+    // 输出拆分后的数据，用于调试
+    console.log("拆分后的地名：", this.branches);
+    console.log("拆分后的月份：", this.months);
+    console.log("拆分后的数量：", this.numbers);
+}
+,
+        Branchsplit() {
+    // 创建一个二维数组，用于存放按照年月分组地区的结果
+    const groupedData = [];
+    const uniqueMonths = Array.from(new Set(this.months)); // 去重月份
+
+    // 初始化二维数组
+    for (let i = 0; i < this.branches.length; i++) {
+        groupedData[i] = Array(uniqueMonths.length).fill(0);
+    }
+
+    // 填充数据到二维数组中
+    this.months.forEach((month, monthIndex) => {
+        const monthIdx = uniqueMonths.indexOf(month); // 获取月份在去重后的月份数组中的索引
+        const branchIdx = this.branches.indexOf(this.branches[monthIndex]); // 获取地区在地区数组中的索引
+        groupedData[branchIdx][monthIdx] = this.numbers[monthIndex]; // 根据月份和地区索引填充数量到对应位置
+    });
+
+    return groupedData;
+},
 
         async initData() {
             this.timeData.startTime = this.selectedDate[0],
@@ -101,7 +119,9 @@ export default {
                 console.log(this.timeData)
                 this.result = await getIndex11(this.timeData);
                 console.log("======>");
-                console.log(this.result)
+                  console.log("后端传过来的数据：", this.result[0]);
+                   console.log("后端传过来的数据：", this.result[0].branch);
+                   console.log("后端传过来的数据：", this.result[0].yearMonth);
                 this.splitData();
                 this.data = this.result.integerMap
                 this.loading = false
@@ -213,6 +233,24 @@ const labelOption = {
     name: {}
   }
 };
+   const uniqueMonths = Array.from(new Set(this.months));
+  
+   
+          // 创建一个二维数组，用于存放按照年月分组地区的结果
+    const groupedData = [];
+    // 初始化二维数组
+    for (let i = 0; i < this.branches.length; i++) {
+        groupedData[i] = Array(uniqueMonths.length).fill(0);
+    }
+
+    // 填充数据到二维数组中
+    this.months.forEach((month, monthIndex) => {
+        const monthIdx = uniqueMonths.indexOf(month); // 获取月份在去重后的月份数组中的索引
+        const branchIdx = this.branches.indexOf(this.branches[monthIndex]); // 获取地区在地区数组中的索引
+        groupedData[branchIdx][monthIdx] = this.numbers[monthIndex]; // 根据月份和地区索引填充数量到对应位置
+    });
+               this.branchmonthIdx= groupedData
+     console.log("拆分后的行是地区，列是月份，数据是数量：", this.branchmonthIdx);
 option = {
   tooltip: {
     trigger: 'axis',
@@ -221,7 +259,7 @@ option = {
     }
   },
   legend: {
-    data: this.provinces
+    data: this.branches
   },
   toolbox: {
     show: true,
@@ -240,7 +278,7 @@ option = {
     {
       type: 'category',
       axisTick: { show: false },
-      data: this.months
+      data: uniqueMonths
     }
   ],
   yAxis: [
@@ -248,59 +286,23 @@ option = {
       type: 'value'
     }
   ],
-  // series: [
-  //   {
-  //     name: 'Forest',
-  //     type: 'bar',
-  //     barGap: 0,
-  //     label: labelOption,
-  //     emphasis: {
-  //       focus: 'series'
-  //     },
-  //     data: [320, 332, 301, 334, 390]
-  //   },
-  //   {
-  //     name: 'Steppe',
-  //     type: 'bar',
-  //     label: labelOption,
-  //     emphasis: {
-  //       focus: 'series'
-  //     },
-  //     data: [220, 182, 191, 234, 290]
-  //   },
-  //   {
-  //     name: 'Desert',
-  //     type: 'bar',
-  //     label: labelOption,
-  //     emphasis: {
-  //       focus: 'series'
-  //     },
-  //     data: [150, 232, 201, 154, 190]
-  //   },
-  //   {
-  //     name: 'Wetland',
-  //     type: 'bar',
-  //     label: labelOption,
-  //     emphasis: {
-  //       focus: 'series'
-  //     },
-  //     data: [98, 77, 101, 99, 40]
-  //   }
-  // ]
-  series: this.provinces.map((province, index) => ({
-        name: province,
+series : this.branchmonthIdx.map((branchData, branchIndex) => {
+    return {
+        name: this.branches[branchIndex], // 地区名称
         type: 'bar',
         label: labelOption,
         emphasis: {
-        focus: 'series'
-      },
-      data: [this.quantities[index]] // 此处假设每个省份只有一个数量
-      }))
+            focus: 'series'
+        },
+        data: branchData // 地区对应的数量数据
+    };
+})
 };
 
 option && myChart.setOption(option);
 
 },
+
 
 
         // updateChart() {

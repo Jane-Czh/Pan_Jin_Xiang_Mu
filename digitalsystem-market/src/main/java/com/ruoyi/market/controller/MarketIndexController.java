@@ -12,6 +12,7 @@ import com.ruoyi.market.domain.MarketAfterSaleLedger;
 import com.ruoyi.market.domain.MarketIndexResult;
 import com.ruoyi.market.domain.MarketSalesTable;
 
+import com.ruoyi.market.domain.VoEntity;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import com.ruoyi.market.service.IMarketSalesTableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class MarketIndexController extends BaseController {
     @Autowired
     private IMarketAfterSaleLedgerService iMarketAfterSaleLedgerService;
     @PostMapping("/IClassProportion")
-    public MarketIndexResult ProportionOfClassITrams(@RequestBody MarketSalesTable marketSalesTable){
+    public  List<VoEntity>  ProportionOfClassITrams(@RequestBody MarketSalesTable marketSalesTable){
         System.out.println("获取到的实体类"+marketSalesTable);
         System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
         System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
@@ -64,28 +65,32 @@ public class MarketIndexController extends BaseController {
                     && a.getOrderAcceptanceTime().getMonth() <= marketSalesTable.getEndTime().getMonth();
 
         })
-                .collect(Collectors.groupingBy(MarketSalesTable::getBranch,
-                        Collectors.groupingBy(
-                                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
-                                Collectors.summingLong(MarketSalesTable::getNumber)
-                        )
+//                .collect(Collectors.groupingBy(MarketSalesTable::getBranch
+//                        , Collectors.groupingBy(
+//                                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
+//                                , Collectors.summingLong(MarketSalesTable::getNumber))
+//                ));
+                        .collect(Collectors.groupingBy(
+                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+                        Collectors.groupingBy(MarketSalesTable::getBranch, Collectors.summingLong(MarketSalesTable::getNumber))
                 ));
-
+//        {2024-01={天津={10},上海={2},合肥={4}}}
 
         System.out.println("收集到的list"+cpd);
 
+         List<VoEntity> convert = VoEntity.convert(cpd);
         MarketIndexResult marketIndexResult = new MarketIndexResult();
         marketIndexResult.setMapMap(cpd);
 //
 
-        return marketIndexResult;
+        return convert;
 //
     }
     /*
     *指标12
     **/
     @PostMapping("/IVVClassProportion")
-    public  MarketIndexResult ProportionOfClassIVVTrams(@RequestBody MarketSalesTable marketSalesTable){
+    public   List<VoEntity> ProportionOfClassIVVTrams(@RequestBody MarketSalesTable marketSalesTable){
 
         System.out.println("获取到的实体类"+marketSalesTable);
         System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
@@ -93,26 +98,34 @@ public class MarketIndexController extends BaseController {
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        //规定年月日的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
 
-        Map<String, Map<Integer, Long>> cpc =
-                marketSalesTables.stream().filter((MarketSalesTable a) ->
-                {        return   a.getVehicleModel().substring(0,3).equals("CPC") &&
-                        marketSalesTable.getStartTime().getMonth()<= a.getOrderAcceptanceTime().getMonth()
-                        && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth();
+         Map<String, Map<String, Long>> cpc = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        {
+            return a.getVehicleModel().substring(0, 3).equals("CPC") &&
+                    marketSalesTable.getStartTime().getMonth() <= a.getOrderAcceptanceTime().getMonth()
+                    && a.getOrderAcceptanceTime().getMonth() <= marketSalesTable.getEndTime().getMonth();
 
-                })
-                        .collect(Collectors.groupingBy(MarketSalesTable::getBranch
-                                , Collectors.groupingBy(
-                                        a -> a.getOrderAcceptanceTime().getMonth()
-                                        , Collectors.summingLong(MarketSalesTable::getNumber))
-                        ));
+        })
+//                .collect(Collectors.groupingBy(MarketSalesTable::getBranch
+//                        , Collectors.groupingBy(
+//                                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
+//                                , Collectors.summingLong(MarketSalesTable::getNumber))
+//                ));
+                        .collect(Collectors.groupingBy(
+                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+                        Collectors.groupingBy(MarketSalesTable::getBranch, Collectors.summingLong(MarketSalesTable::getNumber))
+                ));
+
         System.out.println("按照地区分类，选出车型为cpc和日期符合的数据"+cpc);
 
-
+         List<VoEntity> convert = VoEntity.convert(cpc);
 
         MarketIndexResult marketIndexResult = new MarketIndexResult();
-        marketIndexResult.setIntegerMap(cpc);
-        return marketIndexResult;
+        marketIndexResult.setMapMap(cpc);
+
+        return convert;
     }
 
     /*

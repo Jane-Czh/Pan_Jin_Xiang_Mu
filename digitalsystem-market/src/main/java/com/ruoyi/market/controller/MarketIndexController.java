@@ -79,11 +79,12 @@ public class MarketIndexController extends BaseController {
         System.out.println("收集到的list"+cpd);
 
          List<VoEntity> convert = VoEntity.convert(cpd);
+         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(cpd);
         MarketIndexResult marketIndexResult = new MarketIndexResult();
         marketIndexResult.setMapMap(cpd);
 //
 
-        return convert;
+        return voEntities;
 //
     }
     /*
@@ -121,11 +122,11 @@ public class MarketIndexController extends BaseController {
         System.out.println("按照地区分类，选出车型为cpc和日期符合的数据"+cpc);
 
          List<VoEntity> convert = VoEntity.convert(cpc);
-
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(cpc);
         MarketIndexResult marketIndexResult = new MarketIndexResult();
         marketIndexResult.setMapMap(cpc);
 
-        return convert;
+        return voEntities;
     }
 
     /*

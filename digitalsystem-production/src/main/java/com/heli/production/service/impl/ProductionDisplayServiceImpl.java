@@ -58,8 +58,19 @@ public class ProductionDisplayServiceImpl implements IProductionDisplayService {
         return productionDisplayMapper.selectOvertimeFrontlinemonth(startTime, endTime);
     }
 
-//    @Override
-//    public List<DisplayEntity> selectMainRevenue(Date startTime, Date endTime) {
-//        return financialDisplayMapper.selectMainRevenue(startTime, endTime);
-//    }
+    @Override
+    public List<DisplayEntity> selectDailyLaunchAndCompletion(Date startTime, Date endTime) {
+        return productionDisplayMapper.selectDailyLaunchAndCompletion(startTime, endTime);
+    }
+
+    @Override
+    public List<DisplayEntity> selectMonthlyLaunchAndCompletion(Date startTime, Date endTime) {
+        return productionDisplayMapper.selectMonthlyLaunchAndCompletion(startTime, endTime);
+    }
+
+    @Override
+    public List<DisplayEntity> selectAnnualLaunchAndCompletion(Date startTime, Date endTime) {
+        return productionDisplayMapper.selectAnnualLaunchAndCompletion(startTime, endTime);
+    }
+
 }

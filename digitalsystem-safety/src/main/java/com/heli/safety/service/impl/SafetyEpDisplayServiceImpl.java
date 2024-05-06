@@ -6,6 +6,8 @@ import com.ruoyi.common.core.domain.entity.DisplayEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -43,8 +45,27 @@ public class SafetyEpDisplayServiceImpl implements ISafetyEpDisplayService {
         return safetyEpDisplayMapper.selectKeyEquipmentTotalFailureCount(startTime,endTime);
     }
 
+//    @Override
+//    public List<DisplayEntity> selectOutputPercapitavalue(Date startTime, Date endTime) {
+////        for (Date i = startTime; i < endTime; DateUtils.getNextMonth(i)) {
+////
+////        }
+//        //将Date转为LocalDate
+//        LocalDate start = startTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//        LocalDate end = endTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//
+//
+//        for (LocalDate date = start; date.isBefore(end); date = date.plusMonths(1)) {
+//            // 你的逻辑
+//            List<DisplayEntity> displayEntities = safetyEpDisplayMapper.selectOutputPercapitavalue(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//
+//
+//        }
+//        return safetyEpDisplayMapper.selectOutputPercapitavalue(startTime,endTime);
+//    }
     @Override
     public List<DisplayEntity> selectOutputPercapitavalue(Date startTime, Date endTime) {
+
         return safetyEpDisplayMapper.selectOutputPercapitavalue(startTime,endTime);
     }
 

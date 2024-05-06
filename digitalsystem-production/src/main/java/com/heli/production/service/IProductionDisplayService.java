@@ -1,6 +1,7 @@
 package com.heli.production.service;
 
 import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,21 @@ public interface IProductionDisplayService {
      * 一线当月加班时长 指标48
      */
     List<DisplayEntity> selectOvertimeFrontlinemonth(Date startTime, Date endTime);
+
+    /**
+     * 每日上线数和完工数
+     */
+    List<DisplayEntity> selectDailyLaunchAndCompletion(Date startTime, Date endTime);
+    /**
+     * 每月上线数和完工数
+     */
+    List<DisplayEntity> selectMonthlyLaunchAndCompletion(Date startTime, Date endTime);
+    /**
+     * 每年上线数和完工数
+     */
+    List<DisplayEntity> selectAnnualLaunchAndCompletion(Date startTime, Date endTime);
+
+
 
 
 }

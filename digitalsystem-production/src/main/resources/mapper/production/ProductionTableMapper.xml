@@ -18,7 +18,7 @@
         <result property="amount" column="Amount"/>
         <result property="accessory" column="Accessory"/>
         <result property="valveBlock" column="Valve_Block"/>
-        <result property="configuration" column="Configuration"/>
+        <result property="carConfiguration" column="Car_Configuration"/>
         <result property="plannedCompletionPeriod" column="Planned_Completion_Period"/>
         <result property="customer" column="Customer"/>
         <result property="vehicleLaunchDate" column="Vehicle_Launch_Date"/>
@@ -35,7 +35,7 @@
     </resultMap>
 
     <sql id="selectProductionTableVo">
-        select MCV_ID, CREATED_BY, CREATED_TIME, Acceptance_Date, Launch_Date, Order_Number, Contract_Number, Car_Number, Vehicle_Model, Door_Frame_Height, Amount, Accessory, Valve_Block, Configuration, Planned_Completion_Period, Customer, Vehicle_Launch_Date, Completion_Period_Of_Door_Frame_Assembly, Trial_Completion_Period, Special_Operations, Precision_Completion_Period, Production_SiteIssues, Procurement_Of_On_site_Abnormal_Issues, Quality_Of_On_site_Abnormal_Issues, Go_Live, Warehousing, Production_Cycle from Production_Table
+        select MCV_ID, CREATED_BY, CREATED_TIME, Acceptance_Date, Launch_Date, Order_Number, Contract_Number, Car_Number, Vehicle_Model, Door_Frame_Height, Amount, Accessory, Valve_Block, Car_Configuration, Planned_Completion_Period, Customer, Vehicle_Launch_Date, Completion_Period_Of_Door_Frame_Assembly, Trial_Completion_Period, Special_Operations, Precision_Completion_Period, Production_SiteIssues, Procurement_Of_On_site_Abnormal_Issues, Quality_Of_On_site_Abnormal_Issues, Go_Live, Warehousing, Production_Cycle from Production_Table
     </sql>
 
     <select id="selectProductionTableList" parameterType="ProductionTable" resultMap="ProductionTableResult">
@@ -53,7 +53,7 @@
             <if test="amount != null ">and Amount = #{amount}</if>
             <if test="accessory != null  and accessory != ''">and Accessory = #{accessory}</if>
             <if test="valveBlock != null  and valveBlock != ''">and Valve_Block = #{valveBlock}</if>
-            <if test="configuration != null  and configuration != ''">and Configuration = #{configuration}</if>
+            <if test="carConfiguration != null  and carConfiguration != ''">and Car_Configuration = #{carConfiguration}</if>
             <if test="plannedCompletionPeriod != null ">and Planned_Completion_Period = #{plannedCompletionPeriod}</if>
             <if test="customer != null  and customer != ''">and Customer = #{customer}</if>
             <if test="vehicleLaunchDate != null ">and Vehicle_Launch_Date = #{vehicleLaunchDate}</if>
@@ -124,45 +124,87 @@
             (#{e.createdBy},#{e.createdTime},#{e.acceptanceDate},
             #{e.launchDate},#{e.orderNumber},#{e.contractNumber},
             #{e.carNumber},#{e.vehicleModel},#{e.doorFrameHeight},
-            #{e.amount},#{e.accessory},#{e.valveBlock},#{e.configuration},
+            #{e.amount},#{e.accessory},#{e.valveBlock},#{e.carConfiguration},
             #{e.plannedCompletionPeriod},#{e.customer},#{e.vehicleLaunchDate},
             #{e.completionPeriodOfDoorFrameAssembly},#{e.trialCompletionPeriod},
             #{e.specialOperations},#{e.precisionCompletionPeriod},#{e.productionSiteIssues},
             #{e.procurementOfOnSiteAbnormalIssues},#{e.qualityOfOnSiteAbnormalIssues},
             #{e.goLive},#{e.warehousing},#{e.productionCycle})
         </foreach>
+        ON DUPLICATE KEY UPDATE
+        CREATED_BY = values(CREATED_BY),CREATED_TIME =values(CREATED_TIME),Acceptance_Date = values(Acceptance_Date),Launch_Date =values(Launch_Date),
+        Order_Number =values(Order_Number),Contract_Number =values(Contract_Number),Vehicle_Model =values(Vehicle_Model),
+        Door_Frame_Height =values(Door_Frame_Height),Amount =values(Amount),Accessory =values(Accessory),Valve_Block =values(Valve_Block),
+        Car_Configuration =values(Car_Configuration),Planned_Completion_Period =values(Planned_Completion_Period),Customer =values(Customer),
+        Vehicle_Launch_Date =values(Vehicle_Launch_Date),Completion_Period_Of_Door_Frame_Assembly =values(Completion_Period_Of_Door_Frame_Assembly),
+        Trial_Completion_Period =values(Trial_Completion_Period),Special_Operations =values(Special_Operations),Precision_Completion_Period =values(Precision_Completion_Period),
+        Production_SiteIssues =values(Production_SiteIssues),Procurement_Of_On_site_Abnormal_Issues =values(Procurement_Of_On_site_Abnormal_Issues),
+        Quality_Of_On_site_Abnormal_Issues =values(Quality_Of_On_site_Abnormal_Issues),Go_Live =values(Go_Live),Warehousing =values(Warehousing),Production_Cycle =values(Production_Cycle)
     </insert>
 
 
     <select id="selectLaunchNumGroupByDate" resultType="com.heli.production.domain.ProductionCountNumberEntity">
-        select Launch_Date as realTime,count('Launch_Date') as num
+        select Launch_Date as realTime,count('Launch_Date') as launch
         from Production_Table
         group by Launch_Date
     </select>
 
     <select id="selectCompletionNumGroupByDate" resultType="com.heli.production.domain.ProductionCountNumberEntity">
-        select Planned_Completion_Period as realTime,count('Planned_Completion_Period') as num
+        select Planned_Completion_Period as realTime,count('Planned_Completion_Period') as completion
         from Production_Table
         group by Planned_Completion_Period
     </select>
 
     <insert id="batchInsertOrUpdateLaunch">
-        insert into Production_LunchAndCompletionNumber(Real_Time,Launch_Number)
+        insert into Production_Launch_Completion_Daily_Number(Real_Time,Launch_Number)
         VALUES
-        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.num})</foreach>
+        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.launch})</foreach>
         ON DUPLICATE KEY UPDATE
         Launch_Number = values(Launch_Number)
     </insert>
 
     <insert id="batchInsertOrUpdateCompletion">
-        insert into Production_LunchAndCompletionNumber(Real_Time,Completion_Number)
+        insert into Production_Launch_Completion_Daily_Number(Real_Time,Completion_Number)
         VALUES
-        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.num})</foreach>
+        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.completion})</foreach>
         ON DUPLICATE KEY UPDATE
         Completion_Number = values(Completion_Number)
     </insert>
 
 
+    <!--  按月统计上线数和完工数  -->
+    <select id="selectProductionCountNumberByMonth" resultType="com.heli.production.domain.ProductionCountNumberEntity">
+        select DATE_FORMAT(Real_Time,'20%y-%m-01') realTime,sum(Launch_Number) as launch, sum(Completion_Number) as completion
+        from Production_Launch_Completion_Daily_Number
+        group by realTime;
+    </select>
+
+    <!--  按年统计上线数和完工数  -->
+    <select id="selectProductionCountNumberByYear" resultType="com.heli.production.domain.ProductionCountNumberEntity">
+        select DATE_FORMAT(Real_Time,'20%y-01-01') realTime,sum(Launch_Number) as launch, sum(Completion_Number) as completion
+        from Production_Launch_Completion_Daily_Number
+        group by realTime;
+    </select>
+
+    <!--  安全-新增每月上线数和完工数  -->
+    <insert id="batchInsertOrUpdateMonthlyLaunchAndCompletion">
+        insert into Production_Launch_Completion_Monthly_Number(Real_Time,Launch_Number,Completion_Number)
+        VALUES
+        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.launch},#{e.completion})</foreach>
+        ON DUPLICATE KEY UPDATE
+        Launch_Number = values(Launch_Number),
+        Completion_Number =values(Completion_Number)
+    </insert>
+
+    <!--  安全-新增每年上线数和完工数  -->
+    <insert id="batchInsertOrUpdateYearlyLaunchAndCompletion">
+        insert into Production_Launch_Completion_Annual_Number(Real_Time,Launch_Number,Completion_Number)
+        VALUES
+        <foreach collection="productionCountNumberEntityList" item="e" separator=",">(#{e.realTime},#{e.launch},#{e.completion})</foreach>
+        ON DUPLICATE KEY UPDATE
+        Launch_Number = values(Launch_Number),
+        Completion_Number =values(Completion_Number)
+    </insert>
 
 
 <!--    <insert id="batchUserRole">-->
@@ -207,7 +249,7 @@
             <if test="amount != null">Amount,</if>
             <if test="accessory != null">Accessory,</if>
             <if test="valveBlock != null">Valve_Block,</if>
-            <if test="configuration != null">Configuration,</if>
+            <if test="carConfiguration != null">Car_Configuration,</if>
             <if test="plannedCompletionPeriod != null">Planned_Completion_Period,</if>
             <if test="customer != null">Customer,</if>
             <if test="vehicleLaunchDate != null">Vehicle_Launch_Date,</if>
@@ -235,7 +277,7 @@
             <if test="amount != null">#{amount},</if>
             <if test="accessory != null">#{accessory},</if>
             <if test="valveBlock != null">#{valveBlock},</if>
-            <if test="configuration != null">#{configuration},</if>
+            <if test="carConfiguration != null">#{carConfiguration},</if>
             <if test="plannedCompletionPeriod != null">#{plannedCompletionPeriod},</if>
             <if test="customer != null">#{customer},</if>
             <if test="vehicleLaunchDate != null">#{vehicleLaunchDate},</if>
@@ -267,7 +309,7 @@
             <if test="amount != null">Amount = #{amount},</if>
             <if test="accessory != null">Accessory = #{accessory},</if>
             <if test="valveBlock != null">Valve_Block = #{valveBlock},</if>
-            <if test="configuration != null">Configuration = #{configuration},</if>
+            <if test="carConfiguration != null">Car_Configuration = #{carConfiguration},</if>
             <if test="plannedCompletionPeriod != null">Planned_Completion_Period = #{plannedCompletionPeriod},</if>
             <if test="customer != null">Customer = #{customer},</if>
             <if test="vehicleLaunchDate != null">Vehicle_Launch_Date = #{vehicleLaunchDate},</if>

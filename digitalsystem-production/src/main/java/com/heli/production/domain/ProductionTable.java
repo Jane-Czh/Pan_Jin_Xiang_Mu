@@ -107,7 +107,7 @@ public class ProductionTable extends BaseEntity {
      * 配置
      */
     @ExcelProperty(value = "配置")
-    private String configuration;
+    private String carConfiguration;
 
     /**
      * 计划完工期

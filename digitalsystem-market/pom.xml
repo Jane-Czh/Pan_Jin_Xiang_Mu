@@ -22,10 +22,6 @@
             <artifactId>ruoyi-common</artifactId>
             <version>3.8.7</version>
         </dependency>
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>digitalsystem-production</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

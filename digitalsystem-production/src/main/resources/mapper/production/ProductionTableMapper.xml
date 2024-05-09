@@ -174,14 +174,14 @@
 
     <!--  按月统计上线数和完工数  -->
     <select id="selectProductionCountNumberByMonth" resultType="com.heli.production.domain.ProductionCountNumberEntity">
-        select DATE_FORMAT(Real_Time,'20%y-%m-01') realTime,sum(Launch_Number) as launch, sum(Completion_Number) as completion
+        select DATE_FORMAT(Real_Time,'%Y-%m-01') realTime,sum(Launch_Number) as launch, sum(Completion_Number) as completion
         from Production_Launch_Completion_Daily_Number
         group by realTime;
     </select>
 
     <!--  按年统计上线数和完工数  -->
     <select id="selectProductionCountNumberByYear" resultType="com.heli.production.domain.ProductionCountNumberEntity">
-        select DATE_FORMAT(Real_Time,'20%y-01-01') realTime,sum(Launch_Number) as launch, sum(Completion_Number) as completion
+        select DATE_FORMAT(Real_Time,'%Y-01-01') realTime,sum(Launch_Number) as launch, sum(Completion_Number) as completion
         from Production_Launch_Completion_Daily_Number
         group by realTime;
     </select>

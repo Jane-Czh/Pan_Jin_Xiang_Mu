@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <!--  查询月度管控采购金额  -->
-    <select id="selectMonthlyControlledMaterialPurchases" resultType="com.ruoyi.common.core.domain.entity.DisplayEntity">
+    <select id="selectMonthlyControlledMaterialPurchases" resultType="com.ruoyi.common.core.domain.DisplayEntity">
         select DATE_FORMAT(Document_Date,'%Y-%m-01') yearAndMonth,sum(Order_NetValue) data from Supply_Indicators_PurchaseOrder_table a
         inner join (
 	        select distinct Material_Number from Supply_Indicators_Collectible_Materials_table
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <!--  查询月度采购总金额  -->
-    <select id="selectMonthlyTotalPurchaseAmount" resultType="com.ruoyi.common.core.domain.entity.DisplayEntity">
+    <select id="selectMonthlyTotalPurchaseAmount" resultType="com.ruoyi.common.core.domain.DisplayEntity">
         select DATE_FORMAT(Document_Date,'%Y-%m-01') yearAndMonth,SUM(Order_NetValue) data
         from Supply_Indicators_PurchaseOrder_table
         group by yearAndMonth

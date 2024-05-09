@@ -2,7 +2,7 @@ package com.heli.quality.service.impl;
 
 import com.heli.quality.mapper.QualityDisplayMapper;
 import com.heli.quality.service.IQualityDisplayService;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

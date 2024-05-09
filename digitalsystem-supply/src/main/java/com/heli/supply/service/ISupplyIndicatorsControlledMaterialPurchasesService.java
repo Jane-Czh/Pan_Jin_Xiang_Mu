@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.supply.domain.SupplyIndicatorsControlledMaterialPurchases;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 
 /**
  * @description: 供应-指标-集团管控物资占比Service接口

@@ -1,7 +1,7 @@
 package com.heli.partybuilding.mapper;
 
 import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.enums.DataSourceType;
 import org.apache.ibatis.annotations.Param;
 

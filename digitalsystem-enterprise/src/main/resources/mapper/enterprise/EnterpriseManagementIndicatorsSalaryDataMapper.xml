@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementIndicatorsSalaryDataMapper">
+
+    <resultMap type="EnterpriseManagementIndicatorsSalaryData" id="EnterpriseManagementIndicatorsSalaryDataResult">
+        <result property="esId"    column="ES_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="totalMonthlySalary"    column="Total_Monthly_Salary"    />
+        <result property="monthlyAalaryRatio"    column="Monthly_Aalary_Ratio"    />
+        <result property="annualSalaryRatio"    column="Annual_Salary_Ratio"    />
+        <result property="cumulativeAverageIncome"    column="Cumulative_Average_Income"    />
+        <result property="monthlyProductionAVGIncome"    column="Monthly_Production_AVG_Income"    />
+        <result property="monthlyFunctionalAVGIncome"    column="Monthly_Functional_AVG_Income"    />
+        <result property="functionalDeptOvertimeCost"    column="Functional_Dept_Overtime_Cost"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementIndicatorsSalaryDataVo">
+        select ES_ID, Year_And_Month, Total_Monthly_Salary, Monthly_Aalary_Ratio, Annual_Salary_Ratio, Cumulative_Average_Income, Monthly_Production_AVG_Income, Monthly_Functional_AVG_Income, Functional_Dept_Overtime_Cost, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Salary_Data
+    </sql>
+
+    <!--检查当月数据是否上传-->
+    <select id="checkEMSalaryDataIsExisted" parameterType="Date" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Salary_Data WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+    <!--  查询工资月度值  -->
+    <select id="selectMonthlySalary" resultType="decimal">
+        select Total_Monthly_Salary from Enterprise_Management_Indicators_Salary_Data
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <!--  查询工资年度值  -->
+    <select id="selectAnnualSalary" resultType="decimal">
+        select Annual_Total_Salary from Enterprise_Management_Indicators_Annual_Data
+        where Natural_Year = #{year}
+    </select>
+
+    <!--  公司当年工资总额,自然年从一月加到当月  -->
+    <select id="selectSalaryTotalNumber" resultType="decimal">
+        select sum(Total_Monthly_Salary)
+        from Enterprise_Management_Indicators_Salary_Data
+        WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!-- 当月人均收入 -->
+    <select id="selectMonthlyAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        where Salary_Calculation_Year_Month=#{yearAndMonth}
+    </select>
+
+    <!--  年度工资总和,自然年从一月加到当月  -->
+    <select id="selectAnnualAllIncome" resultType="decimal">
+        select sum(Total_Salary)
+        from Enterprise_Management_Salary_Table
+        WHERE Salary_Calculation_Year_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Salary_Calculation_Year_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!-- 当月生产人均收入 指标55-->
+    <select id="selectMonthlyProductionAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE (Group_Code NOT IN("实习生") AND Department IN("生产管理科") AND Subgroup_Code IN("生产类")) and Salary_Calculation_Year_Month=#{yearAndMonth};
+    </select>
+
+    <!-- 当月职能人均收入 56-->
+    <select id="selectMonthlyFunctionalAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN(
+            SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
+            WHERE (Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%' OR Position LIKE '%经理%'
+               OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
+               OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))) and Salary_Calculation_Year_Month=#{yearAndMonth}
+        );
+    </select>
+
+    <!-- 当月职能人均加班费 76-->
+    <select id="selectMonthlyFunctionalAverageOvertimeCost" resultType="decimal">
+        SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN(
+            SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
+            WHERE (Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+               OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
+               OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))) and Salary_Calculation_Year_Month=#{yearAndMonth}
+        );
+    </select>
+
+
+
+    <update id="updateSalaryTableByMonth" parameterType="EnterpriseManagementIndicatorsSalaryData">
+        update Enterprise_Management_Indicators_Salary_Data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="totalMonthlySalary != null">Total_Monthly_Salary = #{totalMonthlySalary},</if>
+            <if test="monthlyAalaryRatio != null">Monthly_Aalary_Ratio = #{monthlyAalaryRatio},</if>
+            <if test="annualSalaryRatio != null">Annual_Salary_Ratio = #{annualSalaryRatio},</if>
+            <if test="cumulativeAverageIncome != null">Cumulative_Average_Income = #{cumulativeAverageIncome},</if>
+            <if test="monthlyProductionAVGIncome != null">Monthly_Production_AVG_Income = #{monthlyProductionAVGIncome},</if>
+            <if test="monthlyFunctionalAVGIncome != null">Monthly_Functional_AVG_Income = #{monthlyFunctionalAVGIncome},</if>
+            <if test="functionalDeptOvertimeCost != null">Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where ES_ID = #{esId}
+    </update>
+
+
+    <select id="selectEnterpriseManagementIndicatorsSalaryDataList" parameterType="EnterpriseManagementIndicatorsSalaryData" resultMap="EnterpriseManagementIndicatorsSalaryDataResult">
+        <include refid="selectEnterpriseManagementIndicatorsSalaryDataVo"/>
+        <where>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="totalMonthlySalary != null "> and Total_Monthly_Salary = #{totalMonthlySalary}</if>
+            <if test="monthlyAalaryRatio != null "> and Monthly_Aalary_Ratio = #{monthlyAalaryRatio}</if>
+            <if test="annualSalaryRatio != null "> and Annual_Salary_Ratio = #{annualSalaryRatio}</if>
+            <if test="cumulativeAverageIncome != null "> and Cumulative_Average_Income = #{cumulativeAverageIncome}</if>
+            <if test="monthlyProductionAVGIncome != null "> and Monthly_Production_AVG_Income = #{monthlyProductionAVGIncome}</if>
+            <if test="monthlyFunctionalAVGIncome != null "> and Monthly_Functional_AVG_Income = #{monthlyFunctionalAVGIncome}</if>
+            <if test="functionalDeptOvertimeCost != null "> and Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost}</if>
+        </where>
+    </select>
+
+    <select id="selectEnterpriseManagementIndicatorsSalaryDataByEsId" parameterType="Long" resultMap="EnterpriseManagementIndicatorsSalaryDataResult">
+        <include refid="selectEnterpriseManagementIndicatorsSalaryDataVo"/>
+        where ES_ID = #{esId}
+    </select>
+
+    <insert id="insertEnterpriseManagementIndicatorsSalaryData" parameterType="EnterpriseManagementIndicatorsSalaryData" useGeneratedKeys="true" keyProperty="esId">
+        insert into Enterprise_Management_Indicators_Salary_Data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="totalMonthlySalary != null">Total_Monthly_Salary,</if>
+            <if test="monthlyAalaryRatio != null">Monthly_Aalary_Ratio,</if>
+            <if test="annualSalaryRatio != null">Annual_Salary_Ratio,</if>
+            <if test="cumulativeAverageIncome != null">Cumulative_Average_Income,</if>
+            <if test="monthlyProductionAVGIncome != null">Monthly_Production_AVG_Income,</if>
+            <if test="monthlyFunctionalAVGIncome != null">Monthly_Functional_AVG_Income,</if>
+            <if test="functionalDeptOvertimeCost != null">Functional_Dept_Overtime_Cost,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="totalMonthlySalary != null">#{totalMonthlySalary},</if>
+            <if test="monthlyAalaryRatio != null">#{monthlyAalaryRatio},</if>
+            <if test="annualSalaryRatio != null">#{annualSalaryRatio},</if>
+            <if test="cumulativeAverageIncome != null">#{cumulativeAverageIncome},</if>
+            <if test="monthlyProductionAVGIncome != null">#{monthlyProductionAVGIncome},</if>
+            <if test="monthlyFunctionalAVGIncome != null">#{monthlyFunctionalAVGIncome},</if>
+            <if test="functionalDeptOvertimeCost != null">#{functionalDeptOvertimeCost},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementIndicatorsSalaryData" parameterType="EnterpriseManagementIndicatorsSalaryData">
+        update Enterprise_Management_Indicators_Salary_Data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="totalMonthlySalary != null">Total_Monthly_Salary = #{totalMonthlySalary},</if>
+            <if test="monthlyAalaryRatio != null">Monthly_Aalary_Ratio = #{monthlyAalaryRatio},</if>
+            <if test="annualSalaryRatio != null">Annual_Salary_Ratio = #{annualSalaryRatio},</if>
+            <if test="cumulativeAverageIncome != null">Cumulative_Average_Income = #{cumulativeAverageIncome},</if>
+            <if test="monthlyProductionAVGIncome != null">Monthly_Production_AVG_Income = #{monthlyProductionAVGIncome},</if>
+            <if test="monthlyFunctionalAVGIncome != null">Monthly_Functional_AVG_Income = #{monthlyFunctionalAVGIncome},</if>
+            <if test="functionalDeptOvertimeCost != null">Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where ES_ID = #{esId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementIndicatorsSalaryDataByEsId" parameterType="Long">
+        delete from Enterprise_Management_Indicators_Salary_Data where ES_ID = #{esId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementIndicatorsSalaryDataByEsIds" parameterType="String">
+        delete from Enterprise_Management_Indicators_Salary_Data where ES_ID in
+        <foreach item="esId" collection="array" open="(" separator="," close=")">
+            #{esId}
+        </foreach>
+    </delete>
+</mapper>

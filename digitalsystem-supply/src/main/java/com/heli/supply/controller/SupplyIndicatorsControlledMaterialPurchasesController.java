@@ -2,8 +2,8 @@ package com.heli.supply.controller;
 
 import java.util.List;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import com.ruoyi.common.core.domain.entity.DisplayRequestParam;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <!--检查本年数据是否上传-->
-    <select id="checkEMAnnualDataIsExisted" parameterType="int" >
+    <select id="checkEMAnnualDataIsExisted" parameterType="int" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Annual_Data WHERE Natural_Year=#{naturalYear})
     </select>
 

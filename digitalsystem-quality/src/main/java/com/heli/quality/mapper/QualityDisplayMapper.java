@@ -1,6 +1,6 @@
 package com.heli.quality.mapper;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

@@ -10,7 +10,7 @@ import com.alibaba.excel.EasyExcel;
 import com.heli.supply.domain.SupplyIndicatorsControlledMaterialPurchases;
 import com.heli.supply.listener.SupplyOrderTableListener;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,57 +4,115 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.heli.enterprise.domain.EnterpriseManagementEmployeesData;
+import com.heli.enterprise.domain.EnterpriseManagementIndicatorsSalaryData;
 import com.ruoyi.common.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.enterprise.mapper.EnterpriseManagementMonthlyDataMapper;
 import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.heli.enterprise.service.IEnterpriseManagementMonthlyDataService;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+
 /**
  * [企业管理]指标月度数据Service业务层处理
  *
  * @author hong
- * @date 2024-04-27
+ * @date 2024-05-09
  */
 @Service
 public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseManagementMonthlyDataService {
     @Autowired
     private EnterpriseManagementMonthlyDataMapper enterpriseManagementMonthlyDataMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementMonthlyDataServiceImpl.class);
+
+
     @Override
-    public Boolean checkEMMonthlyDataIsExisted(Date date) {
-        return enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataIsExisted(date);
+    public Boolean checkEMEmployeesDataIsExisted(Date date) {
+        return enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(date);
     }
 
+    @Override
+    public int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+        return enterpriseManagementMonthlyDataMapper.insertMonthlyFillingDataByMonth(enterpriseManagementMonthlyData);
+    }
 
     /**
-     * 新增[企业管理]指标月度数据
-     *
-     * @param enterpriseManagementMonthlyData [企业管理]指标月度数据
-     * @return 结果
+     * 计算填报相关月度指标
      */
-    @Override
-    public int insertEnterpriseManagementMonthlyData(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
-        enterpriseManagementMonthlyData.setCreateTime(DateUtils.getNowDate());
-//        计算公司月度平均从业人数
-        Long employeesNumberLastMonth = enterpriseManagementMonthlyDataMapper.selectEmployeesNumber(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()));
-        enterpriseManagementMonthlyData.setEmployeesAvgMonthlyNumber((enterpriseManagementMonthlyData.getEmployeesNumber() + employeesNumberLastMonth) / 2);
+    public int calculateHandFillIndicators(Date yearAndMonth) {
+
+        EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
 
 
-        return enterpriseManagementMonthlyDataMapper.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
+        monthlyData.setYearAndMonth(yearAndMonth);
+        //计算公司月度平均从业人数
+        Long employeesNumber = enterpriseManagementMonthlyDataMapper.selectEmployeesNumberByMonth(yearAndMonth);
+        Long employeesNumberLastMonth = enterpriseManagementMonthlyDataMapper.selectEmployeesNumberByMonth(DateUtils.getLastMonth(yearAndMonth));
+        //更新时，如果上月数据未上传，则使用本月数据代替上月数据
+        if (employeesNumberLastMonth == null) {
+            employeesNumberLastMonth = employeesNumber;
+        }
+        monthlyData.setEmployeesAvgMonthlyNumber((employeesNumber + employeesNumberLastMonth) / 2);
+
+        //计算公司年度平均从业人数
+        int sumEmployeesNumber = enterpriseManagementMonthlyDataMapper.selectEmployeesAVGMonthlyNumber(yearAndMonth);
+        monthlyData.setEmployeesAvgAnnualNumber((long) sumEmployeesNumber);
+
+
+        // 计算工资月度占比
+        BigDecimal monthlySalary = enterpriseManagementMonthlyDataMapper.selectMonthlySalary(yearAndMonth);
+        BigDecimal annualSalary = enterpriseManagementMonthlyDataMapper.selectAnnualSalary(DateUtils.getYear(yearAndMonth));
+
+        monthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 2, ROUND_HALF_UP));
+        BigDecimal totalNumber = enterpriseManagementMonthlyDataMapper.selectSalaryTotalNumber(yearAndMonth);
+
+        monthlyData.setAnnualSalaryRatio(totalNumber.divide(annualSalary, 2, ROUND_HALF_UP));
+
+        log.info("计算月度指标数据：" + monthlyData);
+//        return enterpriseManagementMonthlyDataMapper.updateCalculateEmployeesDataByMonth(monthlyData);
+        return enterpriseManagementMonthlyDataMapper.updateCalculateMonthlyDataByMonth(monthlyData);
+
     }
+
+
+    //计算工资表中相关数据
+    public void calculateSalaryTableIndicators(Date date) {
+
+        EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
+        monthlyData.setYearAndMonth(date);
+        // 计算累计人均收入
+        BigDecimal allIncome = enterpriseManagementMonthlyDataMapper.selectAnnualAllIncome(date);
+        monthlyData.setCumulativeAverageIncome(allIncome.divide(BigDecimal.valueOf(DateUtils.getMonth(date)), 2, ROUND_HALF_UP));
+        System.out.println("当前月份："+BigDecimal.valueOf(DateUtils.getMonth(date)));
+
+        // 当月生产人均收入
+        monthlyData.setMonthlyProductionAvgIncome(enterpriseManagementMonthlyDataMapper.selectMonthlyProductionAverageIncome(date));
+
+        //当月职能人均收入
+        monthlyData.setMonthlyFunctionalAvgIncome(enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageIncome(date));
+
+        //当月职能人均加班费
+        monthlyData.setFunctionalDeptOvertimeCost(enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOvertimeCost(date));
+
+        enterpriseManagementMonthlyDataMapper.updateCalculateSalaryDataByMonth(monthlyData);
+    }
+
 
 
     /**
      * 查询[企业管理]指标月度数据
      *
-     * @param emId [企业管理]指标月度数据主键
+     * @param esId [企业管理]指标月度数据主键
      * @return [企业管理]指标月度数据
      */
     @Override
-    public EnterpriseManagementMonthlyData selectEnterpriseManagementMonthlyDataByEmId(Long emId) {
-        return enterpriseManagementMonthlyDataMapper.selectEnterpriseManagementMonthlyDataByEmId(emId);
+    public EnterpriseManagementMonthlyData selectEnterpriseManagementMonthlyDataByEsId(Long esId) {
+        return enterpriseManagementMonthlyDataMapper.selectEnterpriseManagementMonthlyDataByEsId(esId);
     }
 
     /**
@@ -66,6 +124,18 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
     @Override
     public List<EnterpriseManagementMonthlyData> selectEnterpriseManagementMonthlyDataList(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         return enterpriseManagementMonthlyDataMapper.selectEnterpriseManagementMonthlyDataList(enterpriseManagementMonthlyData);
+    }
+
+    /**
+     * 新增[企业管理]指标月度数据
+     *
+     * @param enterpriseManagementMonthlyData [企业管理]指标月度数据
+     * @return 结果
+     */
+    @Override
+    public int insertEnterpriseManagementMonthlyData(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+        enterpriseManagementMonthlyData.setCreateTime(DateUtils.getNowDate());
+        return enterpriseManagementMonthlyDataMapper.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
     }
 
     /**
@@ -83,22 +153,22 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
     /**
      * 批量删除[企业管理]指标月度数据
      *
-     * @param emIds 需要删除的[企业管理]指标月度数据主键
+     * @param esIds 需要删除的[企业管理]指标月度数据主键
      * @return 结果
      */
     @Override
-    public int deleteEnterpriseManagementMonthlyDataByEmIds(Long[] emIds) {
-        return enterpriseManagementMonthlyDataMapper.deleteEnterpriseManagementMonthlyDataByEmIds(emIds);
+    public int deleteEnterpriseManagementMonthlyDataByEsIds(Long[] esIds) {
+        return enterpriseManagementMonthlyDataMapper.deleteEnterpriseManagementMonthlyDataByEsIds(esIds);
     }
 
     /**
      * 删除[企业管理]指标月度数据信息
      *
-     * @param emId [企业管理]指标月度数据主键
+     * @param esId [企业管理]指标月度数据主键
      * @return 结果
      */
     @Override
-    public int deleteEnterpriseManagementMonthlyDataByEmId(Long emId) {
-        return enterpriseManagementMonthlyDataMapper.deleteEnterpriseManagementMonthlyDataByEmId(emId);
+    public int deleteEnterpriseManagementMonthlyDataByEsId(Long esId) {
+        return enterpriseManagementMonthlyDataMapper.deleteEnterpriseManagementMonthlyDataByEsId(esId);
     }
 }

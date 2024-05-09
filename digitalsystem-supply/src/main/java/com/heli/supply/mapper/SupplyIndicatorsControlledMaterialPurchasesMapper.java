@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.heli.supply.domain.SupplyIndicatorsControlledMaterialPurchases;
 import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.enums.DataSourceType;
 import org.apache.ibatis.annotations.Param;
 

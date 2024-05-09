@@ -2,7 +2,7 @@ package com.heli.production.service.impl;
 
 import com.heli.production.mapper.ProductionDisplayMapper;
 import com.heli.production.service.IProductionDisplayService;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

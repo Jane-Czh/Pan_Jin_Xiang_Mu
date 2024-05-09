@@ -1,7 +1,6 @@
 package com.heli.safety.service;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import org.apache.ibatis.annotations.Param;
+import com.ruoyi.common.core.domain.DisplayEntity;
 
 import java.util.Date;
 import java.util.List;

@@ -222,6 +222,12 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         return c.get(Calendar.YEAR);
     }
 
+    public static Integer getMonth(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.MONTH) + 1;
+    }
+
     //获取当前日期的前一天，传入date类型参数
     public static Date getLastDay(Date date) {
         Calendar calendar = Calendar.getInstance();

@@ -5,8 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.heli.tech.domain.TechAnnualPlanCount;
 import com.heli.tech.service.ITechAnnualPlanCountService;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import com.ruoyi.common.core.domain.entity.DisplayRequestParam;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;

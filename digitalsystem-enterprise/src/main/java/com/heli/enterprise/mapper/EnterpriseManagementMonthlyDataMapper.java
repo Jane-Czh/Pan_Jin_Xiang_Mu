@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.heli.enterprise.domain.EnterpriseManagementEmployeesData;
+import com.heli.enterprise.domain.EnterpriseManagementIndicatorsSalaryData;
 import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,13 +13,45 @@ import org.apache.ibatis.annotations.Param;
  * [企业管理]指标月度数据Mapper接口
  *
  * @author hong
- * @date 2024-04-27
+ * @date 2024-05-09
  */
 public interface EnterpriseManagementMonthlyDataMapper {
 
 
-    Boolean checkEMMonthlyDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
-    Long selectEmployeesNumber(@Param("yearAndMonth") Date yearAndMonth);
+    Boolean checkEMEmployeesDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+    Long selectEmployeesNumberByMonth(@Param("yearAndMonth") Date yearAndMonth);
+
+    Integer selectEmployeesAVGMonthlyNumber(@Param("yearAndMonth") Date yearAndMonth);
+
+    Date selectMaxMonths(@Param("year") Date year);
+
+    int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
+    int updateCalculateMonthlyDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
+
+
+
+
+    Boolean checkEMSalaryDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectMonthlySalary(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectAnnualSalary(@Param("year") Integer year);
+
+    BigDecimal selectSalaryTotalNumber(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectMonthlyAverageIncome(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectAnnualAllIncome(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectMonthlyProductionAverageIncome(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectMonthlyFunctionalAverageIncome(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectMonthlyFunctionalAverageOvertimeCost(@Param("yearAndMonth") Date yearAndMonth);
+
+    public int updateCalculateSalaryDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
+
+
+
 
 
 
@@ -25,10 +59,10 @@ public interface EnterpriseManagementMonthlyDataMapper {
     /**
      * 查询[企业管理]指标月度数据
      *
-     * @param emId [企业管理]指标月度数据主键
+     * @param esId [企业管理]指标月度数据主键
      * @return [企业管理]指标月度数据
      */
-    public EnterpriseManagementMonthlyData selectEnterpriseManagementMonthlyDataByEmId(Long emId);
+    public EnterpriseManagementMonthlyData selectEnterpriseManagementMonthlyDataByEsId(Long esId);
 
     /**
      * 查询[企业管理]指标月度数据列表
@@ -57,16 +91,16 @@ public interface EnterpriseManagementMonthlyDataMapper {
     /**
      * 删除[企业管理]指标月度数据
      *
-     * @param emId [企业管理]指标月度数据主键
+     * @param esId [企业管理]指标月度数据主键
      * @return 结果
      */
-    public int deleteEnterpriseManagementMonthlyDataByEmId(Long emId);
+    public int deleteEnterpriseManagementMonthlyDataByEsId(Long esId);
 
     /**
      * 批量删除[企业管理]指标月度数据
      *
-     * @param emIds 需要删除的数据主键集合
+     * @param esIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteEnterpriseManagementMonthlyDataByEmIds(Long[] emIds);
+    public int deleteEnterpriseManagementMonthlyDataByEsIds(Long[] esIds);
 }

@@ -8,10 +8,10 @@ import com.heli.project.domain.ProjectInfoTable;
 import com.heli.project.service.IProjectInfoTableService;
 
 /**
- * 项目基本信息表Service业务层处理
+ * 项目基本信息Service业务层处理
  * 
  * @author Teandron
- * @date 2024-04-26
+ * @date 2024-05-08
  */
 @Service
 public class ProjectInfoTableServiceImpl implements IProjectInfoTableService 
@@ -20,10 +20,10 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     private ProjectInfoTableMapper projectInfoTableMapper;
 
     /**
-     * 查询项目基本信息表
+     * 查询项目基本信息
      * 
-     * @param projectId 项目基本信息表主键
-     * @return 项目基本信息表
+     * @param projectId 项目基本信息主键
+     * @return 项目基本信息
      */
     @Override
     public ProjectInfoTable selectProjectInfoTableByProjectId(Long projectId)
@@ -32,10 +32,10 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     }
 
     /**
-     * 查询项目基本信息表列表
+     * 查询项目基本信息列表
      * 
-     * @param projectInfoTable 项目基本信息表
-     * @return 项目基本信息表
+     * @param projectInfoTable 项目基本信息
+     * @return 项目基本信息
      */
     @Override
     public List<ProjectInfoTable> selectProjectInfoTableList(ProjectInfoTable projectInfoTable)
@@ -44,9 +44,9 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     }
 
     /**
-     * 新增项目基本信息表
+     * 新增项目基本信息
      * 
-     * @param projectInfoTable 项目基本信息表
+     * @param projectInfoTable 项目基本信息
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     }
 
     /**
-     * 修改项目基本信息表
+     * 修改项目基本信息
      * 
-     * @param projectInfoTable 项目基本信息表
+     * @param projectInfoTable 项目基本信息
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     }
 
     /**
-     * 批量删除项目基本信息表
+     * 批量删除项目基本信息
      * 
-     * @param projectIds 需要删除的项目基本信息表主键
+     * @param projectIds 需要删除的项目基本信息主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     }
 
     /**
-     * 删除项目基本信息表信息
+     * 删除项目基本信息信息
      * 
-     * @param projectId 项目基本信息表主键
+     * @param projectId 项目基本信息主键
      * @return 结果
      */
     @Override

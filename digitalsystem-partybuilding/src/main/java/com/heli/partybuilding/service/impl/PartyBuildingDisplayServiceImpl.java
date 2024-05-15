@@ -2,7 +2,7 @@ package com.heli.partybuilding.service.impl;
 
 import com.heli.partybuilding.mapper.PartyBuildingDisplayMapper;
 import com.heli.partybuilding.service.IPartyBuildingDisplayService;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,12 +1,10 @@
 package com.heli.financial.controller;
 
 import com.heli.financial.domain.FinancialBalanceTable;
+import com.heli.financial.domain.FinancialDailyInProgressTable;
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.domain.FinancialInterestsTable;
-import com.heli.financial.service.IFinancialDataService;
-import com.heli.financial.service.IFinancialBalanceTableService;
-import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
-import com.heli.financial.service.IFinancialInterestsTableService;
+import com.heli.financial.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -15,6 +13,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +39,8 @@ public class FinancialDataController extends BaseController {
     private IFinancialBalanceTableService financialBalanceTableService;
     @Autowired
     private IFinancialInterestsTableService financialInterestsTableService;
+    @Autowired
+    private IFinancialDailyInProgressTableService financialDailyInProgressTableService;
     @Autowired
     private IFinancialDataService financialDataService;
 
@@ -140,6 +141,52 @@ public class FinancialDataController extends BaseController {
         return AjaxResult.success();
     }
 
+    /**
+     * 新增[财务]每日填报指标[当日再制品金额]
+     */
+//    @PreAuthorize("@ss.hasPermi('financial:data:add')")
+    @Log(title = "[财务]每日填报指标[当日在制品金额]", businessType = BusinessType.INSERT)
+    @PostMapping("/dailyInProgress")
+    public AjaxResult add(@RequestBody FinancialDailyInProgressTable financialDailyInProgressTable) {
+        if(financialDailyInProgressTableService.checkDailyInProgressTableIsExist(financialDailyInProgressTable.getDataTime())){
+            return AjaxResult.error("当日在制品金额已填报");
+        }
+        financialDailyInProgressTable.setCreateBy(getUsername());
+        return toAjax(financialDailyInProgressTableService.insertFinancialDailyInProgressTable(financialDailyInProgressTable));
+    }
+
+    /**
+     * 修改[财务]每日填报指标[当日再制品金额]
+     */
+//    @PreAuthorize("@ss.hasPermi('financial:data:edit')")
+    @Log(title = "[财务]每日填报指标[当日再制品金额]", businessType = BusinessType.UPDATE)
+    @PutMapping("/dailyInProgress")
+    public AjaxResult edit(@RequestBody FinancialDailyInProgressTable financialDailyInProgressTable) {
+        financialDailyInProgressTable.setUpdateBy(getUsername());
+        return toAjax(financialDailyInProgressTableService.updateFinancialDailyInProgressTable(financialDailyInProgressTable));
+    }
+
+    /**
+     * 删除[财务]每日填报指标[当日再制品金额]
+     */
+//    @PreAuthorize("@ss.hasPermi('financial:data:remove')")
+    @Log(title = "[财务]每日填报指标[当日再制品金额]", businessType = BusinessType.DELETE)
+    @DeleteMapping("/dailyInProgress/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
+        return toAjax(financialDailyInProgressTableService.deleteFinancialDailyInProgressTableByIds(ids));
+    }
+
+    /**
+     * 查询[财务]每日填报指标[当日再制品金额]列表
+     */
+//    @PreAuthorize("@ss.hasPermi('financial:data:list')")
+    @GetMapping("/dailyInProgress/list")
+    public TableDataInfo list(FinancialDailyInProgressTable financialDailyInProgressTable) {
+        startPage();
+        List<FinancialDailyInProgressTable> list = financialDailyInProgressTableService.selectFinancialDailyInProgressTableList(financialDailyInProgressTable);
+        return getDataTable(list);
+    }
+
 
     /**
      * @description: 按年查询利润表
@@ -162,11 +209,11 @@ public class FinancialDataController extends BaseController {
      * @return: com.ruoyi.common.core.page.TableDataInfo
      **/
     @GetMapping("/interests/test")
-    public TableDataInfo list(Date beginTime,Date endTime) {
+    public TableDataInfo list(Date beginTime, Date endTime) {
 
         System.out.println(beginTime);
         System.out.println(endTime);
-        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableByTime(beginTime,endTime);
+        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableByTime(beginTime, endTime);
         return getDataTable(list);
     }
 
@@ -243,7 +290,6 @@ public class FinancialDataController extends BaseController {
 //        return financialIndicatorsHandfillTableService.deleteFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
 //
 //    }
-
 
 
 }

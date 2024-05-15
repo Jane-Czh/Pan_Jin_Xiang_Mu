@@ -1,6 +1,6 @@
 package com.heli.financial.service.impl;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.heli.financial.mapper.FinancialDisplayMapper;
 import com.heli.financial.service.IFinancialDisplayService;
 import org.springframework.beans.factory.annotation.Autowired;

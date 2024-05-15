@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.Tech;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 
 /**
  * [技术]指标填报Service接口

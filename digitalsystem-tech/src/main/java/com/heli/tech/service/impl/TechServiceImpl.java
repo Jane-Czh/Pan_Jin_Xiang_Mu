@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

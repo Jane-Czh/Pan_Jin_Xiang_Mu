@@ -93,6 +93,11 @@ public class MarketAfterSaleLedgerServiceImpl implements IMarketAfterSaleLedgerS
         return marketAfterSaleLedgerMapper.selectMarketAfterSaleLedgerList(marketAfterSaleLedger);
     }
 
+    @Override
+    public List<MarketAfterSaleLedger> selectMarketAfterSaleLedgerList() {
+        return marketAfterSaleLedgerMapper.selectMarketAfterSaleLedgerList1();
+    }
+
     /**
      * 新增售后台账导入
      * 

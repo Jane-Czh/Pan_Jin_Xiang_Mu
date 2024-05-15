@@ -3,10 +3,12 @@ package com.ruoyi.market.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.data.annotation.Transient;
 
 /**
  * 售后台账导入对象 Market_After_Sale_Ledger
@@ -14,10 +16,17 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2024-04-15
  */
+@Data
 public class MarketAfterSaleLedger extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    @Transient
+    private Date startTime;
+    @Transient
+    private Date endTime;
+    @Transient
+    private Integer numberInput;
     /** 主键 */
     private Long maslId;
 

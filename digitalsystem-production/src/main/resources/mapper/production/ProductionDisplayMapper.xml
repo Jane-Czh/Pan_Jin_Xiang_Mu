@@ -74,5 +74,34 @@
         order by yearAndMonth ASC
     </select>
 
+    <!--  查询每日上线数和完工数  -->
+    <select id="selectDailyLaunchAndCompletion" resultType="map">
+        select * from (
+            select Real_Time as realTime,Launch_Number as launch,Completion_Number as completion from Production_Launch_Completion_Daily_Number
+            where Real_Time between #{startTime} and #{endTime}
+            order by Real_Time DESC
+        ) as t
+        order by realTime ASC
+    </select>
+
+    <!--  查询月度上线数和完工数  -->
+    <select id="selectMonthlyLaunchAndCompletion" resultType="map">
+        select * from (
+            select Real_Time as realTime,Launch_Number as launch,Completion_Number as completion from Production_Launch_Completion_Monthly_Number
+            where Real_Time between #{startTime} and #{endTime}
+            order by Real_Time DESC
+        ) as t
+        order by realTime ASC
+    </select>
+
+    <!--  查询年度上线数和完工数  -->
+    <select id="selectAnnualLaunchAndCompletion" resultType="map">
+        select * from (
+            select Real_Time as realTime,Launch_Number as launch,Completion_Number as completion from Production_Launch_Completion_Annual_Number
+            where Real_Time between #{startTime} and #{endTime}
+            order by Real_Time DESC
+        ) as t
+        order by realTime ASC
+    </select>
 
 </mapper>

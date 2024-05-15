@@ -2,8 +2,8 @@ package com.heli.financial.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.heli.financial.service.IFinancialDisplayService;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import com.ruoyi.common.core.domain.entity.DisplayRequestParam;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;

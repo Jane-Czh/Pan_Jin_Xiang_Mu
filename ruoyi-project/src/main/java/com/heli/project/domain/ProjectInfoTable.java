@@ -8,10 +8,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 项目基本信息表对象 Project_Info_table
+ * 项目基本信息对象 Project_Info_table
  * 
  * @author Teandron
- * @date 2024-04-26
+ * @date 2024-05-08
  */
 public class ProjectInfoTable extends BaseEntity
 {
@@ -70,6 +70,51 @@ public class ProjectInfoTable extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "关联时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date associationDate;
+
+    /** 负责人 */
+    @Excel(name = "负责人")
+    private String manager;
+
+    /** 组成员 */
+    @Excel(name = "组成员")
+    private String teamMembers;
+
+    /** 项目状态 */
+    @Excel(name = "项目状态")
+    private String status;
+
+    /** 项目进度 */
+    @Excel(name = "项目进度")
+    private String progress;
+
+    /** 项目现状 */
+    @Excel(name = "项目现状")
+    private String currentStatus;
+
+    /** 目标 */
+    @Excel(name = "目标")
+    private String goal;
+
+    /** 范围 */
+    @Excel(name = "范围")
+    private String scope;
+
+    /** 计划结项时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "计划结项时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date plannedCompletionTime;
+
+    /** 已过天数(自动计算) */
+    @Excel(name = "已过天数(自动计算)")
+    private Integer daysPassed;
+
+    /** 剩余天数(自动计算) */
+    @Excel(name = "剩余天数(自动计算)")
+    private Integer daysRemaining;
+
+    /** 完成内容概述 */
+    @Excel(name = "完成内容概述")
+    private String completionSummary;
 
     public void setProjectId(Long projectId) 
     {
@@ -188,6 +233,105 @@ public class ProjectInfoTable extends BaseEntity
     {
         return associationDate;
     }
+    public void setManager(String manager) 
+    {
+        this.manager = manager;
+    }
+
+    public String getManager() 
+    {
+        return manager;
+    }
+    public void setTeamMembers(String teamMembers) 
+    {
+        this.teamMembers = teamMembers;
+    }
+
+    public String getTeamMembers() 
+    {
+        return teamMembers;
+    }
+    public void setStatus(String status) 
+    {
+        this.status = status;
+    }
+
+    public String getStatus() 
+    {
+        return status;
+    }
+    public void setProgress(String progress) 
+    {
+        this.progress = progress;
+    }
+
+    public String getProgress() 
+    {
+        return progress;
+    }
+    public void setCurrentStatus(String currentStatus) 
+    {
+        this.currentStatus = currentStatus;
+    }
+
+    public String getCurrentStatus() 
+    {
+        return currentStatus;
+    }
+    public void setGoal(String goal) 
+    {
+        this.goal = goal;
+    }
+
+    public String getGoal() 
+    {
+        return goal;
+    }
+    public void setScope(String scope) 
+    {
+        this.scope = scope;
+    }
+
+    public String getScope() 
+    {
+        return scope;
+    }
+    public void setPlannedCompletionTime(Date plannedCompletionTime) 
+    {
+        this.plannedCompletionTime = plannedCompletionTime;
+    }
+
+    public Date getPlannedCompletionTime() 
+    {
+        return plannedCompletionTime;
+    }
+    public void setDaysPassed(Integer daysPassed) 
+    {
+        this.daysPassed = daysPassed;
+    }
+
+    public Integer getDaysPassed() 
+    {
+        return daysPassed;
+    }
+    public void setDaysRemaining(Integer daysRemaining) 
+    {
+        this.daysRemaining = daysRemaining;
+    }
+
+    public Integer getDaysRemaining() 
+    {
+        return daysRemaining;
+    }
+    public void setCompletionSummary(String completionSummary) 
+    {
+        this.completionSummary = completionSummary;
+    }
+
+    public String getCompletionSummary() 
+    {
+        return completionSummary;
+    }
 
     @Override
     public String toString() {
@@ -205,6 +349,17 @@ public class ProjectInfoTable extends BaseEntity
             .append("remake", getRemake())
             .append("oldProjectId", getOldProjectId())
             .append("associationDate", getAssociationDate())
+            .append("manager", getManager())
+            .append("teamMembers", getTeamMembers())
+            .append("status", getStatus())
+            .append("progress", getProgress())
+            .append("currentStatus", getCurrentStatus())
+            .append("goal", getGoal())
+            .append("scope", getScope())
+            .append("plannedCompletionTime", getPlannedCompletionTime())
+            .append("daysPassed", getDaysPassed())
+            .append("daysRemaining", getDaysRemaining())
+            .append("completionSummary", getCompletionSummary())
             .toString();
     }
 }

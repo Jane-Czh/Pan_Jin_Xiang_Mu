@@ -1,8 +1,8 @@
 package com.ruoyi.market.mapper;
 
-import com.ruoyi.market.domain.MarketCommercialVehicleTable;
-
 import java.util.List;
+import com.ruoyi.market.domain.MarketCommercialVehicleTable;
+import com.ruoyi.market.domain.MarketSalesTable;
 
 /**
  * 商品车台账Mapper接口

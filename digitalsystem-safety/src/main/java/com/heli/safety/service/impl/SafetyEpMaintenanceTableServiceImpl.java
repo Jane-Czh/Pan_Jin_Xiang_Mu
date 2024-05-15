@@ -57,8 +57,9 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
             SafetyEp safetyEp = new SafetyEp();
             safetyEp.setKeyEquipmentTotalFailureCount(count);
             safetyEp.setYearAndMonth(date);
-            System.out.println(date);
-            System.out.println(count + "----12312312312312312312");
+
+            //统计当月主要设备故障率-目前是写死的状态，看是否需要修改
+            safetyEp.setKeyEquipmentFailureRate(safetyEpMapper.countMajorEquipmentFailuresInCurrentMonth().floatValue() / 360000 * 100);
 
             safetyEpMapper.InsertOrUpdateSafetyEp(safetyEp);
 

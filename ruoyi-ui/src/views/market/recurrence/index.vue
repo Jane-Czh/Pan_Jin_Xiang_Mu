@@ -25,6 +25,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="月份" prop="Month">
+        <el-input
+          v-model="queryParams.Month"
+          placeholder="请输入月份"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -92,6 +100,7 @@
       <el-table-column label="车型" align="center" prop="vehicleModel" />
       <el-table-column label="相同问题复发率" align="center" prop="problemRecurrenceRate" />
       <el-table-column label="不同问题出现率" align="center" prop="differentProblemOccurrenceRate" />
+      <el-table-column label="月份" align="center" prop="month" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -120,7 +129,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改售后问题复发率对话框 -->
+    <!-- 添加或修改售后台账问题复发率对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="车型" prop="vehicleModel">
@@ -131,6 +140,9 @@
         </el-form-item>
         <el-form-item label="不同问题出现率" prop="differentProblemOccurrenceRate">
           <el-input v-model="form.differentProblemOccurrenceRate" placeholder="请输入不同问题出现率" />
+        </el-form-item>
+        <el-form-item label="月份" prop="Month">
+          <el-input v-model="form.Month" placeholder="请输入月份" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -160,7 +172,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 售后问题复发率表格数据
+      // 售后台账问题复发率表格数据
       recurrenceList: [],
       // 弹出层标题
       title: "",
@@ -172,7 +184,8 @@ export default {
         pageSize: 10,
         vehicleModel: null,
         problemRecurrenceRate: null,
-        differentProblemOccurrenceRate: null
+        differentProblemOccurrenceRate: null,
+        Month: null
       },
       // 表单参数
       form: {},
@@ -181,9 +194,6 @@ export default {
         vehicleModel: [
           { required: true, message: "车型不能为空", trigger: "blur" }
         ],
-        problemRecurrenceRate: [
-          { required: true, message: "相同问题复发率不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -191,7 +201,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询售后问题复发率列表 */
+    /** 查询售后台账问题复发率列表 */
     getList() {
       this.loading = true;
       listRecurrence(this.queryParams).then(response => {
@@ -211,7 +221,8 @@ export default {
         masrrId: null,
         vehicleModel: null,
         problemRecurrenceRate: null,
-        differentProblemOccurrenceRate: null
+        differentProblemOccurrenceRate: null,
+        Month: null
       };
       this.resetForm("form");
     },
@@ -235,7 +246,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加售后问题复发率";
+      this.title = "添加售后台账问题复发率";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -244,7 +255,7 @@ export default {
       getRecurrence(masrrId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改售后问题复发率";
+        this.title = "修改售后台账问题复发率";
       });
     },
     /** 提交按钮 */
@@ -270,7 +281,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const masrrIds = row.masrrId || this.ids;
-      this.$modal.confirm('是否确认删除售后问题复发率编号为"' + masrrIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除售后台账问题复发率编号为"' + masrrIds + '"的数据项？').then(function() {
         return delRecurrence(masrrIds);
       }).then(() => {
         this.getList();

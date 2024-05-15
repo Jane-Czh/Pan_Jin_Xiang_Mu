@@ -1,19 +1,28 @@
 package com.ruoyi.market.service.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.market.domain.MarketCommercialVehicleTable;
-import com.ruoyi.market.mapper.MarketCommercialVehicleTableMapper;
-import com.ruoyi.market.service.IMarketCommercialVehicleTableService;
+import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
+import com.ruoyi.market.domain.MarketSalesTable;
+import com.ruoyi.market.service.IMarketFunctionComparisonDeliverydaysService;
 import com.ruoyi.market.utils.ExcelUtils;
 import com.ruoyi.market.utils.GenerateId;
+import com.ruoyi.market.utils.SplitDate;
 import com.ruoyi.market.utils.getTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.ruoyi.market.mapper.MarketCommercialVehicleTableMapper;
+import com.ruoyi.market.domain.MarketCommercialVehicleTable;
+import com.ruoyi.market.service.IMarketCommercialVehicleTableService;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 /**
  * 商品车台账Service业务层处理
@@ -24,7 +33,7 @@ import java.util.List;
 @Service
 public class MarketCommercialVehicleTableServiceImpl implements IMarketCommercialVehicleTableService 
 {
-   @Autowired
+    @Autowired
     private MarketCommercialVehicleTableMapper marketCommercialVehicleTableMapper;
 
     @Override

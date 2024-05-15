@@ -1,10 +1,12 @@
 package com.heli.partybuilding.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.partybuilding.domain.PartyBuilding;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @description: [党建]指标填报Mapper接口
@@ -13,6 +15,10 @@ import com.ruoyi.common.enums.DataSourceType;
  **/
 @DataSource(value = DataSourceType.SLAVE)
 public interface PartyBuildingMapper {
+
+    boolean checkPartyBuildingDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+
+
     /**
      * @description: 按年查询党建数据
      * @author: hong

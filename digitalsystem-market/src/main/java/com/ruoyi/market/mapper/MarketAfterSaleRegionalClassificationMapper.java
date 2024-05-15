@@ -7,7 +7,7 @@ import com.ruoyi.market.domain.MarketAfterSaleRegionalClassification;
  * 售后区域分类Mapper接口
  * 
  * @author ruoyi
- * @date 2024-04-16
+ * @date 2024-04-18
  */
 public interface MarketAfterSaleRegionalClassificationMapper 
 {

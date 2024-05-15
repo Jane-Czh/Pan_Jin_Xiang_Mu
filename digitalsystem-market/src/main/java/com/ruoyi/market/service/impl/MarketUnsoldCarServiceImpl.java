@@ -1,5 +1,6 @@
 package com.ruoyi.market.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import com.ruoyi.market.domain.MarketFunctionQuickReport;
 import com.ruoyi.market.domain.MarketInventoryCarDetail;
 import com.ruoyi.market.utils.GenerateId;
+import com.ruoyi.market.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.*;
@@ -47,26 +49,25 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
     @Override
     public List<MarketUnsoldCar> selectMarketUnsoldCarList(MarketUnsoldCar marketUnsoldCar)
     {
+        return marketUnsoldCarMapper.selectMarketUnsoldCarList(marketUnsoldCar);
+    }
+
+    @Override
+    public void Synchronization(){
         //删除数据库中已有数据
         MarketInventoryCarDetail marketInventoryCarDetail = new MarketInventoryCarDetail();
-        List<MarketUnsoldCar> marketUnsoldCars = marketUnsoldCarMapper.selectMarketUnsoldCarList(marketUnsoldCar);
-        if (marketUnsoldCars.size() > 0){
-            int order = 0;
-            Long[] delete_id = new Long[marketUnsoldCars.size()];
-            while (order < marketUnsoldCars.size()){
-                delete_id[order] = marketUnsoldCars.get(order).getUcId();
-                order++;
-            }
-            marketUnsoldCarMapper.deleteMarketUnsoldCarByUcIds(delete_id);
-            System.out.println("删除成功");
-        }
+
+        marketUnsoldCarMapper.deleteAllMarketUnsoldCar();
+        System.out.println("删除成功");
         //生成插入数据
-        List<MarketInventoryCarDetail> marketInventoryCarDetails = marketInventoryCarDetailMapper.selectMarketInventoryCarDetailList(marketInventoryCarDetail);
+        List<MarketInventoryCarDetail> marketInventoryCarDetails = marketInventoryCarDetailMapper.selectAllData();
+        System.out.println(marketInventoryCarDetails.size());
+
         if(marketInventoryCarDetails != null){
             int insert_order = 0;
-            HashMap<String, MarketUnsoldCar> insert = new HashMap<String, MarketUnsoldCar>();
+            HashMap<String, MarketUnsoldCar> insert = new HashMap<>();
             while (insert_order < marketInventoryCarDetails.size()){
-                String Vehicle_Model = marketInventoryCarDetails.get(insert_order).getVehicleModel();
+                String Vehicle_Model = StringUtils.getPrefix(marketInventoryCarDetails.get(insert_order).getVehicleModel());
                 //hash中不存在对应车型
                 if (insert.get(Vehicle_Model) == null){
                     MarketUnsoldCar marketUnsoldCar1 = new MarketUnsoldCar();
@@ -80,6 +81,7 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
                 }
                 insert_order++;
             }
+            System.out.println(insert);
             //放入UC_id后插入
             Long UC_ID = 0L;
             for (Map.Entry<String, MarketUnsoldCar> entry : insert.entrySet()){
@@ -89,10 +91,6 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
                 UC_ID++;
             }
         }
-
-
-
-        return marketUnsoldCarMapper.selectMarketUnsoldCarList(marketUnsoldCar);
     }
 
     /**

@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 售后区域分类对象 Market_After_Sale_Regional_Classification
  * 
  * @author ruoyi
- * @date 2024-04-16
+ * @date 2024-04-18
  */
 public class MarketAfterSaleRegionalClassification extends BaseEntity
 {
@@ -30,6 +30,10 @@ public class MarketAfterSaleRegionalClassification extends BaseEntity
     /** 未处理数目 */
     @Excel(name = "未处理数目")
     private Long unprocessedNmber;
+
+    /** 周数 */
+    @Excel(name = "周数")
+    private Integer Week;
 
     public void setMasrcId(Long masrcId) 
     {
@@ -67,6 +71,15 @@ public class MarketAfterSaleRegionalClassification extends BaseEntity
     {
         return unprocessedNmber;
     }
+    public void setWeek(Integer Week) 
+    {
+        this.Week = Week;
+    }
+
+    public Integer getWeek() 
+    {
+        return Week;
+    }
 
     @Override
     public String toString() {
@@ -75,6 +88,7 @@ public class MarketAfterSaleRegionalClassification extends BaseEntity
             .append("Area", getArea())
             .append("regionalProblemsProportion", getRegionalProblemsProportion())
             .append("unprocessedNmber", getUnprocessedNmber())
+            .append("Week", getWeek())
             .toString();
     }
 }

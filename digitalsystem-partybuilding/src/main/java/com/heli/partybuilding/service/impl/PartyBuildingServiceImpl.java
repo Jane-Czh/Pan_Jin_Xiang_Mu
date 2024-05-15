@@ -1,5 +1,6 @@
 package com.heli.partybuilding.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ import com.heli.partybuilding.service.IPartyBuildingService;
 public class PartyBuildingServiceImpl implements IPartyBuildingService {
     @Autowired
     private PartyBuildingMapper partyBuildingMapper;
+
+    @Override
+    public Boolean checkPartyBuildingDataIsExisted(Date yearAndMonth) {
+        return partyBuildingMapper.checkPartyBuildingDataIsExisted(yearAndMonth);
+    }
 
     /**
      * @description: 按年查询党建数据

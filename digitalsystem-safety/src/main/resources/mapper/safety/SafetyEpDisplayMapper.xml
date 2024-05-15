@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.safety.mapper.SafetyEpDisplayMapper">
+
+    <!-- 当月度设备维修总费用 指标23 -->
+    <select id="selectCurEquipmentMaintenanceCost" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Cur_Equipment_Maintenance_Cost as curEquipmentMaintenanceCost from Safety_EP
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 重点设备故障率 指标45 -->
+    <select id="selectKeyEquipmentFailureRate" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Key_Equipment_Failure_Rate as keyEquipmentFailureRate from Safety_EP
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 当月设备故障累计停产时间 指标46 -->
+    <select id="selectCurEquipmentFailuresTotaltime" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Cur_Equipment_Failures_TotalTime as curEquipmentFailuresTotaltime from Safety_EP
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 主要设备故障总次数 指标67 -->
+    <select id="selectKeyEquipmentTotalFailureCount" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Key_Equipment_Total_Failure_Count as keyEquipmentTotalFailureCount from Safety_EP
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 与其他的展示方式不同-设备故障类别次数分布图 指标68 -->
+    <select id="selectOutputPercapitavalue" resultType="map">
+        SELECT Year_And_Month, GROUP_CONCAT(Problem_Type,':',Failure_Count SEPARATOR ',') as resultData
+        FROM (
+            select Year_And_Month,Problem_Type,Failure_Count from Safety_EP_Equipment_Failure_Category_Distribution
+             ) as YAMPTFC
+        where Year_And_Month between #{startTime} and #{endTime}
+        GROUP BY Year_And_Month
+    </select>
+<!--    <select id="selectOutputPercapitavalue" resultType="map">-->
+<!--        SELECT Year_And_Month, GROUP_CONCAT(Problem_Type, ':',Failure_Count SEPARATOR ';')-->
+<!--        FROM Safety_EP_Equipment_Failure_Category_Distribution-->
+<!--        where Year_And_Month between #{startTime} and #{endTime}-->
+<!--        GROUP BY Year_And_Month-->
+<!--    </select>-->
+
+    <!-- 当月设备维修成本-替换件成本 指标69 -->
+    <select id="selectCurEquipmentReplacementCost" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Cur_Equipment_Replacement_Cost as curEquipmentReplacementCost from Safety_EP
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+
+</mapper>

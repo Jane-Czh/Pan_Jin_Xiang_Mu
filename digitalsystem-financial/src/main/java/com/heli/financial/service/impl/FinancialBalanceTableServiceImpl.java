@@ -46,6 +46,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     private IFinancialInterestsTableService iFinancialInterestsTableService;
 
     @Override
+    public List<Date> selectAllBalanceYearAndMonth() {
+        return financialBalanceTableMapper.selectAllBalanceYearAndMonth();
+    }
+
+    @Override
     public boolean checkBalanceDataIsExisted(Date date) {
         return financialBalanceTableMapper.checkBalanceDataIsExisted(date);
     }
@@ -58,7 +63,7 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
      * @return: int
      **/
     @Override
-    public int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, BigDecimal reserveCarAmount, MultipartFile excelFile) throws IOException {
+    public int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, MultipartFile excelFile) throws IOException {
         FinancialBalanceTable financialBalanceTable;
         InputStream is = null;
         try {
@@ -77,8 +82,8 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         /**
          * @description: 导入时间和导入者
          **/
-        financialBalanceTable.setCreatedBy(createdBy);
-        financialBalanceTable.setCreatedTime(createdTime);
+        financialBalanceTable.setCreateBy(createdBy);
+        financialBalanceTable.setCreateTime(createdTime);
         financialBalanceTable.setYearAndMonth(yearAndMonth);
 
         /**
@@ -103,11 +108,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
          * 当月库存商品存货额 = 库存商品-整车 + 产品成本差异-产成品 - 储备车金额（填报)
          * monthAmountInStock =（资产负债表） inventoryVehicles + pcvFinished - reserveCarAmount
          **/
-        financialBalanceTable.setMonthAmountInStock(
-                financialBalanceTable.getInventoryVehicles()
-                        .add(financialBalanceTable.getPcvFinished()
-                                .subtract(reserveCarAmount))
-        );
+//        financialBalanceTable.setMonthAmountInStock(
+//                financialBalanceTable.getInventoryVehicles()
+//                        .add(financialBalanceTable.getPcvFinished()
+//                                .subtract(reserveCarAmount))
+//        );
 
 
         /**
@@ -116,19 +121,107 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
          * turnoverRateReceivable =（利润表） operatingRevenue / (资产负债表) receivables
          * 由于计算比率，所以保留2位小数，并四舍五入
          **/
-        financialBalanceTable.setTurnoverRateReceivable(
-                (financialInterestsTableMapper.selectOperatingRevenueByMonth(yearAndMonth)
-                        .divide(financialBalanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
-        );
-
-
-        return financialBalanceTableMapper.insertFinancialBalanceTable(countGrowthRateInventorySales(financialBalanceTable));
+//        financialBalanceTable.setTurnoverRateReceivable(
+//                (financialInterestsTableMapper.selectOperatingRevenueByMonth(yearAndMonth)
+//                        .divide(financialBalanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
+//        );
+        return financialBalanceTableMapper.insertFinancialBalanceTable(financialBalanceTable);
     }
+
+
+//    @Override
+//    public int importBalanceTable(String createdBy, Date createdTime, Date yearAndMonth, BigDecimal reserveCarAmount, MultipartFile excelFile) throws IOException {
+//        FinancialBalanceTable financialBalanceTable;
+//        InputStream is = null;
+//        try {
+//            System.out.println(excelFile);
+//            is = excelFile.getInputStream();
+//            financialBalanceTable = (FinancialBalanceTable) ReadExcelCellUtils.parseExcelToModel("com.heli.financial.domain.FinancialBalanceTable", is, null);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new ServiceException("excel解析失败");
+//        } finally {
+//            if (is != null) {
+//                is.close();
+//            }
+//        }
+//
+//        /**
+//         * @description: 导入时间和导入者
+//         **/
+//        financialBalanceTable.setCreateBy(createdBy);
+//        financialBalanceTable.setCreateTime(createdTime);
+//        financialBalanceTable.setYearAndMonth(yearAndMonth);
+//
+//        /**
+//         * @description: 计算当月原材料存货额
+//         **/
+//        financialBalanceTable.setMonthlyRawMaterialInventory(
+//                financialBalanceTable.getInTransitInventory()
+//                        .add(financialBalanceTable.getMaterials()
+//                                .add(financialBalanceTable.getMaterialCostVariance()
+//                                        .add(financialBalanceTable.getMaterialCostVarianceUnallocated())))
+//        );
+//        /**
+//         * @description: 计算当月在制品存货额
+//         **/
+//        financialBalanceTable.setMonthlyWorkInProgressInventory(
+//                financialBalanceTable.getWorkInProgressSemiFinishedGoods()
+//                        .add(financialBalanceTable.getProductCostVarianceSemiFinishedGoods())
+//                        .add(financialBalanceTable.getWorkInProgressEndOfMonth())
+//        );
+//        /**
+//         * @description: 计算当月库存商品存货额
+//         * 当月库存商品存货额 = 库存商品-整车 + 产品成本差异-产成品 - 储备车金额（填报)
+//         * monthAmountInStock =（资产负债表） inventoryVehicles + pcvFinished - reserveCarAmount
+//         **/
+//        financialBalanceTable.setMonthAmountInStock(
+//                financialBalanceTable.getInventoryVehicles()
+//                        .add(financialBalanceTable.getPcvFinished()
+//                                .subtract(reserveCarAmount))
+//        );
+//
+//
+//        /**
+//         * @description: 计算应收帐款周转率
+//         * 应收帐款周转率 = （利润表）营业收入 / (资产负债表) 应收账款
+//         * turnoverRateReceivable =（利润表） operatingRevenue / (资产负债表) receivables
+//         * 由于计算比率，所以保留2位小数，并四舍五入
+//         **/
+//        financialBalanceTable.setTurnoverRateReceivable(
+//                (financialInterestsTableMapper.selectOperatingRevenueByMonth(yearAndMonth)
+//                        .divide(financialBalanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
+//        );
+//
+//
+//        return financialBalanceTableMapper.insertFinancialBalanceTable(countGrowthRateInventorySales(financialBalanceTable));
+//    }
 
 
     @Override
     public int deleteFinancialBalanceTableByYearAndMonth(Date yearAndMonth) {
         return 0;
+    }
+
+    /**
+     * @description: 按时间查询资产负债表
+     * @author: hong
+     * @date: 2024/4/23 11:05
+     **/
+    @Override
+    public FinancialBalanceTable selectFinancialBalanceTableByYearAndMonth(Date yearAndMonth) {
+        return financialBalanceTableMapper.selectFinancialBalanceTableByYearAndMonth(yearAndMonth);
+    }
+
+
+    /**
+     * @description: 按月查询-月度存货总金额
+     * @author: hong
+     * @date: 2024/4/23 11:24
+     **/
+    @Override
+    public BigDecimal selectMonthlyInventoryTotalAmountByYearAndMonth(Date yearAndMonth) {
+        return financialBalanceTableMapper.selectMonthlyInventoryTotalAmountByYearAndMonth(yearAndMonth);
     }
 
 
@@ -165,6 +258,13 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         return financialBalanceTable;
     }
 
+
+
+
+
+
+
+
     /**
      * @description: 计算存货增长率/销售增长率 growthRateInventorySales
      * (资产负债表)(b29(本月) / b29(上月) - 1)  /  (利润表)(b2(本月) / (b2(上月) - 1))
@@ -184,7 +284,7 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
 
         //获取上月 月度存货总金额
         BigDecimal monthlyInventoryTotalAmount = financialBalanceTable.getMonthlyInventoryTotalAmount();
-        BigDecimal monthlyInventoryTotalAmountLastMonth = financialBalanceTableMapper.selectLastMonthMonthlyInventoryTotalAmount(lastMonth);
+        BigDecimal monthlyInventoryTotalAmountLastMonth = financialBalanceTableMapper.selectMonthlyInventoryTotalAmountByYearAndMonth(lastMonth);
 
         //获取 本月和上月 营业收入
         BigDecimal operatingRevenue = iFinancialInterestsTableService.selectOperatingRevenueByMonth(date);
@@ -203,10 +303,9 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         System.out.println("monthlyInventoryTotalAmountRate" + monthlyInventoryTotalAmountRate);
         System.out.println("operatingRevenueRate" + operatingRevenueRate);
 
-        //计算总比率
-        financialBalanceTable.setGrowthRateInventorySales(
-                monthlyInventoryTotalAmountRate.divide(operatingRevenueRate, 2, RoundingMode.HALF_UP).doubleValue()
-        );
+        financialBalanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
+        financialBalanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
+
         return financialBalanceTable;
     }
 

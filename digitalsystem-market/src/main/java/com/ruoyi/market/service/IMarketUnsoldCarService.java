@@ -27,6 +27,7 @@ public interface IMarketUnsoldCarService
      */
     public List<MarketUnsoldCar> selectMarketUnsoldCarList(MarketUnsoldCar marketUnsoldCar);
 
+    public void Synchronization();
     /**
      * 新增统计库存车数量
      * 

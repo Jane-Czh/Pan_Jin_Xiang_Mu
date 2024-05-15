@@ -2,6 +2,9 @@ package com.ruoyi.market.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.market.domain.MarketAfterSaleLedger;
+import com.ruoyi.market.domain.MarketAfterSaleRegionalClassification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +36,12 @@ public class MarketUnsoldCarController extends BaseController
 {
     @Autowired
     private IMarketUnsoldCarService marketUnsoldCarService;
+
+    @PostMapping("/synchronization")
+    public void Database_Synchronization(MarketAfterSaleRegionalClassification marketAfterSaleRegionalClassification){
+        System.out.println("------同步------");
+        marketUnsoldCarService.Synchronization();
+    }
 
     /**
      * 查询统计库存车数量列表

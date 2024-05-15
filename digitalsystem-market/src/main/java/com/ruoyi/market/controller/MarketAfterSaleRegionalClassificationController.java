@@ -4,7 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.market.domain.MarketAfterSaleLedger;
-import com.ruoyi.market.domain.MarketAfterSaleProblemClassification;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 售后区域分类Controller
  * 
  * @author ruoyi
- * @date 2024-04-16
+ * @date 2024-04-18
  */
 @RestController
 @RequestMapping("/market/regional")
@@ -37,6 +36,7 @@ public class MarketAfterSaleRegionalClassificationController extends BaseControl
 {
     @Autowired
     private IMarketAfterSaleRegionalClassificationService marketAfterSaleRegionalClassificationService;
+
     @Autowired
     private IMarketAfterSaleLedgerService marketAfterSaleLedgerService;
 

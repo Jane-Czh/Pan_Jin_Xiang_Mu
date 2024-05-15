@@ -10,13 +10,12 @@
         <result property="useScope"    column="use_scope"    />
         <result property="uploadDate"    column="upload_date"    />
         <result property="effectiveDate"    column="effective_date"    />
-        <result property="regulationsAddress"    column="regulations_address"    />
         <result property="fileName"    column="file_name"    />
         <result property="filePath"    column="file_path"    />
         <result property="fileType"    column="file_type"    />
         <result property="fileSize"    column="file_size"    />
         <result property="createDate"    column="create_date"    />
-        <result property="createUsername"    column="create_username"    />
+        <result property="uploadUsername"    column="upload_username"    />
         <result property="useState"    column="use_state"    />
         <result property="departmentCategory"    column="department_category"    />
         <result property="fileTag"    column="file_tag"    />
@@ -24,10 +23,12 @@
         <result property="revisionDate"    column="revision_date"    />
         <result property="revisionContent"    column="revision_content"    />
         <result property="reviser"    column="reviser"    />
+        <result property="newFlag"    column="new_flag"    />
+        <result property="newRegulationsId"    column="new_regulations_id"    />
     </resultMap>
 
     <sql id="selectRegulationsInfoTableVo">
-        select regulations_id, regulations_title, use_scope, upload_date, effective_date, regulations_address, file_name, file_path, file_type, file_size, create_date, create_username, use_state, department_category, file_tag, old_regulations_id, revision_date, revision_content, reviser from Regulations_Info_table
+        select regulations_id, regulations_title, use_scope, upload_date, effective_date,  file_name, file_path, file_type, file_size, create_date, upload_username, use_state, department_category, file_tag, old_regulations_id, revision_date, revision_content, reviser, new_flag, new_regulations_id from Regulations_Info_table
     </sql>
 
     <select id="selectRegulationsInfoTableList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
@@ -37,13 +38,12 @@
             <if test="useScope != null  and useScope != ''"> and use_scope = #{useScope}</if>
             <if test="uploadDate != null "> and upload_date = #{uploadDate}</if>
             <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
-            <if test="regulationsAddress != null  and regulationsAddress != ''"> and regulations_address = #{regulationsAddress}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
             <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
             <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
             <if test="fileSize != null "> and file_size = #{fileSize}</if>
             <if test="createDate != null "> and create_date = #{createDate}</if>
-            <if test="createUsername != null  and createUsername != ''"> and create_username = #{createUsername}</if>
+            <if test="uploadUsername != null  and uploadUsername != ''"> and upload_username like concat('%', #{uploadUsername}, '%')</if>
             <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
             <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
             <if test="fileTag != null  and fileTag != ''"> and file_tag = #{fileTag}</if>
@@ -51,6 +51,8 @@
             <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
             <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="newFlag = 1 "> and new_flag = #{newFlag}</if>
+            <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
         </where>
     </select>
 
@@ -59,6 +61,7 @@
         where regulations_id = #{regulationsId}
     </select>
 
+
     <insert id="insertRegulationsInfoTable" parameterType="RegulationsInfoTable" useGeneratedKeys="true" keyProperty="regulationsId">
         insert into Regulations_Info_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -66,13 +69,12 @@
             <if test="useScope != null and useScope != ''">use_scope,</if>
             <if test="uploadDate != null">upload_date,</if>
             <if test="effectiveDate != null">effective_date,</if>
-            <if test="regulationsAddress != null and regulationsAddress != ''">regulations_address,</if>
             <if test="fileName != null">file_name,</if>
             <if test="filePath != null">file_path,</if>
-            <if test="fileType != null and fileType != ''">file_type,</if>
+            <if test="fileType != null">file_type,</if>
             <if test="fileSize != null">file_size,</if>
             <if test="createDate != null">create_date,</if>
-            <if test="createUsername != null and createUsername != ''">create_username,</if>
+            <if test="uploadUsername != null and uploadUsername != ''">upload_username,</if>
             <if test="useState != null and useState != ''">use_state,</if>
             <if test="departmentCategory != null and departmentCategory != ''">department_category,</if>
             <if test="fileTag != null">file_tag,</if>
@@ -80,19 +82,20 @@
             <if test="revisionDate != null">revision_date,</if>
             <if test="revisionContent != null">revision_content,</if>
             <if test="reviser != null">reviser,</if>
+            <if test="newFlag != null">new_flag,</if>
+            <if test="newRegulationsId != null">new_regulations_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="regulationsTitle != null and regulationsTitle != ''">#{regulationsTitle},</if>
             <if test="useScope != null and useScope != ''">#{useScope},</if>
             <if test="uploadDate != null">#{uploadDate},</if>
             <if test="effectiveDate != null">#{effectiveDate},</if>
-            <if test="regulationsAddress != null and regulationsAddress != ''">#{regulationsAddress},</if>
             <if test="fileName != null">#{fileName},</if>
             <if test="filePath != null">#{filePath},</if>
-            <if test="fileType != null and fileType != ''">#{fileType},</if>
+            <if test="fileType != null">#{fileType},</if>
             <if test="fileSize != null">#{fileSize},</if>
             <if test="createDate != null">#{createDate},</if>
-            <if test="createUsername != null and createUsername != ''">#{createUsername},</if>
+            <if test="uploadUsername != null and uploadUsername != ''">#{uploadUsername},</if>
             <if test="useState != null and useState != ''">#{useState},</if>
             <if test="departmentCategory != null and departmentCategory != ''">#{departmentCategory},</if>
             <if test="fileTag != null">#{fileTag},</if>
@@ -100,6 +103,8 @@
             <if test="revisionDate != null">#{revisionDate},</if>
             <if test="revisionContent != null">#{revisionContent},</if>
             <if test="reviser != null">#{reviser},</if>
+            <if test="newFlag != null">#{newFlag},</if>
+            <if test="newRegulationsId != null">#{newRegulationsId},</if>
         </trim>
     </insert>
 
@@ -110,13 +115,12 @@
             <if test="useScope != null and useScope != ''">use_scope = #{useScope},</if>
             <if test="uploadDate != null">upload_date = #{uploadDate},</if>
             <if test="effectiveDate != null">effective_date = #{effectiveDate},</if>
-            <if test="regulationsAddress != null and regulationsAddress != ''">regulations_address = #{regulationsAddress},</if>
             <if test="fileName != null">file_name = #{fileName},</if>
             <if test="filePath != null">file_path = #{filePath},</if>
-            <if test="fileType != null and fileType != ''">file_type = #{fileType},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
             <if test="fileSize != null">file_size = #{fileSize},</if>
             <if test="createDate != null">create_date = #{createDate},</if>
-            <if test="createUsername != null and createUsername != ''">create_username = #{createUsername},</if>
+            <if test="uploadUsername != null and uploadUsername != ''">upload_username = #{uploadUsername},</if>
             <if test="useState != null and useState != ''">use_state = #{useState},</if>
             <if test="departmentCategory != null and departmentCategory != ''">department_category = #{departmentCategory},</if>
             <if test="fileTag != null">file_tag = #{fileTag},</if>
@@ -124,6 +128,8 @@
             <if test="revisionDate != null">revision_date = #{revisionDate},</if>
             <if test="revisionContent != null">revision_content = #{revisionContent},</if>
             <if test="reviser != null">reviser = #{reviser},</if>
+            <if test="newFlag != null">new_flag = #{newFlag},</if>
+            <if test="newRegulationsId != null">new_regulations_id = #{newRegulationsId},</if>
         </trim>
         where regulations_id = #{regulationsId}
     </update>

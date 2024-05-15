@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.supply.mapper.SupplyRatioFormulaTableMapper">
+    
+    <resultMap type="SupplyRatioFormulaTable" id="SupplyRatioFormulaTableResult">
+        <result property="srftId"    column="SRFT_ID"    />
+        <result property="materialNumber"    column="Material_Number"    />
+        <result property="materialClass"    column="Material_Class"    />
+        <result property="supplierCode"    column="Supplier_Code"    />
+        <result property="supplierName"    column="Supplier_Name"    />
+        <result property="supplyProportion"    column="Supply_Proportion"    />
+        <result property="paymentMethod"    column="Payment_Method"    />
+        <result property="proportionStatisticalMethod"    column="Proportion_Statistical_Method"    />
+        <result property="thirdParty"    column="Third_Party"    />
+        <result property="Remarks"    column="Remarks"    />
+        <result property="actualProportion"    column="Actual_Proportion"    />
+        <result property="Difference"    column="Difference"    />
+    </resultMap>
+
+    <sql id="selectSupplyRatioFormulaTableVo">
+        select SRFT_ID, Material_Number, Material_Class, Supplier_Code, Supplier_Name, Supply_Proportion, Payment_Method, Proportion_Statistical_Method, Third_Party, Remarks, Actual_Proportion, Difference from Supply_Ratio_Formula_Table
+    </sql>
+
+    <select id="selectLastId" resultType="java.lang.Long"> SELECT SRFT_ID FROM Supply_Ratio_Formula_Table WHERE SRFT_ID = (SELECT MAX(SRFT_ID) FROM Supply_Ratio_Formula_Table); </select>
+
+    <select id="selectSupplyRatioFormulaTableList" parameterType="SupplyRatioFormulaTable" resultMap="SupplyRatioFormulaTableResult">
+        <include refid="selectSupplyRatioFormulaTableVo"/>
+        <where>  
+            <if test="materialNumber != null  and materialNumber != ''"> and Material_Number = #{materialNumber}</if>
+            <if test="materialClass != null  and materialClass != ''"> and Material_Class = #{materialClass}</if>
+            <if test="supplierCode != null  and supplierCode != ''"> and Supplier_Code = #{supplierCode}</if>
+            <if test="supplierName != null  and supplierName != ''"> and Supplier_Name like concat('%', #{supplierName}, '%')</if>
+            <if test="supplyProportion != null  and supplyProportion != ''"> and Supply_Proportion = #{supplyProportion}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and Payment_Method = #{paymentMethod}</if>
+            <if test="proportionStatisticalMethod != null  and proportionStatisticalMethod != ''"> and Proportion_Statistical_Method = #{proportionStatisticalMethod}</if>
+            <if test="thirdParty != null  and thirdParty != ''"> and Third_Party = #{thirdParty}</if>
+            <if test="Remarks != null  and Remarks != ''"> and Remarks = #{Remarks}</if>
+            <if test="actualProportion != null  and actualProportion != ''"> and Actual_Proportion = #{actualProportion}</if>
+            <if test="Difference != null  and Difference != ''"> and Difference = #{Difference}</if>
+        </where>
+    </select>
+    
+    <select id="selectSupplyRatioFormulaTableBySrftId" parameterType="Long" resultMap="SupplyRatioFormulaTableResult">
+        <include refid="selectSupplyRatioFormulaTableVo"/>
+        where SRFT_ID = #{srftId}
+    </select>
+        
+    <insert id="insertSupplyRatioFormulaTable" parameterType="SupplyRatioFormulaTable">
+        insert into Supply_Ratio_Formula_Table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="srftId != null">SRFT_ID,</if>
+            <if test="materialNumber != null and materialNumber != ''">Material_Number,</if>
+            <if test="materialClass != null">Material_Class,</if>
+            <if test="supplierCode != null and supplierCode != ''">Supplier_Code,</if>
+            <if test="supplierName != null and supplierName != ''">Supplier_Name,</if>
+            <if test="supplyProportion != null and supplyProportion != ''">Supply_Proportion,</if>
+            <if test="paymentMethod != null">Payment_Method,</if>
+            <if test="proportionStatisticalMethod != null">Proportion_Statistical_Method,</if>
+            <if test="thirdParty != null">Third_Party,</if>
+            <if test="Remarks != null">Remarks,</if>
+            <if test="actualProportion != null">Actual_Proportion,</if>
+            <if test="Difference != null">Difference,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="srftId != null">#{srftId},</if>
+            <if test="materialNumber != null and materialNumber != ''">#{materialNumber},</if>
+            <if test="materialClass != null">#{materialClass},</if>
+            <if test="supplierCode != null and supplierCode != ''">#{supplierCode},</if>
+            <if test="supplierName != null and supplierName != ''">#{supplierName},</if>
+            <if test="supplyProportion != null and supplyProportion != ''">#{supplyProportion},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="proportionStatisticalMethod != null">#{proportionStatisticalMethod},</if>
+            <if test="thirdParty != null">#{thirdParty},</if>
+            <if test="Remarks != null">#{Remarks},</if>
+            <if test="actualProportion != null">#{actualProportion},</if>
+            <if test="Difference != null">#{Difference},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplyRatioFormulaTable" parameterType="SupplyRatioFormulaTable">
+        update Supply_Ratio_Formula_Table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialNumber != null and materialNumber != ''">Material_Number = #{materialNumber},</if>
+            <if test="materialClass != null">Material_Class = #{materialClass},</if>
+            <if test="supplierCode != null and supplierCode != ''">Supplier_Code = #{supplierCode},</if>
+            <if test="supplierName != null and supplierName != ''">Supplier_Name = #{supplierName},</if>
+            <if test="supplyProportion != null and supplyProportion != ''">Supply_Proportion = #{supplyProportion},</if>
+            <if test="paymentMethod != null">Payment_Method = #{paymentMethod},</if>
+            <if test="proportionStatisticalMethod != null">Proportion_Statistical_Method = #{proportionStatisticalMethod},</if>
+            <if test="thirdParty != null">Third_Party = #{thirdParty},</if>
+            <if test="Remarks != null">Remarks = #{Remarks},</if>
+            <if test="actualProportion != null">Actual_Proportion = #{actualProportion},</if>
+            <if test="Difference != null">Difference = #{Difference},</if>
+        </trim>
+        where SRFT_ID = #{srftId}
+    </update>
+
+    <delete id="deleteSupplyRatioFormulaTableBySrftId" parameterType="Long">
+        delete from Supply_Ratio_Formula_Table where SRFT_ID = #{srftId}
+    </delete>
+
+    <delete id="deleteSupplyRatioFormulaTableBySrftIds" parameterType="String">
+        delete from Supply_Ratio_Formula_Table where SRFT_ID in 
+        <foreach item="srftId" collection="array" open="(" separator="," close=")">
+            #{srftId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAll">
+        delete from Supply_Ratio_Formula_Table
+    </delete>
+</mapper>

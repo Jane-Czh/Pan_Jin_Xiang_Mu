@@ -4,8 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.market.domain.MarketAfterSaleLedger;
-import com.ruoyi.market.domain.MarketFunctionQuickReport;
-import com.ruoyi.market.domain.MarketSalesTable;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +25,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 售后问题复发率Controller
+ * 售后台账问题复发率Controller
  * 
  * @author ruoyi
- * @date 2024-04-15
+ * @date 2024-04-17
  */
 @RestController
 @RequestMapping("/market/recurrence")
@@ -52,9 +50,8 @@ public class MarketAfterSalesRecurrenceRateController extends BaseController
         List<MarketAfterSaleLedger> list = marketAfterSaleLedgerService.selectMarketAfterSaleLedgerList(marketAfterSaleLedger);
         marketAfterSalesRecurrenceRateService.Synchronization(list, marketAfterSalesRecurrenceRate);
     }
-
     /**
-     * 查询售后问题复发率列表
+     * 查询售后台账问题复发率列表
      */
     @PreAuthorize("@ss.hasPermi('market:recurrence:list')")
     @GetMapping("/list")
@@ -66,20 +63,20 @@ public class MarketAfterSalesRecurrenceRateController extends BaseController
     }
 
     /**
-     * 导出售后问题复发率列表
+     * 导出售后台账问题复发率列表
      */
     @PreAuthorize("@ss.hasPermi('market:recurrence:export')")
-    @Log(title = "售后问题复发率", businessType = BusinessType.EXPORT)
+    @Log(title = "售后台账问题复发率", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, MarketAfterSalesRecurrenceRate marketAfterSalesRecurrenceRate)
     {
         List<MarketAfterSalesRecurrenceRate> list = marketAfterSalesRecurrenceRateService.selectMarketAfterSalesRecurrenceRateList(marketAfterSalesRecurrenceRate);
         ExcelUtil<MarketAfterSalesRecurrenceRate> util = new ExcelUtil<MarketAfterSalesRecurrenceRate>(MarketAfterSalesRecurrenceRate.class);
-        util.exportExcel(response, list, "售后问题复发率数据");
+        util.exportExcel(response, list, "售后台账问题复发率数据");
     }
 
     /**
-     * 获取售后问题复发率详细信息
+     * 获取售后台账问题复发率详细信息
      */
     @PreAuthorize("@ss.hasPermi('market:recurrence:query')")
     @GetMapping(value = "/{masrrId}")
@@ -89,10 +86,10 @@ public class MarketAfterSalesRecurrenceRateController extends BaseController
     }
 
     /**
-     * 新增售后问题复发率
+     * 新增售后台账问题复发率
      */
     @PreAuthorize("@ss.hasPermi('market:recurrence:add')")
-    @Log(title = "售后问题复发率", businessType = BusinessType.INSERT)
+    @Log(title = "售后台账问题复发率", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MarketAfterSalesRecurrenceRate marketAfterSalesRecurrenceRate)
     {
@@ -100,10 +97,10 @@ public class MarketAfterSalesRecurrenceRateController extends BaseController
     }
 
     /**
-     * 修改售后问题复发率
+     * 修改售后台账问题复发率
      */
     @PreAuthorize("@ss.hasPermi('market:recurrence:edit')")
-    @Log(title = "售后问题复发率", businessType = BusinessType.UPDATE)
+    @Log(title = "售后台账问题复发率", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MarketAfterSalesRecurrenceRate marketAfterSalesRecurrenceRate)
     {
@@ -111,10 +108,10 @@ public class MarketAfterSalesRecurrenceRateController extends BaseController
     }
 
     /**
-     * 删除售后问题复发率
+     * 删除售后台账问题复发率
      */
     @PreAuthorize("@ss.hasPermi('market:recurrence:remove')")
-    @Log(title = "售后问题复发率", businessType = BusinessType.DELETE)
+    @Log(title = "售后台账问题复发率", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{masrrIds}")
     public AjaxResult remove(@PathVariable Long[] masrrIds)
     {

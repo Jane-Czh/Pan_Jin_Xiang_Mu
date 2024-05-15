@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.financial.mapper.FinancialDailyInProgressTableMapper">
+
+    <resultMap type="FinancialDailyInProgressTable" id="FinancialDailyInProgressTableResult">
+        <result property="id"    column="id"    />
+        <result property="inProgressDayRevenue"    column="InProgress_DayRevenue"    />
+        <result property="dataTime"    column="Data_Time"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectFinancialDailyInProgressTableVo">
+        select id, InProgress_DayRevenue, Data_Time, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Financial_Daily_InProgress_table
+    </sql>
+
+    <!-- 查询指定年月的Financial_Daily_InProgress_table是否存在-->
+    <select id="checkDailyInProgressTableIsExist" resultType="java.lang.Boolean">
+        select count(1) from Financial_Daily_InProgress_table where Data_Time = #{yearAndMonth}
+    </select>
+
+    <select id="selectFinancialDailyInProgressTableList" parameterType="FinancialDailyInProgressTable" resultMap="FinancialDailyInProgressTableResult">
+        <include refid="selectFinancialDailyInProgressTableVo"/>
+        <where>
+            <if test="inProgressDayRevenue != null "> and InProgress_DayRevenue = #{inProgressDayRevenue}</if>
+            <if test="dataTime != null "> and Data_Time = #{dataTime}</if>
+        </where>
+    </select>
+
+    <select id="selectFinancialDailyInProgressTableById" parameterType="Long" resultMap="FinancialDailyInProgressTableResult">
+        <include refid="selectFinancialDailyInProgressTableVo"/>
+        where id = #{id}
+    </select>
+
+
+    <insert id="insertFinancialDailyInProgressTable" parameterType="FinancialDailyInProgressTable">
+        insert into Financial_Daily_InProgress_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="inProgressDayRevenue != null">InProgress_DayRevenue,</if>
+            <if test="dataTime != null">Data_Time,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="inProgressDayRevenue != null">#{inProgressDayRevenue},</if>
+            <if test="dataTime != null">#{dataTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFinancialDailyInProgressTable" parameterType="FinancialDailyInProgressTable">
+        update Financial_Daily_InProgress_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inProgressDayRevenue != null">InProgress_DayRevenue = #{inProgressDayRevenue},</if>
+            <if test="dataTime != null">Data_Time = #{dataTime},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinancialDailyInProgressTableById" parameterType="Long">
+        delete from Financial_Daily_InProgress_table where id = #{id}
+    </delete>
+
+    <delete id="deleteFinancialDailyInProgressTableByIds" parameterType="String">
+        delete from Financial_Daily_InProgress_table where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

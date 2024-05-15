@@ -25,6 +25,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="周数" prop="Week">
+        <el-input
+          v-model="queryParams.Week"
+          placeholder="请输入周数"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -92,6 +100,7 @@
       <el-table-column label="区域" align="center" prop="area" />
       <el-table-column label="区域问题占比" align="center" prop="regionalProblemsProportion" />
       <el-table-column label="未处理数目" align="center" prop="unprocessedNmber" />
+      <el-table-column label="周数" align="center" prop="week" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -131,6 +140,9 @@
         </el-form-item>
         <el-form-item label="未处理数目" prop="unprocessedNmber">
           <el-input v-model="form.unprocessedNmber" placeholder="请输入未处理数目" />
+        </el-form-item>
+        <el-form-item label="周数" prop="Week">
+          <el-input v-model="form.Week" placeholder="请输入周数" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -172,7 +184,8 @@ export default {
         pageSize: 10,
         Area: null,
         regionalProblemsProportion: null,
-        unprocessedNmber: null
+        unprocessedNmber: null,
+        Week: null
       },
       // 表单参数
       form: {},
@@ -186,6 +199,9 @@ export default {
         ],
         unprocessedNmber: [
           { required: true, message: "未处理数目不能为空", trigger: "blur" }
+        ],
+        Week: [
+          { required: true, message: "周数不能为空", trigger: "blur" }
         ]
       }
     };
@@ -214,7 +230,8 @@ export default {
         masrcId: null,
         Area: null,
         regionalProblemsProportion: null,
-        unprocessedNmber: null
+        unprocessedNmber: null,
+        Week: null
       };
       this.resetForm("form");
     },

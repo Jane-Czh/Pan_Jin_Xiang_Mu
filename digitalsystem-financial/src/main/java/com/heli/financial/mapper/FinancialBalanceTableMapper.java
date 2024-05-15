@@ -18,20 +18,30 @@ import org.apache.ibatis.annotations.Param;
 public interface FinancialBalanceTableMapper {
 
 
+    List<Date> selectAllBalanceYearAndMonth();
+
 
     /**
      * @description: 检查当月资产负债表数据是否存在
      * @author: hong
      * @date: 2024/4/15 14:59
      **/
-    boolean checkBalanceDataIsExisted(@Param("date") Date date);
+    boolean checkBalanceDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
 
     /**
-     *
-     *
-     */
+     * @description: 按年月查询资产负债表数据
+     * @author: hong
+     * @date: 2024/4/23 11:01
+     **/
+    FinancialBalanceTable selectFinancialBalanceTableByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
 
-    public BigDecimal selectLastMonthMonthlyInventoryTotalAmount(@Param("yearAndMonth") Date yearAndMonth);
+
+    /**
+     * @description: 按月查询-月度存货总金额
+     * @author: hong
+     * @date: 2024/4/23 11:24
+     **/
+    BigDecimal selectMonthlyInventoryTotalAmountByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
 
 
 

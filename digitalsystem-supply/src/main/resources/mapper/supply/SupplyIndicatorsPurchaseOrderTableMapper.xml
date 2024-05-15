@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.supply.mapper.SupplyIndicatorsPurchaseOrderTableMapper">
+
+    <resultMap type="SupplyIndicatorsPurchaseOrderTable" id="SupplyIndicatorsPurchaseOrderTableResult">
+        <result property="spId"    column="SP_ID"    />
+        <result property="documentDate"    column="Document_Date"    />
+        <result property="purchasingDocuments"    column="Purchasing_Documents"    />
+        <result property="materialNumber"    column="Material_Number"    />
+        <result property="collectiveProcurement"    column="Collective_Procurement"    />
+        <result property="shortText"    column="ShortText"    />
+        <result property="unit"    column="Unit"    />
+        <result property="quantity"    column="Quantity"    />
+        <result property="orderNetValue"    column="Order_NetValue"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectSupplyIndicatorsPurchaseOrderTableVo">
+        select SP_ID, Document_Date, Purchasing_Documents, Material_Number, Collective_Procurement, ShortText, Unit, Quantity, Order_NetValue, CREATE_BY, CREATE_TIME from Supply_Indicators_PurchaseOrder_table
+    </sql>
+
+
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertSupplyOrderTable" parameterType="java.util.List">
+        insert into Supply_Indicators_PurchaseOrder_table(Document_Date,Purchasing_Documents,Material_Number,
+        Collective_Procurement,ShortText,Unit,Quantity,Order_NetValue)
+        values
+        <foreach collection="supplyOrderTableList" item="e" separator=",">
+            (#{e.documentDate},#{e.purchasingDocuments},#{e.materialNumber},
+            #{e.collectiveProcurement},#{e.shortText},#{e.unit},#{e.quantity},#{e.orderNetValue})
+        </foreach>
+    </insert>
+
+
+    <!--  查询月度管控采购金额  -->
+    <select id="selectMonthlyControlledMaterialPurchases" resultType="com.ruoyi.common.core.domain.DisplayEntity">
+        select DATE_FORMAT(Document_Date,'%Y-%m-01') yearAndMonth,sum(Order_NetValue) data from Supply_Indicators_PurchaseOrder_table a
+        inner join (
+	        select distinct Material_Number from Supply_Indicators_Collectible_Materials_table
+        ) b
+        on a.Material_Number = b.Material_Number
+        group by yearAndMonth;
+    </select>
+
+    <!--  查询月度采购总金额  -->
+    <select id="selectMonthlyTotalPurchaseAmount" resultType="com.ruoyi.common.core.domain.DisplayEntity">
+        select DATE_FORMAT(Document_Date,'%Y-%m-01') yearAndMonth,SUM(Order_NetValue) data
+        from Supply_Indicators_PurchaseOrder_table
+        group by yearAndMonth
+    </select>
+
+    <!--  清空表  -->
+    <update id="truncatePurchaseOrderTable">
+        TRUNCATE TABLE Supply_Indicators_PurchaseOrder_table
+    </update>
+
+
+    <select id="selectSupplyIndicatorsPurchaseOrderTableList" parameterType="SupplyIndicatorsPurchaseOrderTable" resultMap="SupplyIndicatorsPurchaseOrderTableResult">
+        <include refid="selectSupplyIndicatorsPurchaseOrderTableVo"/>
+        <where>
+            <if test="documentDate != null "> and Document_Date = #{documentDate}</if>
+            <if test="purchasingDocuments != null  and purchasingDocuments != ''"> and Purchasing_Documents = #{purchasingDocuments}</if>
+            <if test="materialNumber != null  and materialNumber != ''"> and Material_Number = #{materialNumber}</if>
+            <if test="collectiveProcurement != null "> and Collective_Procurement = #{collectiveProcurement}</if>
+            <if test="shortText != null  and shortText != ''"> and ShortText = #{shortText}</if>
+            <if test="unit != null  and unit != ''"> and Unit = #{unit}</if>
+            <if test="quantity != null "> and Quantity = #{quantity}</if>
+            <if test="orderNetValue != null "> and Order_NetValue = #{orderNetValue}</if>
+        </where>
+    </select>
+
+    <select id="selectSupplyIndicatorsPurchaseOrderTableBySpId" parameterType="Long" resultMap="SupplyIndicatorsPurchaseOrderTableResult">
+        <include refid="selectSupplyIndicatorsPurchaseOrderTableVo"/>
+        where SP_ID = #{spId}
+    </select>
+
+    <insert id="insertSupplyIndicatorsPurchaseOrderTable" parameterType="SupplyIndicatorsPurchaseOrderTable" useGeneratedKeys="true" keyProperty="spId">
+        insert into Supply_Indicators_PurchaseOrder_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="documentDate != null">Document_Date,</if>
+            <if test="purchasingDocuments != null">Purchasing_Documents,</if>
+            <if test="materialNumber != null">Material_Number,</if>
+            <if test="collectiveProcurement != null">Collective_Procurement,</if>
+            <if test="shortText != null">ShortText,</if>
+            <if test="unit != null">Unit,</if>
+            <if test="quantity != null">Quantity,</if>
+            <if test="orderNetValue != null">Order_NetValue,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="documentDate != null">#{documentDate},</if>
+            <if test="purchasingDocuments != null">#{purchasingDocuments},</if>
+            <if test="materialNumber != null">#{materialNumber},</if>
+            <if test="collectiveProcurement != null">#{collectiveProcurement},</if>
+            <if test="shortText != null">#{shortText},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="orderNetValue != null">#{orderNetValue},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplyIndicatorsPurchaseOrderTable" parameterType="SupplyIndicatorsPurchaseOrderTable">
+        update Supply_Indicators_PurchaseOrder_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="documentDate != null">Document_Date = #{documentDate},</if>
+            <if test="purchasingDocuments != null">Purchasing_Documents = #{purchasingDocuments},</if>
+            <if test="materialNumber != null">Material_Number = #{materialNumber},</if>
+            <if test="collectiveProcurement != null">Collective_Procurement = #{collectiveProcurement},</if>
+            <if test="shortText != null">ShortText = #{shortText},</if>
+            <if test="unit != null">Unit = #{unit},</if>
+            <if test="quantity != null">Quantity = #{quantity},</if>
+            <if test="orderNetValue != null">Order_NetValue = #{orderNetValue},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+        </trim>
+        where SP_ID = #{spId}
+    </update>
+
+    <delete id="deleteSupplyIndicatorsPurchaseOrderTableBySpId" parameterType="Long">
+        delete from Supply_Indicators_PurchaseOrder_table where SP_ID = #{spId}
+    </delete>
+
+    <delete id="deleteSupplyIndicatorsPurchaseOrderTableBySpIds" parameterType="String">
+        delete from Supply_Indicators_PurchaseOrder_table where SP_ID in
+        <foreach item="spId" collection="array" open="(" separator="," close=")">
+            #{spId}
+        </foreach>
+    </delete>
+</mapper>

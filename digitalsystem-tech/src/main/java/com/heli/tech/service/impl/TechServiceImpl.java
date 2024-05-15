@@ -1,9 +1,11 @@
 package com.heli.tech.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.tech.mapper.TechMapper;
@@ -11,60 +13,57 @@ import com.heli.tech.domain.Tech;
 import com.heli.tech.service.ITechService;
 
 /**
- * @description: [技术]指标Service业务层处理
- * @author: hong
- * @date: 2024/4/9 15:51
- **/
+ * [技术]指标填报Service业务层处理
+ *
+ * @author hong
+ * @date 2024-04-27
+ */
 @Service
 public class TechServiceImpl implements ITechService {
+
+
     @Autowired
     private TechMapper techMapper;
 
+
     /**
-     * @description: 新增数据的同时计算出 研发项目计划进度完成率
+     * @description: 新增数据
      * @author: hong
-     * @date: 2024/4/9 14:10
+     * @date: 2024/4/24 14:10
      **/
     @Override
     public int insertTech(Tech tech) {
-        return techMapper.insertTech(calculateCompletionRate(tech));
-    }
-
-
-    /**
-     * @description: ----->> 待定，是否允许用户直接修改数据
-     * @author: hong
-     * @date: 2024/4/9 14:11
-     **/
-    @Override
-    public int updateTech(Tech tech) {
-        return 1;
+        tech.setCreateTime(DateUtils.getNowDate());
+        return techMapper.insertTech(tech);
     }
 
 
     /**
      * @description: 计算研发项目计划进度完成率
      * @author: hong
-     * @date: 2024/4/9 11:25
+     * @date: 2024/4/27 11:25
      **/
-    public Tech calculateCompletionRate(Tech tech) {
-        Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(new SimpleDateFormat("yyyy").format(tech.getYearAndMonth()));
-        tech.setPrdscheduleCompletionrate((annualCompletionNumber + tech.getCompletedmonthlyPlancounts()) / tech.getAnnualPlancounts().doubleValue() * 100);
+    public Tech calculateCompletionRate(Tech tech, Long annualNumber) {
+        Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(DateUtils.getYear(tech.getYearAndMonth())) + tech.getCompletedmonthlyPlancounts();
+        tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
         return tech;
     }
 
-    /**
-     * @description: 按年查询数据列表
-     * @author: hong
-     * @date: 2024/4/9 14:10
-     **/
     @Override
-    public List<Tech> selectTechListByYear(int year) {
-        return techMapper.selectTechListByYear(year);
+    public List<DisplayEntity> selectNonStandardAVGPreparationDays(Date startTime, Date endTime) {
+        return techMapper.selectNonStandardAVGPreparationDays(startTime, endTime);
+    }
+
+    @Override
+    public List<DisplayEntity> selectPRDScheduleCompletionRate(Date startTime, Date endTime) {
+        return techMapper.selectPRDScheduleCompletionRate(startTime, endTime);
     }
 
 
-
+    @Override
+    public Boolean checkTechMonthlyDataIsExisted(Date date) {
+        return techMapper.checkTechMonthlyDataIsExisted(date);
+    }
 
     /**
      * 查询[技术]指标填报
@@ -86,6 +85,31 @@ public class TechServiceImpl implements ITechService {
     @Override
     public List<Tech> selectTechList(Tech tech) {
         return techMapper.selectTechList(tech);
+    }
+
+    /**
+     * 新增[技术]指标填报
+     *
+     * @param tech [技术]指标填报
+     * @return 结果
+     */
+//    @Override
+//    public int insertTech(Tech tech)
+//    {
+//        tech.setCreateTime(DateUtils.getNowDate());
+//        return techMapper.insertTech(tech);
+//    }
+
+    /**
+     * 修改[技术]指标填报
+     *
+     * @param tech [技术]指标填报
+     * @return 结果
+     */
+    @Override
+    public int updateTech(Tech tech) {
+        tech.setUpdateTime(DateUtils.getNowDate());
+        return techMapper.updateTech(tech);
     }
 
     /**

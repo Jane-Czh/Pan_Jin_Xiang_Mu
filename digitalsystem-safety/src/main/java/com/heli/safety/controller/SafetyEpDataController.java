@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.heli.safety.service.ISafetyEpMaintenanceTableService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +43,7 @@ public class SafetyEpDataController extends BaseController {
 
 
 
+
     /**
      * @return
      * @description: 上传 维修数据表excel，并存入数据库
@@ -49,6 +52,7 @@ public class SafetyEpDataController extends BaseController {
      */
     @PostMapping("/importTable")
     public R<String> simpleRead(Date yearAndMonth, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
+
         //检查当月数据是否上传
         if (safetyEpMaintenanceTableService.checkSafetyEpMaintenanceTableIsExisted(yearAndMonth)){
             return R.fail("当月数据已上传");
@@ -59,6 +63,9 @@ public class SafetyEpDataController extends BaseController {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
             throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
         }
+
+
+
     }
 
 
@@ -67,13 +74,19 @@ public class SafetyEpDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('safety:data:add')")
     @Log(title = "[安全环保]指标填报", businessType = BusinessType.INSERT)
-    @PostMapping("fillingData")
+    @PostMapping("/fillingData")
     public AjaxResult add(@RequestBody SafetyEp safetyEp) {
         if(safetyEpService.checkSafetyFillingDataIsExisted(safetyEp.getYearAndMonth()))
             return AjaxResult.error("当月数据已填报");
-//        return toAjax(safetyEpService.insertSafetyEp(safetyEp));
+
+        safetyEp.setCreateBy(getUsername());
+        safetyEp.setCreateTime(DateUtils.getNowDate());
+
         return toAjax(safetyEpService.InsertOrUpdateSafetyEp(safetyEp));
     }
+
+
+
 
 
     /**

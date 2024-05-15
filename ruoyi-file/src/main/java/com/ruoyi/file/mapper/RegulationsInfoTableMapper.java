@@ -7,7 +7,7 @@ import com.ruoyi.file.domain.RegulationsInfoTable;
  * 文件管理Mapper接口
  *
  * @author ruoyi
- * @date 2024-04-10
+ * @date 2024-04-17
  */
 public interface RegulationsInfoTableMapper
 {

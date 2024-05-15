@@ -4,7 +4,7 @@ let dataA = {
         {
             id: '1234',
             name: '流程A-开始节点',
-            type: 'task',
+            type: 'no',
             left: '26px',
             top: '161px',
             ico: 'el-icon-user-solid',
@@ -13,7 +13,7 @@ let dataA = {
         {
             id: '2345',
             name: '流程A-中间节点',
-            type: 'task',
+            type: 'no',
             left: '340px',
             top: '161px',
             ico: 'el-icon-goods',
@@ -22,7 +22,7 @@ let dataA = {
         {
             id: '3456',
             name: '流程A-结束节点',
-            type: 'task',
+            type: 'no',
             left: '670px',
             top: '161px',
             ico: 'el-icon-present',

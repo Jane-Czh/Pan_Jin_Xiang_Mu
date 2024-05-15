@@ -34,21 +34,22 @@ public class ProductionTableServiceImpl implements IProductionTableService {
             // 读取文件内容
             EasyExcel.read(inputStream, ProductionTable.class, new ProductionTableListener(productionTableMapper)).sheet().doRead();
 
-
-
-            //开始计算
+            //计算每日上线数和完工数
             List<ProductionCountNumberEntity> list1 = productionTableMapper.selectLaunchNumGroupByDate();
-            System.out.println(list1);
-
             List<ProductionCountNumberEntity> list2 = productionTableMapper.selectCompletionNumGroupByDate();
-            System.out.println(list2);
+            productionTableMapper.batchInsertOrUpdateLaunch(list1);
+            productionTableMapper.batchInsertOrUpdateCompletion(list2);
 
-            int i = productionTableMapper.batchInsertOrUpdateLaunch(list1);
+            //计算月度上线数和完工数
+            List<ProductionCountNumberEntity> numberByMonth = productionTableMapper.selectProductionCountNumberByMonth();
+            productionTableMapper.batchInsertOrUpdateMonthlyLaunchAndCompletion(numberByMonth);
+            log.info("月度上线数和完工数"+ numberByMonth);
 
-            System.out.println(i);
-            int j = productionTableMapper.batchInsertOrUpdateCompletion(list2);
+            //计算年度上线数和完工数
+            List<ProductionCountNumberEntity> numberByYear = productionTableMapper.selectProductionCountNumberByYear();
+            productionTableMapper.batchInsertOrUpdateYearlyLaunchAndCompletion(numberByYear);
+            log.info("年度上线数和完工数"+ numberByYear);
 
-            System.out.println(j);
 
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {

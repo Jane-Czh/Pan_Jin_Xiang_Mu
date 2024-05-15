@@ -1,5 +1,42 @@
 import request from '@/utils/request'
-import axios from 'axios'
+
+// 部署的时候将localhost --> ip 172.19.9.246
+// 同时还有：pane.vue--save()、 edit_panel.vue--updateProject()
+
+
+// 按照name查询流程
+export function getProjectByName(query) {
+  return request({
+    url: 'http://localhost:8081/project/searchList',
+    method: 'post',
+    data: {
+      name: query.name
+    }
+
+  })
+}
+
+
+// 根据id获取流程名称name
+export function getProjectName(id) {
+  return request({
+    url: 'http://localhost:8081/project/projectName/' + id,
+    method: 'get',
+  })
+}
+
+// 指标:当前流程变更次数统计
+export function getIndicatorUpdateCounts(data) {
+  return request({
+    url: `http://localhost:8081/project/indicators/updateCounts`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      id: data.id,
+    }
+  })
+}
 
 
 // 查询流程列表

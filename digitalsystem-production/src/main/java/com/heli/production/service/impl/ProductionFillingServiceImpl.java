@@ -1,5 +1,6 @@
 package com.heli.production.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.production.domain.ProductionFilling;
@@ -19,6 +20,16 @@ import com.heli.production.service.IProductionFillingService;
 public class ProductionFillingServiceImpl implements IProductionFillingService {
     @Autowired
     private ProductionFillingMapper productionFillingMapper;
+
+    @Override
+    public Boolean checkProductionFillingDataIsExisted(Date date) {
+        return productionFillingMapper.checkProductionFillingDataIsExisted(date);
+    }
+
+    @Override
+    public List<Date> selectExistedYearAndMonth() {
+        return productionFillingMapper.selectExistedYearAndMonth();
+    }
 
     /**
      * 查询[生产]手动填报指标功能

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -188,4 +189,51 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
     }
+
+    /**
+     * @description: 得到当前月份的上一个月
+     * @author: hong
+     * @date: 2024/4/23 11:32
+     **/
+    public static Date getLastMonth(Date date){
+        //将date转化为localDateTime
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        //利用localDateTime工具得到当前月份的上一个月，并且重新转化为Date类型
+        return Date.from(localDateTime.minusMonths(1).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date getNextMonth(Date date){
+        //将date转化为localDateTime
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        //利用localDateTime工具得到当前月份的上一个月，并且重新转化为Date类型
+        return Date.from(localDateTime.plusMonths(1).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * @description: 得到当前年的前一年
+     * @author: hong
+     * @date: 2024/4/23 11:32
+     **/
+    public static Integer getYear(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.YEAR);
+    }
+
+    public static Integer getMonth(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.MONTH) + 1;
+    }
+
+    //获取当前日期的前一天，传入date类型参数
+    public static Date getLastDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return calendar.getTime();
+    }
+
 }

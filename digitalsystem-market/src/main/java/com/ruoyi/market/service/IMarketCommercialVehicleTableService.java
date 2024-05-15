@@ -1,10 +1,9 @@
 package com.ruoyi.market.service;
 
-import com.ruoyi.market.domain.MarketCommercialVehicleTable;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
+import com.ruoyi.market.domain.MarketCommercialVehicleTable;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品车台账Service接口

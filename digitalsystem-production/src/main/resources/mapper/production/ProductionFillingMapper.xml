@@ -108,4 +108,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{productionId}
         </foreach>
     </delete>
+
+
+
+    <!-- 根据月份，检查当月数据是否上传 -->
+    <select id="checkProductionFillingDataIsExisted" parameterType="Date" >
+        SELECT EXISTS(SELECT 1 FROM Production WHERE Year_And_Month=#{date})
+    </select>
+
+    <!-- 查询已经上传数据的月份   -->
+    <select id="selectExistedYearAndMonth" parameterType="Date" resultType="map">
+        select * from (
+            select Year_And_Month from Production
+            order by Year_And_Month DESC
+        ) as t
+        order by Year_And_Month ASC
+    </select>
+
 </mapper>

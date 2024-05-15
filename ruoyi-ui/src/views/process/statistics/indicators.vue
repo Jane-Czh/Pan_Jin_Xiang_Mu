@@ -206,7 +206,7 @@ export default {
       };
       this.option = {
         title: {
-          text: "流程 "+this.projectName+" 更新频率统计 / 月",
+          text: "流程 "+this.projectName+" 更新频率统计（月）",
         },
         tooltip: {
           trigger: "axis",
@@ -262,6 +262,7 @@ export default {
             emphasis: {
               focus: "series",
             },
+            //TODO 将一个具体的更新时间
             data: this.data.map((item) => item.times),
           },
         ],

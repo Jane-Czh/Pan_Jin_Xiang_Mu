@@ -708,7 +708,7 @@ export default {
       var node = {
         id: nodeId,
         name: nodeName,
-        type: nodeMenu.type,
+        type: "no",
         left: left + "px",
         top: top + "px",
         ico: nodeMenu.ico,

@@ -12,18 +12,18 @@
     >
       <div class="container">
         <!-- 1、左侧50%流程图内容 -->
+        <!-- 2、右侧展示部分 -->
         <div
-          v-if="easyFlowVisible"
-          style="width: 55%; height: calc(80vh)"
+          style="width: 50%; height: calc(80vh)"
           class="left-side"
         >
           <el-row>
             <!--顶部工具菜单-->
             <el-col :span="24">
               <div class="ef-tooltar">
-                <el-link type="primary" :underline="false">{{
-                  data.name
-                }}</el-link>
+                <el-link type="primary" :underline="false"
+                  >{{ data.name }}</el-link
+                >
                 <el-divider direction="vertical"></el-divider>
                 <el-button
                   type="text"
@@ -39,29 +39,26 @@
                   @click="zoomSub"
                 ></el-button>
                 <el-divider direction="vertical"></el-divider>
-                <!-- 历史 -->
+                <!-- 关闭查看历史 -->
                 <!-- <el-button
-                type="primary"
-                icon="el-icon-folder-opened"
-                size="large"
-                @click="historyView()"
-              ></el-button> -->
-                <el-divider direction="vertical"></el-divider>
+                  style="float: right"
+                  type="primary"
+                  icon="el-icon-close"
+                  size="large"
+                  @click="historyView()"
+                ></el-button> -->
+                <!-- <el-divider direction="vertical"></el-divider> -->
               </div>
             </el-col>
           </el-row>
           <div style="display: flex; height: calc(100% - 47px)">
-            <div
-              id="myContainer"
-              ref="myContainer"
-              class="container"
-            >
+            <div id="myContainer" ref="myContainer">
               <template v-for="node in data.nodeList">
                 <flow-node
                   :id="node.id"
                   :key="node.id"
                   :node="node"
-                  :activeElement="activeElement"
+                  :activeElement="historyActiveElement"
                   @changeNodeSite="changeNodeSite"
                   @nodeRightMenu="nodeRightMenu"
                   @clickNode="clickNode"
@@ -70,7 +67,7 @@
                 </flow-node>
               </template>
               <!-- 给画布一个默认的宽度和高度 -->
-              <div style="position: absolute; top: 2000px; left: 2000px">
+              <div style="position: absolute; top: 2000px; right: 2000px">
                 &nbsp;
               </div>
             </div>
@@ -78,7 +75,11 @@
         </div>
 
         <!-- 2、右侧50%历史数据部分 v-if="!showHisPanelVisible" -->
-        <div style="width: 50" class="right-side line-between-divs" v-if="!showHisPanelVisible">
+        <div
+          style="width: 50%"
+          class="right-side line-between-divs"
+          v-if="!showHisPanelVisible"
+        >
           <el-table v-loading="loading" :data="historyProjectList" stripe>
             <el-table-column
               label="序号"
@@ -165,7 +166,11 @@
         </div>
 
         <!-- 2、右侧展示部分 -->
-        <div v-else style="width: 50%; height: calc(80vh)" class="left-side line-between-divss">
+        <div
+          v-else
+          style="width: 50%; height: calc(80vh)"
+          class="left-side line-between-divss"
+        >
           <el-row>
             <!--顶部工具菜单-->
             <el-col :span="24">
@@ -201,11 +206,7 @@
             </el-col>
           </el-row>
           <div style="display: flex; height: calc(100% - 47px)">
-            <div
-              id="efContainer"
-              ref="efContainer"
-              class="container"
-            >
+            <div id="efContainer" ref="efContainer">
               <template v-for="node in this.historyData.nodeList">
                 <flow-node
                   :id="node.id"
@@ -470,7 +471,6 @@ export default {
         });
         this.jsPlumb.setContainer(this.$refs.myContainer);
       });
-
     },
 
     // 加载流程图
@@ -619,6 +619,11 @@ export default {
   width: 100%;
 }
 
+.mycontainer {
+  display: flex;
+  width: 100%;
+}
+
 .left-side,
 .right-side {
   width: 50%;
@@ -653,5 +658,4 @@ export default {
   background-image: linear-gradient(to bottom, gray 50%, transparent 50%);
   background-size: 1px 5px; /* 控制虚线的高度和间隔 */
 }
-
 </style>

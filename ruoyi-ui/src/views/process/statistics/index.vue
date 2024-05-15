@@ -36,276 +36,34 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:project:add']"
-        >新增</el-button>
-      </el-col> -->
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:project:edit']"
-          >修改</el-button
-        >
-      </el-col> -->
+    <!-- 记录流程变更展示数据面板 -->
+    <el-row v-for="(row, index) in this.rowList" :key="index" :gutter="20">
+      <el-col v-for="item in row" :key="item.id" :span="6">
+        <el-card shadow="hover">
+          <div slot="header" class="clearfix">
+            <span>流程：{{ item.name }}</span>
+          </div>
 
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:project:remove']"
-          >批量删除</el-button
-        >
-      </el-col> -->
+          <div>
+            <el-button type="text" @click="toDetail(item)"
+              >流程{{ item.name }}的变更次数统计</el-button
+            >
+          </div>
+          <!-- 搞一个button、点击跳转页面展示数据 -->
+          <!-- <el-popover placement="right" trigger="click" width="750"> -->
 
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:project:export']"
-          >导出</el-button
-        >
-      </el-col> -->
-      <right-toolbar
-        :showSearch.sync="showSearch"
-        @queryTable="getList"
-      ></right-toolbar>
+          <!-- </el-popover> -->
+        </el-card>
+      </el-col>
     </el-row>
 
-    <el-table
-      v-loading="loading"
-      :data="projectList"
-      stripe
-      @cell-mouse-enter="enter"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="ID" align="center" prop="id" /> -->
-      <el-table-column label="序号" align="center" prop="id">
-        <template slot-scope="scope">
-          <!-- <span>{{ scope.$index + 1 }}</span> -->
-          <span>{{ (pageIndex - 1) * pageSize + scope.$index + 1 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="流程名称" align="center" prop="name" />
-      <!-- <el-table-column label="${comment}" align="center" prop="json" /> -->
-      <el-table-column label="创建人" align="center" prop="createBy" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createDate"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{
-            parseTime(scope.row.createDate, "{y}-{m}-{d}  {h}:{i}:{s}")
-          }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="更新人" align="center" prop="updateBy" />
-      <el-table-column
-        label="更新时间"
-        align="center"
-        prop="updateDate"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{
-            parseTime(scope.row.updateDate, "{y}-{m}-{d}  {h}:{i}:{s}")
-          }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="绑定文件" align="center">
-        <template slot-scope="scope">
-          <!-- 111111111111制度文件 -->
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="制度文件,点击查看详情！"
-            placement="top"
-          >
-            <!-- popover：1、制度文件显示 -->
-            <el-popover
-              placement="bottom"
-              title="绑定的制度文件"
-              trigger="click"
-            >
-              <template slot="reference">
-                <span class="file">
-                  <i class="el-icon-files"></i>
-                </span>
-              </template>
-              <!-- slot插槽展示自定义内容 -->
-              <div v-if="nodeFileNames.length != 0">
-                <ul>
-                  <li v-for="(file, index) in nodeFileNames" :key="index">
-                    {{ file }}
-                    <el-divider direction="vertical"></el-divider>
-                    <!-- 下载文件  -->
-                    <i class="el-icon-download download-icon">
-                      <a :href="baseUrl + fileHyperLinks[index]" download
-                        >点击下载</a
-                      >
-                    </i>
-                    <el-divider direction="vertical"></el-divider>
-                    <!-- 预览文件 -->
-                    <i
-                      class="el-icon-view preview-icon"
-                      @click="previewFile(fileHyperLinks[index])"
-                    >
-                      <a href="#">预览</a>
-                    </i>
-                  </li>
-                </ul>
-              </div>
-              <div v-else>"无绑定"</div>
-              <!-- slot插槽over -->
-            </el-popover>
-          </el-tooltip>
-
-          <!-- 222222222222222表单文件  @mouseenter.native="getFormFileData(scope.row)"-->
-          <el-tooltip
-            style="margin-left: 10px"
-            class="item"
-            effect="dark"
-            content="表单文件,点击查看详情！"
-            placement="top"
-          >
-            <!-- popover：2、制度文件显示 -->
-            <el-popover
-              placement="bottom"
-              title="绑定的表单文件"
-              trigger="click"
-            >
-              <!-- slot插槽展示自定义内容 -->
-              <template slot="reference">
-                <!-- <el-button
-                  type="file1"
-                  size="small"
-                  round
-                  icon="el-icon-files"
-                ></el-button> -->
-                <span class="file">
-                  <i class="el-icon-tickets"></i>
-                </span>
-              </template>
-              <!-- slot插槽展示自定义内容 -->
-              <div v-if="nodeFormNames.length != 0">
-                <ul>
-                  <li v-for="(file, index) in nodeFormNames" :key="index">
-                    {{ file }}
-                    <el-divider direction="vertical"></el-divider>
-                    <!-- 下载文件  -->
-                    <i class="el-icon-download download-icon">
-                      <a :href="baseUrl + formHyperLinks[index]" download
-                        >点击下载</a
-                      >
-                    </i>
-                    <el-divider direction="vertical"></el-divider>
-                    <!-- 预览文件 -->
-                    <i
-                      class="el-icon-view preview-icon"
-                      @click="previewFile(formHyperLinks[index])"
-                    >
-                      <a href="#"> 预览</a>
-                    </i>
-                  </li>
-                </ul>
-              </div>
-              <div v-else>"无绑定"</div>
-              <!-- slot插槽over -->
-            </el-popover>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="scope">
-          <el-button
-            type="primary"
-            size="small"
-            plain
-            round
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:project:edit']"
-            >修改</el-button
-          >
-          <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> -->
-
-          <el-button
-            type="success"
-            size="small"
-            plain
-            round
-            icon="el-icon-edit-outline"
-            @click="edit(scope.row)"
-          >
-            更新</el-button
-          >
-
-          <br />
-
-          <el-button
-            type="info"
-            size="small"
-            plain
-            round
-            icon="el-icon-document"
-            @click="view(scope.row)"
-          >
-            查看</el-button
-          >
-
-          <el-button
-            type="danger"
-            size="small"
-            plain
-            round
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:project:remove']"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- 分页 -->
-    <el-pagination
-      @size-change="sizeChangeHandle"
-      @current-change="currentChangeHandle"
-      :current-page="pageIndex"
-      :page-sizes="[5, 10, 20, 50, 100]"
-      :page-size="pageSize"
-      :total="totalPage"
-      layout="->, total, sizes, prev, pager, next, jumper"
-    >
-    </el-pagination>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
 
     <!-- 添加或修改流程对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -395,8 +153,12 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+
       // 流程表格数据
       projectList: [],
+      // 流程表格数据--布局分组数据
+      rowList: [],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -407,13 +169,11 @@ export default {
         pageSize: 10,
         name: null,
       },
-
-      dataList: [],
       // 分页参数
+      dataList: [],
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
-
       dataListSelections: [],
 
       // 表单参数
@@ -433,12 +193,19 @@ export default {
   },
 
   created() {
-    //获取数据
+    //获取数据 --> 改为获取当前流程的全部历史数据
     this.getList();
   },
 
   methods: {
-    /**搜索功能1、按照project name进行搜索 */
+    //路由跳转--转到数据展示部分
+    toDetail(item) {
+      //item 是当前的最新版本流程
+      // console.log("item========>",item)
+      //设置id为每个流程都单独指定一个统计数据的页面
+      let id = item.id;
+      this.$router.push("/process/statistics/indicators/" + id);
+    },
 
     /**根据project的state(制度文件ids)、type(表单文件ids)查找filenames */
     // 1.1 查询制度文件列表
@@ -602,6 +369,7 @@ export default {
     /** 查询流程列表 */
     getList() {
       this.projectList = [];
+      this.rowList = [];
 
       this.loading = true;
       listProject(this.queryParams).then((response) => {
@@ -616,23 +384,36 @@ export default {
           return new Date(a.createDate) - new Date(b.createDate);
         });
 
-        //分页功能
-        this.totalPage = response.length;
+        //TODO 分页功能、分科室搜索功能等
+        // this.total = response.total;
 
-        //数据分页
-        this.projectList = this.projectList.slice(
-          (this.pageIndex - 1) * this.pageSize,
-          this.pageIndex * this.pageSize
-        );
+        //el-card做分组布局
+        for (let i = 0; i < this.projectList.length; i += 4) {
+          // 4表示每行4条
+          this.rowList.push(this.projectList.slice(i, i + 4));
+        }
 
         this.loading = false;
       });
     },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        name: null,
+      };
+      this.resetForm("form");
+    },
 
     /** 搜索流程by name */
-
     searchByName() {
       this.projectList = [];
+      this.rowList = [];
 
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
@@ -646,33 +427,23 @@ export default {
         //   // 按照updateDate字段从小到大排序
         //   return new Date(a.createDate) - new Date(b.createDate);
         // });
+        // 按照updateDate字段进行排序
+        this.projectList.sort((a, b) => {
+          // 按照updateDate字段从小到大排序
+          return new Date(a.createDate) - new Date(b.createDate);
+        });
 
-        //分页功能
-        this.totalPage = response.length;
+        //TODO 分页功能、分科室搜索功能等
+        // this.total = response.total;
 
-        //数据分页
-        this.projectList = this.projectList.slice(
-          (this.pageIndex - 1) * this.pageSize,
-          this.pageIndex * this.pageSize
-        );
+        //el-card做分组布局
+        for (let i = 0; i < this.projectList.length; i += 4) {
+          // 4表示每行4条
+          this.rowList.push(this.projectList.slice(i, i + 4));
+        }
 
         this.loading = false;
       });
-    },
-
-
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        name: null,
-      };
-      this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -749,19 +520,6 @@ export default {
         .catch(() => {
           // 处理用户取消操作或者任何删除过程中出现的错误
         });
-    },
-
-    // 每页数
-    sizeChangeHandle(val) {
-      this.pageSize = val;
-      this.pageIndex = 1;
-      this.getList();
-    },
-
-    // 当前页
-    currentChangeHandle(val) {
-      this.pageIndex = val;
-      this.getList();
     },
 
     /** 导出按钮操作 */

@@ -186,7 +186,6 @@ export default {
     this.getRegularFileData();
     //获取表单文件数据
     this.getFormFileData();
-  
   },
   mounted() {
     // 当组件挂载时，设置已绑定的文件信息为选中状态

@@ -21,6 +21,7 @@
             size="large"
             @click="downloadData"
           ></el-button> -->
+
           <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
@@ -76,15 +77,7 @@
               >自定义样式</el-button
             >
             <!-- <el-button type="primary" plain round @click="dataReloadE" icon="el-icon-refresh" size="mini">力导图</el-button> -->
-            <!-- <el-button
-              type="primary"
-              plain
-              round
-              icon="el-icon-document"
-              @click="openHelp"
-              size="mini"
-              >帮助</el-button
-            > -->
+
             <!-- 弹出面板 设置流程绑定文件(制度&表单) -->
             <el-button
               v-if="
@@ -265,6 +258,9 @@ import CustomFiles from "./CustomFiles.vue";
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
 import { getDept } from "@/api/system/dept";
+//流程名称重名检测
+import { listProject } from "@/api/system/project";
+
 export default {
   data() {
     return {
@@ -296,6 +292,9 @@ export default {
       formData: {
         project_Name: "",
       },
+
+      // 流程表格数据
+      projectList: [],
 
       //项目名称参数
       project_Id: null,
@@ -380,6 +379,8 @@ export default {
     });
     //获取当前用户信息
     this.getUserInfo();
+    //获取现有流程名称
+    this.getList();
   },
 
   methods: {
@@ -388,7 +389,7 @@ export default {
       getUserProfile()
         .then((response) => {
           // 处理成功的情况
-          console.log("成功获取用户信息:", response.data);
+          // console.log("成功获取用户信息:", response.data);
           const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
           // 填充到对应的输入框中
           this.uploadUsername = userInfo.userName;
@@ -444,9 +445,9 @@ export default {
 
     temp() {
       this.regulationFiles = this.selectedRegulationTemp;
-      console.log("temp1 == ", this.regulationFiles);
+      // console.log("temp1 == ", this.regulationFiles);
       this.formFiles = this.selectedFormsTemp;
-      console.log("temp 2 ", this.formFiles);
+      // console.log("temp 2 ", this.formFiles);
     },
 
     //展示选择的文件名的dialog 点击确定后进行[绑定文件]  -- regulationFiles 、 formFiles
@@ -960,6 +961,24 @@ export default {
       this.dialogVisible = true;
     },
 
+    /** 查询流程列表--> 获取流程的名称进行比较是否 用户输入的流程名称有重名的 */
+    getList() {
+      listProject(this.queryParams).then((response) => {
+        // console.log("manage/index从后端获取的response===>", response);
+        for (var i = 0; i < response.length; i++) {
+          this.projectList.push(response[i]);
+        }
+
+        // console.log("panel init  projectList===>", this.projectList);
+
+        // 按照updateDate字段进行排序
+        // this.projectList.sort((a, b) => {
+        //   // 按照updateDate字段从小到大排序
+        //   return new Date(a.createDate) - new Date(b.createDate);
+        // });
+      });
+    },
+
     //保存流程
     save() {
       // console.log("this.uploadUsername =========>", this.uploadUsername);
@@ -971,13 +990,26 @@ export default {
       //填写 项目流程名称
       this.openDialog();
 
+      // 如果存在同名的项目流程，则提示已存在 --  this.formData.project_Name
+      const projectExists = this.projectList.find(
+        (project) => project.name === this.formData.project_Name
+      );
+      if (projectExists) {
+        this.$message({
+          type: "warning",
+          message: `名称为 ${this.formData.project_Name} 的流程已存在!!!`,
+        });
+        return;
+      } else {
+      }
+
       this.project_Id = nanoid();
       // //将date分解为project、node、line
       const { projectData, nodeData, lineData } = this.splitData(
         this.data,
         this.project_Id
       );
-      console.log("projectData =======",projectData )
+      console.log("projectData =======", projectData);
 
       // 发送项目数据到后端
       axios
@@ -1024,6 +1056,7 @@ export default {
         type: "success",
         message: "流程保存成功！",
       });
+      this.formData.project_Name = null;
     },
 
     //将this.data数据进行拆分
@@ -1031,18 +1064,19 @@ export default {
       const projectData = {
         id: id, //随机id
         // name: data.name, // 使用流程的名称作为项目名称
-        name: this.formData.project_Name, // 使用流程的名称作为项目名称
+        name: this.formData.project_Name, // 使用  用户填入的流程名称 作为项目名称
         // create_date: , 后台记录
 
-        createBy: this.uploadUsername +"/"+this.departmentCategory,
-        // updated_by,
+        createBy: this.uploadUsername + "/" + this.departmentCategory,
+        // 初次创建流程无对应的更新部分的信息
+        // updateBy: "/",
+        // updateDate: "/",
         // 保存绑定的文件 this.idsRegulation & this.idsForm
         state:
-          this.idsRegulation == null
-            ? this.idsRegulation
-            : JSON.stringify(this.idsRegulation), //制度文件ids
-        type:
-          this.idsForm == null ? this.idsForm : JSON.stringify(this.idsForm), //表单文件ids
+          this.idsRegulation != null
+            ? JSON.stringify(this.idsRegulation)
+            : null, //制度文件ids
+        type: this.idsForm != null ? JSON.stringify(this.idsForm) : null, //表单文件ids
       };
 
       const nodeData = data.nodeList.map((node) => ({

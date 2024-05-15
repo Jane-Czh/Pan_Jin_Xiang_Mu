@@ -98,8 +98,11 @@
       destroy-on-close="true"
     >
       <!-- ref 组件 el-table 显示制度文件的数据 -->
-      <div>
-        <custom-tabs ref="customTabs"></custom-tabs>
+      <div v-if="this.dialogVisible">
+        <custom-tabs
+          ref="customTabs"
+          :selectedFileNames="this.selectedFileNames"
+        ></custom-tabs>
       </div>
       <!-- 展示选择的表单名 -->
       <!-- <span v-if="selectedFileName">{{ selectedFileName }}</span> -->
@@ -119,8 +122,12 @@
       destroy-on-close="true"
     >
       <!-- ref 组件 el-table 显示制度文件的数据 -->
-      <div>
-        <custom-tabs ref="customTabs" :selectedFileNames="this.selectedFileNames"></custom-tabs>
+      <div v-if="this.dialogMoreVisible">
+        <custom-tabs
+          ref="customTabs"
+          :selectedFileNames="this.selectedFileNames"
+          :activeName="first"
+        ></custom-tabs>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancleBand(node)">取消绑定</el-button>
@@ -140,8 +147,11 @@
       destroy-on-close="true"
     >
       <!-- ref 组件 el-table 显示制度文件的数据 -->
-      <div>
-        <custom-forms ref="customForms"></custom-forms>
+      <div v-if="this.formsVisible">
+        <custom-forms
+          ref="customForms"
+          :selectedFileNames="this.selectedFormsNames"
+        ></custom-forms>
       </div>
       <!-- 展示选择的表单名 -->
       <span slot="footer" class="dialog-footer">
@@ -162,8 +172,11 @@
       destroy-on-close="true"
     >
       <!-- ref 组件 el-table 显示制度文件的数据 -->
-      <div>
-        <custom-forms ref="customForms"></custom-forms>
+      <div v-if="this.formsMoreVisible">
+        <custom-forms
+          ref="customForms"
+          :selectedFileNames="this.selectedFormsNames"
+        ></custom-forms>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancleFormsBand(node)">取消绑定</el-button>
@@ -282,9 +295,9 @@ export default {
       if (JSON.stringify(node.state) != JSON.stringify("no")) {
         //提示还需要绑定表单吗？或者对绑定的文件进行解绑
         this.selectedFileNames = this.selectedTemp;
-        this.$nextTick(function () {
-          this.$refs.customTabs.setSelectedFileNames(this.selectedFileNames);
-        });
+        // this.$nextTick(function () {
+        //   this.$refs.customTabs.setSelectedFileNames(this.selectedFileNames);
+        // });
       }
     },
 
@@ -331,7 +344,7 @@ export default {
         //提示还需要绑定表单吗？或者对绑定的文件进行解绑
         this.selectedFormsNames = this.selectedFormsTemp;
 
-        this.$refs.customForms.setSelectedFileNames(this.selectedFormsNames);
+        // this.$refs.customForms.setSelectedFileNames(this.selectedFormsNames);
       }
     },
     // 确认绑定按钮
@@ -378,7 +391,7 @@ export default {
       this.selectedFormsTemp = this.selectedFileName;
     },
     //取消绑定-对应节点已经绑定了文件想要取绑
-    cancleFormsBand() {
+    cancleFormsBand(node) {
       this.formsMoreVisible = false;
       this.selectedFormsNames = this.selectedFileName;
       this.selectedFormsTemp = this.selectedFileName;

@@ -45,19 +45,20 @@
           <ul>
             <li v-for="(file, index) in this.nodeFileNames" :key="index">
               {{ file }}
+              <!-- {{ this.fileHyperLinks[index] }} -->
               <el-divider direction="vertical"></el-divider>
               <!-- 下载文件  -->
-              <!-- <a target="_blank"  download :href="`baseUrl +'/' + this.fileHyperLinks[index]`"> </a -->
-              <i
-                class="el-icon-download download-icon"
-                @click.prevent="
-                  downloadRegularFile(index, this.fileHyperLinks[index])
-                "
-              ></i>
-
+              <i class="el-icon-download download-icon">
+                <a :href="baseUrl + fileHyperLinks[index]" download>点击下载</a>
+              </i>
               <el-divider direction="vertical"></el-divider>
               <!-- 预览文件 -->
-              <i class="el-icon-view preview-icon"></i>
+              <i
+                class="el-icon-view preview-icon"
+                @click="previewFile(fileHyperLinks[index])"
+              >
+                <a href="#"> 预览 </a>
+              </i>
             </li>
           </ul>
         </div>
@@ -90,26 +91,21 @@
           <p>--已绑定表单文件如下--</p>
           <ul>
             <li v-for="(file, index) in this.nodeFormNames" :key="index">
-              <!-- <a
-                target="_blank"
-                :href="`baseUrl +'/' + this.formHyperLinks[index]`"
-                dowmnload
-                >{{ file }}</a
-              > -->
               {{ file }}
+              <!-- {{ this.formHyperLinks[index] }} -->
               <el-divider direction="vertical"></el-divider>
               <!-- 下载文件  -->
-              <!-- <a target="_blank"  download :href="`baseUrl +'/' + this.fileHyperLinks[index]`"> </a -->
-              <i
-                class="el-icon-download download-icon"
-                @click.prevent="
-                  downloadRegularFile(index, this.fileHyperLinks[index])
-                "
-              ></i>
-
+              <i class="el-icon-download download-icon">
+                <a :href="baseUrl + formHyperLinks[index]" download>点击下载</a>
+              </i>
               <el-divider direction="vertical"></el-divider>
               <!-- 预览文件 -->
-              <i class="el-icon-view preview-icon"></i>
+              <i
+                class="el-icon-view preview-icon"
+                @click="previewFile(formHyperLinks[index])"
+              >
+                <a href="#"> 预览 </a>
+              </i>
             </li>
           </ul>
         </div>
@@ -122,6 +118,8 @@
   <script>
 import FlowNodeForm from "./node_form";
 import { listFilemanagement } from "@/api/file/filemanagement";
+import { word2Pdf } from "@/api/file/filemanagement";
+
 export default {
   props: {
     node: Object,
@@ -211,31 +209,62 @@ export default {
     this.getFormFileData();
   },
   methods: {
-    //下载制度文件
-    downloadRegularFile(index, url) {
-      // const downloadUrl = `${this.baseUrl}/${this.fileHyperLinks[index]}`;
-      // // 创建一个隐藏的链接并设置其下载属性
-      // const link = document.createElement("a");
-      // link.href = downloadUrl;
-      // link.download = true;
-      // // 将链接添加到文档中并触发点击事件
-      // document.body.appendChild(link);
-      // link.click();
-      // // 清理掉创建的链接
-      // document.body.removeChild(link);
+    // 文件预览
+    previewFile(filePath) {
+      console.log("filePath=======>", filePath);
+
+      const fileType = this.getFileType(filePath);
+      switch (fileType) {
+        case "pdf":
+          window.open(filePath, "_blank");
+          break;
+        case "word":
+          const pdfFilePath = this.convertToPdfPath(filePath);
+          word2Pdf(filePath, pdfFilePath).then((response) => {});
+          window.open(pdfFilePath, "_blank");
+          break;
+      }
+      // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
     },
-    //下载表单文件
-    downloadFormFile(index, url) {
-      // const downloadUrl = `${this.baseUrl}/${this.fileHyperLinks[index]}`;
-      // // 创建一个隐藏的链接并设置其下载属性
-      // const link = document.createElement("a");
-      // link.href = downloadUrl;
-      // link.download = true;
-      // // 将链接添加到文档中并触发点击事件
-      // document.body.appendChild(link);
-      // link.click();
-      // // 清理掉创建的链接
-      // document.body.removeChild(link);
+
+    getFileType(filePath) {
+      // 获取文件名的后缀名
+      const fileExtension = filePath.split(".").pop();
+      // 根据文件后缀名判断文件类型
+      switch (fileExtension.toLowerCase()) {
+        case "pdf":
+          return "pdf";
+        case "doc":
+        case "docx":
+          return "word";
+        case "xls":
+        case "xlsx":
+          return "Excel 文档";
+        case "ppt":
+        case "pptx":
+          return "PowerPoint 文档";
+        // 可以根据需要添加更多的文件类型判断
+        default:
+          return "未知类型";
+      }
+    },
+
+    convertToPdfPath(wordFilePath) {
+      // 找到文件路径中的最后一个点的位置
+      const lastDotIndex = wordFilePath.lastIndexOf(".");
+
+      if (lastDotIndex != -1) {
+        // 获取文件路径中最后一个点之前的部分（文件名部分）
+        const prefix = wordFilePath.substring(0, lastDotIndex);
+
+        // 将文件名部分与 .pdf 后缀拼接，形成 PDF 文件路径
+        const pdfFilePath = prefix + ".pdf";
+
+        return pdfFilePath;
+      } else {
+        // 文件路径中没有点，无法更改后缀
+        throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
+      }
     },
 
     // 正对绑定的文件id，去文件管理 查找其地址，使得提供的文件能够 下载/预览
@@ -266,6 +295,15 @@ export default {
               }
             });
           }
+          // console.log(
+          //   "制度文件名称===== this.nodeFileNames===>",
+          //   this.nodeFileNames
+          // );
+
+          // console.log(
+          //   "制度文件===》预览部分的filePath==== this.fileHyperLinks===>",
+          //   this.fileHyperLinks
+          // );
         });
     },
 
@@ -289,7 +327,7 @@ export default {
                   JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
               );
               if (row != null) {
-                //将匹配的记录的文件名、链接保存 (nodeFileNames、fileHyperLinks)
+                //将匹配的记录的文件名、链接保存 (nodeFileNames、formHyperLinks)
                 this.nodeFormNames.push(row.fileName);
                 this.formHyperLinks.push(row.filePath);
               }
@@ -337,7 +375,7 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 999;
   display: none;
-  top: calc(100%); /* 让面板位于节点下方 */
+  top: calc(100%-100px); /* 让面板位于节点下方 */
   left: calc(100% - 78px); /* 水平居中 */
   transform: translateX(-50%); /* 水平居中 */
   font-size: 10px; /* 设置字体大小为 12px */

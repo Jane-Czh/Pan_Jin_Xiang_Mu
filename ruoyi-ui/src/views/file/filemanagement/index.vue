@@ -615,6 +615,8 @@
     },
     created() {
       this.getList();
+
+      console.log("uploadFileUrl==============>",this.uploadFileUrl)
     },
     methods: {
       /** 查询文件管理列表 */
@@ -687,6 +689,8 @@
       /** 上传制度文件 */
       handleUpload() {
         this.reset();
+
+        
         this.fileUploadDialogVisible = true;
         this.title = "上传制度文件";
       },
@@ -719,6 +723,8 @@
       },
       /** 上传文件提交按钮 */
       uploadSubmitForm() {
+        
+
         this.$refs["form"].validate(valid => {
           if (valid) {
               this.form.newFlag = 1;
@@ -918,6 +924,8 @@
       },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {
+       
+
         const KB = 1024;
         const MB = KB * 1024;
         const GB = MB * 1024;
@@ -968,6 +976,8 @@
       },
       // 调用接口获取用户信息
       getUserInfo() {
+
+       
         getUserProfile().then(response => {
           // 处理成功的情况
           console.log('成功获取用户信息:', response.data)

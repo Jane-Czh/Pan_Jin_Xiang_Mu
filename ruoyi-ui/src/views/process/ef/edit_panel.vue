@@ -190,6 +190,11 @@ import lodash from "lodash";
 
 import axios from "axios";
 import { nanoid } from "nanoid";
+//获取用户信息-用户名
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/dept";
+
 // 绑定文件
 import CustomFiles from "./CustomFiles.vue";
 // 文件api
@@ -198,6 +203,11 @@ export default {
   inject: ["reload"],
   data() {
     return {
+      //用户名
+      uploadUsername: null,
+      //所属部门
+      departmentCategory: null,
+
       // 后台表单文件数据
       formsmanagementList: [],
       // 后台制度文件数据
@@ -253,7 +263,6 @@ export default {
       // 流程原始数据,判断是否修改
       oriState: {},
       oriType: {},
-
 
       // 激活的元素、可能是节点、可能是连线
       activeElement: {
@@ -325,6 +334,8 @@ export default {
     //对于从index中传递过来需要回显的filenames进行渲染
     // this.getRegularFileData();
     // this.getFormFileData();
+    //获取当前用户信息
+    this.getUserInfo();
   },
 
   beforeDestroy() {
@@ -334,6 +345,27 @@ export default {
   },
 
   methods: {
+    // 调用接口获取用户信息
+    getUserInfo() {
+      getUserProfile()
+        .then((response) => {
+          // 处理成功的情况
+          console.log("成功获取用户信息:", response.data);
+          const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+          // 填充到对应的输入框中
+          this.uploadUsername = userInfo.userName;
+          //根据部门id获取部门名称
+          getDept(userInfo.deptId).then((response) => {
+            const deptInfo = response.data;
+            this.departmentCategory = deptInfo.deptName;
+          });
+        })
+        .catch((error) => {
+          // 处理失败的情况
+          console.error("获取用户信息失败:", error);
+        });
+    },
+
     /**流程绑定文件(制度&表单)*/
 
     // 无绑定文件时,进行文件的绑定
@@ -843,7 +875,6 @@ export default {
             if (row != null) {
               this.regulationFiles.push(row.fileName);
               this.selectedRegulationTemp.push(row.fileName);
-
             }
           });
         });
@@ -952,7 +983,11 @@ export default {
 
     updateProject() {
       //this.oriData === this.data 并不是在比较对象的内容，而是在比较对象的引用是否相同
-      if (JSON.stringify(this.oriData) === JSON.stringify(this.data) && JSON.stringify(this.idsForm) === JSON.stringify(this.oriType) && JSON.stringify(this.idsRegulation) === JSON.stringify(this.oriState)) {
+      if (
+        JSON.stringify(this.oriData) === JSON.stringify(this.data) &&
+        JSON.stringify(this.idsForm) === JSON.stringify(this.oriType) &&
+        JSON.stringify(this.idsRegulation) === JSON.stringify(this.oriState)
+      ) {
         this.$message.warning("未进行修改流程,无法保存!请修改后再保存!!");
       } else {
         //projectId 在对应的 node节点属性中有.
@@ -1014,9 +1049,9 @@ export default {
           type: "success",
           message: "流程更新成功！",
         });
-
+        //让面板消失 、页面刷新装载更新后的数据
+        this.easyFlowVisible = false;
         this.reload();
-        // this.easyFlowVisible = false;
       }
     },
 
@@ -1029,8 +1064,8 @@ export default {
 
         // create_date: , 后台记录
 
-        // create_by:,
-        // updated_by,
+        // create_by: 更新流程无create_by,
+        updateBy: this.uploadUsername + "/" + this.departmentCategory,
         // 保存绑定的文件 this.idsRegulation & this.idsForm
         state:
           this.idsRegulation == null

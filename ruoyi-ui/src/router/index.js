@@ -1201,7 +1201,7 @@ export const dynamicRoutes = [
     ]
   },
 
-  //流程模块
+  //流程模块-流程新建
   {
     path: '/ef',
     component: Layout,
@@ -1216,6 +1216,39 @@ export const dynamicRoutes = [
       }
     ]
   },
+  //流程模块-流程统计
+  {
+    path: '/statistics',
+    component: Layout,
+    hidden: true,
+    permissions: ['system:user:edit'],
+    children: [
+      {
+        path: 'statistics',
+        component: () => import('@/views/process/statistics/index'),
+        name: '流程',
+        meta: { title: '流程统计', activeMenu: '/statistics/index' }
+      }
+    ]
+  },
+
+  //流程模块 -- 流程指标: 流程变更次数统计
+  {
+    path: '/process/statistics/index', //ori from 路径
+    component: Layout,
+    hidden: true,
+    permissions: ['system:user:edit'],
+    children: [
+      {
+        path: '/process/statistics/indicators/:id',// to 路径
+        component: () => import('@/views/process/statistics/indicators'), //组件vue路径
+        name: 'indicators',
+        meta: { title: '详细流程统计' }
+      }
+    ]
+  },
+
+  
   //流程模块
   {
     path: '/project',
@@ -1225,20 +1258,20 @@ export const dynamicRoutes = [
 
   },
   //文件模块
-  // { 
-  //   path: '/file/filemanagement/index',
-  //   component: Layout,
-  //   hidden: true,
-  //   permissions: ['file:filemanagement:list'],
-  //   children: [
-  //     {
-  //       path: '/file/filemanagement/historyVersions/:regulationsId(\\d+)', // 路由路径
-  //       component: () => import('@/views/file/filemanagement/historyVersions'), // 对应的组件
-  //       name: 'historyVersions', // 路由名称
-  //       meta: { title: '历史版本管理' } // 元信息，用于设置标题等
-  //     }
-  //   ]
-  // },
+  { 
+    path: '/file/filemanagement/index',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:filemanagement:list'],
+    children: [
+      {
+        path: '/file/filemanagement/historyVersions/:regulationsId(\\d+)', // 路由路径
+        component: () => import('@/views/file/filemanagement/historyVersions'), // 对应的组件
+        name: 'historyVersions', // 路由名称
+        meta: { title: '历史版本管理' } // 元信息，用于设置标题等
+      }
+    ]
+  },
 
 ]
 

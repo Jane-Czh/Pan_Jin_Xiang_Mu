@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <!-- 1 -->
+    <!-- 1  :name= this.$props.activeName -->
     <el-tab-pane
       label="制度文件"
       name="first"
@@ -65,6 +65,7 @@ export default {
       type: Array,
       default: () => [],
     },
+    activeName: "first",
   },
   name: "CustomTabs",
   inject: ["reload"],
@@ -72,7 +73,7 @@ export default {
     return {
       // 制度文件数据
       filemanagementList: [],
-      activeName: "first",
+      // activeName: "first",
       // 制度文件数据
 
       // 选中数组传给 node
@@ -113,9 +114,13 @@ export default {
   created() {
     this.getRegularFileData();
   },
+
   mounted() {
-    // 当组件挂载时，设置已绑定的文件信息为选中状态
-    // this.setSelectedFileNames(this.props.selectedFileNames);
+    // 当组件挂载时，设置已绑定的文件信息为选中状态--展示回显效果
+    this.setFilesSelected(
+      JSON.parse(JSON.stringify(this.$props.selectedFileNames))
+    );
+
   },
 
   destroyed() {
@@ -123,9 +128,9 @@ export default {
   },
 
   methods: {
-    hello() {
-      console.log("hello");
-    },
+    // hello() {
+    //   console.log("hello");
+    // },
     /** 查询制度文件列表 */
     getRegularFileData() {
       listFilemanagement(this.queryParams).then((response) => {
@@ -160,26 +165,29 @@ export default {
       };
     },
 
-    //接收node的数据
-    setSelectedFileNames(name) {
-      // 接收父组件传递的已绑定的文件信息
-      // this.props.selectedFileNames = names;
-      // 设置已绑定的文件信息为已选状态
-      this.setFilesSelected(name);
-    },
+    // //接收node的数据
+    // setSelectedFileNames(name) {
+    //   // 接收父组件传递的已绑定的文件信息
+    //   // this.props.selectedFileNames = names;
+    //   // 设置已绑定的文件信息为已选状态
+    //   this.setFilesSelected(name);
+    // },
+
     setFilesSelected(name) {
       if (name != null) {
         // 将已绑定的文件信息设置为已选状态
-        this.$nextTick(() => {
-          name.forEach((name) => {
-            const row = this.filemanagementList.find(
-              (item) => item.fileName === name
-            );
-            if (row) {
-              this.$refs.multipleTable.toggleRowSelection(row, true);
-            }
+        setTimeout(() => {
+          this.$nextTick(() => {
+            name.forEach((name) => {
+              const row = this.filemanagementList.find(
+                (item) => item.fileName === name
+              );
+              if (row) {
+                this.$refs.multipleTable.toggleRowSelection(row, true);
+              }
+            });
           });
-        });
+        }, 1000);
       }
     },
 

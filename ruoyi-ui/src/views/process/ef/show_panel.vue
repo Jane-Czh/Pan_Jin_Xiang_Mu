@@ -5,7 +5,7 @@
     <el-dialog
       :title="`查看[ ${data.name} ]流程详情`"
       :visible.sync="easyFlowVisible"
-      width="90%"
+      width="85%"
       :before-close="handleClose"
       destroy-on-close="true"
       append-to-body
@@ -104,9 +104,9 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="创建人" align="center" prop="createBy" />
+            <el-table-column label="更新人" align="center" prop="createBy" />
             <el-table-column
-              label="修改时间"
+              label="更新时间"
               align="center"
               prop="updateDate"
               width="180"
@@ -118,7 +118,7 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="修改人" align="center" prop="updataBy" />
+            <el-table-column label="修改人" align="center" prop="updateBy" />
             <el-table-column
               label="操作"
               align="center"

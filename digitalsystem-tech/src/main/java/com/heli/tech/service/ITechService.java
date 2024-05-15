@@ -1,17 +1,29 @@
 package com.heli.tech.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.Tech;
+import com.ruoyi.common.core.domain.DisplayEntity;
 
 /**
- * @description: [技术]指标Service接口
- * @author: hong
- * @date: 2024/4/9 15:52
- **/
+ * [技术]指标填报Service接口
+ *
+ * @author hong
+ * @date 2024-04-27
+ */
 public interface ITechService {
 
-    List<Tech> selectTechListByYear(int year);
+    Boolean checkTechMonthlyDataIsExisted(Date date);
+
+
+    public Tech calculateCompletionRate(Tech tech, Long annualNumber);
+
+
+
+    List<DisplayEntity> selectNonStandardAVGPreparationDays(Date startTime, Date endTime);
+    List<DisplayEntity> selectPRDScheduleCompletionRate(Date startTime, Date endTime);
+
 
     /**
      * 查询[技术]指标填报
@@ -60,7 +72,6 @@ public interface ITechService {
      * @return 结果
      */
     public int deleteTechByTechId(Long techId);
-
-
-
 }
+
+

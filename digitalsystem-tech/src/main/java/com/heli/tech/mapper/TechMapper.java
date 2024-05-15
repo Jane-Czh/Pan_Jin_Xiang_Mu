@@ -4,30 +4,35 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.Tech;
-import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import org.apache.ibatis.annotations.Param;
 
 /**
- * @description: [技术]指标Mapper接口
- * @author: hong
- * @date: 2024/4/9 15:53
- **/
-@DataSource(value = DataSourceType.SLAVE)
+ * [技术]指标填报Mapper接口
+ *
+ * @author hong
+ * @date 2024-04-27
+ */
 public interface TechMapper {
+
 
     /**
      * @description: 统计当年已经研发完成的数目
      * @author: hong
      * @date: 2024/4/9 11:10
      **/
-    Long countAnnualCompletionNumber(String year);
+    Long countAnnualCompletionNumber(Integer year);
 
-    /**
-     * @description: 按年查询列表
-     * @author: hong
-     * @date: 2024/4/9 14:14
-     **/
-    List<Tech> selectTechListByYear(int year);
+
+    Boolean checkTechMonthlyDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+
+
+    List<DisplayEntity> selectNonStandardAVGPreparationDays(@Param("startTime") Date startTime,
+                                                            @Param("endTime") Date endTime);
+
+    List<DisplayEntity> selectPRDScheduleCompletionRate(@Param("startTime") Date startTime,
+                                                        @Param("endTime") Date endTime);
+
 
     /**
      * 查询[技术]指标填报

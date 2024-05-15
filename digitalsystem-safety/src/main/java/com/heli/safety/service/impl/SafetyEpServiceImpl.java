@@ -20,8 +20,6 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
     @Autowired
     private SafetyEpMapper safetyEpMapper;
 
-
-
     @Override
     public Boolean checkSafetyFillingDataIsExisted(Date date) {
         return safetyEpMapper.checkSafetyFillingDataIsExisted(date);
@@ -35,8 +33,6 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
     public int InsertOrUpdateSafetyEp(SafetyEp safetyEp) {
         return safetyEpMapper.InsertOrUpdateSafetyEp(safetyEp);
     }
-
-
 
     /**
      * 查询[安全环保]指标填报

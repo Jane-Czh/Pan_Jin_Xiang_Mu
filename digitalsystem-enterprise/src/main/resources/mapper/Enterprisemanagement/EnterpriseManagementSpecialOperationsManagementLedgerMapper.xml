@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Enterprisemanagement.mapper.EnterpriseManagementSpecialOperationsManagementLedgerMapper">
+    
+    <resultMap type="EnterpriseManagementSpecialOperationsManagementLedger" id="EnterpriseManagementSpecialOperationsManagementLedgerResult">
+        <result property="emsiId"    column="EMSI_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="Department"    column="Department"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="issuingAuthority"    column="Issuing_authority"    />
+        <result property="documentType"    column="Document_type"    />
+        <result property="assignmentCategory"    column="Assignment_category"    />
+        <result property="idNumber"    column="ID_number"    />
+        <result property="idCard"    column="ID_card"    />
+        <result property="evidenceCollectionTime"    column="Evidence_collection_time"    />
+        <result property="firstExpiration"    column="First_expiration"    />
+        <result property="reexaminationFirstly"    column="Reexamination_firstly"    />
+        <result property="secondExpiration"    column="Second_expiration"    />
+        <result property="reexaminationSecondly"    column="Reexamination_secondly"    />
+        <result property="thirdExpiration"    column="Third_expiration"    />
+        <result property="reexaminationThirdly"    column="Reexamination_thirdly"    />
+        <result property="Warn"    column="Warn"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementSpecialOperationsManagementLedgerVo">
+        select EMSI_ID, Number, Department, Name, Gender, Issuing_authority, Document_type, Assignment_category, ID_number, ID_card, Evidence_collection_time, First_expiration, Reexamination_firstly, Second_expiration, Reexamination_secondly, Third_expiration, Reexamination_thirdly, Warn, CREATED_BY, CREATED_TIME from Enterprise_Management_Special_Operations_Management_Ledger
+    </sql>
+
+    <select id="selectEnterpriseManagementSpecialOperationsManagementLedgerList" parameterType="EnterpriseManagementSpecialOperationsManagementLedger" resultMap="EnterpriseManagementSpecialOperationsManagementLedgerResult">
+        <include refid="selectEnterpriseManagementSpecialOperationsManagementLedgerVo"/>
+        <where>  
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="Department != null  and Department != ''"> and Department = #{Department}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="issuingAuthority != null  and issuingAuthority != ''"> and Issuing_authority = #{issuingAuthority}</if>
+            <if test="documentType != null  and documentType != ''"> and Document_type = #{documentType}</if>
+            <if test="assignmentCategory != null  and assignmentCategory != ''"> and Assignment_category = #{assignmentCategory}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="idCard != null  and idCard != ''"> and ID_card = #{idCard}</if>
+            <if test="evidenceCollectionTime != null "> and Evidence_collection_time = #{evidenceCollectionTime}</if>
+            <if test="firstExpiration != null "> and First_expiration = #{firstExpiration}</if>
+            <if test="reexaminationFirstly != null "> and Reexamination_firstly = #{reexaminationFirstly}</if>
+            <if test="secondExpiration != null "> and Second_expiration = #{secondExpiration}</if>
+            <if test="reexaminationSecondly != null "> and Reexamination_secondly = #{reexaminationSecondly}</if>
+            <if test="thirdExpiration != null "> and Third_expiration = #{thirdExpiration}</if>
+            <if test="reexaminationThirdly != null "> and Reexamination_thirdly = #{reexaminationThirdly}</if>
+            <if test="Warn != null  and Warn != ''"> and Warn = #{Warn}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+        </where>
+    </select>
+    <select id="selectEnterpriseManagementSpecialOperationsManagementLedgerList1" parameterType="EnterpriseManagementSpecialOperationsManagementLedger" resultMap="EnterpriseManagementSpecialOperationsManagementLedgerResult">
+        <include refid="selectEnterpriseManagementSpecialOperationsManagementLedgerVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="Department != null  and Department != ''"> and Department = #{Department}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="issuingAuthority != null  and issuingAuthority != ''"> and Issuing_authority = #{issuingAuthority}</if>
+            <if test="documentType != null  and documentType != ''"> and Document_type = #{documentType}</if>
+            <if test="assignmentCategory != null  and assignmentCategory != ''"> and Assignment_category = #{assignmentCategory}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="idCard != null  and idCard != ''"> and ID_card = #{idCard}</if>
+            <if test="evidenceCollectionTime != null "> and Evidence_collection_time = #{evidenceCollectionTime}</if>
+            <if test="firstExpiration != null "> and First_expiration = #{firstExpiration}</if>
+            <if test="reexaminationFirstly != null "> and Reexamination_firstly = #{reexaminationFirstly}</if>
+            <if test="secondExpiration != null "> and Second_expiration = #{secondExpiration}</if>
+            <if test="reexaminationSecondly != null "> and Reexamination_secondly = #{reexaminationSecondly}</if>
+            <if test="thirdExpiration != null "> and Third_expiration = #{thirdExpiration}</if>
+            <if test="reexaminationThirdly != null "> and Reexamination_thirdly = #{reexaminationThirdly}</if>
+            <if test="Warn != null  and Warn != ''"> and Warn = #{Warn}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEnterpriseManagementSpecialOperationsManagementLedgerByEmsiId" parameterType="Long" resultMap="EnterpriseManagementSpecialOperationsManagementLedgerResult">
+        <include refid="selectEnterpriseManagementSpecialOperationsManagementLedgerVo"/>
+        where EMSI_ID = #{emsiId}
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT EMSI_ID
+        FROM Enterprise_Management_Special_Operations_Management_Ledger
+        WHERE EMSI_ID = (SELECT MAX(EMSI_ID) FROM Enterprise_Management_Special_Operations_Management_Ledger);
+    </select>
+        
+    <insert id="insertEnterpriseManagementSpecialOperationsManagementLedger" parameterType="EnterpriseManagementSpecialOperationsManagementLedger">
+        insert into Enterprise_Management_Special_Operations_Management_Ledger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="emsiId != null">EMSI_ID,</if>
+            <if test="Number != null">Number,</if>
+            <if test="Department != null">Department,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Gender != null">Gender,</if>
+            <if test="issuingAuthority != null">Issuing_authority,</if>
+            <if test="documentType != null">Document_type,</if>
+            <if test="assignmentCategory != null">Assignment_category,</if>
+            <if test="idNumber != null">ID_number,</if>
+            <if test="idCard != null">ID_card,</if>
+            <if test="evidenceCollectionTime != null">Evidence_collection_time,</if>
+            <if test="firstExpiration != null">First_expiration,</if>
+            <if test="reexaminationFirstly != null">Reexamination_firstly,</if>
+            <if test="secondExpiration != null">Second_expiration,</if>
+            <if test="reexaminationSecondly != null">Reexamination_secondly,</if>
+            <if test="thirdExpiration != null">Third_expiration,</if>
+            <if test="reexaminationThirdly != null">Reexamination_thirdly,</if>
+            <if test="Warn != null">Warn,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="emsiId != null">#{emsiId},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="Department != null">#{Department},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Gender != null">#{Gender},</if>
+            <if test="issuingAuthority != null">#{issuingAuthority},</if>
+            <if test="documentType != null">#{documentType},</if>
+            <if test="assignmentCategory != null">#{assignmentCategory},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="evidenceCollectionTime != null">#{evidenceCollectionTime},</if>
+            <if test="firstExpiration != null">#{firstExpiration},</if>
+            <if test="reexaminationFirstly != null">#{reexaminationFirstly},</if>
+            <if test="secondExpiration != null">#{secondExpiration},</if>
+            <if test="reexaminationSecondly != null">#{reexaminationSecondly},</if>
+            <if test="thirdExpiration != null">#{thirdExpiration},</if>
+            <if test="reexaminationThirdly != null">#{reexaminationThirdly},</if>
+            <if test="Warn != null">#{Warn},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementSpecialOperationsManagementLedger" parameterType="EnterpriseManagementSpecialOperationsManagementLedger">
+        update Enterprise_Management_Special_Operations_Management_Ledger
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="Department != null">Department = #{Department},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Gender != null">Gender = #{Gender},</if>
+            <if test="issuingAuthority != null">Issuing_authority = #{issuingAuthority},</if>
+            <if test="documentType != null">Document_type = #{documentType},</if>
+            <if test="assignmentCategory != null">Assignment_category = #{assignmentCategory},</if>
+            <if test="idNumber != null">ID_number = #{idNumber},</if>
+            <if test="idCard != null">ID_card = #{idCard},</if>
+            <if test="evidenceCollectionTime != null">Evidence_collection_time = #{evidenceCollectionTime},</if>
+            <if test="firstExpiration != null">First_expiration = #{firstExpiration},</if>
+            <if test="reexaminationFirstly != null">Reexamination_firstly = #{reexaminationFirstly},</if>
+            <if test="secondExpiration != null">Second_expiration = #{secondExpiration},</if>
+            <if test="reexaminationSecondly != null">Reexamination_secondly = #{reexaminationSecondly},</if>
+            <if test="thirdExpiration != null">Third_expiration = #{thirdExpiration},</if>
+            <if test="reexaminationThirdly != null">Reexamination_thirdly = #{reexaminationThirdly},</if>
+            <if test="Warn != null">Warn = #{Warn},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+        </trim>
+        where EMSI_ID = #{emsiId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementSpecialOperationsManagementLedgerByEmsiId" parameterType="Long">
+        delete from Enterprise_Management_Special_Operations_Management_Ledger where EMSI_ID = #{emsiId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementSpecialOperationsManagementLedgerByEmsiIds" parameterType="String">
+        delete from Enterprise_Management_Special_Operations_Management_Ledger where EMSI_ID in 
+        <foreach item="emsiId" collection="array" open="(" separator="," close=")">
+            #{emsiId}
+        </foreach>
+    </delete>
+</mapper>

@@ -43,204 +43,319 @@ export function delData(fihfId) {
   })
 }
 
+
+
 // 主营业务收入
-export function getMainRevenueData(fihfId) {
+export function getMainRevenueData(data) {
   return request({
-    url: '/financial/display/mainRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/mainRevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 
 // 整机销售
-export function getTotalSalesRevenueData(fihfId) {
+export function getTotalSalesRevenueData(data) {
   return request({
-    url: '/financial/display/totalSalesRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/totalSalesRevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 集团外部销售收入
-export function getExternalGroupSalesRevenueData(fihfId) {
+export function getExternalGroupSalesRevenueData(data) {
   return request({
-    url: '/financial/display/externalGroupSalesRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/externalGroupSalesRevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 
 // 整车产量
-export function getTotalVehicleProductionData(fihfId) {
+export function getTotalVehicleProductionData(data) {
   return request({
-    url: '/financial/display/totalVehicleProduction/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/totalVehicleProduction`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 整车销量
-export function getTotalVehicleSalesData(fihfId) {
+export function getTotalVehicleSalesData(data) {
   return request({
-    url: '/financial/display/totalVehicleSales/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/totalVehicleSales`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 新产品销售收入
-export function getNewProductSalesRevenueData(fihfId) {
+export function getNewProductSalesRevenueData(data) {
   return request({
-    url: '/financial/display/newProductSalesRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/newProductSalesRevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 特色产品收入
-export function getSpecialtyProductRevenueData(fihfId) {
+export function getSpecialtyProductRevenueData(data) {
   return request({
-    url: '/financial/display/specialtyProductRevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/specialtyProductRevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 主营业务成本
-export function getCOGSData(fihfId) {
+export function getCOGSData(data) {
   return request({
-    url: '/financial/display/COGS/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/COGS`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 整机销售成本
-export function getTotalSalesCostData(fihfId) {
+export function getTotalSalesCostData(data) {
   return request({
-    url: '/financial/display/totalSalesCost/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/totalSalesCost`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 净利润
-export function getNetProfitData(fihfId) {
+export function getNetProfitData(data) {
   return request({
-    url: '/financial/display/netProfit/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/netProfit`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
-//20当月管理费用 
-export function getManagementExpenseMonthData(fihfId) {
+//20当月管理费用
+export function getManagementExpenseData(data) {
   return request({
-    url: '/financial/display/managementExpense/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/managementExpense`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 //21 当月研发费用
-export function getRdExpenseData(fihfId) {
+export function getRdExpenseData(data) {
   return request({
-    url: '/financial/display/rdExpense/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/rdExpense`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 当月制造费用
-export function getManufacturingExpensesMonthData(fihfId) {
+export function getManufacturingExpensesMonthData(data) {
   return request({
-    url: '/financial/display/manufacturingExpensesMonth/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/manufacturingExpensesMonth`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 当月原材料存货额
-export function getMonthlyRawMaterialInventoryData(fihfId) {
+export function getMonthlyRawMaterialInventoryData(data) {
   return request({
-    url: '/financial/display/monthlyRawMaterialInventory/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/monthlyRawMaterialInventory`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 当月在制品存货额
-export function getMonthlyWorkInProgressInventoryData(fihfId) {
+export function getMonthlyWorkInProgressInventoryData(data) {
   return request({
-    url: '/financial/display/monthlyWorkInProgressInventory/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/monthlyWorkInProgressInventory`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
-// 存货增长率/销售增长率
-export function getGrowthRateInventorySalesInventoryData(fihfId) {
+// 当月库存商品存货额
+export function getMonthAmountInStockData(data) {
   return request({
-    url: '/financial/display/growthRateInventorySales/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/monthAmountInStock`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+
+// 存货增长率/销售增长率
+export function getGrowthRateInventorySalesData(data) {
+  return request({
+    url: `/financial/display/growthRateInventorySales`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 应收账款周转率
-export function getTurnoverRateReceivableInventoryData(fihfId) {
+export function getTurnoverRateReceivableData(data) {
   return request({
-    url: '/financial/display/turnoverRateReceivable/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/turnoverRateReceivable`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 //33 当月资金周转率
-export function getCapitalTurnoverRateData(fihfId) {
+export function getCapitalTurnoverRateData(data) {
   return request({
-    url: '/financial/display/capitalTurnoverRate/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/capitalTurnoverRate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 库存商品周转率
-export function getInventoryTurnoverRateData(fihfId) {
+export function getInventoryTurnoverRateData(data) {
   return request({
-    url: '/financial/display/inventoryTurnoverRate/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/inventoryTurnoverRate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 原材料周转率
-export function getRawMaterialTurnoverRateData(fihfId) {
+export function getRawMaterialTurnoverRateData(data) {
   return request({
-    url: '/financial/display/rawMaterialTurnoverRate/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/rawMaterialTurnoverRate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 在制品周转率
-export function getInprogressTurnoverRateData(fihfId) {
+export function getInprogressTurnoverRateData(data) {
   return request({
-    url: '/financial/display/inprogressTurnoverRate/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/inprogressTurnoverRate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 一年以上暂估行项目
-export function getLongEstimatedItemsData(fihfId) {
+export function getLongEstimatedItemsData(data) {
   return request({
-    url: '/financial/display/longEstimatedItems/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/longEstimatedItems`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 当日在制品金额
-export function getInprogressDayrevenueData(fihfId) {
+export function getInprogressDayrevenueData(data) {
   return request({
-    url: '/financial/display/inprogressDayrevenue/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/inprogressDayrevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
 // 月度存货总金额
-export function getMonthlyInventoryTotalAmountData(fihfId) {
+export function getMonthlyInventoryTotalAmountData(data) {
   return request({
-    url: '/financial/display/monthlyInventoryTotalAmount/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/monthlyInventoryTotalAmount`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 
-// 当日经济增加值
-export function getAddedValueMonthlyData(fihfId) {
+// 当月经济增加值
+export function getAddedValueMonthlyData(data) {
   return request({
-    url: '/financial/display/addedValueMonthly/2024?fihfId=' + fihfId,
-    method: 'get'
+    url: `/financial/display/addedValueMonthly`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }

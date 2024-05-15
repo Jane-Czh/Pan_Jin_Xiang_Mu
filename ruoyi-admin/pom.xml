@@ -109,13 +109,29 @@
             <artifactId>digitalsystem-quality</artifactId>
         </dependency>
 
+        <!-- 企管-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-enterprise</artifactId>
+        </dependency>
+         
+        <!--供应-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-supply</artifactId>
+        </dependency>
+
         <!--         项目模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-project</artifactId>
         </dependency>
 
-
+        <!-- 文件模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-file</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

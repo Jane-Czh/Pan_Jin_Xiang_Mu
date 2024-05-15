@@ -90,11 +90,7 @@
       ></right-toolbar>
     </el-row>
 
-    <el-table
-      v-loading="loading"
-      :data="projectList"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="projectList" stripe>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="序号" align="center" prop="id">
@@ -131,6 +127,72 @@
         </template>
       </el-table-column>
       <el-table-column label="修改人" align="center" prop="updataBy" />
+
+      <el-table-column
+        label="绑定文件"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <!-- 制度文件显示 -->
+          <el-button
+            size="mini"
+            type="text"
+            v-hasPermi="['system:project:edit']"
+          ></el-button>
+          <!-- 下载图标 -->
+          <el-tooltip content="下载" placement="top" v-if="scope.row.state">
+            <i
+              class="el-icon-download"
+              style="font-size: 16px; cursor: pointer"
+            ></i>
+          </el-tooltip>
+          <!-- 预览图标 -->
+          <el-tooltip content="预览" placement="top" v-if="scope.row.state">
+            <i
+              class="el-icon-view"
+              style="font-size: 16px; cursor: pointer"
+            ></i>
+          </el-tooltip>
+          <!-- 无制度文件绑定 -->
+          <el-tooltip content="无" placement="top" v-if="!scope.row.state">
+            <i
+              class="el-icon-document-delete"
+              style="font-size: 16px; cursor: pointer"
+            ></i>
+          </el-tooltip>
+
+          <br />
+          <!-- 表单文件显示 -->
+          <el-button
+            size="mini"
+            type="text"
+            v-hasPermi="['system:project:edit']"
+          ></el-button>
+          <!-- 下载图标 -->
+          <el-tooltip content="下载" placement="top" v-if="scope.row.type">
+            <i
+              class="el-icon-download"
+              style="font-size: 16px; cursor: pointer"
+            ></i>
+          </el-tooltip>
+          <!-- 预览图标 -->
+          <el-tooltip content="预览" placement="top" v-if="scope.row.type">
+            <i
+              class="el-icon-view"
+              style="font-size: 16px; cursor: pointer"
+            ></i>
+          </el-tooltip>
+          <!-- 无表单文件绑定 -->
+          <el-tooltip content="无" placement="top" v-if="!scope.row.type">
+            <i
+              class="el-icon-document-delete"
+              style="font-size: 16px; cursor: pointer"
+            ></i>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
       <el-table-column
         label="操作"
         align="center"
@@ -138,36 +200,48 @@
       >
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
+            type="primary"
+            size="small"
+            plain
+            round
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:project:edit']"
             >修改</el-button
           >
+          <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> -->
+          
           <el-button
-            size="mini"
-            type="text"
+            type="primary"
+            size="small"
+            plain
+            round
+            icon="el-icon-edit-outline"
+            @click="edit(scope.row)"
+          >
+            更新</el-button
+          >
+
+          <br />
+          <el-button
+            type="primary"
+            size="small"
+            plain
+            round
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:project:remove']"
             >删除</el-button
           >
           <el-button
-            size="mini"
-            type="text"
+            type="primary"
+            size="small"
+            plain
+            round
             icon="el-icon-document"
             @click="view(scope.row)"
           >
             查看</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit-outline"
-            @click="edit(scope.row)"
-          >
-            更新</el-button
           >
         </template>
       </el-table-column>
@@ -204,7 +278,7 @@ import {
   addProject,
   updateProject,
 } from "@/api/system/project";
-
+import { listFilemanagement } from "@/api/file/filemanagement";
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import axios from "axios";
@@ -214,6 +288,22 @@ export default {
   inject: ["reload"],
   data() {
     return {
+      // 制度文件数据
+      filemanagementList: [],
+      // 制度文件中 选中数组传给 node
+      idsRegulation: [],
+      namesRegulation: [],
+      // 从node传来的 已绑定的文件信息 x
+      // ----------------------------------------------
+
+      // 表单文件数据
+      formsmanagementList: [],
+      // 表单文件中 选中数组传给 node
+      idsForm: [],
+      namesForm: [],
+      // 从node传来的 已绑定的文件信息 x
+      // ----------------------------------------------
+
       // 控制查看的流程数据显示与隐藏
       showPanelVisible: false,
       // 控制可编辑的的流程数据显示与隐藏
@@ -272,6 +362,34 @@ export default {
   },
 
   methods: {
+    /**根据project的state(制度文件ids)、type(表单文件ids)查找filenames */
+    /** 1.1 查询制度文件列表 */
+    // getRegularFileData() {
+    //   listFilemanagement(this.queryParams).then((response) => {
+    //     this.filemanagementList = response.rows;
+    //   });
+    //   //对 filemanagementList 查找符合state的文件 将其放入 namesRegulation
+    //   JSON.parse(row.state).forEach((stateId) => {
+    //     let row = this.filemanagementList.find(
+    //       (item) =>
+    //         JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+    //     );
+    //     if (row != null) {
+    //       //将匹配的记录的文件名、链接保存 (namesRegulation )
+    //       this.namesRegulation.push(row.fileName);
+    //       // this.fileHyperLinks.push(row.filePath);
+    //     }
+    //   });
+    // },
+
+    // /** 1.2 查询表单文件列表 */
+    // getFormFileData() {
+    //   listFilemanagement(this.queryParams).then((response) => {
+    //     this.formsmanagementList = response.rows;
+    //   });
+    //   //对 formsmanagementList 查找符合type的文件 将其放入 namesForm
+    // },
+
     //可编辑流程
     edit(row) {
       //加载流程面板可见
@@ -279,7 +397,12 @@ export default {
       //getProject 从后端读取数据
       getProject(row.id).then((response) => {
         // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
-        this.$refs.EditPanel.dataReload(response.data);
+        this.$refs.EditPanel.dataReload(
+          response.data,
+          row.id,
+          row.state,
+          row.type
+        );
       });
       if (this.easyFlowVisible) {
         this.reload();
@@ -308,11 +431,10 @@ export default {
 
         // 按照updateDate字段进行排序
         this.projectList.sort((a, b) => {
-
-            // 按照updateDate字段从小到大排序
-            return new Date(a.createDate) - new Date(b.createDate);
-
+          // 按照updateDate字段从小到大排序
+          return new Date(a.createDate) - new Date(b.createDate);
         });
+
         //TODO 分页功能、分科室搜索功能等
         // this.total = response.total;
         this.loading = false;
@@ -391,16 +513,19 @@ export default {
         .confirm(
           `是否确认删除流程[ ${row.name} ]？这会删除与此流程相关的所有历史流程！`
         )
-        .then(
-          delProject(ids).then((response) => {})
-          // function () { return delProject(ids);}
-        )
         .then(() => {
+          // 只有当用户确认删除时才执行删除操作
+          return delProject(ids);
+        })
+        .then(() => {
+          // 处理成功的删除操作
           // this.getList();
           this.reload();
           this.$modal.msgSuccess("删除成功");
         })
-        .catch(() => {});
+        .catch(() => {
+          // 处理用户取消操作或者任何删除过程中出现的错误
+        });
     },
 
     /** 导出按钮操作 */

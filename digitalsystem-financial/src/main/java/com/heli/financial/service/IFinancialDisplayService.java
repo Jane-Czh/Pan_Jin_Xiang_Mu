@@ -1,6 +1,6 @@
 package com.heli.financial.service;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 
 import java.util.Date;
 import java.util.List;

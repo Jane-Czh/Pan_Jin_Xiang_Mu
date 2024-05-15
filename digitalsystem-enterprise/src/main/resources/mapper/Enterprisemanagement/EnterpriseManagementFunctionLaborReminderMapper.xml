@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Enterprisemanagement.mapper.EnterpriseManagementFunctionLaborReminderMapper">
+
+    <resultMap type="EnterpriseManagementFunctionLaborReminder" id="EnterpriseManagementFunctionLaborReminderResult">
+        <result property="emlwId"    column="EMLW_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="Name"    column="Name"    />
+        <result property="Document"    column="Document"    />
+        <result property="employmentStatus"    column="Employment_status"    />
+        <result property="idNumber"    column="ID_number"    />
+        <result property="phoneNumber"    column="Phone_number"    />
+        <result property="firstContractPeriodStart"    column="First_Contract_Period_Start"    />
+        <result property="firstContractPeriodEnd"    column="First_Contract_Period_End"    />
+        <result property="contractStatusFirstly"    column="Contract_status_Firstly"    />
+        <result property="secondContractPeriodStart"    column="Second_Contract_Period_Start"    />
+        <result property="secondContractPeriodEnd"    column="Second_Contract_Period_End"    />
+        <result property="contractStatusSecondly"    column="Contract_status_Secondly"    />
+        <result property="thirdContractPeriodStart"    column="Third_Contract_Period_Start"    />
+        <result property="thirdContractPeriodEnd"    column="Third_Contract_Period_End"    />
+        <result property="contractStatusThirdly"    column="Contract_status_Thirdly"    />
+        <result property="Warn"    column="Warn"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementFunctionLaborReminderVo">
+        select EMLW_ID, Number, Name, Document, Employment_status, ID_number, Phone_number, First_Contract_Period_Start, First_Contract_Period_End, Contract_status_Firstly, Second_Contract_Period_Start, Second_Contract_Period_End, Contract_status_Secondly, Third_Contract_Period_Start, Third_Contract_Period_End, Contract_status_Thirdly, Warn from Enterprise_Management_function_labor_reminder
+    </sql>
+
+    <select id="selectEnterpriseManagementFunctionLaborReminderList" parameterType="EnterpriseManagementFunctionLaborReminder" resultMap="EnterpriseManagementFunctionLaborReminderResult">
+        <include refid="selectEnterpriseManagementFunctionLaborReminderVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Document != null  and Document != ''"> and Document = #{Document}</if>
+            <if test="employmentStatus != null  and employmentStatus != ''"> and Employment_status = #{employmentStatus}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="phoneNumber != null  and phoneNumber != ''"> and Phone_number = #{phoneNumber}</if>
+            <if test="firstContractPeriodStart != null "> and First_Contract_Period_Start = #{firstContractPeriodStart}</if>
+            <if test="firstContractPeriodEnd != null "> and First_Contract_Period_End = #{firstContractPeriodEnd}</if>
+            <if test="contractStatusFirstly != null  and contractStatusFirstly != ''"> and Contract_status_Firstly = #{contractStatusFirstly}</if>
+            <if test="secondContractPeriodStart != null "> and Second_Contract_Period_Start = #{secondContractPeriodStart}</if>
+            <if test="secondContractPeriodEnd != null "> and Second_Contract_Period_End = #{secondContractPeriodEnd}</if>
+            <if test="contractStatusSecondly != null  and contractStatusSecondly != ''"> and Contract_status_Secondly = #{contractStatusSecondly}</if>
+            <if test="thirdContractPeriodStart != null "> and Third_Contract_Period_Start = #{thirdContractPeriodStart}</if>
+            <if test="thirdContractPeriodEnd != null "> and Third_Contract_Period_End = #{thirdContractPeriodEnd}</if>
+            <if test="contractStatusThirdly != null  and contractStatusThirdly != ''"> and Contract_status_Thirdly = #{contractStatusThirdly}</if>
+            <if test="Warn != null  and Warn != ''"> and Warn = #{Warn}</if>
+        </where>
+    </select>
+    <select id="selectEnterpriseManagementFunctionLaborReminderList1" parameterType="EnterpriseManagementFunctionLaborReminder" resultMap="EnterpriseManagementFunctionLaborReminderResult">
+        <include refid="selectEnterpriseManagementFunctionLaborReminderVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Document != null  and Document != ''"> and Document = #{Document}</if>
+            <if test="employmentStatus != null  and employmentStatus != ''"> and Employment_status = #{employmentStatus}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="phoneNumber != null  and phoneNumber != ''"> and Phone_number = #{phoneNumber}</if>
+            <if test="firstContractPeriodStart != null "> and First_Contract_Period_Start = #{firstContractPeriodStart}</if>
+            <if test="firstContractPeriodEnd != null "> and First_Contract_Period_End = #{firstContractPeriodEnd}</if>
+            <if test="contractStatusFirstly != null  and contractStatusFirstly != ''"> and Contract_status_Firstly = #{contractStatusFirstly}</if>
+            <if test="secondContractPeriodStart != null "> and Second_Contract_Period_Start = #{secondContractPeriodStart}</if>
+            <if test="secondContractPeriodEnd != null "> and Second_Contract_Period_End = #{secondContractPeriodEnd}</if>
+            <if test="contractStatusSecondly != null  and contractStatusSecondly != ''"> and Contract_status_Secondly = #{contractStatusSecondly}</if>
+            <if test="thirdContractPeriodStart != null "> and Third_Contract_Period_Start = #{thirdContractPeriodStart}</if>
+            <if test="thirdContractPeriodEnd != null "> and Third_Contract_Period_End = #{thirdContractPeriodEnd}</if>
+            <if test="contractStatusThirdly != null  and contractStatusThirdly != ''"> and Contract_status_Thirdly = #{contractStatusThirdly}</if>
+            <if test="Warn != null  and Warn != ''"> and Warn = #{Warn}</if>
+        </where>
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT EMLW_ID
+        FROM Enterprise_Management_function_labor_reminder
+        WHERE EMLW_ID = (SELECT MAX(EMLW_ID) FROM Enterprise_Management_function_labor_reminder);
+    </select>
+
+
+
+    <select id="selectEnterpriseManagementFunctionLaborReminderByEmlwId" parameterType="Long" resultMap="EnterpriseManagementFunctionLaborReminderResult">
+        <include refid="selectEnterpriseManagementFunctionLaborReminderVo"/>
+        where EMLW_ID = #{emlwId}
+    </select>
+
+    <insert id="insertEnterpriseManagementFunctionLaborReminder" parameterType="EnterpriseManagementFunctionLaborReminder">
+        insert into Enterprise_Management_function_labor_reminder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="emlwId != null">EMLW_ID,</if>
+            <if test="Number != null">Number,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Document != null">Document,</if>
+            <if test="employmentStatus != null">Employment_status,</if>
+            <if test="idNumber != null">ID_number,</if>
+            <if test="phoneNumber != null">Phone_number,</if>
+            <if test="firstContractPeriodStart != null">First_Contract_Period_Start,</if>
+            <if test="firstContractPeriodEnd != null">First_Contract_Period_End,</if>
+            <if test="contractStatusFirstly != null">Contract_status_Firstly,</if>
+            <if test="secondContractPeriodStart != null">Second_Contract_Period_Start,</if>
+            <if test="secondContractPeriodEnd != null">Second_Contract_Period_End,</if>
+            <if test="contractStatusSecondly != null">Contract_status_Secondly,</if>
+            <if test="thirdContractPeriodStart != null">Third_Contract_Period_Start,</if>
+            <if test="thirdContractPeriodEnd != null">Third_Contract_Period_End,</if>
+            <if test="contractStatusThirdly != null">Contract_status_Thirdly,</if>
+            <if test="Warn != null">Warn,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="emlwId != null">#{emlwId},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Document != null">#{Document},</if>
+            <if test="employmentStatus != null">#{employmentStatus},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="phoneNumber != null">#{phoneNumber},</if>
+            <if test="firstContractPeriodStart != null">#{firstContractPeriodStart},</if>
+            <if test="firstContractPeriodEnd != null">#{firstContractPeriodEnd},</if>
+            <if test="contractStatusFirstly != null">#{contractStatusFirstly},</if>
+            <if test="secondContractPeriodStart != null">#{secondContractPeriodStart},</if>
+            <if test="secondContractPeriodEnd != null">#{secondContractPeriodEnd},</if>
+            <if test="contractStatusSecondly != null">#{contractStatusSecondly},</if>
+            <if test="thirdContractPeriodStart != null">#{thirdContractPeriodStart},</if>
+            <if test="thirdContractPeriodEnd != null">#{thirdContractPeriodEnd},</if>
+            <if test="contractStatusThirdly != null">#{contractStatusThirdly},</if>
+            <if test="Warn != null">#{Warn},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementFunctionLaborReminder" parameterType="EnterpriseManagementFunctionLaborReminder">
+        update Enterprise_Management_function_labor_reminder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Document != null">Document = #{Document},</if>
+            <if test="employmentStatus != null">Employment_status = #{employmentStatus},</if>
+            <if test="idNumber != null">ID_number = #{idNumber},</if>
+            <if test="phoneNumber != null">Phone_number = #{phoneNumber},</if>
+            <if test="firstContractPeriodStart != null">First_Contract_Period_Start = #{firstContractPeriodStart},</if>
+            <if test="firstContractPeriodEnd != null">First_Contract_Period_End = #{firstContractPeriodEnd},</if>
+            <if test="contractStatusFirstly != null">Contract_status_Firstly = #{contractStatusFirstly},</if>
+            <if test="secondContractPeriodStart != null">Second_Contract_Period_Start = #{secondContractPeriodStart},</if>
+            <if test="secondContractPeriodEnd != null">Second_Contract_Period_End = #{secondContractPeriodEnd},</if>
+            <if test="contractStatusSecondly != null">Contract_status_Secondly = #{contractStatusSecondly},</if>
+            <if test="thirdContractPeriodStart != null">Third_Contract_Period_Start = #{thirdContractPeriodStart},</if>
+            <if test="thirdContractPeriodEnd != null">Third_Contract_Period_End = #{thirdContractPeriodEnd},</if>
+            <if test="contractStatusThirdly != null">Contract_status_Thirdly = #{contractStatusThirdly},</if>
+            <if test="Warn != null">Warn = #{Warn},</if>
+        </trim>
+        where EMLW_ID = #{emlwId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementFunctionLaborReminderByEmlwId" parameterType="Long">
+        delete from Enterprise_Management_function_labor_reminder where EMLW_ID = #{emlwId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementFunctionLaborReminderByEmlwIds" parameterType="String">
+        delete from Enterprise_Management_function_labor_reminder where EMLW_ID in
+        <foreach item="emlwId" collection="array" open="(" separator="," close=")">
+            #{emlwId}
+        </foreach>
+    </delete>
+</mapper>

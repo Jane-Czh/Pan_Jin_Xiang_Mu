@@ -61,4 +61,6 @@ public interface MarketAfterSaleLedgerMapper
      * @return 结果
      */
     public int deleteMarketAfterSaleLedgerByMaslIds(Long[] maslIds);
+
+    List<MarketAfterSaleLedger> selectMarketAfterSaleLedgerList1();
 }

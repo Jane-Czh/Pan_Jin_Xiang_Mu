@@ -2,10 +2,12 @@ package com.ruoyi.market.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.data.annotation.Transient;
 
 /**
  * 市场科销售台账对象 Market_Sales_table
@@ -13,10 +15,16 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2024-04-08
  */
+@Data
 public class MarketSalesTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    @Transient
+    private Date startTime;
+    @Transient
+    private Date endTime;
+    @Transient
+    private Integer numberInput;
     /** MS_ID */
     private Long msId;
 

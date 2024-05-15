@@ -11,11 +11,10 @@
       append-to-body
     >
       <div class="container">
-        <!-- 1、左侧流程图内容 -->
-
+        <!-- 1、左侧50%流程图内容 -->
         <div
           v-if="easyFlowVisible"
-          style="width: 50%; height: calc(80vh)"
+          style="width: 55%; height: calc(80vh)"
           class="left-side"
         >
           <el-row>
@@ -56,7 +55,6 @@
               id="myContainer"
               ref="myContainer"
               class="container"
-
             >
               <template v-for="node in data.nodeList">
                 <flow-node
@@ -79,7 +77,7 @@
           </div>
         </div>
 
-        <!-- 2、右侧历史数据部分 v-if="!showHisPanelVisible" -->
+        <!-- 2、右侧50%历史数据部分 v-if="!showHisPanelVisible" -->
         <div style="width: 50" class="right-side line-between-divs" v-if="!showHisPanelVisible">
           <el-table v-loading="loading" :data="historyProjectList" stripe>
             <el-table-column

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketCommercialVehicleTableMapper">
+    
+    <resultMap type="MarketCommercialVehicleTable" id="MarketCommercialVehicleTableResult">
+        <result property="mcvId"    column="MCV_ID"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="acceptanceDate"    column="Acceptance_Date"    />
+        <result property="launchDate"    column="Launch_Date"    />
+        <result property="orderNumber"    column="Order_Number"    />
+        <result property="contractNumber"    column="Contract_Number"    />
+        <result property="carNumber"    column="Car_Number"    />
+        <result property="vehicleModel"    column="Vehicle_Model"    />
+        <result property="doorFrameHeight"    column="Door_Frame_Height"    />
+        <result property="Number"    column="Number"    />
+        <result property="Accessory"    column="Accessory"    />
+        <result property="valveBlock"    column="Valve_Block"    />
+        <result property="Configuration"    column="Configuration"    />
+        <result property="plannedCompletionPeriod"    column="Planned_Completion_Period"    />
+        <result property="Customer"    column="Customer"    />
+        <result property="vehicleLaunchDate"    column="Vehicle_Launch_Date"    />
+        <result property="completionPeriodOfDoorFrameAssembly"    column="Completion_Period_Of_Door_Frame_Assembly"    />
+        <result property="trialCompletionPeriod"    column="Trial_Completion_Period"    />
+        <result property="specialOperations"    column="Special_Operations"    />
+        <result property="precisionCompletionPeriod"    column="Precision_Completion_Period"    />
+        <result property="productionSiteissues"    column="Production_SiteIssues"    />
+        <result property="procurementOfOnSiteAbnormalIssues"    column="Procurement_Of_On_site_Abnormal_Issues"    />
+        <result property="qualityOfOnSiteAbnormalIssues"    column="Quality_Of_On_site_Abnormal_Issues"    />
+        <result property="goLive"    column="Go_Live"    />
+        <result property="Warehousing"    column="Warehousing"    />
+        <result property="productionCycle"    column="Production_Cycle"    />
+    </resultMap>
+
+    <sql id="selectMarketCommercialVehicleTableVo">
+        select MCV_ID, CREATED_BY, CREATED_TIME, Acceptance_Date, Launch_Date, Order_Number, Contract_Number, Car_Number, Vehicle_Model, Door_Frame_Height, Number, Accessory, Valve_Block, Configuration, Planned_Completion_Period, Customer, Vehicle_Launch_Date, Completion_Period_Of_Door_Frame_Assembly, Trial_Completion_Period, Special_Operations, Precision_Completion_Period, Production_SiteIssues, Procurement_Of_On_site_Abnormal_Issues, Quality_Of_On_site_Abnormal_Issues, Go_Live, Warehousing, Production_Cycle from Market_Commercial_Vehicle_table
+    </sql>
+
+    <select id="selectMarketCommercialVehicleTableList" parameterType="MarketCommercialVehicleTable" resultMap="MarketCommercialVehicleTableResult">
+        <include refid="selectMarketCommercialVehicleTableVo"/>
+        <where>  
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="acceptanceDate != null "> and Acceptance_Date = #{acceptanceDate}</if>
+            <if test="launchDate != null "> and Launch_Date = #{launchDate}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and Order_Number = #{orderNumber}</if>
+            <if test="contractNumber != null  and contractNumber != ''"> and Contract_Number = #{contractNumber}</if>
+            <if test="carNumber != null  and carNumber != ''"> and Car_Number = #{carNumber}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="doorFrameHeight != null  and doorFrameHeight != ''"> and Door_Frame_Height = #{doorFrameHeight}</if>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="Accessory != null  and Accessory != ''"> and Accessory = #{Accessory}</if>
+            <if test="valveBlock != null  and valveBlock != ''"> and Valve_Block = #{valveBlock}</if>
+            <if test="Configuration != null  and Configuration != ''"> and Configuration = #{Configuration}</if>
+            <if test="plannedCompletionPeriod != null "> and Planned_Completion_Period = #{plannedCompletionPeriod}</if>
+            <if test="Customer != null  and Customer != ''"> and Customer = #{Customer}</if>
+            <if test="vehicleLaunchDate != null "> and Vehicle_Launch_Date = #{vehicleLaunchDate}</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null "> and Completion_Period_Of_Door_Frame_Assembly = #{completionPeriodOfDoorFrameAssembly}</if>
+            <if test="trialCompletionPeriod != null "> and Trial_Completion_Period = #{trialCompletionPeriod}</if>
+            <if test="specialOperations != null  and specialOperations != ''"> and Special_Operations = #{specialOperations}</if>
+            <if test="precisionCompletionPeriod != null "> and Precision_Completion_Period = #{precisionCompletionPeriod}</if>
+            <if test="productionSiteissues != null  and productionSiteissues != ''"> and Production_SiteIssues = #{productionSiteissues}</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null  and procurementOfOnSiteAbnormalIssues != ''"> and Procurement_Of_On_site_Abnormal_Issues = #{procurementOfOnSiteAbnormalIssues}</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null  and qualityOfOnSiteAbnormalIssues != ''"> and Quality_Of_On_site_Abnormal_Issues = #{qualityOfOnSiteAbnormalIssues}</if>
+            <if test="goLive != null  and goLive != ''"> and Go_Live = #{goLive}</if>
+            <if test="Warehousing != null  and Warehousing != ''"> and Warehousing = #{Warehousing}</if>
+            <if test="productionCycle != null  and productionCycle != ''"> and Production_Cycle = #{productionCycle}</if>
+        </where>
+    </select>
+
+    <select id="selectMarketCommercialVehicleTableList1" parameterType="MarketCommercialVehicleTable" resultMap="MarketCommercialVehicleTableResult">
+        <include refid="selectMarketCommercialVehicleTableVo"/>
+        <where>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+            <if test="acceptanceDate != null "> and Acceptance_Date = #{acceptanceDate}</if>
+            <if test="launchDate != null "> and Launch_Date = #{launchDate}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and Order_Number = #{orderNumber}</if>
+            <if test="contractNumber != null  and contractNumber != ''"> and Contract_Number = #{contractNumber}</if>
+            <if test="carNumber != null  and carNumber != ''"> and Car_Number = #{carNumber}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="doorFrameHeight != null  and doorFrameHeight != ''"> and Door_Frame_Height = #{doorFrameHeight}</if>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="Accessory != null  and Accessory != ''"> and Accessory = #{Accessory}</if>
+            <if test="valveBlock != null  and valveBlock != ''"> and Valve_Block = #{valveBlock}</if>
+            <if test="Configuration != null  and Configuration != ''"> and Configuration = #{Configuration}</if>
+            <if test="plannedCompletionPeriod != null "> and Planned_Completion_Period = #{plannedCompletionPeriod}</if>
+            <if test="Customer != null  and Customer != ''"> and Customer = #{Customer}</if>
+            <if test="vehicleLaunchDate != null "> and Vehicle_Launch_Date = #{vehicleLaunchDate}</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null "> and Completion_Period_Of_Door_Frame_Assembly = #{completionPeriodOfDoorFrameAssembly}</if>
+            <if test="trialCompletionPeriod != null "> and Trial_Completion_Period = #{trialCompletionPeriod}</if>
+            <if test="specialOperations != null  and specialOperations != ''"> and Special_Operations = #{specialOperations}</if>
+            <if test="precisionCompletionPeriod != null "> and Precision_Completion_Period = #{precisionCompletionPeriod}</if>
+            <if test="productionSiteissues != null  and productionSiteissues != ''"> and Production_SiteIssues = #{productionSiteissues}</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null  and procurementOfOnSiteAbnormalIssues != ''"> and Procurement_Of_On_site_Abnormal_Issues = #{procurementOfOnSiteAbnormalIssues}</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null  and qualityOfOnSiteAbnormalIssues != ''"> and Quality_Of_On_site_Abnormal_Issues = #{qualityOfOnSiteAbnormalIssues}</if>
+            <if test="goLive != null  and goLive != ''"> and Go_Live = #{goLive}</if>
+            <if test="Warehousing != null  and Warehousing != ''"> and Warehousing = #{Warehousing}</if>
+            <if test="productionCycle != null  and productionCycle != ''"> and Production_Cycle = #{productionCycle}</if>
+        </where>
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT MCV_ID
+        FROM Market_Commercial_Vehicle_table
+        WHERE MCV_ID = (SELECT MAX(MCV_ID) FROM Market_Commercial_Vehicle_table);
+    </select>
+    
+    <select id="selectMarketCommercialVehicleTableByMcvId" parameterType="Long" resultMap="MarketCommercialVehicleTableResult">
+        <include refid="selectMarketCommercialVehicleTableVo"/>
+        where MCV_ID = #{mcvId}
+    </select>
+        
+    <insert id="insertMarketCommercialVehicleTable" parameterType="MarketCommercialVehicleTable">
+        insert into Market_Commercial_Vehicle_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mcvId != null">MCV_ID,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="acceptanceDate != null">Acceptance_Date,</if>
+            <if test="launchDate != null">Launch_Date,</if>
+            <if test="orderNumber != null and orderNumber != ''">Order_Number,</if>
+            <if test="contractNumber != null and contractNumber != ''">Contract_Number,</if>
+            <if test="carNumber != null and carNumber != ''">Car_Number,</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model,</if>
+            <if test="doorFrameHeight != null and doorFrameHeight != ''">Door_Frame_Height,</if>
+            <if test="Number != null">Number,</if>
+            <if test="Accessory != null and Accessory != ''">Accessory,</if>
+            <if test="valveBlock != null and valveBlock != ''">Valve_Block,</if>
+            <if test="Configuration != null and Configuration != ''">Configuration,</if>
+            <if test="plannedCompletionPeriod != null">Planned_Completion_Period,</if>
+            <if test="Customer != null and Customer != ''">Customer,</if>
+            <if test="vehicleLaunchDate != null">Vehicle_Launch_Date,</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null">Completion_Period_Of_Door_Frame_Assembly,</if>
+            <if test="trialCompletionPeriod != null">Trial_Completion_Period,</if>
+            <if test="specialOperations != null">Special_Operations,</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period,</if>
+            <if test="productionSiteissues != null">Production_SiteIssues,</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null">Procurement_Of_On_site_Abnormal_Issues,</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null">Quality_Of_On_site_Abnormal_Issues,</if>
+            <if test="goLive != null">Go_Live,</if>
+            <if test="Warehousing != null">Warehousing,</if>
+            <if test="productionCycle != null">Production_Cycle,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mcvId != null">#{mcvId},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="acceptanceDate != null">#{acceptanceDate},</if>
+            <if test="launchDate != null">#{launchDate},</if>
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="contractNumber != null and contractNumber != ''">#{contractNumber},</if>
+            <if test="carNumber != null and carNumber != ''">#{carNumber},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">#{vehicleModel},</if>
+            <if test="doorFrameHeight != null and doorFrameHeight != ''">#{doorFrameHeight},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="Accessory != null and Accessory != ''">#{Accessory},</if>
+            <if test="valveBlock != null and valveBlock != ''">#{valveBlock},</if>
+            <if test="Configuration != null and Configuration != ''">#{Configuration},</if>
+            <if test="plannedCompletionPeriod != null">#{plannedCompletionPeriod},</if>
+            <if test="Customer != null and Customer != ''">#{Customer},</if>
+            <if test="vehicleLaunchDate != null">#{vehicleLaunchDate},</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null">#{completionPeriodOfDoorFrameAssembly},</if>
+            <if test="trialCompletionPeriod != null">#{trialCompletionPeriod},</if>
+            <if test="specialOperations != null">#{specialOperations},</if>
+            <if test="precisionCompletionPeriod != null">#{precisionCompletionPeriod},</if>
+            <if test="productionSiteissues != null">#{productionSiteissues},</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null">#{procurementOfOnSiteAbnormalIssues},</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null">#{qualityOfOnSiteAbnormalIssues},</if>
+            <if test="goLive != null">#{goLive},</if>
+            <if test="Warehousing != null">#{Warehousing},</if>
+            <if test="productionCycle != null">#{productionCycle},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketCommercialVehicleTable" parameterType="MarketCommercialVehicleTable">
+        update Market_Commercial_Vehicle_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="acceptanceDate != null">Acceptance_Date = #{acceptanceDate},</if>
+            <if test="launchDate != null">Launch_Date = #{launchDate},</if>
+            <if test="orderNumber != null and orderNumber != ''">Order_Number = #{orderNumber},</if>
+            <if test="contractNumber != null and contractNumber != ''">Contract_Number = #{contractNumber},</if>
+            <if test="carNumber != null and carNumber != ''">Car_Number = #{carNumber},</if>
+            <if test="vehicleModel != null and vehicleModel != ''">Vehicle_Model = #{vehicleModel},</if>
+            <if test="doorFrameHeight != null and doorFrameHeight != ''">Door_Frame_Height = #{doorFrameHeight},</if>
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="Accessory != null and Accessory != ''">Accessory = #{Accessory},</if>
+            <if test="valveBlock != null and valveBlock != ''">Valve_Block = #{valveBlock},</if>
+            <if test="Configuration != null and Configuration != ''">Configuration = #{Configuration},</if>
+            <if test="plannedCompletionPeriod != null">Planned_Completion_Period = #{plannedCompletionPeriod},</if>
+            <if test="Customer != null and Customer != ''">Customer = #{Customer},</if>
+            <if test="vehicleLaunchDate != null">Vehicle_Launch_Date = #{vehicleLaunchDate},</if>
+            <if test="completionPeriodOfDoorFrameAssembly != null">Completion_Period_Of_Door_Frame_Assembly = #{completionPeriodOfDoorFrameAssembly},</if>
+            <if test="trialCompletionPeriod != null">Trial_Completion_Period = #{trialCompletionPeriod},</if>
+            <if test="specialOperations != null">Special_Operations = #{specialOperations},</if>
+            <if test="precisionCompletionPeriod != null">Precision_Completion_Period = #{precisionCompletionPeriod},</if>
+            <if test="productionSiteissues != null">Production_SiteIssues = #{productionSiteissues},</if>
+            <if test="procurementOfOnSiteAbnormalIssues != null">Procurement_Of_On_site_Abnormal_Issues = #{procurementOfOnSiteAbnormalIssues},</if>
+            <if test="qualityOfOnSiteAbnormalIssues != null">Quality_Of_On_site_Abnormal_Issues = #{qualityOfOnSiteAbnormalIssues},</if>
+            <if test="goLive != null">Go_Live = #{goLive},</if>
+            <if test="Warehousing != null">Warehousing = #{Warehousing},</if>
+            <if test="productionCycle != null">Production_Cycle = #{productionCycle},</if>
+        </trim>
+        where MCV_ID = #{mcvId}
+    </update>
+
+    <delete id="deleteMarketCommercialVehicleTableByMcvId" parameterType="Long">
+        delete from Market_Commercial_Vehicle_table where MCV_ID = #{mcvId}
+    </delete>
+
+    <delete id="deleteMarketCommercialVehicleTableByMcvIds" parameterType="String">
+        delete from Market_Commercial_Vehicle_table where MCV_ID in 
+        <foreach item="mcvId" collection="array" open="(" separator="," close=")">
+            #{mcvId}
+        </foreach>
+    </delete>
+</mapper>

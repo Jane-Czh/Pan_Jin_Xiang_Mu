@@ -14,13 +14,13 @@
             :disabled="!this.activeElement.type"
           ></el-button>
 
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
             icon="el-icon-download"
             size="large"
             @click="downloadData"
-          ></el-button>
+          ></el-button> -->
           <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
@@ -35,17 +35,18 @@
             size="large"
             @click="zoomSub"
           ></el-button>
+          <el-divider direction="vertical"></el-divider>
+          <el-button
+            type="text"
+            icon="el-icon-document"
+            @click="openHelp"
+            size="mini"
+            >帮助</el-button
+          >
+          <el-divider direction="vertical"></el-divider>
+
           <!-- 右侧button -->
           <div style="float: right; margin-right: 5px">
-            <!-- <el-button
-              type="info"
-              plain
-              round
-              icon="el-icon-document"
-              @click="dataInfo"
-              size="mini"
-              >流程信息</el-button
-            > -->
             <el-button
               type="primary"
               plain
@@ -75,14 +76,36 @@
               >自定义样式</el-button
             >
             <!-- <el-button type="primary" plain round @click="dataReloadE" icon="el-icon-refresh" size="mini">力导图</el-button> -->
-            <el-button
-              type="info"
+            <!-- <el-button
+              type="primary"
               plain
               round
               icon="el-icon-document"
               @click="openHelp"
               size="mini"
               >帮助</el-button
+            > -->
+            <!-- 弹出面板 设置流程绑定文件(制度&表单) -->
+            <el-button
+              v-if="
+                this.regulationFiles.length == 0 && this.formFiles.length == 0
+              "
+              type="primary"
+              plain
+              round
+              icon="el-icon-folder-add"
+              @click="bandFiles()"
+              size="mini"
+              >绑定文件</el-button
+            >
+            <el-button
+              v-else
+              type="primary"
+              round
+              icon="el-icon-folder-add"
+              @click="bandMoreFiles(), temp()"
+              size="mini"
+              >更改已绑定文件</el-button
             >
             <!-- 对流程进行保存 -->
             <el-button
@@ -114,6 +137,59 @@
               <el-button type="primary" @click="save">保存</el-button>
             </div>
           </el-dialog>
+          <!--  -------------------------------------------  -->
+
+          <!-- 绑定文件的dialog ------------------------------------------- -->
+          <el-dialog
+            title="流程绑定文件(请选择需要绑定的文件)"
+            :visible.sync="dialogFilesVisible"
+            width="60%"
+            style="height: 1000px"
+            :before-close="handleClose"
+            destroy-on-close="true"
+          >
+            <!-- ref 组件 -->
+            <div v-if="this.dialogFilesVisible">
+              <custom-files
+                ref="customFiles"
+                :selectedFormNames="this.selectedFormsTemp"
+                :selectedRegulationNames="this.selectedRegulationTemp"
+              ></custom-files>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="cancle()">取消选择</el-button>
+              <el-button type="primary" @click="confirmDialog()"
+                >确 定</el-button
+              >
+            </span>
+          </el-dialog>
+
+          <!-- 继续绑定制度文件的dialog -->
+          <el-dialog
+            title="继续绑定文件"
+            :visible.sync="dialogMoreFilesVisible"
+            width="60%"
+            style="height: 1000px"
+            :before-close="handleClose"
+            destroy-on-close="true"
+          >
+            <!-- ref 组件 el-table 显示制度文件的数据   v-on:backShow="backShow" -->
+            <div v-if="this.dialogMoreFilesVisible">
+              <custom-files
+                ref="customFiles"
+                :selectedFormNames="this.selectedFormsTemp"
+                :selectedRegulationNames="this.selectedRegulationTemp"
+              ></custom-files>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="cancleBand()">取消绑定</el-button>
+              <el-button type="primary" @click="confirmDialog()"
+                >确 定</el-button
+              >
+            </span>
+          </el-dialog>
+
+          <!-- 绑定文件 ------------------------------------------- over -->
         </div>
       </el-col>
     </el-row>
@@ -183,15 +259,44 @@ import { getDataE } from "./data_E";
 import { ForceDirected } from "./force-directed";
 import axios from "axios";
 import { nanoid } from "nanoid";
-
+//绑定文件
+import CustomFiles from "./CustomFiles.vue";
+//获取用户信息-用户名
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/dept";
 export default {
   data() {
     return {
+      //用户名
+      uploadUsername: null,
+      //所属部门
+      departmentCategory: null,
+      //---------------------------------------
+      //绑定的制度文件names
+      regulationFiles: [],
+      idsRegulation: null,
+      selectedRegulationTemp: [],
+
+      //绑定的表单文件names
+      formFiles: [],
+      idsForm: null,
+      selectedFormsTemp: [],
+
+      emptyFile: [],
+
+      //文件绑定的dialog
+      dialogFilesVisible: false,
+      //文件继续绑定的dialog
+      dialogMoreFilesVisible: false,
+
       //填写 流程项目名称的提示框
       dialogVisible: false,
+      //保存输入的流程名称
       formData: {
         project_Name: "",
       },
+
       //项目名称参数
       project_Id: null,
       // jsPlumb 实例
@@ -227,6 +332,8 @@ export default {
     FlowInfo,
     FlowNodeForm,
     FlowHelp,
+    //绑定文件
+    CustomFiles,
   },
   directives: {
     flowDrag: {
@@ -271,8 +378,160 @@ export default {
       // 默认加载流程A的数据(模板)、在这里可以根据具体的业务返回符合流程数据格式的数据即可
       this.dataReload(getDataA());
     });
+    //获取当前用户信息
+    this.getUserInfo();
   },
+
   methods: {
+    // 调用接口获取用户信息
+    getUserInfo() {
+      getUserProfile()
+        .then((response) => {
+          // 处理成功的情况
+          console.log("成功获取用户信息:", response.data);
+          const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+          // 填充到对应的输入框中
+          this.uploadUsername = userInfo.userName;
+          //根据部门id获取部门名称
+          getDept(userInfo.deptId).then((response) => {
+            const deptInfo = response.data;
+            this.departmentCategory = deptInfo.deptName;
+          });
+        })
+        .catch((error) => {
+          // 处理失败的情况
+          console.error("获取用户信息失败:", error);
+        });
+    },
+
+    //------------------------------------------------
+    handleClose(done) {
+      // 不要执行阻止关闭的操作，直接调用 done() 函数
+      done();
+    },
+
+    /**流程绑定文件(制度&表单)*/
+
+    // 无绑定文件时,进行文件的绑定
+    bandFiles() {
+      this.dialogFilesVisible = true;
+    },
+    // 已经绑定了文件,进行修改
+    bandMoreFiles() {
+      this.dialogMoreFilesVisible = true;
+    },
+
+    //取消选择-对应节点还未绑定文件时
+    cancle() {
+      this.regulationFiles = this.emptyFile;
+      this.formFiles = this.emptyFile;
+
+      this.selectedRegulationTemp = this.emptyFile;
+      this.selectedFormsTemp = this.emptyFile;
+
+      this.dialogFilesVisible = false;
+    },
+    //取消绑定-对应节点已经绑定了文件想要取绑
+    cancleBand() {
+      this.dialogMoreFilesVisible = false;
+
+      this.regulationFiles = this.emptyFile;
+      this.formFiles = this.emptyFile;
+
+      this.selectedRegulationTemp = this.emptyFile;
+      this.selectedFormsTemp = this.emptyFile;
+    },
+
+    temp() {
+      this.regulationFiles = this.selectedRegulationTemp;
+      console.log("temp1 == ", this.regulationFiles);
+      this.formFiles = this.selectedFormsTemp;
+      console.log("temp 2 ", this.formFiles);
+    },
+
+    //展示选择的文件名的dialog 点击确定后进行[绑定文件]  -- regulationFiles 、 formFiles
+    confirmDialog() {
+      this.$confirm("确认进行绑定？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          /**处理制度文件 */
+          // 调用 CustomFiles 组件的方法来获取 选中的 [制度文件] 的 [idsRegulation] 和 [namesRegulation] 数据
+          let { idsRegulation, namesRegulation } =
+            this.$refs.customFiles.getSelectedRegulationIdsAndNames();
+          // 将获取到的filenames给本地的展示变量：this.regulationFiles
+          this.regulationFiles = namesRegulation;
+          this.selectedRegulationTemp = this.regulationFiles;
+          this.idsRegulation = idsRegulation;
+
+          /**处理表单文件 */
+          let { idsForm, namesForm } =
+            this.$refs.customFiles.getSelectedFormIdsAndNames();
+          // 将获取到的filenames给本地的展示变量：this.formFiles
+          this.formFiles = namesForm;
+          this.selectedFormsTemp = this.formFiles;
+          this.idsForm = idsForm;
+
+          // console.log("hihihi111111", this.idsRegulation);
+          // console.log("hihihi222222", this.regulationFiles);
+
+          // console.log("hihihi333333", this.idsForm);
+          // console.log("hihihi444444", this.formFiles);
+
+          //将文件名[idsRegulation]绑定到 流程的 字段上
+          if (
+            this.regulationFiles.length === 0 &&
+            this.formFiles.length === 0
+          ) {
+            this.$message.warning("未选择文件,无法绑定！请先选择文件再绑定！");
+          } else {
+            // this.selectedTemp = this.selectedFileNames;
+            //TODO 保存流程save 的时候 将 idsRegulation、idsForm 其保存到 流程的指定字段中
+
+            this.dialogFilesVisible = false;
+            this.dialogMoreFilesVisible = false;
+          }
+        })
+        .catch(() => {
+          // 用户点击取消按钮的操作
+          // 在此处可以执行确认绑定的逻辑
+
+          this.regulationFiles = this.emptyFile;
+          this.formFiles = this.emptyFile;
+
+          this.dialogFilesVisible = true;
+          this.dialogFilesVisible = false;
+          this.dialogMoreFilesVisible = false;
+          // 清除选择的文件名
+          // this.selectedFileNames = this.selectedFileName;
+        });
+    },
+
+    // backShow() {
+    //   let { idsRegulation, namesRegulation } =
+    //     this.$refs.customFiles.getSelectedRegulationIdsAndNames();
+    //   // 将获取到的filenames给本地的展示变量：this.regulationFiles
+    //   this.regulationFiles = namesRegulation;
+    //   this.selectedRegulationTemp = this.regulationFiles;
+    //   this.idsRegulation = idsRegulation;
+
+    //   /**处理表单文件 */
+    //   let { idsForm, namesForm } =
+    //     this.$refs.customFiles.getSelectedFormIdsAndNames();
+    //   // 将获取到的filenames给本地的展示变量：this.formFiles
+    //   this.formFiles = namesForm;
+    //   this.selectedFormsTemp = this.formFiles;
+    //   this.idsForm = idsForm;
+
+    //   console.log("hihihi111111", this.idsRegulation);
+    //   console.log("hihihi222222", JSON.parse(JSON.stringify(this.regulationFiles)));
+
+    //   console.log("hihihi333333", this.idsForm);
+    //   console.log("hihihi444444", this.formFiles);
+    // },
+
     // 返回唯一标识
     getUUID() {
       return Math.random().toString(36).substr(3, 10);
@@ -508,7 +767,7 @@ export default {
       var node = {
         id: nodeId,
         name: nodeName,
-        type: nodeMenu.type,
+        type: "no",
         left: left + "px",
         top: top + "px",
         ico: nodeMenu.ico,
@@ -642,16 +901,16 @@ export default {
       this.dataReload(getDataD());
     },
     // 模拟加载数据dataE，自适应创建坐标
-    dataReloadE() {
-      let dataE = getDataE();
-      let tempData = lodash.cloneDeep(dataE);
-      let data = ForceDirected(tempData);
-      this.dataReload(data);
-      this.$message({
-        message: "力导图每次产生的布局是不一样的",
-        type: "warning",
-      });
-    },
+    // dataReloadE() {
+    //   let dataE = getDataE();
+    //   let tempData = lodash.cloneDeep(dataE);
+    //   let data = ForceDirected(tempData);
+    //   this.dataReload(data);
+    //   this.$message({
+    //     message: "力导图每次产生的布局是不一样的",
+    //     type: "warning",
+    //   });
+    // },
     zoomAdd() {
       if (this.zoom >= 1) {
         return;
@@ -703,6 +962,11 @@ export default {
 
     //保存流程
     save() {
+      // console.log("this.uploadUsername =========>", this.uploadUsername);
+      // console.log(
+      //   " this.departmentCategory =========>",
+      //   this.departmentCategory
+      // );
       console.log("this.data ===>", this.data);
       //填写 项目流程名称
       this.openDialog();
@@ -713,6 +977,7 @@ export default {
         this.data,
         this.project_Id
       );
+      console.log("projectData =======",projectData )
 
       // 发送项目数据到后端
       axios
@@ -767,20 +1032,29 @@ export default {
         id: id, //随机id
         // name: data.name, // 使用流程的名称作为项目名称
         name: this.formData.project_Name, // 使用流程的名称作为项目名称
-        // create_date: ,
-        // create_by: ,
+        // create_date: , 后台记录
+
+        createBy: this.uploadUsername +"/"+this.departmentCategory,
+        // updated_by,
+        // 保存绑定的文件 this.idsRegulation & this.idsForm
+        state:
+          this.idsRegulation == null
+            ? this.idsRegulation
+            : JSON.stringify(this.idsRegulation), //制度文件ids
+        type:
+          this.idsForm == null ? this.idsForm : JSON.stringify(this.idsForm), //表单文件ids
       };
 
       const nodeData = data.nodeList.map((node) => ({
         id: node.id,
         projectId: id, // 统一的 projectId
         name: node.name,
-        type: node.type,
+        type: node.type != "no" ? JSON.stringify(node.type) : node.type,
         left: node.left,
         top: node.top,
         ico: node.ico,
         // state: node.state,
-        state: node.state != 'no' ? JSON.stringify(node.state) : node.state,
+        state: node.state != "no" ? JSON.stringify(node.state) : node.state,
       }));
 
       const lineData = data.lineList.map((line) => ({

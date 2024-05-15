@@ -22,6 +22,14 @@
         select Safety_EP_ID, Year_And_Month, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, Cur_Equipment_Maintenance_Cost, Cur_Equipment_Failures_TotalTime, Cur_Equipment_Replacement_Cost, Key_Equipment_Failure_Rate, Key_Equipment_Total_Failure_Count from Safety_EP
     </sql>
 
+    <!--  查询当月重点设备故障总时间  -->
+    <select id="countMajorEquipmentFailuresInCurrentMonth" resultType="long">
+        select sum(Fault_Duration) from Safety_EP_Maintenance_table
+        where Equipment_Number in (
+            select * from Safety_EP_Key_Equipment_index
+            )
+    </select>
+
     <select id="selectSafetyEpList" parameterType="SafetyEp" resultMap="SafetyEpResult">
         <include refid="selectSafetyEpVo"/>
         <where>

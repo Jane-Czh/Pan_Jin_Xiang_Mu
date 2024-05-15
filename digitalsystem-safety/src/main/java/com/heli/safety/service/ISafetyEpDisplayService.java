@@ -1,7 +1,6 @@
 package com.heli.safety.service;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import org.apache.ibatis.annotations.Param;
+import com.ruoyi.common.core.domain.DisplayEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -33,6 +32,7 @@ public interface ISafetyEpDisplayService {
      * 与其他的展示方式不同-设备故障类别次数分布图 指标68
      */
     List<DisplayEntity> selectOutputPercapitavalue(Date startTime, Date endTime);
+//    List<DisplayEntity> selectOutputPercapitavalue(Date startTime, Date endTime);
 
     /**
      * 当月设备维修成本-替换件成本 指标69

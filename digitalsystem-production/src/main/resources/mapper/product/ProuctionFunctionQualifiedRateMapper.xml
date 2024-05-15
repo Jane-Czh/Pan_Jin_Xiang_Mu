@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProuctionFunctionQualifiedRateMapper">
+    
+    <resultMap type="ProuctionFunctionQualifiedRate" id="ProuctionFunctionQualifiedRateResult">
+        <result property="pqrId"    column="PQR_ID"    />
+        <result property="qualificationRate"    column="Qualification_rate"    />
+        <result property="qualifiedNumber"    column="Qualified_number"    />
+        <result property="productionNumber"    column="Production_number"    />
+        <result property="date"    column="date"    />
+        <result property="model"    column="model"    />
+        <result property="disqualifiedNumber"    column="Disqualified_number"    />
+    </resultMap>
+
+    <sql id="selectProuctionFunctionQualifiedRateVo">
+        select PQR_ID, Qualification_rate, Qualified_number, Production_number, date, model, Disqualified_number from Prouction_function_Qualified_rate
+    </sql>
+
+    <select id="selectProuctionFunctionQualifiedRateList" parameterType="ProuctionFunctionQualifiedRate" resultMap="ProuctionFunctionQualifiedRateResult">
+        <include refid="selectProuctionFunctionQualifiedRateVo"/>
+        <where>  
+        </where>
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT PQR_ID
+        FROM Prouction_function_Qualified_rate
+        WHERE PQR_ID = (SELECT MAX(PQR_ID) FROM Prouction_function_Qualified_rate);
+    </select>
+    
+    <select id="selectProuctionFunctionQualifiedRateByPqrId" parameterType="Long" resultMap="ProuctionFunctionQualifiedRateResult">
+        <include refid="selectProuctionFunctionQualifiedRateVo"/>
+        where PQR_ID = #{pqrId}
+    </select>
+        
+    <insert id="insertProuctionFunctionQualifiedRate" parameterType="ProuctionFunctionQualifiedRate">
+        insert into Prouction_function_Qualified_rate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pqrId != null">PQR_ID,</if>
+            <if test="qualificationRate != null">Qualification_rate,</if>
+            <if test="qualifiedNumber != null">Qualified_number,</if>
+            <if test="productionNumber != null">Production_number,</if>
+            <if test="date != null">date,</if>
+            <if test="model != null">model,</if>
+            <if test="disqualifiedNumber != null">Disqualified_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pqrId != null">#{pqrId},</if>
+            <if test="qualificationRate != null">#{qualificationRate},</if>
+            <if test="qualifiedNumber != null">#{qualifiedNumber},</if>
+            <if test="productionNumber != null">#{productionNumber},</if>
+            <if test="date != null">#{date},</if>
+            <if test="model != null">#{model},</if>
+            <if test="disqualifiedNumber != null">#{disqualifiedNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProuctionFunctionQualifiedRate" parameterType="ProuctionFunctionQualifiedRate">
+        update Prouction_function_Qualified_rate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qualificationRate != null">Qualification_rate = #{qualificationRate},</if>
+            <if test="qualifiedNumber != null">Qualified_number = #{qualifiedNumber},</if>
+            <if test="productionNumber != null">Production_number = #{productionNumber},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="disqualifiedNumber != null">Disqualified_number = #{disqualifiedNumber},</if>
+        </trim>
+        where PQR_ID = #{pqrId}
+    </update>
+
+    <delete id="deleteProuctionFunctionQualifiedRateByPqrId" parameterType="Long">
+        delete from Prouction_function_Qualified_rate where PQR_ID = #{pqrId}
+    </delete>
+
+    <delete id="deleteProuctionFunctionQualifiedRateByPqrIds" parameterType="String">
+        delete from Prouction_function_Qualified_rate where PQR_ID in 
+        <foreach item="pqrId" collection="array" open="(" separator="," close=")">
+            #{pqrId}
+        </foreach>
+    </delete>
+</mapper>

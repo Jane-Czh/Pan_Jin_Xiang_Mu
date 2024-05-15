@@ -12,9 +12,10 @@ import java.util.Date;
 @Data
 public class ProductionCountNumberEntity {
 
-
     private Date realTime;
 
-    private Integer num;
+    private Integer launch;
+
+    private Integer completion;
 
 }

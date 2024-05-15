@@ -46,13 +46,19 @@
 
     <!-- 与其他的展示方式不同-设备故障类别次数分布图 指标68 -->
     <select id="selectOutputPercapitavalue" resultType="map">
-        select * from (
-            select Year_And_Month as yearAndMonth,Output_PerCapitaValue as outputPercapitavalue from Safety_EP
-            where Year_And_Month between #{startTime} and #{endTime}
-            order by Year_And_Month DESC
-        ) as t
-        order by yearAndMonth ASC
+        SELECT Year_And_Month, GROUP_CONCAT(Problem_Type,':',Failure_Count SEPARATOR ',') as resultData
+        FROM (
+            select Year_And_Month,Problem_Type,Failure_Count from Safety_EP_Equipment_Failure_Category_Distribution
+             ) as YAMPTFC
+        where Year_And_Month between #{startTime} and #{endTime}
+        GROUP BY Year_And_Month
     </select>
+<!--    <select id="selectOutputPercapitavalue" resultType="map">-->
+<!--        SELECT Year_And_Month, GROUP_CONCAT(Problem_Type, ':',Failure_Count SEPARATOR ';')-->
+<!--        FROM Safety_EP_Equipment_Failure_Category_Distribution-->
+<!--        where Year_And_Month between #{startTime} and #{endTime}-->
+<!--        GROUP BY Year_And_Month-->
+<!--    </select>-->
 
     <!-- 当月设备维修成本-替换件成本 指标69 -->
     <select id="selectCurEquipmentReplacementCost" resultType="map">

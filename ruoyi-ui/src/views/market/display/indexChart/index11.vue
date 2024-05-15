@@ -9,9 +9,9 @@
     <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input>
   
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+            <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
-                @change="handleDateChange">
+                @change="handleDateChange" >
             </el-date-picker>
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
@@ -44,23 +44,37 @@ export default {
             data: [],
             // timeData: { startTime: null, endTime: null },
             timeData: {
-                startTime: new Date('2024-01-02'),
-                endTime: new Date('2024-09-01'),
+                startTime: new Date(),
+                endTime: new Date(),
                 numberInput:null
     
             },
-            selectedDate: [new Date('2024-01-02'),new Date('2024-10-01')],
+            
+            selectedDate: [],
             pickerOptions: [],
             option: {},
             myChart: {}
+        }
+        
+    },
+       watch: {
+        numberInput(newValue) {
+            if (newValue) {
+                // 输入框有数据时，处理 transposedSeriesData
+              this.updateChart()
+            } 
+            
+            console.log("_____--------总数量seriesData：", this.transposedSeriesData);
         }
     },
     mounted() {
         this.financialId = this.$route.query.id;
         this.myChart = echarts.init(document.getElementById('main'));
+        this.defaultMonth()
         this.initData();
-        this.getCurrentMonth();
-        this.getCurrentYear();
+        // this.getCurrentMonth();
+        // this.getCurrentYear();
+        
         const currentDate = new Date();
         //
 //   const currentYear = currentDate.getFullYear();
@@ -68,8 +82,8 @@ export default {
 //   const currentMonth = currentDate.getMonth() + 1; // 月份从0开始，所以要加1
 //   const lastDayOfMonth = new Date(currentYear, currentMonth, 0); // 设置为每一年的当前月份的最后一天
 
-  this.timeData.startTime = firstMonthOfYear;
-  this.timeData.endTime = lastDayOfMonth;
+  // this.timeData.startTime = firstMonthOfYear;
+  // this.timeData.endTime = lastDayOfMonth;
     },
     methods: {
 
@@ -190,10 +204,14 @@ app.configParameters = {
   }
 };
 app.config = {
-  rotate: 90,
-  align: 'left',
-  verticalAlign: 'middle',
-  position: 'insideBottom',
+    rotate: 0, // Set rotate to 0 for horizontal labels
+  align: 'center', // Align labels in the center horizontally
+  verticalAlign: 'top', // Align labels at the top vertically
+  position: 'top', // Position labels at the top of the bars
+  // rotate: 90,
+  // align: 'left',
+  // verticalAlign: 'middle',
+  // position: 'insideBottom',
   distance: 15,
   onChange: function () {
     const labelOption = {
@@ -304,7 +322,17 @@ for (var i = 0; i < this.result.length; i++) {
 
 // 输出转置后的 seriesData，用于调试
 console.log("转置后的 seriesData：", this.transposedSeriesData);
-
+   // 在这里更新 transposedSeriesData 的值
+    // 在这里更新 transposedSeriesData 的值
+    if (this.numberInput) {
+        for (let i = 0; i < this.transposedSeriesData.length; i++) {
+            for (let j = 0; j < this.transposedSeriesData[i].length; j++) {
+                // 更新 transposedSeriesData 数组项
+                this.$set(this.transposedSeriesData[i], j, (this.transposedSeriesData[i][j] / this.numberInput).toFixed(3));
+            }
+        }
+    }
+    console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
 option = {
   tooltip: {
     trigger: 'axis',
@@ -358,16 +386,19 @@ option && myChart.setOption(option);
 
 },
 
-        getCurrentMonth() {
-            const currentDate = new Date();
-            const currentMonth = currentDate.getMonth() + 1;
-            this.timeData.currentMonth = currentMonth;
-        },
-        getCurrentYear() {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            this.timeData.currentYear = currentYear;
-        }
+     
+            //时间选择器的默认月份设置
+    defaultMonth() {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1;
+      const startDate = new Date(currentYear, 0, 1);
+      const endDate = new Date(currentYear, currentMonth, 0);
+
+      this.selectedDate = [startDate, endDate];
+
+    },
+
     },
 
 

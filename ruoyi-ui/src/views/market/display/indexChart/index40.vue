@@ -22,7 +22,7 @@
 <script>
 import * as echarts from 'echarts';     
 import moment from 'moment'
-import { getIndex14 } from '@/api/market/index'
+import { getIndex40 } from '@/api/market/index'
 
 export default {
     data() {
@@ -49,7 +49,7 @@ export default {
                 numberInput:null
     
             },
-            selectedDate: [new Date('2024-01-02'),new Date('2024-10-01')],
+            selectedDate: [new Date('2024-01-01'),new Date('2024-10-01')],
             pickerOptions: [],
             option: {},
             myChart: {}
@@ -118,7 +118,7 @@ export default {
             try {
                 this.loading = true
                 console.log(this.timeData)
-                this.result = await getIndex14(this.timeData);
+                this.result = await getIndex40(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
                    console.log("后端传过来的数据：", this.result[0].branch);
@@ -277,7 +277,7 @@ this.result.forEach(function (item) {
         item.minEntity.forEach(function (minEntity) {
             if (minEntity.branch === legendItem) {
                 // 找到了匹配的 branch，则将其对应的 number 添加到 data 数组中
-                data.push(minEntity.number);
+                data.push(minEntity.proportion);
                 found = true;
             }
         });
@@ -308,7 +308,12 @@ for (var i = 0; i < this.result.length; i++) {
 
 // 输出转置后的 seriesData，用于调试
 console.log("转置后的 seriesData：", this.transposedSeriesData);
-
+// 创建一个新数组来存储转换后的数据
+const roundedData =  this.transposedSeriesData.map(innerArray => 
+  innerArray.map(value => parseFloat(value.toFixed(3)))
+);
+// console.log("转换后的百分比 seriesData：", percentageData);
+this.transposedSeriesData=roundedData;
 option = {
   tooltip: {
     trigger: 'axis',

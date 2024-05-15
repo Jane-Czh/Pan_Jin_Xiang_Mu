@@ -560,6 +560,48 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
+        path: 'index39',
+        component: () => import('@/views/market/display/indexChart/index39'),
+        name: 'Index39',
+        meta: { title: '指标39：商品车计划兑现率' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index40',
+        component: () => import('@/views/market/display/indexChart/index40'),
+        name: 'Index40',
+        meta: { title: '指标40：订单兑现率' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index42',
+        component: () => import('@/views/market/display/indexChart/index42'),
+        name: 'Index42',
+        meta: { title: '指标42：大叉位叉车整机交货天数平均数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
         path: 'index72',
         component: () => import('@/views/market/display/indexChart/index72'),
         name: 'Index72',

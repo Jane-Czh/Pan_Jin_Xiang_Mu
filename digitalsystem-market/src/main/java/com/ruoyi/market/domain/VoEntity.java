@@ -47,6 +47,34 @@ public class VoEntity {
             return voEntities;
         }
 
+    public static List<VoEntity> convertCpdToVoEntitiesDouble(Map<String, Map<String, Double>> cpd) {
+        List<VoEntity> voEntities = new ArrayList<>();
+
+        for (Map.Entry<String, Map<String, Double>> entry : cpd.entrySet()) {
+            String yearMonth = entry.getKey();
+            Map<String, Double> branchMap = entry.getValue();
+
+            VoEntity voEntity = new VoEntity();
+            voEntity.setYearMonth(yearMonth);
+
+            List<MinEntity> minEntities = new ArrayList<>();
+            for (Map.Entry<String, Double> branchEntry : branchMap.entrySet()) {
+                String branch = branchEntry.getKey();
+                Double proportion = branchEntry.getValue();
+
+                MinEntity minEntity = new MinEntity();
+                minEntity.setBranch(branch);
+                minEntity.setProportion(proportion);
+
+                minEntities.add(minEntity);
+            }
+
+            voEntity.setMinEntity(minEntities);
+            voEntities.add(voEntity);
+        }
+
+        return voEntities;
+    }
 
 
 

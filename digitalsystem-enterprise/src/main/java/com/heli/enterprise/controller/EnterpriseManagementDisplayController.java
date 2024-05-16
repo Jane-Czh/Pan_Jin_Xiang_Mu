@@ -1,5 +1,7 @@
 package com.heli.enterprise.controller;
 
+import com.heli.enterprise.domain.EnterpriseManagementIndicatorsDailyClearingSettlement;
+import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
 import com.heli.enterprise.service.IEnterpriseManagementDisplayService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.DisplayEntity;
@@ -68,6 +70,18 @@ public class EnterpriseManagementDisplayController extends BaseController {
     public TableDataInfo functionalDeptOvertimeCost(@RequestBody DisplayRequestParam time) {
         List<Map<Date, Object>> list = enterpriseManagementDisplayService.selectFunctionalDeptOvertimeCost(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
+    }
+
+    @PostMapping("/dailyClearingSettlement")
+    public TableDataInfo selectDailyClearingSettlement(@RequestBody DisplayRequestParam time) {
+        List<EnterpriseManagementIndicatorsDailyClearingSettlement> enterpriseManagementIndicatorsDailyClearingSettlements = enterpriseManagementDisplayService.selectDailyClearingSettlement(time.getStartTime(), time.getEndTime());
+        return getDataTable(enterpriseManagementIndicatorsDailyClearingSettlements);
+    }
+
+    @PostMapping("/management")
+    public TableDataInfo selectManagement(@RequestBody DisplayRequestParam time) {
+        List<EnterpriseManagementIndicatorsManagement> enterpriseManagementIndicatorsManagements = enterpriseManagementDisplayService.selectManagement(time.getStartTime(), time.getEndTime());
+        return getDataTable(enterpriseManagementIndicatorsManagements);
     }
 
 }

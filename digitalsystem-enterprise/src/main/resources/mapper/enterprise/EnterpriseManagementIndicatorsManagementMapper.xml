@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementIndicatorsManagementMapper">
+
+    <resultMap type="EnterpriseManagementIndicatorsManagement" id="EnterpriseManagementIndicatorsManagementResult">
+        <result property="emId"    column="EM_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="sdSalesordervalidity"    column="SD_SalesOrderValidity"    />
+        <result property="ppManualpocreationratio"    column="PP_ManualPOCreationRatio"    />
+        <result property="ppDeliveredunreportedratio"    column="PP_DeliveredUnreportedRatio"    />
+        <result property="mesLateworkreportingrate"    column="MES_LateWorkReportingRate"    />
+        <result property="qmExternalinspectiondelay"    column="QM_ExternalInspectionDelay"    />
+        <result property="mmPurchaseorderlatedelivery"    column="MM_PurchaseOrderLateDelivery"    />
+        <result property="mmManualpocreation"    column="MM_ManualPOCreation"    />
+        <result property="mmUnsettledpurchaserequests"    column="MM_UnsettledPurchaseRequests"    />
+        <result property="ficoMonthlystandardpricevariation"    column="FICO_MonthlyStandardPriceVariation"    />
+        <result property="crossMonthProductionOrders"    column="CrossMonthProductionOrders"    />
+        <result property="pmLatemaintenanceordercompletion"    column="PM_LateMaintenanceOrderCompletion"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementIndicatorsManagementVo">
+        select EM_ID, Year_And_Month, SD_SalesOrderValidity, PP_ManualPOCreationRatio, PP_DeliveredUnreportedRatio, MES_LateWorkReportingRate, QM_ExternalInspectionDelay, MM_PurchaseOrderLateDelivery, MM_ManualPOCreation, MM_UnsettledPurchaseRequests, FICO_MonthlyStandardPriceVariation, CrossMonthProductionOrders, PM_LateMaintenanceOrderCompletion, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Management
+    </sql>
+
+
+    <!--检查当月填报数据是否上传-->
+    <select id="checkManagementDataIsExisted" parameterType="Date" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Management WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+
+
+
+    <select id="selectEnterpriseManagementIndicatorsManagementList" parameterType="EnterpriseManagementIndicatorsManagement" resultMap="EnterpriseManagementIndicatorsManagementResult">
+        <include refid="selectEnterpriseManagementIndicatorsManagementVo"/>
+        <where>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="sdSalesordervalidity != null "> and SD_SalesOrderValidity = #{sdSalesordervalidity}</if>
+            <if test="ppManualpocreationratio != null "> and PP_ManualPOCreationRatio = #{ppManualpocreationratio}</if>
+            <if test="ppDeliveredunreportedratio != null "> and PP_DeliveredUnreportedRatio = #{ppDeliveredunreportedratio}</if>
+            <if test="mesLateworkreportingrate != null "> and MES_LateWorkReportingRate = #{mesLateworkreportingrate}</if>
+            <if test="qmExternalinspectiondelay != null "> and QM_ExternalInspectionDelay = #{qmExternalinspectiondelay}</if>
+            <if test="mmPurchaseorderlatedelivery != null "> and MM_PurchaseOrderLateDelivery = #{mmPurchaseorderlatedelivery}</if>
+            <if test="mmManualpocreation != null "> and MM_ManualPOCreation = #{mmManualpocreation}</if>
+            <if test="mmUnsettledpurchaserequests != null "> and MM_UnsettledPurchaseRequests = #{mmUnsettledpurchaserequests}</if>
+            <if test="ficoMonthlystandardpricevariation != null "> and FICO_MonthlyStandardPriceVariation = #{ficoMonthlystandardpricevariation}</if>
+            <if test="crossMonthProductionOrders != null "> and CrossMonthProductionOrders = #{crossMonthProductionOrders}</if>
+            <if test="pmLatemaintenanceordercompletion != null "> and PM_LateMaintenanceOrderCompletion = #{pmLatemaintenanceordercompletion}</if>
+        </where>
+    </select>
+
+    <select id="selectEnterpriseManagementIndicatorsManagementByEmId" parameterType="Long" resultMap="EnterpriseManagementIndicatorsManagementResult">
+        <include refid="selectEnterpriseManagementIndicatorsManagementVo"/>
+        where EM_ID = #{emId}
+    </select>
+
+    <insert id="insertEnterpriseManagementIndicatorsManagement" parameterType="EnterpriseManagementIndicatorsManagement" useGeneratedKeys="true" keyProperty="emId">
+        insert into Enterprise_Management_Indicators_Management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="sdSalesordervalidity != null">SD_SalesOrderValidity,</if>
+            <if test="ppManualpocreationratio != null">PP_ManualPOCreationRatio,</if>
+            <if test="ppDeliveredunreportedratio != null">PP_DeliveredUnreportedRatio,</if>
+            <if test="mesLateworkreportingrate != null">MES_LateWorkReportingRate,</if>
+            <if test="qmExternalinspectiondelay != null">QM_ExternalInspectionDelay,</if>
+            <if test="mmPurchaseorderlatedelivery != null">MM_PurchaseOrderLateDelivery,</if>
+            <if test="mmManualpocreation != null">MM_ManualPOCreation,</if>
+            <if test="mmUnsettledpurchaserequests != null">MM_UnsettledPurchaseRequests,</if>
+            <if test="ficoMonthlystandardpricevariation != null">FICO_MonthlyStandardPriceVariation,</if>
+            <if test="crossMonthProductionOrders != null">CrossMonthProductionOrders,</if>
+            <if test="pmLatemaintenanceordercompletion != null">PM_LateMaintenanceOrderCompletion,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="sdSalesordervalidity != null">#{sdSalesordervalidity},</if>
+            <if test="ppManualpocreationratio != null">#{ppManualpocreationratio},</if>
+            <if test="ppDeliveredunreportedratio != null">#{ppDeliveredunreportedratio},</if>
+            <if test="mesLateworkreportingrate != null">#{mesLateworkreportingrate},</if>
+            <if test="qmExternalinspectiondelay != null">#{qmExternalinspectiondelay},</if>
+            <if test="mmPurchaseorderlatedelivery != null">#{mmPurchaseorderlatedelivery},</if>
+            <if test="mmManualpocreation != null">#{mmManualpocreation},</if>
+            <if test="mmUnsettledpurchaserequests != null">#{mmUnsettledpurchaserequests},</if>
+            <if test="ficoMonthlystandardpricevariation != null">#{ficoMonthlystandardpricevariation},</if>
+            <if test="crossMonthProductionOrders != null">#{crossMonthProductionOrders},</if>
+            <if test="pmLatemaintenanceordercompletion != null">#{pmLatemaintenanceordercompletion},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementIndicatorsManagement" parameterType="EnterpriseManagementIndicatorsManagement">
+        update Enterprise_Management_Indicators_Management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="sdSalesordervalidity != null">SD_SalesOrderValidity = #{sdSalesordervalidity},</if>
+            <if test="ppManualpocreationratio != null">PP_ManualPOCreationRatio = #{ppManualpocreationratio},</if>
+            <if test="ppDeliveredunreportedratio != null">PP_DeliveredUnreportedRatio = #{ppDeliveredunreportedratio},</if>
+            <if test="mesLateworkreportingrate != null">MES_LateWorkReportingRate = #{mesLateworkreportingrate},</if>
+            <if test="qmExternalinspectiondelay != null">QM_ExternalInspectionDelay = #{qmExternalinspectiondelay},</if>
+            <if test="mmPurchaseorderlatedelivery != null">MM_PurchaseOrderLateDelivery = #{mmPurchaseorderlatedelivery},</if>
+            <if test="mmManualpocreation != null">MM_ManualPOCreation = #{mmManualpocreation},</if>
+            <if test="mmUnsettledpurchaserequests != null">MM_UnsettledPurchaseRequests = #{mmUnsettledpurchaserequests},</if>
+            <if test="ficoMonthlystandardpricevariation != null">FICO_MonthlyStandardPriceVariation = #{ficoMonthlystandardpricevariation},</if>
+            <if test="crossMonthProductionOrders != null">CrossMonthProductionOrders = #{crossMonthProductionOrders},</if>
+            <if test="pmLatemaintenanceordercompletion != null">PM_LateMaintenanceOrderCompletion = #{pmLatemaintenanceordercompletion},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where EM_ID = #{emId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementIndicatorsManagementByEmId" parameterType="Long">
+        delete from Enterprise_Management_Indicators_Management where EM_ID = #{emId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementIndicatorsManagementByEmIds" parameterType="String">
+        delete from Enterprise_Management_Indicators_Management where EM_ID in
+        <foreach item="emId" collection="array" open="(" separator="," close=")">
+            #{emId}
+        </foreach>
+    </delete>
+</mapper>

@@ -9,7 +9,7 @@
   <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input>
 
           <span class="DataSelect" style="margin-right:10px">日期选择</span>
-          <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+          <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
               start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
               @change="handleDateChange" >
           </el-date-picker>
@@ -147,12 +147,12 @@ export default {
       },
       handleDateChange(val) {
           console.log(val, 'val')
-          if (value && value[1]) {
-      let endDate = new Date(value[1]);
-      endDate.setMonth(endDate.getMonth() + 1);
-      endDate.setDate(0);
-      this.selectedDate[1] = endDate;
-    }
+      //     if (value && value[1]) {
+      // let endDate = new Date(value[1]);
+      // endDate.setMonth(endDate.getMonth() + 1);
+      // endDate.setDate(0);
+      // this.selectedDate[1] = endDate;
+    // }
           this.initData()
       },
     updateChart() {

@@ -94,5 +94,58 @@
     </select>
 
 
+    <resultMap type="EnterpriseManagementIndicatorsDailyClearingSettlement" id="EnterpriseManagementIndicatorsDailyClearingSettlementResult">
+        <result property="edId"    column="ED_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="orderEntryDelayRatio"    column="Order_Entry_Delay_Ratio"    />
+        <result property="shipmentDelayRatio"    column="Shipment_Delay_Ratio"    />
+        <result property="productionReportDelayRatio"    column="Production_Report_Delay_Ratio"    />
+        <result property="inspectionDelayRate"    column="Inspection_Delay_Rate"    />
+        <result property="invoicePostingDelayRate"    column="Invoice_Posting_Delay_Rate"    />
+        <result property="unsettledAccountsRatio"    column="Unsettled_Accounts_Ratio"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <!-- 日清日结  -->
+    <select id="selectDailyClearingSettlement" resultMap="EnterpriseManagementIndicatorsDailyClearingSettlementResult">
+        select *
+        from (  select Year_And_Month, Order_Entry_Delay_Ratio, Shipment_Delay_Ratio, Production_Report_Delay_Ratio, Inspection_Delay_Rate, Invoice_Posting_Delay_Rate, Unsettled_Accounts_Ratio
+                from Enterprise_Management_Indicators_Daily_Clearing_Settlement
+                where Year_And_Month between #{startTime} and #{endTime}
+                order by Year_And_Month DESC
+             ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
+    <resultMap type="EnterpriseManagementIndicatorsManagement" id="EnterpriseManagementIndicatorsManagementResult">
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="sdSalesordervalidity"    column="SD_SalesOrderValidity"    />
+        <result property="ppManualpocreationratio"    column="PP_ManualPOCreationRatio"    />
+        <result property="ppDeliveredunreportedratio"    column="PP_DeliveredUnreportedRatio"    />
+        <result property="mesLateworkreportingrate"    column="MES_LateWorkReportingRate"    />
+        <result property="qmExternalinspectiondelay"    column="QM_ExternalInspectionDelay"    />
+        <result property="mmPurchaseorderlatedelivery"    column="MM_PurchaseOrderLateDelivery"    />
+        <result property="mmManualpocreation"    column="MM_ManualPOCreation"    />
+        <result property="mmUnsettledpurchaserequests"    column="MM_UnsettledPurchaseRequests"    />
+        <result property="ficoMonthlystandardpricevariation"    column="FICO_MonthlyStandardPriceVariation"    />
+        <result property="crossMonthProductionOrders"    column="CrossMonthProductionOrders"    />
+        <result property="pmLatemaintenanceordercompletion"    column="PM_LateMaintenanceOrderCompletion"    />
+    </resultMap>
+
+    <!-- 11项管理指标 -->
+    <select id="selectManagement" resultMap="EnterpriseManagementIndicatorsManagementResult">
+        select *
+        from (  select Year_And_Month, SD_SalesOrderValidity, PP_ManualPOCreationRatio, PP_DeliveredUnreportedRatio, MES_LateWorkReportingRate, QM_ExternalInspectionDelay, MM_PurchaseOrderLateDelivery, MM_ManualPOCreation, MM_UnsettledPurchaseRequests, FICO_MonthlyStandardPriceVariation, CrossMonthProductionOrders, PM_LateMaintenanceOrderCompletion
+                from Enterprise_Management_Indicators_Management
+                where Year_And_Month between #{startTime} and #{endTime}
+                order by Year_And_Month DESC
+             ) as t
+        order by Year_And_Month ASC
+    </select>
+
 
 </mapper>

@@ -1,5 +1,7 @@
 package com.heli.enterprise.service.impl;
 
+import com.heli.enterprise.domain.EnterpriseManagementIndicatorsDailyClearingSettlement;
+import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
 import com.heli.enterprise.mapper.EnterpriseManagementDisplayMapper;
 import com.heli.enterprise.service.IEnterpriseManagementDisplayService;
 import com.ruoyi.common.core.domain.DisplayEntity;
@@ -62,6 +64,16 @@ public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManage
     @Override
     public List<Map<Date, Object>> selectFunctionalDeptOvertimeCost(Date startTime, Date endTime) {
         return enterpriseManagementDisplayMapper.selectFunctionalDeptOvertimeCost(startTime, endTime);
+    }
+
+    @Override
+    public List<EnterpriseManagementIndicatorsDailyClearingSettlement> selectDailyClearingSettlement(Date startTime, Date endTime) {
+        return enterpriseManagementDisplayMapper.selectDailyClearingSettlement(startTime,endTime);
+    }
+
+    @Override
+    public List<EnterpriseManagementIndicatorsManagement> selectManagement(Date startTime, Date endTime) {
+        return enterpriseManagementDisplayMapper.selectManagement(startTime,endTime);
     }
 
 }

@@ -9,11 +9,11 @@
     <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input>
   
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+            <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
-                @change="handleDateChange">
+                @change="handleDateChange" >
             </el-date-picker>
-            <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p>
+            <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
         <div id="main" ref="main"></div>
     </div>
@@ -27,6 +27,7 @@ import { getIndex11 } from '@/api/market/index'
 export default {
     data() {
         return {
+          transposedSeriesData:[],
             branchmonthIdx:[],
             seriesData :[],
             branches :[],
@@ -43,23 +44,37 @@ export default {
             data: [],
             // timeData: { startTime: null, endTime: null },
             timeData: {
-                startTime: new Date('2024-01-02'),
-                endTime: new Date('2024-09-01'),
+                startTime: new Date(),
+                endTime: new Date(),
                 numberInput:null
     
             },
-            selectedDate: [new Date('2024-01-02'),new Date('2024-10-01')],
+            
+            selectedDate: [],
             pickerOptions: [],
             option: {},
             myChart: {}
+        }
+        
+    },
+       watch: {
+        numberInput(newValue) {
+            if (newValue) {
+                // 输入框有数据时，处理 transposedSeriesData
+              this.updateChart()
+            } 
+            
+            console.log("_____--------总数量seriesData：", this.transposedSeriesData);
         }
     },
     mounted() {
         this.financialId = this.$route.query.id;
         this.myChart = echarts.init(document.getElementById('main'));
+        this.defaultMonth()
         this.initData();
-        this.getCurrentMonth();
-        this.getCurrentYear();
+        // this.getCurrentMonth();
+        // this.getCurrentYear();
+        
         const currentDate = new Date();
         //
 //   const currentYear = currentDate.getFullYear();
@@ -67,8 +82,8 @@ export default {
 //   const currentMonth = currentDate.getMonth() + 1; // 月份从0开始，所以要加1
 //   const lastDayOfMonth = new Date(currentYear, currentMonth, 0); // 设置为每一年的当前月份的最后一天
 
-  this.timeData.startTime = firstMonthOfYear;
-  this.timeData.endTime = lastDayOfMonth;
+  // this.timeData.startTime = firstMonthOfYear;
+  // this.timeData.endTime = lastDayOfMonth;
     },
     methods: {
 
@@ -189,10 +204,14 @@ app.configParameters = {
   }
 };
 app.config = {
-  rotate: 90,
-  align: 'left',
-  verticalAlign: 'middle',
-  position: 'insideBottom',
+    rotate: 0, // Set rotate to 0 for horizontal labels
+  align: 'center', // Align labels in the center horizontally
+  verticalAlign: 'top', // Align labels at the top vertically
+  position: 'top', // Position labels at the top of the bars
+  // rotate: 90,
+  // align: 'left',
+  // verticalAlign: 'middle',
+  // position: 'insideBottom',
   distance: 15,
   onChange: function () {
     const labelOption = {
@@ -233,24 +252,87 @@ const labelOption = {
     name: {}
   }
 };
-   const uniqueMonths = Array.from(new Set(this.months));
-  
-   
-          // 创建一个二维数组，用于存放按照年月分组地区的结果
-    const groupedData = [];
-    // 初始化二维数组
-    for (let i = 0; i < this.branches.length; i++) {
-        groupedData[i] = Array(uniqueMonths.length).fill(0);
-    }
 
-    // 填充数据到二维数组中
-    this.months.forEach((month, monthIndex) => {
-        const monthIdx = uniqueMonths.indexOf(month); // 获取月份在去重后的月份数组中的索引
-        const branchIdx = this.branches.indexOf(this.branches[monthIndex]); // 获取地区在地区数组中的索引
-        groupedData[branchIdx][monthIdx] = this.numbers[monthIndex]; // 根据月份和地区索引填充数量到对应位置
+// 提取 xAxis 数据
+var xAxisData = [];
+this.result.forEach(function (item) {
+    // 拆分后端传来的数据，提取月份并添加到 xAxisData 数组中
+    xAxisData.push(item.yearMonth);
+});
+
+// 输出拆分后的月份，用于调试
+console.log("拆分后的月份：", xAxisData);
+
+// 提取 legend 数据
+var legendData = [];
+this.result.forEach(function (item) {
+    item.minEntity.forEach(function (minEntity) {
+        if (!legendData.includes(minEntity.branch)) {
+            legendData.push(minEntity.branch);
+        }
     });
-               this.branchmonthIdx= groupedData
-     console.log("拆分后的行是地区，列是月份，数据是数量：", this.branchmonthIdx);
+});
+
+// 输出提取的 legend 数据，用于调试
+console.log("提取的 legend 数据：", legendData);
+
+     // 构建 series 数据
+var seriesData = [];
+
+// 遍历每个 result 中的 minEntity 数据
+this.result.forEach(function (item) {
+    var data = [];
+    
+    // 遍历图例数据
+    legendData.forEach(function (legendItem) {
+        var found = false;
+        
+        // 在当前 result 的 minEntity 中查找与图例数据匹配的 branch
+        item.minEntity.forEach(function (minEntity) {
+            if (minEntity.branch === legendItem) {
+                // 找到了匹配的 branch，则将其对应的 number 添加到 data 数组中
+                data.push(minEntity.number);
+                found = true;
+            }
+        });
+        
+        // 如果当前 branch 在当前 result 的 minEntity 中未找到，则将 0 添加到 data 数组中
+        if (!found) {
+            data.push(0);
+        }
+    });
+    
+    // 将当前 result 的 data 添加到 series 数据中
+    seriesData.push(data);
+});
+
+// 输出 series 数据，用于调试
+console.log("series 数据：", seriesData);
+
+// 创建新数组，行数为 legendData 的长度，列数为 result 的长度
+this.transposedSeriesData = Array(legendData.length).fill().map(() => []);
+
+// 遍历 result 数据，并将数据按行列互换放入新数组中
+for (var i = 0; i < this.result.length; i++) {
+    for (var j = 0; j < legendData.length; j++) {
+        // 从原 seriesData 中取出数据并放入新数组对应位置
+        this.transposedSeriesData[j][i] = seriesData[i][j];
+    }
+}
+
+// 输出转置后的 seriesData，用于调试
+console.log("转置后的 seriesData：", this.transposedSeriesData);
+   // 在这里更新 transposedSeriesData 的值
+    // 在这里更新 transposedSeriesData 的值
+    if (this.numberInput) {
+        for (let i = 0; i < this.transposedSeriesData.length; i++) {
+            for (let j = 0; j < this.transposedSeriesData[i].length; j++) {
+                // 更新 transposedSeriesData 数组项
+                this.$set(this.transposedSeriesData[i], j, (this.transposedSeriesData[i][j] / this.numberInput).toFixed(3));
+            }
+        }
+    }
+    console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
 option = {
   tooltip: {
     trigger: 'axis',
@@ -259,7 +341,7 @@ option = {
     }
   },
   legend: {
-    data: this.branches
+    data: legendData
   },
   toolbox: {
     show: true,
@@ -278,7 +360,7 @@ option = {
     {
       type: 'category',
       axisTick: { show: false },
-      data: uniqueMonths
+      data: xAxisData
     }
   ],
   yAxis: [
@@ -286,59 +368,37 @@ option = {
       type: 'value'
     }
   ],
-series : this.branchmonthIdx.map((branchData, branchIndex) => {
-    return {
-        name: this.branches[branchIndex], // 地区名称
-        type: 'bar',
-        label: labelOption,
-        emphasis: {
-            focus: 'series'
-        },
-        data: branchData // 地区对应的数量数据
-    };
-})
+series : this.transposedSeriesData.map( (item,index) => {
+     return {
+      // console:console.log(legendData[index]),
+      name :legendData[index],
+      type: 'bar',
+      label: labelOption,
+      emphasis: {
+          focus: 'series'
+      },
+      data: item
+     }
+  })
 };
 
 option && myChart.setOption(option);
 
 },
 
+     
+            //时间选择器的默认月份设置
+    defaultMonth() {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1;
+      const startDate = new Date(currentYear, 0, 1);
+      const endDate = new Date(currentYear, currentMonth, 0);
 
+      this.selectedDate = [startDate, endDate];
 
-        // updateChart() {
-        //     this.option = {
-        //         title: {
-        //             text: '主营业务收入'
-        //         },
-        //         tooltip: {},
-        //         xAxis: {
-        //             data: this.data.map(item => moment(item.Year_And_Month).format('YY-MM')),
-        //         },
-        //         yAxis: {},
-        //         series: [
-        //             {
-        //                 name: '金额',
-        //                 type: 'line',
-        //                 data: this.data.map(item => item.MainRevenue),
-        //                 label: {
-        //                     show: true,
-        //                     position: 'top'
-        //                 }
-        //             },
-        //         ],
-        //     };
-        //     this.option && this.myChart.setOption(this.option)
-        // },
-        getCurrentMonth() {
-            const currentDate = new Date();
-            const currentMonth = currentDate.getMonth() + 1;
-            this.timeData.currentMonth = currentMonth;
-        },
-        getCurrentYear() {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            this.timeData.currentYear = currentYear;
-        }
+    },
+
     },
 
 

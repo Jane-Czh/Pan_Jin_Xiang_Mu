@@ -1,11 +1,14 @@
 package com.ruoyi.market.domain;
 
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.data.annotation.Transient;
+
+import java.util.Date;
 
 /**
  * 商品车台账对象 Market_Commercial_Vehicle_table
@@ -13,10 +16,19 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2024-04-12
  */
+@Data
 public class MarketCommercialVehicleTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    /*
+    * 不需要持久化的数据，用于接收前端入参
+    * */
+    @Transient
+    private Date startTime;
+    @Transient
+    private Date endTime;
+    @Transient
+    private Integer numberInput;
     /** MCV_ID */
     private Long mcvId;
 

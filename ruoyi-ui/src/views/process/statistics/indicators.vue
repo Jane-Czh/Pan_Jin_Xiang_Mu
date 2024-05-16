@@ -279,17 +279,8 @@ export default {
       const startDate = new Date(currentYear, 0, 1);
       const endDate = new Date(currentYear, currentMonth, 0);
 
-      //转换this.historyStartTime 为日期选择器符合的格式
-      // const year = this.historyStartTime.getFullYear();
-      // const month = String(this.historyStartTime.getMonth() + 1).padStart(2, "0"); // 月份是从0开始计数，需要加1
-      // const day = String(this.historyStartTime.getDate()).padStart(2, "0");
-
-      // // 拼接成所需的日期格式
-      // const formattedDate = `${year}-${month}-${day}`;
-      // const startDate = new Date(formattedDate, 0, 1);
-
       this.selectedDate = [startDate, endDate];
-      // console.log("this.selectedDat=====", this.selectedDate);
+
     },
   },
 };

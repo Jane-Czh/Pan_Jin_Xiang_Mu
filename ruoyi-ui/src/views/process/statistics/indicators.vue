@@ -112,7 +112,18 @@ export default {
     handleDateChange() {
       this.initData();
     },
+
     updateChart() {
+      const formattedData = this.data.map((item) => {
+        return {
+          yearAndMonth: moment(item.yearAndMonth).format("YYYY-MM"),
+          times: item.times,
+          updateDates: item.updateDates.map((date) =>
+            moment(date).format("YYYY-MM-DD HH:mm:ss")
+          ),
+        };
+      });
+
       var app = {};
       const posList = [
         "left",
@@ -130,34 +141,18 @@ export default {
         "insideBottomRight",
       ];
       app.configParameters = {
-        rotate: {
-          min: -90,
-          max: 90,
-        },
-        align: {
-          options: {
-            left: "left",
-            center: "center",
-            right: "right",
-          },
-        },
+        rotate: { min: -90, max: 90 },
+        align: { options: { left: "left", center: "center", right: "right" } },
         verticalAlign: {
-          options: {
-            top: "top",
-            middle: "middle",
-            bottom: "bottom",
-          },
+          options: { top: "top", middle: "middle", bottom: "bottom" },
         },
         position: {
-          options: posList.reduce(function (map, pos) {
+          options: posList.reduce((map, pos) => {
             map[pos] = pos;
             return map;
           }, {}),
         },
-        distance: {
-          min: 0,
-          max: 100,
-        },
+        distance: { min: 0, max: 100 },
       };
       app.config = {
         rotate: 0,
@@ -175,18 +170,10 @@ export default {
           };
           this.myChart.setOption({
             series: [
-              {
-                label: labelOption,
-              },
-              {
-                label: labelOption,
-              },
-              {
-                label: labelOption,
-              },
-              {
-                label: labelOption,
-              },
+              { label: labelOption },
+              { label: labelOption },
+              { label: labelOption },
+              { label: labelOption },
             ],
           });
         },
@@ -198,25 +185,28 @@ export default {
         align: app.config.align,
         verticalAlign: app.config.verticalAlign,
         rotate: app.config.rotate,
-        formatter: "{c}",
-        fontSize: 16,
-        rich: {
-          name: {},
+        formatter: function (params) {
+          return params.data.times;
         },
+        fontSize: 16,
+        rich: { name: {} },
       };
       this.option = {
         title: {
-          text: "流程 "+this.projectName+" 更新频率统计（月）",
+          text: "流程 " + this.projectName + " 更新频率统计（月）",
         },
         tooltip: {
           trigger: "axis",
-          axisPointer: {
-            type: "shadow",
+          axisPointer: { type: "shadow" },
+          formatter: function (params) {
+            const data = params[0].data;
+            const updateDates =
+              data.updateDates.length > 0
+                ? data.updateDates.join("<br/>")
+                : "无更新记录";
+            return `具体更新时间:<br/>${updateDates}`;
           },
         },
-        // legend: {
-        //     data: ['更新次数']
-        // },
         toolbox: {
           show: true,
           orient: "vertical",
@@ -238,9 +228,7 @@ export default {
           {
             type: "category",
             axisTick: { show: false },
-            data: this.data.map((item) =>
-              moment(item.yearAndMonth).format("YYYY-MM")
-            ),
+            data: formattedData.map((item) => item.yearAndMonth),
           },
         ],
         yAxis: [
@@ -251,7 +239,7 @@ export default {
                 return parseInt(value);
               },
             },
-            interval: 1, // 设置刻度之间的间隔为1，确保每个整数值都有刻度
+            interval: 1,
           },
         ],
         series: [
@@ -259,18 +247,18 @@ export default {
             name: "更新次数",
             type: "line",
             label: labelOption,
-            emphasis: {
-              focus: "series",
-            },
-            //TODO 将一个具体的更新时间
-            data: this.data.map((item) => item.times),
+            emphasis: { focus: "series" },
+            data: formattedData.map((item) => ({
+              value: item.times,
+              times: item.times,
+              updateDates: item.updateDates,
+            })),
           },
         ],
       };
 
       this.option && this.myChart.setOption(this.option);
     },
-
     //时间选择器的默认月份设置
     defaultMonth() {
       const currentDate = new Date();
@@ -280,7 +268,6 @@ export default {
       const endDate = new Date(currentYear, currentMonth, 0);
 
       this.selectedDate = [startDate, endDate];
-
     },
   },
 };

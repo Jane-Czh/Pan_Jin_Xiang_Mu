@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.file.mapper.FormInfoTableMapper">
-    
+
     <resultMap type="FormInfoTable" id="FormInfoTableResult">
         <result property="formId"    column="form_id"    />
         <result property="formTitle"    column="form_title"    />
         <result property="scope"    column="scope"    />
         <result property="effectiveDate"    column="effective_date"    />
+        <result property="formName"    column="form_name"    />
         <result property="formType"    column="form_type"    />
         <result property="formPath"    column="form_path"    />
         <result property="formSize"    column="form_size"    />
@@ -19,18 +20,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="revisionTime"    column="revision_time"    />
         <result property="revisionContent"    column="revision_content"    />
         <result property="reviser"    column="reviser"    />
+        <result property="newFlag"    column="new_flag"    />
+        <result property="newFormId"    column="new_form_id"    />
     </resultMap>
 
     <sql id="selectFormInfoTableVo">
-        select form_id, form_title, scope, effective_date, form_type, form_path, form_size, create_username, department_category, remark, old_form_id, revision_time, revision_content, reviser from Form_Info_table
+        select form_id, form_title, scope, effective_date, form_name, form_type, form_path, form_size, create_username, department_category, remark, old_form_id, revision_time, revision_content, reviser, new_flag, new_form_id from Form_Info_table
     </sql>
 
     <select id="selectFormInfoTableList" parameterType="FormInfoTable" resultMap="FormInfoTableResult">
         <include refid="selectFormInfoTableVo"/>
-        <where>  
+        <where>
             <if test="formTitle != null  and formTitle != ''"> and form_title = #{formTitle}</if>
             <if test="scope != null  and scope != ''"> and scope = #{scope}</if>
             <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
+            <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
             <if test="formType != null  and formType != ''"> and form_type = #{formType}</if>
             <if test="formPath != null  and formPath != ''"> and form_path = #{formPath}</if>
             <if test="formSize != null "> and form_size = #{formSize}</if>
@@ -40,20 +44,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revisionTime != null "> and revision_time = #{revisionTime}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
             <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="newFlag = 1 "> and new_flag = #{newFlag}</if>
+            <if test="newFormId != null "> and new_form_id = #{newFormId}</if>
         </where>
     </select>
-    
+
     <select id="selectFormInfoTableByFormId" parameterType="Long" resultMap="FormInfoTableResult">
         <include refid="selectFormInfoTableVo"/>
         where form_id = #{formId}
     </select>
-        
+
     <insert id="insertFormInfoTable" parameterType="FormInfoTable" useGeneratedKeys="true" keyProperty="formId">
         insert into Form_Info_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="formTitle != null and formTitle != ''">form_title,</if>
             <if test="scope != null and scope != ''">scope,</if>
             <if test="effectiveDate != null">effective_date,</if>
+            <if test="formName != null">form_name,</if>
             <if test="formType != null and formType != ''">form_type,</if>
             <if test="formPath != null">form_path,</if>
             <if test="formSize != null">form_size,</if>
@@ -64,11 +71,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revisionTime != null">revision_time,</if>
             <if test="revisionContent != null">revision_content,</if>
             <if test="reviser != null">reviser,</if>
-         </trim>
+            <if test="newFlag != null">new_flag,</if>
+            <if test="newFormId != null">new_form_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="formTitle != null and formTitle != ''">#{formTitle},</if>
             <if test="scope != null and scope != ''">#{scope},</if>
             <if test="effectiveDate != null">#{effectiveDate},</if>
+            <if test="formName != null">#{formName},</if>
             <if test="formType != null and formType != ''">#{formType},</if>
             <if test="formPath != null">#{formPath},</if>
             <if test="formSize != null">#{formSize},</if>
@@ -79,7 +89,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revisionTime != null">#{revisionTime},</if>
             <if test="revisionContent != null">#{revisionContent},</if>
             <if test="reviser != null">#{reviser},</if>
-         </trim>
+            <if test="newFlag != null">#{newFlag},</if>
+            <if test="newFormId != null">#{newFormId},</if>
+        </trim>
     </insert>
 
     <update id="updateFormInfoTable" parameterType="FormInfoTable">
@@ -88,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="formTitle != null and formTitle != ''">form_title = #{formTitle},</if>
             <if test="scope != null and scope != ''">scope = #{scope},</if>
             <if test="effectiveDate != null">effective_date = #{effectiveDate},</if>
+            <if test="formName != null">form_name = #{formName},</if>
             <if test="formType != null and formType != ''">form_type = #{formType},</if>
             <if test="formPath != null">form_path = #{formPath},</if>
             <if test="formSize != null">form_size = #{formSize},</if>
@@ -98,6 +111,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revisionTime != null">revision_time = #{revisionTime},</if>
             <if test="revisionContent != null">revision_content = #{revisionContent},</if>
             <if test="reviser != null">reviser = #{reviser},</if>
+            <if test="newFlag != null">new_flag = #{newFlag},</if>
+            <if test="newFormId != null">new_form_id = #{newFormId},</if>
         </trim>
         where form_id = #{formId}
     </update>
@@ -107,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteFormInfoTableByFormIds" parameterType="String">
-        delete from Form_Info_table where form_id in 
+        delete from Form_Info_table where form_id in
         <foreach item="formId" collection="array" open="(" separator="," close=")">
             #{formId}
         </foreach>

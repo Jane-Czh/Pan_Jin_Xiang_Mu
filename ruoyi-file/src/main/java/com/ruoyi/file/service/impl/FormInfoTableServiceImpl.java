@@ -1,6 +1,9 @@
 package com.ruoyi.file.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ruoyi.file.domain.RegulationsInfoTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.file.mapper.FormInfoTableMapper;
@@ -44,6 +47,29 @@ public class FormInfoTableServiceImpl implements IFormInfoTableService
     }
 
     /**
+     * 查询历史版本文件列表
+     *
+     * @param currentId 文件管理
+     * @return 文件管理
+     */
+    @Override
+    public List<FormInfoTable> getFormHistory(Long currentId) {
+        //返回结果
+        List<FormInfoTable> historyList = new ArrayList<>();
+        Long oldId = formInfoTableMapper.selectFormInfoTableByFormId(currentId).getOldFormId();
+        while (oldId != null) {
+            FormInfoTable record = formInfoTableMapper.selectFormInfoTableByFormId(oldId);
+            if (record != null) {
+                historyList.add(record);
+                oldId = record.getOldFormId();
+            } else {
+                break;
+            }
+        }
+        return historyList;
+    }
+
+    /**
      * 新增表单文件管理
      * 
      * @param formInfoTable 表单文件管理
@@ -52,7 +78,9 @@ public class FormInfoTableServiceImpl implements IFormInfoTableService
     @Override
     public int insertFormInfoTable(FormInfoTable formInfoTable)
     {
-        return formInfoTableMapper.insertFormInfoTable(formInfoTable);
+        formInfoTableMapper.insertFormInfoTable(formInfoTable);
+        Long rId = formInfoTable.getFormId();
+        return Math.toIntExact(rId);
     }
 
     /**

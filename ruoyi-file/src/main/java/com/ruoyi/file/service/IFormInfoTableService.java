@@ -2,6 +2,7 @@ package com.ruoyi.file.service;
 
 import java.util.List;
 import com.ruoyi.file.domain.FormInfoTable;
+import com.ruoyi.file.domain.RegulationsInfoTable;
 
 /**
  * 表单文件管理Service接口
@@ -26,6 +27,14 @@ public interface IFormInfoTableService
      * @return 表单文件管理集合
      */
     public List<FormInfoTable> selectFormInfoTableList(FormInfoTable formInfoTable);
+
+    /**
+     * 查询历史版本文件管理列表
+     *
+     * @param currentId 文件管理
+     * @return 文件管理集合
+     */
+    public List<FormInfoTable> getFormHistory(Long currentId);
 
     /**
      * 新增表单文件管理

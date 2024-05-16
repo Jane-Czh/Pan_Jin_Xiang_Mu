@@ -3,123 +3,66 @@
     <el-collapse v-model="activeNames" @change="handleChange">
       <el-collapse-item title="制度检索" name="1">
         <div>
-          <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
-                   label-width="68px">
-            <el-form-item label="制度标题" prop="regulationsTitle">
+          <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+            <el-form-item label="表单名称" prop="formTitle">
               <el-input
-                v-model="queryParams.regulationsTitle"
-                placeholder="请输入制度标题"
+                v-model="queryParams.formTitle"
+                placeholder="请输入表单名称"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="适用范围" prop="useScope">
+            <el-form-item label="存储表单内容" prop="scope">
               <el-input
-                v-model="queryParams.useScope"
-                placeholder="请输入适用范围"
+                v-model="queryParams.scope"
+                placeholder="请输入存储表单内容"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="上传日期" prop="uploadDate">
-              <el-date-picker clearable
-                              v-model="queryParams.uploadDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择上传日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="生效日期" prop="effectiveDate">
+            <el-form-item label="表单上传时间" prop="effectiveDate">
               <el-date-picker clearable
                               v-model="queryParams.effectiveDate"
                               type="date"
                               value-format="yyyy-MM-dd"
-                              placeholder="请选择生效日期">
+                              placeholder="请选择表单上传时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="文件名称" prop="fileName">
+            <el-form-item label="表单大小" prop="formSize">
               <el-input
-                v-model="queryParams.fileName"
-                placeholder="请输入文件名称"
+                v-model="queryParams.formSize"
+                placeholder="请输入表单大小"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件路径" prop="filePath">
+            <el-form-item label="上传人" prop="createUsername">
               <el-input
-                v-model="queryParams.filePath"
-                placeholder="请输入文件路径"
+                v-model="queryParams.createUsername"
+                placeholder="请输入上传人"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件类型" prop="fileType">
-              <el-input
-                v-model="queryParams.fileType"
-                placeholder="请输入文件类型"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="文件大小" prop="fileSize">
-              <el-input
-                v-model="queryParams.fileSize"
-                placeholder="请输入文件大小"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度创建日期" prop="createDate">
-              <el-date-picker clearable
-                              v-model="queryParams.createDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择制度创建日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="制度上传人" prop="createUsername">
-              <el-input
-                v-model="queryParams.uploadUsername"
-                placeholder="请输入制度创建人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度使用状态" prop="useState">
-              <el-input
-                v-model="queryParams.useState"
-                placeholder="请输入制度使用状态"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度所属科室" prop="departmentCategory">
+            <el-form-item label="表单所属科室" prop="departmentCategory">
               <el-input
                 v-model="queryParams.departmentCategory"
-                placeholder="请输入制度所属科室"
+                placeholder="请输入表单所属科室"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="制度标签名称" prop="fileTag">
+            <el-form-item label="历史表单" prop="oldFormId">
               <el-input
-                v-model="queryParams.fileTag"
-                placeholder="请输入制度标签名称"
+                v-model="queryParams.oldFormId"
+                placeholder="请输入历史表单"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="历史版本制度" prop="oldRegulationsId">
-              <el-input
-                v-model="queryParams.oldRegulationsId"
-                placeholder="请输入历史版本制度"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="修订时间" prop="revisionDate">
+            <el-form-item label="修订时间" prop="revisionTime">
               <el-date-picker clearable
-                              v-model="queryParams.revisionDate"
+                              v-model="queryParams.revisionTime"
                               type="date"
                               value-format="yyyy-MM-dd"
                               placeholder="请选择修订时间">
@@ -143,47 +86,37 @@
     </el-collapse>
 
 
-    <el-table v-loading="loading" :data="filemanagementList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>
-      <el-table-column label="制度标题" align="center" prop="regulationsTitle"/>
-      <el-table-column label="适用范围" align="center" prop="useScope"/>
-      <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="生效日期" align="center" prop="effectiveDate" width="180">
+    <el-table v-loading="loading" :data="formmanagementList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+<!--      <el-table-column label="id" align="center" prop="formId" />-->
+      <el-table-column label="表单标题" align="center" prop="formTitle" />
+      <el-table-column label="存储表单内容" align="center" prop="scope" />
+      <el-table-column label="表单上传时间" align="center" prop="effectiveDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="文件名称" align="center" prop="fileName"/>
-      <el-table-column label="文件路径" align="center" prop="filePath">
+      <el-table-column label="表单名称" align="center" prop="formName" />
+      <el-table-column label="表单类型" align="center" prop="formType" />
+      <el-table-column label="表单路径" align="center" prop="formPath">
         <template slot-scope="scope">
-          <a :href="baseUrl+scope.row.filePath" download>点击下载</a>
+          <a :href="baseUrl + scope.row.formPath" download>点击下载</a>
         </template>
       </el-table-column>
-      <el-table-column label="文件类型" align="center" prop="fileType"/>
-      <el-table-column label="文件大小" align="center" prop="fileSize"/>
-      <el-table-column label="制度创建日期" align="center" prop="createDate" width="180">
+      <el-table-column label="表单大小" align="center" prop="formSize" />
+      <el-table-column label="上传人" align="center" prop="createUsername" />
+      <el-table-column label="表单所属科室" align="center" prop="departmentCategory" />
+      <el-table-column label="备注" align="center" prop="remark" />
+<!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
+<!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
+<!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
+      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>
-      <el-table-column label="制度使用状态" align="center" prop="useState"/>
-      <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
-      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>
-      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>
-      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>
-      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修订内容" align="center" prop="revisionContent"/>
-      <el-table-column label="修订人" align="center" prop="reviser"/>
+      <el-table-column label="修订内容" align="center" prop="revisionContent" />
+      <el-table-column label="修订人" align="center" prop="reviser" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -191,7 +124,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
-            v-hasPermi="['file:filemanagement:edit']"
+            v-hasPermi="['file:formfilemanagement:edit']"
           >修改
           </el-button>
           <el-button
@@ -199,7 +132,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['file:filemanagement:remove']"
+            v-hasPermi="['file:formfilemanagement:remove']"
           >删除
           </el-button>
         </template>
@@ -210,7 +143,7 @@
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="previewFile(baseUrl+scope.row.filePath)"
+            @click="previewFile(baseUrl+scope.row.formPath)"
           >预览
           </el-button>
         </template>
@@ -225,49 +158,12 @@
       @pagination="getList"
     />
     <!-- 修改文件对话框 -->
-    <el-dialog :title="title" :visible.sync="fileModifyDialogVisible" width="1000px" :center="true" append-to-body>
+    <el-dialog :title="title" :visible.sync="formModifyDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="制度标题" prop="regulationsTitle">
-              <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="适用范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入适用范围"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="生效日期" prop="effectiveDate">
-              <el-date-picker clearable
-                              v-model="form.effectiveDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择生效日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度创建日期" prop="createDate">
-              <el-date-picker clearable
-                              v-model="form.createDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择制度创建日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度使用状态" prop="useState">
-              <el-select v-model="form.useState" placeholder="请选择制度使用状态">
-                <el-option label="正常" value="正常"></el-option>
-                <el-option label="停用" value="停用"></el-option>
-              </el-select>
+            <el-form-item label="表单标题" prop="formTitle">
+              <el-input v-model="form.formTitle" placeholder="请输入表单标题"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -282,13 +178,13 @@
 
 <script>
   import {
-    listFilemanagement,
-    getFilemanagement,
-    delFilemanagement,
-    addFilemanagement,
-    updateFilemanagement,
-    getRegulationsHistory
-  } from "@/api/file/filemanagement";
+    listFormfilemanagement,
+    getFormfilemanagement,
+    delFormfilemanagement,
+    addFormfilemanagement,
+    updateFormfilemanagement,
+    getFormHistory
+  } from "@/api/file/formfilemanagement";
   import {getUserProfile} from '@/api/system/user'
   import {getDept} from '@/api/system/dept'
   import {getToken} from "@/utils/auth"
@@ -300,7 +196,7 @@
       return {
         number: 0,
         uploadList: [],
-        fileList: [],
+        formList: [],
         fd: {},
         path: '',
         baseUrl: process.env.VUE_APP_BASE_API,
@@ -324,100 +220,56 @@
         // 总条数
         total: 0,
         // 文件管理表格数据
-        filemanagementList: [],
+        formmanagementList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
-        fileUpdateDialogVisible: false,
-        fileModifyDialogVisible: false,
-        fileUploadDialogVisible: false,
+        formUpdateDialogVisible: false,
+        formModifyDialogVisible: false,
+        formUploadDialogVisible: false,
         historyVersionsDialogVisible: false,
         // 查询参数
         queryParams: {
           pageNum: 1,
           pageSize: 10,
-          regulationsTitle: null,
-          useScope: null,
-          uploadDate: null,
+          formTitle: null,
+          scope: null,
           effectiveDate: null,
-          regulationsAddress: null,
-          fileName: null,
-          filePath: null,
-          fileType: null,
-          fileSize: null,
-          createDate: null,
-          uploadUsername: null,
-          useState: null,
+          formName: null,
+          formType: null,
+          formPath: null,
+          formSize: null,
+          createUsername: null,
           departmentCategory: null,
-          fileTag: null,
-          oldRegulationsId: null,
-          revisionDate: null,
+          oldFormId: null,
+          revisionTime: null,
           revisionContent: null,
           reviser: null,
           newFlag: null,
-          newRegulationsId: null,
+          newFormId: null
         },
 
         // 表单参数
-        form: {
-          regulationsId: null,
-          regulationsTitle: null,
-          useScope: null,
-          effectiveDate: null,
-          regulationsAddress: null,
-          fileName: null,
-          filePath: null,
-          fileType: null,
-          fileSize: null,
-          createDate: null,
-          uploadUsername: null,
-          useState: null,
-          departmentCategory: null,
-          fileTag: null,
-          oldRegulationsId: null,
-          revisionDate: null,
-          revisionContent: null,
-          reviser: null,
-          newFlag: null,
-          newRegulationsId: null,
-        },
+        form: {},
         // 表单校验
         rules: {
-          regulationsTitle: [
-            {required: true, message: "制度标题不能为空", trigger: "blur"}
-          ],
-          useScope: [
-            {required: true, message: "适用范围不能为空", trigger: "blur"}
-          ],
-          uploadDate: [
-            {required: true, message: "上传日期不能为空", trigger: "blur"}
+          formTitle: [
+            { required: true, message: "表单名称不能为空", trigger: "blur" }
           ],
           effectiveDate: [
-            {required: true, message: "生效日期不能为空", trigger: "blur"}
+            { required: true, message: "表单上传时间不能为空", trigger: "blur" }
           ],
-          fileName: [
-            {required: true, message: "文件名称不能为空", trigger: "blur"}
+          formType: [
+            { required: true, message: "表单类型word/pdf不能为空", trigger: "change" }
           ],
-          filePath: [
-            { required: true, message: "文件路径不能为空", trigger: "blur" }
+          formSize: [
+            { required: true, message: "表单大小不能为空", trigger: "blur" }
           ],
-          fileType: [
-            {required: true, message: "文件类型不能为空", trigger: "blur"}
-          ],
-          fileSize: [
-            {required: true, message: "文件大小不能为空", trigger: "blur"}
-          ],
-          createDate: [
-            {required: true, message: "制度创建日期不能为空", trigger: "blur"}
-          ],
-          uploadUsername: [
-            {required: true, message: "制度上传人不能为空", trigger: "blur"}
-          ],
-          useState: [
-            {required: true, message: "制度使用状态不能为空", trigger: "blur"}
+          createUsername: [
+            { required: true, message: "上传人不能为空", trigger: "blur" }
           ],
           departmentCategory: [
-            {required: true, message: "制度所属科室不能为空", trigger: "blur"}
+            { required: true, message: "表单所属科室不能为空", trigger: "blur" }
           ],
         },
         uploadVisible: false,
@@ -456,7 +308,7 @@
     computed: {
       // 是否显示提示
       showTip() {
-        return this.isShowTip && (this.fileType || this.fileSize);
+        return this.isShowTip && (this.formType || this.formSize);
       },
     },
     created() {
@@ -466,14 +318,14 @@
       /** 查询文件管理列表 */
       getList() {
         this.loading = true;
-        const newRegulationId = this.$route.params.regulationsId;
-        console.log("newRegulationId=>：",newRegulationId);
+        const newFormId = this.$route.params.formId;
+        console.log("newFormId=>：",newFormId);
 
-        getRegulationsHistory(newRegulationId).then(response =>{
+        getFormHistory(newFormId).then(response =>{
           console.log("response:：",response);
-          this.filemanagementList = response;
+          this.formmanagementList = response;
           console.log("response.rows:：",response.rows);
-          console.log("filemanagementList:：",this.filemanagementList);
+          console.log("formmanagementList:：",this.formmanagementList);
           this.loading = false;
         })
         // getFilemanagement(newRegulationId).then(response => {
@@ -513,32 +365,29 @@
       },
       // 文件修改取消按钮
       modifyCancel() {
-        this.fileModifyDialogVisible = false;
+        this.formModifyDialogVisible = false;
         this.reset();
       },
       // 表单重置
       reset() {
         this.form = {
-          regulationsId: null,
-          regulationsTitle: null,
-          useScope: null,
-          uploadDate: null,
+          formId: null,
+          formTitle: null,
+          scope: null,
           effectiveDate: null,
-          regulationsAddress: null,
-          fileName: null,
-          filePath: null,
-          fileType: null,
-          fileSize: null,
-          createDate: null,
-          uploadUsername: null,
-          useState: null,
+          formName: null,
+          formType: null,
+          formPath: null,
+          formSize: null,
+          createUsername: null,
           departmentCategory: null,
-          fileTag: null,
-          oldRegulationsId: null,
-          revisionDate: null,
+          remark: null,
+          oldFormId: null,
+          revisionTime: null,
           revisionContent: null,
           reviser: null,
-          newRegulationsId: null,
+          newFlag: null,
+          newFormId: null
         };
         this.resetForm("form");
       },
@@ -558,24 +407,24 @@
         this.single = selection.length !== 1
         this.multiple = !selection.length
       },
-      /** 修改制度文件 */
+      /** 修改表单文件 */
       handleModify(row) {
         this.reset();
-        const regulationsId = row.regulationsId || this.ids
-        getFilemanagement(regulationsId).then(response => {
+        const formId = row.formId || this.ids
+        getFormfilemanagement(formId).then(response => {
           this.form = response.data;
-          this.fileModifyDialogVisible = true;
-          this.title = "修改制度文件";
+          this.formModifyDialogVisible = true;
+          this.title = "修改表单文件";
         });
       },
       /** 修改文件提交按钮 */
       modifySubmitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.regulationsId != null) {
-              updateFilemanagement(this.form).then(response => {
+            if (this.form.formId != null) {
+              updateFormfilemanagement(this.form).then(response => {
                 this.$modal.msgSuccess("修改成功");
-                this.fileModifyDialogVisible = false;
+                this.formModifyDialogVisible = false;
                 this.getList();
                 console.log("修改文件提交按钮=>",this.form);
               });
@@ -585,35 +434,37 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const regulationsIds = row.regulationsId || this.ids;
-        this.$modal.confirm('是否确认删除文件管理编号为"' + regulationsIds + '"的数据项？').then(function () {
-          return delFilemanagement(regulationsIds);
+        const formIds = row.formId || this.ids;
+        this.$modal.confirm('是否确认删除文件管理编号为"' + formIds + '"的数据项？').then(function () {
+          return delFormfilemanagement(formIds);
         }).then(() => {
           this.getList();
           this.$modal.msgSuccess("删除成功");
         }).catch(() => {
         });
-        if(row.oldRegulationsId != null) {
-          getFilemanagement(row.oldRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
+        if(row.oldFormId != null) {
+          getFormfilemanagement(row.oldFormId).then(response => {
+            console.log("当前表单2=>",row);
             const lastForm = response.data;
+            console.log("response=>",response);
             console.log("上一表单=>",lastForm);
-            lastForm.newRegulationsId = row.newRegulationsId;
+            lastForm.newFormId = row.newFormId;
             console.log("上一表单=>",lastForm);
-            updateFilemanagement(lastForm).then(response => {
+            updateFormfilemanagement(lastForm).then(response => {
             });
           });
-          getFilemanagement(row.newRegulationsId).then(response => {
+          getFormfilemanagement(row.newFormId).then(response => {
             console.log("当前表单3=>",this.form);
             const newForm = response.data;
             console.log("上一表单=>",newForm);
-            newForm.oldRegulationsId = row.oldRegulationsId;
+            newForm.oldFormId = row.oldFormId;
             console.log("上一表单=>",newForm);
-            updateFilemanagement(newForm).then(response => {
+            updateFormfilemanagement(newForm).then(response => {
             });
           });
           this.getList();
         }
+        this.getList();
       },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {
@@ -649,7 +500,7 @@
           console.log('成功获取用户信息:', response.data)
           const userInfo = response.data // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
           // 填充到对应的输入框中
-          this.form.uploadUsername = userInfo.userName
+          this.form.createUsername = userInfo.userName
           //根据部门id获取部门名称
           getDept(userInfo.deptId).then(response => {
             const deptInfo = response.data
@@ -670,7 +521,7 @@
             word2Pdf(filePath,pdfFilePath);
             window.open(pdfFilePath, '_blank');
         }
-          // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
+        // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
         window.open(filePath, '_blank');
       },
 

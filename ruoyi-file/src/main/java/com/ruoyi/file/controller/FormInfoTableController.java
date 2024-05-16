@@ -2,6 +2,8 @@ package com.ruoyi.file.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.file.domain.RegulationsInfoTable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +49,19 @@ public class FormInfoTableController extends BaseController
     }
 
     /**
+     * 查询历史版本文件列表
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('file:formfilemanagement:list')")
+    @GetMapping(value = "/history/{currentId}")
+    public List<FormInfoTable> getFormHistory(@PathVariable Long currentId) {
+//        startPage();
+        System.out.println("123 currentId" + currentId);
+        List<FormInfoTable> list = formInfoTableService.getFormHistory(currentId);
+        return list;
+    }
+
+    /**
      * 导出表单文件管理列表
      */
     @PreAuthorize("@ss.hasPermi('file:formfilemanagement:export')")
@@ -70,14 +85,14 @@ public class FormInfoTableController extends BaseController
     }
 
     /**
-     * 新增表单文件管理
+     * 新增文件管理
      */
     @PreAuthorize("@ss.hasPermi('file:formfilemanagement:add')")
-    @Log(title = "表单文件管理", businessType = BusinessType.INSERT)
+    @Log(title = "文件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FormInfoTable formInfoTable)
     {
-        return toAjax(formInfoTableService.insertFormInfoTable(formInfoTable));
+        return success(formInfoTableService.insertFormInfoTable(formInfoTable));
     }
 
     /**

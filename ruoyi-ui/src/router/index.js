@@ -579,48 +579,9 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators76',
-        component: () => import('@/views/enterprise/display/indexChart/indicators76'),
-        name: 'Indicators76',
-        meta: { title: '指标76：职能部门人均加班费用' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators77',
-        component: () => import('@/views/financial/display/indexChart/indicators77'),
-        name: 'Indicators77',
-        meta: { title: '指标77：月度存货总金额' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators78',
-        component: () => import('@/views/financial/display/indexChart/indicators78'),
-        name: 'Indicators78',
-        meta: { title: '指标78：当月经济增加值' }
-      }
-    ]
-  },
+ 
+ 
+  
   {
     path: '/market',
     component: Layout,
@@ -953,6 +914,21 @@ export const dynamicRoutes = [
       }
     ]
   },
+    //表单文件管理
+    {
+      path: '/file/formfilemanagement/index',
+      component: Layout,
+      hidden: true,
+      permissions: ['file:formfilemanagement:list'],
+      children: [
+        {
+          path: '/file/formfilemanagement/historyVersions/:formId(\\d+)', // 路由路径
+          component: () => import('@/views/file/formfilemanagement/historyVersions'), // 对应的组件
+          name: 'historyVersions', // 路由名称
+          meta: { title: '历史版本管理' } // 元信息，用于设置标题等
+        }
+      ]
+    },
 
 ]
 

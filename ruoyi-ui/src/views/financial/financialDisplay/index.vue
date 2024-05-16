@@ -104,7 +104,7 @@ export default {
         { id: '33', apiName: 'getCapitalTurnoverRateData', yDataName: 'Capital_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '资金周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
         { id: '34', apiName: 'getInventoryTurnoverRateData', yDataName: 'Inventory_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '库存商品周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
         { id: '35', apiName: 'getRawMaterialTurnoverRateData', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '原材料周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
-        { id: '36', apiName: 'getInprogressTurnoverRateData', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '在制品周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
+        { id: '36', apiName: 'getInprogressTurnoverRateData', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '在制品周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
         { id: '66', apiName: 'getLongEstimatedItemsData', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '企业主要营业产品财务收入' },
         { id: '70', apiName: 'getInprogressDayrevenueData', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '企业主要营业产品财务收入' },
         { id: '77', apiName: 'getMonthlyInventoryTotalAmountData', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '月度存货金额', dataName: '金额', content: '企业主要营业产品财务收入' },

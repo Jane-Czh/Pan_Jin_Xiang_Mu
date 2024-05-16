@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Enterprisemanagement.mapper.EnterpriseManagementFunctionEmployeeStatisticsMapper">
+    
+    <resultMap type="EnterpriseManagementFunctionEmployeeStatistics" id="EnterpriseManagementFunctionEmployeeStatisticsResult">
+        <result property="emesId"    column="EMES_ID"    />
+        <result property="employeeId"    column="Employee_ID"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="employeeGroup"    column="Employee_Group"    />
+        <result property="totalNumberOfInterns"    column="Total_number_of_interns"    />
+        <result property="ttotalNumberOfLaborDispatch"    column="TTotal_number_of_labor_dispatch"    />
+        <result property="totalNumberOfContracted"    column="Total_number_of_contracted"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementFunctionEmployeeStatisticsVo">
+        select EMES_ID, Employee_ID, Name, Gender, Employee_Group, Total_number_of_interns, TTotal_number_of_labor_dispatch, Total_number_of_contracted from Enterprise_Management_function_Employee_statistics
+    </sql>
+
+    <select id="selectEnterpriseManagementFunctionEmployeeStatisticsList" parameterType="EnterpriseManagementFunctionEmployeeStatistics" resultMap="EnterpriseManagementFunctionEmployeeStatisticsResult">
+        <include refid="selectEnterpriseManagementFunctionEmployeeStatisticsVo"/>
+        <where>  
+            <if test="employeeId != null  and employeeId != ''"> and Employee_ID = #{employeeId}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>
+            <if test="totalNumberOfInterns != null "> and Total_number_of_interns = #{totalNumberOfInterns}</if>
+            <if test="ttotalNumberOfLaborDispatch != null "> and TTotal_number_of_labor_dispatch = #{ttotalNumberOfLaborDispatch}</if>
+            <if test="totalNumberOfContracted != null "> and Total_number_of_contracted = #{totalNumberOfContracted}</if>
+        </where>
+    </select>
+
+    <select id="selectEnterpriseManagementFunctionEmployeeStatisticsList1" parameterType="EnterpriseManagementFunctionEmployeeStatistics" resultMap="EnterpriseManagementFunctionEmployeeStatisticsResult">
+        <include refid="selectEnterpriseManagementFunctionEmployeeStatisticsVo"/>
+        <where>
+            <if test="employeeId != null  and employeeId != ''"> and Employee_ID = #{employeeId}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>
+            <if test="totalNumberOfInterns != null "> and Total_number_of_interns = #{totalNumberOfInterns}</if>
+            <if test="ttotalNumberOfLaborDispatch != null "> and TTotal_number_of_labor_dispatch = #{ttotalNumberOfLaborDispatch}</if>
+            <if test="totalNumberOfContracted != null "> and Total_number_of_contracted = #{totalNumberOfContracted}</if>
+        </where>
+    </select>
+    
+    <select id="selectEnterpriseManagementFunctionEmployeeStatisticsByEmesId" parameterType="Long" resultMap="EnterpriseManagementFunctionEmployeeStatisticsResult">
+        <include refid="selectEnterpriseManagementFunctionEmployeeStatisticsVo"/>
+        where EMES_ID = #{emesId}
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT EMES_ID
+        FROM Enterprise_Management_function_Employee_statistics
+        WHERE EMES_ID = (SELECT MAX(EMES_ID) FROM Enterprise_Management_function_Employee_statistics);
+    </select>
+        
+    <insert id="insertEnterpriseManagementFunctionEmployeeStatistics" parameterType="EnterpriseManagementFunctionEmployeeStatistics">
+        insert into Enterprise_Management_function_Employee_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="emesId != null">EMES_ID,</if>
+            <if test="employeeId != null">Employee_ID,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Gender != null">Gender,</if>
+            <if test="employeeGroup != null">Employee_Group,</if>
+            <if test="totalNumberOfInterns != null">Total_number_of_interns,</if>
+            <if test="ttotalNumberOfLaborDispatch != null">TTotal_number_of_labor_dispatch,</if>
+            <if test="totalNumberOfContracted != null">Total_number_of_contracted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="emesId != null">#{emesId},</if>
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Gender != null">#{Gender},</if>
+            <if test="employeeGroup != null">#{employeeGroup},</if>
+            <if test="totalNumberOfInterns != null">#{totalNumberOfInterns},</if>
+            <if test="ttotalNumberOfLaborDispatch != null">#{ttotalNumberOfLaborDispatch},</if>
+            <if test="totalNumberOfContracted != null">#{totalNumberOfContracted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementFunctionEmployeeStatistics" parameterType="EnterpriseManagementFunctionEmployeeStatistics">
+        update Enterprise_Management_function_Employee_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">Employee_ID = #{employeeId},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Gender != null">Gender = #{Gender},</if>
+            <if test="employeeGroup != null">Employee_Group = #{employeeGroup},</if>
+            <if test="totalNumberOfInterns != null">Total_number_of_interns = #{totalNumberOfInterns},</if>
+            <if test="ttotalNumberOfLaborDispatch != null">TTotal_number_of_labor_dispatch = #{ttotalNumberOfLaborDispatch},</if>
+            <if test="totalNumberOfContracted != null">Total_number_of_contracted = #{totalNumberOfContracted},</if>
+        </trim>
+        where EMES_ID = #{emesId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementFunctionEmployeeStatisticsByEmesId" parameterType="Long">
+        delete from Enterprise_Management_function_Employee_statistics where EMES_ID = #{emesId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementFunctionEmployeeStatisticsByEmesIds" parameterType="String">
+        delete from Enterprise_Management_function_Employee_statistics where EMES_ID in 
+        <foreach item="emesId" collection="array" open="(" separator="," close=")">
+            #{emesId}
+        </foreach>
+    </delete>
+</mapper>

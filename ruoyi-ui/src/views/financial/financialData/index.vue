@@ -7,6 +7,11 @@
         </el-date-picker>
       </el-form-item>
 
+      <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
+        <el-input v-model="queryParams.inprogressDayrevenue" placeholder="请输入当日在制品金额" clearable
+          @keyup.enter.native="handleQuery" />
+      </el-form-item>
+
       <el-form-item label="更新时间" prop="updatedDate">
         <el-date-picker clearable v-model="queryParams.updatedDate" type="date" value-format="yyyy-MM-dd"
           placeholder="请选择更新时间">
@@ -22,15 +27,15 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-            v-hasPermi="['production:data:add']">新增</el-button>
+            v-hasPermi="['financial:data:add']">新增</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-            v-hasPermi="['production:data:edit']">修改</el-button>
+            v-hasPermi="['financial:data:edit']">修改</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-            v-hasPermi="['production:data:remove']">删除</el-button>
+            v-hasPermi="['financial:data:remove']">删除</el-button>
         </el-col>
         <el-col :span="1.5">
           <!--Excel 参数导入 -->
@@ -38,7 +43,7 @@
           </el-button>
 
           <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
-            <!-- 下拉框
+            <!-- 下拉框 -->
             <el-form :model="form" ref="form" label-width="90px">
               <el-form-item label="选择表类型">
                 <el-select v-model="selectedType" placeholder="请选择Excel类型">
@@ -46,7 +51,7 @@
                   <el-option label="资产负债表" value="balance"></el-option>
                 </el-select>
               </el-form-item>
-            </el-form> -->
+            </el-form>
 
             <i class="el-icon-upload"></i>
             <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
@@ -64,7 +69,7 @@
         </el-col>
         <el-col :span="1.5">
           <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-            v-hasPermi="['production:data:export']">导出</el-button>
+            v-hasPermi="['financial:data:export']">导出</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
@@ -73,25 +78,34 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column sortable="custom" label="年月" align="center" prop="yearAndMonth" width="150">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="当月单台非BOM物料费用" align="center" prop="curNonBomMaterialCost" width="180" />
-      <el-table-column label="当月单台低值易耗费用" align="center" prop="curLowValueConsumables" width="160" />
-      <el-table-column label="在制物资年化周转天数" align="center" prop="inventoryTurnoverdays" width="160" />
-      <el-table-column label="人均生产台数" align="center" prop="outputPercapitacounts" />
-      <el-table-column label="人均产值" align="center" prop="outputPercapitavalue" />
-      <el-table-column label="上线及时率" align="center" prop="onlineOntimerate" />
-      <el-table-column label="一线当月加班时长" align="center" prop="overtimeFrontlinemonth" />
+      <el-table-column label="整机销售收入" align="center" prop="totalSalesRevenue" width="100" />
+      <el-table-column label="集团外部销售收入" align="center" prop="externalGroupSalesRevenue" width="130" />
+      <el-table-column label="整车产量" align="center" prop="totalVehicleProduction" />
+      <el-table-column label="整车销量" align="center" prop="totalVehicleSales" />
+      <el-table-column label="新产品销售收入" align="center" prop="newProductSalesRevenue" width="120" />
+      <el-table-column label="特色产品收入" align="center" prop="specialtyProductRevenue" width="100" />
+      <el-table-column label="整机销售成本" align="center" prop="totalSalesCost" width="100" />
+      <el-table-column label="当月制造费用" align="center" prop="manufacturingExpensesMonth" width="100" />
+      <el-table-column label="储备车金额" align="center" prop="reserveCarAmount" width="90" />
+      <el-table-column label="资金周转率" align="center" prop="capitalTurnoverRate" width="90" />
+      <el-table-column label="库存商品周转率" align="center" prop="inventoryTurnoverRate" width="120" />
+      <el-table-column label="原材料周转率" align="center" prop="rawMaterialTurnoverRate" width="100" />
+      <el-table-column label="在制品周转率" align="center" prop="inprogressTurnoverRate" width="100" />
+      <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" width="140" />
+      <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" />
+      <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" width="120" />
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['production:data:edit']">修改</el-button>
+            v-hasPermi="['financial:data:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['production:data:remove']">删除</el-button>
+            v-hasPermi="['financial:data:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,36 +113,62 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 添加或修改[生产]手动填报指标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
+    <!-- 添加或修改[财务]手动填报指标对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="当月单台非BOM物料费用" prop="curNonBomMaterialCost">
-          <el-input v-model="form.curNonBomMaterialCost" placeholder="请输入当月单台非BOM物料费用" />
+        <el-form-item label="整机销售收入" prop="totalSalesRevenue">
+          <el-input v-model="form.totalSalesRevenue" placeholder="请输入整机销售收入" />
         </el-form-item>
-        <el-form-item label="当月单台低值易耗费用" prop="curLowValueConsumables">
-          <el-input v-model="form.curLowValueConsumables" placeholder="请输入当月单台低值易耗费用" />
+        <el-form-item label="集团外部销售收入" prop="externalGroupSalesRevenue">
+          <el-input v-model="form.externalGroupSalesRevenue" placeholder="请输入集团外部销售收入" />
         </el-form-item>
-        <el-form-item label="在制物资年化周转天数" prop="inventoryTurnoverdays">
-          <el-input v-model="form.inventoryTurnoverdays" placeholder="请输入在制物资年化周转天数" />
+        <el-form-item label="整车产量" prop="totalVehicleProduction">
+          <el-input v-model="form.totalVehicleProduction" placeholder="请输入整车产量" />
         </el-form-item>
-        <el-form-item label="人均生产台数" prop="outputPercapitacounts">
-          <el-input v-model="form.outputPercapitacounts" placeholder="请输入人均生产台数" />
+        <el-form-item label="整车销量" prop="totalVehicleSales">
+          <el-input v-model="form.totalVehicleSales" placeholder="请输入整车销量" />
         </el-form-item>
-        <el-form-item label="人均产值" prop="outputPercapitavalue">
-          <el-input v-model="form.outputPercapitavalue" placeholder="请输入人均产值" />
+        <el-form-item label="新产品销售收入" prop="newProductSalesRevenue">
+          <el-input v-model="form.newProductSalesRevenue" placeholder="请输入新产品销售收入" />
         </el-form-item>
-        <el-form-item label="上线及时率" prop="onlineOntimerate">
-          <el-input v-model="form.onlineOntimerate" placeholder="请输入上线及时率" />
+        <el-form-item label="特色产品收入" prop="specialtyProductRevenue">
+          <el-input v-model="form.specialtyProductRevenue" placeholder="请输入特色产品收入" />
         </el-form-item>
-        <el-form-item label="一线当月加班时长" prop="overtimeFrontlinemonth">
-          <el-input v-model="form.overtimeFrontlinemonth" placeholder="请输入一线当月加班时长" />
+        <el-form-item label="整机销售成本" prop="totalSalesCost">
+          <el-input v-model="form.totalSalesCost" placeholder="请输入整机销售成本" />
         </el-form-item>
-
+        <el-form-item label="当月制造费用" prop="manufacturingExpensesMonth">
+          <el-input v-model="form.manufacturingExpensesMonth" placeholder="请输入当月制造费用" />
+        </el-form-item>
+        <el-form-item label="储备车金额" prop="reserveCarAmount">
+          <el-input v-model="form.reserveCarAmount" placeholder="请输入储备车金额" />
+        </el-form-item>
+        <el-form-item label="资金周转率" prop="capitalTurnoverRate">
+          <el-input v-model="form.capitalTurnoverRate" placeholder="请输入资金周转率" />
+        </el-form-item>
+        <el-form-item label="库存商品周转率" prop="inventoryTurnoverRate">
+          <el-input v-model="form.inventoryTurnoverRate" placeholder="请输入库存商品周转率" />
+        </el-form-item>
+        <el-form-item label="原材料周转率" prop="rawMaterialTurnoverRate">
+          <el-input v-model="form.rawMaterialTurnoverRate" placeholder="请输入原材料周转率" />
+        </el-form-item>
+        <el-form-item label="在制品周转率" prop="inprogressTurnoverRate">
+          <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入在制品周转率" />
+        </el-form-item>
+        <el-form-item label="一年以上暂估行项目" prop="longEstimatedItems">
+          <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目" />
+        </el-form-item>
+        <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
+          <el-input v-model="form.inprogressDayrevenue" placeholder="请输入当日在制品金额" />
+        </el-form-item>
+        <el-form-item label="当月经济增加值" prop="addedValueMonthly">
+          <el-input v-model="form.addedValueMonthly" placeholder="请输入当月经济增加值" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -139,7 +179,7 @@
 </template>
 
 <script>
-import { listData, getData, delData, addData, updateData } from "@/api/production/data";
+import { listData, getData, delData, addData, updateData } from "@/api/financial/data";
 // import * as XLSX from "xlsx";
 // import "font-awesome/css/font-awesome.css";
 //引入font-awesome
@@ -168,7 +208,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // [生产]手动填报指标表格数据
+      // [财务]手动填报指标表格数据
       dataList: [],
       // 弹出层标题
       title: "",
@@ -179,14 +219,26 @@ export default {
         pageNum: 1,
         pageSize: 10,
         yearAndMonth: null,
-        curNonBomMaterialCost: null,
-        curLowValueConsumables: null,
-        inventoryTurnoverdays: null,
-        outputPercapitacounts: null,
-        outputPercapitavalue: null,
-        onlineOntimerate: null,
-        overtimeFrontlinemonth: null,
-        upload: null,                         //未完成待处理
+        totalSalesRevenue: null,
+        externalGroupSalesRevenue: null,
+        totalVehicleProduction: null,
+        totalVehicleSales: null,
+        newProductSalesRevenue: null,
+        specialtyProductRevenue: null,
+        totalSalesCost: null,
+        manufacturingExpensesMonth: null,
+        reserveCarAmount: null,
+        capitalTurnoverRate: null,
+        inventoryTurnoverRate: null,
+        rawMaterialTurnoverRate: null,
+        inprogressTurnoverRate: null,
+        longEstimatedItems: null,
+        inprogressDayrevenue: null,
+        addedValueMonthly: null,
+        Reporter: null,
+        reportingDate: null,
+        updatedBy: null,
+        updatedDate: null
 
       },
       // 表单参数
@@ -198,19 +250,29 @@ export default {
   },
   created() {
     this.getList();
+    this.sortDataListDescending()
   },
   methods: {
+
+    sortDataListDescending() {
+      this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+    },//默认改为降序排列
     handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
       if (sort.column && sort.prop === 'yearAndMonth') {
         if (sort.order === 'ascending') {
+          // 如果是升序，你可以使用Array的sort方法来排序dataList
           this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
         } else if (sort.order === 'descending') {
+          // 如果是降序，你可以使用Array的sort方法来排序dataList
           this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
         }
       }
     },
 
-    /** 查询[生产]手动填报指标列表 */
+
+
+    /** 查询[财务]手动填报指标列表 */
     getList() {
       this.loading = true;
       this.queryParams.page = 10
@@ -218,11 +280,6 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
       });
     },
     // 取消按钮
@@ -233,16 +290,28 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        productionId: null,
+        fihfId: null,
         yearAndMonth: null,
-        curNonBomMaterialCost: null,
-        curLowValueConsumables: null,
-        inventoryTurnoverdays: null,
-        outputPercapitacounts: null,
-        outputPercapitavalue: null,
-        onlineOntimerate: null,
-        overtimeFrontlinemonth: null,
-        upload: null,                         //未完成待处理
+        totalSalesRevenue: null,
+        externalGroupSalesRevenue: null,
+        totalVehicleProduction: null,
+        totalVehicleSales: null,
+        newProductSalesRevenue: null,
+        specialtyProductRevenue: null,
+        totalSalesCost: null,
+        manufacturingExpensesMonth: null,
+        reserveCarAmount: null,
+        capitalTurnoverRate: null,
+        inventoryTurnoverRate: null,
+        rawMaterialTurnoverRate: null,
+        inprogressTurnoverRate: null,
+        longEstimatedItems: null,
+        inprogressDayrevenue: null,
+        addedValueMonthly: null,
+        Reporter: null,
+        reportingDate: null,
+        updatedBy: null,
+        updatedDate: null
       };
       this.resetForm("form");
     },
@@ -258,7 +327,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.productionId)
+      this.ids = selection.map(item => item.fihfId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -266,23 +335,23 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[生产]手动填报指标";
+      this.title = "添加[财务]手动填报指标";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const productionId = row.productionId || this.ids
-      getData(productionId).then(response => {
+      const fihfId = row.fihfId || this.ids
+      getData(fihfId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[生产]手动填报指标";
+        this.title = "修改[财务]手动填报指标";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.productionId != null) {
+          if (this.form.fihfId != null) {
             updateData(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -300,9 +369,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const productionIds = row.productionId || this.ids;
-      this.$modal.confirm('是否确认删除[生产]手动填报指标编号为"' + productionIds + '"的数据项？').then(function () {
-        return delData(productionIds);
+      const fihfIds = row.fihfId || this.ids;
+      this.$modal.confirm('是否确认删除[财务]手动填报指标编号为"' + fihfIds + '"的数据项？').then(function () {
+        return delData(fihfIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -338,8 +407,8 @@ export default {
       if (this.selectedType === 'profit') {
         axios({
           method: "post",
-          // url: this.$http.url('/production/data/upload'),
-          url: "http://localhost:8080/production/interests/importTable",
+          // url: this.$http.url('/financial/data/upload'),
+          url: "http://localhost:8080/financial/interests/importTable",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),
@@ -358,8 +427,8 @@ export default {
       } else if (this.selectedType === 'balance') {
         axios({
           method: "post",
-          // url: this.$http.url('/production/data/upload'),
-          url: "http://localhost:8080/production/balance/importTable",
+          // url: this.$http.url('/financial/data/upload'),
+          url: "http://localhost:8080/financial/balance/importTable",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),
@@ -374,7 +443,7 @@ export default {
             );
           },
         });
-        //  axios.post('production/balance/importTable', formData, {
+        //  axios.post('financial/balance/importTable', formData, {
         //   headers: {
         //     'Content-Type': 'multipart/form-data'
         //   },
@@ -386,8 +455,8 @@ export default {
       }
       // axios({
       //   method: "post",
-      //   // url: this.$http.url('/production/data/upload'),
-      //     url:"http://localhost:8080/production/interests/importTable",
+      //   // url: this.$http.url('/financial/data/upload'),
+      //     url:"http://localhost:8080/financial/interests/importTable",
       //   // params: this.$http.adornParams({
       //   //   userName: this.$store.state.user.name,
       //   // }),
@@ -426,7 +495,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('production/data/export', {
+      this.download('financial/data/export', {
         ...this.queryParams
       }, `data_${new Date().getTime()}.xlsx`)
     }

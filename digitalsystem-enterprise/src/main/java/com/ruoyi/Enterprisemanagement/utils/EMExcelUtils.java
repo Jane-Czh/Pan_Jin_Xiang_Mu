@@ -1,9 +1,6 @@
 package com.ruoyi.Enterprisemanagement.utils;
 
-import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementFunctionLaborReminder;
-import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementFunctionSpecialOperationWarning;
-import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementLaborContractLedger;
-import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementSpecialOperationsManagementLedger;
+import com.ruoyi.Enterprisemanagement.domain.*;
 import com.ruoyi.market.utils.ExcelDateUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class EMExcelUtils {
     public static List<EnterpriseManagementSpecialOperationsManagementLedger> SOparseExcel(MultipartFile file) throws IOException {
@@ -311,6 +311,379 @@ public class EMExcelUtils {
             enterpriseManagementLaborContractLedger.setContractStatusThirdly(getStringCellValue(row.getCell(count++)));
 
             dataList.add(enterpriseManagementLaborContractLedger);
+
+        }
+        workbook.close();
+
+        return dataList;
+
+    }
+
+    public static List<EnterpriseManagementPersonnelRoster> PRparseExcel(MultipartFile file) throws IOException {
+        List<EnterpriseManagementPersonnelRoster > dataList = new ArrayList<>();
+        LocalDate myDate = LocalDate.of(1902, 1, 1);
+        LocalDate myDate1 = LocalDate.of(2900, 1, 1);
+        // 转换为Date类型
+        Date date = java.sql.Date.valueOf(myDate);
+        Date date1 = java.sql.Date.valueOf(myDate1);
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header rows
+        for (int i = 0; i < 1 && rowIterator.hasNext(); i++) {
+            rowIterator.next();
+        }
+
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            EnterpriseManagementPersonnelRoster enterpriseManagementPersonnelRoster = new EnterpriseManagementPersonnelRoster();
+
+
+            int count = 0;
+
+
+            //0.序号
+            enterpriseManagementPersonnelRoster.setNumber(Long.valueOf(getIntegerCellValue(row.getCell(count++))));
+
+            //员工ID
+            enterpriseManagementPersonnelRoster.setEmployeeId(getStringCellValue(row.getCell(count++)));
+//
+            //姓名
+            enterpriseManagementPersonnelRoster.setName(getStringCellValue(row.getCell(count++)));
+
+            //性别
+            enterpriseManagementPersonnelRoster.setGender(getStringCellValue(row.getCell(count++)));
+            //
+            //生日
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setBirthday(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            //年龄
+            enterpriseManagementPersonnelRoster.setAge(Long.valueOf(getIntegerCellValue(row.getCell(count++))));
+
+            //档案生日
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setRecordBirth(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            //身份证
+            enterpriseManagementPersonnelRoster.setIdCard(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSocialSecurityNumber(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPersonnelScope(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPersonnelScopeText(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPersonnelSubScope(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPersonnelSubScopeText(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSalaryAccountingScope(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSalaryAccountingScopeText(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setCostCenter(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setCostCenterText(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setRootTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setRootTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFirstTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFirstTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSecondTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSecondTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setThirdTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setThirdTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFourthTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFourthTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFifthTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFifthTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSixthTissueId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSixthTissue(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPositionEthnicGroupId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPositionEthnicGroup(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setJobCategoryId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setJobCategory(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setJob(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setJobTitle(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTechnicalTitle(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestTechnicalTitl(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTechnicalLevel(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestTechnicalLevel(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setRank(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPositionId(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPosition(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setJobbTitle(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSalaryGrade(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSalaryyGrade(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPositionSalary(Long.valueOf(getIntegerCellValue(row.getCell(count++))));
+
+            enterpriseManagementPersonnelRoster.setEmployeeGroup(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setEmployeeSubGroup(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setBackboneLevel(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPersonnelManagementClassification(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestEducationalLevel(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestEducationalSchool(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestEducationalMajor(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestDegree(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestDegreeSchool(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setTheHighestDegreeMajor(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFirstEducationalLevel(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFirstHighestDegree(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFirstHighestDegreeSchool(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setFirstHighestDegreeMajor(getStringCellValue(row.getCell(count++)));
+
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setContractStartTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+            // 假设date为您的java.util.Date对象
+            Date date2 = getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count))));
+//            //转成localdate
+//            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (date.before(date2)&&date2.before(date1)){
+
+                enterpriseManagementPersonnelRoster.setContractEndTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            enterpriseManagementPersonnelRoster.setContractTerm(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setContractSigningUnit(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setSigningFrequency(Long.valueOf(getIntegerCellValue(row.getCell(count++))));
+
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setWorkingHours(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setJoinedTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setStartingTimeOfServiceLife(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setRetirementDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            enterpriseManagementPersonnelRoster.setSiLing(Long.valueOf(getIntegerCellValue(row.getCell(count++))));
+
+            enterpriseManagementPersonnelRoster.setNation(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setPoliticalLandscape(getStringCellValue(row.getCell(count++)));
+
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+
+                enterpriseManagementPersonnelRoster.setPartyMembershipTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            else {
+                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+                count++;
+            }
+
+            enterpriseManagementPersonnelRoster.setMaritalStatus(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setHometown(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setHouseholdRegistrationNature(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setResidentAddress(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setContactInformation(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setEmergencyContact(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setEmergencyContactPhone(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setWorkContract(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setProvidentFundAccount(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setEnterpriseAnnuityAccount(getStringCellValue(row.getCell(count++)));
+
+            enterpriseManagementPersonnelRoster.setUploadPhoto(getStringCellValue(row.getCell(count++)));
+
+
+
+
+
+
+//
+//            //2、部门
+//            enterpriseManagementLaborContractLedger.setDocument(getStringCellValue(row.getCell(count++)));
+//
+//            //3.就职状态
+//            enterpriseManagementLaborContractLedger.setEmploymentStatus(getStringCellValue(row.getCell(count++)));
+//
+//            //7.身份证号
+//            enterpriseManagementLaborContractLedger.setIdNumber(getStringCellValue(row.getCell(count++)));
+//
+//            //电话号码
+//            enterpriseManagementLaborContractLedger.setPhoneNumber(getStringCellValue(row.getCell(count++)));
+//
+//            //第一次合同起始
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//
+//                enterpriseManagementLaborContractLedger.setFirstContractPeriodStart(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第一次合同结束
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//
+//                enterpriseManagementLaborContractLedger.setFirstContractPeriodEnd(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第一次合同情况
+//            if (getStringCellValue(row.getCell(count))!=null) {
+//                enterpriseManagementLaborContractLedger.setContractStatusFirstly(getStringCellValue(row.getCell(count++)));
+//
+//            }
+//            else {
+//                count++;
+//            }
+//            //第二次合同起始
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//
+//                enterpriseManagementLaborContractLedger.setSecondContractPeriodStart(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第二次合同结束
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//
+//                enterpriseManagementLaborContractLedger.setSecondContractPeriodEnd(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第二次合同情况
+//            if (getStringCellValue(row.getCell(count))!=null) {
+//                System.out.println(row.getCell(count));
+//                System.out.println("================");
+//                enterpriseManagementLaborContractLedger.setContractStatusSecondly(getStringCellValue(row.getCell(count++)));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第三次合同起始
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//
+//                enterpriseManagementLaborContractLedger.setThirdContractPeriodStart(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第三次合同结束
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//
+//                enterpriseManagementLaborContractLedger.setThirdContractPeriodEnd(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
+//            //第三次合同情况
+//            enterpriseManagementLaborContractLedger.setContractStatusThirdly(getStringCellValue(row.getCell(count++)));
+//
+            dataList.add(enterpriseManagementPersonnelRoster);
 
         }
         workbook.close();

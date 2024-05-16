@@ -13,7 +13,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getCurEquipmentMaintenanceCostData } from '@/api/supply/data'
+import { getControlledPurchaseAmountRatioData } from '@/api/supply/data'
 
 export default {
   data() {
@@ -42,7 +42,7 @@ export default {
         this.timeData.endTime = this.selectedDate[1]
       try {
         this.loading = true
-        const res = await getCurEquipmentMaintenanceCostData(this.timeData);
+        const res = await getControlledPurchaseAmountRatioData(this.timeData);
         this.data = res.rows
         this.loading = false
         this.updateChart()
@@ -139,7 +139,7 @@ export default {
         align: app.config.align,
         verticalAlign: app.config.verticalAlign,
         rotate: app.config.rotate,
-        formatter: '{c}',
+        formatter: '{c} ',
         fontSize: 16,
         rich: {
           name: {}
@@ -147,7 +147,7 @@ export default {
       };
       this.option = {
         title: {
-          text: '当月设备维修总费用',
+          text: '集团管控物资采购金额占比',
         },
         tooltip: {
           trigger: 'axis',
@@ -155,9 +155,9 @@ export default {
             type: 'shadow'
           }
         },
-        // legend: {
-        //     data: ['Forest', 'Steppe', 'Desert', 'Wetland']
-        // },
+        legend: {
+          data: ['采购金额', '总金额', '占比']
+        },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -179,19 +179,69 @@ export default {
           }
         ],
         yAxis: [
+
           {
             type: 'value'
-          }
-        ],
-        series: [{
-          name: '金额',
-          type: 'line',
-          label: labelOption,
-          emphasis: {
-            focus: 'series'
           },
-          data: this.data.map(item => item.curEquipmentMaintenanceCost),
-        }]
+          {
+            type: 'value',
+            name: '占比',
+            // interval: 5,
+            splitLine: { show: false },
+            axisLabel: {
+              formatter: '{value} %'
+            }
+          }
+
+        ],
+        series: [
+          {
+            name: '采购金额',
+            type: 'bar',
+            label: labelOption,
+            emphasis: {
+              focus: 'series'
+            },
+            data: this.data.map(item => item.controlledMaterialPurchases),
+          },
+          {
+            name: '总金额',
+            type: 'bar',
+            label: labelOption,
+            emphasis: {
+              focus: 'series'
+            },
+            data: this.data.map(item => item.totalPurchaseAmount),
+          },
+          {
+            name: '占比',
+            type: 'line',
+            label: {
+              show: true,
+              position: app.config.position,
+              distance: app.config.distance,
+              align: app.config.align,
+              verticalAlign: app.config.verticalAlign,
+              rotate: app.config.rotate,
+              formatter: '{c} %',
+              fontSize: 16,
+              rich: {
+                name: {}
+              }
+            },
+            emphasis: {
+              focus: 'series'
+            },
+
+            yAxisIndex: 1,
+            tooltip: {
+              valueFormatter: function (value) {
+                return value + '%';
+              }
+            },
+            data: this.data.map(item => item.controlledPurchaseAmountRatio),
+          }
+        ]
       };
 
       this.option && this.myChart.setOption(this.option);
@@ -204,7 +254,7 @@ export default {
           }
           this.myChart.setOption(this.option);
         }
-      });
+      });//切换为折线图时，设置boundaryGap为true
     },
     defaultMonth() {
       const currentDate = new Date();

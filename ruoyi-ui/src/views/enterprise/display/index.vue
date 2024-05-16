@@ -28,21 +28,21 @@
 
 export default {
   components: {},
-  props: [],
+  props: ['option'],
   data() {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '49', icon: 'el-icon-s-data', title: '一线从业人数', content: '企业主要营业产品财务收入', path: '/enterprise/indicators49' },
-        { id: '51', icon: 'el-icon-s-data', title: '公司平均从业人数（月度）', content: '企业主要营业产品财务收入', path: '/enterprise/indicators51' },
-        // { id: '52', icon: 'el-icon-s-data', title: '工资总额年度占比', content: '企业主要营业产品财务收入', path: '/enterprise/indicators52' },
-        // { id: '53', icon: 'el-icon-s-data', title: '日清日结考核得分', content: '企业主要营业产品财务收入', path: '/enterprise/indicators53' },
-        // { id: '54', icon: 'el-icon-s-data', title: '累计人均收入', content: '企业主要营业产品财务收入', path: '/enterprise/indicators54' },
-        // { id: '55', icon: 'el-icon-s-data', title: '月度累计生产人均收入', content: '企业主要营业产品财务收入', path: '/enterprise/indicators55' },
-        // { id: '56', icon: 'el-icon-s-data', title: '月度累计职能人均收入', content: '企业主要营业产品财务收入', path: '/enterprise/indicators56' },
-        // { id: '76', icon: 'el-icon-s-data', title: '职能部门人均加班费用', content: '企业主要营业产品财务收入', path: '/enterprise/indicators76' },
-        // { id: '暂无', icon: 'el-icon-s-data', title: '公司平均从业人数（年度）', content: '企业主要营业产品财务收入', path: '/enterprise/indicators47' },
-        // { id: '暂无', icon: 'el-icon-s-data', title: '11项管理指标-单个指标得分', content: '企业主要营业产品财务收入', path: '/enterprise/indicators47' },
+        { id: '49', icon: 'el-icon-s-data', title: '一线从业人数', apiName: 'getEmployeesNumberData', yDataName: 'employeesNumber', dataName: '人数', content: '企业主要营业产品财务收入', },
+        { id: '51', icon: 'el-icon-s-data', title: '公司平均从业人数（月度）', apiName: 'getEmployeesAVGMonthlyNumberData', yDataName: 'employeesAVGMonthlyNumber', dataName: '人数', content: '企业主要营业产品财务收入', },
+        { id: '52', icon: 'el-icon-s-data', title: '工资总额年度占比', apiName: 'getAnnualSalaryRatioData', yDataName: 'annualSalaryRatio', dataName: '占比', content: '企业主要营业产品财务收入', },
+        // { id: '53', icon: 'el-icon-s-data', title: '日清日结考核得分', apiName: 'getMainRevenueData',yDataName: 'Total_Sales_Revenue',dataName: '金额',content: '企业主要营业产品财务收入', },
+        { id: '54', icon: 'el-icon-s-data', title: '累计人均收入', apiName: 'getCumulativeAverageIncomeData', yDataName: 'cumulativeAverageIncome', dataName: '金额', content: '企业主要营业产品财务收入', },
+        { id: '55', icon: 'el-icon-s-data', title: '月度累计生产人均收入', apiName: 'getMonthlyProductionAVGIncomeData', yDataName: 'monthlyProductionAVGIncome', dataName: '金额', content: '企业主要营业产品财务收入', },
+        { id: '56', icon: 'el-icon-s-data', title: '月度累计职能人均收入', apiName: 'getMonthlyFunctionalAVGIncomeData', yDataName: 'monthlyFunctionalAVGIncome', dataName: '金额', content: '企业主要营业产品财务收入', },
+        { id: '76', icon: 'el-icon-s-data', title: '职能部门人均加班费用', apiName: 'getFunctionalDeptOvertimeCostData', yDataName: 'functionalDeptOvertimeCost', dataName: '金额', content: '企业主要营业产品财务收入', },
+        { id: '100', icon: 'el-icon-s-data', title: '公司平均从业人数（年度）', apiName: 'getEmployeesAVGAnnualNumberData', yDataName: 'employeesAVGAnnualNumber', dataName: '人数', content: '企业主要营业产品财务收入', },
+        //   { id: '101', icon: 'el-icon-s-data', title: '11项管理指标-单个指标得分', apiName: 'getMainRevenueData',yDataName: 'Total_Sales_Revenue',dataName: '得分',content: '企业主要营业产品财务收入', },
       ],
 
       formData: {},
@@ -56,7 +56,20 @@ export default {
   mounted() { },
   methods: {
     toDetail(item) {
-      this.$router.push(item.path)
+      // if (item.id === '30') {
+      //   this.$router.push('/financial/indicators30')
+      // }
+      // else if (item.id === '70') {
+      //   this.$router.push('/financial/indicators70')
+      // }
+      this.$router.push({
+        path: '/enterprise/index-detail-enterprise',
+        query: {
+          data: JSON.stringify(item)
+        }
+      })
+
+
     }
   }
 }

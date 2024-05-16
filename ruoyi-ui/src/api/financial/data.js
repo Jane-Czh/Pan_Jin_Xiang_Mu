@@ -243,7 +243,7 @@ export function getMonthAmountInStockData(data) {
 // 存货增长率/销售增长率
 export function getGrowthRateInventorySalesData(data) {
   return request({
-    url: `/financial/display/growthRateInventorySales`,
+    url: `/financial/display/growthRateInventoryAndSales`,
     method: 'post',
     data: {
       startTime: data.startTime,

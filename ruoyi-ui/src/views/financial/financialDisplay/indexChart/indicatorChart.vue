@@ -1,61 +1,45 @@
 <template>
-  <div>
-    <div class="block">
-      <span class="DataSelect" style="margin-right:10px">日期选择</span>
-      <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
-        start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions" @change="handleDateChange">
-      </el-date-picker>
-    </div>
-    <div id="main" ref="main"></div>
-  </div>
+  <div id="main" ref="main"></div>
 </template>
 
 <script>
-import * as echarts from 'echarts';
-import { getOutputPercapitavalueData } from '@/api/safety/data'
+import * as echarts from 'echarts'
 
 export default {
+  props: {
+    title: { type: String, default: '主营业务收入' },
+    dataName: { type: String, default: '金额' },
+    xAxisData: { type: Array, default: () => [] },
+    yAxisData: { type: Array, default: () => [] },
+    legendData: { type: String, default: null }
+  },
   data() {
     return {
       loading: false,
       data: [],
-      timeData: {
-        startTime: new Date(),
-        endTime: new Date(),
-      },
-      selectedDate: [],
-      pickerOptions: [],
       option: {},
-      myChart: {},
-      chartData: [], // 存放格式化后的数据
-      parsedData: {}
+      myChart: {}
     }
   },
-  computed: {},
+  watch: {
+    xAxisData: {
+      handler() {
+        this.updateChart()
+      },
+      deep: true
+    },
+    yAxisData: {
+      handler() {
+        this.updateChart()
+      },
+      deep: true
+    },
+  },
   mounted() {
-    this.defaultMonth()
     this.myChart = echarts.init(document.getElementById('main'))
-    this.initData()
-
+    this.updateChart()
   },
   methods: {
-    async initData() {
-      this.timeData.startTime = this.selectedDate[0],
-        this.timeData.endTime = this.selectedDate[1]
-      try {
-        this.loading = true
-        const res = await getOutputPercapitavalueData(this.timeData);
-        this.data = res
-        this.loading = false
-        this.formatData()
-        this.updateChart()
-      } catch (error) {
-        this.loading = false
-      }
-    },
-    handleDateChange() {
-      this.initData()
-    },
     updateChart() {
       var app = {};
       const posList = [
@@ -150,7 +134,7 @@ export default {
       };
       this.option = {
         title: {
-          text: '设备故障类别次数分布图',
+          text: this.title
         },
         tooltip: {
           trigger: 'axis',
@@ -158,9 +142,9 @@ export default {
             type: 'shadow'
           }
         },
-        legend: {
-          data: ['机械', '气动', '液压', '电器']
-        },
+        // legend: {
+        //   data: [this.legendData]
+        // },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -169,8 +153,8 @@ export default {
           feature: {
             mark: { show: true, },
             dataView: { show: true, readOnly: false, title: '数据视图' },
-            magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
-            restore: { show: true, title: '还原' },
+            magicType: { show: true, type: ['bar', 'line'], title: { bar: '切换为柱状图', line: '切换为折线图' } },
+            // restore: { show: true, title: '还原' },
             saveAsImage: { show: true, title: '保存为图片' }
           }
         },
@@ -178,7 +162,7 @@ export default {
           {
             // type: 'category',
             axisTick: { show: false },
-            data: this.chartData.map(data => data.month)
+            data: this.xAxisData,
           }
         ],
         yAxis: [
@@ -186,43 +170,15 @@ export default {
             type: 'value'
           }
         ],
-        series: [
-          {
-            name: '机械',
-            type: 'bar',
-            label: labelOption,
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.chartData.map(data => data.mechanical),
+        series: [{
+          name: this.dataName,
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
           },
-          {
-            name: '气动',
-            type: 'bar',
-            label: labelOption,
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.chartData.map(data => data.pneumatic),
-          },
-          {
-            name: '液压',
-            type: 'bar',
-            label: labelOption,
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.chartData.map(data => data.hydraulic),
-          },
-          {
-            name: '电器',
-            type: 'bar',
-            label: labelOption,
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.chartData.map(data => data.electrical),
-          }]
+          data: this.yAxisData,
+        }]
       };
 
       this.option && this.myChart.setOption(this.option);
@@ -236,34 +192,8 @@ export default {
           this.myChart.setOption(this.option);
         }
       });
-    },
-    defaultMonth() {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth() + 1;
-      const startDate = new Date(currentYear, 0, 1);
-      const endDate = new Date(currentYear, currentMonth, 0);
-      this.selectedDate = [startDate, endDate];
-    },
-    formatData() {
-      this.chartData = this.data.rows.map(rows => {
-        const month = rows.Year_And_Month;
-        const resultData = rows.resultData.split(',');
-        return {
-          month,
-          mechanical: parseInt(resultData[0].split(':')[1]),
-          pneumatic: parseInt(resultData[1].split(':')[1]),
-          hydraulic: parseInt(resultData[2].split(':')[1]),
-          electrical: parseInt(resultData[3].split(':')[1]),
-        };
-
-      });
     }
-
   },
-
-
-
 }
 
 

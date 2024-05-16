@@ -78,12 +78,12 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="当月单台非BOM物料费用" align="center" prop="curNonBomMaterialCost" width="180" />
-      <el-table-column label="当月单台低值易耗费用" align="center" prop="curLowValueConsumables" width="160" />
-      <el-table-column label="在制物资年化周转天数" align="center" prop="inventoryTurnoverdays" width="160" />
-      <el-table-column label="人均生产台数" align="center" prop="outputPercapitacounts" />
-      <el-table-column label="人均产值" align="center" prop="outputPercapitavalue" />
-      <el-table-column label="上线及时率" align="center" prop="onlineOntimerate" />
+      <el-table-column label="当月度设备维修总费用" align="center" prop="curNonBomMaterialCost" width="180" />
+      <el-table-column label="重点设备故障率" align="center" prop="curLowValueConsumables" width="160" />
+      <el-table-column label="当月设备故障累计停产时间" align="center" prop="inventoryTurnoverdays" width="160" />
+      <el-table-column label="主要设备故障总次数" align="center" prop="outputPercapitacounts" />
+      <el-table-column label="设备故障类别次数分布图" align="center" prop="outputPercapitavalue" />
+      <el-table-column label="当月设备维修成本" align="center" prop="onlineOntimerate" />
       <el-table-column label="一线当月加班时长" align="center" prop="overtimeFrontlinemonth" />
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -107,26 +107,23 @@
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="当月单台非BOM物料费用" prop="curNonBomMaterialCost">
-          <el-input v-model="form.curNonBomMaterialCost" placeholder="请输入当月单台非BOM物料费用" />
+        <el-form-item label="当月度设备维修总费用" prop="curNonBomMaterialCost">
+          <el-input v-model="form.curNonBomMaterialCost" placeholder="请输入当月度设备维修总费用" />
         </el-form-item>
-        <el-form-item label="当月单台低值易耗费用" prop="curLowValueConsumables">
-          <el-input v-model="form.curLowValueConsumables" placeholder="请输入当月单台低值易耗费用" />
+        <el-form-item label="重点设备故障率" prop="curLowValueConsumables">
+          <el-input v-model="form.curLowValueConsumables" placeholder="请输入重点设备故障率" />
         </el-form-item>
-        <el-form-item label="在制物资年化周转天数" prop="inventoryTurnoverdays">
-          <el-input v-model="form.inventoryTurnoverdays" placeholder="请输入在制物资年化周转天数" />
+        <el-form-item label="当月设备故障累计停产时间" prop="inventoryTurnoverdays">
+          <el-input v-model="form.inventoryTurnoverdays" placeholder="请输入当月设备故障累计停产时间" />
         </el-form-item>
-        <el-form-item label="人均生产台数" prop="outputPercapitacounts">
-          <el-input v-model="form.outputPercapitacounts" placeholder="请输入人均生产台数" />
+        <el-form-item label="主要设备故障总次数" prop="outputPercapitacounts">
+          <el-input v-model="form.outputPercapitacounts" placeholder="请输入主要设备故障总次数" />
         </el-form-item>
-        <el-form-item label="人均产值" prop="outputPercapitavalue">
-          <el-input v-model="form.outputPercapitavalue" placeholder="请输入人均产值" />
+        <el-form-item label="设备故障类别次数分布图" prop="outputPercapitavalue">
+          <el-input v-model="form.outputPercapitavalue" placeholder="请输入设备故障类别次数分布图" />
         </el-form-item>
-        <el-form-item label="上线及时率" prop="onlineOntimerate">
-          <el-input v-model="form.onlineOntimerate" placeholder="请输入上线及时率" />
-        </el-form-item>
-        <el-form-item label="一线当月加班时长" prop="overtimeFrontlinemonth">
-          <el-input v-model="form.overtimeFrontlinemonth" placeholder="请输入一线当月加班时长" />
+        <el-form-item label="当月设备维修成本" prop="onlineOntimerate">
+          <el-input v-model="form.onlineOntimerate" placeholder="请输入当月设备维修成本" />
         </el-form-item>
 
       </el-form>
@@ -185,8 +182,7 @@ export default {
         outputPercapitacounts: null,
         outputPercapitavalue: null,
         onlineOntimerate: null,
-        overtimeFrontlinemonth: null,
-        upload: null,                         //未完成待处理
+        upload: null,                     //未完成待处理
 
       },
       // 表单参数
@@ -221,7 +217,7 @@ export default {
         this.handleSortChange({
           column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
           prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
+          order: 'ascending' // 或'descending'
         });
       });
     },
@@ -426,7 +422,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('production/data/export', {
+      this.download('safety/data/export', {
         ...this.queryParams
       }, `data_${new Date().getTime()}.xlsx`)
     }

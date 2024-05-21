@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.quality.mapper.QualityAfterSalesRecordMapper">
+
+    <resultMap type="QualityAfterSalesRecord" id="QualityAfterSalesRecordResult">
+        <result property="qaId"    column="QA_ID"    />
+        <result property="uniqueIndex"    column="Unique_Index"    />
+        <result property="feedbackDate"    column="Feedback_Date"    />
+        <result property="carNumber"    column="Car_Number"    />
+        <result property="saleTime"    column="Sale_Time"    />
+        <result property="usageTime"    column="Usage_Time"    />
+        <result property="checkNewcar"    column="Check_Newcar"    />
+        <result property="responsibleUnit"    column="Responsible_Unit"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectQualityAfterSalesRecordVo">
+        select QA_ID, Feedback_Date, Car_Number, Sale_Time, Usage_Time, Check_Newcar, Responsible_Unit, After_Sales_Id, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_After_Sales_Record
+    </sql>
+
+
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertAfterSalesRecord" parameterType="java.util.List">
+        insert into Quality_After_Sales_Record(After_Sales_Id,Feedback_Date,Car_Number,Sale_Time,Usage_Time,Check_Newcar,Responsible_Unit)
+        VALUES
+        <foreach collection="afterSalesRecordList" item="item" separator=",">
+            (#{item.afterSalesId},#{item.feedbackDate},#{item.carNumber},#{item.saleTime},#{item.usageTime},#{item.checkNewcar},#{item.responsibleUnit})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        After_Sales_Id = values(After_Sales_Id),Feedback_Date = values(Feedback_Date),Car_Number = values(Car_Number),Sale_Time = values(Sale_Time),
+        Usage_Time = values(Usage_Time),Check_Newcar = values(Check_Newcar),Responsible_Unit = values(Responsible_Unit)
+    </insert>
+
+
+
+
+
+
+
+
+
+
+    <select id="selectQualityAfterSalesRecordList" parameterType="QualityAfterSalesRecord" resultMap="QualityAfterSalesRecordResult">
+        <include refid="selectQualityAfterSalesRecordVo"/>
+        <where>
+            <if test="afterSalesId != null  and afterSalesId != ''"> and After_Sales_Id = #{afterSalesId}</if>
+            <if test="feedbackDate != null "> and Feedback_Date = #{feedbackDate}</if>
+            <if test="carNumber != null  and carNumber != ''"> and Car_Number = #{carNumber}</if>
+            <if test="saleTime != null "> and Sale_Time = #{saleTime}</if>
+            <if test="usageTime != null "> and Usage_Time = #{usageTime}</if>
+            <if test="checkNewcar != null "> and Check_Newcar = #{checkNewcar}</if>
+            <if test="responsibleUnit != null  and responsibleUnit != ''"> and Responsible_Unit = #{responsibleUnit}</if>
+        </where>
+    </select>
+
+    <select id="selectQualityAfterSalesRecordByQaId" parameterType="Long" resultMap="QualityAfterSalesRecordResult">
+        <include refid="selectQualityAfterSalesRecordVo"/>
+        where QA_ID = #{qaId}
+    </select>
+
+    <insert id="insertQualityAfterSalesRecord" parameterType="QualityAfterSalesRecord" useGeneratedKeys="true" keyProperty="qaId">
+        insert into Quality_After_Sales_Record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uniqueIndex != null">After_Sales_Id,</if>
+            <if test="feedbackDate != null">Feedback_Date,</if>
+            <if test="carNumber != null">Car_Number,</if>
+            <if test="saleTime != null">Sale_Time,</if>
+            <if test="usageTime != null">Usage_Time,</if>
+            <if test="checkNewcar != null">Check_Newcar,</if>
+            <if test="responsibleUnit != null">Responsible_Unit,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedbackDate != null">#{feedbackDate},</if>
+            <if test="carNumber != null">#{carNumber},</if>
+            <if test="saleTime != null">#{saleTime},</if>
+            <if test="usageTime != null">#{usageTime},</if>
+            <if test="checkNewcar != null">#{checkNewcar},</if>
+            <if test="responsibleUnit != null">#{responsibleUnit},</if>
+            <if test="afterSalesId != null">#{afterSalesId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateQualityAfterSalesRecord" parameterType="QualityAfterSalesRecord">
+        update Quality_After_Sales_Record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="afterSalesId != null">After_Sales_Id = #{afterSalesId},</if>
+            <if test="feedbackDate != null">Feedback_Date = #{feedbackDate},</if>
+            <if test="carNumber != null">Car_Number = #{carNumber},</if>
+            <if test="saleTime != null">Sale_Time = #{saleTime},</if>
+            <if test="usageTime != null">Usage_Time = #{usageTime},</if>
+            <if test="checkNewcar != null">Check_Newcar = #{checkNewcar},</if>
+            <if test="responsibleUnit != null">Responsible_Unit = #{responsibleUnit},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where QA_ID = #{qaId}
+    </update>
+
+    <delete id="deleteQualityAfterSalesRecordByQaId" parameterType="Long">
+        delete from Quality_After_Sales_Record where QA_ID = #{qaId}
+    </delete>
+
+    <delete id="deleteQualityAfterSalesRecordByQaIds" parameterType="String">
+        delete from Quality_After_Sales_Record where QA_ID in
+        <foreach item="qaId" collection="array" open="(" separator="," close=")">
+            #{qaId}
+        </foreach>
+    </delete>
+</mapper>

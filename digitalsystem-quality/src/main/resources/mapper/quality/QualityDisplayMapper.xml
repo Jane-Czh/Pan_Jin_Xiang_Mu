@@ -26,4 +26,25 @@
 
 
 
+
+<!--    &lt;!&ndash; 供应商不合格件返厂及时率 &ndash;&gt;-->
+<!--    <select id="selectMeantimeWithoutFailure" resultType="map">-->
+<!--        select * from (-->
+<!--            select Year_And_Month as yearAndMonth,InTime_ReturnRate as intimeReturnrate from Quality_Indicators_HandFill_table-->
+<!--            where Year_And_Month between #{startTime} and #{endTime}-->
+<!--            order by Year_And_Month DESC-->
+<!--        ) as t-->
+<!--        order by yearAndMonth ASC-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 班组自查合格率、下道工序反馈合格率 &ndash;&gt;-->
+<!--    <select id="selectPartQualificationRate" resultType="map">-->
+<!--        select * from (-->
+<!--            select Year_And_Month as yearAndMonth,SelfCheck_PassRate as selfcheckPassrate,NextProcess_Feedback_PassRate as nextprocessFeedbackPassrate from Quality_Indicators_HandFill_table-->
+<!--            where Year_And_Month between #{startTime} and #{endTime}-->
+<!--            order by Year_And_Month DESC-->
+<!--        ) as t-->
+<!--        order by yearAndMonth ASC-->
+<!--    </select>-->
+
 </mapper>

@@ -28,14 +28,16 @@ public class QualityDisplayController extends BaseController {
     private IQualityDisplayService qualityDisplayService;
 
     /**
-     * 当月单台非BOM物料费用 指标24
+     * 质量考核季度排名 指标63
      */
     @PostMapping("/quarterlyRank")
     public TableDataInfo quarterlyRank(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = qualityDisplayService.selectQuarterlyRank(time.getStartTime(),time.getEndTime());
         return getDataTable(list);
-    }    /**
-     * 当月单台非BOM物料费用 指标24
+    }
+
+    /**
+     * 平均无故障时间 指标64
      */
     @PostMapping("/meantimeWithoutFailure")
     public TableDataInfo meantimeWithoutFailure(@RequestBody DisplayRequestParam time) {

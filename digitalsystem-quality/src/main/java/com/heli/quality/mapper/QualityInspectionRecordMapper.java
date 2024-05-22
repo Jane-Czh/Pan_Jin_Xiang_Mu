@@ -1,7 +1,10 @@
 package com.heli.quality.mapper;
 
+import java.util.Date;
 import java.util.List;
+
 import com.heli.quality.domain.QualityInspectionRecord;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 质检部分字段Mapper接口
@@ -9,8 +12,12 @@ import com.heli.quality.domain.QualityInspectionRecord;
  * @author ruoyi
  * @date 2024-05-16
  */
-public interface QualityInspectionRecordMapper
-{
+public interface QualityInspectionRecordMapper {
+
+
+    Boolean checkQualityInspectionTableIsExisted(@Param("yearAndMonth") Date date);
+
+
     /**
      * 查询质检部分字段
      *

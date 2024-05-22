@@ -37,4 +37,14 @@ public class QualityDisplayServiceImpl implements IQualityDisplayService {
     public List<DisplayEntity> selectMeantimeWithoutFailure(Date startTime, Date endTime) {
         return qualityDisplayMapper.selectMeantimeWithoutFailure(startTime,endTime);
     }
+
+    @Override
+    public List<DisplayEntity> selectInTimeReturnRate(Date startTime, Date endTime) {
+        return qualityDisplayMapper.selectInTimeReturnRate(startTime,endTime);
+    }
+
+    @Override
+    public List<DisplayEntity> selectPartQualificationRate(Date startTime, Date endTime) {
+        return qualityDisplayMapper.selectPartQualificationRate(startTime,endTime);
+    }
 }

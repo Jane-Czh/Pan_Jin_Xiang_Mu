@@ -1,9 +1,11 @@
 package com.heli.quality.service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import com.heli.quality.domain.QualityInspectionRecord;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -15,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 public interface IQualityInspectionRecordService {
 
 
-    void importQualityInspectionTable(MultipartFile excelFile) throws IOException;
+    void importQualityInspectionTable(MultipartFile excelFile, Date yearAndMonth,String userName) throws IOException;
+
+    Boolean checkQualityInspectionTableIsExisted(Date date);
+
 
     /**
      * 查询质检部分字段

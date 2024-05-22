@@ -207,8 +207,17 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         //将date转化为localDateTime
         LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-        //利用localDateTime工具得到当前月份的上一个月，并且重新转化为Date类型
+        //利用localDateTime工具得到当前月份的下一个月，并且重新转化为Date类型
         return Date.from(localDateTime.plusMonths(1).atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date getWarrantyPeriodTime(Date date){
+        //将date转化为localDateTime
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        //利用localDateTime工具得到当前月份的后三个月个月，并且重新转化为Date类型
+        return Date.from(localDateTime.plusMonths(3).plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+
     }
 
     /**
@@ -233,6 +242,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return calendar.getTime();
+    }
+
+    public static Date getNextDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, +1);
         return calendar.getTime();
     }
 

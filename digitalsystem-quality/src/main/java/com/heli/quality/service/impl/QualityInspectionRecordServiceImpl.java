@@ -2,11 +2,16 @@ package com.heli.quality.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import com.heli.quality.controller.QualityAfterSalesRecordController;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.excel.ReadExcelCellUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.quality.mapper.QualityInspectionRecordMapper;
@@ -25,8 +30,11 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
     @Autowired
     private QualityInspectionRecordMapper qualityInspectionRecordMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(QualityInspectionRecordServiceImpl.class);
+
+
     @Override
-    public void importQualityInspectionTable(MultipartFile excelFile) throws IOException {
+    public void importQualityInspectionTable(MultipartFile excelFile, Date yearAndMonth,String username) throws IOException {
         QualityInspectionRecord qualityInspectionRecord;
         InputStream is = null;
 
@@ -34,7 +42,7 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
         try {
             System.out.println(excelFile);
             is = excelFile.getInputStream();
-            qualityInspectionRecord = (QualityInspectionRecord) ReadExcelCellUtils.parseExcelToModel("com.heli.quality.domain.QualityInspectionRecord", is, "");
+            qualityInspectionRecord = (QualityInspectionRecord) ReadExcelCellUtils.parseExcelToModel("com.heli.quality.domain.QualityInspectionRecord", is, "问题数据统计");
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel解析失败");
@@ -44,11 +52,21 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
             }
         }
 
-        System.out.println(qualityInspectionRecord);
-        System.out.println("------------");
+        qualityInspectionRecord.setYearAndMonth(yearAndMonth);
+        qualityInspectionRecord.setCreateBy(username);
+        qualityInspectionRecord.setCreateTime(DateUtils.getNowDate());
+        //计算
+        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
+        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
+        qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
 
+        log.info(String.valueOf("读取质检表并计算" + qualityInspectionRecord));
         qualityInspectionRecordMapper.insertQualityInspectionRecord(qualityInspectionRecord);
-        System.out.println("上传成功");
+    }
+
+    @Override
+    public Boolean checkQualityInspectionTableIsExisted(Date date) {
+        return qualityInspectionRecordMapper.checkQualityInspectionTableIsExisted(date);
     }
 
     /**

@@ -9,12 +9,14 @@ import java.util.List;
 public interface QualityDisplayMapper {
 
     //    质量考核季度排名 指标63
-    List<DisplayEntity> selectQuarterlyRank(@Param("startTime") Date startTime,
-                                            @Param("endTime") Date endTime);
+    List<DisplayEntity> selectQuarterlyRank(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     //    平均无故障时间 指标64
-    List<DisplayEntity> selectMeantimeWithoutFailure(@Param("startTime") Date startTime,
-                                                     @Param("endTime") Date endTime);
+    List<DisplayEntity> selectMeantimeWithoutFailure(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    List<DisplayEntity> selectInTimeReturnRate(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    List<DisplayEntity> selectPartQualificationRate(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
 
 }

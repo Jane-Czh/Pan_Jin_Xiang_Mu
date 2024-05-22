@@ -32,7 +32,7 @@ public class QualityDisplayController extends BaseController {
      */
     @PostMapping("/quarterlyRank")
     public TableDataInfo quarterlyRank(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = qualityDisplayService.selectQuarterlyRank(time.getStartTime(),time.getEndTime());
+        List<DisplayEntity> list = qualityDisplayService.selectQuarterlyRank(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
     }
 
@@ -41,7 +41,25 @@ public class QualityDisplayController extends BaseController {
      */
     @PostMapping("/meantimeWithoutFailure")
     public TableDataInfo meantimeWithoutFailure(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = qualityDisplayService.selectMeantimeWithoutFailure(time.getStartTime(),time.getEndTime());
+        List<DisplayEntity> list = qualityDisplayService.selectMeantimeWithoutFailure(time.getStartTime(), time.getEndTime());
+        return getDataTable(list);
+    }
+
+    /**
+     * 供应商不合格件返厂及时率
+     */
+    @PostMapping("/inTimeReturnRate")
+    public TableDataInfo inTimeReturnRate(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = qualityDisplayService.selectInTimeReturnRate(time.getStartTime(), time.getEndTime());
+        return getDataTable(list);
+    }
+
+    /**
+     * 班组自查合格率 下道工序反馈合格率
+     */
+    @PostMapping("/partQualificationRate")
+    public TableDataInfo partQualificationRate(@RequestBody DisplayRequestParam time) {
+        List<DisplayEntity> list = qualityDisplayService.selectPartQualificationRate(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
     }
 

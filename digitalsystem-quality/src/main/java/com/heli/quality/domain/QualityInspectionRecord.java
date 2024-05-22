@@ -37,43 +37,43 @@ public class QualityInspectionRecord extends BaseEntity {
     /**
      * 电车的问题数量
      */
-    @Excel(name = "电车的问题数量")
-    @RecordTemplate(rowNo = 3, columnNo = 6, comment = FillCommentEnum.EMPTY, name = "电车的问题数量")
-    private Long electricCarProblemCount;
+    @Excel(name = "电车生产数量")
+    @RecordTemplate(rowNo = 3, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "电车的问题数量")
+    private Long electricCarProductionQuantity;
 
     /**
      * K2型号中小于5吨的问题数量
      */
-    @Excel(name = "K2型号中小于5吨的问题数量")
-    @RecordTemplate(rowNo = 3, columnNo = 7, comment = FillCommentEnum.EMPTY, name = "K2型号中小于5吨的问题数量")
-    private Long k2lessthan5tonProblemCount;
+    @Excel(name = "K2型号中小于5吨电车生产数量")
+    @RecordTemplate(rowNo = 4, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "K2型号中小于5吨的问题数量")
+    private Long k2lessthan5tonProductionQuantity;
 
     /**
      * K2型号中大吨位的问题数量
      */
-    @Excel(name = "K2型号中大吨位的问题数量")
-    @RecordTemplate(rowNo = 3, columnNo = 8, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题数量")
-    private Long k2largetonnageProblemCount;
+    @Excel(name = "K2型号中大吨位的电车生产数量")
+    @RecordTemplate(rowNo = 5, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题数量")
+    private Long k2largetonnageProductionQuantity;
 
     /**
      * 电车的问题车数量
      */
     @Excel(name = "电车的问题车数量")
-    @RecordTemplate(rowNo = 2, columnNo = 6, comment = FillCommentEnum.EMPTY, name = "电车的问题车数量")
+    @RecordTemplate(rowNo = 3, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "电车的问题车数量")
     private Long electricCarProblemVehicles;
 
     /**
      * K2型号中小于5吨的问题车数量
      */
     @Excel(name = "K2型号中小于5吨的问题车数量 ")
-    @RecordTemplate(rowNo = 2, columnNo = 7, comment = FillCommentEnum.EMPTY, name = "K2型号中小于5吨的问题车数量")
+    @RecordTemplate(rowNo = 4, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "K2型号中小于5吨的问题车数量")
     private Long k2lessthan5tonProblemVehicles;
 
     /**
      * K2型号中大吨位的问题车数量
      */
     @Excel(name = "K2型号中大吨位的问题车数量")
-    @RecordTemplate(rowNo = 2, columnNo = 8, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题车数量")
+    @RecordTemplate(rowNo = 5, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题车数量")
     private Long k2largetonnageProblemVehicles;
 
     /**

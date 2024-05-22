@@ -41,12 +41,30 @@ public class AfterSalesTableListener implements ReadListener<QualityAfterSalesRe
 
 //        log.info("当前读取对象为："+registerInfoExcel);
 
-        if (registerInfoExcel.getUsageTime() == null){
+        if (registerInfoExcel.getUsageTime() == null) {
             registerInfoExcel.setUsageTime("0");
         }
 
-        if (registerInfoExcel.getUsageTime().equals("/")){
+        if (registerInfoExcel.getUsageTime().equals("/")) {
             registerInfoExcel.setUsageTime("0");
+        }
+
+        // 判断是否为新车,但是由于日期不是很固定，故直接读
+//        if (DateUtils.getWarrantyPeriodTime(registerInfoExcel.getSaleTime()).before(registerInfoExcel.getFeedbackDate()) || Float.parseFloat(registerInfoExcel.getUsageTime()) < 200) {
+//            registerInfoExcel.setCheckNewcar(1);
+//        }else {
+//            registerInfoExcel.setCheckNewcar(0);
+//        }
+
+//        if (registerInfoExcel.getCheckNewcar().equals("是")){
+//            registerInfoExcel.setCheckNewcar(String.valueOf(1));
+//        }else {
+//            registerInfoExcel.setCheckNewcar(String.valueOf(0));
+//        }
+        if (registerInfoExcel.getCheckNewcar() == null || registerInfoExcel.getCheckNewcar().equals("否")){
+            registerInfoExcel.setCheckNewcar(String.valueOf(0));
+        }else {
+            registerInfoExcel.setCheckNewcar(String.valueOf(1));
         }
 
         cacheDataList.add(registerInfoExcel);

@@ -3,6 +3,7 @@ package com.heli.quality.mapper;
 import java.util.List;
 
 import com.heli.quality.domain.QualityAfterSalesRecord;
+import com.heli.quality.domain.QualityCountNumberEntity;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -16,6 +17,11 @@ public interface QualityAfterSalesRecordMapper {
 
     int batchInsertAfterSalesRecord(@Param("afterSalesRecordList") List<QualityAfterSalesRecord> afterSalesRecordList);
 
+    List<QualityCountNumberEntity> selectMonthlyRecallCount();
+
+    List<QualityCountNumberEntity> selectProductionLiabilityAfterSalesIssues();
+
+    List<QualityCountNumberEntity> selectMonthlyFeedbackCount();
 
 
     /**

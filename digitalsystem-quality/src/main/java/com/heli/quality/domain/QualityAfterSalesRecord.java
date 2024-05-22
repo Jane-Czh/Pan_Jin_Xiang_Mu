@@ -56,21 +56,22 @@ public class QualityAfterSalesRecord extends BaseEntity {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat("yyyy/MM/dd")
-    @ExcelProperty(value = "销售时间")
+//    @ExcelProperty(value = "销售时间")
     private Date saleTime;
 
     /**
      * 使用时间
      */
     @Excel(name = "使用时间")
-    @ExcelProperty(value = "使用时间")
+//    @ExcelProperty(value = "使用时间")
     private String usageTime;
 
     /**
      * 是否为新车
      */
     @Excel(name = "是否为新车")
-    private Integer checkNewcar;
+    @ExcelProperty(value = "是否新车")
+    private String checkNewcar;
 
     /**
      * 责任单位

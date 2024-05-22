@@ -6,7 +6,7 @@
 
     <resultMap type="QualityAfterSalesRecord" id="QualityAfterSalesRecordResult">
         <result property="qaId"    column="QA_ID"    />
-        <result property="uniqueIndex"    column="Unique_Index"    />
+        <result property="afterSalesId"    column="After_Sales_Id"    />
         <result property="feedbackDate"    column="Feedback_Date"    />
         <result property="carNumber"    column="Car_Number"    />
         <result property="saleTime"    column="Sale_Time"    />
@@ -38,7 +38,28 @@
     </insert>
 
 
+    <!-- 三包期内整车月度返修数 -->
+    <select id="selectMonthlyRecallCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
+        select DATE_FORMAT(Feedback_Date,'%y-%m-01') months,COUNT(*) totalNumber
+        from Quality_After_Sales_Record
+        GROUP BY months;
+    </select>
 
+    <!--  售后问题生产责任次数  -->
+    <select id="selectProductionLiabilityAfterSalesIssues" resultType="com.heli.quality.domain.QualityCountNumberEntity">
+        select DATE_FORMAT(Feedback_Date,'%y-%m-01') months,COUNT(*) totalNumber
+        from Quality_After_Sales_Record
+        where Responsible_Unit = "生产"
+        GROUP BY months;
+    </select>
+
+    <!--  当月反馈新车病车数  -->
+    <select id="selectMonthlyFeedbackCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
+        select DATE_FORMAT(Feedback_Date,'%y-%m-01') months,COUNT(*) totalNumber
+        from Quality_After_Sales_Record
+        where Check_Newcar = 1
+        GROUP BY months;
+    </select>
 
 
 

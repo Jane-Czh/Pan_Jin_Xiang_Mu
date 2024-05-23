@@ -1,10 +1,15 @@
 package com.heli.quality.service.impl;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.excel.EasyExcel;
+import com.heli.quality.domain.QualityCountNumberEntity;
+import com.heli.quality.domain.QualityIndicatorsMetrics;
 import com.heli.quality.listener.AfterSalesTableListener;
+import com.heli.quality.mapper.QualityIndicatorsMetricsMapper;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
@@ -25,6 +30,8 @@ import com.heli.quality.service.IQualityAfterSalesRecordService;
 public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRecordService {
     @Autowired
     private QualityAfterSalesRecordMapper qualityAfterSalesRecordMapper;
+    @Autowired
+    private QualityIndicatorsMetricsMapper qualityIndicatorsMetricsMapper;
 
     private static final Logger log = LoggerFactory.getLogger(QualityAfterSalesRecordServiceImpl.class);
 
@@ -44,6 +51,64 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
     }
 
 
+    // 售后台账计算
+    public void calculateAfterSalesRecord() {
+
+        List<QualityCountNumberEntity> monthlyRecallCount = qualityAfterSalesRecordMapper.selectMonthlyRecallCount();
+
+        List<QualityCountNumberEntity> productionLiabilityAfterSalesIssues = qualityAfterSalesRecordMapper.selectProductionLiabilityAfterSalesIssues();
+
+        List<QualityCountNumberEntity> monthlyNewCarFeedbackCount = qualityAfterSalesRecordMapper.selectMonthlyNewCarFeedbackCount();
+
+        log.info("monthlyRecallCount: {}", monthlyRecallCount);
+        log.info("productionLiabilityAfterSalesIssues: {}", productionLiabilityAfterSalesIssues);
+        log.info("monthlyFeedbackCount: {}", monthlyNewCarFeedbackCount);
+
+        ArrayList<QualityIndicatorsMetrics> metricsArrayList = new ArrayList<>();
+
+        for (int i = 0; i < monthlyRecallCount.size(); i++) {
+            //查询截至当月在保车车辆数
+            BigDecimal warrantyVehicles = qualityAfterSalesRecordMapper.selectInWarrantyVehicles(DateUtils.getInWarrantyTime(monthlyRecallCount.get(i).getMonths()), monthlyRecallCount.get(i).getMonths());
+
+            log.info("截至当月在保车车辆数"+warrantyVehicles);
+
+//            log.info("开始时间" + DateUtils.getInWarrantyTime(monthlyRecallCount.get(i).getMonths())+"结束时间"+monthlyRecallCount.get(i).getMonths());
+
+
+            QualityIndicatorsMetrics qualityIndicatorsMetrics = new QualityIndicatorsMetrics();
+            //年月
+            qualityIndicatorsMetrics.setYearAndMonth(monthlyRecallCount.get(i).getMonths());
+            //新车病车数
+            qualityIndicatorsMetrics.setNewCarDefects(monthlyNewCarFeedbackCount.get(i).getTotalNumber());
+            //生产责任次数
+            qualityIndicatorsMetrics.setProductionLiabilityIssues(productionLiabilityAfterSalesIssues.get(i).getTotalNumber());
+            //月度售后质量问题总数
+            qualityIndicatorsMetrics.setMonthlyAfterSalesIssues(monthlyRecallCount.get(i).getTotalNumber());
+            //三包期内新车返修率
+            qualityIndicatorsMetrics.setWarrantyRepairRate(new BigDecimal(monthlyNewCarFeedbackCount.get(i).getTotalNumber()).divide(warrantyVehicles, 2, BigDecimal.ROUND_HALF_UP));
+            //三包期内整车月度返修率
+            qualityIndicatorsMetrics.setWarrantyVehicleRepairRate(new BigDecimal(monthlyRecallCount.get(i).getTotalNumber()).divide(warrantyVehicles, 2, BigDecimal.ROUND_HALF_UP));
+
+            //外部质量损失率
+            //主营业务收入
+            BigDecimal mainRevenue = qualityAfterSalesRecordMapper.selectMainRevenue(monthlyRecallCount.get(i).getMonths());
+            //当月质量损失
+            BigDecimal externalMassLossAmount = qualityAfterSalesRecordMapper.selectMoleculeExternalMassLossRate(monthlyRecallCount.get(i).getMonths());
+            qualityIndicatorsMetrics.setExternalLossRate(externalMassLossAmount.divide(mainRevenue, 2, BigDecimal.ROUND_HALF_UP));
+
+
+
+            log.info(String.valueOf(qualityIndicatorsMetrics));
+
+            metricsArrayList.add(qualityIndicatorsMetrics);
+
+
+        }
+
+        qualityIndicatorsMetricsMapper.batchInsertMetrics(metricsArrayList);
+
+
+    }
 
 
 

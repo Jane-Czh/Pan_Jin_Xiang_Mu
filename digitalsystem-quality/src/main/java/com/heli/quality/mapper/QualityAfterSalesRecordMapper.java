@@ -1,5 +1,7 @@
 package com.heli.quality.mapper;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.heli.quality.domain.QualityAfterSalesRecord;
@@ -21,8 +23,11 @@ public interface QualityAfterSalesRecordMapper {
 
     List<QualityCountNumberEntity> selectProductionLiabilityAfterSalesIssues();
 
-    List<QualityCountNumberEntity> selectMonthlyFeedbackCount();
+    List<QualityCountNumberEntity> selectMonthlyNewCarFeedbackCount();
 
+    BigDecimal selectInWarrantyVehicles(@Param("startTime")Date startTime, @Param("endTime")Date endTime);
+    BigDecimal selectMoleculeExternalMassLossRate(@Param("date")Date date);
+    BigDecimal selectMainRevenue(@Param("date")Date date);
 
     /**
      * 查询售后台账部分字段

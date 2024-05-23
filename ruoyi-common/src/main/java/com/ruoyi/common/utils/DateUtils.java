@@ -220,6 +220,15 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
 
     }
 
+    public static Date getInWarrantyTime(Date date){
+        //将date转化为localDateTime
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        //利用localDateTime工具得到当前月份的后三个月个月，并且重新转化为Date类型
+        return Date.from(localDateTime.minusMonths(11).atZone(ZoneId.systemDefault()).toInstant());
+
+    }
+
     /**
      * @description: 得到当前年的前一年
      * @author: hong

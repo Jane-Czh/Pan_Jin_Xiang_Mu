@@ -16,6 +16,9 @@ public interface IQualityAfterSalesRecordService {
 
     R<String> readSalesAfterExcelToDB(String originalFilename, InputStream inputStream);
 
+
+    public void calculateAfterSalesRecord();
+
     /**
      * 查询售后台账部分字段
      *

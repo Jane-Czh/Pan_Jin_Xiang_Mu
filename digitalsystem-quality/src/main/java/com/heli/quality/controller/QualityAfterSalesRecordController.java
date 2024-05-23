@@ -66,6 +66,11 @@ public class QualityAfterSalesRecordController extends BaseController {
     }
 
 
+    @PostMapping("/test")
+    public void test() {
+        qualityAfterSalesRecordService.calculateAfterSalesRecord();
+    }
+
 
 
 

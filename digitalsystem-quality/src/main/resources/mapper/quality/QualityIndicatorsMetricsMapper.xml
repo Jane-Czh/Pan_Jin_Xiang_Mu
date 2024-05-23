@@ -25,14 +25,18 @@
 
 
     <!--  批量插入数据库  -->
-    <insert id="batch" parameterType="java.util.List">
-        insert into Quality_Indicators_Metrics(Year_And_Month,New_Car_Defects,Production_Liability_Issues,Monthly_After_Sales_Issues)
+    <insert id="batchInsertMetrics" parameterType="java.util.List">
+        insert into Quality_Indicators_Metrics(Year_And_Month,New_Car_Defects,Warranty_Repair_Rate,
+                                               Monthly_After_Sales_Issues,Warranty_Vehicle_Repair_Rate,External_Loss_Rate,Production_Liability_Issues)
         VALUES
-        <foreach collection="" item="item" separator=",">
-            (#{yearAndMonth},#{newCarDefects},#{productionLiabilityIssues},#{monthlyAfterSalesIssues})
+        <foreach collection="metricsList" item="item" separator=",">
+            (#{item.yearAndMonth},#{item.newCarDefects},#{item.warrantyRepairRate},
+             #{item.monthlyAfterSalesIssues},#{item.warrantyVehicleRepairRate},#{item.externalLossRate},#{item.productionLiabilityIssues})
         </foreach>
         ON DUPLICATE KEY UPDATE
-        Year_And_Month = values(Year_And_Month),New_Car_Defects = values(New_Car_Defects),Production_Liability_Issues = values(Production_Liability_Issues),Monthly_After_Sales_Issues = values(Monthly_After_Sales_Issues)
+        Year_And_Month = values(Year_And_Month),New_Car_Defects = values(New_Car_Defects),Warranty_Repair_Rate = values(Warranty_Repair_Rate),
+        Monthly_After_Sales_Issues = values(Monthly_After_Sales_Issues),Warranty_Vehicle_Repair_Rate = values(Warranty_Vehicle_Repair_Rate),
+        External_Loss_Rate = values(External_Loss_Rate),Production_Liability_Issues = values(Production_Liability_Issues)
     </insert>
 
 

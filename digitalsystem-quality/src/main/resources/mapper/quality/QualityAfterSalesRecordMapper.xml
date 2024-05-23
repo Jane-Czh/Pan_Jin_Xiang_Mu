@@ -38,29 +38,45 @@
     </insert>
 
 
-    <!-- 三包期内整车月度返修数 -->
+    <!-- 月度售后质量问题总数 -->
     <select id="selectMonthlyRecallCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
-        select DATE_FORMAT(Feedback_Date,'%y-%m-01') months,COUNT(*) totalNumber
+        select DATE_FORMAT(Feedback_Date,'%Y-%m-01') months,COUNT(*) totalNumber
         from Quality_After_Sales_Record
         GROUP BY months;
     </select>
 
     <!--  售后问题生产责任次数  -->
     <select id="selectProductionLiabilityAfterSalesIssues" resultType="com.heli.quality.domain.QualityCountNumberEntity">
-        select DATE_FORMAT(Feedback_Date,'%y-%m-01') months,COUNT(*) totalNumber
+        select DATE_FORMAT(Feedback_Date,'%Y-%m-01') months,COUNT(*) totalNumber
         from Quality_After_Sales_Record
         where Responsible_Unit = "生产"
         GROUP BY months;
     </select>
 
     <!--  当月反馈新车病车数  -->
-    <select id="selectMonthlyFeedbackCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
-        select DATE_FORMAT(Feedback_Date,'%y-%m-01') months,COUNT(*) totalNumber
+    <select id="selectMonthlyNewCarFeedbackCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
+        select DATE_FORMAT(Feedback_Date,'%Y-%m-01') months,COUNT(*) totalNumber
         from Quality_After_Sales_Record
         where Check_Newcar = 1
         GROUP BY months;
     </select>
 
+    <!-- 截止当月外部在保车数 -->
+    <select id="selectInWarrantyVehicles" resultType="decimal">
+        select sum(Total_Vehicle_Sales) from Financial_Indicators_HandFill_table
+        where Year_And_Month between #{startTime} and #{endTime}
+    </select>
+
+    <!--  外部质量损失  -->
+    <select id="selectMoleculeExternalMassLossRate" resultType="decimal">
+        select Molecule_External_Mass_Loss_Rate from Quality_Indicators_HandFill_table
+        where Year_And_Month =  #{date}
+    </select>
+    <!-- 主营业务收入 指标1 -->
+    <select id="selectMainRevenue" resultType="decimal">
+        select MainRevenue from Financial_Interests_table
+        where Year_And_Month =  #{date}
+    </select>
 
 
 

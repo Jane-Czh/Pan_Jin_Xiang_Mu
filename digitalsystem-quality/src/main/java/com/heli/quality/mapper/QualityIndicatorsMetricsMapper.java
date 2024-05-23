@@ -1,7 +1,9 @@
 package com.heli.quality.mapper;
 
 import java.util.List;
+
 import com.heli.quality.domain.QualityIndicatorsMetrics;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 质量指标-统计Mapper接口
@@ -9,8 +11,11 @@ import com.heli.quality.domain.QualityIndicatorsMetrics;
  * @author hong
  * @date 2024-05-21
  */
-public interface QualityIndicatorsMetricsMapper
-{
+public interface QualityIndicatorsMetricsMapper {
+
+
+    int batchInsertMetrics(@Param("metricsList") List<QualityIndicatorsMetrics> metricsList);
+
     /**
      * 查询质量指标-统计
      *

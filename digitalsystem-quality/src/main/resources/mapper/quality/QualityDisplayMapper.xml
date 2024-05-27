@@ -4,6 +4,57 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heli.quality.mapper.QualityDisplayMapper">
 
+    <!-- 三包期内新车返修率 指标57 -->
+    <select id="selectWarrantyRepairRate" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Warranty_Repair_Rate as warrantyRepairRate from Quality_Indicators_Metrics
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+    <!--三包期内整车月度返修率 指标58-->
+    <select id="selectWarrantyVehicleRepairRate" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Warranty_Vehicle_Repair_Rate as warrantyVehicleRepairRate from Quality_Indicators_Metrics
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 外部质量损失率 指标59 -->
+    <select id="selectExternalLossRate" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,External_Loss_Rate as externalLossRate from Quality_Indicators_Metrics
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 月度售后质量问题总数  指标61-->
+    <select id="selectMonthlyAfterSalesIssues" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Monthly_After_Sales_Issues as monthlyAfterSalesIssues from Quality_Indicators_Metrics
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 售后问题生产责任次数 指标62-->
+    <select id="selectProductionLiabilityIssues" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Production_Liability_Issues as productionLiabilityIssues from Quality_Indicators_Metrics
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
+
     <!-- 质量考核季度排名 指标63 -->
     <select id="selectQuarterlyRank" resultType="map">
         select * from (
@@ -14,7 +65,7 @@
         order by yearAndMonth ASC
     </select>
 
-    <!-- 当月单台非BOM物料费用 指标24 -->
+    <!-- 平均无故障时间 指标64 -->
     <select id="selectMeantimeWithoutFailure" resultType="map">
         select * from (
             select Year_And_Month as yearAndMonth,Meantime_Without_Failure as meantimeWithoutFailure from Quality_Indicators_HandFill_table
@@ -24,8 +75,15 @@
         order by yearAndMonth ASC
     </select>
 
-
-
+    <!-- 电车、大吨位一次交检合格率 -->
+    <select id="selectSingleInspectionPassRate" resultType="map">
+        select * from (
+            select Year_And_Month as yearAndMonth,Single_Inspection_Pass_Rate as singleInspectionPassRate from Quality_Inspection_Record
+            where Year_And_Month between #{startTime} and #{endTime}
+            order by Year_And_Month DESC
+        ) as t
+        order by yearAndMonth ASC
+    </select>
 
     <!-- 供应商不合格件返厂及时率 -->
     <select id="selectInTimeReturnRate" resultType="map">

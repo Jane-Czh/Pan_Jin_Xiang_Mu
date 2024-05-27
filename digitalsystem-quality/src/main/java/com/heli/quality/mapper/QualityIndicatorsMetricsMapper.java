@@ -1,5 +1,6 @@
 package com.heli.quality.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.quality.domain.QualityIndicatorsMetrics;
@@ -15,6 +16,9 @@ public interface QualityIndicatorsMetricsMapper {
 
 
     int batchInsertMetrics(@Param("metricsList") List<QualityIndicatorsMetrics> metricsList);
+    int insertOrUpdateMetrics(QualityIndicatorsMetrics qualityIndicatorsMetrics);
+
+    QualityIndicatorsMetrics selectQualityIndicatorsMetricsByMonth(@Param("date") Date date);
 
     /**
      * 查询质量指标-统计

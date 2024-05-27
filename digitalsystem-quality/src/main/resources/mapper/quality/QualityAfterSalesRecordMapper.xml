@@ -42,6 +42,7 @@
     <select id="selectMonthlyRecallCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
         select DATE_FORMAT(Feedback_Date,'%Y-%m-01') months,COUNT(*) totalNumber
         from Quality_After_Sales_Record
+        where feedback_date >= #{date}
         GROUP BY months;
     </select>
 
@@ -49,7 +50,7 @@
     <select id="selectProductionLiabilityAfterSalesIssues" resultType="com.heli.quality.domain.QualityCountNumberEntity">
         select DATE_FORMAT(Feedback_Date,'%Y-%m-01') months,COUNT(*) totalNumber
         from Quality_After_Sales_Record
-        where Responsible_Unit = "生产"
+        where Responsible_Unit = "生产" and feedback_date >= #{date}
         GROUP BY months;
     </select>
 
@@ -57,8 +58,15 @@
     <select id="selectMonthlyNewCarFeedbackCount" resultType="com.heli.quality.domain.QualityCountNumberEntity">
         select DATE_FORMAT(Feedback_Date,'%Y-%m-01') months,COUNT(*) totalNumber
         from Quality_After_Sales_Record
-        where Check_Newcar = 1
+        where Check_Newcar = 1 and feedback_date >= #{date}
         GROUP BY months;
+    </select>
+
+
+    <!-- 检查当月售后 台账是否上传 -->
+    <select id="checkAfterSalesTableIsExisted" resultType="boolean">
+        select count(1) from Quality_Indicators_Metrics
+        where Year_And_Month =  #{date}
     </select>
 
     <!-- 截止当月外部在保车数 -->
@@ -67,14 +75,34 @@
         where Year_And_Month between #{startTime} and #{endTime}
     </select>
 
+    <!-- 截止当月外部在保车数,已存在的月份数据 -->
+    <select id="checkInWarrantyVehiclesIsExisted" resultType="date">
+        select Year_And_Month from Financial_Indicators_HandFill_table
+        where Year_And_Month between #{startTime} and #{endTime}
+    </select>
+
     <!--  外部质量损失  -->
     <select id="selectMoleculeExternalMassLossRate" resultType="decimal">
         select Molecule_External_Mass_Loss_Rate from Quality_Indicators_HandFill_table
         where Year_And_Month =  #{date}
     </select>
+
+    <!-- 检查 外部质量损失 数据是否存在 -->
+    <select id="checkMoleculeExternalMassLossRateIsExisted" resultType="boolean">
+        select count(1) from Quality_Indicators_HandFill_table
+        where Year_And_Month =  #{date}
+    </select>
+
+
     <!-- 主营业务收入 指标1 -->
     <select id="selectMainRevenue" resultType="decimal">
         select MainRevenue from Financial_Interests_table
+        where Year_And_Month =  #{date}
+    </select>
+
+    <!-- 检查 主营业务收入 指标1 数据是否存在 -->
+    <select id="checkMainRevenueIsExisted" resultType="boolean">
+        select count(1) from Financial_Interests_table
         where Year_And_Month =  #{date}
     </select>
 

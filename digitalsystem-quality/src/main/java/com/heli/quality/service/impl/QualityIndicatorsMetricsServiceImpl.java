@@ -1,6 +1,7 @@
 package com.heli.quality.service.impl;
 
 import java.util.List;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,7 @@ import com.heli.quality.service.IQualityIndicatorsMetricsService;
  * @date 2024-05-21
  */
 @Service
-public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMetricsService
-{
+public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMetricsService {
     @Autowired
     private QualityIndicatorsMetricsMapper qualityIndicatorsMetricsMapper;
 
@@ -27,8 +27,7 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
      * @return 质量指标-统计
      */
     @Override
-    public QualityIndicatorsMetrics selectQualityIndicatorsMetricsByQcId(Long qcId)
-    {
+    public QualityIndicatorsMetrics selectQualityIndicatorsMetricsByQcId(Long qcId) {
         return qualityIndicatorsMetricsMapper.selectQualityIndicatorsMetricsByQcId(qcId);
     }
 
@@ -39,8 +38,7 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
      * @return 质量指标-统计
      */
     @Override
-    public List<QualityIndicatorsMetrics> selectQualityIndicatorsMetricsList(QualityIndicatorsMetrics qualityIndicatorsMetrics)
-    {
+    public List<QualityIndicatorsMetrics> selectQualityIndicatorsMetricsList(QualityIndicatorsMetrics qualityIndicatorsMetrics) {
         return qualityIndicatorsMetricsMapper.selectQualityIndicatorsMetricsList(qualityIndicatorsMetrics);
     }
 
@@ -51,8 +49,7 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
      * @return 结果
      */
     @Override
-    public int insertQualityIndicatorsMetrics(QualityIndicatorsMetrics qualityIndicatorsMetrics)
-    {
+    public int insertQualityIndicatorsMetrics(QualityIndicatorsMetrics qualityIndicatorsMetrics) {
         qualityIndicatorsMetrics.setCreateTime(DateUtils.getNowDate());
         return qualityIndicatorsMetricsMapper.insertQualityIndicatorsMetrics(qualityIndicatorsMetrics);
     }
@@ -64,8 +61,7 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
      * @return 结果
      */
     @Override
-    public int updateQualityIndicatorsMetrics(QualityIndicatorsMetrics qualityIndicatorsMetrics)
-    {
+    public int updateQualityIndicatorsMetrics(QualityIndicatorsMetrics qualityIndicatorsMetrics) {
         qualityIndicatorsMetrics.setUpdateTime(DateUtils.getNowDate());
         return qualityIndicatorsMetricsMapper.updateQualityIndicatorsMetrics(qualityIndicatorsMetrics);
     }
@@ -77,8 +73,7 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
      * @return 结果
      */
     @Override
-    public int deleteQualityIndicatorsMetricsByQcIds(Long[] qcIds)
-    {
+    public int deleteQualityIndicatorsMetricsByQcIds(Long[] qcIds) {
         return qualityIndicatorsMetricsMapper.deleteQualityIndicatorsMetricsByQcIds(qcIds);
     }
 
@@ -89,8 +84,7 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
      * @return 结果
      */
     @Override
-    public int deleteQualityIndicatorsMetricsByQcId(Long qcId)
-    {
+    public int deleteQualityIndicatorsMetricsByQcId(Long qcId) {
         return qualityIndicatorsMetricsMapper.deleteQualityIndicatorsMetricsByQcId(qcId);
     }
 }

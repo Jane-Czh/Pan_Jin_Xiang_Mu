@@ -34,7 +34,7 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
 
 
     @Override
-    public void importQualityInspectionTable(MultipartFile excelFile, Date yearAndMonth,String username) throws IOException {
+    public void importQualityInspectionTable(MultipartFile excelFile, Date yearAndMonth, String username) throws IOException {
         QualityInspectionRecord qualityInspectionRecord;
         InputStream is = null;
 

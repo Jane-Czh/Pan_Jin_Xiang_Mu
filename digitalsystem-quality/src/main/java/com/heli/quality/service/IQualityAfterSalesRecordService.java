@@ -1,6 +1,7 @@
 package com.heli.quality.service;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import com.heli.quality.domain.QualityAfterSalesRecord;
@@ -66,4 +67,7 @@ public interface IQualityAfterSalesRecordService {
      * @return 结果
      */
     public int deleteQualityAfterSalesRecordByQaId(Long qaId);
+
+    void statisticsAfterSalesTable(Date date);
+    R<String> calculateQualityMetrics(Date date);
 }

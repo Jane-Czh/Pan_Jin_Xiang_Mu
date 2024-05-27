@@ -39,8 +39,23 @@
         External_Loss_Rate = values(External_Loss_Rate),Production_Liability_Issues = values(Production_Liability_Issues)
     </insert>
 
+    <!--  批量插入数据库  -->
+    <insert id="insertOrUpdateMetrics" parameterType="QualityIndicatorsMetrics">
+        insert into Quality_Indicators_Metrics(Year_And_Month,New_Car_Defects,Warranty_Repair_Rate,
+                                               Monthly_After_Sales_Issues,Warranty_Vehicle_Repair_Rate,External_Loss_Rate,Production_Liability_Issues)
+        VALUES(#{yearAndMonth},#{newCarDefects},#{warrantyRepairRate},
+             #{monthlyAfterSalesIssues},#{warrantyVehicleRepairRate},#{externalLossRate},#{productionLiabilityIssues})
+        ON DUPLICATE KEY UPDATE
+        Year_And_Month = #{yearAndMonth},New_Car_Defects = #{newCarDefects},Warranty_Repair_Rate = #{warrantyRepairRate},
+        Monthly_After_Sales_Issues = #{monthlyAfterSalesIssues},Warranty_Vehicle_Repair_Rate = #{warrantyVehicleRepairRate},
+        External_Loss_Rate = #{externalLossRate},Production_Liability_Issues = #{productionLiabilityIssues}
+    </insert>
 
 
+    <select id="selectQualityIndicatorsMetricsByMonth" parameterType="Date" resultMap="QualityIndicatorsMetricsResult">
+        <include refid="selectQualityIndicatorsMetricsVo"/>
+        where Year_And_Month = #{date}
+    </select>
 
 
 

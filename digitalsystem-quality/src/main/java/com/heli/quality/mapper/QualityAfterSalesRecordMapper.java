@@ -19,15 +19,36 @@ public interface QualityAfterSalesRecordMapper {
 
     int batchInsertAfterSalesRecord(@Param("afterSalesRecordList") List<QualityAfterSalesRecord> afterSalesRecordList);
 
-    List<QualityCountNumberEntity> selectMonthlyRecallCount();
+//    List<QualityCountNumberEntity> selectMonthlyRecallCount();
+//
+//    List<QualityCountNumberEntity> selectProductionLiabilityAfterSalesIssues();
+//
+//    List<QualityCountNumberEntity> selectMonthlyNewCarFeedbackCount();
 
-    List<QualityCountNumberEntity> selectProductionLiabilityAfterSalesIssues();
+    //    月度售后质量问题总数
+    List<QualityCountNumberEntity> selectMonthlyRecallCount(@Param("date") Date date);
 
-    List<QualityCountNumberEntity> selectMonthlyNewCarFeedbackCount();
+    //    售后问题生产责任次数
+    List<QualityCountNumberEntity> selectProductionLiabilityAfterSalesIssues(@Param("date") Date date);
 
-    BigDecimal selectInWarrantyVehicles(@Param("startTime")Date startTime, @Param("endTime")Date endTime);
-    BigDecimal selectMoleculeExternalMassLossRate(@Param("date")Date date);
-    BigDecimal selectMainRevenue(@Param("date")Date date);
+    //    当月反馈新车病车数
+    List<QualityCountNumberEntity> selectMonthlyNewCarFeedbackCount(@Param("date") Date date);
+
+    BigDecimal selectInWarrantyVehicles(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    List<Date> checkInWarrantyVehiclesIsExisted(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    BigDecimal selectMoleculeExternalMassLossRate(@Param("date") Date date);
+
+    Boolean checkMoleculeExternalMassLossRateIsExisted(@Param("date") Date date);
+
+    BigDecimal selectMainRevenue(@Param("date") Date date);
+
+    Boolean checkMainRevenueIsExisted(@Param("date") Date date);
+
+    // 检查当月售后 台账是否上传
+    Boolean checkAfterSalesTableIsExisted(@Param("date") Date date);
+
 
     /**
      * 查询售后台账部分字段

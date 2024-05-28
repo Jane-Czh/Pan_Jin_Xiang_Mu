@@ -1,6 +1,7 @@
 package com.heli.tech.controller;
 
 import java.util.List;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
 import com.heli.tech.domain.TechAnnualPlanCount;
@@ -8,6 +9,8 @@ import com.heli.tech.service.ITechAnnualPlanCountService;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +44,8 @@ public class TechController extends BaseController {
     @Autowired
     private ITechAnnualPlanCountService techAnnualPlanCountService;
 
+
+
     /**
      * 新增[技术]指标填报
      */
@@ -61,25 +66,6 @@ public class TechController extends BaseController {
         return toAjax(techService.insertTech(techService.calculateCompletionRate(tech, techAnnualPlanCountService.selectTechAnnualNumberByYear(DateUtils.getYear(tech.getYearAndMonth())))));
     }
 
-
-    /**
-     * 新增【技术】总计划年初填报
-     */
-    @PreAuthorize("@ss.hasPermi('Tech:data:add')")
-    @Log(title = "【技术】总计划年初填报", businessType = BusinessType.INSERT)
-    @PostMapping("/data/annual")
-    public AjaxResult add(TechAnnualPlanCount techAnnualPlanCount) {
-        if (techAnnualPlanCountService.checkTechAnnualDataIsExisted(techAnnualPlanCount.getNaturalYear())) {
-            return AjaxResult.error("年度总计划已上传");
-        }
-        techAnnualPlanCount.setCreateBy(getUsername());
-        return toAjax(techAnnualPlanCountService.insertTechAnnualPlanCount(techAnnualPlanCount));
-    }
-
-
-
-
-
     @PostMapping("/display/employeesAVGMonthlyNumber")
     public TableDataInfo nonStandardAVGPreparationDays(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = techService.selectNonStandardAVGPreparationDays(time.getStartTime(),time.getEndTime());
@@ -91,14 +77,11 @@ public class TechController extends BaseController {
         return getDataTable(list);
     }
 
-
-
-
     /**
      * 查询[技术]指标填报列表
      */
     @PreAuthorize("@ss.hasPermi('tech:data:list')")
-    @GetMapping("/data/list")
+    @GetMapping("/data/monthly/list")
     public TableDataInfo list(Tech tech) {
         startPage();
         List<Tech> list = techService.selectTechList(tech);
@@ -106,22 +89,10 @@ public class TechController extends BaseController {
     }
 
     /**
-     * 导出[技术]指标填报列表
-     */
-    @PreAuthorize("@ss.hasPermi('tech:data:export')")
-    @Log(title = "[技术]指标填报", businessType = BusinessType.EXPORT)
-    @PostMapping("/data/export")
-    public void export(HttpServletResponse response, Tech tech) {
-        List<Tech> list = techService.selectTechList(tech);
-        ExcelUtil<Tech> util = new ExcelUtil<Tech>(Tech.class);
-        util.exportExcel(response, list, "[技术]指标填报数据");
-    }
-
-    /**
      * 获取[技术]指标填报详细信息
      */
     @PreAuthorize("@ss.hasPermi('tech:data:query')")
-    @GetMapping(value = "/data/{techId}")
+    @GetMapping(value = "/data/monthly/{techId}")
     public AjaxResult getInfo(@PathVariable("techId") Long techId) {
         return success(techService.selectTechByTechId(techId));
     }
@@ -131,8 +102,14 @@ public class TechController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('tech:data:edit')")
     @Log(title = "[技术]指标填报", businessType = BusinessType.UPDATE)
-    @PutMapping("/data")
+    @PutMapping("/data/monthly")
     public AjaxResult edit(@RequestBody Tech tech) {
+        tech.setUpdateBy(getUsername());
+        if (!Objects.equals(techService.selectTechByTechId(tech.getTechId()).getCompletedmonthlyPlancounts(), tech.getCompletedmonthlyPlancounts())) {
+            techService.updateTech(tech);
+            techService.batchUpdateTech(tech.getYearAndMonth());
+            return AjaxResult.success();
+        }
         return toAjax(techService.updateTech(tech));
     }
 
@@ -141,7 +118,7 @@ public class TechController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('tech:data:remove')")
     @Log(title = "[技术]指标填报", businessType = BusinessType.DELETE)
-    @DeleteMapping("/data/{techIds}")
+    @DeleteMapping("/data/monthly/{techIds}")
     public AjaxResult remove(@PathVariable Long[] techIds) {
         return toAjax(techService.deleteTechByTechIds(techIds));
     }

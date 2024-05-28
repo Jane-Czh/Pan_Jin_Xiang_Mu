@@ -33,31 +33,25 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-05-16
  */
 @RestController
-@RequestMapping("/quality/inspection")
+@RequestMapping("/quality/data/inspection")
 public class QualityInspectionRecordController extends BaseController {
     @Autowired
     private IQualityInspectionRecordService qualityInspectionRecordService;
 
-
-
-
-
-    @PostMapping("/importTable")
+    @PostMapping("/read")
     public AjaxResult importTable(Date yearAndMonth, MultipartFile excelFile) {
         //检查当月数据是否上传
-        if(qualityInspectionRecordService.checkQualityInspectionTableIsExisted(yearAndMonth)){
+        if (qualityInspectionRecordService.checkQualityInspectionTableIsExisted(yearAndMonth)) {
             return error("当月数据已上传");
         }
         try {
-            qualityInspectionRecordService.importQualityInspectionTable(excelFile,yearAndMonth,getUsername());
+            qualityInspectionRecordService.importQualityInspectionTable(excelFile, yearAndMonth, getUsername());
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel上传失败");
         }
         return success();
     }
-
-
 
 
     /**
@@ -71,17 +65,6 @@ public class QualityInspectionRecordController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出质检部分字段列表
-     */
-    @PreAuthorize("@ss.hasPermi('quality:inspection:export')")
-    @Log(title = "质检部分字段", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, QualityInspectionRecord qualityInspectionRecord) {
-        List<QualityInspectionRecord> list = qualityInspectionRecordService.selectQualityInspectionRecordList(qualityInspectionRecord);
-        ExcelUtil<QualityInspectionRecord> util = new ExcelUtil<QualityInspectionRecord>(QualityInspectionRecord.class);
-        util.exportExcel(response, list, "质检部分字段数据");
-    }
 
     /**
      * 获取质检部分字段详细信息
@@ -95,12 +78,12 @@ public class QualityInspectionRecordController extends BaseController {
     /**
      * 新增质检部分字段
      */
-    @PreAuthorize("@ss.hasPermi('quality:inspection:add')")
-    @Log(title = "质检部分字段", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody QualityInspectionRecord qualityInspectionRecord) {
-        return toAjax(qualityInspectionRecordService.insertQualityInspectionRecord(qualityInspectionRecord));
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:inspection:add')")
+//    @Log(title = "质检部分字段", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody QualityInspectionRecord qualityInspectionRecord) {
+//        return toAjax(qualityInspectionRecordService.insertQualityInspectionRecord(qualityInspectionRecord));
+//    }
 
     /**
      * 修改质检部分字段

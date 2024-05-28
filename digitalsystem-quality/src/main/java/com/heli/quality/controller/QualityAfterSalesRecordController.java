@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-05-16
  */
 @RestController
-@RequestMapping("/quality/salesafter")
+@RequestMapping("/quality/data/after-sales")
 public class QualityAfterSalesRecordController extends BaseController {
     @Autowired
     private IQualityAfterSalesRecordService qualityAfterSalesRecordService;
@@ -55,8 +55,7 @@ public class QualityAfterSalesRecordController extends BaseController {
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
-            qualityAfterSalesRecordService.readSalesAfterExcelToDB(multipartFile.getOriginalFilename(), inputStream);
-
+            qualityAfterSalesRecordService.readSalesAfterExcelToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
 
             return R.ok("上传成功");
         } catch (Exception e) {
@@ -65,76 +64,65 @@ public class QualityAfterSalesRecordController extends BaseController {
         }
     }
 
-
-    @PostMapping("/test")
-    public void test(Date date) {
-//        qualityAfterSalesRecordService.calculateAfterSalesRecord();
-//        qualityAfterSalesRecordService.statisticsAfterSalesTable(date);
-        qualityAfterSalesRecordService.calculateQualityMetrics(date);
-    }
-
-
-
-
     /**
      * 查询售后台账部分字段列表
      */
-    @PreAuthorize("@ss.hasPermi('quality:salesafter:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(QualityAfterSalesRecord qualityAfterSalesRecord) {
-        startPage();
-        List<QualityAfterSalesRecord> list = qualityAfterSalesRecordService.selectQualityAfterSalesRecordList(qualityAfterSalesRecord);
-        return getDataTable(list);
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:salesafter:list')")
+//    @GetMapping("/list")
+//    public TableDataInfo list(QualityAfterSalesRecord qualityAfterSalesRecord) {
+//        startPage();
+//        List<QualityAfterSalesRecord> list = qualityAfterSalesRecordService.selectQualityAfterSalesRecordList(qualityAfterSalesRecord);
+//        return getDataTable(list);
+//    }
 
     /**
      * 导出售后台账部分字段列表
      */
-    @PreAuthorize("@ss.hasPermi('quality:salesafter:export')")
-    @Log(title = "售后台账部分字段", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, QualityAfterSalesRecord qualityAfterSalesRecord) {
-        List<QualityAfterSalesRecord> list = qualityAfterSalesRecordService.selectQualityAfterSalesRecordList(qualityAfterSalesRecord);
-        ExcelUtil<QualityAfterSalesRecord> util = new ExcelUtil<QualityAfterSalesRecord>(QualityAfterSalesRecord.class);
-        util.exportExcel(response, list, "售后台账部分字段数据");
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:salesafter:export')")
+//    @Log(title = "售后台账部分字段", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, QualityAfterSalesRecord qualityAfterSalesRecord) {
+//        List<QualityAfterSalesRecord> list = qualityAfterSalesRecordService.selectQualityAfterSalesRecordList(qualityAfterSalesRecord);
+//        ExcelUtil<QualityAfterSalesRecord> util = new ExcelUtil<QualityAfterSalesRecord>(QualityAfterSalesRecord.class);
+//        util.exportExcel(response, list, "售后台账部分字段数据");
+//    }
 
     /**
      * 获取售后台账部分字段详细信息
      */
-    @PreAuthorize("@ss.hasPermi('quality:salesafter:query')")
-    @GetMapping(value = "/{qaId}")
-    public AjaxResult getInfo(@PathVariable("qaId") Long qaId) {
-        return success(qualityAfterSalesRecordService.selectQualityAfterSalesRecordByQaId(qaId));
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:salesafter:query')")
+//    @GetMapping(value = "/{qaId}")
+//    public AjaxResult getInfo(@PathVariable("qaId") Long qaId) {
+//        return success(qualityAfterSalesRecordService.selectQualityAfterSalesRecordByQaId(qaId));
+//    }
 
     /**
      * 新增售后台账部分字段
      */
-    @PreAuthorize("@ss.hasPermi('quality:salesafter:add')")
-    @Log(title = "售后台账部分字段", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody QualityAfterSalesRecord qualityAfterSalesRecord) {
-        return toAjax(qualityAfterSalesRecordService.insertQualityAfterSalesRecord(qualityAfterSalesRecord));
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:salesafter:add')")
+//    @Log(title = "售后台账部分字段", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody QualityAfterSalesRecord qualityAfterSalesRecord) {
+//        return toAjax(qualityAfterSalesRecordService.insertQualityAfterSalesRecord(qualityAfterSalesRecord));
+//    }
 
     /**
      * 修改售后台账部分字段
      */
-    @PreAuthorize("@ss.hasPermi('quality:salesafter:edit')")
-    @Log(title = "售后台账部分字段", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody QualityAfterSalesRecord qualityAfterSalesRecord) {
-        return toAjax(qualityAfterSalesRecordService.updateQualityAfterSalesRecord(qualityAfterSalesRecord));
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:salesafter:edit')")
+//    @Log(title = "售后台账部分字段", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    public AjaxResult edit(@RequestBody QualityAfterSalesRecord qualityAfterSalesRecord) {
+//        return toAjax(qualityAfterSalesRecordService.updateQualityAfterSalesRecord(qualityAfterSalesRecord));
+//    }
 
     /**
      * 删除售后台账部分字段
      */
-    @PreAuthorize("@ss.hasPermi('quality:salesafter:remove')")
-    @Log(title = "售后台账部分字段", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{qaIds}")
-    public AjaxResult remove(@PathVariable Long[] qaIds) {
-        return toAjax(qualityAfterSalesRecordService.deleteQualityAfterSalesRecordByQaIds(qaIds));
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:salesafter:remove')")
+//    @Log(title = "售后台账部分字段", businessType = BusinessType.DELETE)
+//    @DeleteMapping("/{qaIds}")
+//    public AjaxResult remove(@PathVariable Long[] qaIds) {
+//        return toAjax(qualityAfterSalesRecordService.deleteQualityAfterSalesRecordByQaIds(qaIds));
+//    }
 }

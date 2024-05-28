@@ -49,6 +49,7 @@ public interface QualityAfterSalesRecordMapper {
     // 检查当月售后 台账是否上传
     Boolean checkAfterSalesTableIsExisted(@Param("date") Date date);
 
+    Date selectMaxMonth();
 
     /**
      * 查询售后台账部分字段

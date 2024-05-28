@@ -15,7 +15,7 @@ import com.ruoyi.common.core.domain.R;
  */
 public interface IQualityAfterSalesRecordService {
 
-    R<String> readSalesAfterExcelToDB(String originalFilename, InputStream inputStream);
+    R<String> readSalesAfterExcelToDB(String originalFilename, InputStream inputStream,Date date);
 
 
     public void calculateAfterSalesRecord();
@@ -70,4 +70,6 @@ public interface IQualityAfterSalesRecordService {
 
     void statisticsAfterSalesTable(Date date);
     R<String> calculateQualityMetrics(Date date);
+
+    public R<String> calculateQualityIndicators(Date startTime,Date endTime);
 }

@@ -1,8 +1,11 @@
 package com.heli.quality.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.quality.service.IQualityAfterSalesRecordService;
+import com.ruoyi.common.core.domain.R;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +32,24 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2024-05-21
  */
 @RestController
-@RequestMapping("/quality/Metrics")
+@RequestMapping("/quality/data/metrics")
 public class QualityIndicatorsMetricsController extends BaseController {
     @Autowired
     private IQualityIndicatorsMetricsService qualityIndicatorsMetricsService;
+    @Autowired
+    private IQualityAfterSalesRecordService qualityAfterSalesRecordService;
+
+
+    /**
+     * 更新列表操作。
+     * 该方法通过计算给定时间范围内的质量指标来更新相关的列表信息。
+     */
+    @PostMapping("/updateList")
+    public R<String> calculateQualityIndicators(Date startTime, Date endTime) {
+        // 计算指定时间范围内的质量指标
+        return qualityAfterSalesRecordService.calculateQualityIndicators(startTime, endTime);
+    }
+
 
     /**
      * 查询质量指标-统计列表
@@ -45,17 +62,6 @@ public class QualityIndicatorsMetricsController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出质量指标-统计列表
-     */
-    @PreAuthorize("@ss.hasPermi('quality:Metrics:export')")
-    @Log(title = "质量指标-统计", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, QualityIndicatorsMetrics qualityIndicatorsMetrics) {
-        List<QualityIndicatorsMetrics> list = qualityIndicatorsMetricsService.selectQualityIndicatorsMetricsList(qualityIndicatorsMetrics);
-        ExcelUtil<QualityIndicatorsMetrics> util = new ExcelUtil<QualityIndicatorsMetrics>(QualityIndicatorsMetrics.class);
-        util.exportExcel(response, list, "质量指标-统计数据");
-    }
 
     /**
      * 获取质量指标-统计详细信息
@@ -69,12 +75,12 @@ public class QualityIndicatorsMetricsController extends BaseController {
     /**
      * 新增质量指标-统计
      */
-    @PreAuthorize("@ss.hasPermi('quality:Metrics:add')")
-    @Log(title = "质量指标-统计", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody QualityIndicatorsMetrics qualityIndicatorsMetrics) {
-        return toAjax(qualityIndicatorsMetricsService.insertQualityIndicatorsMetrics(qualityIndicatorsMetrics));
-    }
+//    @PreAuthorize("@ss.hasPermi('quality:Metrics:add')")
+//    @Log(title = "质量指标-统计", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody QualityIndicatorsMetrics qualityIndicatorsMetrics) {
+//        return toAjax(qualityIndicatorsMetricsService.insertQualityIndicatorsMetrics(qualityIndicatorsMetrics));
+//    }
 
     /**
      * 修改质量指标-统计

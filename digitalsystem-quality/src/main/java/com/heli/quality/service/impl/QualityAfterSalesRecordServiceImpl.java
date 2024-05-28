@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.alibaba.excel.EasyExcel;
 import com.heli.quality.domain.QualityCountNumberEntity;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import com.heli.quality.mapper.QualityAfterSalesRecordMapper;
 import com.heli.quality.domain.QualityAfterSalesRecord;
 import com.heli.quality.service.IQualityAfterSalesRecordService;
+
+import static io.lettuce.core.GeoArgs.Unit.m;
 
 /**
  * 售后台账部分字段Service业务层处理
@@ -38,11 +41,13 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
 
 
     @Override
-    public R<String> readSalesAfterExcelToDB(String fileName, InputStream inputStream) {
+    public R<String> readSalesAfterExcelToDB(String fileName, InputStream inputStream,Date date) {
         try {
             // 读取文件内容
             log.info("开始读取文件: {}", fileName);
             EasyExcel.read(inputStream, QualityAfterSalesRecord.class, new AfterSalesTableListener(qualityAfterSalesRecordMapper)).sheet(0).doRead();
+            statisticsAfterSalesTable(date);
+            calculateQualityIndicators(date,qualityAfterSalesRecordMapper.selectMaxMonth());
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,9 +168,30 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
     }
 
 
+    public R<String> calculateQualityIndicators(Date startTime,Date endTime){
+        String data = "";
+        String msg = "";
+        R<String> r = R.ok();
+        //循环从start Time，到endTime
+        for (Date date = startTime; date.before(DateUtils.getNextMonth(endTime)); date = DateUtils.getNextMonth(date)) {
+            log.info("当前计算的月份为：" + date);
+
+            String tempMsg = calculateQualityMetrics(date).getMsg();
+
+            if(!Objects.equals(tempMsg, "操作成功")) {
+                msg += date.toString();
+                data += tempMsg;
+            }
+        }
+        if (!data.equals("")){
+            return R.fail(data,msg);
+        }else {
+            return R.ok();
+        }
+    }
+
 
     /**
-     * @return
      * @author: hong
      * @date: 2024/5/27 13:15
      * @description: 质量科指标计算
@@ -181,7 +207,7 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
             //遍历dates，找到缺少的月份
             for (int i = 0; i < dates.size(); i++, d = DateUtils.getNextMonth(d)){
                 if (!dates.get(i).equals(d)){
-                    log.info("缺少" + d + "数据");
+                    log.info("缺少" + d + "月在保车辆数据数据");
                     return R.fail(dates.get(i) + "月在保车辆数据未上传");
                 }
             }
@@ -208,7 +234,7 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
 
 
         //数据齐全，开始计算
-        ArrayList<QualityIndicatorsMetrics> metricsArrayList = new ArrayList<>();
+//        ArrayList<QualityIndicatorsMetrics> metricsArrayList = new ArrayList<>();
 
 
         QualityIndicatorsMetrics qualityIndicatorsMetrics = qualityIndicatorsMetricsMapper.selectQualityIndicatorsMetricsByMonth(date);
@@ -233,9 +259,10 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
         log.info(String.valueOf(qualityIndicatorsMetrics));
 
 
-        metricsArrayList.add(qualityIndicatorsMetrics);
+//        metricsArrayList.add(qualityIndicatorsMetrics);
         // 计算完成后，批量插入数据库
-        qualityIndicatorsMetricsMapper.batchInsertMetrics(metricsArrayList);
+//        qualityIndicatorsMetricsMapper.batchInsertMetrics(metricsArrayList);
+        qualityIndicatorsMetricsMapper.insertOrUpdateMetrics(qualityIndicatorsMetrics);
 
         return R.ok();
 

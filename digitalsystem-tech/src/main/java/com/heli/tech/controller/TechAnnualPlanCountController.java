@@ -3,7 +3,6 @@ package com.heli.tech.controller;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 
 import com.heli.tech.service.ITechService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,14 +21,13 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.heli.tech.domain.TechAnnualPlanCount;
 import com.heli.tech.service.ITechAnnualPlanCountService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 【技术】总计划年初填报Controller
- *
- * @author hong
- * @date 2024-04-27
+ * @description: 技术年度数据接口
+ * @author: hong
+ * @date: 2024/5/29 19:33
+ * @version: 1.0
  */
 @RestController
 @RequestMapping("/tech/data/annual")
@@ -42,7 +40,7 @@ public class TechAnnualPlanCountController extends BaseController {
     /**
      * 修改【技术】总计划年初填报,并更新月度完成数
      */
-    @PreAuthorize("@ss.hasPermi('Tech:data:edit')")
+    @PreAuthorize("@ss.hasPermi('Tech:annual:edit')")
     @Log(title = "【技术】总计划年初填报", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TechAnnualPlanCount techAnnualPlanCount) {
@@ -59,7 +57,7 @@ public class TechAnnualPlanCountController extends BaseController {
     /**
      * 查询【技术】总计划年初填报列表
      */
-    @PreAuthorize("@ss.hasPermi('Tech:data:list')")
+    @PreAuthorize("@ss.hasPermi('Tech:annual:list')")
     @GetMapping("/list")
     public TableDataInfo list(TechAnnualPlanCount techAnnualPlanCount) {
         startPage();
@@ -70,7 +68,7 @@ public class TechAnnualPlanCountController extends BaseController {
     /**
      * 获取【技术】总计划年初填报详细信息
      */
-    @PreAuthorize("@ss.hasPermi('Tech:data:query')")
+    @PreAuthorize("@ss.hasPermi('Tech:annual:query')")
     @GetMapping(value = "/{tapcId}")
     public AjaxResult getInfo(@PathVariable("tapcId") Long tapcId) {
         return success(techAnnualPlanCountService.selectTechAnnualPlanCountByTapcId(tapcId));
@@ -79,7 +77,7 @@ public class TechAnnualPlanCountController extends BaseController {
     /**
      * 新增【技术】总计划年初填报
      */
-    @PreAuthorize("@ss.hasPermi('Tech:data:add')")
+    @PreAuthorize("@ss.hasPermi('Tech:annual:add')")
     @Log(title = "【技术】总计划年初填报", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TechAnnualPlanCount techAnnualPlanCount) {
@@ -93,7 +91,7 @@ public class TechAnnualPlanCountController extends BaseController {
     /**
      * 删除【技术】总计划年初填报
      */
-    @PreAuthorize("@ss.hasPermi('Tech:data:remove')")
+    @PreAuthorize("@ss.hasPermi('Tech:annual:remove')")
     @Log(title = "【技术】总计划年初填报", businessType = BusinessType.DELETE)
     @DeleteMapping("/{tapcIds}")
     public AjaxResult remove(@PathVariable Long[] tapcIds) {

@@ -17,7 +17,7 @@ public interface ITechService {
     Boolean checkTechMonthlyDataIsExisted(Date date);
 
 
-    public Tech calculateCompletionRate(Tech tech, Long annualNumber);
+    public Tech calculateCompletionRate(Tech tech);
 
     public int batchUpdateTech(Date date);
 

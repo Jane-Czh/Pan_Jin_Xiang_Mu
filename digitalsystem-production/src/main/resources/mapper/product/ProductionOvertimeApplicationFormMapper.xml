@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductionOvertimeApplicationFormMapper">
+    
+    <resultMap type="ProductionOvertimeApplicationForm" id="ProductionOvertimeApplicationFormResult">
+        <result property="poafId"    column="POAF_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="idNumber"    column="ID_number"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="applicationForOvertimeStartTime"    column="Application_for_overtime_start_time"    />
+        <result property="applicationForOvertimeEndTime"    column="Application_for_overtime_end_time"    />
+    </resultMap>
+
+    <sql id="selectProductionOvertimeApplicationFormVo">
+        select POAF_ID, Number, ID_number, Name, Gender, Application_for_overtime_start_time, Application_for_overtime_end_time from Production_Overtime_application_form
+    </sql>
+
+    <select id="selectProductionOvertimeApplicationFormList" parameterType="ProductionOvertimeApplicationForm" resultMap="ProductionOvertimeApplicationFormResult">
+        <include refid="selectProductionOvertimeApplicationFormVo"/>
+        <where>  
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="applicationForOvertimeStartTime != null "> and Application_for_overtime_start_time = #{applicationForOvertimeStartTime}</if>
+            <if test="applicationForOvertimeEndTime != null "> and Application_for_overtime_end_time = #{applicationForOvertimeEndTime}</if>
+        </where>
+    </select>
+
+    <select id="selectProductionOvertimeApplicationFormList1" parameterType="ProductionOvertimeApplicationForm" resultMap="ProductionOvertimeApplicationFormResult">
+        <include refid="selectProductionOvertimeApplicationFormVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="applicationForOvertimeStartTime != null "> and Application_for_overtime_start_time = #{applicationForOvertimeStartTime}</if>
+            <if test="applicationForOvertimeEndTime != null "> and Application_for_overtime_end_time = #{applicationForOvertimeEndTime}</if>
+        </where>
+    </select>
+
+    <select id="selectProductionOvertimeApplicationFormByPoafId" parameterType="Long" resultMap="ProductionOvertimeApplicationFormResult">
+        <include refid="selectProductionOvertimeApplicationFormVo"/>
+        where POAF_ID = #{poafId}
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT POAF_ID
+        FROM Production_Overtime_application_form
+        WHERE POAF_ID = (SELECT MAX(POAF_ID) FROM Production_Overtime_application_form);
+    </select>
+        
+    <insert id="insertProductionOvertimeApplicationForm" parameterType="ProductionOvertimeApplicationForm">
+        insert into Production_Overtime_application_form
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="poafId != null">POAF_ID,</if>
+            <if test="Number != null">Number,</if>
+            <if test="idNumber != null">ID_number,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Gender != null">Gender,</if>
+            <if test="applicationForOvertimeStartTime != null">Application_for_overtime_start_time,</if>
+            <if test="applicationForOvertimeEndTime != null">Application_for_overtime_end_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="poafId != null">#{poafId},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Gender != null">#{Gender},</if>
+            <if test="applicationForOvertimeStartTime != null">#{applicationForOvertimeStartTime},</if>
+            <if test="applicationForOvertimeEndTime != null">#{applicationForOvertimeEndTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductionOvertimeApplicationForm" parameterType="ProductionOvertimeApplicationForm">
+        update Production_Overtime_application_form
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="idNumber != null">ID_number = #{idNumber},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Gender != null">Gender = #{Gender},</if>
+            <if test="applicationForOvertimeStartTime != null">Application_for_overtime_start_time = #{applicationForOvertimeStartTime},</if>
+            <if test="applicationForOvertimeEndTime != null">Application_for_overtime_end_time = #{applicationForOvertimeEndTime},</if>
+        </trim>
+        where POAF_ID = #{poafId}
+    </update>
+
+    <delete id="deleteProductionOvertimeApplicationFormByPoafId" parameterType="Long">
+        delete from Production_Overtime_application_form where POAF_ID = #{poafId}
+    </delete>
+
+    <delete id="deleteProductionOvertimeApplicationFormByPoafIds" parameterType="String">
+        delete from Production_Overtime_application_form where POAF_ID in 
+        <foreach item="poafId" collection="array" open="(" separator="," close=")">
+            #{poafId}
+        </foreach>
+    </delete>
+</mapper>

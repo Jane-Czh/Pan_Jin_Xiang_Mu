@@ -41,6 +41,7 @@
     "buefy": "^0.9.29",
     "clipboard": "2.0.8",
     "core-js": "3.25.3",
+    "dayjs": "^1.11.11",
     "echarts": "^5.4.0",
     "element-ui": "2.15.14",
     "file-saver": "^2.0.5",

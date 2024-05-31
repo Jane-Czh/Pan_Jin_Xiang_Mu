@@ -6,8 +6,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="SafetyEpMaintenanceTable" id="SafetyEpMaintenanceTableResult">
         <result property="semId"    column="SEM_ID"    />
-        <result property="createdBy"    column="CREATED_BY"    />
-        <result property="createdTime"    column="CREATED_TIME"    />
         <result property="equipmentNumber"    column="Equipment_Number"    />
         <result property="equipmentName"    column="Equipment_Name"    />
         <result property="workOrderStatus"    column="Work_Order_Status"    />
@@ -35,17 +33,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="workOrderSendingTime"    column="Work_Order_Sending_Time"    />
         <result property="workOrderSendingResults"    column="Work_Order_Sending_Results"    />
         <result property="whetherToShutdown"    column="Whether_To_ShutDown"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
     </resultMap>
 
     <sql id="selectSafetyEpMaintenanceTableVo">
-        select SEM_ID, CREATED_BY, CREATED_TIME, Equipment_Number, Equipment_Name, Work_Order_Status, Problem_Type, Maintenance_Department, Applicant, Application_Department, Maintenance_Personnel, Fault_Phenomenon, Maintenance_Analysis, Maintenance_Content, Maintenance_Duration, Fault_Duration, Maintenance_Time, Pending_Status, Waiting_Start_Time, Waiting_End_Time, Waiting_Time, Maintenance_Application_Number, Acceptance_Person, Acceptance_Results, Acceptance_Evaluation, Accumulated_Number_Of_Failures, Work_Order_Sending_Flag, Work_Order_Sending_Time, Work_Order_Sending_Results, Whether_To_ShutDown from Safety_EP_Maintenance_table
+        select SEM_ID, Equipment_Number, Equipment_Name, Work_Order_Status, Problem_Type, Maintenance_Department, Applicant, Application_Department, Maintenance_Personnel, Fault_Phenomenon, Maintenance_Analysis, Maintenance_Content, Maintenance_Duration, Fault_Duration, Maintenance_Time, Pending_Status, Waiting_Start_Time, Waiting_End_Time, Waiting_Time, Maintenance_Application_Number, Acceptance_Person, Acceptance_Results, Acceptance_Evaluation, Accumulated_Number_Of_Failures, Work_Order_Sending_Flag, Work_Order_Sending_Time, Work_Order_Sending_Results, Whether_To_ShutDown, CREATE_BY, CREATE_TIME from Safety_EP_Maintenance_table
     </sql>
 
     <select id="selectSafetyEpMaintenanceTableList" parameterType="SafetyEpMaintenanceTable" resultMap="SafetyEpMaintenanceTableResult">
         <include refid="selectSafetyEpMaintenanceTableVo"/>
-        <where>  
-            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
-            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
+        <where>
             <if test="equipmentNumber != null  and equipmentNumber != ''"> and Equipment_Number = #{equipmentNumber}</if>
             <if test="equipmentName != null  and equipmentName != ''"> and Equipment_Name like concat('%', #{equipmentName}, '%')</if>
             <if test="workOrderStatus != null  and workOrderStatus != ''"> and Work_Order_Status = #{workOrderStatus}</if>
@@ -73,6 +71,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workOrderSendingTime != null "> and Work_Order_Sending_Time = #{workOrderSendingTime}</if>
             <if test="workOrderSendingResults != null  and workOrderSendingResults != ''"> and Work_Order_Sending_Results = #{workOrderSendingResults}</if>
             <if test="whetherToShutdown != null  and whetherToShutdown != ''"> and Whether_To_ShutDown = #{whetherToShutdown}</if>
+            <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
         </where>
     </select>
     
@@ -91,20 +91,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!--  维修数据表批量插入数据库  -->
     <insert id="batchInsertSafetyEpMaintenanceTable" parameterType="java.util.List">
-        insert into Safety_EP_Maintenance_table(CREATED_BY,CREATED_TIME,Equipment_Number,Equipment_Name,
+        insert into Safety_EP_Maintenance_table(Equipment_Number,Equipment_Name,
         Work_Order_Status,Problem_Type,Maintenance_Department,Applicant,Application_Department,Maintenance_Personnel,
         Fault_Phenomenon,Maintenance_Analysis,Maintenance_Content,Maintenance_Duration,Fault_Duration,Maintenance_Time,
         Pending_Status,Waiting_Start_Time,Waiting_End_Time,Waiting_Time,Maintenance_Application_Number,Acceptance_Person,
         Acceptance_Results,Acceptance_Evaluation,Accumulated_Number_Of_Failures,Work_Order_Sending_Flag,Work_Order_Sending_Time,
-        Work_Order_Sending_Results,Whether_To_ShutDown)
+        Work_Order_Sending_Results,Whether_To_ShutDown,CREATE_BY,CREATE_TIME)
         values
         <foreach collection="safetyEpMaintenanceTableList" item="e" separator=",">
-            (#{e.createdBy},#{e.createdTime},#{e.equipmentNumber},#{e.equipmentName},#{e.workOrderStatus},#{e.problemType},
+            (#{e.equipmentNumber},#{e.equipmentName},#{e.workOrderStatus},#{e.problemType},
             #{e.maintenanceDepartment},#{e.applicant},#{e.applicationDepartment},#{e.maintenancePersonnel},#{e.faultPhenomenon},
             #{e.maintenanceAnalysis},#{e.maintenanceContent},#{e.maintenanceDuration},#{e.faultDuration},#{e.maintenanceTime},
             #{e.pendingStatus},#{e.waitingStartTime},#{e.waitingEndTime},#{e.waitingTime},#{e.maintenanceApplicationNumber},
             #{e.acceptancePerson},#{e.acceptanceResults},#{e.acceptanceEvaluation},#{e.accumulatedNumberOfFailures},
-            #{e.workOrderSendingFlag},#{e.workOrderSendingTime},#{e.workOrderSendingResults},#{e.whetherToShutdown})
+            #{e.workOrderSendingFlag},#{e.workOrderSendingTime},#{e.workOrderSendingResults},#{e.whetherToShutdown},#{e.createBy},#{e.createTime})
         </foreach>
     </insert>
 
@@ -143,8 +143,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into Safety_EP_Maintenance_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="semId != null">SEM_ID,</if>
-            <if test="createdBy != null">CREATED_BY,</if>
-            <if test="createdTime != null">CREATED_TIME,</if>
             <if test="equipmentNumber != null">Equipment_Number,</if>
             <if test="equipmentName != null">Equipment_Name,</if>
             <if test="workOrderStatus != null">Work_Order_Status,</if>
@@ -172,11 +170,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workOrderSendingTime != null">Work_Order_Sending_Time,</if>
             <if test="workOrderSendingResults != null">Work_Order_Sending_Results,</if>
             <if test="whetherToShutdown != null">Whether_To_ShutDown,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="semId != null">#{semId},</if>
-            <if test="createdBy != null">#{createdBy},</if>
-            <if test="createdTime != null">#{createdTime},</if>
             <if test="equipmentNumber != null">#{equipmentNumber},</if>
             <if test="equipmentName != null">#{equipmentName},</if>
             <if test="workOrderStatus != null">#{workOrderStatus},</if>
@@ -204,14 +202,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workOrderSendingTime != null">#{workOrderSendingTime},</if>
             <if test="workOrderSendingResults != null">#{workOrderSendingResults},</if>
             <if test="whetherToShutdown != null">#{whetherToShutdown},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
          </trim>
     </insert>
 
     <update id="updateSafetyEpMaintenanceTable" parameterType="SafetyEpMaintenanceTable">
         update Safety_EP_Maintenance_table
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
-            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
             <if test="equipmentNumber != null">Equipment_Number = #{equipmentNumber},</if>
             <if test="equipmentName != null">Equipment_Name = #{equipmentName},</if>
             <if test="workOrderStatus != null">Work_Order_Status = #{workOrderStatus},</if>
@@ -239,6 +237,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workOrderSendingTime != null">Work_Order_Sending_Time = #{workOrderSendingTime},</if>
             <if test="workOrderSendingResults != null">Work_Order_Sending_Results = #{workOrderSendingResults},</if>
             <if test="whetherToShutdown != null">Whether_To_ShutDown = #{whetherToShutdown},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
         </trim>
         where SEM_ID = #{semId}
     </update>

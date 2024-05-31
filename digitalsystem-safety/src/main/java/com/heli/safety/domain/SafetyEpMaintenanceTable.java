@@ -3,6 +3,7 @@ package com.heli.safety.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -19,24 +20,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @return:
  **/
 @Data
-public class SafetyEpMaintenanceTable extends BaseEntity {
+public class SafetyEpMaintenanceTable {
     private static final long serialVersionUID = 1L;
 
     /**
      * SEM_ID
      */
     private Long semId;
-
-    /**
-     * 导入人
-     */
-    private String createdBy;
-
-    /**
-     * 导入时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date createdTime;
 
     /**
      * 设备编号
@@ -132,14 +122,14 @@ public class SafetyEpMaintenanceTable extends BaseEntity {
      * 待件开始时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @ExcelProperty(value = "待件开始时间")
+    @ExcelIgnore
     private Date waitingStartTime;
 
     /**
      * 待件结束时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @ExcelProperty(value = "待件结束时间")
+    @ExcelIgnore
     private Date waitingEndTime;
 
     /**
@@ -188,7 +178,7 @@ public class SafetyEpMaintenanceTable extends BaseEntity {
      * 工单发送时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @ExcelProperty(value = "工单发送时间")
+    @ExcelIgnore
     private Date workOrderSendingTime;
 
     /**
@@ -202,5 +192,11 @@ public class SafetyEpMaintenanceTable extends BaseEntity {
      */
     @ExcelProperty(value = "是否停机")
     private String whetherToShutdown;
+
+    @ExcelIgnore
+    private String createBy;
+
+    @ExcelIgnore
+    private Date createTime;
 
 }

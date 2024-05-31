@@ -8,7 +8,7 @@
               <i :class="item.icon" />
               <div class="main-content">
                 <h3>{{ item.title }}</h3>
-                <div>{{ item.content }}</div>
+                <!-- <div>{{ item.content }}</div> -->
               </div>
             </div>
             <div class="allIndex-item__footer">
@@ -31,7 +31,7 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '31', icon: 'el-icon-s-data', title: '集团管控物资采购金额占比', content: '企业', path: '/supply/indicators31' },
+        { id: '31', icon: 'el-icon-s-data', title: '集团管控物资采购金额占比', path: '/supply/indicators31' },
       ],
       formData: {},
       rules: {},

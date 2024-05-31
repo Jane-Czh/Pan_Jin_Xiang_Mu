@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Enterprisemanagement.mapper.EnterpriseManagementPersonnelRosterMapper">
+    
+    <resultMap type="EnterpriseManagementPersonnelRoster" id="EnterpriseManagementPersonnelRosterResult">
+        <result property="emprId"    column="EMPR_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="employeeId"    column="Employee_ID"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="Birthday"    column="Birthday"    />
+        <result property="Age"    column="Age"    />
+        <result property="recordBirth"    column="Record_birth"    />
+        <result property="idCard"    column="ID_Card"    />
+        <result property="socialSecurityNumber"    column="Social_security_number"    />
+        <result property="personnelScope"    column="Personnel_scope"    />
+        <result property="personnelScopeText"    column="Personnel_scope_text"    />
+        <result property="personnelSubScope"    column="Personnel_sub_scope"    />
+        <result property="personnelSubScopeText"    column="Personnel_sub_scope_text"    />
+        <result property="salaryAccountingScope"    column="Salary_accounting_scope"    />
+        <result property="salaryAccountingScopeText"    column="Salary_accounting_scope_text"    />
+        <result property="costCenter"    column="Cost_Center"    />
+        <result property="costCenterText"    column="Cost_Center_text"    />
+        <result property="rootTissueId"    column="Root_tissue_ID"    />
+        <result property="rootTissue"    column="Root_tissue"    />
+        <result property="firstTissueId"    column="First_tissue_ID"    />
+        <result property="firstTissue"    column="First_tissue"    />
+        <result property="secondTissueId"    column="Second_tissue_ID"    />
+        <result property="secondTissue"    column="Second_tissue"    />
+        <result property="thirdTissueId"    column="Third_tissue_ID"    />
+        <result property="thirdTissue"    column="Third_tissue"    />
+        <result property="fourthTissueId"    column="Fourth_tissue_ID"    />
+        <result property="fourthTissue"    column="Fourth_tissue"    />
+        <result property="fifthTissueId"    column="Fifth_tissue_ID"    />
+        <result property="fifthTissue"    column="Fifth_tissue"    />
+        <result property="sixthTissueId"    column="Sixth_tissue_ID"    />
+        <result property="sixthTissue"    column="Sixth_tissue"    />
+        <result property="positionEthnicGroupId"    column="Position_ethnic_group_ID"    />
+        <result property="positionEthnicGroup"    column="Position_ethnic_group"    />
+        <result property="jobCategoryId"    column="Job_category_ID"    />
+        <result property="jobCategory"    column="Job_category"    />
+        <result property="Job"    column="Job"    />
+        <result property="jobTitle"    column="Job_title"    />
+        <result property="technicalTitle"    column="Technical_title"    />
+        <result property="theHighestTechnicalTitl"    column="The_highest_technical_titl"    />
+        <result property="technicalLevel"    column="Technical_level"    />
+        <result property="theHighestTechnicalLevel"    column="The_highest_technical_level"    />
+        <result property="Rank"    column="Rank"    />
+        <result property="positionId"    column="Position_ID"    />
+        <result property="Position"    column="Position"    />
+        <result property="jobbTitle"    column="Jobb_title"    />
+        <result property="salaryGrade"    column="Salary_grade"    />
+        <result property="salaryyGrade"    column="Salaryy_grade"    />
+        <result property="positionSalary"    column="Position_salary"    />
+        <result property="employeeGroup"    column="Employee_Group"    />
+        <result property="employeeSubGroup"    column="Employee_sub_Group"    />
+        <result property="backboneLevel"    column="Backbone_level"    />
+        <result property="personnelManagementClassification"    column="Personnel_Management_Classification"    />
+        <result property="theHighestEducationalLevel"    column="The_highest_educational_level"    />
+        <result property="theHighestEducationalSchool"    column="The_highest_educational_school"    />
+        <result property="theHighestEducationalMajor"    column="The_highest_educational_major"    />
+        <result property="theHighestDegree"    column="The_highest_degree"    />
+        <result property="theHighestDegreeSchool"    column="The_highest_degree_school"    />
+        <result property="theHighestDegreeMajor"    column="The_highest_degree_major"    />
+        <result property="firstEducationalLevel"    column="First_educational_level"    />
+        <result property="firstHighestDegree"    column="FIrst_highest_degree"    />
+        <result property="firstHighestDegreeSchool"    column="First_highest_degree_school"    />
+        <result property="firstHighestDegreeMajor"    column="First_highest_degree_major"    />
+        <result property="contractStartTime"    column="Contract_start_time"    />
+        <result property="contractEndTime"    column="Contract_end_time"    />
+        <result property="contractTerm"    column="Contract_term"    />
+        <result property="contractSigningUnit"    column="Contract_signing_unit"    />
+        <result property="signingFrequency"    column="Signing_frequency"    />
+        <result property="workingHours"    column="Working_hours"    />
+        <result property="joinedTime"    column="Joined_time"    />
+        <result property="startingTimeOfServiceLife"    column="Starting_time_of_service_life"    />
+        <result property="retirementDate"    column="Retirement_date"    />
+        <result property="siLing"    column="Si_Ling"    />
+        <result property="Nation"    column="Nation"    />
+        <result property="politicalLandscape"    column="Political_landscape"    />
+        <result property="partyMembershipTime"    column="Party_membership_time"    />
+        <result property="maritalStatus"    column="marital_status"    />
+        <result property="Hometown"    column="Hometown"    />
+        <result property="householdRegistrationNature"    column="Household_registration_nature"    />
+        <result property="residentAddress"    column="Resident_address"    />
+        <result property="contactInformation"    column="Contact_information"    />
+        <result property="emergencyContact"    column="Emergency_contact"    />
+        <result property="emergencyContactPhone"    column="Emergency_contact_phone"    />
+        <result property="workContract"    column="Work_Contract"    />
+        <result property="providentFundAccount"    column="Provident_fund_account"    />
+        <result property="enterpriseAnnuityAccount"    column="Enterprise_annuity_account"    />
+        <result property="uploadPhoto"    column="Upload_photo"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementPersonnelRosterVo">
+        select EMPR_ID, Number, Employee_ID, Name, Gender, Birthday, Age, Record_birth, ID_Card, Social_security_number, Personnel_scope, Personnel_scope_text, Personnel_sub_scope, Personnel_sub_scope_text, Salary_accounting_scope, Salary_accounting_scope_text, Cost_Center, Cost_Center_text, Root_tissue_ID, Root_tissue, First_tissue_ID, First_tissue, Second_tissue_ID, Second_tissue, Third_tissue_ID, Third_tissue, Fourth_tissue_ID, Fourth_tissue, Fifth_tissue_ID, Fifth_tissue, Sixth_tissue_ID, Sixth_tissue, Position_ethnic_group_ID, Position_ethnic_group, Job_category_ID, Job_category, Job, Job_title, Technical_title, The_highest_technical_titl, Technical_level, The_highest_technical_level, Rank, Position_ID, Position, Jobb_title, Salary_grade, Salaryy_grade, Position_salary, Employee_Group, Employee_sub_Group, Backbone_level, Personnel_Management_Classification, The_highest_educational_level, The_highest_educational_school, The_highest_educational_major, The_highest_degree, The_highest_degree_school, The_highest_degree_major, First_educational_level, FIrst_highest_degree, First_highest_degree_school, First_highest_degree_major, Contract_start_time, Contract_end_time, Contract_term, Contract_signing_unit, Signing_frequency, Working_hours, Joined_time, Starting_time_of_service_life, Retirement_date, Si_Ling, Nation, Political_landscape, Party_membership_time, marital_status, Hometown, Household_registration_nature, Resident_address, Contact_information, Emergency_contact, Emergency_contact_phone, Work_Contract, Provident_fund_account, Enterprise_annuity_account, Upload_photo from Enterprise_Management_Personnel_roster
+    </sql>
+
+    <select id="selectEnterpriseManagementPersonnelRosterList" parameterType="EnterpriseManagementPersonnelRoster" resultMap="EnterpriseManagementPersonnelRosterResult">
+        <include refid="selectEnterpriseManagementPersonnelRosterVo"/>
+        <where>  
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="employeeId != null  and employeeId != ''"> and Employee_ID = #{employeeId}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="Birthday != null "> and Birthday = #{Birthday}</if>
+            <if test="Age != null "> and Age = #{Age}</if>
+            <if test="recordBirth != null "> and Record_birth = #{recordBirth}</if>
+            <if test="idCard != null  and idCard != ''"> and ID_Card = #{idCard}</if>
+            <if test="socialSecurityNumber != null  and socialSecurityNumber != ''"> and Social_security_number = #{socialSecurityNumber}</if>
+            <if test="personnelScope != null  and personnelScope != ''"> and Personnel_scope = #{personnelScope}</if>
+            <if test="personnelScopeText != null  and personnelScopeText != ''"> and Personnel_scope_text = #{personnelScopeText}</if>
+            <if test="personnelSubScope != null  and personnelSubScope != ''"> and Personnel_sub_scope = #{personnelSubScope}</if>
+            <if test="personnelSubScopeText != null  and personnelSubScopeText != ''"> and Personnel_sub_scope_text = #{personnelSubScopeText}</if>
+            <if test="salaryAccountingScope != null  and salaryAccountingScope != ''"> and Salary_accounting_scope = #{salaryAccountingScope}</if>
+            <if test="salaryAccountingScopeText != null  and salaryAccountingScopeText != ''"> and Salary_accounting_scope_text = #{salaryAccountingScopeText}</if>
+            <if test="costCenter != null  and costCenter != ''"> and Cost_Center = #{costCenter}</if>
+            <if test="costCenterText != null  and costCenterText != ''"> and Cost_Center_text = #{costCenterText}</if>
+            <if test="rootTissueId != null  and rootTissueId != ''"> and Root_tissue_ID = #{rootTissueId}</if>
+            <if test="rootTissue != null  and rootTissue != ''"> and Root_tissue = #{rootTissue}</if>
+            <if test="firstTissueId != null  and firstTissueId != ''"> and First_tissue_ID = #{firstTissueId}</if>
+            <if test="firstTissue != null  and firstTissue != ''"> and First_tissue = #{firstTissue}</if>
+            <if test="secondTissueId != null  and secondTissueId != ''"> and Second_tissue_ID = #{secondTissueId}</if>
+            <if test="secondTissue != null  and secondTissue != ''"> and Second_tissue = #{secondTissue}</if>
+            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID = #{thirdTissueId}</if>
+            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue = #{thirdTissue}</if>
+            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID = #{fourthTissueId}</if>
+            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue = #{fourthTissue}</if>
+            <if test="fifthTissueId != null  and fifthTissueId != ''"> and Fifth_tissue_ID = #{fifthTissueId}</if>
+            <if test="fifthTissue != null  and fifthTissue != ''"> and Fifth_tissue = #{fifthTissue}</if>
+            <if test="sixthTissueId != null  and sixthTissueId != ''"> and Sixth_tissue_ID = #{sixthTissueId}</if>
+            <if test="sixthTissue != null  and sixthTissue != ''"> and Sixth_tissue = #{sixthTissue}</if>
+            <if test="positionEthnicGroupId != null  and positionEthnicGroupId != ''"> and Position_ethnic_group_ID = #{positionEthnicGroupId}</if>
+            <if test="positionEthnicGroup != null  and positionEthnicGroup != ''"> and Position_ethnic_group = #{positionEthnicGroup}</if>
+            <if test="jobCategoryId != null  and jobCategoryId != ''"> and Job_category_ID = #{jobCategoryId}</if>
+            <if test="jobCategory != null  and jobCategory != ''"> and Job_category = #{jobCategory}</if>
+            <if test="Job != null  and Job != ''"> and Job = #{Job}</if>
+            <if test="jobTitle != null  and jobTitle != ''"> and Job_title = #{jobTitle}</if>
+            <if test="technicalTitle != null  and technicalTitle != ''"> and Technical_title = #{technicalTitle}</if>
+            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>
+            <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level = #{technicalLevel}</if>
+            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>
+            <if test="Rank != null  and Rank != ''"> and Rank = #{Rank}</if>
+            <if test="positionId != null  and positionId != ''"> and Position_ID = #{positionId}</if>
+            <if test="Position != null  and Position != ''"> and Position = #{Position}</if>
+            <if test="jobbTitle != null  and jobbTitle != ''"> and Jobb_title = #{jobbTitle}</if>
+            <if test="salaryGrade != null  and salaryGrade != ''"> and Salary_grade = #{salaryGrade}</if>
+            <if test="salaryyGrade != null  and salaryyGrade != ''"> and Salaryy_grade = #{salaryyGrade}</if>
+            <if test="positionSalary != null "> and Position_salary = #{positionSalary}</if>
+            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>
+            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group = #{employeeSubGroup}</if>
+            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level = #{backboneLevel}</if>
+            <if test="personnelManagementClassification != null  and personnelManagementClassification != ''"> and Personnel_Management_Classification = #{personnelManagementClassification}</if>
+            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level = #{theHighestEducationalLevel}</if>
+            <if test="theHighestEducationalSchool != null  and theHighestEducationalSchool != ''"> and The_highest_educational_school = #{theHighestEducationalSchool}</if>
+            <if test="theHighestEducationalMajor != null  and theHighestEducationalMajor != ''"> and The_highest_educational_major = #{theHighestEducationalMajor}</if>
+            <if test="theHighestDegree != null  and theHighestDegree != ''"> and The_highest_degree = #{theHighestDegree}</if>
+            <if test="theHighestDegreeSchool != null  and theHighestDegreeSchool != ''"> and The_highest_degree_school = #{theHighestDegreeSchool}</if>
+            <if test="theHighestDegreeMajor != null  and theHighestDegreeMajor != ''"> and The_highest_degree_major = #{theHighestDegreeMajor}</if>
+            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level = #{firstEducationalLevel}</if>
+            <if test="firstHighestDegree != null  and firstHighestDegree != ''"> and FIrst_highest_degree = #{firstHighestDegree}</if>
+            <if test="firstHighestDegreeSchool != null  and firstHighestDegreeSchool != ''"> and First_highest_degree_school = #{firstHighestDegreeSchool}</if>
+            <if test="firstHighestDegreeMajor != null  and firstHighestDegreeMajor != ''"> and First_highest_degree_major = #{firstHighestDegreeMajor}</if>
+            <if test="contractStartTime != null "> and Contract_start_time = #{contractStartTime}</if>
+            <if test="contractEndTime != null "> and Contract_end_time = #{contractEndTime}</if>
+            <if test="contractTerm != null  and contractTerm != ''"> and Contract_term = #{contractTerm}</if>
+            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit = #{contractSigningUnit}</if>
+            <if test="signingFrequency != null "> and Signing_frequency = #{signingFrequency}</if>
+            <if test="workingHours != null "> and Working_hours = #{workingHours}</if>
+            <if test="joinedTime != null "> and Joined_time = #{joinedTime}</if>
+            <if test="startingTimeOfServiceLife != null "> and Starting_time_of_service_life = #{startingTimeOfServiceLife}</if>
+            <if test="retirementDate != null "> and Retirement_date = #{retirementDate}</if>
+            <if test="siLing != null "> and Si_Ling = #{siLing}</if>
+            <if test="Nation != null  and Nation != ''"> and Nation = #{Nation}</if>
+            <if test="politicalLandscape != null  and politicalLandscape != ''"> and Political_landscape = #{politicalLandscape}</if>
+            <if test="partyMembershipTime != null "> and Party_membership_time = #{partyMembershipTime}</if>
+            <if test="maritalStatus != null  and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
+            <if test="Hometown != null  and Hometown != ''"> and Hometown = #{Hometown}</if>
+            <if test="householdRegistrationNature != null  and householdRegistrationNature != ''"> and Household_registration_nature = #{householdRegistrationNature}</if>
+            <if test="residentAddress != null  and residentAddress != ''"> and Resident_address = #{residentAddress}</if>
+            <if test="contactInformation != null  and contactInformation != ''"> and Contact_information = #{contactInformation}</if>
+            <if test="emergencyContact != null  and emergencyContact != ''"> and Emergency_contact = #{emergencyContact}</if>
+            <if test="emergencyContactPhone != null  and emergencyContactPhone != ''"> and Emergency_contact_phone = #{emergencyContactPhone}</if>
+            <if test="workContract != null  and workContract != ''"> and Work_Contract = #{workContract}</if>
+            <if test="providentFundAccount != null  and providentFundAccount != ''"> and Provident_fund_account = #{providentFundAccount}</if>
+            <if test="enterpriseAnnuityAccount != null  and enterpriseAnnuityAccount != ''"> and Enterprise_annuity_account = #{enterpriseAnnuityAccount}</if>
+            <if test="uploadPhoto != null  and uploadPhoto != ''"> and Upload_photo = #{uploadPhoto}</if>
+        </where>
+    </select>
+
+    <select id="selectEnterpriseManagementPersonnelRosterList1" parameterType="EnterpriseManagementPersonnelRoster" resultMap="EnterpriseManagementPersonnelRosterResult">
+        <include refid="selectEnterpriseManagementPersonnelRosterVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="employeeId != null  and employeeId != ''"> and Employee_ID = #{employeeId}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="Birthday != null "> and Birthday = #{Birthday}</if>
+            <if test="Age != null "> and Age = #{Age}</if>
+            <if test="recordBirth != null "> and Record_birth = #{recordBirth}</if>
+            <if test="idCard != null  and idCard != ''"> and ID_Card = #{idCard}</if>
+            <if test="socialSecurityNumber != null  and socialSecurityNumber != ''"> and Social_security_number = #{socialSecurityNumber}</if>
+            <if test="personnelScope != null  and personnelScope != ''"> and Personnel_scope = #{personnelScope}</if>
+            <if test="personnelScopeText != null  and personnelScopeText != ''"> and Personnel_scope_text = #{personnelScopeText}</if>
+            <if test="personnelSubScope != null  and personnelSubScope != ''"> and Personnel_sub_scope = #{personnelSubScope}</if>
+            <if test="personnelSubScopeText != null  and personnelSubScopeText != ''"> and Personnel_sub_scope_text = #{personnelSubScopeText}</if>
+            <if test="salaryAccountingScope != null  and salaryAccountingScope != ''"> and Salary_accounting_scope = #{salaryAccountingScope}</if>
+            <if test="salaryAccountingScopeText != null  and salaryAccountingScopeText != ''"> and Salary_accounting_scope_text = #{salaryAccountingScopeText}</if>
+            <if test="costCenter != null  and costCenter != ''"> and Cost_Center = #{costCenter}</if>
+            <if test="costCenterText != null  and costCenterText != ''"> and Cost_Center_text = #{costCenterText}</if>
+            <if test="rootTissueId != null  and rootTissueId != ''"> and Root_tissue_ID = #{rootTissueId}</if>
+            <if test="rootTissue != null  and rootTissue != ''"> and Root_tissue = #{rootTissue}</if>
+            <if test="firstTissueId != null  and firstTissueId != ''"> and First_tissue_ID = #{firstTissueId}</if>
+            <if test="firstTissue != null  and firstTissue != ''"> and First_tissue = #{firstTissue}</if>
+            <if test="secondTissueId != null  and secondTissueId != ''"> and Second_tissue_ID = #{secondTissueId}</if>
+            <if test="secondTissue != null  and secondTissue != ''"> and Second_tissue = #{secondTissue}</if>
+            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID = #{thirdTissueId}</if>
+            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue = #{thirdTissue}</if>
+            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID = #{fourthTissueId}</if>
+            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue = #{fourthTissue}</if>
+            <if test="fifthTissueId != null  and fifthTissueId != ''"> and Fifth_tissue_ID = #{fifthTissueId}</if>
+            <if test="fifthTissue != null  and fifthTissue != ''"> and Fifth_tissue = #{fifthTissue}</if>
+            <if test="sixthTissueId != null  and sixthTissueId != ''"> and Sixth_tissue_ID = #{sixthTissueId}</if>
+            <if test="sixthTissue != null  and sixthTissue != ''"> and Sixth_tissue = #{sixthTissue}</if>
+            <if test="positionEthnicGroupId != null  and positionEthnicGroupId != ''"> and Position_ethnic_group_ID = #{positionEthnicGroupId}</if>
+            <if test="positionEthnicGroup != null  and positionEthnicGroup != ''"> and Position_ethnic_group = #{positionEthnicGroup}</if>
+            <if test="jobCategoryId != null  and jobCategoryId != ''"> and Job_category_ID = #{jobCategoryId}</if>
+            <if test="jobCategory != null  and jobCategory != ''"> and Job_category = #{jobCategory}</if>
+            <if test="Job != null  and Job != ''"> and Job = #{Job}</if>
+            <if test="jobTitle != null  and jobTitle != ''"> and Job_title = #{jobTitle}</if>
+            <if test="technicalTitle != null  and technicalTitle != ''"> and Technical_title = #{technicalTitle}</if>
+            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>
+            <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level = #{technicalLevel}</if>
+            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>
+            <if test="Rank != null  and Rank != ''"> and Rank = #{Rank}</if>
+            <if test="positionId != null  and positionId != ''"> and Position_ID = #{positionId}</if>
+            <if test="Position != null  and Position != ''"> and Position = #{Position}</if>
+            <if test="jobbTitle != null  and jobbTitle != ''"> and Jobb_title = #{jobbTitle}</if>
+            <if test="salaryGrade != null  and salaryGrade != ''"> and Salary_grade = #{salaryGrade}</if>
+            <if test="salaryyGrade != null  and salaryyGrade != ''"> and Salaryy_grade = #{salaryyGrade}</if>
+            <if test="positionSalary != null "> and Position_salary = #{positionSalary}</if>
+            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>
+            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group = #{employeeSubGroup}</if>
+            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level = #{backboneLevel}</if>
+            <if test="personnelManagementClassification != null  and personnelManagementClassification != ''"> and Personnel_Management_Classification = #{personnelManagementClassification}</if>
+            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level = #{theHighestEducationalLevel}</if>
+            <if test="theHighestEducationalSchool != null  and theHighestEducationalSchool != ''"> and The_highest_educational_school = #{theHighestEducationalSchool}</if>
+            <if test="theHighestEducationalMajor != null  and theHighestEducationalMajor != ''"> and The_highest_educational_major = #{theHighestEducationalMajor}</if>
+            <if test="theHighestDegree != null  and theHighestDegree != ''"> and The_highest_degree = #{theHighestDegree}</if>
+            <if test="theHighestDegreeSchool != null  and theHighestDegreeSchool != ''"> and The_highest_degree_school = #{theHighestDegreeSchool}</if>
+            <if test="theHighestDegreeMajor != null  and theHighestDegreeMajor != ''"> and The_highest_degree_major = #{theHighestDegreeMajor}</if>
+            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level = #{firstEducationalLevel}</if>
+            <if test="firstHighestDegree != null  and firstHighestDegree != ''"> and FIrst_highest_degree = #{firstHighestDegree}</if>
+            <if test="firstHighestDegreeSchool != null  and firstHighestDegreeSchool != ''"> and First_highest_degree_school = #{firstHighestDegreeSchool}</if>
+            <if test="firstHighestDegreeMajor != null  and firstHighestDegreeMajor != ''"> and First_highest_degree_major = #{firstHighestDegreeMajor}</if>
+            <if test="contractStartTime != null "> and Contract_start_time = #{contractStartTime}</if>
+            <if test="contractEndTime != null "> and Contract_end_time = #{contractEndTime}</if>
+            <if test="contractTerm != null  and contractTerm != ''"> and Contract_term = #{contractTerm}</if>
+            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit = #{contractSigningUnit}</if>
+            <if test="signingFrequency != null "> and Signing_frequency = #{signingFrequency}</if>
+            <if test="workingHours != null "> and Working_hours = #{workingHours}</if>
+            <if test="joinedTime != null "> and Joined_time = #{joinedTime}</if>
+            <if test="startingTimeOfServiceLife != null "> and Starting_time_of_service_life = #{startingTimeOfServiceLife}</if>
+            <if test="retirementDate != null "> and Retirement_date = #{retirementDate}</if>
+            <if test="siLing != null "> and Si_Ling = #{siLing}</if>
+            <if test="Nation != null  and Nation != ''"> and Nation = #{Nation}</if>
+            <if test="politicalLandscape != null  and politicalLandscape != ''"> and Political_landscape = #{politicalLandscape}</if>
+            <if test="partyMembershipTime != null "> and Party_membership_time = #{partyMembershipTime}</if>
+            <if test="maritalStatus != null  and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
+            <if test="Hometown != null  and Hometown != ''"> and Hometown = #{Hometown}</if>
+            <if test="householdRegistrationNature != null  and householdRegistrationNature != ''"> and Household_registration_nature = #{householdRegistrationNature}</if>
+            <if test="residentAddress != null  and residentAddress != ''"> and Resident_address = #{residentAddress}</if>
+            <if test="contactInformation != null  and contactInformation != ''"> and Contact_information = #{contactInformation}</if>
+            <if test="emergencyContact != null  and emergencyContact != ''"> and Emergency_contact = #{emergencyContact}</if>
+            <if test="emergencyContactPhone != null  and emergencyContactPhone != ''"> and Emergency_contact_phone = #{emergencyContactPhone}</if>
+            <if test="workContract != null  and workContract != ''"> and Work_Contract = #{workContract}</if>
+            <if test="providentFundAccount != null  and providentFundAccount != ''"> and Provident_fund_account = #{providentFundAccount}</if>
+            <if test="enterpriseAnnuityAccount != null  and enterpriseAnnuityAccount != ''"> and Enterprise_annuity_account = #{enterpriseAnnuityAccount}</if>
+            <if test="uploadPhoto != null  and uploadPhoto != ''"> and Upload_photo = #{uploadPhoto}</if>
+        </where>
+    </select>
+    
+    <select id="selectEnterpriseManagementPersonnelRosterByEmprId" parameterType="Long" resultMap="EnterpriseManagementPersonnelRosterResult">
+        <include refid="selectEnterpriseManagementPersonnelRosterVo"/>
+        where EMPR_ID = #{emprId}
+    </select>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT EMPR_ID
+        FROM Enterprise_Management_Personnel_roster
+        WHERE EMPR_ID = (SELECT MAX(EMPR_ID) FROM Enterprise_Management_Personnel_roster);
+    </select>
+        
+    <insert id="insertEnterpriseManagementPersonnelRoster" parameterType="EnterpriseManagementPersonnelRoster">
+        insert into Enterprise_Management_Personnel_roster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="emprId != null">EMPR_ID,</if>
+            <if test="Number != null">Number,</if>
+            <if test="employeeId != null">Employee_ID,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Gender != null">Gender,</if>
+            <if test="Birthday != null">Birthday,</if>
+            <if test="Age != null">Age,</if>
+            <if test="recordBirth != null">Record_birth,</if>
+            <if test="idCard != null">ID_Card,</if>
+            <if test="socialSecurityNumber != null">Social_security_number,</if>
+            <if test="personnelScope != null">Personnel_scope,</if>
+            <if test="personnelScopeText != null">Personnel_scope_text,</if>
+            <if test="personnelSubScope != null">Personnel_sub_scope,</if>
+            <if test="personnelSubScopeText != null">Personnel_sub_scope_text,</if>
+            <if test="salaryAccountingScope != null">Salary_accounting_scope,</if>
+            <if test="salaryAccountingScopeText != null">Salary_accounting_scope_text,</if>
+            <if test="costCenter != null">Cost_Center,</if>
+            <if test="costCenterText != null">Cost_Center_text,</if>
+            <if test="rootTissueId != null">Root_tissue_ID,</if>
+            <if test="rootTissue != null">Root_tissue,</if>
+            <if test="firstTissueId != null">First_tissue_ID,</if>
+            <if test="firstTissue != null">First_tissue,</if>
+            <if test="secondTissueId != null">Second_tissue_ID,</if>
+            <if test="secondTissue != null">Second_tissue,</if>
+            <if test="thirdTissueId != null">Third_tissue_ID,</if>
+            <if test="thirdTissue != null">Third_tissue,</if>
+            <if test="fourthTissueId != null">Fourth_tissue_ID,</if>
+            <if test="fourthTissue != null">Fourth_tissue,</if>
+            <if test="fifthTissueId != null">Fifth_tissue_ID,</if>
+            <if test="fifthTissue != null">Fifth_tissue,</if>
+            <if test="sixthTissueId != null">Sixth_tissue_ID,</if>
+            <if test="sixthTissue != null">Sixth_tissue,</if>
+            <if test="positionEthnicGroupId != null">Position_ethnic_group_ID,</if>
+            <if test="positionEthnicGroup != null">Position_ethnic_group,</if>
+            <if test="jobCategoryId != null">Job_category_ID,</if>
+            <if test="jobCategory != null">Job_category,</if>
+            <if test="Job != null">Job,</if>
+            <if test="jobTitle != null">Job_title,</if>
+            <if test="technicalTitle != null">Technical_title,</if>
+            <if test="theHighestTechnicalTitl != null">The_highest_technical_titl,</if>
+            <if test="technicalLevel != null">Technical_level,</if>
+            <if test="theHighestTechnicalLevel != null">The_highest_technical_level,</if>
+            <if test="Rank != null">Rank,</if>
+            <if test="positionId != null">Position_ID,</if>
+            <if test="Position != null">Position,</if>
+            <if test="jobbTitle != null">Jobb_title,</if>
+            <if test="salaryGrade != null">Salary_grade,</if>
+            <if test="salaryyGrade != null">Salaryy_grade,</if>
+            <if test="positionSalary != null">Position_salary,</if>
+            <if test="employeeGroup != null">Employee_Group,</if>
+            <if test="employeeSubGroup != null">Employee_sub_Group,</if>
+            <if test="backboneLevel != null">Backbone_level,</if>
+            <if test="personnelManagementClassification != null">Personnel_Management_Classification,</if>
+            <if test="theHighestEducationalLevel != null">The_highest_educational_level,</if>
+            <if test="theHighestEducationalSchool != null">The_highest_educational_school,</if>
+            <if test="theHighestEducationalMajor != null">The_highest_educational_major,</if>
+            <if test="theHighestDegree != null">The_highest_degree,</if>
+            <if test="theHighestDegreeSchool != null">The_highest_degree_school,</if>
+            <if test="theHighestDegreeMajor != null">The_highest_degree_major,</if>
+            <if test="firstEducationalLevel != null">First_educational_level,</if>
+            <if test="firstHighestDegree != null">FIrst_highest_degree,</if>
+            <if test="firstHighestDegreeSchool != null">First_highest_degree_school,</if>
+            <if test="firstHighestDegreeMajor != null">First_highest_degree_major,</if>
+            <if test="contractStartTime != null">Contract_start_time,</if>
+            <if test="contractEndTime != null">Contract_end_time,</if>
+            <if test="contractTerm != null">Contract_term,</if>
+            <if test="contractSigningUnit != null">Contract_signing_unit,</if>
+            <if test="signingFrequency != null">Signing_frequency,</if>
+            <if test="workingHours != null">Working_hours,</if>
+            <if test="joinedTime != null">Joined_time,</if>
+            <if test="startingTimeOfServiceLife != null">Starting_time_of_service_life,</if>
+            <if test="retirementDate != null">Retirement_date,</if>
+            <if test="siLing != null">Si_Ling,</if>
+            <if test="Nation != null">Nation,</if>
+            <if test="politicalLandscape != null">Political_landscape,</if>
+            <if test="partyMembershipTime != null">Party_membership_time,</if>
+            <if test="maritalStatus != null">marital_status,</if>
+            <if test="Hometown != null">Hometown,</if>
+            <if test="householdRegistrationNature != null">Household_registration_nature,</if>
+            <if test="residentAddress != null">Resident_address,</if>
+            <if test="contactInformation != null">Contact_information,</if>
+            <if test="emergencyContact != null">Emergency_contact,</if>
+            <if test="emergencyContactPhone != null">Emergency_contact_phone,</if>
+            <if test="workContract != null">Work_Contract,</if>
+            <if test="providentFundAccount != null">Provident_fund_account,</if>
+            <if test="enterpriseAnnuityAccount != null">Enterprise_annuity_account,</if>
+            <if test="uploadPhoto != null">Upload_photo,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="emprId != null">#{emprId},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Gender != null">#{Gender},</if>
+            <if test="Birthday != null">#{Birthday},</if>
+            <if test="Age != null">#{Age},</if>
+            <if test="recordBirth != null">#{recordBirth},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="socialSecurityNumber != null">#{socialSecurityNumber},</if>
+            <if test="personnelScope != null">#{personnelScope},</if>
+            <if test="personnelScopeText != null">#{personnelScopeText},</if>
+            <if test="personnelSubScope != null">#{personnelSubScope},</if>
+            <if test="personnelSubScopeText != null">#{personnelSubScopeText},</if>
+            <if test="salaryAccountingScope != null">#{salaryAccountingScope},</if>
+            <if test="salaryAccountingScopeText != null">#{salaryAccountingScopeText},</if>
+            <if test="costCenter != null">#{costCenter},</if>
+            <if test="costCenterText != null">#{costCenterText},</if>
+            <if test="rootTissueId != null">#{rootTissueId},</if>
+            <if test="rootTissue != null">#{rootTissue},</if>
+            <if test="firstTissueId != null">#{firstTissueId},</if>
+            <if test="firstTissue != null">#{firstTissue},</if>
+            <if test="secondTissueId != null">#{secondTissueId},</if>
+            <if test="secondTissue != null">#{secondTissue},</if>
+            <if test="thirdTissueId != null">#{thirdTissueId},</if>
+            <if test="thirdTissue != null">#{thirdTissue},</if>
+            <if test="fourthTissueId != null">#{fourthTissueId},</if>
+            <if test="fourthTissue != null">#{fourthTissue},</if>
+            <if test="fifthTissueId != null">#{fifthTissueId},</if>
+            <if test="fifthTissue != null">#{fifthTissue},</if>
+            <if test="sixthTissueId != null">#{sixthTissueId},</if>
+            <if test="sixthTissue != null">#{sixthTissue},</if>
+            <if test="positionEthnicGroupId != null">#{positionEthnicGroupId},</if>
+            <if test="positionEthnicGroup != null">#{positionEthnicGroup},</if>
+            <if test="jobCategoryId != null">#{jobCategoryId},</if>
+            <if test="jobCategory != null">#{jobCategory},</if>
+            <if test="Job != null">#{Job},</if>
+            <if test="jobTitle != null">#{jobTitle},</if>
+            <if test="technicalTitle != null">#{technicalTitle},</if>
+            <if test="theHighestTechnicalTitl != null">#{theHighestTechnicalTitl},</if>
+            <if test="technicalLevel != null">#{technicalLevel},</if>
+            <if test="theHighestTechnicalLevel != null">#{theHighestTechnicalLevel},</if>
+            <if test="Rank != null">#{Rank},</if>
+            <if test="positionId != null">#{positionId},</if>
+            <if test="Position != null">#{Position},</if>
+            <if test="jobbTitle != null">#{jobbTitle},</if>
+            <if test="salaryGrade != null">#{salaryGrade},</if>
+            <if test="salaryyGrade != null">#{salaryyGrade},</if>
+            <if test="positionSalary != null">#{positionSalary},</if>
+            <if test="employeeGroup != null">#{employeeGroup},</if>
+            <if test="employeeSubGroup != null">#{employeeSubGroup},</if>
+            <if test="backboneLevel != null">#{backboneLevel},</if>
+            <if test="personnelManagementClassification != null">#{personnelManagementClassification},</if>
+            <if test="theHighestEducationalLevel != null">#{theHighestEducationalLevel},</if>
+            <if test="theHighestEducationalSchool != null">#{theHighestEducationalSchool},</if>
+            <if test="theHighestEducationalMajor != null">#{theHighestEducationalMajor},</if>
+            <if test="theHighestDegree != null">#{theHighestDegree},</if>
+            <if test="theHighestDegreeSchool != null">#{theHighestDegreeSchool},</if>
+            <if test="theHighestDegreeMajor != null">#{theHighestDegreeMajor},</if>
+            <if test="firstEducationalLevel != null">#{firstEducationalLevel},</if>
+            <if test="firstHighestDegree != null">#{firstHighestDegree},</if>
+            <if test="firstHighestDegreeSchool != null">#{firstHighestDegreeSchool},</if>
+            <if test="firstHighestDegreeMajor != null">#{firstHighestDegreeMajor},</if>
+            <if test="contractStartTime != null">#{contractStartTime},</if>
+            <if test="contractEndTime != null">#{contractEndTime},</if>
+            <if test="contractTerm != null">#{contractTerm},</if>
+            <if test="contractSigningUnit != null">#{contractSigningUnit},</if>
+            <if test="signingFrequency != null">#{signingFrequency},</if>
+            <if test="workingHours != null">#{workingHours},</if>
+            <if test="joinedTime != null">#{joinedTime},</if>
+            <if test="startingTimeOfServiceLife != null">#{startingTimeOfServiceLife},</if>
+            <if test="retirementDate != null">#{retirementDate},</if>
+            <if test="siLing != null">#{siLing},</if>
+            <if test="Nation != null">#{Nation},</if>
+            <if test="politicalLandscape != null">#{politicalLandscape},</if>
+            <if test="partyMembershipTime != null">#{partyMembershipTime},</if>
+            <if test="maritalStatus != null">#{maritalStatus},</if>
+            <if test="Hometown != null">#{Hometown},</if>
+            <if test="householdRegistrationNature != null">#{householdRegistrationNature},</if>
+            <if test="residentAddress != null">#{residentAddress},</if>
+            <if test="contactInformation != null">#{contactInformation},</if>
+            <if test="emergencyContact != null">#{emergencyContact},</if>
+            <if test="emergencyContactPhone != null">#{emergencyContactPhone},</if>
+            <if test="workContract != null">#{workContract},</if>
+            <if test="providentFundAccount != null">#{providentFundAccount},</if>
+            <if test="enterpriseAnnuityAccount != null">#{enterpriseAnnuityAccount},</if>
+            <if test="uploadPhoto != null">#{uploadPhoto},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementPersonnelRoster" parameterType="EnterpriseManagementPersonnelRoster">
+        update Enterprise_Management_Personnel_roster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="employeeId != null">Employee_ID = #{employeeId},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Gender != null">Gender = #{Gender},</if>
+            <if test="Birthday != null">Birthday = #{Birthday},</if>
+            <if test="Age != null">Age = #{Age},</if>
+            <if test="recordBirth != null">Record_birth = #{recordBirth},</if>
+            <if test="idCard != null">ID_Card = #{idCard},</if>
+            <if test="socialSecurityNumber != null">Social_security_number = #{socialSecurityNumber},</if>
+            <if test="personnelScope != null">Personnel_scope = #{personnelScope},</if>
+            <if test="personnelScopeText != null">Personnel_scope_text = #{personnelScopeText},</if>
+            <if test="personnelSubScope != null">Personnel_sub_scope = #{personnelSubScope},</if>
+            <if test="personnelSubScopeText != null">Personnel_sub_scope_text = #{personnelSubScopeText},</if>
+            <if test="salaryAccountingScope != null">Salary_accounting_scope = #{salaryAccountingScope},</if>
+            <if test="salaryAccountingScopeText != null">Salary_accounting_scope_text = #{salaryAccountingScopeText},</if>
+            <if test="costCenter != null">Cost_Center = #{costCenter},</if>
+            <if test="costCenterText != null">Cost_Center_text = #{costCenterText},</if>
+            <if test="rootTissueId != null">Root_tissue_ID = #{rootTissueId},</if>
+            <if test="rootTissue != null">Root_tissue = #{rootTissue},</if>
+            <if test="firstTissueId != null">First_tissue_ID = #{firstTissueId},</if>
+            <if test="firstTissue != null">First_tissue = #{firstTissue},</if>
+            <if test="secondTissueId != null">Second_tissue_ID = #{secondTissueId},</if>
+            <if test="secondTissue != null">Second_tissue = #{secondTissue},</if>
+            <if test="thirdTissueId != null">Third_tissue_ID = #{thirdTissueId},</if>
+            <if test="thirdTissue != null">Third_tissue = #{thirdTissue},</if>
+            <if test="fourthTissueId != null">Fourth_tissue_ID = #{fourthTissueId},</if>
+            <if test="fourthTissue != null">Fourth_tissue = #{fourthTissue},</if>
+            <if test="fifthTissueId != null">Fifth_tissue_ID = #{fifthTissueId},</if>
+            <if test="fifthTissue != null">Fifth_tissue = #{fifthTissue},</if>
+            <if test="sixthTissueId != null">Sixth_tissue_ID = #{sixthTissueId},</if>
+            <if test="sixthTissue != null">Sixth_tissue = #{sixthTissue},</if>
+            <if test="positionEthnicGroupId != null">Position_ethnic_group_ID = #{positionEthnicGroupId},</if>
+            <if test="positionEthnicGroup != null">Position_ethnic_group = #{positionEthnicGroup},</if>
+            <if test="jobCategoryId != null">Job_category_ID = #{jobCategoryId},</if>
+            <if test="jobCategory != null">Job_category = #{jobCategory},</if>
+            <if test="Job != null">Job = #{Job},</if>
+            <if test="jobTitle != null">Job_title = #{jobTitle},</if>
+            <if test="technicalTitle != null">Technical_title = #{technicalTitle},</if>
+            <if test="theHighestTechnicalTitl != null">The_highest_technical_titl = #{theHighestTechnicalTitl},</if>
+            <if test="technicalLevel != null">Technical_level = #{technicalLevel},</if>
+            <if test="theHighestTechnicalLevel != null">The_highest_technical_level = #{theHighestTechnicalLevel},</if>
+            <if test="Rank != null">Rank = #{Rank},</if>
+            <if test="positionId != null">Position_ID = #{positionId},</if>
+            <if test="Position != null">Position = #{Position},</if>
+            <if test="jobbTitle != null">Jobb_title = #{jobbTitle},</if>
+            <if test="salaryGrade != null">Salary_grade = #{salaryGrade},</if>
+            <if test="salaryyGrade != null">Salaryy_grade = #{salaryyGrade},</if>
+            <if test="positionSalary != null">Position_salary = #{positionSalary},</if>
+            <if test="employeeGroup != null">Employee_Group = #{employeeGroup},</if>
+            <if test="employeeSubGroup != null">Employee_sub_Group = #{employeeSubGroup},</if>
+            <if test="backboneLevel != null">Backbone_level = #{backboneLevel},</if>
+            <if test="personnelManagementClassification != null">Personnel_Management_Classification = #{personnelManagementClassification},</if>
+            <if test="theHighestEducationalLevel != null">The_highest_educational_level = #{theHighestEducationalLevel},</if>
+            <if test="theHighestEducationalSchool != null">The_highest_educational_school = #{theHighestEducationalSchool},</if>
+            <if test="theHighestEducationalMajor != null">The_highest_educational_major = #{theHighestEducationalMajor},</if>
+            <if test="theHighestDegree != null">The_highest_degree = #{theHighestDegree},</if>
+            <if test="theHighestDegreeSchool != null">The_highest_degree_school = #{theHighestDegreeSchool},</if>
+            <if test="theHighestDegreeMajor != null">The_highest_degree_major = #{theHighestDegreeMajor},</if>
+            <if test="firstEducationalLevel != null">First_educational_level = #{firstEducationalLevel},</if>
+            <if test="firstHighestDegree != null">FIrst_highest_degree = #{firstHighestDegree},</if>
+            <if test="firstHighestDegreeSchool != null">First_highest_degree_school = #{firstHighestDegreeSchool},</if>
+            <if test="firstHighestDegreeMajor != null">First_highest_degree_major = #{firstHighestDegreeMajor},</if>
+            <if test="contractStartTime != null">Contract_start_time = #{contractStartTime},</if>
+            <if test="contractEndTime != null">Contract_end_time = #{contractEndTime},</if>
+            <if test="contractTerm != null">Contract_term = #{contractTerm},</if>
+            <if test="contractSigningUnit != null">Contract_signing_unit = #{contractSigningUnit},</if>
+            <if test="signingFrequency != null">Signing_frequency = #{signingFrequency},</if>
+            <if test="workingHours != null">Working_hours = #{workingHours},</if>
+            <if test="joinedTime != null">Joined_time = #{joinedTime},</if>
+            <if test="startingTimeOfServiceLife != null">Starting_time_of_service_life = #{startingTimeOfServiceLife},</if>
+            <if test="retirementDate != null">Retirement_date = #{retirementDate},</if>
+            <if test="siLing != null">Si_Ling = #{siLing},</if>
+            <if test="Nation != null">Nation = #{Nation},</if>
+            <if test="politicalLandscape != null">Political_landscape = #{politicalLandscape},</if>
+            <if test="partyMembershipTime != null">Party_membership_time = #{partyMembershipTime},</if>
+            <if test="maritalStatus != null">marital_status = #{maritalStatus},</if>
+            <if test="Hometown != null">Hometown = #{Hometown},</if>
+            <if test="householdRegistrationNature != null">Household_registration_nature = #{householdRegistrationNature},</if>
+            <if test="residentAddress != null">Resident_address = #{residentAddress},</if>
+            <if test="contactInformation != null">Contact_information = #{contactInformation},</if>
+            <if test="emergencyContact != null">Emergency_contact = #{emergencyContact},</if>
+            <if test="emergencyContactPhone != null">Emergency_contact_phone = #{emergencyContactPhone},</if>
+            <if test="workContract != null">Work_Contract = #{workContract},</if>
+            <if test="providentFundAccount != null">Provident_fund_account = #{providentFundAccount},</if>
+            <if test="enterpriseAnnuityAccount != null">Enterprise_annuity_account = #{enterpriseAnnuityAccount},</if>
+            <if test="uploadPhoto != null">Upload_photo = #{uploadPhoto},</if>
+        </trim>
+        where EMPR_ID = #{emprId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementPersonnelRosterByEmprId" parameterType="Long">
+        delete from Enterprise_Management_Personnel_roster where EMPR_ID = #{emprId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementPersonnelRosterByEmprIds" parameterType="String">
+        delete from Enterprise_Management_Personnel_roster where EMPR_ID in 
+        <foreach item="emprId" collection="array" open="(" separator="," close=")">
+            #{emprId}
+        </foreach>
+    </delete>
+</mapper>

@@ -609,7 +609,7 @@
             console.log("上一表单=>",newForm);
             newForm.oldRegulationsId = row.oldRegulationsId;
             console.log("上一表单=>",newForm);
-            updateFilemanagement(lastForm).then(response => {
+            updateFilemanagement(newForm).then(response => {
             });
           });
           this.getList();

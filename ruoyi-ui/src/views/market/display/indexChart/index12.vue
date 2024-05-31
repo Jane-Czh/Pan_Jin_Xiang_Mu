@@ -1,14 +1,14 @@
 <template>
-    
+
     <div>
         <div class="block">
-            
+
     <!-- 添加标签页标题 -->
     <span class="DataSelect" style="margin-right:10px"></span>
     <!-- 添加输入框 -->
     <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
-  
-  
+
+
 
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
             <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';     
+import * as echarts from 'echarts';
 import moment from 'moment'
 import { getIndex12 } from '@/api/market/index'
 
@@ -40,7 +40,7 @@ export default {
         numbers : [],
             result:[],
             provinces: [],
-          
+
             quantities: [],
              quantitiesForMonth3: [], // 针对月份3的数量数组
             numberInput:null,
@@ -52,23 +52,23 @@ export default {
                 startTime: new Date(),
                 endTime: new Date(),
                 numberInput:null
-    
+
             },
-            
+
             selectedDate: [],
             pickerOptions: [],
             option: {},
             myChart: {}
         }
-        
+
     },
     //    watch: {
     //     numberInput(newValue) {
     //         if (newValue) {
     //             // 输入框有数据时，处理 transposedSeriesData
     //           this.updateChart()
-    //         } 
-            
+    //         }
+
     //         console.log("_____--------总数量seriesData：", this.transposedSeriesData);
     //     }
     // },
@@ -79,7 +79,7 @@ export default {
         this.initData();
         // this.getCurrentMonth();
         // this.getCurrentYear();
-        
+
         const currentDate = new Date();
         //
 //   const currentYear = currentDate.getFullYear();
@@ -102,7 +102,7 @@ export default {
     //     }
     // }
     // console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
-      }, 
+      },
    splitData() {
     // 初始化空数组用来存放拆分后的数据
 
@@ -322,11 +322,11 @@ var seriesData = [];
 // 遍历每个 result 中的 minEntity 数据
 this.result.forEach(function (item) {
     var data = [];
-    
+
     // 遍历图例数据
     legendData.forEach(function (legendItem) {
         var found = false;
-        
+
         // 在当前 result 的 minEntity 中查找与图例数据匹配的 branch
         item.minEntity.forEach(function (minEntity) {
             if (minEntity.branch === legendItem) {
@@ -335,13 +335,13 @@ this.result.forEach(function (item) {
                 found = true;
             }
         });
-        
+
         // 如果当前 branch 在当前 result 的 minEntity 中未找到，则将 0 添加到 data 数组中
         if (!found) {
             data.push(0);
         }
     });
-    
+
     // 将当前 result 的 data 添加到 series 数据中
     seriesData.push(data);
 });
@@ -426,7 +426,7 @@ option && myChart.setOption(option);
 
 },
 
-     
+
             //时间选择器的默认月份设置
     defaultMonth() {
       const currentDate = new Date();

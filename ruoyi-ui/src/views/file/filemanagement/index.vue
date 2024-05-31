@@ -189,7 +189,7 @@
       <el-table-column label="文件名称" align="center" prop="fileName"/>
       <el-table-column label="文件路径" align="center" prop="filePath">
         <template slot-scope="scope">
-          <a :href="baseUrl+scope.row.filePath" download>点击下载</a>
+          <a :href="scope.row.filePath" download>点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="文件类型" align="center" prop="fileType"/>
@@ -615,8 +615,6 @@
     },
     created() {
       this.getList();
-
-      console.log("uploadFileUrl==============>",this.uploadFileUrl)
     },
     methods: {
       /** 查询文件管理列表 */
@@ -689,8 +687,6 @@
       /** 上传制度文件 */
       handleUpload() {
         this.reset();
-
-        
         this.fileUploadDialogVisible = true;
         this.title = "上传制度文件";
       },
@@ -723,8 +719,6 @@
       },
       /** 上传文件提交按钮 */
       uploadSubmitForm() {
-        
-
         this.$refs["form"].validate(valid => {
           if (valid) {
               this.form.newFlag = 1;
@@ -788,7 +782,7 @@
       handleDelete(row) {
         console.log("当前表单1=>",row);
         const regulationsIds = row.regulationsId || this.ids;
-        this.$modal.confirm('是否确认删除文件管理编号为"' + regulationsIds + '"的数据项？').then(function () {
+        this.$modal.confirm('是否确认删除制度文件编号为"' + regulationsIds + '"的数据项？').then(function () {
           return delFilemanagement(regulationsIds);
         }).then(() => {
           this.getList();
@@ -924,8 +918,6 @@
       },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {
-       
-
         const KB = 1024;
         const MB = KB * 1024;
         const GB = MB * 1024;
@@ -976,8 +968,6 @@
       },
       // 调用接口获取用户信息
       getUserInfo() {
-
-       
         getUserProfile().then(response => {
           // 处理成功的情况
           console.log('成功获取用户信息:', response.data)

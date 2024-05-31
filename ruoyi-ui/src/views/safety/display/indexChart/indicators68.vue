@@ -12,7 +12,6 @@
 
 <script>
 import * as echarts from 'echarts';
-import moment from 'moment'
 import { getOutputPercapitavalueData } from '@/api/safety/data'
 
 export default {
@@ -27,7 +26,9 @@ export default {
       selectedDate: [],
       pickerOptions: [],
       option: {},
-      myChart: {}
+      myChart: {},
+      chartData: [], // 存放格式化后的数据
+      parsedData: {}
     }
   },
   computed: {},
@@ -35,6 +36,7 @@ export default {
     this.defaultMonth()
     this.myChart = echarts.init(document.getElementById('main'))
     this.initData()
+
   },
   methods: {
     async initData() {
@@ -43,8 +45,9 @@ export default {
       try {
         this.loading = true
         const res = await getOutputPercapitavalueData(this.timeData);
-        this.data = res.rows
+        this.data = res
         this.loading = false
+        this.formatData()
         this.updateChart()
       } catch (error) {
         this.loading = false
@@ -147,7 +150,7 @@ export default {
       };
       this.option = {
         title: {
-          text: '当月设备维修总费用',
+          text: '设备故障类别次数分布图',
         },
         tooltip: {
           trigger: 'axis',
@@ -155,9 +158,9 @@ export default {
             type: 'shadow'
           }
         },
-        // legend: {
-        //     data: ['Forest', 'Steppe', 'Desert', 'Wetland']
-        // },
+        legend: {
+          data: ['机械', '气动', '液压', '电器']
+        },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -166,7 +169,7 @@ export default {
           feature: {
             mark: { show: true, },
             dataView: { show: true, readOnly: false, title: '数据视图' },
-            magicType: { show: true, type: ['bar'], title: { bar: '切换为柱状图', line: '切换为折线图' } },
+            magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
             restore: { show: true, title: '还原' },
             saveAsImage: { show: true, title: '保存为图片' }
           }
@@ -175,7 +178,7 @@ export default {
           {
             // type: 'category',
             axisTick: { show: false },
-            data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
+            data: this.chartData.map(data => data.month)
           }
         ],
         yAxis: [
@@ -183,15 +186,43 @@ export default {
             type: 'value'
           }
         ],
-        series: [{
-          name: '金额',
-          type: 'line',
-          label: labelOption,
-          emphasis: {
-            focus: 'series'
+        series: [
+          {
+            name: '机械',
+            type: 'bar',
+            label: labelOption,
+            emphasis: {
+              focus: 'series'
+            },
+            data: this.chartData.map(data => data.mechanical),
           },
-          data: this.data.map(item => item.curEquipmentMaintenanceCost),
-        }]
+          {
+            name: '气动',
+            type: 'bar',
+            label: labelOption,
+            emphasis: {
+              focus: 'series'
+            },
+            data: this.chartData.map(data => data.pneumatic),
+          },
+          {
+            name: '液压',
+            type: 'bar',
+            label: labelOption,
+            emphasis: {
+              focus: 'series'
+            },
+            data: this.chartData.map(data => data.hydraulic),
+          },
+          {
+            name: '电器',
+            type: 'bar',
+            label: labelOption,
+            emphasis: {
+              focus: 'series'
+            },
+            data: this.chartData.map(data => data.electrical),
+          }]
       };
 
       this.option && this.myChart.setOption(this.option);
@@ -214,6 +245,21 @@ export default {
       const endDate = new Date(currentYear, currentMonth, 0);
       this.selectedDate = [startDate, endDate];
     },
+    formatData() {
+      this.chartData = this.data.rows.map(rows => {
+        const month = rows.Year_And_Month;
+        const resultData = rows.resultData.split(',');
+        return {
+          month,
+          mechanical: parseInt(resultData[0].split(':')[1]),
+          pneumatic: parseInt(resultData[1].split(':')[1]),
+          hydraulic: parseInt(resultData[2].split(':')[1]),
+          electrical: parseInt(resultData[3].split(':')[1]),
+        };
+
+      });
+    }
+
   },
 
 

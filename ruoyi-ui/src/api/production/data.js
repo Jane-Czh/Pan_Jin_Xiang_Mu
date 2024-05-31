@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询[生产]手动填报指标列表
+// 查询[生产]手动填报指标功能列表
 export function listData(query) {
   return request({
     url: '/production/FillingInIndicators/list',
@@ -9,28 +9,24 @@ export function listData(query) {
   })
 }
 
-// 查询[生产]手动填报指标详细
+// 查询[生产]手动填报指标功能详细
 export function getData(productionId) {
   return request({
-    url: `/production/FillingInIndicators/${productionId}`,
+    url: '/production/FillingInIndicators/' + productionId,
     method: 'get'
   })
 }
 
-// 新增[生产]手动填报指标
+// 新增[生产]手动填报指标功能
 export function addData(data) {
-  // const data = {
-  //   yearAndMonth: year + '-' + month 
-  // };
   return request({
     url: '/production/FillingInIndicators',
     method: 'post',
     data: data
-  });
+  })
 }
 
-
-// 修改[生产]手动填报指标
+// 修改[生产]手动填报指标功能
 export function updateData(data) {
   return request({
     url: '/production/FillingInIndicators',
@@ -39,10 +35,10 @@ export function updateData(data) {
   })
 }
 
-// 删除[生产]手动填报指标
-export function delData(productionIds) {
+// 删除[生产]手动填报指标功能
+export function delData(productionId) {
   return request({
-    url: `/production/FillingInIndicators/${productionIds}`,
+    url: '/production/FillingInIndicators/' + productionId,
     method: 'delete'
   })
 }

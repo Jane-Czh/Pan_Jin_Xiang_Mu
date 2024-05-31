@@ -16,6 +16,7 @@ import moment from 'moment'
 import { getPartyBuildingRankData } from '@/api/partybuilding/data'
 
 export default {
+  name: 'Indicators50',
   data() {
     return {
       loading: false,
@@ -155,9 +156,9 @@ export default {
             type: 'shadow'
           }
         },
-        // legend: {
-        //     data: ['Forest', 'Steppe', 'Desert', 'Wetland']
-        // },
+        legend: {
+          data: ['分数', '排名']
+        },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -166,7 +167,7 @@ export default {
           feature: {
             mark: { show: true, },
             dataView: { show: true, readOnly: false, title: '数据视图' },
-            magicType: { show: true, type: ['bar'], title: { bar: '切换为柱状图' } },
+            magicType: { show: true, type: ['bar', 'line'], title: { bar: '切换为柱状图', line: '切换为折线图' } },
             restore: { show: true, title: '还原' },
             saveAsImage: { show: true, title: '保存为图片' }
           }
@@ -181,16 +182,35 @@ export default {
         yAxis: [
           {
             type: 'value'
+          },
+          {
+            type: 'value',
+            name: '排名',
+            // interval: 5,
+            splitLine: { show: false },
+            axisLabel: {
+              formatter: '{value} '
+            }
           }
         ],
         series: [{
-          name: '排名',
-          type: 'line',
+          name: '分数',
+          type: 'bar',
           label: labelOption,
           emphasis: {
             focus: 'series'
           },
           data: this.data.map(item => item.score),
+        },
+        {
+          name: '排名',
+          type: 'line',
+          label: labelOption,
+          yAxisIndex: 1,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.data.map(item => item.rank),
         }]
       };
 

@@ -221,7 +221,7 @@ export default {
         this.handleSortChange({
           column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
           prop: 'yearAndMonth',
-          order: 'ascending' // 或'descending'
+          order: 'descending' // 或'descending'
         });
       });
     },

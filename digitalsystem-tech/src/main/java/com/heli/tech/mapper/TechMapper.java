@@ -1,5 +1,6 @@
 package com.heli.tech.mapper;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,9 @@ public interface TechMapper {
      * @author: hong
      * @date: 2024/4/9 11:10
      **/
-    Long countAnnualCompletionNumber(Integer year);
+    Long countAnnualCompletionNumber(@Param("yearAndMonth") Date yearAndMonth);
+
+    Date selectMaxMonthByYear(@Param("year") int year);
 
 
     Boolean checkTechMonthlyDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
@@ -81,4 +84,6 @@ public interface TechMapper {
      * @return 结果
      */
     public int deleteTechByTechIds(Long[] techIds);
+
+    int batchUpdateTech(@Param("teches") ArrayList<Tech> teches);
 }

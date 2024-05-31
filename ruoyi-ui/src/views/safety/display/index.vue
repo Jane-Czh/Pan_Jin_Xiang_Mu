@@ -1,6 +1,6 @@
 <template>
   <div class="current-page">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="border-card">
       <el-tab-pane label="全部" name="first">
         <div class="allIndex">
           <div v-for="(item, index) in allIndex" :key="index" class="allIndex-item">

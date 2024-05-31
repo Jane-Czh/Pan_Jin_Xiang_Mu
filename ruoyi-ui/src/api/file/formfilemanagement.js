@@ -9,6 +9,15 @@ export function listFormfilemanagement(query) {
   })
 }
 
+// 查询历史文件列表
+export function getFormHistory(currentId) {
+  return request({
+    url: '/file/formfilemanagement/history/' + currentId,
+    method: 'get',
+    // params: query
+  });
+}
+
 // 查询表单文件管理详细
 export function getFormfilemanagement(formId) {
   return request({
@@ -41,4 +50,13 @@ export function delFormfilemanagement(formId) {
     url: '/file/formfilemanagement/' + formId,
     method: 'delete'
   })
+}
+
+// word转pdf
+export function word2Pdf(inPath, outPath) {
+  return request({
+    url: '/file/formfilemanagement/convert',
+    method: 'post',
+    params: { inPath, outPath }
+  });
 }

@@ -98,302 +98,30 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
-        path: 'indicators1',
-        component: () => import('@/views/financial/display/indexChart/indicators1'),
-        name: 'Indicators1',
-        meta: { title: '指标1：主营业务收入' }
+        path: 'indicators30',
+        component: () => import('@/views/financial/financialDisplay/indexChart/indicators30'),
+        name: 'Indicators30',
+        meta: { title: '指标数据' }
+      },
+
+      {
+        path: 'indicators70',
+        component: () => import('@/views/financial/financialDisplay/indexChart/indicators70'),
+        name: 'Indicators70',
+        meta: { title: '指标数据' }
+      },
+
+      {
+        path: 'index-detail-financial',
+        component: () => import('@/views/financial/financialDisplay/indexDetailFinancial'),
+        name: 'IndexDetailFinancial',
+        meta: {
+          title: '指标详情',
+        }
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators2',
-        component: () => import('@/views/financial/display/indexChart/indicators2'),
-        name: 'Indicators2',
-        meta: { title: '指标2：整机销售收入' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators3',
-        component: () => import('@/views/financial/display/indexChart/indicators3'),
-        name: 'Indicators3',
-        meta: { title: '指标3：集团外部销售收入' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators4',
-        component: () => import('@/views/financial/display/indexChart/indicators4'),
-        name: 'Indicators4',
-        meta: { title: '指标4：整车产量' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators5',
-        component: () => import('@/views/financial/display/indexChart/indicators5'),
-        name: 'Indicators5',
-        meta: { title: '指标5：整车销量' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators6',
-        component: () => import('@/views/financial/display/indexChart/indicators6'),
-        name: 'Indicators6',
-        meta: { title: '指标6：新产品销售收入' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators7',
-        component: () => import('@/views/financial/display/indexChart/indicators7'),
-        name: 'Indicators7',
-        meta: { title: '指标7：特色产品收入' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators8',
-        component: () => import('@/views/financial/display/indexChart/indicators8'),
-        name: 'Indicators8',
-        meta: { title: '指标8：主营业务成本' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators9',
-        component: () => import('@/views/financial/display/indexChart/indicators9'),
-        name: 'Indicators9',
-        meta: { title: '指标9：整机销售成本' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators10',
-        component: () => import('@/views/financial/display/indexChart/indicators10'),
-        name: 'Indicators10',
-        meta: { title: '指标10：净利润' }
-      }
-    ]
-  },
-  {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators11',
-        component: () => import('@/views/market/display/indexChart/indicators11'),
-        name: 'Indicators11',
-        meta: { title: '指标11：各销售网点月度(I类)电车盘锦区域内订单占比' }
-      }
-    ]
-  },
-  {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators12',
-        component: () => import('@/views/market/display/indexChart/indicators12'),
-        name: 'Indicators12',
-        meta: { title: '指标12：各销售网点月度(IV-V类)内燃车盘锦区域内订单占比' }
-      }
-    ]
-  }, {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators13',
-        component: () => import('@/views/market/display/indexChart/indicators13'),
-        name: 'Indicators13',
-        meta: { title: '指标13：各主要车型产量月度比率' }
-      }
-    ]
-  }, {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators14',
-        component: () => import('@/views/market/display/indexChart/indicators14'),
-        name: 'Indicators14',
-        meta: { title: '指标14：各主要车型同比增长比例' }
-      }
-    ]
-  }, {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators15',
-        component: () => import('@/views/market/display/indexChart/indicators15'),
-        name: 'Indicators15',
-        meta: { title: '指标15：各销售网点月度各主要车型分布表' }
-      }
-    ]
-  }, {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators16',
-        component: () => import('@/views/market/display/indexChart/indicators16'),
-        name: 'Indicators16',
-        meta: { title: '指标16：各网点已接单未发车总台数' }
-      }
-    ]
-  }, {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators17',
-        component: () => import('@/views/market/display/indexChart/indicators17'),
-        name: 'Indicators17',
-        meta: { title: '指标17：各网点未排产订单台数' }
-      }
-    ]
-  },
-  {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators18',
-        component: () => import('@/views/market/display/indexChart/indicators18'),
-        name: 'Indicators18',
-        meta: { title: '指标18：各网点已完工未发车订单数' }
-      }
-    ]
-  },
-  {
-    path: '/market',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators19',
-        component: () => import('@/views/market/display/indexChart/indicators19'),
-        name: 'Indicators19',
-        meta: { title: '指标19：各网点已到期未完工订单数' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators20',
-        component: () => import('@/views/financial/display/indexChart/indicators20'),
-        name: 'Indicators20',
-        meta: { title: '指标20：当月管理费用' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators21',
-        component: () => import('@/views/financial/display/indexChart/indicators21'),
-        name: 'Indicators21',
-        meta: { title: '指标21：当月研发费用' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators22',
-        component: () => import('@/views/financial/display/indexChart/indicators22'),
-        name: 'Indicators22',
-        meta: { title: '指标22：当月制造费用' }
-      }
-    ]
-  },
+
   {
     path: '/safety',
     component: Layout,
@@ -436,48 +164,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators26',
-        component: () => import('@/views/financial/display/indexChart/indicators26'),
-        name: 'Indicators26',
-        meta: { title: '指标26：当月原材料存货额' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators27',
-        component: () => import('@/views/financial/display/indexChart/indicators27'),
-        name: 'Indicators27',
-        meta: { title: '指标27：当月在制品存货额' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators28',
-        component: () => import('@/views/financial/display/indexChart/indicators28'),
-        name: 'Indicators28',
-        meta: { title: '指标28：当月在制品存货额' }
-      }
-    ]
-  },
+
   {
     path: '/production',
     component: Layout,
@@ -492,20 +179,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators30',
-        component: () => import('@/views/financial/display/indexChart/indicators30'),
-        name: 'Indicators30',
-        meta: { title: '指标30：存货增长率/销售增长率' }
-      }
-    ]
-  },
+
   {
     path: '/supply',
     component: Layout,
@@ -520,76 +194,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators32',
-        component: () => import('@/views/financial/display/indexChart/indicators32'),
-        name: 'Indicators32',
-        meta: { title: '指标32：应收账款周转率' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators33',
-        component: () => import('@/views/financial/display/indexChart/indicators33'),
-        name: 'Indicators33',
-        meta: { title: '指标33：资金周转率' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators34',
-        component: () => import('@/views/financial/display/indexChart/indicators34'),
-        name: 'Indicators34',
-        meta: { title: '指标34：库存商品周转率' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators35',
-        component: () => import('@/views/financial/display/indexChart/indicators35'),
-        name: 'Indicators35',
-        meta: { title: '指标35：原材料周转率' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators36',
-        component: () => import('@/views/financial/display/indexChart/indicators36'),
-        name: 'Indicators36',
-        meta: { title: '指标36：在制品周转率' }
-      }
-    ]
-  },
+
   {
     path: '/production',
     component: Layout,
@@ -763,12 +368,14 @@ export const constantRoutes = [
     hidden: true,
     redirect: 'noredirect',
     children: [
+
       {
-        path: 'indicators49',
-        component: () => import('@/views/enterprise/display/indexChart/indicators49'),
-        name: 'Indicators49',
-        meta: { title: '指标49：一线从业人数' }
+        path: 'index-detail-enterprise',
+        component: () => import('@/views/enterprise/display/indexDetailEnterprise'),
+        name: 'IndexDetailEnterprise',
+        meta: { title: '指标数据' }
       }
+
     ]
   },
   {
@@ -785,90 +392,8 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators51',
-        component: () => import('@/views/enterprise/display/indexChart/indicators51'),
-        name: 'Indicators51',
-        meta: { title: '指标51：公司平均从业人数（月度）' }
-      }
-    ]
-  },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators52',
-        component: () => import('@/views/enterprise/display/indexChart/indicators52'),
-        name: 'Indicators52',
-        meta: { title: '指标52：工资总额年度占比' }
-      }
-    ]
-  },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators53',
-        component: () => import('@/views/enterprise/display/indexChart/indicators53'),
-        name: 'Indicators53',
-        meta: { title: '指标53：日清日结考核得分）' }
-      }
-    ]
-  },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators54',
-        component: () => import('@/views/enterprise/display/indexChart/indicators54'),
-        name: 'Indicators54',
-        meta: { title: '指标54：累计人均收入' }
-      }
-    ]
-  },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators55',
-        component: () => import('@/views/enterprise/display/indexChart/indicators55'),
-        name: 'Indicators55',
-        meta: { title: '指标55：月度累计生产人均收入' }
-      }
-    ]
-  },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators56',
-        component: () => import('@/views/enterprise/display/indexChart/indicators56'),
-        name: 'Indicators56',
-        meta: { title: '指标56：月度累计职能人均收入' }
-      }
-    ]
-  },
+
+
   {
     path: '/quality',
     component: Layout,
@@ -968,20 +493,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators66',
-        component: () => import('@/views/financial/display/indexChart/indicators66'),
-        name: 'Indicators66',
-        meta: { title: '指标66：一年以上暂估行项目' }
-      }
-    ]
-  },
+
   {
     path: '/safety',
     component: Layout,
@@ -1024,20 +536,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators70',
-        component: () => import('@/views/financial/display/indexChart/indicators70'),
-        name: 'Indicators70',
-        meta: { title: '指标70：当日在制品金额' }
-      }
-    ]
-  },
+
   {
     path: '/tech',
     component: Layout,
@@ -1047,7 +546,7 @@ export const constantRoutes = [
       {
         path: 'indicators71',
         component: () => import('@/views/tech/display/indexChart/indicators71'),
-        name: 'Indicators47',
+        name: 'Indicators71',
         meta: { title: '指标71：研发项目计划进度完成率' }
       }
     ]
@@ -1080,48 +579,9 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators76',
-        component: () => import('@/views/enterprise/display/indexChart/indicators76'),
-        name: 'Indicators76',
-        meta: { title: '指标76：职能部门人均加班费用' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators77',
-        component: () => import('@/views/financial/display/indexChart/indicators77'),
-        name: 'Indicators77',
-        meta: { title: '指标77：月度存货总金额' }
-      }
-    ]
-  },
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators78',
-        component: () => import('@/views/financial/display/indexChart/indicators78'),
-        name: 'Indicators78',
-        meta: { title: '指标78：当月经济增加值' }
-      }
-    ]
-  },
+ 
+ 
+  
   {
     path: '/market',
     component: Layout,
@@ -1430,7 +890,7 @@ export const dynamicRoutes = [
     ]
   },
 
-  
+
   //流程模块
   {
     path: '/project',
@@ -1440,7 +900,7 @@ export const dynamicRoutes = [
 
   },
   //文件模块
-  { 
+  {
     path: '/file/filemanagement/index',
     component: Layout,
     hidden: true,
@@ -1454,6 +914,21 @@ export const dynamicRoutes = [
       }
     ]
   },
+    //表单文件管理
+    {
+      path: '/file/formfilemanagement/index',
+      component: Layout,
+      hidden: true,
+      permissions: ['file:formfilemanagement:list'],
+      children: [
+        {
+          path: '/file/formfilemanagement/historyVersions/:formId(\\d+)', // 路由路径
+          component: () => import('@/views/file/formfilemanagement/historyVersions'), // 对应的组件
+          name: 'historyVersions', // 路由名称
+          meta: { title: '历史版本管理' } // 元信息，用于设置标题等
+        }
+      ]
+    },
 
 ]
 

@@ -40,8 +40,8 @@ export default {
         { id: '38', icon: 'el-icon-s-data', title: '人均产值', content: '企业主要营业产品财务收入', path: '/production/indicators38' },
         { id: '41', icon: 'el-icon-s-data', title: '上线及时率', content: '企业主要营业产品财务收入', path: '/production/indicators41' },
         { id: '48', icon: 'el-icon-s-data', title: '一线当月加班时长', content: '企业主要营业产品财务收入', path: '/production/indicators48' },
-        { id: '74', icon: 'el-icon-s-data', title: '日/月/年上线数', content: '企业主要营业产品财务收入', path: '/production/indicators74' },
-        { id: '75', icon: 'el-icon-s-data', title: '日/月/年完工数', content: '企业主要营业产品财务收入', path: '/production/indicators75' },
+        // { id: '74', icon: 'el-icon-s-data', title: '日/月/年上线数', content: '企业主要营业产品财务收入', path: '/production/indicators74' },
+        // { id: '75', icon: 'el-icon-s-data', title: '日/月/年完工数', content: '企业主要营业产品财务收入', path: '/production/indicators75' },
       ],
 
       formData: {},

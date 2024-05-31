@@ -19,6 +19,7 @@ public interface ITechService {
 
     public Tech calculateCompletionRate(Tech tech, Long annualNumber);
 
+    public int batchUpdateTech(Date date);
 
 
     List<DisplayEntity> selectNonStandardAVGPreparationDays(Date startTime, Date endTime);

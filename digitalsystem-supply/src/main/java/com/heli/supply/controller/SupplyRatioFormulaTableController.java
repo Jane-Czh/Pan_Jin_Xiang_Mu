@@ -69,6 +69,7 @@ public class SupplyRatioFormulaTableController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SupplyRatioFormulaTable supplyRatioFormulaTable)
     {
+        System.out.println("test----------test");
         startPage();
         List<SupplyRatioFormulaTable> list = supplyRatioFormulaTableService.selectSupplyRatioFormulaTableList(supplyRatioFormulaTable);
         return getDataTable(list);

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 
-// 查询[技术]手动填报指标列表
+// 查询[技术]指标填报列表
 export function listData(query) {
   return request({
     url: '/tech/data/list',
@@ -10,34 +10,24 @@ export function listData(query) {
   })
 }
 
-// 查询[技术]手动填报指标详细
+// 查询[技术]指标填报详细
 export function getData(techId) {
   return request({
-    url: `/tech/data/${techId}`,
+    url: '/tech/data/' + techId,
     method: 'get'
   })
 }
 
-// 新增[技术]手动填报指标
+// 新增[技术]指标填报
 export function addData(data) {
   return request({
-    url: '/tech/data/monthly',
+    url: '/tech/data',
     method: 'post',
     data: data
   })
 }
 
-// 新增[技术]总计划年初填报
-export function addAnnualData(data) {
-  return request({
-    url: '/tech/data/annual',
-    method: 'post',
-    data: data
-  })
-}
-
-
-// 修改[技术]手动填报指标
+// 修改[技术]指标填报
 export function updateData(data) {
   return request({
     url: '/tech/data',
@@ -46,10 +36,10 @@ export function updateData(data) {
   })
 }
 
-// 删除[技术]手动填报指标
-export function delData(techIds) {
+// 删除[技术]指标填报
+export function delData(techId) {
   return request({
-    url: `/financial/data/${techIds}`,
+    url: '/tech/data/' + techId,
     method: 'delete'
   })
 }

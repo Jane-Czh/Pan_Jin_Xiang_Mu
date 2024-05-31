@@ -5700,6 +5700,7 @@
         this.getAllConnections = function () {
             return connections;
         };
+        
         this.getDefaultScope = function () {
             return DEFAULT_SCOPE;
         };

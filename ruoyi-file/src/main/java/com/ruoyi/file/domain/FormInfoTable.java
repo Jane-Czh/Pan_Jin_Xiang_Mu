@@ -10,9 +10,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 表单文件管理对象 Form_Info_table
- * 
+ *
  * @author ruoyi
- * @date 2024-04-14
+ * @date 2024-05-07
  */
 public class FormInfoTable extends BaseEntity
 {
@@ -21,21 +21,25 @@ public class FormInfoTable extends BaseEntity
     /** id(主键) */
     private Long formId;
 
-    /** 表单名称 */
-    @Excel(name = "表单名称")
+    /** 表单标题 */
+    @Excel(name = "表单标题")
     private String formTitle;
 
     /** 存储表单内容 */
     @Excel(name = "存储表单内容")
     private String scope;
 
-    /** 表单上传时间 */
+    /** 上传时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "表单上传时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "上传时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date effectiveDate;
 
-    /** 表单类型word/pdf */
-    @Excel(name = "表单类型word/pdf")
+    /** 表单名称 */
+    @Excel(name = "表单名称")
+    private String formName;
+
+    /** 表单类型 */
+    @Excel(name = "表单类型")
     private String formType;
 
     /** 表单路径 */
@@ -71,141 +75,179 @@ public class FormInfoTable extends BaseEntity
     @Excel(name = "修订人")
     private String reviser;
 
-    public void setFormId(Long formId) 
+    /** 标志位(是否为最新文件) */
+    @Excel(name = "标志位(是否为最新文件)")
+    private Integer newFlag;
+
+    /** 该表单下一表单id */
+    @Excel(name = "该表单下一表单id")
+    private Long newFormId;
+
+    public void setFormId(Long formId)
     {
         this.formId = formId;
     }
 
-    public Long getFormId() 
+    public Long getFormId()
     {
         return formId;
     }
-    public void setFormTitle(String formTitle) 
+    public void setFormTitle(String formTitle)
     {
         this.formTitle = formTitle;
     }
 
-    public String getFormTitle() 
+    public String getFormTitle()
     {
         return formTitle;
     }
-    public void setScope(String scope) 
+    public void setScope(String scope)
     {
         this.scope = scope;
     }
 
-    public String getScope() 
+    public String getScope()
     {
         return scope;
     }
-    public void setEffectiveDate(Date effectiveDate) 
+    public void setEffectiveDate(Date effectiveDate)
     {
         this.effectiveDate = effectiveDate;
     }
 
-    public Date getEffectiveDate() 
+    public Date getEffectiveDate()
     {
         return effectiveDate;
     }
-    public void setFormType(String formType) 
+    public void setFormName(String formName)
+    {
+        this.formName = formName;
+    }
+
+    public String getFormName()
+    {
+        return formName;
+    }
+    public void setFormType(String formType)
     {
         this.formType = formType;
     }
 
-    public String getFormType() 
+    public String getFormType()
     {
         return formType;
     }
-    public void setFormPath(String formPath) 
+    public void setFormPath(String formPath)
     {
         this.formPath = formPath;
     }
 
-    public String getFormPath() 
+    public String getFormPath()
     {
         return formPath;
     }
-    public void setFormSize(BigDecimal formSize) 
+    public void setFormSize(BigDecimal formSize)
     {
         this.formSize = formSize;
     }
 
-    public BigDecimal getFormSize() 
+    public BigDecimal getFormSize()
     {
         return formSize;
     }
-    public void setCreateUsername(String createUsername) 
+    public void setCreateUsername(String createUsername)
     {
         this.createUsername = createUsername;
     }
 
-    public String getCreateUsername() 
+    public String getCreateUsername()
     {
         return createUsername;
     }
-    public void setDepartmentCategory(String departmentCategory) 
+    public void setDepartmentCategory(String departmentCategory)
     {
         this.departmentCategory = departmentCategory;
     }
 
-    public String getDepartmentCategory() 
+    public String getDepartmentCategory()
     {
         return departmentCategory;
     }
-    public void setOldFormId(Long oldFormId) 
+    public void setOldFormId(Long oldFormId)
     {
         this.oldFormId = oldFormId;
     }
 
-    public Long getOldFormId() 
+    public Long getOldFormId()
     {
         return oldFormId;
     }
-    public void setRevisionTime(Date revisionTime) 
+    public void setRevisionTime(Date revisionTime)
     {
         this.revisionTime = revisionTime;
     }
 
-    public Date getRevisionTime() 
+    public Date getRevisionTime()
     {
         return revisionTime;
     }
-    public void setRevisionContent(String revisionContent) 
+    public void setRevisionContent(String revisionContent)
     {
         this.revisionContent = revisionContent;
     }
 
-    public String getRevisionContent() 
+    public String getRevisionContent()
     {
         return revisionContent;
     }
-    public void setReviser(String reviser) 
+    public void setReviser(String reviser)
     {
         this.reviser = reviser;
     }
 
-    public String getReviser() 
+    public String getReviser()
     {
         return reviser;
+    }
+    public void setNewFlag(Integer newFlag)
+    {
+        this.newFlag = newFlag;
+    }
+
+    public Integer getNewFlag()
+    {
+        return newFlag;
+    }
+    public void setNewFormId(Long newFormId)
+    {
+        this.newFormId = newFormId;
+    }
+
+    public Long getNewFormId()
+    {
+        return newFormId;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("formId", getFormId())
-            .append("formTitle", getFormTitle())
-            .append("scope", getScope())
-            .append("effectiveDate", getEffectiveDate())
-            .append("formType", getFormType())
-            .append("formPath", getFormPath())
-            .append("formSize", getFormSize())
-            .append("createUsername", getCreateUsername())
-            .append("departmentCategory", getDepartmentCategory())
-            .append("remark", getRemark())
-            .append("oldFormId", getOldFormId())
-            .append("revisionTime", getRevisionTime())
-            .append("revisionContent", getRevisionContent())
-            .append("reviser", getReviser())
-            .toString();
+                .append("formId", getFormId())
+                .append("formTitle", getFormTitle())
+                .append("scope", getScope())
+                .append("effectiveDate", getEffectiveDate())
+                .append("formName", getFormName())
+                .append("formType", getFormType())
+                .append("formPath", getFormPath())
+                .append("formSize", getFormSize())
+                .append("createUsername", getCreateUsername())
+                .append("departmentCategory", getDepartmentCategory())
+                .append("remark", getRemark())
+                .append("oldFormId", getOldFormId())
+                .append("revisionTime", getRevisionTime())
+                .append("revisionContent", getRevisionContent())
+                .append("reviser", getReviser())
+                .append("newFlag", getNewFlag())
+                .append("newFormId", getNewFormId())
+                .toString();
     }
 }

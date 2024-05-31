@@ -58,17 +58,6 @@ public class ProductionFillingController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出[生产]手动填报指标功能列表
-     */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:export')")
-    @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, ProductionFilling ProductionFilling) {
-        List<ProductionFilling> list = productionFillingService.selectProductionList(ProductionFilling);
-        ExcelUtil<ProductionFilling> util = new ExcelUtil<ProductionFilling>(ProductionFilling.class);
-        util.exportExcel(response, list, "[生产]手动填报指标功能数据");
-    }
 
     /**
      * 获取[生产]手动填报指标功能详细信息
@@ -88,6 +77,7 @@ public class ProductionFillingController extends BaseController {
     public AjaxResult add(@RequestBody ProductionFilling ProductionFilling) {
         if (productionFillingService.checkProductionFillingDataIsExisted(ProductionFilling.getYearAndMonth()))
             return AjaxResult.error("当月数据已填报");
+        ProductionFilling.setCreateBy(getUsername());
         return toAjax(productionFillingService.insertProduction(ProductionFilling));
     }
 
@@ -98,6 +88,7 @@ public class ProductionFillingController extends BaseController {
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ProductionFilling ProductionFilling) {
+        ProductionFilling.setUpdateBy(getUsername());
         return toAjax(productionFillingService.updateProduction(ProductionFilling));
     }
 

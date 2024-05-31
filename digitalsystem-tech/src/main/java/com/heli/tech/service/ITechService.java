@@ -73,6 +73,8 @@ public interface ITechService {
      * @return 结果
      */
     public int deleteTechByTechId(Long techId);
+
+    boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
 }
 
 

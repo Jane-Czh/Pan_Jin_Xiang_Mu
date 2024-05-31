@@ -165,4 +165,9 @@ public class TechServiceImpl implements ITechService {
     public int deleteTechByTechId(Long techId) {
         return techMapper.deleteTechByTechId(techId);
     }
+
+    @Override
+    public boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear) {
+        return techMapper.checkTechMonthlyDataIsExistedByYear(naturalYear);
+    }
 }

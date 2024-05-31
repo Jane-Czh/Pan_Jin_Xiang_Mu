@@ -2,6 +2,7 @@ package com.heli.enterprise.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +30,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/enterprise/Data")
-public class EnterpriseManagementMonthlyDataController extends BaseController
-{
+public class EnterpriseManagementMonthlyDataController extends BaseController {
     @Autowired
     private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
 
@@ -39,33 +39,19 @@ public class EnterpriseManagementMonthlyDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('enterprise:Data:list')")
     @GetMapping("/list")
-    public TableDataInfo list(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData)
-    {
+    public TableDataInfo list(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         startPage();
         List<EnterpriseManagementMonthlyData> list = enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataList(enterpriseManagementMonthlyData);
         return getDataTable(list);
     }
 
-    /**
-     * 导出[企业管理]指标月度数据列表
-     */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:export')")
-    @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, EnterpriseManagementMonthlyData enterpriseManagementMonthlyData)
-    {
-        List<EnterpriseManagementMonthlyData> list = enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataList(enterpriseManagementMonthlyData);
-        ExcelUtil<EnterpriseManagementMonthlyData> util = new ExcelUtil<EnterpriseManagementMonthlyData>(EnterpriseManagementMonthlyData.class);
-        util.exportExcel(response, list, "[企业管理]指标月度数据数据");
-    }
 
     /**
      * 获取[企业管理]指标月度数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:query')")
+//    @PreAuthorize("@ss.hasPermi('enterprise:Data:query')")
     @GetMapping(value = "/{esId}")
-    public AjaxResult getInfo(@PathVariable("esId") Long esId)
-    {
+    public AjaxResult getInfo(@PathVariable("esId") Long esId) {
         return success(enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataByEsId(esId));
     }
 
@@ -75,8 +61,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('enterprise:Data:add')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData)
-    {
+    public AjaxResult add(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         return toAjax(enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData));
     }
 
@@ -86,8 +71,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('enterprise:Data:edit')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData)
-    {
+    public AjaxResult edit(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         return toAjax(enterpriseManagementMonthlyDataService.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData));
     }
 
@@ -97,8 +81,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('enterprise:Data:remove')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{esIds}")
-    public AjaxResult remove(@PathVariable Long[] esIds)
-    {
+    public AjaxResult remove(@PathVariable Long[] esIds) {
         return toAjax(enterpriseManagementMonthlyDataService.deleteEnterpriseManagementMonthlyDataByEsIds(esIds));
     }
 }

@@ -48,8 +48,10 @@ public class TechAnnualPlanCountController extends BaseController {
     public AjaxResult edit(@RequestBody TechAnnualPlanCount techAnnualPlanCount) {
         techAnnualPlanCount.setUpdateBy(getUsername());
         techAnnualPlanCountService.updateTechAnnualPlanCount(techAnnualPlanCount);
-        Date date = new Date(techAnnualPlanCount.getNaturalYear() - 1900 , Calendar.JANUARY, 1);
-        techService.batchUpdateTech(date);
+        if (techService.checkTechMonthlyDataIsExistedByYear(techAnnualPlanCount.getNaturalYear())){
+            Date date = new Date(techAnnualPlanCount.getNaturalYear() - 1900 , Calendar.JANUARY, 1);
+            techService.batchUpdateTech(date);
+        }
 
         return AjaxResult.success();
     }

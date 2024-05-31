@@ -148,7 +148,7 @@ public class FinancialDataController extends BaseController {
     @Log(title = "[财务]每日填报指标[当日在制品金额]", businessType = BusinessType.INSERT)
     @PostMapping("/dailyInProgress")
     public AjaxResult add(@RequestBody FinancialDailyInProgressTable financialDailyInProgressTable) {
-        if(financialDailyInProgressTableService.checkDailyInProgressTableIsExist(financialDailyInProgressTable.getDataTime())){
+        if (financialDailyInProgressTableService.checkDailyInProgressTableIsExist(financialDailyInProgressTable.getDataTime())) {
             return AjaxResult.error("当日在制品金额已填报");
         }
         financialDailyInProgressTable.setCreateBy(getUsername());
@@ -186,6 +186,17 @@ public class FinancialDataController extends BaseController {
         List<FinancialDailyInProgressTable> list = financialDailyInProgressTableService.selectFinancialDailyInProgressTableList(financialDailyInProgressTable);
         return getDataTable(list);
     }
+
+    /**
+     * 查询[财务]每日填报指标[当日再制品金额]
+     */
+//    @PreAuthorize("@ss.hasPermi('financial:data:list')")
+    @GetMapping("/dailyInProgress/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        return success(financialDailyInProgressTableService.selectFinancialDailyInProgressTableById(id));
+
+    }
+
 
 
     /**

@@ -1,8 +1,11 @@
 package com.heli.tech.controller;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.tech.service.ITechService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +32,27 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2024-04-27
  */
 @RestController
-@RequestMapping("/tech/annualPlanCount")
+@RequestMapping("/tech/data/annual")
 public class TechAnnualPlanCountController extends BaseController {
     @Autowired
     private ITechAnnualPlanCountService techAnnualPlanCountService;
+    @Autowired
+    private ITechService techService;
+
+    /**
+     * 修改【技术】总计划年初填报,并更新月度完成数
+     */
+    @PreAuthorize("@ss.hasPermi('Tech:data:edit')")
+    @Log(title = "【技术】总计划年初填报", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody TechAnnualPlanCount techAnnualPlanCount) {
+        techAnnualPlanCount.setUpdateBy(getUsername());
+        techAnnualPlanCountService.updateTechAnnualPlanCount(techAnnualPlanCount);
+        Date date = new Date(techAnnualPlanCount.getNaturalYear() - 1900 , Calendar.JANUARY, 1);
+        techService.batchUpdateTech(date);
+
+        return AjaxResult.success();
+    }
 
     /**
      * 查询【技术】总计划年初填报列表
@@ -43,18 +63,6 @@ public class TechAnnualPlanCountController extends BaseController {
         startPage();
         List<TechAnnualPlanCount> list = techAnnualPlanCountService.selectTechAnnualPlanCountList(techAnnualPlanCount);
         return getDataTable(list);
-    }
-
-    /**
-     * 导出【技术】总计划年初填报列表
-     */
-    @PreAuthorize("@ss.hasPermi('Tech:data:export')")
-    @Log(title = "【技术】总计划年初填报", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, TechAnnualPlanCount techAnnualPlanCount) {
-        List<TechAnnualPlanCount> list = techAnnualPlanCountService.selectTechAnnualPlanCountList(techAnnualPlanCount);
-        ExcelUtil<TechAnnualPlanCount> util = new ExcelUtil<TechAnnualPlanCount>(TechAnnualPlanCount.class);
-        util.exportExcel(response, list, "【技术】总计划年初填报数据");
     }
 
     /**
@@ -73,17 +81,11 @@ public class TechAnnualPlanCountController extends BaseController {
     @Log(title = "【技术】总计划年初填报", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TechAnnualPlanCount techAnnualPlanCount) {
+        if (techAnnualPlanCountService.checkTechAnnualDataIsExisted(techAnnualPlanCount.getNaturalYear())) {
+            return AjaxResult.error("年度总计划已上传");
+        }
+        techAnnualPlanCount.setCreateBy(getUsername());
         return toAjax(techAnnualPlanCountService.insertTechAnnualPlanCount(techAnnualPlanCount));
-    }
-
-    /**
-     * 修改【技术】总计划年初填报
-     */
-    @PreAuthorize("@ss.hasPermi('Tech:data:edit')")
-    @Log(title = "【技术】总计划年初填报", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody TechAnnualPlanCount techAnnualPlanCount) {
-        return toAjax(techAnnualPlanCountService.updateTechAnnualPlanCount(techAnnualPlanCount));
     }
 
     /**

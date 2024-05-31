@@ -4,15 +4,20 @@
         <div class="block">
             
     <!-- 添加标签页标题 -->
-    <span class="DataSelect" style="margin-right:10px">填写数字</span>
+    <span class="DataSelect" style="margin-right:10px"></span>
     <!-- 添加输入框 -->
-    <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input>
+    <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
   
+  
+
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
             <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange" >
             </el-date-picker>
+
+            <el-input v-model.number="numberInput" placeholder="请输入订单总台数" style="width: 200px;"></el-input>
+            <el-button type="primary" @click="handleConfirm">确定</el-button>
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
         <div id="main" ref="main"></div>
@@ -57,16 +62,16 @@ export default {
         }
         
     },
-       watch: {
-        numberInput(newValue) {
-            if (newValue) {
-                // 输入框有数据时，处理 transposedSeriesData
-              this.updateChart()
-            } 
+    //    watch: {
+    //     numberInput(newValue) {
+    //         if (newValue) {
+    //             // 输入框有数据时，处理 transposedSeriesData
+    //           this.updateChart()
+    //         } 
             
-            console.log("_____--------总数量seriesData：", this.transposedSeriesData);
-        }
-    },
+    //         console.log("_____--------总数量seriesData：", this.transposedSeriesData);
+    //     }
+    // },
     mounted() {
         this.financialId = this.$route.query.id;
         this.myChart = echarts.init(document.getElementById('main'));
@@ -86,7 +91,18 @@ export default {
   // this.timeData.endTime = lastDayOfMonth;
     },
     methods: {
-
+      handleConfirm(){
+         this.initDataNumber()
+    //         if (this.numberInput) {
+    //     for (let i = 0; i < this.transposedSeriesData.length; i++) {
+    //         for (let j = 0; j < this.transposedSeriesData[i].length; j++) {
+    //             // 更新 transposedSeriesData 数组项
+    //             this.$set(this.transposedSeriesData[i], j, (this.transposedSeriesData[i][j] / this.numberInput).toFixed(3));
+    //         }
+    //     }
+    // }
+    // console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
+      }, 
    splitData() {
     // 初始化空数组用来存放拆分后的数据
 
@@ -145,6 +161,26 @@ export default {
                 this.loading = false
             }
         },
+       async initDataNumber() {
+            this.timeData.startTime = this.selectedDate[0],
+                this.timeData.endTime = this.selectedDate[1]
+                 this.timeData.numberInput=this.numberInput
+            try {
+                this.loading = true
+                console.log(this.timeData)
+                this.result = await getIndex11(this.timeData);
+                console.log("======>");
+                  console.log("后端传过来的数据：", this.result[0]);
+                   console.log("后端传过来的数据：", this.result[0].branch);
+                   console.log("后端传过来的数据：", this.result[0].yearMonth);
+                this.splitData();
+                this.data = this.result.integerMap
+                this.loading = false
+                this.updateChart()
+            } catch (error) {
+                this.loading = false
+            }
+        },
         handleDateChange(val) {
             console.log(val, 'val')
         //     if (value && value[1]) {
@@ -159,8 +195,12 @@ export default {
 
 
 var app = {};
+// let a = document.getElementById("echart");
+// a.removeAttribute('_echarts_instance_');
+// const myChart = echarts.init(a);
 
 var chartDom = document.getElementById('main');
+chartDom.removeAttribute('_echarts_instance_');
 var myChart = echarts.init(chartDom);
 var option;
 
@@ -242,7 +282,7 @@ app.config = {
           label: labelOption
         }
       ]
-    });
+    },true);
   }
 };
 const labelOption = {
@@ -297,7 +337,7 @@ this.result.forEach(function (item) {
         item.minEntity.forEach(function (minEntity) {
             if (minEntity.branch === legendItem) {
                 // 找到了匹配的 branch，则将其对应的 number 添加到 data 数组中
-                data.push(minEntity.number);
+                data.push(minEntity.proportion);
                 found = true;
             }
         });
@@ -330,15 +370,15 @@ for (var i = 0; i < this.result.length; i++) {
 console.log("转置后的 seriesData：", this.transposedSeriesData);
    // 在这里更新 transposedSeriesData 的值
     // 在这里更新 transposedSeriesData 的值
-    if (this.numberInput) {
-        for (let i = 0; i < this.transposedSeriesData.length; i++) {
-            for (let j = 0; j < this.transposedSeriesData[i].length; j++) {
-                // 更新 transposedSeriesData 数组项
-                this.$set(this.transposedSeriesData[i], j, (this.transposedSeriesData[i][j] / this.numberInput).toFixed(3));
-            }
-        }
-    }
-    console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
+    // if (this.numberInput) {
+    //     for (let i = 0; i < this.transposedSeriesData.length; i++) {
+    //         for (let j = 0; j < this.transposedSeriesData[i].length; j++) {
+    //             // 更新 transposedSeriesData 数组项
+    //             this.$set(this.transposedSeriesData[i], j, (this.transposedSeriesData[i][j] / this.numberInput).toFixed(3));
+    //         }
+    //     }
+    // }
+    // console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
 option = {
   tooltip: {
     trigger: 'axis',

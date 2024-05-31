@@ -29,13 +29,25 @@
         from Tech
     </sql>
 
+    <!--  获取当年已经上传数据的最大月份  -->
+    <select id="selectMaxMonthByYear" resultType="Date">
+        select max(Year_And_Month) as yearAndMonth
+        from Tech
+        where Year_And_Month like concat(#{year}, '%')
+    </select>
 
-    <!-- 统计当年已经完成的数量 -->
-    <select id="countAnnualCompletionNumber" parameterType="int" resultType="long">
+    <!-- 统计当年已经完成的数量,要求年份相同，月份小于等于传入参数的月份 -->
+    <select id="countAnnualCompletionNumber" parameterType="Date" resultType="long">
         select sum(CompletedMonthly_PlanCounts) as num
         from Tech
-        where Year_And_Month like concat('%', #{year}, '%')
+        where DATE_FORMAT(Year_And_Month,'%y') like DATE_FORMAT(#{yearAndMonth},'%y')
+        and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth}
     </select>
+<!--    <select id="countAnnualCompletionNumber" parameterType="int" resultType="long">-->
+<!--        select sum(CompletedMonthly_PlanCounts) as num-->
+<!--        from Tech-->
+<!--        where Year_And_Month like concat('%', #{year}, '%') and Year_And_Month-->
+<!--    </select>-->
 
     <!--检查当月数据是否上传-->
     <select id="checkTechMonthlyDataIsExisted" parameterType="Date" >
@@ -67,6 +79,17 @@
     </select>
 
 
+
+    <!--  批量更新tech表  -->
+    <insert id="batchUpdateTech" parameterType="ArrayList">
+        insert into Tech(Year_And_Month,PRDSchedule_CompletionRate)
+        VALUES
+        <foreach collection="teches" item="item" separator=",">
+            (#{item.yearAndMonth},#{item.prdscheduleCompletionrate})
+        </foreach>
+        on duplicate key update
+        Year_And_Month = values(Year_And_Month),PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate)
+    </insert>
 
 
 

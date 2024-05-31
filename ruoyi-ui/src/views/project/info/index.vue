@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 查询 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="项目名称" prop="projectName">
         <el-input
@@ -33,31 +34,31 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="承接属性" prop="attribute">
+      <!-- <el-form-item label="承接属性" prop="attribute">
         <el-input
           v-model="queryParams.attribute"
           placeholder="请输入承接属性"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="项目描述" prop="description">
+      </el-form-item> -->
+      <!-- <el-form-item label="项目描述" prop="description">
         <el-input
           v-model="queryParams.description"
           placeholder="请输入项目描述"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="立项时间" prop="startDate">
+      </el-form-item> -->
+      <!-- <el-form-item label="立项时间" prop="startDate">
         <el-date-picker clearable
           v-model="queryParams.startDate"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="请选择立项时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="项目总进度" prop="progressAlloverProgress">
+      </el-form-item> -->
+      <!-- <el-form-item label="项目总进度" prop="progressAlloverProgress">
         <el-input
           v-model="queryParams.progressAlloverProgress"
           placeholder="请输入项目总进度"
@@ -168,13 +169,14 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
+    <!-- 操作栏 -->
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -222,28 +224,12 @@
     </el-row>
 
     <el-row v-for="(infodata, index) in rowList" :key="index"  :gutter="20">
-    <el-col v-for="(info, index1) in infodata" :key="index1" :span="6"><div class="grid-content bg-purple">
+    <el-col v-for="(info, index1) in infodata" :key="index1" :span="6">
+      <div class="grid-content bg-purple">
       <el-card>
         <div slot="header" class="clearfix">
           <span>项目信息</span>
         </div>
-
-        <!-- <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['project:Info:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['project:Info:remove']"
-          >删除</el-button>
-        </template> -->
         
         <div class="card-container">
           <el-card class="user-card">
@@ -252,6 +238,7 @@
             <p>项目类别: {{ info.category }}</p>
             <p>项目等级: {{ info.level }}</p>
 
+            <!-- 详情查看 -->
             <el-popover placement="right" trigger="click" width="750">
 
               <div class="two-column">
@@ -282,8 +269,8 @@
                     <pre>目标: {{ info.goal }}</pre>
                     <pre>范围: {{ info.scope }}</pre>
                     <pre>计划结项时间: {{ info.plannedCompletionTime }}</pre>
-                    <pre>已过天数: {{ info.daysPassed }}</pre>
-                    <pre>剩余天数: {{ info.daysRemaining }}</pre>
+                    <pre>已过天数: {{ formattedDaysPassed(info.startDate) }}</pre>
+                    <pre>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</pre>
                     <pre>完成内容概述: {{ info.completionSummary }}</pre>
                   </pre>
                 </div>
@@ -292,13 +279,29 @@
               <el-button slot="reference">查看详情</el-button>
             </el-popover>
 
+            <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
+              <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
+              <div v-if="loading">加载中...</div>
+              <div v-else>
+                <h3>历史项目列表</h3>
+                <!-- <el-table :data="historyList" @row-click="handleRowClick" style="width: 100%"> -->
+                <el-table :data="historyList" @selection-change="handleRowClick" style="width: 100%">
+                  <el-table-column type="selection"  width="55"></el-table-column>
+                  <el-table-column prop="projectName" label="项目名称"></el-table-column>
+                </el-table>
+                <el-button type="primary" @click="confirmSelection(info)">确认</el-button>
+                <el-button @click="cancelSelection">取消</el-button>
+              </div>
+            </el-popover>
+
 
           </el-card>
         </div>
       </el-card>
-    </div></el-col>
+      </div>
+    </el-col>
 
-  </el-row>
+    </el-row>
 
     <el-table v-loading="loading" :data="InfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
@@ -477,12 +480,12 @@
             placeholder="请选择计划结项时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="已过天数(自动计算)" prop="daysPassed">
+        <!-- <el-form-item label="已过天数(自动计算)" prop="daysPassed">
           <el-input v-model="form.daysPassed" placeholder="请输入已过天数(自动计算)" />
         </el-form-item>
         <el-form-item label="剩余天数(自动计算)" prop="daysRemaining">
           <el-input v-model="form.daysRemaining" placeholder="请输入剩余天数(自动计算)" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="完成内容概述" prop="completionSummary">
           <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
         </el-form-item>
@@ -496,12 +499,19 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/project/info";
+import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
+import { listHistory } from "@/api/project/history";
 
 export default {
   name: "Info",
   data() {
     return {
+
+      historyList: [],
+      selectedHistoryList: [],
+      loading: false,
+      isPopoverVisible: false,
+
       // 遮罩层
       loading: true,
       // 选中数组
@@ -523,6 +533,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
+        oldProjectList:null,
         pageNum: 1,
         pageSize: 10,
         projectName: null,
@@ -662,7 +673,114 @@ export default {
   created() {
     this.getList();
   },
+
   methods: {
+
+    formattedDaysPassed(startDate) {
+      // 获取当前日期
+      const currentDate = new Date();
+      const startDateObj = new Date(startDate);
+
+      // 计算已过天数
+      const daysPassed = Math.floor((currentDate - startDateObj) / (1000 * 60 * 60 * 24));
+
+      // 判断并返回结果
+      if (daysPassed < 0) {
+        return '未开始';
+      } else {
+        return daysPassed;
+      }
+    },
+
+    formattedDaysRemaining(endDate) {
+      // 获取当前日期
+      const currentDate = new Date();
+      const endDateObj = new Date(endDate);
+      
+      // 计算已过天数
+      const daysRemaining = Math.floor((endDateObj - currentDate) / (1000 * 60 * 60 * 24));
+
+      // 判断并返回结果
+      if (daysRemaining < 0) {
+        return '0';
+      } else {
+        return daysRemaining;
+      }
+
+    },
+
+    //获取历史项目信息
+    async fetchHistoryList() {
+      try {
+        this.loading = true; // 开始加载数据，显示加载中提示
+        // 调用 API 方法获取历史项目列表
+        const response = await listHistory(this.queryParams);
+        this.historyList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        this.isPopoverVisible = true; // 打开弹窗
+
+      } catch (error) {
+        console.error("获取历史项目列表失败:", error);
+        this.loading = false;
+      }
+    },
+
+    handleRowClick(rows) {
+      // 获取当前选中行的项目ID集合
+      const selectedIds = new Set(rows.map(row => row.projectId));
+      this.selectedHistoryList = Array.from(selectedIds);
+      console.log(JSON.parse(JSON.stringify(this.selectedHistoryList)))
+    },
+
+
+
+    confirmSelection(info) {
+      // 处理确认选项的逻辑，例如将选中的历史项目进行关联操作
+      console.log("确认选择的历史项目:", this.selectedHistoryList);
+      if (this.selectedHistoryList.length === 0) {
+        this.$message.error('请选择至少一个历史项目！');
+        return;
+      }
+
+      const data = {
+        projectId: info, // 项目ID，假设您从 this.form 中获取
+        selectedHistoryList: this.selectedHistoryList // 选中的历史项目列表
+      };
+      // 填充数据
+      // info.oldProjectId = this.selectedHistoryList;
+      info.oldProjectList = this.selectedHistoryList;
+      info.associationDate = new Date();
+
+      this.selectedHistoryList = [];
+      this.isPopoverVisible = false; // 关闭弹窗
+
+
+      console.log("projectId========="+info.projectId);
+      console.log("history========="+info.oldProjectId)
+      // 调用更新数据库的函数
+      updateInfoHistory(info).then(response => {
+        this.$message.success('关联成功');
+        this.isPopoverVisible = false; // 关闭弹窗
+        this.getList(); // 重新获取数据
+      }).catch(error => {
+        this.$message.error('关联失败: ' + error);
+      });
+
+      location.reload();
+    },
+
+
+    cancelSelection() {
+      // 处理取消选项的逻辑，例如清空选中的历史项目
+      console.log("取消选择");
+      // 重置状态
+      this.selectedHistoryList = [];
+      this.isPopoverVisible = false;
+      console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
+      // this.$refs.historyPopover.doClose(); // 手动关闭弹窗
+    },
+
     /** 查询项目基本信息列表 */
     getList() {
       this.loading = true;
@@ -675,12 +793,9 @@ export default {
     },
 
     split(data, total){
-
       for (let i = 0; i < total; i += 4) {
           // 4表示每行4条
           this.rowList.push(data.slice(i, i + 4));
-
-          console.log(this.rowList)
         }
     }, 
 

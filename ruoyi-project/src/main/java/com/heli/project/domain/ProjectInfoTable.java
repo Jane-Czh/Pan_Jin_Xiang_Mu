@@ -2,10 +2,12 @@ package com.heli.project.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.data.annotation.Transient;
 
 /**
  * 项目基本信息对象 Project_Info_table
@@ -13,10 +15,12 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author Teandron
  * @date 2024-05-08
  */
+@Data
 public class ProjectInfoTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    @Transient
+    private Long [] oldProjectList;
     /** id(主键) */
     private Long projectId;
 

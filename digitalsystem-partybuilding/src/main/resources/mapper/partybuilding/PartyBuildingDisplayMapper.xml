@@ -7,11 +7,11 @@
 
     <!-- 党建月度考核排名 指标50 -->
     <select id="selectPartyBuildingRank" resultType="map">
-        select * from (
-            select Year_And_Month as yearAndMonth,Ranking as rank,score from PartyBuilding
-            where Year_And_Month between #{startTime} and #{endTime}
-            order by Year_And_Month DESC
-        ) as t
+        select *
+        from (select Year_And_Month as yearAndMonth, Ranking as rank, score
+              from PartyBuilding
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC) as t
         order by yearAndMonth ASC
     </select>
 

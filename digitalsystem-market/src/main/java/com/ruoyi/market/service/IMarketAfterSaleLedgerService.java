@@ -20,7 +20,8 @@ public interface IMarketAfterSaleLedgerService
      *
      *
      */
-    public void importInterests(MultipartFile excelFile) throws IOException;
+    public void
+    importInterests(MultipartFile excelFile) throws IOException;
 
     /**
      * 查询售后台账导入

@@ -6,7 +6,7 @@
     <!-- 添加标签页标题 -->
     <span class="DataSelect" style="margin-right:10px">填写数字</span>
     <!-- 添加输入框 -->
-    <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input>
+    <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
   
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
             <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"

@@ -35,6 +35,15 @@ export function updateInfo(data) {
   })
 }
 
+// 修改项目历史项目关联
+export function updateInfoHistory(data) {
+  return request({
+    url: '/project/Info/updataHistory',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除项目基本信息
 export function delInfo(projectId) {
   return request({

@@ -53,12 +53,19 @@ public class MarketIndexController extends BaseController {
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        int numberInput=0;
+        //获取订单总台数做为分母
+       if(marketSalesTable.getNumberInput()==null||marketSalesTable.getNumberInput()==0)
+       {
+           numberInput=1;
+       }else
 
-        //获取到全部的数据的number  做为分母
-         long allSum = marketSalesTables.stream().mapToLong(MarketSalesTable::getNumber).sum();
+           numberInput= marketSalesTable.getNumberInput();
+//        long allSum = marketSalesTables.stream().mapToLong(MarketSalesTable::getNumber).sum();
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-         Map<String, Map<String, Long>> cpd = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        int finalNumberInput = numberInput;
+        Map<String, Map<String, Double>> cpd = marketSalesTables.stream().filter((MarketSalesTable a) ->
         {         LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -68,16 +75,21 @@ public class MarketIndexController extends BaseController {
                     || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
         }).collect(Collectors.groupingBy(
            a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
-            Collectors.groupingBy(MarketSalesTable::getBranch, Collectors.summingLong(MarketSalesTable::getNumber))
-                ));
+                 Collectors.groupingBy(
+                         MarketSalesTable::getBranch,
+                         Collectors.collectingAndThen(
+                                 Collectors.summingLong(MarketSalesTable::getNumber),
+                                 sum -> Math.round((sum / (double) finalNumberInput) * 1000) / 1000.0
+                         )
+                 )                ));
 //        {2024-01={天津={10},上海={2},合肥={4}}}
 
         System.out.println("收集到的list"+cpd);
 
-         List<VoEntity> convert = VoEntity.convert(cpd);
-         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(cpd);
+
+         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(cpd);
         MarketIndexResult marketIndexResult = new MarketIndexResult();
-        marketIndexResult.setMapMap(cpd);
+//        marketIndexResult.setMapMap(cpd);
 //
 
         return voEntities;
@@ -95,10 +107,19 @@ public class MarketIndexController extends BaseController {
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        int numberInput=0;
+        //获取订单总台数做为分母
+        if(marketSalesTable.getNumberInput()==null||marketSalesTable.getNumberInput()==0)
+        {
+            numberInput=1;
+        }else
+
+            numberInput= marketSalesTable.getNumberInput();
+//        long allSum = marketSalesTables.stream().mapToLong(MarketSalesTable::getNumber).sum();
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-
-         Map<String, Map<String, Long>> cpc = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        int finalNumberInput = numberInput;
+        Map<String, Map<String, Double>> cpc = marketSalesTables.stream().filter((MarketSalesTable a) ->
         {         LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -106,23 +127,21 @@ public class MarketIndexController extends BaseController {
             return a.getVehicleModel().substring(0, 3).equals("CPC") &&
                     !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
                     || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
-        })
-//                .collect(Collectors.groupingBy(MarketSalesTable::getBranch
-//                        , Collectors.groupingBy(
-//                                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
-//                                , Collectors.summingLong(MarketSalesTable::getNumber))
-//                ));
-                        .collect(Collectors.groupingBy(
-                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
-                        Collectors.groupingBy(MarketSalesTable::getBranch, Collectors.summingLong(MarketSalesTable::getNumber))
-                ));
-
+        }).collect(Collectors.groupingBy(
+                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+                Collectors.groupingBy(
+                        MarketSalesTable::getBranch,
+                        Collectors.collectingAndThen(
+                                Collectors.summingLong(MarketSalesTable::getNumber),
+                                sum -> Math.round((sum / (double) finalNumberInput) * 1000) / 1000.0
+                        )
+                )                ));
         System.out.println("按照地区分类，选出车型为cpc和日期符合的数据"+cpc);
 
-         List<VoEntity> convert = VoEntity.convert(cpc);
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(cpc);
-        MarketIndexResult marketIndexResult = new MarketIndexResult();
-        marketIndexResult.setMapMap(cpc);
+//         List<VoEntity> convert = VoEntity.convert(cpc);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(cpc);
+//        MarketIndexResult marketIndexResult = new MarketIndexResult();
+//        marketIndexResult.setMapMap(cpc);
 
         return voEntities;
     }

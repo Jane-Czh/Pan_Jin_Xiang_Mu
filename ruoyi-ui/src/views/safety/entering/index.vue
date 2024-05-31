@@ -34,7 +34,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="整改完成时间" prop="rectificationCompletionTime">
+      <!-- <el-form-item label="整改完成时间" prop="rectificationCompletionTime">
         <el-date-picker clearable
           v-model="queryParams.rectificationCompletionTime"
           type="date"
@@ -49,8 +49,8 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="整改后照片" prop="postRectificationPhoto">
+      </el-form-item> -->
+      <!-- <el-form-item label="整改后照片" prop="postRectificationPhoto">
         <el-input
           v-model="queryParams.postRectificationPhoto"
           placeholder="请输入整改后照片"
@@ -65,15 +65,15 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="验收人" prop="accepter">
+      </el-form-item> -->
+      <!-- <el-form-item label="验收人" prop="accepter">
         <el-input
           v-model="queryParams.accepter"
           placeholder="请输入验收人"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>

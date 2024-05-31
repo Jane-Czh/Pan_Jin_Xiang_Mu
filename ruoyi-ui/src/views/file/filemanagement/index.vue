@@ -189,7 +189,7 @@
       <el-table-column label="文件名称" align="center" prop="fileName"/>
       <el-table-column label="文件路径" align="center" prop="filePath">
         <template slot-scope="scope">
-          <a :href="scope.row.filePath" download>点击下载</a>
+          <a :href="baseUrl + scope.row.filePath" download>点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="文件类型" align="center" prop="fileType"/>
@@ -256,6 +256,13 @@
             icon="el-icon-s-operation"
             @click="handleHistoryVersions(scope.row)"
           >历史版本
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-operation"
+            @click="handleRevisionFrequency(scope.row)"
+          >制度修订频率
           </el-button>
         </template>
       </el-table-column>
@@ -717,6 +724,11 @@
         const regulationsId = row.regulationsId;
         this.$router.push("/file/filemanagement/historyVersions/" + regulationsId);
       },
+      /** 制度修改频率 */
+      handleRevisionFrequency(row) {
+        const regulationsId = row.regulationsId;
+        this.$router.push("/file/filemanagement/revisionFrequency/" + regulationsId);
+      },
       /** 上传文件提交按钮 */
       uploadSubmitForm() {
         this.$refs["form"].validate(valid => {
@@ -998,8 +1010,8 @@
             const pdfFilePath = this.convertToPdfPath(filePath);
             console.log("filePath:",filePath);
             console.log("pdfFilePath:",pdfFilePath);
-            word2Pdf(filePath,pdfFilePath).then(response => {
-            })
+            // word2Pdf(filePath,pdfFilePath).then(response => {
+            // })
             window.open(pdfFilePath, '_blank');
             break;
         }

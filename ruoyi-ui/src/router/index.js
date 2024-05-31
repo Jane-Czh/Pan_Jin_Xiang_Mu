@@ -579,9 +579,9 @@ export const constantRoutes = [
       }
     ]
   },
- 
- 
-  
+
+
+
   {
     path: '/market',
     component: Layout,
@@ -929,6 +929,21 @@ export const dynamicRoutes = [
         }
       ]
     },
+  //制度修订频率
+  {
+    path: '/file/filemanagement/index',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:filemanagement:list'],
+    children: [
+      {
+        path: '/file/filemanagement/revisionFrequency/:regulationsId(\\d+)', // 路由路径
+        component: () => import('@/views/file/filemanagement/revisionFrequency'), // 对应的组件
+        name: 'revisionFrequency', // 路由名称
+        meta: { title: '制度修订频率' } // 元信息，用于设置标题等
+      }
+    ]
+  },
 
 ]
 

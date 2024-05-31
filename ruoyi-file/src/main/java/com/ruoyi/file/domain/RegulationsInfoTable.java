@@ -18,6 +18,13 @@ public class RegulationsInfoTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+
+    // 指标查询流程更改次数时通过api传递过来的 时间参数：startTime、endTime
+
+    private Date startTime;
+
+    private Date endTime;
+
     /** id(主键) */
     private Long regulationsId;
 
@@ -100,6 +107,23 @@ public class RegulationsInfoTable extends BaseEntity
     /** 标志位(本文件上一旧文件id) */
     @Excel(name = "标志位(本文件上一旧文件id)")
     private Long newRegulationsId;
+
+    // startTime和endTime的getter和setter
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public void setRegulationsId(Long regulationsId)
     {

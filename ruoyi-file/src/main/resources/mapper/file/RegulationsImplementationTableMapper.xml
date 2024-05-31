@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.file.mapper.RegulationsImplementationTableMapper">
+
+    <resultMap type="RegulationsImplementationTable" id="RegulationsImplementationTableResult">
+        <result property="id"    column="id"    />
+        <result property="yearAndMonth"    column="Year_and_Month"    />
+        <result property="actualImplementedTimes"    column="Actual_Implemented_Times"    />
+        <result property="shouldImplementedTimes"    column="Should_Implemented_Times"    />
+        <result property="regulationsImplementationRate"    column="Regulations_Implementation_rate"    />
+    </resultMap>
+
+    <sql id="selectRegulationsImplementationTableVo">
+        select id, Year_and_Month, Actual_Implemented_Times, Should_Implemented_Times, Regulations_Implementation_rate from Regulations_Implementation_table
+    </sql>
+
+    <select id="selectRegulationsImplementationTableList" parameterType="RegulationsImplementationTable" resultMap="RegulationsImplementationTableResult">
+        <include refid="selectRegulationsImplementationTableVo"/>
+        <where>
+            <if test="yearAndMonth != null "> and Year_and_Month = #{yearAndMonth}</if>
+            <if test="actualImplementedTimes != null "> and Actual_Implemented_Times = #{actualImplementedTimes}</if>
+            <if test="shouldImplementedTimes != null "> and Should_Implemented_Times = #{shouldImplementedTimes}</if>
+            <if test="regulationsImplementationRate != null "> and Regulations_Implementation_rate = #{regulationsImplementationRate}</if>
+        </where>
+    </select>
+
+    <select id="selectRegulationsImplementationTableById" parameterType="Long" resultMap="RegulationsImplementationTableResult">
+        <include refid="selectRegulationsImplementationTableVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertRegulationsImplementationTable" parameterType="RegulationsImplementationTable" useGeneratedKeys="true" keyProperty="id">
+        insert into Regulations_Implementation_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_and_Month,</if>
+            <if test="actualImplementedTimes != null">Actual_Implemented_Times,</if>
+            <if test="shouldImplementedTimes != null">Should_Implemented_Times,</if>
+            <if test="regulationsImplementationRate != null">Regulations_Implementation_rate,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="actualImplementedTimes != null">#{actualImplementedTimes},</if>
+            <if test="shouldImplementedTimes != null">#{shouldImplementedTimes},</if>
+            <if test="regulationsImplementationRate != null">#{regulationsImplementationRate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRegulationsImplementationTable" parameterType="RegulationsImplementationTable">
+        update Regulations_Implementation_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_and_Month = #{yearAndMonth},</if>
+            <if test="actualImplementedTimes != null">Actual_Implemented_Times = #{actualImplementedTimes},</if>
+            <if test="shouldImplementedTimes != null">Should_Implemented_Times = #{shouldImplementedTimes},</if>
+            <if test="regulationsImplementationRate != null">Regulations_Implementation_rate = #{regulationsImplementationRate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRegulationsImplementationTableById" parameterType="Long">
+        delete from Regulations_Implementation_table where id = #{id}
+    </delete>
+
+    <delete id="deleteRegulationsImplementationTableByIds" parameterType="String">
+        delete from Regulations_Implementation_table where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

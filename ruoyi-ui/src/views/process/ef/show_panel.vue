@@ -5,14 +5,13 @@
     <el-dialog
       :title="`查看[ ${data.name} ]流程详情`"
       :visible.sync="easyFlowVisible"
-      width="90%"
+      width="85%"
       :before-close="handleClose"
       destroy-on-close="true"
       append-to-body
     >
-      <div class="container">
-        <!-- 1、左侧流程图内容 -->
-
+      <div class="containers">
+        <!-- 1、左侧50%流程图内容 -->
         <div
           v-if="easyFlowVisible"
           style="width: 50%; height: calc(80vh)"
@@ -30,14 +29,14 @@
                   type="text"
                   icon="el-icon-plus"
                   size="large"
-                  @click="zoomAdd"
+                  @click="zoomAddMy"
                 ></el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button
                   type="text"
                   icon="el-icon-minus"
                   size="large"
-                  @click="zoomSub"
+                  @click="zoomSubMy"
                 ></el-button>
                 <el-divider direction="vertical"></el-divider>
                 <!-- 历史 -->
@@ -51,13 +50,9 @@
               </div>
             </el-col>
           </el-row>
+          <!-- 流程展示部分 -->
           <div style="display: flex; height: calc(100% - 47px)">
-            <div
-              id="myContainer"
-              ref="myContainer"
-              class="container"
-
-            >
+            <div id="myContainer" ref="myContainer" class="container">
               <template v-for="node in data.nodeList">
                 <flow-node
                   :id="node.id"
@@ -75,12 +70,17 @@
               <div style="position: absolute; top: 2000px; left: 2000px">
                 &nbsp;
               </div>
+
             </div>
           </div>
         </div>
 
-        <!-- 2、右侧历史数据部分 v-if="!showHisPanelVisible" -->
-        <div style="width: 50" class="right-side line-between-divs" v-if="!showHisPanelVisible">
+        <!-- 2-if、右侧50%历史数据部分 v-if="!showHisPanelVisible" -->
+        <div
+          style="width: 50%"
+          class="right-side line-between-divs"
+          v-if="!showHisPanelVisible"
+        >
           <el-table v-loading="loading" :data="historyProjectList" stripe>
             <el-table-column
               label="序号"
@@ -106,9 +106,9 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="创建人" align="center" prop="createBy" />
+            <el-table-column label="更新人" align="center" prop="createBy" />
             <el-table-column
-              label="修改时间"
+              label="更新时间"
               align="center"
               prop="updateDate"
               width="180"
@@ -120,7 +120,7 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="修改人" align="center" prop="updataBy" />
+            <el-table-column label="修改人" align="center" prop="updateBy" />
             <el-table-column
               label="操作"
               align="center"
@@ -166,8 +166,12 @@
           </el-table>
         </div>
 
-        <!-- 2、右侧展示部分 -->
-        <div v-else style="width: 50%; height: calc(80vh)" class="left-side line-between-divss">
+        <!-- 2-else、右侧展示部分 -->
+        <div
+          v-else
+          style="width: 50%; height: calc(80vh)"
+          class="left-right line-between-divss"
+        >
           <el-row>
             <!--顶部工具菜单-->
             <el-col :span="24">
@@ -203,11 +207,7 @@
             </el-col>
           </el-row>
           <div style="display: flex; height: calc(100% - 47px)">
-            <div
-              id="efContainer"
-              ref="efContainer"
-              class="container"
-            >
+            <div id="efContainer" ref="efContainer" class="container">
               <template v-for="node in this.historyData.nodeList">
                 <flow-node
                   :id="node.id"
@@ -222,9 +222,9 @@
                 </flow-node>
               </template>
               <!-- 给画布一个默认的宽度和高度 -->
-              <div style="position: absolute; top: 2000px; right: 2000px">
+              <!-- <div style="position: absolute; top: 2000px; right: 2000px">
                 &nbsp;
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -238,6 +238,7 @@ import draggable from "vuedraggable";
 // import { jsPlumb } from 'jsplumb'
 // 使用修改后的jsplumb
 import "./jsplumb";
+import "./hjsplumb";
 import { easyFlowMixin } from "@/views/process/ef/mixins";
 import flowNode from "@/views/process/ef/show_node";
 
@@ -470,9 +471,9 @@ export default {
         this.jsPlumb.bind("beforeDetach", (evt) => {
           console.log("beforeDetach", evt);
         });
+        // console.log("this.$refs.myContainer====>", this.$refs.myContainer);
         this.jsPlumb.setContainer(this.$refs.myContainer);
       });
-
     },
 
     // 加载流程图
@@ -518,6 +519,7 @@ export default {
         this.hjsPlumb.bind("beforeDetach", (evt) => {
           console.log("beforeDetach", evt);
         });
+        // console.log("this.$refs.efContainer====>", this.$refs.efContainer);
         this.hjsPlumb.setContainer(this.$refs.efContainer);
       });
     },
@@ -539,6 +541,7 @@ export default {
       }
       this.$nextTick(function () {
         this.historyLoadEasyFlowFinish = true;
+             
       });
     },
 
@@ -548,6 +551,28 @@ export default {
     //   this.$refs.nodeForm.nodeInit(this.data, nodeId);
     // },
 
+   //控件大小--当前版本
+    zoomAddMy() {
+      if (this.zoom >= 1) {
+        return;
+      }
+      this.zoom = this.zoom + 0.1;
+      this.$refs.myContainer.style.transform = `scale(${this.zoom})`;
+      this.jsPlumb.setZoom(this.zoom);
+    },
+
+    zoomSubMy() {
+      if (this.zoom <= 0) {
+        return;
+      }
+      this.zoom = this.zoom - 0.1;
+      this.$refs.myContainer.style.transform = `scale(${this.zoom})`;
+      this.jsPlumb.setZoom(this.zoom);
+    },
+
+
+
+    //控件大小--历史版本
     zoomAdd() {
       if (this.zoom >= 1) {
         return;
@@ -556,7 +581,7 @@ export default {
       this.$refs.efContainer.style.transform = `scale(${this.zoom})`;
       this.jsPlumb.setZoom(this.zoom);
     },
-    //控件大小
+
     zoomSub() {
       if (this.zoom <= 0) {
         return;
@@ -616,10 +641,11 @@ export default {
 </script>
 
 <style>
-.container {
+.containers {
   display: flex;
   width: 100%;
 }
+
 
 .left-side,
 .right-side {
@@ -655,5 +681,4 @@ export default {
   background-image: linear-gradient(to bottom, gray 50%, transparent 50%);
   background-size: 1px 5px; /* 控制虚线的高度和间隔 */
 }
-
 </style>

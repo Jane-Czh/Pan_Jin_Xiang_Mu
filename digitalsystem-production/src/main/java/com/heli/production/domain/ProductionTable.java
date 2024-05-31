@@ -5,6 +5,7 @@ import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 
 import java.util.Date;
 
@@ -21,7 +22,12 @@ public class ProductionTable extends BaseEntity {
      * MCV_ID
      */
     private String mcvId;
-
+    @Transient
+    private Date startTime;
+    @Transient
+    private Date endTime;
+    @Transient
+    private Integer numberInput;
     /**
      * 创建人
      */
@@ -101,7 +107,7 @@ public class ProductionTable extends BaseEntity {
      * 配置
      */
     @ExcelProperty(value = "配置")
-    private String configuration;
+    private String carConfiguration;
 
     /**
      * 计划完工期

@@ -2,8 +2,8 @@ package com.heli.partybuilding.controller;
 
 import com.heli.partybuilding.service.IPartyBuildingDisplayService;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import com.ruoyi.common.core.domain.entity.DisplayRequestParam;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

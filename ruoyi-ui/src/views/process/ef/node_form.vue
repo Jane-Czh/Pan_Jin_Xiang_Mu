@@ -140,7 +140,10 @@ export default {
           node.left = this.node.left;
           node.top = this.node.top;
           node.ico = this.node.ico;
+          //->制度文件
           node.state = this.node.state;
+          //->表单文件
+          node.type = this.node.type;
           
           // node.state = JSON.parse(this.node.state);
           this.$emit("repaintEverything");

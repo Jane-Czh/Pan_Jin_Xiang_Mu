@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementEmployeesDataMapper">
+
+    <resultMap type="EnterpriseManagementEmployeesData" id="EnterpriseManagementEmployeesDataResult">
+        <result property="emId"    column="EM_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="employeesNumber"    column="Employees_Number"    />
+        <result property="employeesAvgMonthlyNumber"    column="Employees_AVG_Monthly_Number"    />
+        <result property="employeesAvgAnnualNumber"    column="Employees_AVG_Annual_Number"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementMonthlyDataVo">
+        select EM_ID, Year_And_Month, Employees_Number, Employees_AVG_Monthly_Number, Employees_AVG_Annual_Number, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Employess_Data
+    </sql>
+
+    <!--检查当月数据是否上传-->
+    <select id="checkEMEmployeesDataIsExisted" parameterType="Date" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Employess_Data WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+    <!--  按月查询EmployeesNumber  -->
+    <select id="selectEmployeesNumberByMonth" resultType="Long">
+        select Employees_Number from Enterprise_Management_Indicators_Employess_Data
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <!--  公司平均从业人数（年度）,自然年从一月加到当月/当前月份  -->
+    <select id="selectEmployeesAVGMonthlyNumber" resultType="int">
+        select sum(Employees_Number)/DATE_FORMAT(#{yearAndMonth}, '%m')
+        from Enterprise_Management_Indicators_Employess_Data
+        WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!--  查询已上传数据的最大月份  -->
+    <select id="selectMaxMonths" resultType="Date">
+        select Year_And_Month from Enterprise_Management_Indicators_Employess_Data
+        order by Year_And_Month desc
+        limit 1
+    </select>
+
+    <!-- 计算数据，存入数据库 -->
+    <update id="updateCalculateEmployeesDataByMonth" parameterType="EnterpriseManagementEmployeesData">
+        update Enterprise_Management_Indicators_Employess_Data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},</if>
+            <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where Year_And_Month = #{yearAndMonth}
+    </update>
+
+    <select id="selectEnterpriseManagementEmployeesDataList" parameterType="EnterpriseManagementEmployeesData" resultMap="EnterpriseManagementEmployeesDataResult">
+        <include refid="selectEnterpriseManagementMonthlyDataVo"/>
+        <where>
+            <if test="yearAndMonth != null  and yearAndMonth != ''"> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="employeesNumber != null "> and Employees_Number = #{employeesNumber}</if>
+            <if test="employeesAvgMonthlyNumber != null "> and Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber}</if>
+            <if test="employeesAvgAnnualNumber != null  and employeesAvgAnnualNumber != ''"> and Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber}</if>
+        </where>
+    </select>
+
+    <select id="selectEnterpriseManagementEmployeesDataByEmId" parameterType="Long" resultMap="EnterpriseManagementEmployeesDataResult">
+        <include refid="selectEnterpriseManagementMonthlyDataVo"/>
+        where EM_ID = #{emId}
+    </select>
+
+
+    <insert id="insertEnterpriseManagementEmployeesData" parameterType="EnterpriseManagementEmployeesData" useGeneratedKeys="true" keyProperty="emId">
+        insert into Enterprise_Management_Indicators_Employess_Data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="employeesNumber != null">Employees_Number,</if>
+            <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number,</if>
+            <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="employeesNumber != null">#{employeesNumber},</if>
+            <if test="employeesAvgMonthlyNumber != null">#{employeesAvgMonthlyNumber},</if>
+            <if test="employeesAvgAnnualNumber != null">#{employeesAvgAnnualNumber},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementEmployeesData" parameterType="EnterpriseManagementEmployeesData">
+        update Enterprise_Management_Indicators_Employess_Data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="employeesNumber != null">Employees_Number = #{employeesNumber},</if>
+            <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},</if>
+            <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where EM_ID = #{emId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementEmployeesDataByEmId" parameterType="Long">
+        delete from Enterprise_Management_Indicators_Employess_Data where EM_ID = #{emId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementEmployeesDataByEmIds" parameterType="String">
+        delete from Enterprise_Management_Indicators_Employess_Data where EM_ID in
+        <foreach item="emId" collection="array" open="(" separator="," close=")">
+            #{emId}
+        </foreach>
+    </delete>
+</mapper>

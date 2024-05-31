@@ -2,25 +2,21 @@ package com.heli.project.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.springframework.data.annotation.Transient;
 
 /**
- * 项目基本信息对象 Project_Info_table
+ * 历史项目信息管理对象 Project_history_Info_table
  * 
  * @author Teandron
- * @date 2024-05-08
+ * @date 2024-05-21
  */
-@Data
-public class ProjectInfoTable extends BaseEntity
+public class ProjectHistoryInfoTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-    @Transient
-    private Long [] oldProjectList;
+
     /** id(主键) */
     private Long projectId;
 
@@ -66,15 +62,6 @@ public class ProjectInfoTable extends BaseEntity
     @Excel(name = "描述")
     private String remake;
 
-    /** 历史项目 */
-    @Excel(name = "历史项目")
-    private Long oldProjectId;
-
-    /** 关联时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "关联时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date associationDate;
-
     /** 负责人 */
     @Excel(name = "负责人")
     private String manager;
@@ -107,14 +94,6 @@ public class ProjectInfoTable extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "计划结项时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date plannedCompletionTime;
-
-    /** 已过天数(自动计算) */
-    @Excel(name = "已过天数(自动计算)")
-    private Integer daysPassed;
-
-    /** 剩余天数(自动计算) */
-    @Excel(name = "剩余天数(自动计算)")
-    private Integer daysRemaining;
 
     /** 完成内容概述 */
     @Excel(name = "完成内容概述")
@@ -219,24 +198,6 @@ public class ProjectInfoTable extends BaseEntity
     {
         return remake;
     }
-    public void setOldProjectId(Long oldProjectId) 
-    {
-        this.oldProjectId = oldProjectId;
-    }
-
-    public Long getOldProjectId() 
-    {
-        return oldProjectId;
-    }
-    public void setAssociationDate(Date associationDate) 
-    {
-        this.associationDate = associationDate;
-    }
-
-    public Date getAssociationDate() 
-    {
-        return associationDate;
-    }
     public void setManager(String manager) 
     {
         this.manager = manager;
@@ -309,24 +270,6 @@ public class ProjectInfoTable extends BaseEntity
     {
         return plannedCompletionTime;
     }
-    public void setDaysPassed(Integer daysPassed) 
-    {
-        this.daysPassed = daysPassed;
-    }
-
-    public Integer getDaysPassed() 
-    {
-        return daysPassed;
-    }
-    public void setDaysRemaining(Integer daysRemaining) 
-    {
-        this.daysRemaining = daysRemaining;
-    }
-
-    public Integer getDaysRemaining() 
-    {
-        return daysRemaining;
-    }
     public void setCompletionSummary(String completionSummary) 
     {
         this.completionSummary = completionSummary;
@@ -351,8 +294,6 @@ public class ProjectInfoTable extends BaseEntity
             .append("progressAlloverProgress", getProgressAlloverProgress())
             .append("importDate", getImportDate())
             .append("remake", getRemake())
-            .append("oldProjectId", getOldProjectId())
-            .append("associationDate", getAssociationDate())
             .append("manager", getManager())
             .append("teamMembers", getTeamMembers())
             .append("status", getStatus())
@@ -361,8 +302,6 @@ public class ProjectInfoTable extends BaseEntity
             .append("goal", getGoal())
             .append("scope", getScope())
             .append("plannedCompletionTime", getPlannedCompletionTime())
-            .append("daysPassed", getDaysPassed())
-            .append("daysRemaining", getDaysRemaining())
             .append("completionSummary", getCompletionSummary())
             .toString();
     }

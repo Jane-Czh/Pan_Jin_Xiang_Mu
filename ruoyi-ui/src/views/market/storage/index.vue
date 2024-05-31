@@ -33,7 +33,7 @@
           placeholder="请选择接单日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="车型" prop="vehicleModel">
+      <!-- <el-form-item label="车型" prop="vehicleModel">
         <el-input
           v-model="queryParams.vehicleModel"
           placeholder="请输入车型"
@@ -120,7 +120,7 @@
           value-format="yyyy-MM-dd"
           placeholder="请选择订单系统交货期">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>

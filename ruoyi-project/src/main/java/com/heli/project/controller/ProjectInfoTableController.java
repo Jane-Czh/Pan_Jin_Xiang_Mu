@@ -1,6 +1,8 @@
 package com.heli.project.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +90,22 @@ public class ProjectInfoTableController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ProjectInfoTable projectInfoTable)
     {
+        return toAjax(projectInfoTableService.updateProjectInfoTable(projectInfoTable));
+    }
+
+    /**
+     * 关联历史项目
+     */
+    @PutMapping("/updataHistory")
+    public AjaxResult updataHistory(@RequestBody ProjectInfoTable projectInfoTable)
+    {
+        System.out.println("-----test------"+projectInfoTable);
+        Long[] oldProjectList = projectInfoTable.getOldProjectList();
+        List<Long> collect = Arrays.stream(oldProjectList).collect(Collectors.toList());
+        projectInfoTable.setOldProjectId(collect.get(0));
+//        System.out.println(Arrays.toString(oldProjectList));
+//        System.out.println(oldProjectList);
+
         return toAjax(projectInfoTableService.updateProjectInfoTable(projectInfoTable));
     }
 

@@ -33,18 +33,19 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        // { id: '57', icon: 'el-icon-s-data', title: '三包期内新车返修率', content: '企业主要营业产品财务收入', path: '/quality/indicators57' },
-        // { id: '58', icon: 'el-icon-s-data', title: '三包期内整车月度返修率', content: '企业主要营业产品财务收入', path: '/quality/indicators58' },
-        // { id: '59', icon: 'el-icon-s-data', title: '外部质量损失率', content: '企业主要营业产品财务收入', path: '/quality/indicators59' },
-        // { id: '61', icon: 'el-icon-s-data', title: '月度售后质量问题总数', content: '企业主要营业产品财务收入', path: '/quality/indicators61' },
-        // { id: '62', icon: 'el-icon-s-data', title: '售后问题生产责任次数', content: '企业主要营业产品财务收入', path: '/quality/indicators62' },
-        { id: '63', icon: 'el-icon-s-data', title: '质量考核季度排名', content: '企业主要营业产品财务收入', path: '/quality/indicators63' },
-        { id: '64', icon: 'el-icon-s-data', title: '平均无故障时间', content: '企业主要营业产品财务收入', path: '/quality/indicators64' },
-        // { id: '??', icon: 'el-icon-s-data', title: '电车、大吨位一次交检合格率', content: '企业主要营业产品财务收入', path: '/quality/indicators8' },
-        // { id: '??', icon: 'el-icon-s-data', title: '供应商不合格件返厂及时率', content: '企业主要营业产品财务收入', path: '/quality/indicators9' },
-        // { id: '??', icon: 'el-icon-s-data', title: '班组自查合格率', content: '企业主要营业产品财务收入', path: '/quality/indicators10' },
-        // { id: '??', icon: 'el-icon-s-data', title: '下道工序反馈合格率', content: '企业主要营业产品财务收入', path: '/quality/indicators20' },
+        { id: '57', apiName: 'getWarrantyRepairRateData', yDataName: 'warrantyRepairRate', dataName: '返修率', icon: 'el-icon-s-data', title: '三包期内新车返修率', content: '企业主要营业产品财务收入' },
+        { id: '58', apiName: 'getWarrantyVehicleRepairRateData', yDataName: 'warrantyVehicleRepairRate', dataName: '返修率', icon: 'el-icon-s-data', title: '三包期内整车月度返修率', content: '企业主要营业产品财务收入' },
+        { id: '59', apiName: 'getExternalLossRateData', yDataName: 'externalLossRate', dataName: '损失率', icon: 'el-icon-s-data', title: '外部质量损失率', content: '企业主要营业产品财务收入' },
+        { id: '61', apiName: 'getMonthlyAfterSalesIssuesData', yDataName: 'monthlyAfterSalesIssues', dataName: '总数', icon: 'el-icon-s-data', title: '月度售后质量问题总数', content: '企业主要营业产品财务收入' },
+        { id: '62', apiName: 'getProductionLiabilityIssuesData', yDataName: 'productionLiabilityIssues', dataName: '次数', icon: 'el-icon-s-data', title: '售后问题生产责任次数', content: '企业主要营业产品财务收入' },
+        { id: '63', apiName: 'getQuarterlyRankData', yDataName: 'quarterlyRank', dataName: '排名', icon: 'el-icon-s-data', title: '质量考核季度排名', content: '企业主要营业产品财务收入' },
+        { id: '64', apiName: 'getMeantimeWithoutFailureData', yDataName: 'meantimeWithoutFailure', dataName: '时间', icon: 'el-icon-s-data', title: '平均无故障时间', content: '企业主要营业产品财务收入' },
+        { id: '102', apiName: 'getSingleInspectionPassRateData', yDataName: 'singleInspectionPassRate', dataName: '合格率', con: 'el-icon-s-data', title: '电车、大吨位一次交检合格率', content: '企业主要营业产品财务收入' },
+        { id: '103', apiName: 'getInTimeReturnRateData', yDataName: 'inTimeReturnRate', dataName: '及时率', icon: 'el-icon-s-data', title: '供应商不合格件返厂及时率', content: '企业主要营业产品财务收入' },
+        { id: '104', apiName: 'getPartQualificationRateData', yDataName: 'partQualificationRate', dataName: '合格率', icon: 'el-icon-s-data', title: '班组自查合格率与下道工序反馈合格率', content: '企业主要营业产品财务收入' },
+        // { id: '105', apiName: 'getcurNonBomMaterialCostData', yDataName: 'curNonBomMaterialCost', dataName: '合格率', icon: 'el-icon-s-data', title: '下道工序反馈合格率', content: '企业主要营业产品财务收入' },
       ],
+
       formData: {
       },
       rules: {
@@ -58,9 +59,22 @@ export default {
   mounted() { },
   methods: {
     toDetail(item) {
-      this.$router.push(item.path)
+      //指标104+105同一个页面
+      if (item.id === '104') {
+        this.$router.push('/quality/indicators104')
+      }
+      else {
+        this.$router.push({
+          path: '/quality/index-detail-quality',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
+      }
+
     }
   }
+
 }
 
 </script>

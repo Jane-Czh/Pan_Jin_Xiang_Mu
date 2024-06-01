@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="block">
       <span class="DataSelect" style="margin-right:10px">日期选择</span>
       <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
@@ -18,14 +19,13 @@
 
 <script>
 import moment from 'moment'
-import chartAPI from '@/api/financial/chartAPI.js'
-import indicatorChart from './indexChart/indicatorChart.vue';
+import chartAPI from '@/api/production/chartAPI.js'
+import indicatorChart from '@/views/financial/financialDisplay/indexChart/indicatorChart.vue';
 
 export default {
   components: { indicatorChart },
   data() {
     return {
-      radioDate: '月',
       loading: false,
       data: [],
       timeData: {
@@ -58,7 +58,7 @@ export default {
         this.loading = true
         const res = await chartAPI[this.option.apiName](this.timeData);
         this.data = res.rows
-        this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'))
+        this.xAxisData = res.rows.map(item => moment(item.yearAndMonth).format('YY-MM'))
         this.yAxisData = res.rows.map(item => item[this.option.yDataName])
         this.loading = false
       } catch (error) {

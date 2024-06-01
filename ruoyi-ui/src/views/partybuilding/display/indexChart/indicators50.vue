@@ -6,6 +6,9 @@
         start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions" @change="handleDateChange">
       </el-date-picker>
     </div>
+    <div>
+      {{ this.SortedScores }}
+    </div>
     <div id="main" ref="main"></div>
   </div>
 </template>
@@ -21,6 +24,8 @@ export default {
     return {
       loading: false,
       data: [],
+      rankData: [],
+      sortedScores: [],
       timeData: {
         startTime: new Date(),
         endTime: new Date(),
@@ -34,8 +39,10 @@ export default {
   computed: {},
   mounted() {
     this.defaultMonth()
+
     this.myChart = echarts.init(document.getElementById('main'))
     this.initData()
+
   },
   methods: {
     async initData() {
@@ -45,6 +52,7 @@ export default {
         this.loading = true
         const res = await getPartyBuildingRankData(this.timeData);
         this.data = res.rows
+        this.reversedSortedScores()
         this.loading = false
         this.updateChart()
       } catch (error) {
@@ -186,6 +194,7 @@ export default {
           {
             type: 'value',
             name: '排名',
+            inverse: true,
             // interval: 5,
             splitLine: { show: false },
             axisLabel: {
@@ -210,7 +219,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          data: this.data.map(item => item.rank),
+          data: this.sortedScores,
         }]
       };
 
@@ -224,6 +233,11 @@ export default {
       const endDate = new Date(currentYear, currentMonth, 0);
       this.selectedDate = [startDate, endDate];
     },
+    reversedSortedScores() {
+      let sortedData = this.data.map((item, index) => ({ ...item, index }))
+        .sort((a, b) => b.score - a.score);
+      this.sortedScores = sortedData.map(item => item.index + 1);
+    }
   },
 
 

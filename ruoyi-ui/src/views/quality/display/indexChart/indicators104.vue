@@ -15,7 +15,9 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getMainRevenueData } from '@/api/quality/data'
+import { getPartQualificationRateData } from '@/api/quality/chartAPI'
+
+//TODO 指标104+105两个图
 
 export default {
     data() {
@@ -44,7 +46,7 @@ export default {
                 this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
-                const res = await getMainRevenueData(this.timeData);
+                const res = await getPartQualificationRateData(this.timeData);
                 this.data = res.rows
                 this.loading = false
                 this.updateChart()
@@ -149,7 +151,7 @@ export default {
             };
             this.option = {
                 title: {
-                    text: '月度售后质量问题总数'
+                    text: '班组自查合格率与下道工序反馈合格率'
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -157,9 +159,9 @@ export default {
                         type: 'shadow'
                     }
                 },
-                // legend: {
-                //     data: ['Forest', 'Steppe', 'Desert', 'Wetland']
-                // },
+                legend: {
+                    data: ['班组自查合格率', '下道工序反馈合格率']
+                },
                 toolbox: {
                     show: true,
                     orient: 'vertical',
@@ -168,8 +170,8 @@ export default {
                     feature: {
                         mark: { show: true, },
                         dataView: { show: true, readOnly: false, title: '数据视图' },
-                        magicType: { show: true, type: ['bar'], title: { bar: '切换为柱状图' } },
-                        restore: { show: true, title: '还原' },
+                        magicType: { show: true, type: ['line', 'bar', 'stack'], title: { line: '切换为折线图', bar: '切换为柱状图', stack: '切换为堆叠图' } },
+                        // restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
                     }
                 },
@@ -177,7 +179,8 @@ export default {
                     {
                         // type: 'category',
                         axisTick: { show: false },
-                        data: this.data.map(item => moment(item.Year_And_Month).format('YY-MM')),
+                        boundaryGap: true,
+                        data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
                     }
                 ],
                 yAxis: [
@@ -186,13 +189,22 @@ export default {
                     }
                 ],
                 series: [{
-                    name: '金额',
+                    name: '班组自查合格率',
                     type: 'line',
                     label: labelOption,
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.data.map(item => item.MainRevenue),
+                    data: this.data.map(item => item.selfcheckPassrate),
+                },
+                {
+                    name: '下道工序反馈合格率',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.nextprocessFeedbackPassrate),
                 }]
             };
 

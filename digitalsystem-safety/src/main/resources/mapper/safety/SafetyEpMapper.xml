@@ -26,7 +26,7 @@
     <select id="countMajorEquipmentFailuresInCurrentMonth" resultType="long">
         select sum(Fault_Duration) from Safety_EP_Maintenance_table
         where Equipment_Number in (
-            select * from Safety_EP_Key_Equipment_index
+            select SE_Key_Equipment_ID from Safety_EP_Key_Equipment_index
             )
     </select>
 

@@ -132,7 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="countMajorEquipmentFailuresInCurrentMonth" resultType="java.lang.Integer">
         select count(*) from Safety_EP_Maintenance_table
         where Equipment_Number in (
-            select * from Safety_EP_Key_Equipment_index
+            select SE_Key_Equipment_ID from Safety_EP_Key_Equipment_index
             )
     </select>
 

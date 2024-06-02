@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -43,6 +44,7 @@ public class SafetyEpMaintenanceTableController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('safety:table:import')")
     @PostMapping("/import")
+    @Transactional
     public R<String> simpleRead(Date yearAndMonth, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
         //检查当月数据是否上传
         if (safetyEpMaintenanceTableService.checkSafetyEpMaintenanceTableIsExisted(yearAndMonth)){

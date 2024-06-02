@@ -108,7 +108,5 @@ public interface TechMapper {
      */
     public int deleteTechByTechIds(Long[] techIds);
 
-    int batchUpdateTech(@Param("teches") ArrayList<Tech> teches);
-
     boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
 }

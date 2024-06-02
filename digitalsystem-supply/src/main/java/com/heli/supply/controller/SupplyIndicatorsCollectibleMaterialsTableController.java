@@ -19,7 +19,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date: 2024/4/29 22:49
  **/
 @RestController
-@RequestMapping("/supply/dictionary")
+@RequestMapping("/supply/data/dictionary")
 public class SupplyIndicatorsCollectibleMaterialsTableController extends BaseController {
     @Autowired
     private ISupplyIndicatorsCollectibleMaterialsTableService supplyIndicatorsCollectibleMaterialsTableService;
@@ -27,7 +27,7 @@ public class SupplyIndicatorsCollectibleMaterialsTableController extends BaseCon
     /**
      * 查询供应科-指标-集采物料字典列表
      */
-    @PreAuthorize("@ss.hasPermi('supply:indicators:list')")
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:list')")
     @GetMapping("/list")
     public TableDataInfo list(SupplyIndicatorsCollectibleMaterialsTable supplyIndicatorsCollectibleMaterialsTable) {
         startPage();
@@ -38,7 +38,7 @@ public class SupplyIndicatorsCollectibleMaterialsTableController extends BaseCon
     /**
      * 获取供应科-指标-集采物料字典详细信息
      */
-    @PreAuthorize("@ss.hasPermi('supply:indicators:query')")
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:query')")
     @GetMapping(value = "/{scmId}")
     public AjaxResult getInfo(@PathVariable("scmId") Long scmId) {
         return success(supplyIndicatorsCollectibleMaterialsTableService.selectSupplyIndicatorsCollectibleMaterialsTableByScmId(scmId));
@@ -47,7 +47,7 @@ public class SupplyIndicatorsCollectibleMaterialsTableController extends BaseCon
     /**
      * 新增供应科-指标-集采物料字典
      */
-    @PreAuthorize("@ss.hasPermi('supply:indicators:add')")
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:add')")
     @Log(title = "供应科-指标-集采物料字典", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SupplyIndicatorsCollectibleMaterialsTable supplyIndicatorsCollectibleMaterialsTable) {
@@ -58,7 +58,7 @@ public class SupplyIndicatorsCollectibleMaterialsTableController extends BaseCon
     /**
      * 修改供应科-指标-集采物料字典
      */
-    @PreAuthorize("@ss.hasPermi('supply:indicators:edit')")
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:edit')")
     @Log(title = "供应科-指标-集采物料字典", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SupplyIndicatorsCollectibleMaterialsTable supplyIndicatorsCollectibleMaterialsTable) {
@@ -69,7 +69,7 @@ public class SupplyIndicatorsCollectibleMaterialsTableController extends BaseCon
     /**
      * 删除供应科-指标-集采物料字典
      */
-    @PreAuthorize("@ss.hasPermi('supply:indicators:remove')")
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:remove')")
     @Log(title = "供应科-指标-集采物料字典", businessType = BusinessType.DELETE)
     @DeleteMapping("/{scmIds}")
     public AjaxResult remove(@PathVariable Long[] scmIds) {

@@ -12,7 +12,7 @@ import java.util.List;
  * @author hong
  * @date 2024-04-28
  */
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface SupplyIndicatorsCollectibleMaterialsTableMapper {
 
     /**

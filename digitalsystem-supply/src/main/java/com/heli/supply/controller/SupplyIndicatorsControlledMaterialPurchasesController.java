@@ -37,6 +37,7 @@ public class SupplyIndicatorsControlledMaterialPurchasesController extends BaseC
     /**
      * 当月度设备维修总费用 指标23-展示
      */
+    @PreAuthorize("@ss.hasPermi('supply:display:controlledPurchaseAmountRatio')")
     @PostMapping("/display/controlledPurchaseAmountRatio")
     public TableDataInfo selectControlledPurchaseAmountRatio(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = supplyIndicatorsControlledMaterialPurchasesService.selectControlledPurchaseAmountRatio(time.getStartTime(), time.getEndTime());
@@ -46,7 +47,7 @@ public class SupplyIndicatorsControlledMaterialPurchasesController extends BaseC
     /**
      * 查询供应-指标-集团管控物资占比列表
      */
-    @PreAuthorize("@ss.hasPermi('supply:controlledAmount:list')")
+    @PreAuthorize("@ss.hasPermi('supply:data:list')")
     @GetMapping("/data/list")
     public TableDataInfo list(SupplyIndicatorsControlledMaterialPurchases supplyIndicatorsControlledMaterialPurchases) {
         startPage();
@@ -57,7 +58,7 @@ public class SupplyIndicatorsControlledMaterialPurchasesController extends BaseC
     /**
      * 获取供应-指标-集团管控物资占比详细信息
      */
-    @PreAuthorize("@ss.hasPermi('supply:controlledAmount:query')")
+    @PreAuthorize("@ss.hasPermi('supply:data:query')")
     @GetMapping(value = "/data/{scpId}")
     public AjaxResult getInfo(@PathVariable("scpId") Long scpId) {
         return success(supplyIndicatorsControlledMaterialPurchasesService.selectSupplyIndicatorsControlledMaterialPurchasesByScpId(scpId));
@@ -66,7 +67,7 @@ public class SupplyIndicatorsControlledMaterialPurchasesController extends BaseC
     /**
      * 新增供应-指标-集团管控物资占比
      */
-    @PreAuthorize("@ss.hasPermi('supply:controlledAmount:add')")
+    @PreAuthorize("@ss.hasPermi('supply:data:add')")
     @Log(title = "供应-指标-集团管控物资占比", businessType = BusinessType.INSERT)
     @PostMapping("/data")
     public AjaxResult add(@RequestBody SupplyIndicatorsControlledMaterialPurchases supplyIndicatorsControlledMaterialPurchases) {
@@ -80,7 +81,7 @@ public class SupplyIndicatorsControlledMaterialPurchasesController extends BaseC
     /**
      * 修改供应-指标-集团管控物资占比
      */
-    @PreAuthorize("@ss.hasPermi('supply:controlledAmount:edit')")
+    @PreAuthorize("@ss.hasPermi('supply:data:edit')")
     @Log(title = "供应-指标-集团管控物资占比", businessType = BusinessType.UPDATE)
     @PutMapping("/data")
     public AjaxResult edit(@RequestBody SupplyIndicatorsControlledMaterialPurchases supplyIndicatorsControlledMaterialPurchases) {
@@ -91,7 +92,7 @@ public class SupplyIndicatorsControlledMaterialPurchasesController extends BaseC
     /**
      * 删除供应-指标-集团管控物资占比
      */
-    @PreAuthorize("@ss.hasPermi('supply:controlledAmount:remove')")
+    @PreAuthorize("@ss.hasPermi('supply:data:remove')")
     @Log(title = "供应-指标-集团管控物资占比", businessType = BusinessType.DELETE)
     @DeleteMapping("/data/{scpIds}")
     public AjaxResult remove(@PathVariable Long[] scpIds) {

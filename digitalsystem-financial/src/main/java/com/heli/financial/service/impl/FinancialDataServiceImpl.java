@@ -11,11 +11,14 @@ import com.ruoyi.common.utils.DateUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -42,6 +45,24 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
     private IFinancialInterestsTableService financialInterestsTableService;
     @Autowired
     private IFinancialBalanceTableService financialBalanceTableService;
+
+    private static final Logger log = LoggerFactory.getLogger(FinancialDataServiceImpl.class);
+
+
+
+    public int batchUpdateFinancialData(Date yearAndMonth){
+        Date maxMonth = financialIndicatorsHandfillTableService.selectMaxYearAndMonth();
+        int i = 0;
+        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(maxMonth)) ; date = DateUtils.getNextMonth(date)) {
+            if (checkDataUploadedForCurrentMonth(date)){
+                calculateCurrentMonthFinancialData(date);
+                i++;
+            }
+        }
+
+        return i;
+
+    }
 
     /**
      * @description: 检查当月数据是否全部上传
@@ -137,16 +158,17 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
     @Override
     public int calculateCurrentMonthFinancialData(Date yearAndMonth) {
 
-        System.out.println(yearAndMonth);
+//        System.out.println(yearAndMonth);
+        log.info("当前计算的月份为："+ DateUtils.parseDateToStr("yyyy-MM",yearAndMonth));
 
         FinancialIndicatorsHandfillTable handFillDate = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
         FinancialInterestsTable interestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
         FinancialBalanceTable balanceTable = financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth);
 
 
-        System.out.println(handFillDate);
-        System.out.println(interestsTable);
-        System.out.println(balanceTable);
+//        System.out.println(handFillDate);
+//        System.out.println(interestsTable);
+//        System.out.println(balanceTable);
 
         /**
          * @description: 计算当月库存商品存货额
@@ -200,18 +222,18 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         BigDecimal operatingRevenue = financialInterestsTableService.selectOperatingRevenueByMonth(balanceTable.getYearAndMonth());
         BigDecimal operatingRevenueLastMonth = financialInterestsTableService.selectOperatingRevenueByMonth(lastMonth);
 
-        System.out.println("本月月度存货总金额" + monthlyInventoryTotalAmount
-                + "上月月度存货总金额" + monthlyInventoryTotalAmountLastMonth
-                + "本月营业收入" + operatingRevenue
-                + "上月营业收入" + operatingRevenueLastMonth
-        );
+//        System.out.println("本月月度存货总金额" + monthlyInventoryTotalAmount
+//                + "上月月度存货总金额" + monthlyInventoryTotalAmountLastMonth
+//                + "本月营业收入" + operatingRevenue
+//                + "上月营业收入" + operatingRevenueLastMonth
+//        );
 
         //分别计算比率
         BigDecimal monthlyInventoryTotalAmountRate = monthlyInventoryTotalAmount.divide(monthlyInventoryTotalAmountLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
         BigDecimal operatingRevenueRate = operatingRevenue.divide(operatingRevenueLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
 
-        System.out.println("monthlyInventoryTotalAmountRate" + monthlyInventoryTotalAmountRate);
-        System.out.println("operatingRevenueRate" + operatingRevenueRate);
+//        System.out.println("monthlyInventoryTotalAmountRate" + monthlyInventoryTotalAmountRate);
+//        System.out.println("operatingRevenueRate" + operatingRevenueRate);
 
         balanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
         balanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());

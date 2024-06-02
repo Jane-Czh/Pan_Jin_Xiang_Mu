@@ -69,6 +69,11 @@
         SELECT EXISTS(SELECT 1 FROM Financial_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
+    <!--  查询已上传数据的最大月份  -->
+    <select id="selectMaxYearAndMonth" resultType="Date">
+        select max(Year_And_Month) from Financial_Indicators_HandFill_table
+    </select>
+
     <!--  按年月查询手动填报数据  -->
     <select id="selectFinancialIndicatorsHandfillTableByYearAndMonth" parameterType="Date" resultMap="FinancialIndicatorsHandfillTableResult">
         <include refid="selectFinancialIndicatorsHandfillTableVo"/>

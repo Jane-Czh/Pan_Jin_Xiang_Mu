@@ -1,8 +1,6 @@
 package com.heli.enterprise.controller;
 
 import com.heli.enterprise.domain.EnterpriseManagementAnnualData;
-import com.heli.enterprise.domain.EnterpriseManagementEmployeesData;
-import com.heli.enterprise.domain.EnterpriseManagementIndicatorsSalaryData;
 
 import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.heli.enterprise.service.*;
@@ -33,42 +31,14 @@ public class EnterpriseManagementDataController extends BaseController {
     @Autowired
     private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
     @Autowired
-    private IEnterpriseManagementIndicatorsSalaryDataService enterpriseManagementIndicatorsSalaryDataService;
-    @Autowired
     private IEnterpriseManagementSalaryTableService enterpriseManagementSalaryTableService;
 
-
     private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementDataController.class);
-
-
-//    /**
-//     * 新增[企业管理]指标月度填报数据
-//     */
-//    @PreAuthorize("@ss.hasPermi('enterprise:Data:add')")
-//    @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.INSERT)
-//    @PostMapping("monthly")
-//    @Transactional
-//    public AjaxResult add(EnterpriseManagementEmployeesData enterpriseManagementMonthlyData, EnterpriseManagementIndicatorsSalaryData enterpriseManagementIndicatorsSalaryData) {
-//
-//        System.out.println(enterpriseManagementMonthlyData);
-//        System.out.println(enterpriseManagementIndicatorsSalaryData);
-//
-//        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))) {
-//            return AjaxResult.error("上月数据未填报，请有序填报");
-//        }
-//        if (enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(enterpriseManagementMonthlyData.getYearAndMonth())) {
-//            return AjaxResult.error("当月数据已填报");
-//        }
-//        enterpriseManagementMonthlyData.setCreateBy(getUsername());
-//        enterpriseManagementIndicatorsSalaryData.setCreateBy(getUsername());
-//        enterpriseManagementIndicatorsSalaryDataService.insertEnterpriseManagementIndicatorsSalaryData(enterpriseManagementIndicatorsSalaryData);
-//        return toAjax(enterpriseManagementMonthlyDataService.insertEnterpriseManagementEmployeesData(enterpriseManagementMonthlyData));
-//    }
 
     /**
      * 新增[企业管理]指标月度填报数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:add')")
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:add')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.INSERT)
     @PostMapping("/monthly")
     @Transactional
@@ -77,11 +47,12 @@ public class EnterpriseManagementDataController extends BaseController {
         System.out.println(enterpriseManagementMonthlyData);
 
 
-        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))) {
-            return AjaxResult.error("上月数据未填报");
-        }
         if (enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(enterpriseManagementMonthlyData.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
+        }
+        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth())) &&
+            enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()) {
+            return AjaxResult.error("上月数据未填报");
         }
         enterpriseManagementMonthlyData.setCreateBy(getUsername());
 
@@ -96,7 +67,7 @@ public class EnterpriseManagementDataController extends BaseController {
     /**
      * 新增[企业管理]指标年度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:add')")
+    @PreAuthorize("@ss.hasPermi('enterprise:annual:add')")
     @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.INSERT)
     @PostMapping("/annual")
     public AjaxResult add(EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
@@ -116,6 +87,7 @@ public class EnterpriseManagementDataController extends BaseController {
      * @author: hong
      * @date: 2024/4/11 16:38
      */
+    @PreAuthorize("@ss.hasPermi('enterprise:salary:import')")
     @PostMapping("/salary")
     public R<String> simpleRead(Date yearAndMonth, MultipartFile multipartFile) {
 

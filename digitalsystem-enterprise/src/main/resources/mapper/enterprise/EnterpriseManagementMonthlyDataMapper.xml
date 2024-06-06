@@ -80,7 +80,7 @@
     </select>
 
     <!-- 计算数据员工人数，存入数据库 -->
-    <update id="updateCalculateMonthlyDataByMonth" parameterType="EnterpriseManagementEmployeesData">
+    <update id="updateCalculateMonthlyDataByMonth" parameterType="EnterpriseManagementMonthlyData">
         update Enterprise_Management_Indicators_Monthly_Data
         <trim prefix="SET" suffixOverrides=",">
             <if test="employeesNumber != null">Employees_Number = #{employeesNumber},</if>
@@ -102,7 +102,7 @@
     </update>
 
     <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
-    <insert id="insertMonthlyFillingDataByMonth" parameterType="EnterpriseManagementEmployeesData">
+    <insert id="insertMonthlyFillingDataByMonth" parameterType="EnterpriseManagementMonthlyData">
         insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Total_Monthly_Salary)
         values (#{yearAndMonth},#{employeesNumber},#{totalMonthlySalary})
         on duplicate key update
@@ -159,6 +159,11 @@
         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
     </select>
 
+    <!--  检查数据库中是否有数据  -->
+    <select id="checkEMMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Salary_Table)
+    </select>
+
     <!-- 计算工资数据，存入数据库 -->
 <!--    <update id="updateCalculateSalaryDataByMonth" parameterType="EnterpriseManagementEmployeesData">-->
 <!--        update Enterprise_Management_Indicators_Monthly_Data-->
@@ -189,7 +194,7 @@
 
 
     <!-- 安全更新财务表数据、数据存在则更新，不存在则插入 -->
-    <insert id="updateCalculateSalaryDataByMonth" parameterType="EnterpriseManagementEmployeesData">
+    <insert id="updateCalculateSalaryDataByMonth" parameterType="EnterpriseManagementMonthlyData">
         insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Cumulative_Average_Income,Monthly_Production_AVG_Income,Monthly_Functional_AVG_Income,Functional_Dept_Overtime_Cost)
         values (#{yearAndMonth},#{cumulativeAverageIncome},#{monthlyProductionAvgIncome},#{monthlyFunctionalAvgIncome},#{functionalDeptOvertimeCost})
         on duplicate key update

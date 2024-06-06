@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.heli.enterprise.domain.EnterpriseManagementEmployeesData;
-import com.heli.enterprise.domain.EnterpriseManagementIndicatorsSalaryData;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +37,11 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
     @Override
     public int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         return enterpriseManagementMonthlyDataMapper.insertMonthlyFillingDataByMonth(enterpriseManagementMonthlyData);
+    }
+
+    @Override
+    public Boolean checkEMMonthlyDataIsExisted() {
+        return enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataIsExisted();
     }
 
     /**

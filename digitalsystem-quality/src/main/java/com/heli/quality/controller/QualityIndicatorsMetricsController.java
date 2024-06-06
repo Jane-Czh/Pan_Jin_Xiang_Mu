@@ -44,6 +44,7 @@ public class QualityIndicatorsMetricsController extends BaseController {
      * 更新列表操作。
      * 该方法通过计算给定时间范围内的质量指标来更新相关的列表信息。
      */
+    @PreAuthorize("@ss.hasPermi('quality:data:update')")
     @PostMapping("/updateList")
     public R<String> calculateQualityIndicators(Date startTime, Date endTime) {
         // 计算指定时间范围内的质量指标
@@ -54,7 +55,7 @@ public class QualityIndicatorsMetricsController extends BaseController {
     /**
      * 查询质量指标-统计列表
      */
-    @PreAuthorize("@ss.hasPermi('quality:Metrics:list')")
+    @PreAuthorize("@ss.hasPermi('quality:metrics:list')")
     @GetMapping("/list")
     public TableDataInfo list(QualityIndicatorsMetrics qualityIndicatorsMetrics) {
         startPage();
@@ -66,7 +67,7 @@ public class QualityIndicatorsMetricsController extends BaseController {
     /**
      * 获取质量指标-统计详细信息
      */
-    @PreAuthorize("@ss.hasPermi('quality:Metrics:query')")
+    @PreAuthorize("@ss.hasPermi('quality:metrics:query')")
     @GetMapping(value = "/{qcId}")
     public AjaxResult getInfo(@PathVariable("qcId") Long qcId) {
         return success(qualityIndicatorsMetricsService.selectQualityIndicatorsMetricsByQcId(qcId));
@@ -85,7 +86,7 @@ public class QualityIndicatorsMetricsController extends BaseController {
     /**
      * 修改质量指标-统计
      */
-    @PreAuthorize("@ss.hasPermi('quality:Metrics:edit')")
+    @PreAuthorize("@ss.hasPermi('quality:metrics:edit')")
     @Log(title = "质量指标-统计", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody QualityIndicatorsMetrics qualityIndicatorsMetrics) {
@@ -95,7 +96,7 @@ public class QualityIndicatorsMetricsController extends BaseController {
     /**
      * 删除质量指标-统计
      */
-    @PreAuthorize("@ss.hasPermi('quality:Metrics:remove')")
+    @PreAuthorize("@ss.hasPermi('quality:metrics:remove')")
     @Log(title = "质量指标-统计", businessType = BusinessType.DELETE)
     @DeleteMapping("/{qcIds}")
     public AjaxResult remove(@PathVariable Long[] qcIds) {

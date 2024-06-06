@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.heli.enterprise.domain.EnterpriseManagementEmployeesData;
-import com.heli.enterprise.domain.EnterpriseManagementIndicatorsSalaryData;
 import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +28,7 @@ public interface EnterpriseManagementMonthlyDataMapper {
     int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
     int updateCalculateMonthlyDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
 
-
+    Boolean checkEMMonthlyDataIsExisted();
 
 
     Boolean checkEMSalaryDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);

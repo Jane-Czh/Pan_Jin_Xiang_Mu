@@ -50,6 +50,7 @@ public class QualityAfterSalesRecordController extends BaseController {
      * @author: hong
      * @date: 2024/4/11 16:38
      */
+    @PreAuthorize("@ss.hasPermi('quality:aftersales:import')")
     @PostMapping("/read")
     public R<String> simpleRead(Date yearAndMonth, MultipartFile multipartFile) {
 

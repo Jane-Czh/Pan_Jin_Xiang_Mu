@@ -35,13 +35,6 @@ public class QualityIndicatorsHandfillTableController extends BaseController {
     private IQualityIndicatorsHandfillTableService qualityIndicatorsHandfillTableService;
 
 
-
-
-
-
-
-
-
     /**
      * 查询[质量]指标填报列表
      */

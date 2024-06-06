@@ -37,7 +37,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 查询[企业管理]指标月度数据列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:list')")
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:list')")
     @GetMapping("/list")
     public TableDataInfo list(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         startPage();
@@ -49,7 +49,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 获取[企业管理]指标月度数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:query')")
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:query')")
     @GetMapping(value = "/{esId}")
     public AjaxResult getInfo(@PathVariable("esId") Long esId) {
         return success(enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataByEsId(esId));
@@ -68,7 +68,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 修改[企业管理]指标月度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:edit')")
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:edit')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
@@ -79,7 +79,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 删除[企业管理]指标月度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:remove')")
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:remove')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{esIds}")
     public AjaxResult remove(@PathVariable Long[] esIds) {

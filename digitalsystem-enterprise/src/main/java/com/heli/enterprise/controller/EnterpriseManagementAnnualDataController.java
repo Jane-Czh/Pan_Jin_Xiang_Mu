@@ -37,7 +37,7 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     /**
      * 查询[企业管理]指标年度数据列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:list')")
+    @PreAuthorize("@ss.hasPermi('enterprise:annual:list')")
     @GetMapping("/list")
     public TableDataInfo list(EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
         startPage();
@@ -48,7 +48,7 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     /**
      * 获取[企业管理]指标年度数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:query')")
+    @PreAuthorize("@ss.hasPermi('enterprise:annual:query')")
     @GetMapping(value = "/{emasId}")
     public AjaxResult getInfo(@PathVariable("emasId") Long emasId) {
         return success(enterpriseManagementAnnualDataService.selectEnterpriseManagementAnnualDataByEmasId(emasId));
@@ -67,7 +67,7 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     /**
      * 修改[企业管理]指标年度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:edit')")
+    @PreAuthorize("@ss.hasPermi('enterprise:annual:edit')")
     @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
@@ -78,7 +78,7 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     /**
      * 删除[企业管理]指标年度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:remove')")
+    @PreAuthorize("@ss.hasPermi('enterprise:annual:remove')")
     @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{emasIds}")
     public AjaxResult remove(@PathVariable Long[] emasIds) {

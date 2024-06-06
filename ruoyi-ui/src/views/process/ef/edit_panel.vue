@@ -195,10 +195,15 @@ import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
 import { getDept } from "@/api/system/dept";
 
-// 绑定文件
+// 绑定文件(制度与表单)
 import CustomFiles from "./CustomFiles.vue";
-// 文件api
+// 制度文件api
 import { listFilemanagement } from "@/api/file/filemanagement";
+// 表单文件api
+import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
+import { compareProjects } from "@/api/system/project";
+
 export default {
   inject: ["reload"],
   data() {
@@ -884,7 +889,7 @@ export default {
     getFormFileData(type) {
       this.formFiles = [];
 
-      listFilemanagement(this.queryParams)
+      listFormfilemanagement(this.queryParams)
         .then((response) => {
           this.formsmanagementList = response.rows;
           // console.log(" this.filemanagementList ==>", this.filemanagementList);
@@ -894,12 +899,11 @@ export default {
 
           JSON.parse(type).forEach((stateId) => {
             let row = this.formsmanagementList.find(
-              (item) =>
-                JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+              (item) => JSON.stringify(item.formId) === JSON.stringify(stateId)
             );
             if (row != null) {
-              this.formFiles.push(row.fileName);
-              this.selectedFormsTemp.push(row.fileName);
+              this.formFiles.push(row.formName);
+              this.selectedFormsTemp.push(row.formName);
             }
           });
         });
@@ -982,7 +986,6 @@ export default {
      */
 
     updateProject() {
-      //this.oriData === this.data 并不是在比较对象的内容，而是在比较对象的引用是否相同
       if (
         JSON.stringify(this.oriData) === JSON.stringify(this.data) &&
         JSON.stringify(this.idsForm) === JSON.stringify(this.oriType) &&
@@ -990,15 +993,10 @@ export default {
       ) {
         this.$message.warning("未进行修改流程,无法保存!请修改后再保存!!");
       } else {
-        //projectId 在对应的 node节点属性中有.
-        const oldProjectId = this.data.nodeList[0].projectId; //JSON.stringify(oldProjectId)
-        const oldProjectName = this.data.name; //JSON.stringify(oldProjectId)
-        //改变node、line的id
+        const oldProjectId = this.data.nodeList[0].projectId;
+        const oldProjectName = this.data.name;
         this.updateId();
-
-        //对project赋新的id
         this.project_Id = nanoid();
-        // //将date分解为project、node、line
         const { projectData, nodeData, lineData } = this.splitData(
           this.data,
           this.project_Id,
@@ -1006,55 +1004,52 @@ export default {
           JSON.stringify(oldProjectName)
         );
 
-        // project数据
-        axios
-          .post(
-            "http://localhost:8081/project/updateProjectFromOld",
-            projectData
-          )
+        // 创建保存节点和连线的 axios 请求数组
+        const nodePromises = nodeData.map((node) =>
+          axios.post("http://localhost:8081/node/saveNode", node)
+        );
+
+        const linePromises = lineData.map((line) =>
+          axios.post("http://localhost:8081/line/saveLine", line)
+        );
+
+        // 保存 project 数据的请求
+        const projectPromise = axios.post(
+          "http://localhost:8081/project/updateProjectFromOld",
+          projectData
+        );
+
+        // 合并所有的请求
+        const allPromises = [...nodePromises, ...linePromises, projectPromise];
+
+        // 等待所有的请求完成
+        Promise.all(allPromises)
+          .then((responses) => {
+            responses.forEach((response) => {
+              console.log("Response:", response.data);
+            });
+
+            // 保存成功后显示提示消息
+            this.$message({
+              type: "success",
+              message: "流程更新成功！",
+            });
+
+            // 调用 compareProjects
+            return compareProjects(this.project_Id);
+          })
           .then((response) => {
-            console.log("Project saved successfully:", response.data);
+            console.log("compareProjects response:", response);
+
+            // 让面板消失 、页面刷新装载更新后的数据
+            this.easyFlowVisible = false;
+            this.reload();
           })
           .catch((error) => {
-            console.error("Error saving project:", error);
+            console.error("Error:", error);
           });
-
-        // 节点数据
-        for (var i = 0; i < nodeData.length; i++) {
-          // console.log("type data state===>",typeof(nodeData[i].state))
-          axios
-            .post("http://localhost:8081/node/saveNode", nodeData[i])
-            .then((response) => {
-              console.log("Nodes saved successfully:", response.data);
-            })
-            .catch((error) => {
-              console.error("Error saving nodes:", error);
-            });
-        }
-
-        // 连线数据
-        for (var i = 0; i < lineData.length; i++) {
-          axios
-            .post("http://localhost:8081/line/saveLine", lineData[i])
-            .then((response) => {
-              console.log("Lines saved successfully:", response.data);
-            })
-            .catch((error) => {
-              console.error("Error saving lines:", error);
-            });
-        }
-
-        // 保存成功后显示提示消息
-        this.$message({
-          type: "success",
-          message: "流程更新成功！",
-        });
-        //让面板消失 、页面刷新装载更新后的数据
-        this.easyFlowVisible = false;
-        this.reload();
       }
     },
-
     //将this.data数据进行拆分为project、node、line
     splitData(data, id, oldId, oldName) {
       const projectData = {

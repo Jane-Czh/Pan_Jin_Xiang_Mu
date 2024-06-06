@@ -56,8 +56,8 @@
 </template>
 
 <script>
+//制度文件api
 import { listFilemanagement } from "@/api/file/filemanagement";
-
 export default {
   props: {
     selectedFileNames: {

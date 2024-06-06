@@ -33,17 +33,16 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '24', icon: 'el-icon-s-data', title: '当月单台非BOM物料费用', content: '企业主要营业产品财务收入', path: '/production/indicators24' },
-        { id: '25', icon: 'el-icon-s-data', title: '当月单台低值易耗费用', content: '企业主要营业产品财务收入', path: '/production/indicators25' },
-        { id: '29', icon: 'el-icon-s-data', title: '在制物资年化周转天数', content: '企业主要营业产品财务收入', path: '/production/indicators29' },
-        { id: '37', icon: 'el-icon-s-data', title: '人均生产台数', content: '企业主要营业产品财务收入', path: '/production/indicators37' },
-        { id: '38', icon: 'el-icon-s-data', title: '人均产值', content: '企业主要营业产品财务收入', path: '/production/indicators38' },
-        { id: '41', icon: 'el-icon-s-data', title: '上线及时率', content: '企业主要营业产品财务收入', path: '/production/indicators41' },
-        { id: '48', icon: 'el-icon-s-data', title: '一线当月加班时长', content: '企业主要营业产品财务收入', path: '/production/indicators48' },
-        // { id: '74', icon: 'el-icon-s-data', title: '日/月/年上线数', content: '企业主要营业产品财务收入', path: '/production/indicators74' },
-        // { id: '75', icon: 'el-icon-s-data', title: '日/月/年完工数', content: '企业主要营业产品财务收入', path: '/production/indicators75' },
+        { id: '24', apiName: 'getcurNonBomMaterialCostData', yDataName: 'curNonBomMaterialCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月单台非BOM物料费用', content: '企业主要营业产品财务收入'},
+        { id: '25', apiName: 'getcurLowValueConsumablesData', yDataName: 'curLowValueConsumables', dataName: '金额', icon: 'el-icon-s-data', icon: 'el-icon-s-data', title: '当月单台低值易耗费用', content: '企业主要营业产品财务收入'},
+        { id: '29', apiName: 'getinventoryTurnoverdaysData', yDataName: 'inventoryTurnoverdays', dataName: '天数', icon: 'el-icon-s-data', icon: 'el-icon-s-data', title: '在制物资年化周转天数', content: '企业主要营业产品财务收入' },
+        { id: '37', apiName: 'getoutputPercapitacountsData', yDataName: 'outputPercapitacounts', dataName: '台数', icon: 'el-icon-s-data', icon: 'el-icon-s-data', title: '人均生产台数', content: '企业主要营业产品财务收入'},
+        { id: '38', apiName: 'getoutputPercapitavalueData', yDataName: 'outputPercapitavalue', dataName: '产值', icon: 'el-icon-s-data', icon: 'el-icon-s-data', title: '人均产值', content: '企业主要营业产品财务收入'},
+        { id: '41', apiName: 'getonlineOntimerateData', yDataName: 'onlineOntimerate', dataName: '及时率', icon: 'el-icon-s-data', icon: 'el-icon-s-data', title: '上线及时率', content: '企业主要营业产品财务收入'},
+        { id: '48', apiName: 'getOvertimeFrontlinemonthData', yDataName: 'overtimeFrontlinemonth', dataName: '金额', icon: 'el-icon-s-data', icon: 'el-icon-s-data', title: '一线当月加班时长', content: '企业主要营业产品财务收入'},
+        { id: '74', icon: 'el-icon-s-data', title: '日/月/年上线数', content: '企业主要营业产品财务收入',  },
+        { id: '75', icon: 'el-icon-s-data', title: '日/月/年完工数', content: '企业主要营业产品财务收入',  },
       ],
-
       formData: {},
       rules: {},
     }
@@ -55,7 +54,20 @@ export default {
   mounted() { },
   methods: {
     toDetail(item) {
-      this.$router.push(item.path)
+      if (item.id === '74') {
+        this.$router.push('/production/indicators74')
+      }
+      else if (item.id === '75') {
+        this.$router.push('/production/indicators75')
+      }
+      else {
+        this.$router.push({
+          path: '/production/index-detail-production',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
+      }
     }
   }
 }

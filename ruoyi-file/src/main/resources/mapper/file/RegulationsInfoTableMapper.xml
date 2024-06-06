@@ -144,4 +144,17 @@
             #{regulationsId}
         </foreach>
     </delete>
+
+
+<!--    &lt;!&ndash; 制度修订频率 &ndash;&gt;-->
+<!--    <select id="selectRevisionFrequency" resultType="map">-->
+<!--    select * from (-->
+<!--           SELECT upload_date, old_regulations_id-->
+<!--    FROM Regulations_Info_table-->
+<!--    WHERE upload_date BETWEEN #{startTime} AND #{endTime}-->
+<!--    ORDER BY upload_date ASC-->
+<!--        ) as t-->
+<!--        order by upload_date ASC-->
+<!--    </select>-->
+
 </mapper>

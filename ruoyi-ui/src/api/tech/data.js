@@ -4,7 +4,7 @@ import request from '@/utils/request'
 // 查询[技术]指标填报列表
 export function listData(query) {
   return request({
-    url: '/tech/data/list',
+    url: '/tech/data/monthly/list',
     method: 'get',
     params: query
   })
@@ -13,7 +13,7 @@ export function listData(query) {
 // 查询[技术]指标填报详细
 export function getData(techId) {
   return request({
-    url: '/tech/data/' + techId,
+    url: '/tech/data/monthly/' + techId,
     method: 'get'
   })
 }
@@ -21,7 +21,7 @@ export function getData(techId) {
 // 新增[技术]指标填报
 export function addData(data) {
   return request({
-    url: '/tech/data',
+    url: '/tech/data/monthly',
     method: 'post',
     data: data
   })
@@ -30,7 +30,7 @@ export function addData(data) {
 // 修改[技术]指标填报
 export function updateData(data) {
   return request({
-    url: '/tech/data',
+    url: '/tech/data/monthly',
     method: 'put',
     data: data
   })
@@ -39,14 +39,56 @@ export function updateData(data) {
 // 删除[技术]指标填报
 export function delData(techId) {
   return request({
-    url: '/tech/data/' + techId,
+    url: '/tech/data/monthly/' + techId,
     method: 'delete'
   })
 }
 
 
+// 年度指标填报
 
+// 查询【技术】总计划年初填报列表
+export function listData2(query) {
+  return request({
+    url: '/tech/data/annual/list',
+    method: 'get',
+    params: query
+  })
+}
 
+// 查询【技术】总计划年初填报详细
+export function getData2(tapcId) {
+  return request({
+    url: '/tech/data/annual/' + tapcId,
+    method: 'get'
+  })
+}
+
+// 新增【技术】总计划年初填报
+export function addData2(data) {
+  return request({
+    url: '/tech/data/annual',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改【技术】总计划年初填报
+export function updateData2(data) {
+  return request({
+    url: '/tech/data/annual',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除【技术】总计划年初填报
+export function delData2(tapcId) {
+  return request({
+    url: '/tech/data/annual/' + tapcId,
+    method: 'delete'
+  })
+}
 
 
 

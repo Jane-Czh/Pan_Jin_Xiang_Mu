@@ -117,8 +117,11 @@
 
   <script>
 import FlowNodeForm from "./node_form";
-import { listFilemanagement } from "@/api/file/filemanagement";
-import { word2Pdf } from "@/api/file/filemanagement";
+//制度文件api
+import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
+//表单文件api
+import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
 
 export default {
   props: {
@@ -314,7 +317,7 @@ export default {
       //存储相应的下载地址
       this.formHyperLinks = [];
 
-      listFilemanagement(this.queryParams)
+      listFormfilemanagement(this.queryParams)
         .then((response) => {
           this.formList = response.rows;
         })
@@ -324,12 +327,12 @@ export default {
             JSON.parse(this.node.type).forEach((stateId) => {
               let row = this.formList.find(
                 (item) =>
-                  JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+                  JSON.stringify(item.formId) === JSON.stringify(stateId)
               );
               if (row != null) {
                 //将匹配的记录的文件名、链接保存 (nodeFileNames、formHyperLinks)
-                this.nodeFormNames.push(row.fileName);
-                this.formHyperLinks.push(row.filePath);
+                this.nodeFormNames.push(row.formName);
+                this.formHyperLinks.push(row.formPath);
               }
             });
           }

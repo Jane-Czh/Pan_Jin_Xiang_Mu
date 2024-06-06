@@ -13,6 +13,7 @@
       :inline="true"
       v-show="showSearch"
       label-width="68px"
+      class="query-form"
     >
       <el-form-item label="流程名称" prop="name">
         <el-input
@@ -32,6 +33,17 @@
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
           >重置</el-button
+        >
+      </el-form-item>
+
+      <el-form-item class="export-button">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="exportAll"
+          >总台账导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -89,11 +101,19 @@ import {
   updateProject,
   getProjectByName,
 } from "@/api/system/project";
-import { listFilemanagement } from "@/api/file/filemanagement";
+// 制度文件api
+import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
+// 表单文件api
+import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import "@/views/process/ef/button.css";
-import { word2Pdf } from "@/api/file/filemanagement";
+//导出总台账excel功能
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+//加载效果
+import { Loading } from "element-ui";
 
 export default {
   name: "Project",
@@ -159,6 +179,13 @@ export default {
       // 流程表格数据--布局分组数据
       rowList: [],
 
+      //excel 导出
+      queryParams: {},
+      // filemanagementList: [],
+      formmanagementList: [],
+      selectedFileNames: [],
+      selectedFormsNames: [],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -193,11 +220,134 @@ export default {
   },
 
   created() {
-    //获取数据 --> 改为获取当前流程的全部历史数据
+    //获取newest==1的流程数据
     this.getList();
   },
 
   methods: {
+    getFileNamesByIds(project) {
+      return new Promise((resolve, reject) => {
+        // 初始化
+        this.selectedFileNames = [];
+        this.selectedFormsNames = [];
+
+        // 制度文件
+        listFilemanagement(this.queryParams)
+          .then((response) => {
+            this.filemanagementList = response.rows;
+          })
+          .then(() => {
+            if (project.state && project.state !== "no") {
+              const stateIds = Array.isArray(JSON.parse(project.state))
+                ? JSON.parse(project.state)
+                : [project.state];
+              stateIds.forEach((stateId) => {
+                let row = this.filemanagementList.find(
+                  (item) =>
+                    JSON.stringify(item.regulationsId) ===
+                    JSON.stringify(stateId)
+                );
+                if (row != null) {
+                  this.selectedFileNames.push(row.fileName);
+                }
+              });
+            }
+          })
+          .then(() => {
+            // 表单文件
+            return listFormfilemanagement(this.queryParams);
+          })
+          .then((response) => {
+            this.formmanagementList = response.rows;
+          })
+          .then(() => {
+            if (project.type && project.type !== "no") {
+              const typeIds = Array.isArray(JSON.parse(project.type))
+                ? JSON.parse(project.type)
+                : [project.type];
+              typeIds.forEach((typeId) => {
+                let row = this.formmanagementList.find(
+                  (item) =>
+                    JSON.stringify(item.formId) === JSON.stringify(typeId)
+                );
+                if (row != null) {
+                  this.selectedFormsNames.push(row.formName);
+                }
+              });
+            }
+          })
+          .then(() => {
+            resolve({
+              selectedFileNames: this.selectedFileNames.join(", "),
+              selectedFormsNames: this.selectedFormsNames.join(", "),
+            });
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    //file字段的格式转换
+    formattedContent(content) {
+      if (content) {
+        // 确认替换前内容
+        console.log("Original content:", content);
+        const formatted = content.replace(/\\+/g, "\n");
+        // 确认替换后内容
+        console.log("Formatted content:", formatted);
+        return formatted;
+      }
+      return "无更新内容！";
+    },
+    //导出总台账 excel
+    exportAll() {
+      const loadingInstance = Loading.service({
+        lock: true,
+        text: "正在导出，请稍后...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
+      const promises = this.projectList.map((project) => {
+        return this.getFileNamesByIds(project).then((fileNames) => {
+          return {
+            流程名称: project.name,
+           
+            创建日期: project.createDate,
+            创建人: project.createBy,
+            更新日期: project.updateDate,
+            更新人: project.updateBy,
+            // 流程绑定的制度文件: fileNames.selectedFileNames,
+            // 流程绑定的表单文件: fileNames.selectedFormsNames,
+            // 节点绑定的文件s???
+
+            最近一次更新内容描述: this.formattedContent(project.file),
+          };
+        });
+      });
+
+      Promise.all(promises)
+        .then((data) => {
+          const ws = XLSX.utils.json_to_sheet(data);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+          const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+          saveAs(
+            new Blob([wbout], { type: "application/octet-stream" }),
+            "流程总台账.xlsx"
+          );
+        })
+        .finally(() => {
+          loadingInstance.close();
+        })
+        .catch((error) => {
+          console.error("导出失败:", error);
+          loadingInstance.close();
+        });
+    },
+
+    //-----------------------------------------------------------------------
     //路由跳转--转到数据展示部分
     toDetail(item) {
       //item 是当前的最新版本流程
@@ -206,166 +356,8 @@ export default {
       let id = item.id;
       this.$router.push("/process/statistics/indicators/" + id);
     },
-
-    /**根据project的state(制度文件ids)、type(表单文件ids)查找filenames */
-    // 1.1 查询制度文件列表
-    getRegularFileData(row) {
-      //存储制度文件名称
-      this.nodeFileNames = [];
-      //存储相应的下载地址
-      this.fileHyperLinks = [];
-
-      console.log("1.1 查询制度文件列表 row=====>", row);
-      listFilemanagement(this.queryParams).then((response) => {
-        this.filemanagementList = response.rows;
-      });
-      //对 filemanagementList 查找符合state中ids的文件 将其放入 nodeFileNames
-      JSON.parse(row.state).forEach((stateId) => {
-        let row = this.filemanagementList.find(
-          (item) =>
-            JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
-        );
-        if (row != null) {
-          //将匹配的记录的文件名、链接保存 (nodeFileNames )
-          this.nodeFileNames.push(row.fileName);
-          this.fileHyperLinks.push(row.filePath);
-        }
-      });
-      // console.log("this.nodeFileNames===>", this.nodeFileNames);
-      // console.log("this.fileHyperLinks===>", this.fileHyperLinks);
-    },
-
-    // 1.2 查询表单文件列表
-    getFormFileData(row) {
-      //存储表单文件名称
-      this.nodeFormNames = [];
-      //存储相应的下载地址
-      this.formHyperLinks = [];
-
-      listFilemanagement(this.queryParams).then((response) => {
-        this.formList = response.rows;
-      });
-      //对 formList 查找符合type中ids的文件 将其放入 nodeFormNames
-      JSON.parse(row.type).forEach((stateId) => {
-        let row = this.formList.find(
-          (item) =>
-            JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
-        );
-        if (row != null) {
-          //将匹配的记录的文件名、链接保存 (nodeFileNames )
-          this.nodeFormNames.push(row.fileName);
-          this.formHyperLinks.push(row.filePath);
-        }
-      });
-    },
-
-    // -------------------------------------------------------------------------
-    // 鼠标进入表格 当前行 的调用函数 获取要展示的文件(制度/表单)的数据
-    enter(row, column, cell) {
-      // console.log("当前的 row=========>",row)
-      this.getRegularFileData(row);
-      this.getFormFileData(row);
-    },
-    // leave(row, column, cell) {
-    //   // this.$refs["popover" + row.rowIndex].showPopper = false;
-    // },
-
-    //文件预览部分
-
-    previewFile(filePath) {
-      const fileType = this.getFileType(filePath);
-      console.log("filePath:", filePath);
-      console.log("fileType:", fileType);
-      switch (fileType) {
-        case "pdf":
-          console.log("fileType1111:", fileType);
-          window.open(filePath, "_blank");
-          break;
-        case "word":
-          const pdfFilePath = this.convertToPdfPath(filePath);
-          console.log("filePath:", filePath);
-          console.log("pdfFilePath:", pdfFilePath);
-          word2Pdf(filePath, pdfFilePath).then((response) => {});
-          window.open(pdfFilePath, "_blank");
-          break;
-      }
-      // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
-    },
-
-    getFileType(filePath) {
-      // 获取文件名的后缀名
-      const fileExtension = filePath.split(".").pop();
-      console.log("fileExtension=>", fileExtension);
-
-      // 根据文件后缀名判断文件类型
-      switch (fileExtension.toLowerCase()) {
-        case "pdf":
-          return "pdf";
-        case "doc":
-        case "docx":
-          return "word";
-        case "xls":
-        case "xlsx":
-          return "Excel 文档";
-        case "ppt":
-        case "pptx":
-          return "PowerPoint 文档";
-        // 可以根据需要添加更多的文件类型判断
-        default:
-          return "未知类型";
-      }
-    },
-
-    convertToPdfPath(wordFilePath) {
-      // 找到文件路径中的最后一个点的位置
-      const lastDotIndex = wordFilePath.lastIndexOf(".");
-
-      if (lastDotIndex != -1) {
-        // 获取文件路径中最后一个点之前的部分（文件名部分）
-        const prefix = wordFilePath.substring(0, lastDotIndex);
-
-        // 将文件名部分与 .pdf 后缀拼接，形成 PDF 文件路径
-        const pdfFilePath = prefix + ".pdf";
-
-        return pdfFilePath;
-      } else {
-        // 文件路径中没有点，无法更改后缀
-        throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
-      }
-    },
-
-    // -------------------------------------------------------------------------
-
-    //可编辑流程
-    edit(row) {
-      //加载流程面板可见
-      this.editPanelVisible = true;
-      //getProject 从后端读取数据
-      getProject(row.id).then((response) => {
-        // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
-        this.$refs.EditPanel.dataReload(
-          response.data,
-          row.id,
-          row.state,
-          row.type
-        );
-      });
-      if (this.easyFlowVisible) {
-        this.reload();
-      }
-    },
-
-    //查看流程
-    view(row) {
-      //加载流程面板可见
-      this.showPanelVisible = true;
-      //getProject 从后端读取数据
-      getProject(row.id).then((response) => {
-        // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
-        this.$refs.ShowPanel.dataReload(response.data);
-      });
-    },
-
+ //-----------------------------------------------------------------------
+  
     /** 查询流程列表 */
     getList() {
       this.projectList = [];
@@ -479,49 +471,7 @@ export default {
         this.title = "修改流程名称";
       });
     },
-    /** 修改流程的提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateProject(this.form).then((response) => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.reload();
-              // this.getList();
-            });
-          } else {
-            addProject(this.form).then((response) => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 单个删除操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal
-        .confirm(
-          `是否确认删除流程[ ${row.name} ]？这会删除与此流程相关的所有历史流程！`
-        )
-        .then(() => {
-          // 只有当用户确认删除时才执行删除操作
-          return delProject(ids);
-        })
-        .then(() => {
-          // 处理成功的删除操作
-          // this.getList();
-          this.reload();
-          this.$modal.msgSuccess("删除成功");
-        })
-        .catch(() => {
-          // 处理用户取消操作或者任何删除过程中出现的错误
-        });
-    },
-
+   
     /** 导出按钮操作 */
     handleExport() {
       this.download(
@@ -535,3 +485,16 @@ export default {
   },
 };
 </script>
+
+<style>
+
+.query-form {
+  display: flex;
+  align-items: center;
+}
+
+.query-form .el-form-item.export-button {
+  margin-left: auto;
+}
+
+</style>

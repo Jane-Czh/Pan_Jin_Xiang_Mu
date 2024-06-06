@@ -4,19 +4,28 @@ package com.ruoyi.file.controller;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+//import com.ruoyi.file.Word2PdfAsposeUtil;
 import com.ruoyi.file.Word2PdfAsposeUtil;
 import com.ruoyi.file.domain.RegulationsInfoTable;
+import com.ruoyi.file.entity.regulationRespondEntity;
 import com.ruoyi.file.service.IRegulationsInfoTableService;
+import com.ruoyi.file.util.FileUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -109,6 +118,18 @@ public class RegulationsInfoTableController extends BaseController {
     }
 
     /**
+     * 指标：制度修订频率
+     */
+    @PostMapping("/revisionCounts")
+    public List<regulationRespondEntity> revisionCounts(@RequestBody RegulationsInfoTable time) {
+        System.out.println("制度指标频率");
+        System.out.println("time start ==>" + time.getStartTime() + "// " + time.getEndTime());
+        List<regulationRespondEntity> list = regulationsInfoTableService.selectRevisionFrequency(time.getStartTime(),time.getEndTime(),time.getRegulationsId());
+        System.out.println("list11111=>" + list);
+        return list;
+    }
+
+    /**
      * word转pdf
      */
     @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")
@@ -125,6 +146,44 @@ public class RegulationsInfoTableController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Word 转 PDF 失败");
         }
     }
+
+
+
+//
+//    @PostMapping("/convert")
+//    public void previewFile(@RequestParam String inPath,@RequestParam String fileName,HttpServletResponse response)throws IOException {
+//
+//        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+//        if("pdf".equalsIgnoreCase(suffix)){
+//            String type = new MimetypesFileTypeMap().getContentType(fileName);
+//            response.setHeader("Content-type",type);
+//            String newFileName = new String(fileName.getBytes("utf-8"), "iso-8859-1");
+//            // 设置扩展头，当Content-Type 的类型为要下载的类型时 , 这个信息头会告诉浏览器这个文件的名字和类型。
+//            response.setHeader("Content-Disposition", "attachment;filename=" + newFileName);
+//            FileUtil.downloadFile(fileName,inPath,response);
+//
+//        }
+//
+//        String filePath = inPath + fileName.substring(0,fileName.lastIndexOf(".")) + ".pdf";
+//        if( FileUtil.checkFileExist(filePath)){
+//            FileUtil.previewFile1(filePath,response);
+//        }else {
+//            String newFilePath=null;
+//
+//                //DOC, DOCX, OOXML, RTF HTML, OpenDocument, PDF, EPUB, XPS, SWF
+//                newFilePath = FileUtil.doc2pdf(fileName, inPath);
+//
+//
+//
+//            if(StringUtils.isNotBlank(newFilePath)){
+//                FileUtil.previewFile1(newFilePath,response);
+//            }
+//        }
+//
+//
+//
+//    }
+
 }
 
 

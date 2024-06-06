@@ -7,10 +7,10 @@
     <resultMap type="SafetyEp" id="SafetyEpResult">
         <result property="safetyEpId"    column="Safety_EP_ID"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
-        <result property="createBy"    column="CREATED_BY"    />
-        <result property="createTime"    column="CREATED_TIME"    />
-        <result property="updateBy"    column="UPDATED_BY"    />
-        <result property="updateTime"    column="UPDATED_TIME"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
         <result property="curEquipmentMaintenanceCost"    column="Cur_Equipment_Maintenance_Cost"    />
         <result property="curEquipmentFailuresTotaltime"    column="Cur_Equipment_Failures_TotalTime"    />
         <result property="curEquipmentReplacementCost"    column="Cur_Equipment_Replacement_Cost"    />
@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="selectSafetyEpVo">
-        select Safety_EP_ID, Year_And_Month, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, Cur_Equipment_Maintenance_Cost, Cur_Equipment_Failures_TotalTime, Cur_Equipment_Replacement_Cost, Key_Equipment_Failure_Rate, Key_Equipment_Total_Failure_Count from Safety_EP
+        select Safety_EP_ID, Year_And_Month, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, Cur_Equipment_Maintenance_Cost, Cur_Equipment_Failures_TotalTime, Cur_Equipment_Replacement_Cost, Key_Equipment_Failure_Rate, Key_Equipment_Total_Failure_Count from Safety_EP
     </sql>
 
     <!--  查询当月重点设备故障总时间  -->
@@ -34,10 +34,10 @@
         <include refid="selectSafetyEpVo"/>
         <where>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
-            <if test="createBy != null  and createBy != ''"> and CREATED_BY = #{createBy}</if>
-            <if test="createTime != null "> and CREATED_TIME = #{createTime}</if>
-            <if test="updateBy != null  and updateBy != ''"> and UPDATED_BY = #{updateBy}</if>
-            <if test="updateTime != null "> and UPDATED_TIME = #{updateTime}</if>
+            <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null "> and UPDATE_TIME = #{updateTime}</if>
             <if test="curEquipmentMaintenanceCost != null "> and Cur_Equipment_Maintenance_Cost = #{curEquipmentMaintenanceCost}</if>
             <if test="curEquipmentFailuresTotaltime != null "> and Cur_Equipment_Failures_TotalTime = #{curEquipmentFailuresTotaltime}</if>
             <if test="curEquipmentReplacementCost != null "> and Cur_Equipment_Replacement_Cost = #{curEquipmentReplacementCost}</if>
@@ -55,10 +55,10 @@
         insert into Safety_EP
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
-            <if test="createBy != null">CREATED_BY,</if>
-            <if test="createTime != null">CREATED_TIME,</if>
-            <if test="updateBy != null">UPDATED_BY,</if>
-            <if test="updateTime != null">UPDATED_TIME,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
             <if test="curEquipmentMaintenanceCost != null">Cur_Equipment_Maintenance_Cost,</if>
             <if test="curEquipmentFailuresTotaltime != null">Cur_Equipment_Failures_TotalTime,</if>
             <if test="curEquipmentReplacementCost != null">Cur_Equipment_Replacement_Cost,</if>
@@ -85,10 +85,10 @@
         update Safety_EP
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
-            <if test="createBy != null">CREATED_BY = #{createBy},</if>
-            <if test="createTime != null">CREATED_TIME = #{createTime},</if>
-            <if test="updateBy != null">UPDATED_BY = #{updateBy},</if>
-            <if test="updateTime != null">UPDATED_TIME = #{updateTime},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
             <if test="curEquipmentMaintenanceCost != null">Cur_Equipment_Maintenance_Cost = #{curEquipmentMaintenanceCost},</if>
             <if test="curEquipmentFailuresTotaltime != null">Cur_Equipment_Failures_TotalTime = #{curEquipmentFailuresTotaltime},</if>
             <if test="curEquipmentReplacementCost != null">Cur_Equipment_Replacement_Cost = #{curEquipmentReplacementCost},</if>
@@ -123,10 +123,10 @@
         insert into Safety_EP
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
-            <if test="createBy != null">CREATED_BY,</if>
-            <if test="createTime != null">CREATED_TIME,</if>
-            <if test="updateBy != null">UPDATED_BY,</if>
-            <if test="updateTime != null">UPDATED_TIME,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
             <if test="curEquipmentMaintenanceCost != null">Cur_Equipment_Maintenance_Cost,</if>
             <if test="curEquipmentFailuresTotaltime != null">Cur_Equipment_Failures_TotalTime,</if>
             <if test="curEquipmentReplacementCost != null">Cur_Equipment_Replacement_Cost,</if>
@@ -148,10 +148,10 @@
         on duplicate key update
         <trim prefix="" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
-            <if test="createBy != null">CREATED_BY = #{createBy},</if>
-            <if test="createTime != null">CREATED_TIME = #{createTime},</if>
-            <if test="updateBy != null">UPDATED_BY = #{updateBy},</if>
-            <if test="updateTime != null">UPDATED_TIME = #{updateTime},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
             <if test="curEquipmentMaintenanceCost != null">Cur_Equipment_Maintenance_Cost = #{curEquipmentMaintenanceCost},</if>
             <if test="curEquipmentFailuresTotaltime != null">Cur_Equipment_Failures_TotalTime = #{curEquipmentFailuresTotaltime},</if>
             <if test="curEquipmentReplacementCost != null">Cur_Equipment_Replacement_Cost = #{curEquipmentReplacementCost},</if>

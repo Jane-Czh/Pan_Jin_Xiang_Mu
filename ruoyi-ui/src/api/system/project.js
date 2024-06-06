@@ -4,6 +4,35 @@ import request from '@/utils/request'
 // 同时还有：pane.vue--save()、 edit_panel.vue--updateProject()
 
 
+
+// 流程管理-更新流程名称
+export function updateProject(data) {
+  return request({
+    url: 'http://localhost:8081/project/updateProjectName',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询指定id的流程projectEntity
+export function getProjectEntityById(id) {
+  return request({
+    url: 'http://localhost:8081/project/queryData/' + id,
+    method: 'get'
+  })
+}
+
+
+// 查询指定id的流程详细
+export function compareProjects(id) {
+  return request({
+    url: 'http://localhost:8081/project/compareData/' + id,
+    method: 'get'
+  })
+}
+
+
+
 // 按照name查询流程
 export function getProjectByName(query) {
   return request({
@@ -73,14 +102,7 @@ export function historyListProject(id) {
 //   })
 // }
 
-// 修改流程
-export function updateProject(data) {
-  return request({
-    url: 'http://localhost:8081/project/update',
-    method: 'post',
-    data: data
-  })
-}
+
 
 // 删除流程: 删除指定id得流程project
 export function delProject(id) {

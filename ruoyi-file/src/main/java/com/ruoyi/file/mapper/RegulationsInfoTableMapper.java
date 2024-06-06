@@ -1,7 +1,12 @@
 package com.ruoyi.file.mapper;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.file.domain.RegulationsInfoTable;
+import com.ruoyi.file.entity.regulationRespondEntity;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 文件管理Mapper接口
@@ -58,4 +63,10 @@ public interface RegulationsInfoTableMapper
      * @return 结果
      */
     public int deleteRegulationsInfoTableByRegulationsIds(Long[] regulationsIds);
+
+//    /**
+//     * 制度修订频率
+//     */
+//     List<regulationRespondEntity> selectRevisionFrequency(@Param("startTime") Date startTime,
+//                                                           @Param("endTime") Date endTime);
 }

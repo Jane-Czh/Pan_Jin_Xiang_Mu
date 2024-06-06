@@ -53,7 +53,7 @@
 
     <!-- ---------------------------------------------- -->
 
-    <!-- 1.2 右侧的表单文件绑定-->
+    <!-- 1.2 左侧的表单文件绑定-->
     <div class="ef-node-rightform-ico">
       <!-- 1、如果节点状态为 'no',悬浮效果为可绑定文件,显示链接文件图标 -->
       <el-tooltip
@@ -192,7 +192,9 @@
 
 <script>
 import FlowNodeForm from "./node_form";
+//选择制度文件--子组件
 import CustomTabs from "./CustomTabs.vue";
+//选择表单文件--子组件
 import CustomForms from "./CustomForms.vue";
 
 export default {

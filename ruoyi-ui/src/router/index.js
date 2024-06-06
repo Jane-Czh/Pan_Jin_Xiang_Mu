@@ -91,6 +91,7 @@ export const constantRoutes = [
       }
     ]
   },
+  
   {
     path: '/financial',
     component: Layout,
@@ -129,10 +130,18 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
-        path: 'indicators23',
-        component: () => import('@/views/safety/display/indexChart/indicators23'),
-        name: 'Indicators23',
-        meta: { title: '指标23：当月设备维修总费用' }
+        path: 'indicators68',
+        component: () => import('@/views/safety/display/indexChart/indicators68'),
+        name: 'Indicators68',
+        meta: { title: '指标68：设备故障类别次数分布图' }
+      },
+      {
+        path: 'index-detail-safety',
+        component: () => import('@/views/safety/display/indexDetailSafety'),
+        name: 'IndexDetailSafety',
+        meta: {
+          title: '指标详情',
+        }
       }
     ]
   },
@@ -143,42 +152,28 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
-        path: 'indicators24',
-        component: () => import('@/views/production/display/indexChart/indicators24'),
-        name: 'Indicators24',
-        meta: { title: '指标24：当月单台非BOM物料费用' }
-      }
-    ]
-  },
-  {
-    path: '/production',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
+        path: 'indicators74',
+        component: () => import('@/views/production/display/indexChart/indicators74'),
+        name: 'Indicators74',
+        meta: { title: '指标74：日/月/年上线数' }
+      },
       {
-        path: 'indicators25',
-        component: () => import('@/views/production/display/indexChart/indicators25'),
-        name: 'Indicators25',
-        meta: { title: '指标25：当月单台低值易耗费用' }
+        path: 'indicators75',
+        component: () => import('@/views/production/display/indexChart/indicators75'),
+        name: 'Indicators75',
+        meta: { title: '指标75：日/月/年完工数' }
+      },
+      {
+        path: 'index-detail-production',
+        component: () => import('@/views/production/display/indexDetailProduction'),
+        name: 'IndexDetailProduction',
+        meta: {
+          title: '指标详情',
+        }
       }
     ]
   },
 
-  {
-    path: '/production',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators29',
-        component: () => import('@/views/production/display/indexChart/indicators29'),
-        name: 'Indicators29',
-        meta: { title: '指标29：在制物资年化周转天数' }
-      }
-    ]
-  },
 
   {
     path: '/supply',
@@ -196,33 +191,83 @@ export const constantRoutes = [
   },
 
   {
-    path: '/production',
+    path: '/tech',
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
     children: [
       {
-        path: 'indicators37',
-        component: () => import('@/views/production/display/indexChart/indicators37'),
-        name: 'Indicators37',
-        meta: { title: '指标37：人均生产台数' }
+        path: 'indicators47',
+        component: () => import('@/views/tech/display/indexChart/indicators47'),
+        name: 'Indicators47',
+        meta: { title: '指标47：非标订单平均技术准备天数' }
+      },
+      {
+        path: 'indicators71',
+        component: () => import('@/views/tech/display/indexChart/indicators71'),
+        name: 'Indicators71',
+        meta: { title: '指标71：研发项目计划进度完成率' }
       }
+    ]
+  },
+
+  {
+    path: '/enterprise',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+
+      {
+        path: 'index-detail-enterprise',
+        component: () => import('@/views/enterprise/display/indexDetailEnterprise'),
+        name: 'IndexDetailEnterprise',
+        meta: { title: '指标数据' }
+      }
+
     ]
   },
   {
-    path: '/production',
+    path: '/partybuilding',
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
     children: [
       {
-        path: 'indicators38',
-        component: () => import('@/views/production/display/indexChart/indicators38'),
-        name: 'Indicators38',
-        meta: { title: '指标38：人均产值' }
+        path: 'indicators50',
+        component: () => import('@/views/partybuilding/display/indexChart/indicators50'),
+        name: 'Indicators50',
+        meta: { title: '指标50：党建月度考核排名' }
       }
     ]
   },
+
+
+  {
+    path: '/quality',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'indicators104',
+        component: () => import('@/views/quality/display/indexChart/indicators104'),
+        name: 'Indicators104',
+        meta: {
+          title: '指标详情',
+        }
+      },
+      {
+        path: 'index-detail-quality',
+        component: () => import('@/views/quality/display/indexDetailQuality'),
+        name: 'IndexDetailQuality',
+        meta: {
+          title: '指标详情',
+        }
+      }
+    ]
+  },
+
   {
     path: '/market',
     component: Layout,
@@ -251,20 +296,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/production',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators41',
-        component: () => import('@/views/production/display/indexChart/indicators41'),
-        name: 'Indicators41',
-        meta: { title: '指标41：上线及时率' }
-      }
-    ]
-  },
+  
   {
     path: '/market',
     component: Layout,
@@ -306,282 +338,28 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/safety',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators45',
-        component: () => import('@/views/safety/display/indexChart/indicators45'),
-        name: 'Indicators45',
-        meta: { title: '指标45：重点设备故障率' }
-      }
-    ]
-  },
-  {
-    path: '/safety',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators46',
-        component: () => import('@/views/safety/display/indexChart/indicators46'),
-        name: 'Indicators46',
-        meta: { title: '指标46：当月设备故障累计停产时间' }
-      }
-    ]
-  },
-  {
-    path: '/tech',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators47',
-        component: () => import('@/views/tech/display/indexChart/indicators47'),
-        name: 'Indicators47',
-        meta: { title: '指标47：非标订单平均技术准备天数' }
-      }
-    ]
-  },
-  {
-    path: '/production',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators48',
-        component: () => import('@/views/production/display/indexChart/indicators48'),
-        name: 'Indicators48',
-        meta: { title: '指标48：一线当月加班时长' }
-      }
-    ]
-  },
-  {
-    path: '/enterprise',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-
-      {
-        path: 'index-detail-enterprise',
-        component: () => import('@/views/enterprise/display/indexDetailEnterprise'),
-        name: 'IndexDetailEnterprise',
-        meta: { title: '指标数据' }
-      }
-
-    ]
-  },
-  {
-    path: '/partybuilding',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators50',
-        component: () => import('@/views/partybuilding/display/indexChart/indicators50'),
-        name: 'Indicators50',
-        meta: { title: '指标50：党建月度考核排名' }
-      }
-    ]
-  },
-
-
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators57',
-        component: () => import('@/views/quality/display/indexChart/indicators57'),
-        name: 'Indicators57',
-        meta: { title: '指标57：三包期内新车返修率' }
-      }
-    ]
-  },
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators58',
-        component: () => import('@/views/quality/display/indexChart/indicators58'),
-        name: 'Indicators58',
-        meta: { title: '指标58：三包期内整车月度返修率' }
-      }
-    ]
-  },
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators59',
-        component: () => import('@/views/quality/display/indexChart/indicators59'),
-        name: 'Indicators59',
-        meta: { title: '指标59：外部质量损失率' }
-      }
-    ]
-  },
-  // 指标60：被删除
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators61',
-        component: () => import('@/views/quality/display/indexChart/indicators61'),
-        name: 'Indicators61',
-        meta: { title: '指标61：月度售后质量问题总数' }
-      }
-    ]
-  },
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators62',
-        component: () => import('@/views/quality/display/indexChart/indicators62'),
-        name: 'Indicators62',
-        meta: { title: '指标62：售后问题生产责任次数' }
-      }
-    ]
-  },
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators63',
-        component: () => import('@/views/quality/display/indexChart/indicators63'),
-        name: 'Indicators63',
-        meta: { title: '指标63：质量考核季度排名' }
-      }
-    ]
-  },
-  {
-    path: '/quality',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators64',
-        component: () => import('@/views/quality/display/indexChart/indicators64'),
-        name: 'Indicators64',
-        meta: { title: '指标64：平均无故障时间' }
-      }
-    ]
-  },
-
-  {
-    path: '/safety',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators67',
-        component: () => import('@/views/safety/display/indexChart/indicators67'),
-        name: 'Indicators67',
-        meta: { title: '指标67：主要设备故障总次数' }
-      }
-    ]
-  },
-  {
-    path: '/safety',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators68',
-        component: () => import('@/views/safety/display/indexChart/indicators68'),
-        name: 'Indicators68',
-        meta: { title: '指标68：设备故障类别次数分布图' }
-      }
-    ]
-  },
-  {
-    path: '/safety',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators69',
-        component: () => import('@/views/safety/display/indexChart/indicators69'),
-        name: 'Indicators69',
-        meta: { title: '指标69：当月设备维修成本' }
-      }
-    ]
-  },
-
-  {
-    path: '/tech',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators71',
-        component: () => import('@/views/tech/display/indexChart/indicators71'),
-        name: 'Indicators71',
-        meta: { title: '指标71：研发项目计划进度完成率' }
-      }
-    ]
-  },
-  {
-    path: '/production',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators74',
-        component: () => import('@/views/production/display/indexChart/indicators74'),
-        name: 'Indicators74',
-        meta: { title: '指标74：日/月/年上线数' }
-      }
-    ]
-  },
-  {
-    path: '/production',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators75',
-        component: () => import('@/views/production/display/indexChart/indicators75'),
-        name: 'Indicators75',
-        meta: { title: '指标75：日/月/年完工数' }
-      }
-    ]
-  },
- 
- 
   
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+
+  
+  
+
+
+
   {
     path: '/market',
     component: Layout,
@@ -929,6 +707,21 @@ export const dynamicRoutes = [
         }
       ]
     },
+  //制度修订频率
+  {
+    path: '/file/filemanagement/index',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:filemanagement:list'],
+    children: [
+      {
+        path: '/file/filemanagement/revisionFrequency/:regulationsId(\\d+)', // 路由路径
+        component: () => import('@/views/file/filemanagement/revisionFrequency'), // 对应的组件
+        name: 'revisionFrequency', // 路由名称
+        meta: { title: '制度修订频率' } // 元信息，用于设置标题等
+      }
+    ]
+  },
 
 ]
 

@@ -660,7 +660,6 @@ export default {
       });
     },
 
-
     // 取消按钮
     cancel() {
       this.open = false;
@@ -698,27 +697,44 @@ export default {
       this.open = true;
       this.title = "添加流程";
     },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
+      //先获取流程原始的名称进行显示
       getProject(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改流程名称";
       });
     },
+
     /** 修改流程的提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateProject(this.form).then((response) => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.reload();
-              // this.getList();
-            });
+            // console.log("this.form=============>"+this.form.id + " " + this.form.name);
+
+            // 如果存在同名的项目流程，则提示【this.form.name】 已存在
+            const projectExists = this.projectList.find(
+              (project) => project.name === this.form.name
+            );
+            if (projectExists) {
+              this.$message({
+                type: "warning",
+                message: `名称为 ${this.form.name} 的流程已存在!!!`,
+              });
+              return;
+            } else {//进行流程名称修改的else
+              updateProject(this.form).then((response) => {
+                this.$modal.msgSuccess("修改成功");
+                this.open = false;
+                this.reload();
+              });
+            }//else--over
+
           } else {
             addProject(this.form).then((response) => {
               this.$modal.msgSuccess("新增成功");

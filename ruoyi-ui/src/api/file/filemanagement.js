@@ -70,3 +70,15 @@ export function word2Pdf(inPath, outPath) {
   });
 }
 
+// 指标:制度修订频率
+export function getRevisionCounts(data) {
+  return request({
+    url: `/file/filemanagement/revisionCounts`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      regulationsId: data.regulationsId,
+    }
+  })
+}

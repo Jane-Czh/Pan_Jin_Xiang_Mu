@@ -31,12 +31,12 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '23', icon: 'el-icon-s-data', title: '当月度设备维修总费用', content: '企业', path: '/safety/indicators23' },
-        { id: '45', icon: 'el-icon-s-data', title: '重点设备故障率', content: '企业', path: '/safety/indicators45' },
-        { id: '46', icon: 'el-icon-s-data', title: '当月设备故障累计停产时间', content: '企业', path: '/safety/indicators46' },
-        { id: '67', icon: 'el-icon-s-data', title: '主要设备故障总次数', content: '企业', path: '/safety/indicators67' },
-        { id: '68', icon: 'el-icon-s-data', title: '设备故障类别次数分布图', content: '企业', path: '/safety/indicators68' },
-        { id: '69', icon: 'el-icon-s-data', title: '当月设备维修成本', content: '企业', path: '/safety/indicators69' },
+        { id: '23', apiName: 'getCurEquipmentMaintenanceCostData', yDataName: 'curEquipmentMaintenanceCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月度设备维修总费用', content: '企业' },
+        { id: '45', apiName: 'getKeyEquipmentFailureRateData', yDataName: 'keyEquipmentFailureRate', dataName: '故障率', icon: 'el-icon-s-data', title: '重点设备故障率', content: '企业' },
+        { id: '46', apiName: 'getCurEquipmentFailuresTotaltimeData', yDataName: 'curEquipmentFailuresTotaltime', dataName: '停产时间', icon: 'el-icon-s-data', title: '当月设备故障累计停产时间', content: '企业' },
+        { id: '67', apiName: 'getKeyEquipmentTotalFailureCountData', yDataName: 'keyEquipmentTotalFailureCount', dataName: '总次数', icon: 'el-icon-s-data', title: '主要设备故障总次数', content: '企业' },
+        { id: '68', apiName: 'getOutputPercapitavalueData', yDataName: 'resultData', dataName: '次数', icon: 'el-icon-s-data', title: '设备故障类别次数分布图', content: '企业', path: '/safety/indicators68' },
+        { id: '69', apiName: 'getCurEquipmentReplacementCostData', yDataName: 'curEquipmentReplacementCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月设备维修成本', content: '企业' },
       ],
       formData: {},
       rules: {},
@@ -49,7 +49,17 @@ export default {
   mounted() { },
   methods: {
     toDetail(item) {
-      this.$router.push(item.path)
+      if (item.id === '68') {
+        this.$router.push('/safety/indicators68')
+      }
+      else {
+        this.$router.push({
+          path: '/safety/index-detail-safety',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
+      }
     }
   }
 }

@@ -12,7 +12,7 @@
 
 <script>
 import * as echarts from 'echarts';
-import { getOutputPercapitavalueData } from '@/api/safety/data'
+import { getOutputPercapitavalueData } from '@/api/safety/chartAPI'
 
 export default {
   data() {

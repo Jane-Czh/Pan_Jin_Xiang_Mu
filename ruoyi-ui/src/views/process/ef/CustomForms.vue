@@ -30,17 +30,13 @@
         </el-table-column>
 
         <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
-        <el-table-column label="文件名称" align="center" prop="fileName" />
+        <el-table-column label="文件名称" align="center" prop="formName" />
         <el-table-column
-          label="制度所属科室"
+          label="表单所属科室"
           align="center"
           prop="departmentCategory"
         />
-        <el-table-column
-          label="制度标题"
-          align="center"
-          prop="regulationsTitle"
-        />
+        <el-table-column label="表单标题" align="center" prop="formTitle" />
       </el-table>
 
       <!-- 分页功能 -->
@@ -56,7 +52,8 @@
 </template>
   
   <script>
-import { listFilemanagement } from "@/api/file/filemanagement";
+//表单文件api
+import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
 export default {
   props: {
@@ -123,13 +120,12 @@ export default {
     hello() {
       console.log("hello");
     },
-    /** 查询制度文件列表 */
+    /** 查询表单文件列表 */
     getRegularFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });
-
       //数据分页
       this.filemanagementList = this.filemanagementList.slice(
         (this.pageIndex - 1) * this.pageSize,
@@ -138,12 +134,12 @@ export default {
     },
 
     /** 查询表单文件列表 */
-    getFormFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
-        this.filemanagementList = response.rows;
-        this.total = response.total;
-      });
-    },
+    // getFormFileData() {
+    //   listFormfilemanagement(this.queryParams).then((response) => {
+    //     this.filemanagementList = response.rows;
+    //     this.total = response.total;
+    //   });
+    // },
 
     handleClick(tab, event) {
       console.log(tab, event);
@@ -152,8 +148,8 @@ export default {
     /** 保存选择的行数据 */
     handleSelectionChange(selection) {
       // 选中的行数据
-      this.ids = selection.map((item) => item.regulationsId);
-      this.names = selection.map((item) => item.fileName);
+      this.ids = selection.map((item) => item.formId);
+      this.names = selection.map((item) => item.formName);
       // 触发自定义事件，并传递 ids 和 names 数据
       // this.$emit("selection-change", { ids: this.ids, names: this.names });
     },
@@ -178,7 +174,7 @@ export default {
         this.$nextTick(() => {
           this.selectedFileNames.forEach((name) => {
             const row = this.filemanagementList.find(
-              (item) => item.fileName === name
+              (item) => item.formName === name
             );
             if (row) {
               this.$refs.multipleTable.toggleRowSelection(row, true);

@@ -83,16 +83,16 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="文件名称" align="center" prop="fileName" />
+        <el-table-column label="文件名称" align="center" prop="formName" />
         <el-table-column
-          label="制度所属科室"
+          label="表单所属科室"
           align="center"
           prop="departmentCategory"
         />
         <el-table-column
-          label="制度标题"
+          label="表单标题"
           align="center"
-          prop="regulationsTitle"
+          prop="formTitle"
         />
       </el-table>
 
@@ -110,7 +110,10 @@
 </template>
   
 <script>
+//制度文件api
 import { listFilemanagement } from "@/api/file/filemanagement";
+//表单文件api
+import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
 export default {
   props: {
@@ -261,7 +264,7 @@ export default {
 
     /** 2.1 查询表单文件列表 */
     getFormFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.formsmanagementList = response.rows;
         this.total = response.total;
       });
@@ -271,8 +274,8 @@ export default {
     handleFormSelectionChange(selection) {
 
       // 选中的行数据
-      this.idsForm = selection.map((item) => item.regulationsId);
-      this.namesForm = selection.map((item) => item.fileName);
+      this.idsForm = selection.map((item) => item.formId);
+      this.namesForm = selection.map((item) => item.formName);
       console.log("change 111-----", this.idsForm);
       console.log("change 222-----", this.namesForm);
       // 触发自定义事件，并传递 ids 和 names 数据
@@ -296,7 +299,7 @@ export default {
           this.$nextTick(() => {
             names.forEach((name) => {
               const row = this.formsmanagementList.find(
-                (item) => item.fileName === name
+                (item) => item.formName === name
               );
               if (row) {
                 this.$refs.multipleFormTable.toggleRowSelection(row, true);

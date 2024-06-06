@@ -1,185 +1,257 @@
 <template>
-  <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
-        </el-date-picker>
-      </el-form-item>
-
-      <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
-        <el-input v-model="queryParams.inprogressDayrevenue" placeholder="请输入当日在制品金额" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-
-      <el-form-item label="更新时间" prop="updatedDate">
-        <el-date-picker clearable v-model="queryParams.updatedDate" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择更新时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <div>
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-            v-hasPermi="['financial:data:add']">新增</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-            v-hasPermi="['financial:data:edit']">修改</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-            v-hasPermi="['financial:data:remove']">删除</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <!--Excel 参数导入 -->
-          <el-button type="primary" @click="showDialog = true" v-if="true"><i class="fa fa-download"></i>导入Excel文件
-          </el-button>
-
-          <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
-            <!-- 下拉框 -->
-            <el-form :model="form" ref="form" label-width="90px">
-              <el-form-item label="选择表类型">
-                <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                  <el-option label="利润表" value="profit"></el-option>
-                  <el-option label="资产负债表" value="balance"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-
-            <i class="el-icon-upload"></i>
-            <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
-
-            <!-- 进度动画条 -->
-            <div v-if="progress > 0">
-              <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-            </div>
-
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="showDialog = false">取 消</el-button>
-              <el-button type="primary" @click="fileSend()">确 定</el-button>
-            </span>
-          </el-dialog>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-            v-hasPermi="['financial:data:export']">导出</el-button>
-        </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-      </el-row>
-    </div>
-
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="整机销售收入" align="center" prop="totalSalesRevenue" width="100" />
-      <el-table-column label="集团外部销售收入" align="center" prop="externalGroupSalesRevenue" width="130" />
-      <el-table-column label="整车产量" align="center" prop="totalVehicleProduction" />
-      <el-table-column label="整车销量" align="center" prop="totalVehicleSales" />
-      <el-table-column label="新产品销售收入" align="center" prop="newProductSalesRevenue" width="120" />
-      <el-table-column label="特色产品收入" align="center" prop="specialtyProductRevenue" width="100" />
-      <el-table-column label="整机销售成本" align="center" prop="totalSalesCost" width="100" />
-      <el-table-column label="当月制造费用" align="center" prop="manufacturingExpensesMonth" width="100" />
-      <el-table-column label="储备车金额" align="center" prop="reserveCarAmount" width="90" />
-      <el-table-column label="资金周转率" align="center" prop="capitalTurnoverRate" width="90" />
-      <el-table-column label="库存商品周转率" align="center" prop="inventoryTurnoverRate" width="120" />
-      <el-table-column label="原材料周转率" align="center" prop="rawMaterialTurnoverRate" width="100" />
-      <el-table-column label="在制品周转率" align="center" prop="inprogressTurnoverRate" width="100" />
-      <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" width="140" />
-      <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" />
-      <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" width="120" />
-
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['financial:data:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['financial:data:remove']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-      @pagination="getList" />
-
-    <!-- 添加或修改[财务]手动填报指标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+  <el-tabs class="currentPage" type="card" v-model="activeName">
+    <el-tab-pane label="数据管理" name="1">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
         <el-form-item label="年月" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="整机销售收入" prop="totalSalesRevenue">
-          <el-input v-model="form.totalSalesRevenue" placeholder="请输入整机销售收入" />
+        <el-form-item label="更新时间" prop="updatedDate">
+          <el-date-picker clearable v-model="queryParams.updatedDate" type="date" value-format="yyyy-MM-dd"
+            placeholder="请选择更新时间">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="集团外部销售收入" prop="externalGroupSalesRevenue">
-          <el-input v-model="form.externalGroupSalesRevenue" placeholder="请输入集团外部销售收入" />
-        </el-form-item>
-        <el-form-item label="整车产量" prop="totalVehicleProduction">
-          <el-input v-model="form.totalVehicleProduction" placeholder="请输入整车产量" />
-        </el-form-item>
-        <el-form-item label="整车销量" prop="totalVehicleSales">
-          <el-input v-model="form.totalVehicleSales" placeholder="请输入整车销量" />
-        </el-form-item>
-        <el-form-item label="新产品销售收入" prop="newProductSalesRevenue">
-          <el-input v-model="form.newProductSalesRevenue" placeholder="请输入新产品销售收入" />
-        </el-form-item>
-        <el-form-item label="特色产品收入" prop="specialtyProductRevenue">
-          <el-input v-model="form.specialtyProductRevenue" placeholder="请输入特色产品收入" />
-        </el-form-item>
-        <el-form-item label="整机销售成本" prop="totalSalesCost">
-          <el-input v-model="form.totalSalesCost" placeholder="请输入整机销售成本" />
-        </el-form-item>
-        <el-form-item label="当月制造费用" prop="manufacturingExpensesMonth">
-          <el-input v-model="form.manufacturingExpensesMonth" placeholder="请输入当月制造费用" />
-        </el-form-item>
-        <el-form-item label="储备车金额" prop="reserveCarAmount">
-          <el-input v-model="form.reserveCarAmount" placeholder="请输入储备车金额" />
-        </el-form-item>
-        <el-form-item label="资金周转率" prop="capitalTurnoverRate">
-          <el-input v-model="form.capitalTurnoverRate" placeholder="请输入资金周转率" />
-        </el-form-item>
-        <el-form-item label="库存商品周转率" prop="inventoryTurnoverRate">
-          <el-input v-model="form.inventoryTurnoverRate" placeholder="请输入库存商品周转率" />
-        </el-form-item>
-        <el-form-item label="原材料周转率" prop="rawMaterialTurnoverRate">
-          <el-input v-model="form.rawMaterialTurnoverRate" placeholder="请输入原材料周转率" />
-        </el-form-item>
-        <el-form-item label="在制品周转率" prop="inprogressTurnoverRate">
-          <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入在制品周转率" />
-        </el-form-item>
-        <el-form-item label="一年以上暂估行项目" prop="longEstimatedItems">
-          <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目" />
-        </el-form-item>
-        <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
-          <el-input v-model="form.inprogressDayrevenue" placeholder="请输入当日在制品金额" />
-        </el-form-item>
-        <el-form-item label="当月经济增加值" prop="addedValueMonthly">
-          <el-input v-model="form.addedValueMonthly" placeholder="请输入当月经济增加值" />
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+
+      <div>
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
+              v-hasPermi="['financial:data:add']">新增</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
+              v-hasPermi="['financial:data:edit']">修改</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
+              v-hasPermi="['financial:data:remove']">删除</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <!--Excel 参数导入 -->
+            <el-button type="primary" @click="showDialog = true" v-if="true"><i class="fa fa-download"></i>导入Excel文件
+            </el-button>
+
+            <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+              <!-- 下拉框 -->
+              <el-form :model="form" ref="form" label-width="90px">
+                <el-form-item label="选择表类型">
+                  <el-select v-model="selectedType" placeholder="请选择Excel类型">
+                    <el-option label="利润表" value="profit"></el-option>
+                    <el-option label="资产负债表" value="balance"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+
+              <i class="el-icon-upload"></i>
+              <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+
+              <!-- 进度动画条 -->
+              <div v-if="progress > 0">
+                <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
+              </div>
+
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="showDialog = false">取 消</el-button>
+                <el-button type="primary" @click="fileSend()">确 定</el-button>
+              </span>
+            </el-dialog>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
+              v-hasPermi="['financial:data:export']">导出</el-button>
+          </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </el-row>
       </div>
-    </el-dialog>
-  </div>
+
+      <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
+        @sort-change="handleSortChange">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="整机销售收入" align="center" prop="totalSalesRevenue" width="100" />
+        <el-table-column label="集团外部销售收入" align="center" prop="externalGroupSalesRevenue" width="130" />
+        <el-table-column label="整车产量" align="center" prop="totalVehicleProduction" />
+        <el-table-column label="整车销量" align="center" prop="totalVehicleSales" />
+        <el-table-column label="新产品销售收入" align="center" prop="newProductSalesRevenue" width="120" />
+        <el-table-column label="特色产品收入" align="center" prop="specialtyProductRevenue" width="100" />
+        <el-table-column label="整机销售成本" align="center" prop="totalSalesCost" width="100" />
+        <el-table-column label="当月制造费用" align="center" prop="manufacturingExpensesMonth" width="100" />
+        <el-table-column label="储备车金额" align="center" prop="reserveCarAmount" width="90" />
+        <el-table-column label="资金周转率" align="center" prop="capitalTurnoverRate" width="90" />
+        <el-table-column label="库存商品周转率" align="center" prop="inventoryTurnoverRate" width="120" />
+        <el-table-column label="原材料周转率" align="center" prop="rawMaterialTurnoverRate" width="100" />
+        <el-table-column label="在制品周转率" align="center" prop="inprogressTurnoverRate" width="100" />
+        <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" width="140" />
+        <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" />
+        <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" width="120" />
+
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
+              v-hasPermi="['financial:data:edit']">修改</el-button>
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
+              v-hasPermi="['financial:data:remove']">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+        @pagination="getList" />
+
+      <!-- 添加或修改[财务]手动填报指标对话框 -->
+      <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
+        <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+          <el-form-item label="年月" prop="yearAndMonth">
+            <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+              placeholder="请选择年月">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="整机销售收入" prop="totalSalesRevenue">
+            <el-input v-model="form.totalSalesRevenue" placeholder="请输入整机销售收入" />
+          </el-form-item>
+          <el-form-item label="集团外部销售收入" prop="externalGroupSalesRevenue">
+            <el-input v-model="form.externalGroupSalesRevenue" placeholder="请输入集团外部销售收入" />
+          </el-form-item>
+          <el-form-item label="整车产量" prop="totalVehicleProduction">
+            <el-input v-model="form.totalVehicleProduction" placeholder="请输入整车产量" />
+          </el-form-item>
+          <el-form-item label="整车销量" prop="totalVehicleSales">
+            <el-input v-model="form.totalVehicleSales" placeholder="请输入整车销量" />
+          </el-form-item>
+          <el-form-item label="新产品销售收入" prop="newProductSalesRevenue">
+            <el-input v-model="form.newProductSalesRevenue" placeholder="请输入新产品销售收入" />
+          </el-form-item>
+          <el-form-item label="特色产品收入" prop="specialtyProductRevenue">
+            <el-input v-model="form.specialtyProductRevenue" placeholder="请输入特色产品收入" />
+          </el-form-item>
+          <el-form-item label="整机销售成本" prop="totalSalesCost">
+            <el-input v-model="form.totalSalesCost" placeholder="请输入整机销售成本" />
+          </el-form-item>
+          <el-form-item label="当月制造费用" prop="manufacturingExpensesMonth">
+            <el-input v-model="form.manufacturingExpensesMonth" placeholder="请输入当月制造费用" />
+          </el-form-item>
+          <el-form-item label="储备车金额" prop="reserveCarAmount">
+            <el-input v-model="form.reserveCarAmount" placeholder="请输入储备车金额" />
+          </el-form-item>
+          <el-form-item label="资金周转率" prop="capitalTurnoverRate">
+            <el-input v-model="form.capitalTurnoverRate" placeholder="请输入资金周转率" />
+          </el-form-item>
+          <el-form-item label="库存商品周转率" prop="inventoryTurnoverRate">
+            <el-input v-model="form.inventoryTurnoverRate" placeholder="请输入库存商品周转率" />
+          </el-form-item>
+          <el-form-item label="原材料周转率" prop="rawMaterialTurnoverRate">
+            <el-input v-model="form.rawMaterialTurnoverRate" placeholder="请输入原材料周转率" />
+          </el-form-item>
+          <el-form-item label="在制品周转率" prop="inprogressTurnoverRate">
+            <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入在制品周转率" />
+          </el-form-item>
+          <el-form-item label="一年以上暂估行项目" prop="longEstimatedItems">
+            <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目" />
+          </el-form-item>
+          <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
+            <el-input v-model="form.inprogressDayrevenue" placeholder="请输入当日在制品金额" />
+          </el-form-item>
+          <el-form-item label="当月经济增加值" prop="addedValueMonthly">
+            <el-input v-model="form.addedValueMonthly" placeholder="请输入当月经济增加值" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
+    </el-tab-pane>
+    <el-tab-pane label="当日在制品" name="2">
+      <el-form :model="queryParams2" ref="queryForm2" size="small" :inline="true" v-show="showSearch"
+        label-width="68px">
+        <!-- <el-form-item label="当日在制品金额" prop="inProgressDayRevenue">
+        <el-input v-model="queryParams2.inProgressDayRevenue" placeholder="请输入当日在制品金额" clearable
+          @keyup.enter.native="handleQuery2" />
+      </el-form-item> -->
+
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery2">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery2">重置</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd2"
+            v-hasPermi="['financial:data:add']">新增</el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate2"
+            v-hasPermi="['financial:data:edit']">修改</el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete2"
+            v-hasPermi="['financial:data:remove']">删除</el-button>
+        </el-col>
+        <!-- <el-col :span="1.5">
+        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
+          v-hasPermi="['financial:data:export']">导出</el-button>
+      </el-col> -->
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList2"></right-toolbar>
+      </el-row>
+
+      <el-table v-loading="loading" :data="dataList2" @selection-change="handleSelectionChange2">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="当日在制品金额" align="center" prop="inProgressDayRevenue" />
+        <el-table-column label="日期-年月" align="center" prop="dataTime" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.dataTime, '{y}-{m}-{d}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate2(scope.row)"
+              v-hasPermi="['financial:data:edit']">修改</el-button>
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete2(scope.row)"
+              v-hasPermi="['financial:data:remove']">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination v-show="total > 0" :total="total" :page.sync="queryParams2.pageNum"
+        :limit.sync="queryParams2.pageSize" @pagination="getList2" />
+
+      <!-- 添加或修改[财务]每日填报指标[当日再制品金额]对话框 -->
+      <el-dialog :title="title" :visible.sync="open2" width="500px" append-to-body>
+        <el-form ref="form2" :model="form2" :rules="rules2" label-width="120px">
+          <el-form-item label="当日在制品金额" prop="inProgressDayRevenue">
+            <el-input v-model="form2.inProgressDayRevenue" placeholder="请输入当日在制品金额" />
+          </el-form-item>
+          <el-form-item label="日期-年月" prop="dataTime">
+            <el-date-picker clearable v-model="form2.dataTime" type="date" value-format="yyyy-MM-dd"
+              placeholder="请选择日期-年月">
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm2">确 定</el-button>
+          <el-button @click="cancel2">取 消</el-button>
+        </div>
+      </el-dialog>
+    </el-tab-pane>
+
+
+  </el-tabs>
 </template>
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/financial/data";
+import { listData2, getData2, delData2, addData2, updateData2 } from "@/api/financial/dayData";
 // import * as XLSX from "xlsx";
 // import "font-awesome/css/font-awesome.css";
 //引入font-awesome
@@ -191,6 +263,7 @@ export default {
   name: "Data",
   data() {
     return {
+      activeName: "1",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -210,10 +283,12 @@ export default {
       total: 0,
       // [财务]手动填报指标表格数据
       dataList: [],
+      dataList2: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      open2: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -241,8 +316,15 @@ export default {
         updatedDate: null
 
       },
+      queryParams2: {
+        pageNum: 1,
+        pageSize: 10,
+        inProgressDayRevenue: null,
+        dataTime: null,
+      },
       // 表单参数
       form: {},
+      form2: {},
       // 表单校验
       rules: {
       }
@@ -250,6 +332,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getList2();
     this.sortDataListDescending()
   },
   methods: {
@@ -498,7 +581,112 @@ export default {
       this.download('financial/data/export', {
         ...this.queryParams
       }, `data_${new Date().getTime()}.xlsx`)
-    }
+    },
+
+
+
+    //当日在制品
+
+
+
+    /** 查询[财务]每日填报指标[当日再制品金额]列表 */
+    getList2() {
+      this.loading = true;
+      listData2(this.queryParams2).then(response => {
+        this.dataList2 = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel2() {
+      this.open2 = false;
+      this.reset2();
+    },
+    // 表单重置
+    reset2() {
+      this.form2 = {
+        id: null,
+        inProgressDayRevenue: null,
+        dataTime: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null
+      };
+      this.resetForm("form2");
+    },
+    /** 搜索按钮操作 */
+    handleQuery2() {
+      this.queryParams2.pageNum = 1;
+      this.getList2();
+    },
+    /** 重置按钮操作 */
+    resetQuery2() {
+      this.resetForm("queryForm2");
+      this.handleQuery2();
+    },
+    // 多选框选中数据
+    handleSelectionChange2(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd2() {
+      this.reset2();
+      this.open2 = true;
+      this.title = "添加[财务]每日填报指标[当日再制品金额]";
+    },
+    /** 修改按钮操作 */
+    handleUpdate2(row) {
+      this.reset2();
+      const id = row.id || this.ids
+      getData2(id).then(response => {
+        this.form2 = response.data;
+        this.open2 = true;
+        this.title = "修改[财务]每日填报指标[当日再制品金额]";
+      });
+    },
+
+    /** 提交按钮 */
+    submitForm2() {
+      this.$refs["form2"].validate(valid => {
+        if (valid) {
+          if (this.form2.id != null) {
+            updateData2(this.form2).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open2 = false;
+              this.getList2();
+            });
+          } else {
+            addData2(this.form2).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open2 = false;
+              this.getList2();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete2(row) {
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除[财务]每日填报指标[当日再制品金额]编号为"' + ids + '"的数据项？').then(function () {
+        return delData2(ids);
+      }).then(() => {
+        this.getList2();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => { });
+    },
+    // TODO修改删除提示字（编号→年月）
+
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.currentPage {
+  padding: 10px;
+}
+</style>

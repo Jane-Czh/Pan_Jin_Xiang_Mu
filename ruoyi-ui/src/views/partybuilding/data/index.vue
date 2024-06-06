@@ -46,7 +46,7 @@
       </el-table-column>
 
       <el-table-column label="党建分数" align="center" prop="score" />
-
+      <!-- <el-table-column label="党建排名" align="center" prop="rank" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -68,9 +68,9 @@
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="党建排名" prop="Ranking">
+        <!-- <el-form-item label="党建排名" prop="Ranking">
           <el-input v-model="form.Ranking" placeholder="请输入党建排名" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="党建分数" prop="score">
           <el-input v-model="form.score" placeholder="请输入党建分数" />
         </el-form-item>

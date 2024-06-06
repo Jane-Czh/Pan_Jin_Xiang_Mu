@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2024-05-09
  */
 @RestController
-@RequestMapping("/enterprise/Data")
+@RequestMapping("/enterprise/data/monthly")
 public class EnterpriseManagementMonthlyDataController extends BaseController {
     @Autowired
     private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
@@ -37,7 +37,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 查询[企业管理]指标月度数据列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:list')")
+    @PreAuthorize("@ss.hasPermi('enterprise:data:list')")
     @GetMapping("/list")
     public TableDataInfo list(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         startPage();
@@ -49,7 +49,7 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 获取[企业管理]指标月度数据详细信息
      */
-//    @PreAuthorize("@ss.hasPermi('enterprise:Data:query')")
+    @PreAuthorize("@ss.hasPermi('enterprise:data:query')")
     @GetMapping(value = "/{esId}")
     public AjaxResult getInfo(@PathVariable("esId") Long esId) {
         return success(enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataByEsId(esId));
@@ -58,27 +58,28 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     /**
      * 新增[企业管理]指标月度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:add')")
-    @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
-        return toAjax(enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData));
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:Data:add')")
+//    @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+//        return toAjax(enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData));
+//    }
 
     /**
      * 修改[企业管理]指标月度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:edit')")
+    @PreAuthorize("@ss.hasPermi('enterprise:data:edit')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+        enterpriseManagementMonthlyData.setUpdateBy(getUsername());
         return toAjax(enterpriseManagementMonthlyDataService.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData));
     }
 
     /**
      * 删除[企业管理]指标月度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Data:remove')")
+    @PreAuthorize("@ss.hasPermi('enterprise:data:remove')")
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{esIds}")
     public AjaxResult remove(@PathVariable Long[] esIds) {

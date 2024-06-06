@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2024-04-27
  */
 @RestController
-@RequestMapping("/enterprise/AnnualData")
+@RequestMapping("/enterprise/data/annual")
 public class EnterpriseManagementAnnualDataController extends BaseController {
     @Autowired
     private IEnterpriseManagementAnnualDataService enterpriseManagementAnnualDataService;
@@ -46,18 +46,6 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     }
 
     /**
-     * 导出[企业管理]指标年度数据列表
-     */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:export')")
-    @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
-        List<EnterpriseManagementAnnualData> list = enterpriseManagementAnnualDataService.selectEnterpriseManagementAnnualDataList(enterpriseManagementAnnualData);
-        ExcelUtil<EnterpriseManagementAnnualData> util = new ExcelUtil<EnterpriseManagementAnnualData>(EnterpriseManagementAnnualData.class);
-        util.exportExcel(response, list, "[企业管理]指标年度数据数据");
-    }
-
-    /**
      * 获取[企业管理]指标年度数据详细信息
      */
     @PreAuthorize("@ss.hasPermi('enterprise:data:query')")
@@ -69,12 +57,12 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     /**
      * 新增[企业管理]指标年度数据
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:data:add')")
-    @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
-        return toAjax(enterpriseManagementAnnualDataService.insertEnterpriseManagementAnnualData(enterpriseManagementAnnualData));
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:data:add')")
+//    @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
+//        return toAjax(enterpriseManagementAnnualDataService.insertEnterpriseManagementAnnualData(enterpriseManagementAnnualData));
+//    }
 
     /**
      * 修改[企业管理]指标年度数据
@@ -83,6 +71,7 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
     @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
+        enterpriseManagementAnnualData.setUpdateBy(getUsername());
         return toAjax(enterpriseManagementAnnualDataService.updateEnterpriseManagementAnnualData(enterpriseManagementAnnualData));
     }
 

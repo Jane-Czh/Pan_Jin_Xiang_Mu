@@ -1,8 +1,14 @@
 package com.heli.enterprise.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import com.heli.enterprise.mapper.EnterpriseManagementMonthlyDataMapper;
+import com.heli.enterprise.service.IEnterpriseManagementMonthlyDataService;
 import com.ruoyi.common.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.enterprise.mapper.EnterpriseManagementAnnualDataMapper;
@@ -19,6 +25,15 @@ import com.heli.enterprise.service.IEnterpriseManagementAnnualDataService;
 public class EnterpriseManagementAnnualDataServiceImpl implements IEnterpriseManagementAnnualDataService {
     @Autowired
     private EnterpriseManagementAnnualDataMapper enterpriseManagementAnnualDataMapper;
+    @Autowired
+    private EnterpriseManagementMonthlyDataMapper enterpriseManagementMonthlyDataMapper;
+
+    @Autowired
+    private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
+
+
+    private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementAnnualDataServiceImpl.class);
+
 
     @Override
     public Boolean checkEMAnnualDataIsExisted(Integer naturalYear) {
@@ -68,7 +83,20 @@ public class EnterpriseManagementAnnualDataServiceImpl implements IEnterpriseMan
     @Override
     public int updateEnterpriseManagementAnnualData(EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
         enterpriseManagementAnnualData.setUpdateTime(DateUtils.getNowDate());
-        return enterpriseManagementAnnualDataMapper.updateEnterpriseManagementAnnualData(enterpriseManagementAnnualData);
+        enterpriseManagementAnnualDataMapper.updateEnterpriseManagementAnnualData(enterpriseManagementAnnualData);
+        Date nowYearDate = new Date(enterpriseManagementAnnualData.getNaturalYear() -1900, 0, 1);
+        int i = 0;
+        //更新
+        //获取当年数据最大月份
+        Date maxMonth = enterpriseManagementMonthlyDataMapper.selectMaxMonthByYear(nowYearDate);
+        log.info("最大月份："+maxMonth);
+        //从当前月份更新到最大月份
+        for (Date date = nowYearDate; date.before(DateUtils.getNextMonth(maxMonth)) ; date = DateUtils.getNextMonth(date),i++) {
+            log.info("当前更新的月份为："+ date);
+            enterpriseManagementMonthlyDataService.calculateHandFillIndicators(date);
+        }
+
+        return i;
     }
 
     /**

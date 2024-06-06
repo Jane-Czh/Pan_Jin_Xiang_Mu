@@ -68,10 +68,10 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         BigDecimal monthlySalary = enterpriseManagementMonthlyDataMapper.selectMonthlySalary(yearAndMonth);
         BigDecimal annualSalary = enterpriseManagementMonthlyDataMapper.selectAnnualSalary(DateUtils.getYear(yearAndMonth));
 
-        monthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 2, ROUND_HALF_UP));
+        monthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
         BigDecimal totalNumber = enterpriseManagementMonthlyDataMapper.selectSalaryTotalNumber(yearAndMonth);
 
-        monthlyData.setAnnualSalaryRatio(totalNumber.divide(annualSalary, 2, ROUND_HALF_UP));
+        monthlyData.setAnnualSalaryRatio(totalNumber.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
 
         log.info("计算月度指标数据：" + monthlyData);
 //        return enterpriseManagementMonthlyDataMapper.updateCalculateEmployeesDataByMonth(monthlyData);
@@ -147,7 +147,18 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
     @Override
     public int updateEnterpriseManagementMonthlyData(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         enterpriseManagementMonthlyData.setUpdateTime(DateUtils.getNowDate());
-        return enterpriseManagementMonthlyDataMapper.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
+        enterpriseManagementMonthlyDataMapper.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
+        int i = 0;
+        //更新
+        //获取当年数据最大月份
+        Date maxMonth = enterpriseManagementMonthlyDataMapper.selectMaxMonthByYear(enterpriseManagementMonthlyData.getYearAndMonth());
+        log.info("最大月份：" + maxMonth);
+        //从当前月份更新到最大月份
+        for (Date date = enterpriseManagementMonthlyData.getYearAndMonth(); date.before(DateUtils.getNextMonth(maxMonth)); date = DateUtils.getNextMonth(date), i++) {
+            log.info("当前更新的月份为：" + date);
+            calculateHandFillIndicators(date);
+        }
+        return i;
     }
 
     /**

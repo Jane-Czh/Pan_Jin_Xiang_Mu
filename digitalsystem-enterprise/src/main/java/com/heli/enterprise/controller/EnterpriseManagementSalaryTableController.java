@@ -43,17 +43,17 @@ public class EnterpriseManagementSalaryTableController extends BaseController {
      * @date: 2024/4/11 16:38
      *
      * @return*/
-    @PostMapping("/simpleRead")
-    public R<String> simpleRead(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {
-
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            log.info("1233333333");
-            return enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream);
-        } catch (Exception e) {
-            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
-            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
-        }
-    }
+//    @PostMapping("/simpleRead")
+//    public R<String> simpleRead(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {
+//
+//        try (InputStream inputStream = multipartFile.getInputStream()) {
+//            log.info("1233333333");
+//            return enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream);
+//        } catch (Exception e) {
+//            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
+//            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
+//        }
+//    }
 
 
 
@@ -61,62 +61,62 @@ public class EnterpriseManagementSalaryTableController extends BaseController {
     /**
      * 查询工资-部分字段列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
-        startPage();
-        List<EnterpriseManagementSalaryTable> list = enterpriseManagementSalaryTableService.selectEnterpriseManagementSalaryTableList(enterpriseManagementSalaryTable);
-        return getDataTable(list);
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:list')")
+//    @GetMapping("/list")
+//    public TableDataInfo list(EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
+//        startPage();
+//        List<EnterpriseManagementSalaryTable> list = enterpriseManagementSalaryTableService.selectEnterpriseManagementSalaryTableList(enterpriseManagementSalaryTable);
+//        return getDataTable(list);
+//    }
 
     /**
      * 导出工资-部分字段列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:export')")
-    @Log(title = "工资-部分字段", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
-        List<EnterpriseManagementSalaryTable> list = enterpriseManagementSalaryTableService.selectEnterpriseManagementSalaryTableList(enterpriseManagementSalaryTable);
-        ExcelUtil<EnterpriseManagementSalaryTable> util = new ExcelUtil<EnterpriseManagementSalaryTable>(EnterpriseManagementSalaryTable.class);
-        util.exportExcel(response, list, "工资-部分字段数据");
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:export')")
+//    @Log(title = "工资-部分字段", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
+//        List<EnterpriseManagementSalaryTable> list = enterpriseManagementSalaryTableService.selectEnterpriseManagementSalaryTableList(enterpriseManagementSalaryTable);
+//        ExcelUtil<EnterpriseManagementSalaryTable> util = new ExcelUtil<EnterpriseManagementSalaryTable>(EnterpriseManagementSalaryTable.class);
+//        util.exportExcel(response, list, "工资-部分字段数据");
+//    }
 
     /**
      * 获取工资-部分字段详细信息
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:query')")
-    @GetMapping(value = "/{esId}")
-    public AjaxResult getInfo(@PathVariable("esId") Long esId) {
-        return success(enterpriseManagementSalaryTableService.selectEnterpriseManagementSalaryTableByEsId(esId));
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:query')")
+//    @GetMapping(value = "/{esId}")
+//    public AjaxResult getInfo(@PathVariable("esId") Long esId) {
+//        return success(enterpriseManagementSalaryTableService.selectEnterpriseManagementSalaryTableByEsId(esId));
+//    }
 
     /**
      * 新增工资-部分字段
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:add')")
-    @Log(title = "工资-部分字段", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
-        return toAjax(enterpriseManagementSalaryTableService.insertEnterpriseManagementSalaryTable(enterpriseManagementSalaryTable));
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:add')")
+//    @Log(title = "工资-部分字段", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
+//        return toAjax(enterpriseManagementSalaryTableService.insertEnterpriseManagementSalaryTable(enterpriseManagementSalaryTable));
+//    }
 
     /**
      * 修改工资-部分字段
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:edit')")
-    @Log(title = "工资-部分字段", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
-        return toAjax(enterpriseManagementSalaryTableService.updateEnterpriseManagementSalaryTable(enterpriseManagementSalaryTable));
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:edit')")
+//    @Log(title = "工资-部分字段", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    public AjaxResult edit(@RequestBody EnterpriseManagementSalaryTable enterpriseManagementSalaryTable) {
+//        return toAjax(enterpriseManagementSalaryTableService.updateEnterpriseManagementSalaryTable(enterpriseManagementSalaryTable));
+//    }
 
     /**
      * 删除工资-部分字段
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:remove')")
-    @Log(title = "工资-部分字段", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{esIds}")
-    public AjaxResult remove(@PathVariable Long[] esIds) {
-        return toAjax(enterpriseManagementSalaryTableService.deleteEnterpriseManagementSalaryTableByEsIds(esIds));
-    }
+//    @PreAuthorize("@ss.hasPermi('enterprise:salaryTable:remove')")
+//    @Log(title = "工资-部分字段", businessType = BusinessType.DELETE)
+//    @DeleteMapping("/{esIds}")
+//    public AjaxResult remove(@PathVariable Long[] esIds) {
+//        return toAjax(enterpriseManagementSalaryTableService.deleteEnterpriseManagementSalaryTableByEsIds(esIds));
+//    }
 }

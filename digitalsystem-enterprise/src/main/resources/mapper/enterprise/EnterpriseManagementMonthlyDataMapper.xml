@@ -54,6 +54,12 @@
         limit 1
     </select>
 
+    <!--  查询当年已上传数据的最大月份  -->
+    <select id="selectMaxMonthByYear" resultType="date">
+        select max(Year_And_Month) from Enterprise_Management_Indicators_Monthly_Data
+        where date_format(Year_And_Month,'%Y') = date_format(#{yearAndMonth},'%Y')
+    </select>
+
     <!--  查询工资月度值  -->
     <select id="selectMonthlySalary" resultType="decimal">
         select Total_Monthly_Salary from Enterprise_Management_Indicators_Monthly_Data

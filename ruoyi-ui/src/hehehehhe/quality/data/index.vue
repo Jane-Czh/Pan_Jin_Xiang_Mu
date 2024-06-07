@@ -35,16 +35,19 @@
 
     <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="qihfId" />
+      <!-- <el-table-column label="主键" align="center" prop="qihfId" /> -->
       <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="外部质量损失率的分子(手动填报)" align="center" prop="moleculeExternalMassLossRate" />
+      <el-table-column label="外部质量损失率的分子" align="center" prop="moleculeExternalMassLossRate" />
       <el-table-column label="外部质量损失率" align="center" prop="externalMassLossRate" />
       <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
       <el-table-column label="平均无故障时间" align="center" prop="meantimeWithoutFailure" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.meantimeWithoutFailure, '{y}-{m}-{d}') }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="供应商不合格件返厂及时率" align="center" prop="intimeReturnrate" />
       <el-table-column label="班组自查合格率" align="center" prop="selfcheckPassrate" />
@@ -80,7 +83,9 @@
           <el-input v-model="form.quarterlyRank" placeholder="请输入质量考核季度排名" />
         </el-form-item>
         <el-form-item label="平均无故障时间" prop="meantimeWithoutFailure">
-          <el-input v-model="form.meantimeWithoutFailure" placeholder="请选择平均无故障时间" />
+          <el-date-picker clearable v-model="form.meantimeWithoutFailure" type="date" value-format="yyyy-MM-dd"
+            placeholder="请选择平均无故障时间">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="供应商不合格件返厂及时率" prop="intimeReturnrate">
           <el-input v-model="form.intimeReturnrate" placeholder="请输入供应商不合格件返厂及时率" />
@@ -101,8 +106,7 @@
 </template>
 
 <script>
-import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";
-
+import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";//TODO 手动填报404
 export default {
   name: "HandFill",
   data() {
@@ -204,6 +208,13 @@ export default {
       this.open = true;
       this.title = "添加[质量]指标填报";
     },
+    //   TODO {
+    // 	"timestamp": "2024-05-31T16:42:56.304+08:00",
+    // 	"status": 404,
+    // 	"error": "Not Found",
+    // 	"message": "No message available",
+    // 	"path": "/quality/handFill"
+    // }
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();

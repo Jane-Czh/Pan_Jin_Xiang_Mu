@@ -35,17 +35,16 @@
 
     <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="qihfId" />
+      <!-- <el-table-column label="主键" align="center" prop="qihfId" /> -->
       <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="外部质量损失率的分子(手动填报)" align="center" prop="moleculeExternalMassLossRate" />
+      <el-table-column label="外部质量损失率的分子" align="center" prop="moleculeExternalMassLossRate" />
       <el-table-column label="外部质量损失率" align="center" prop="externalMassLossRate" />
       <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
-      <el-table-column label="平均无故障时间" align="center" prop="meantimeWithoutFailure" width="180">
-      </el-table-column>
+      <el-table-column label="平均无故障时间" align="center" prop="meantimeWithoutFailure" width="180" />
       <el-table-column label="供应商不合格件返厂及时率" align="center" prop="intimeReturnrate" />
       <el-table-column label="班组自查合格率" align="center" prop="selfcheckPassrate" />
       <el-table-column label="下道工序反馈合格率" align="center" prop="nextprocessFeedbackPassrate" />
@@ -101,8 +100,7 @@
 </template>
 
 <script>
-import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";
-
+import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";//TODO 手动填报404
 export default {
   name: "HandFill",
   data() {
@@ -204,6 +202,7 @@ export default {
       this.open = true;
       this.title = "添加[质量]指标填报";
     },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();

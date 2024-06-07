@@ -6,7 +6,6 @@
           placeholder="请选择年月">
         </el-date-picker>
       </el-form-item>
-
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -16,45 +15,43 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['quality:handFill:add']">新增</el-button>
+          v-hasPermi="['enterprise:Settlement:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['quality:handFill:edit']">修改</el-button>
+          v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['quality:handFill:remove']">删除</el-button>
+          v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['quality:handFill:export']">导出</el-button>
+          v-hasPermi="['enterprise:Settlement:export']">导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="SettlementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="qihfId" />
+      <el-table-column label="id" align="center" prop="edId" />
       <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="外部质量损失率的分子(手动填报)" align="center" prop="moleculeExternalMassLossRate" />
-      <el-table-column label="外部质量损失率" align="center" prop="externalMassLossRate" />
-      <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
-      <el-table-column label="平均无故障时间" align="center" prop="meantimeWithoutFailure" width="180">
-      </el-table-column>
-      <el-table-column label="供应商不合格件返厂及时率" align="center" prop="intimeReturnrate" />
-      <el-table-column label="班组自查合格率" align="center" prop="selfcheckPassrate" />
-      <el-table-column label="下道工序反馈合格率" align="center" prop="nextprocessFeedbackPassrate" />
+      <el-table-column label="销售订单录入不及时比例" align="center" prop="orderEntryDelayRatio" />
+      <el-table-column label="销售订单不及时发货比例" align="center" prop="shipmentDelayRatio" />
+      <el-table-column label="生产订单不及时报工比例" align="center" prop="productionReportDelayRatio" />
+      <el-table-column label="成品检验业务不及时率" align="center" prop="inspectionDelayRate" />
+      <el-table-column label="销售发票过账不及时率" align="center" prop="invoicePostingDelayRate" />
+      <el-table-column label="客户未清账比例" align="center" prop="unsettledAccountsRatio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['quality:handFill:edit']">修改</el-button>
+            v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['quality:handFill:remove']">删除</el-button>
+            v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,7 +59,8 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 添加或修改[质量]指标填报对话框 -->
+    <!-- 添加或修改日清日结
+对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="年月" prop="yearAndMonth">
@@ -70,26 +68,23 @@
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="外部质量损失率的分子(手动填报)" prop="moleculeExternalMassLossRate">
-          <el-input v-model="form.moleculeExternalMassLossRate" placeholder="请输入外部质量损失率的分子(手动填报)" />
+        <el-form-item label="销售订单录入不及时比例" prop="orderEntryDelayRatio">
+          <el-input v-model="form.orderEntryDelayRatio" placeholder="请输入销售订单录入不及时比例" />
         </el-form-item>
-        <el-form-item label="外部质量损失率" prop="externalMassLossRate">
-          <el-input v-model="form.externalMassLossRate" placeholder="请输入外部质量损失率" />
+        <el-form-item label="销售订单不及时发货比例" prop="shipmentDelayRatio">
+          <el-input v-model="form.shipmentDelayRatio" placeholder="请输入销售订单不及时发货比例" />
         </el-form-item>
-        <el-form-item label="质量考核季度排名" prop="quarterlyRank">
-          <el-input v-model="form.quarterlyRank" placeholder="请输入质量考核季度排名" />
+        <el-form-item label="生产订单不及时报工比例" prop="productionReportDelayRatio">
+          <el-input v-model="form.productionReportDelayRatio" placeholder="请输入生产订单不及时报工比例" />
         </el-form-item>
-        <el-form-item label="平均无故障时间" prop="meantimeWithoutFailure">
-          <el-input v-model="form.meantimeWithoutFailure" placeholder="请选择平均无故障时间" />
+        <el-form-item label="成品检验业务不及时率" prop="inspectionDelayRate">
+          <el-input v-model="form.inspectionDelayRate" placeholder="请输入成品检验业务不及时率" />
         </el-form-item>
-        <el-form-item label="供应商不合格件返厂及时率" prop="intimeReturnrate">
-          <el-input v-model="form.intimeReturnrate" placeholder="请输入供应商不合格件返厂及时率" />
+        <el-form-item label="销售发票过账不及时率" prop="invoicePostingDelayRate">
+          <el-input v-model="form.invoicePostingDelayRate" placeholder="请输入销售发票过账不及时率" />
         </el-form-item>
-        <el-form-item label="班组自查合格率" prop="selfcheckPassrate">
-          <el-input v-model="form.selfcheckPassrate" placeholder="请输入班组自查合格率" />
-        </el-form-item>
-        <el-form-item label="下道工序反馈合格率" prop="nextprocessFeedbackPassrate">
-          <el-input v-model="form.nextprocessFeedbackPassrate" placeholder="请输入下道工序反馈合格率" />
+        <el-form-item label="客户未清账比例" prop="unsettledAccountsRatio">
+          <el-input v-model="form.unsettledAccountsRatio" placeholder="请输入客户未清账比例" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -101,10 +96,10 @@
 </template>
 
 <script>
-import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";
+import { listDailyClearData, getDailyClearData, addDailyClearData, updateDailyClearData, delDailyClearData } from "@/api/enterprise/dailyClearData";
 
 export default {
-  name: "HandFill",
+  name: "Settlement",
   data() {
     return {
       // 遮罩层
@@ -119,8 +114,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // [质量]指标填报表格数据
-      handFillList: [],
+      // 日清日结表格数据
+      SettlementList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -130,13 +125,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         yearAndMonth: null,
-        moleculeExternalMassLossRate: null,
-        externalMassLossRate: null,
-        quarterlyRank: null,
-        meantimeWithoutFailure: null,
-        intimeReturnrate: null,
-        selfcheckPassrate: null,
-        nextprocessFeedbackPassrate: null,
+        orderEntryDelayRatio: null,
+        shipmentDelayRatio: null,
+        productionReportDelayRatio: null,
+        inspectionDelayRate: null,
+        invoicePostingDelayRate: null,
+        unsettledAccountsRatio: null,
       },
       // 表单参数
       form: {},
@@ -149,11 +143,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询[质量]指标填报列表 */
+    /** 查询日清日结列表 */
     getList() {
       this.loading = true;
-      listHandFill(this.queryParams).then(response => {
-        this.handFillList = response.rows;
+      listDailyClearData(this.queryParams).then(response => {
+        this.SettlementList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -166,15 +160,14 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        qihfId: null,
+        edId: null,
         yearAndMonth: null,
-        moleculeExternalMassLossRate: null,
-        externalMassLossRate: null,
-        quarterlyRank: null,
-        meantimeWithoutFailure: null,
-        intimeReturnrate: null,
-        selfcheckPassrate: null,
-        nextprocessFeedbackPassrate: null,
+        orderEntryDelayRatio: null,
+        shipmentDelayRatio: null,
+        productionReportDelayRatio: null,
+        inspectionDelayRate: null,
+        invoicePostingDelayRate: null,
+        unsettledAccountsRatio: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -194,7 +187,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.qihfId)
+      this.ids = selection.map(item => item.edId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -202,30 +195,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[质量]指标填报";
+      this.title = "添加日清日结";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const qihfId = row.qihfId || this.ids
-      getHandFill(qihfId).then(response => {
+      const edId = row.edId || this.ids
+      getDailyClearData(edId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[质量]指标填报";
+        this.title = "修改日清日结";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.qihfId != null) {
-            updateHandFill(this.form).then(response => {
+          if (this.form.edId != null) {
+            delDailyClearData(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addHandFill(this.form).then(response => {
+            updateDailyClearData(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -236,9 +229,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const qihfIds = row.qihfId || this.ids;
-      this.$modal.confirm('是否确认删除[质量]指标填报编号为"' + qihfIds + '"的数据项？').then(function () {
-        return delHandFill(qihfIds);
+      const edIds = row.edId || this.ids;
+      this.$modal.confirm('是否确认删除日清日结编号为"' + edIds + '"的数据项？').then(function () {
+        return addDailyClearData(edIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -246,9 +239,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('quality/handFill/export', {
+      this.download('enterprise/Settlement/export', {
         ...this.queryParams
-      }, `handFill_${new Date().getTime()}.xlsx`)
+      }, `Settlement_${new Date().getTime()}.xlsx`)
     }
   }
 };

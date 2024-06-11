@@ -13,20 +13,21 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common</artifactId>
         </dependency>
-<!-- aspose word转pdf -->
+        <!-- aspose word转pdf -->
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-words</artifactId>
             <version>18.6</version>
             <classifier>jdk16</classifier>
-            <!--             <systemPath>${basedir}/src/main/resources/lib/aspose-words-18.6-jdk16-crack.jar</systemPath> -->
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/aspose-words-18.6-jdk16-crack.jar</systemPath>
         </dependency>
     </dependencies>
     <repositories>
-        <repository>
-            <id>aspose-maven-repository</id>
-            <url>https://repository.aspose.com/repo/</url>
-        </repository>
-        <!--  其他远程仓库  -->
+<!--        <repository>-->
+<!--            <id>aspose-maven-repository</id>-->
+<!--            <url>https://repository.aspose.com/repo/</url>-->
+<!--        </repository>-->
+<!--        &lt;!&ndash;  其他远程仓库  &ndash;&gt;-->
     </repositories>
 </project>

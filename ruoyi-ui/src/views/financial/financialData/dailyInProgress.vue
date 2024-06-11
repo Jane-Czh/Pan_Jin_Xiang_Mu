@@ -1,10 +1,15 @@
 <template>
   <div class="currentPage">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
-      <el-form-item label="当日在制品金额" prop="inProgressDayRevenue">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="日期" prop="dataTime">
+        <el-date-picker clearable v-model="queryParams.dataTime" type="date" value-format="yyyy-MM-dd"
+          placeholder="请选择日期">
+        </el-date-picker>
+      </el-form-item>
+      <!-- <el-form-item label="当日在制品金额" prop="inProgressDayRevenue">
         <el-input v-model="queryParams.inProgressDayRevenue" placeholder="请输入当日在制品金额" clearable
           @keyup.enter.native="handleQuery" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -56,7 +61,7 @@
 
     <!-- 添加或修改[财务]每日填报指标[当日再制品金额]对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="日期" prop="dataTime">
           <el-date-picker clearable v-model="form.dataTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期">
           </el-date-picker>
@@ -84,6 +89,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -109,6 +115,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        dataTime: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -156,6 +165,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -198,7 +208,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除[财务]每日填报指标[当日再制品金额]编号为"' + ids + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delData(ids);
       }).then(() => {
         this.getList();

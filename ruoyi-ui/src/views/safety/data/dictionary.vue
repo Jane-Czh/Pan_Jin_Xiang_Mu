@@ -1,10 +1,9 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
-        </el-date-picker>
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
+      <el-form-item label="重点设备编号" prop="seKeyEquipmentId">
+        <el-input v-model="queryParams.seKeyEquipmentId" placeholder="请输入重点设备编号" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -15,46 +14,33 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['safety:data:add']">新增</el-button>
+          v-hasPermi="['safety:KEIndex:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['safety:data:edit']">修改</el-button>
+          v-hasPermi="['safety:KEIndex:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['safety:data:remove']">删除</el-button>
+          v-hasPermi="['safety:KEIndex:remove']">删除</el-button>
       </el-col>
-
-      <import-excel :name="'设备维修表'" :url="'/safety/data/importTable'" />
-
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['safety:data:export']">导出</el-button>
+          v-hasPermi="['safety:KEIndex:export']">导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+    <el-table v-loading="loading" :data="KEIndexList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="Safety_EP_ID" align="center" prop="safetyEpId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
-      <el-table-column label="当月设备故障累计停产时间" align="center" prop="curEquipmentFailuresTotaltime" />
-      <el-table-column label="当月设备维修替换件成本" align="center" prop="curEquipmentReplacementCost" />
-      <el-table-column label="重点设备故障率" align="center" prop="keyEquipmentFailureRate" />
-      <el-table-column label="主要设备故障总次数" align="center" prop="keyEquipmentTotalFailureCount" />
+      <!-- <el-table-column label="id" align="center" prop="skId" /> -->
+      <el-table-column label="重点设备编号" align="center" prop="seKeyEquipmentId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['safety:data:edit']">修改</el-button>
+            v-hasPermi="['safety:KEIndex:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['safety:data:remove']">删除</el-button>
+            v-hasPermi="['safety:KEIndex:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,9 +48,22 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 添加或修改[安全环保]指标填报对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
+    <!-- 添加或修改重点设备字典对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="重点设备编号" prop="seKeyEquipmentId">
+          <el-input v-model="form.seKeyEquipmentId" placeholder="重点设备编号" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+
+    <!-- <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -89,17 +88,15 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
-import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
-import importExcel from "@/views/financial/importExcel.vue";
+import { listDictionary, getDictionary, delDictionary, addDictionary, updateDictionary } from "@/api/safety/dictionary";
 
 export default {
-  components: { importExcel },
-  name: "Data",
+  name: "KEIndex",
   data() {
     return {
       // 遮罩层
@@ -115,8 +112,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // [安全环保]指标填报表格数据
-      dataList: [],
+      // 重点设备字典表格数据
+      KEIndexList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -125,16 +122,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        yearAndMonth: null,
-        createdBy: null,
-        createdTime: null,
-        updatedBy: null,
-        updatedTime: null,
-        curEquipmentMaintenanceCost: null,
-        curEquipmentFailuresTotaltime: null,
-        curEquipmentReplacementCost: null,
-        keyEquipmentFailureRate: null,
-        keyEquipmentTotalFailureCount: null
+        seKeyEquipmentId: null,
       },
       // 表单参数
       form: {},
@@ -150,27 +138,13 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(sort) {
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
-    },
-    /** 查询[安全环保]指标填报列表 */
+    /** 查询重点设备字典列表 */
     getList() {
       this.loading = true;
-      listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
+      listDictionary(this.queryParams).then(response => {
+        this.KEIndexList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
       });
     },
     // 取消按钮
@@ -181,17 +155,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        safetyEpId: null,
-        yearAndMonth: null,
-        createdBy: null,
-        createdTime: null,
-        updatedBy: null,
-        updatedTime: null,
-        curEquipmentMaintenanceCost: null,
-        curEquipmentFailuresTotaltime: null,
-        curEquipmentReplacementCost: null,
-        keyEquipmentFailureRate: null,
-        keyEquipmentTotalFailureCount: null
+        skId: null,
+        seKeyEquipmentId: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null
       };
       this.resetForm("form");
     },
@@ -207,7 +176,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.safetyEpId)
+      this.ids = selection.map(item => item.skId)
       this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
@@ -216,30 +185,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[安全环保]指标";
+      this.title = "添加重点设备字典";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const safetyEpId = row.safetyEpId || this.ids
-      getData(safetyEpId).then(response => {
+      const skId = row.skId || this.ids
+      getDictionary(skId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[安全环保]指标";
+        this.title = "修改重点设备字典";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.safetyEpId != null) {
-            updateData(this.form).then(response => {
+          if (this.form.skId != null) {
+            updateDictionary(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addData(this.form).then(response => {
+            addDictionary(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -250,10 +219,10 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const safetyEpIds = row.safetyEpId || this.ids;
+      const skIds = row.skId || this.ids;
       const date = row.yearAndMonth || this.dates;
       this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
-        return delData(safetyEpIds);
+        return delDictionary(skIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -261,9 +230,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('safety/data/export', {
+      this.download('safety/KEIndex/export', {
         ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
+      }, `KEIndex_${new Date().getTime()}.xlsx`)
     }
   }
 };

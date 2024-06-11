@@ -268,6 +268,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       showDialog: false,
 
       progress: 0,

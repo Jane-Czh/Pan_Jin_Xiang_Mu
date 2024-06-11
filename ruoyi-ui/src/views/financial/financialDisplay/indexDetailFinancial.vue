@@ -35,7 +35,6 @@ export default {
       selectedDate: [],
       endSelectedDate: null,
       pickerOptions: [],
-      option: {},
       xAxisData: [],
       yAxisData: [],
       option: { title: '', dataName: '', apiName: '', yDataName: '' }

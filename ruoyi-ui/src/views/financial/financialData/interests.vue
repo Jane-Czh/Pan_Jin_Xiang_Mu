@@ -27,32 +27,56 @@
           v-hasPermi="['financial:interests:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
+        <!--Excel 参数导入 -->
+        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true">导入Excel
+        </el-button>
+
+        <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+          <!-- 下拉框 -->
+          <el-form :model="form" ref="form" label-width="90px">
+            <el-form-item label="选择表类型">
+              <el-select v-model="selectedType" placeholder="请选择Excel类型">
+                <el-option label="利润表" value="profit"></el-option>
+                <!-- <el-option label="资产负债表" value="balance"></el-option> -->
+              </el-select>
+            </el-form-item>
+          </el-form>
+
+          <i class="el-icon-upload"></i>
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+
+          <!-- 进度动画条 -->
+          <div v-if="progress > 0">
+            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="showDialog = false">取 消</el-button>
+            <el-button type="primary" @click="fileSend()">确 定</el-button>
+          </span>
+        </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['financial:interests:export']">导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="id(主键)" align="center" prop="fiId" /> -->
-      <el-table-column label="导入人" align="center" prop="createdBy" />
-      <el-table-column label="导入时间" align="center" prop="createdTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createdTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="集团内主营业务收入" align="center" prop="internalMainrevenue" />
-      <el-table-column label="集团外主营业务收入" align="center" prop="externalMainrevenue" />
-      <el-table-column label="主营业务收入(上面俩个指标的计算和)" align="center" prop="MainRevenue" />
-      <el-table-column label="主营业务成本-产品销售SD" align="center" prop="cogsProductsalesSd" />
+      <el-table-column label="集团内主营业务收入" align="center" prop="internalMainrevenue" width="140" />
+      <el-table-column label="集团外主营业务收入" align="center" prop="externalMainrevenue" width="140" />
+      <el-table-column label="主营业务收入" align="center" prop="MainRevenue" />
+      <el-table-column label="主营业务成本-产品销售SD" align="center" prop="cogsProductsalesSd" width="180" />
       <el-table-column label="主营业务成本-运费" align="center" prop="cogsFreight" />
-      <el-table-column label="主营业务成本-运费" align="center" prop="cogsVariation" />
+      <el-table-column label="主营业务成本-运费变化" align="center" prop="cogsVariation" />
       <el-table-column label="主营业务成本" align="center" prop="COGS" />
       <el-table-column label="净利润" align="center" prop="NetProfit" />
       <el-table-column label="管理费用" align="center" prop="ManagementExpense" />
@@ -71,16 +95,8 @@
       @pagination="getList" />
 
     <!-- 添加或修改财务-利润对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="导入人" prop="createdBy">
-          <el-input v-model="form.createdBy" placeholder="请输入导入人" />
-        </el-form-item>
-        <el-form-item label="导入时间" prop="createdTime">
-          <el-date-picker clearable v-model="form.createdTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择导入时间">
-          </el-date-picker>
-        </el-form-item>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -92,8 +108,8 @@
         <el-form-item label="集团外主营业务收入" prop="externalMainrevenue">
           <el-input v-model="form.externalMainrevenue" placeholder="请输入集团外主营业务收入" />
         </el-form-item>
-        <el-form-item label="主营业务收入(上面俩个指标的计算和)" prop="MainRevenue">
-          <el-input v-model="form.MainRevenue" placeholder="请输入主营业务收入(上面俩个指标的计算和)" />
+        <el-form-item label="主营业务收入" prop="MainRevenue">
+          <el-input v-model="form.MainRevenue" placeholder="请输入主营业务收入" />
         </el-form-item>
         <el-form-item label="主营业务成本-产品销售SD" prop="cogsProductsalesSd">
           <el-input v-model="form.cogsProductsalesSd" placeholder="请输入主营业务成本-产品销售SD" />
@@ -101,8 +117,8 @@
         <el-form-item label="主营业务成本-运费" prop="cogsFreight">
           <el-input v-model="form.cogsFreight" placeholder="请输入主营业务成本-运费" />
         </el-form-item>
-        <el-form-item label="主营业务成本-运费" prop="cogsVariation">
-          <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-运费" />
+        <el-form-item label="主营业务成本-运费变化" prop="cogsVariation">
+          <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-运费变化" />
         </el-form-item>
         <el-form-item label="主营业务成本" prop="COGS">
           <el-input v-model="form.COGS" placeholder="请输入主营业务成本" />
@@ -127,6 +143,7 @@
 
 <script>
 import { listInterests, getInterests, delInterests, addInterests, updateInterests } from "@/api/financial/interestsData";
+import axios from "axios";
 
 export default {
   name: "Interests",
@@ -136,8 +153,15 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
+      showDialog: false,
+      // 导入Excel弹出层
+      selectedType: '',
+      progress: 0,
+
+
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -172,13 +196,27 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
   created() {
     this.getList();
+
   },
   methods: {
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.interestsList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.interestsList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
+    },
     /** 查询财务-利润列表 */
     getList() {
       this.loading = true;
@@ -186,6 +224,11 @@ export default {
         this.interestsList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
       });
     },
     // 取消按钮
@@ -226,6 +269,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.fiId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -268,12 +312,71 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const fiIds = row.fiId || this.ids;
-      this.$modal.confirm('是否确认删除财务-利润编号为"' + fiIds + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delInterests(fiIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
+    },
+
+    // 导入excel，检查文件类型
+    checkFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileName = file.name;
+      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+
+      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+        this.$message.error("只能上传 Excel 文件！");
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
+      }
+    },
+    //导入excel，取消按钮绑定取消所选的xlsx
+    resetFileInput() {
+      this.$refs.fileInput.value = "";
+    },
+    /** 导入按钮 */
+    fileSend() {
+      const formData = new FormData();
+      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      formData.append("excelFile", file);
+      if (this.selectedType === 'profit') {
+        axios({
+          method: "post",
+          // url: this.$http.url('/financial/data/upload'),
+          url: "http://localhost:8080//financial/data/interests/import",
+          // params: this.$http.adornParams({
+          //   userName: this.$store.state.user.name,
+          // }),
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+          data: formData,
+          onUploadProgress: (progressEvent) => {
+            this.progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+          },
+        })
+          .then(response => {
+            // 处理请求成功的情况
+            this.showDialog = false; // 关闭上传面板
+          })
+          .catch(error => {
+            // 处理请求失败的情况
+            console.error('上传失败：', error);
+          });
+        console.log("利润表")
+        // }
+        this.$message.success("上传成功");
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 2000); // 2000毫秒后关闭
+      }
     },
     /** 导出按钮操作 */
     handleExport() {

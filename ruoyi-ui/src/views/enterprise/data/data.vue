@@ -24,6 +24,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:Data:remove']">删除</el-button>
       </el-col>
+      <import-excel :name="'工资表'" :url="'/enterprise/data/salary'" />
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['enterprise:Data:export']">导出</el-button>
@@ -31,24 +32,25 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="DataList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="DataList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="esId" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
+      <!-- <el-table-column label="主键" align="center" prop="esId" /> -->
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="一线从业人数-填报" align="center" prop="employeesNumber" />
+      <el-table-column label="一线从业人数" align="center" prop="employeesNumber" />
       <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" />
       <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgAnnualNumber" />
-      <el-table-column label="工资总额月度值-填报" align="center" prop="totalMonthlySalary" />
+      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" />
       <el-table-column label="工资总额月度占比" align="center" prop="monthlySalaryRatio" />
       <el-table-column label="工资总额年度占比" align="center" prop="annualSalaryRatio" />
       <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" />
-      <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" />
-      <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" />
-      <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" />
+      <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
+      <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
+      <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -63,15 +65,15 @@
       @pagination="getList" />
 
     <!-- 添加或修改[企业管理]指标月度数据对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="一线从业人数-填报" prop="employeesNumber">
-          <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数-填报" />
+        <el-form-item label="一线从业人数" prop="employeesNumber">
+          <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数" />
         </el-form-item>
         <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
           <el-input v-model="form.employeesAvgMonthlyNumber" placeholder="请输入公司平均从业人数" />
@@ -79,8 +81,8 @@
         <el-form-item label="公司平均从业人数" prop="employeesAvgAnnualNumber">
           <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司平均从业人数" />
         </el-form-item>
-        <el-form-item label="工资总额月度值-填报" prop="totalMonthlySalary">
-          <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值-填报" />
+        <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
+          <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
         </el-form-item>
         <el-form-item label="工资总额月度占比" prop="monthlySalaryRatio">
           <el-input v-model="form.monthlySalaryRatio" placeholder="请输入工资总额月度占比" />
@@ -112,16 +114,17 @@
 
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
-import { listManagement, getManagement, delManagement, addManagement, updateManagement } from "@/api/enterprise/managementIndex";
+import importExcel from "@/views/financial/importExcel.vue";
 
 export default {
   name: "Data",
+  components: { importExcel },
   data() {
     return {
-      activeName: '1',
+
       // 遮罩层
       loading: true,
-      loading2: true,
+
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -132,10 +135,9 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      total2: 0,
+
       // [企业管理]指标月度数据表格数据
       DataList: [],
-      ManagementList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -157,25 +159,8 @@ export default {
         monthlyFunctionalAvgIncome: null,
         functionalDeptOvertimeCost: null,
       },
-      queryParams2: {
-        pageNum: 1,
-        pageSize: 10,
-        yearAndMonth: null,
-        sdSalesordervalidity: null,
-        ppManualpocreationratio: null,
-        ppDeliveredunreportedratio: null,
-        mesLateworkreportingrate: null,
-        qmExternalinspectiondelay: null,
-        mmPurchaseorderlatedelivery: null,
-        mmManualpocreation: null,
-        mmUnsettledpurchaserequests: null,
-        ficoMonthlystandardpricevariation: null,
-        CrossMonthProductionOrders: null,
-        pmLatemaintenanceordercompletion: null,
-      },
       // 表单参数
       form: {},
-      form2: {},
       // 表单校验
       rules: {
       }
@@ -183,9 +168,18 @@ export default {
   },
   created() {
     this.getList();
-    this.getList2();
   },
   methods: {
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.DataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.DataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
+    },
     /** 查询[企业管理]指标月度数据列表 */
     getList() {
       this.loading = true;
@@ -193,6 +187,11 @@ export default {
         this.DataList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
       });
     },
     // 取消按钮
@@ -292,114 +291,6 @@ export default {
     },
 
 
-
-    //11项指标
-
-    /** 查询十一项管理指标列表 */
-    getList2() {
-      this.loading2 = true;
-      listManagement(this.queryParams2).then(response => {
-        this.ManagementList = response.rows;
-        this.total2 = response.total2;
-        this.loading2 = false;
-      });
-    },
-    // 取消按钮
-    cancel2() {
-      this.open2 = false;
-      this.reset2();
-    },
-    // 表单重置
-    reset2() {
-      this.form2 = {
-        emId: null,
-        yearAndMonth: null,
-        sdSalesordervalidity: null,
-        ppManualpocreationratio: null,
-        ppDeliveredunreportedratio: null,
-        mesLateworkreportingrate: null,
-        qmExternalinspectiondelay: null,
-        mmPurchaseorderlatedelivery: null,
-        mmManualpocreation: null,
-        mmUnsettledpurchaserequests: null,
-        ficoMonthlystandardpricevariation: null,
-        CrossMonthProductionOrders: null,
-        pmLatemaintenanceordercompletion: null,
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null
-      };
-      this.resetForm("form2");
-    },
-    /** 搜索按钮操作 */
-    handleQuery2() {
-      this.queryParams2.pageNum = 1;
-      this.getList2();
-    },
-    /** 重置按钮操作 */
-    resetQuery2() {
-      this.resetForm("queryForm2");
-      this.handleQuery2();
-    },
-    // 多选框选中数据
-    handleSelectionChange2(selection) {
-      this.ids = selection.map(item => item.emId)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd2() {
-      this.reset2();
-      this.open2 = true;
-      this.title = "添加十一项管理指标";
-    },
-    /** 修改按钮操作 */
-    handleUpdate2(row) {
-      this.reset2();
-      const emId = row.emId || this.ids
-      getManagement(emId).then(response => {
-        this.form2 = response.data;
-        this.open2 = true;
-        this.title = "修改十一项管理指标";
-      });
-    },
-    /** 提交按钮 */
-    submitForm2() {
-      this.$refs["form2"].validate(valid => {
-        if (valid) {
-          if (this.form2.emId != null) {
-            updateManagement(this.form2).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open2 = false;
-              this.getList2();
-            });
-          } else {
-            addManagement(this.form2).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open2 = false;
-              this.getList2();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete2(row) {
-      const emIds = row.emId || this.ids;
-      this.$modal.confirm('是否确认删除十一项管理指标编号为' + emIds + '的数据项？').then(function () {
-        return delManagement(emIds);
-      }).then(() => {
-        this.getList2();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => { });
-    },
-    // /** 导出按钮操作 */
-    // handleExport2() {
-    //   this.download('enterprise/data/management/export', {
-    //     ...this.queryParams2
-    //   }, `Management_${new Date().getTime()}.xlsx`)
-    // }
   }
 };
 </script>

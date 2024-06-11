@@ -32,25 +32,27 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="ManagementList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="ManagementList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="emId" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
+      <!-- <el-table-column label="id" align="center" prop="emId" /> -->
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="SD 销售订单有效性考核" align="center" prop="sdSalesordervalidity" />
-      <el-table-column label="PP 手工创建生产订单比例" align="center" prop="ppManualpocreationratio" />
-      <el-table-column label="PP 生产订单已收货未报工的比例" align="center" prop="ppDeliveredunreportedratio" />
-      <el-table-column label="MES 报工不及时率比率" align="center" prop="mesLateworkreportingrate" />
-      <el-table-column label="QM 外检业务不及时率" align="center" prop="qmExternalinspectiondelay" />
-      <el-table-column label="MM 采购订单交货不及时的比例" align="center" prop="mmPurchaseorderlatedelivery" />
-      <el-table-column label="MM 手工创建采购订单比例" align="center" prop="mmManualpocreation" />
-      <el-table-column label="MM 未清采购申请" align="center" prop="mmUnsettledpurchaserequests" />
-      <el-table-column label="FICO 月度标准价格与周期单位价格综合差异率" align="center" prop="ficoMonthlystandardpricevariation" />
-      <el-table-column label="跨月生产订单比例" align="center" prop="CrossMonthProductionOrders" />
-      <el-table-column label="PM 维修订单完工不及时率" align="center" prop="pmLatemaintenanceordercompletion" />
+      <el-table-column label="SD 销售订单有效性考核" align="center" prop="sdSalesordervalidity" width="170" />
+      <el-table-column label="PP 手工创建生产订单比例" align="center" prop="ppManualpocreationratio" width="180" />
+      <el-table-column label="PP 生产订单已收货未报工的比例" align="center" prop="ppDeliveredunreportedratio" width="210" />
+      <el-table-column label="MES 报工不及时率比率" align="center" prop="mesLateworkreportingrate" width="170" />
+      <el-table-column label="QM 外检业务不及时率" align="center" prop="qmExternalinspectiondelay" width="160" />
+      <el-table-column label="MM 采购订单交货不及时的比例" align="center" prop="mmPurchaseorderlatedelivery" width="210" />
+      <el-table-column label="MM 手工创建采购订单比例" align="center" prop="mmManualpocreation" width="180" />
+      <el-table-column label="MM 未清采购申请" align="center" prop="mmUnsettledpurchaserequests" width="140" />
+      <el-table-column label="FICO 月度标准价格与周期单位价格综合差异率" align="center" prop="ficoMonthlystandardpricevariation"
+        width="290" />
+      <el-table-column label="跨月生产订单比例" align="center" prop="CrossMonthProductionOrders" width="140" />
+      <el-table-column label="PM 维修订单完工不及时率" align="center" prop="pmLatemaintenanceordercompletion" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -65,8 +67,8 @@
       @pagination="getList" />
 
     <!-- 添加或修改十一项管理指标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="220px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -167,6 +169,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.ManagementList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.ManagementList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
+    },
     /** 查询十一项管理指标列表 */
     getList() {
       this.loading = true;
@@ -174,6 +186,11 @@ export default {
         this.ManagementList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
       });
     },
     // 取消按钮

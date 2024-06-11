@@ -15,46 +15,45 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['safety:data:add']">新增</el-button>
+          v-hasPermi="['quality:Metrics:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['safety:data:edit']">修改</el-button>
+          v-hasPermi="['quality:Metrics:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['safety:data:remove']">删除</el-button>
+          v-hasPermi="['quality:Metrics:remove']">删除</el-button>
       </el-col>
-
-      <import-excel :name="'设备维修表'" :url="'/safety/data/importTable'" />
-
+      <import-excel :name="'售后表'" :url="'/quality/after-sales/read'" />
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['safety:data:export']">导出</el-button>
+          v-hasPermi="['quality:Metrics:export']">导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
+    <el-table v-loading="loading" :data="MetricsList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="Safety_EP_ID" align="center" prop="safetyEpId" /> -->
+      <!-- <el-table-column label="${comment}" align="center" prop="qcId" /> -->
       <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
-      <el-table-column label="当月设备故障累计停产时间" align="center" prop="curEquipmentFailuresTotaltime" />
-      <el-table-column label="当月设备维修替换件成本" align="center" prop="curEquipmentReplacementCost" />
-      <el-table-column label="重点设备故障率" align="center" prop="keyEquipmentFailureRate" />
-      <el-table-column label="主要设备故障总次数" align="center" prop="keyEquipmentTotalFailureCount" />
+      <el-table-column label="当月反馈新车病车数" align="center" prop="newCarDefects" />
+      <el-table-column label="三包期内新车返修率" align="center" prop="warrantyRepairRate" />
+      <el-table-column label="月度售后质量问题总数" align="center" prop="monthlyAfterSalesIssues" />
+      <el-table-column label="三包期内整车月度返修率" align="center" prop="warrantyVehicleRepairRate" />
+      <el-table-column label="外部质量损失率" align="center" prop="externalLossRate" />
+      <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['safety:data:edit']">修改</el-button>
+            v-hasPermi="['quality:Metrics:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['safety:data:remove']">删除</el-button>
+            v-hasPermi="['quality:Metrics:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,7 +61,7 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 添加或修改[安全环保]指标填报对话框 -->
+    <!-- 添加或修改质量指标-统计对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="年月" prop="yearAndMonth">
@@ -70,19 +69,23 @@
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-
-        <el-form-item label="当月设备维修总费用" prop="curEquipmentMaintenanceCost">
-          <el-input v-model="form.curEquipmentMaintenanceCost" placeholder="请输入当月设备维修总费用" />
+        <el-form-item label="当月反馈新车病车数" prop="newCarDefects">
+          <el-input v-model="form.newCarDefects" placeholder="请输入当月反馈新车病车数" />
         </el-form-item>
-        <el-form-item label="当月设备故障累计停产时间" prop="curEquipmentFailuresTotaltime">
-          <el-input v-model="form.curEquipmentFailuresTotaltime" placeholder="请输入当月设备故障累计停产时间" />
+        <el-form-item label="三包期内新车返修率" prop="warrantyRepairRate">
+          <el-input v-model="form.warrantyRepairRate" placeholder="请输入三包期内新车返修率" />
         </el-form-item>
-        <el-form-item label="当月设备维修替换件成本" prop="curEquipmentReplacementCost">
-          <el-input v-model="form.curEquipmentReplacementCost" placeholder="请输入当月设备维修替换件成本" />
+        <el-form-item label="月度售后质量问题总数" prop="monthlyAfterSalesIssues">
+          <el-input v-model="form.monthlyAfterSalesIssues" placeholder="请输入月度售后质量问题总数" />
         </el-form-item>
-
-        <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
-          <el-input v-model="form.keyEquipmentTotalFailureCount" placeholder="请输入主要设备故障总次数" />
+        <el-form-item label="三包期内整车月度返修率" prop="warrantyVehicleRepairRate">
+          <el-input v-model="form.warrantyVehicleRepairRate" placeholder="请输入三包期内整车月度返修率" />
+        </el-form-item>
+        <el-form-item label="外部质量损失率" prop="externalLossRate">
+          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率" />
+        </el-form-item>
+        <el-form-item label="售后问题生产责任次数" prop="productionLiabilityIssues">
+          <el-input v-model="form.productionLiabilityIssues" placeholder="请输入售后问题生产责任次数" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -94,12 +97,11 @@
 </template>
 
 <script>
-import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
+import { listMetrics, getMetrics, delMetrics, addMetrics, updateMetrics } from "@/api/quality/afterSales";
 import importExcel from "@/views/financial/importExcel.vue";
-
 export default {
+  name: "Metrics",
   components: { importExcel },
-  name: "Data",
   data() {
     return {
       // 遮罩层
@@ -115,8 +117,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // [安全环保]指标填报表格数据
-      dataList: [],
+      // 质量指标-统计表格数据
+      MetricsList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -126,15 +128,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         yearAndMonth: null,
-        createdBy: null,
-        createdTime: null,
-        updatedBy: null,
-        updatedTime: null,
-        curEquipmentMaintenanceCost: null,
-        curEquipmentFailuresTotaltime: null,
-        curEquipmentReplacementCost: null,
-        keyEquipmentFailureRate: null,
-        keyEquipmentTotalFailureCount: null
+        newCarDefects: null,
+        warrantyRepairRate: null,
+        monthlyAfterSalesIssues: null,
+        warrantyVehicleRepairRate: null,
+        externalLossRate: null,
+        productionLiabilityIssues: null,
       },
       // 表单参数
       form: {},
@@ -153,17 +152,17 @@ export default {
     handleSortChange(sort) {
       if (sort.column && sort.prop === 'yearAndMonth') {
         if (sort.order === 'ascending') {
-          this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+          this.MetricsList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
         } else if (sort.order === 'descending') {
-          this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+          this.MetricsList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
         }
       }
     },
-    /** 查询[安全环保]指标填报列表 */
+    /** 查询质量指标-统计列表 */
     getList() {
       this.loading = true;
-      listData(this.queryParams).then(response => {
-        this.dataList = response.rows;
+      listMetrics(this.queryParams).then(response => {
+        this.MetricsList = response.rows;
         this.total = response.total;
         this.loading = false;
         this.handleSortChange({
@@ -181,17 +180,18 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        safetyEpId: null,
+        qcId: null,
         yearAndMonth: null,
-        createdBy: null,
-        createdTime: null,
-        updatedBy: null,
-        updatedTime: null,
-        curEquipmentMaintenanceCost: null,
-        curEquipmentFailuresTotaltime: null,
-        curEquipmentReplacementCost: null,
-        keyEquipmentFailureRate: null,
-        keyEquipmentTotalFailureCount: null
+        newCarDefects: null,
+        warrantyRepairRate: null,
+        monthlyAfterSalesIssues: null,
+        warrantyVehicleRepairRate: null,
+        externalLossRate: null,
+        productionLiabilityIssues: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null
       };
       this.resetForm("form");
     },
@@ -207,7 +207,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.safetyEpId)
+      this.ids = selection.map(item => item.qcId)
       this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
@@ -216,30 +216,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[安全环保]指标";
+      this.title = "添加质量指标-统计";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const safetyEpId = row.safetyEpId || this.ids
-      getData(safetyEpId).then(response => {
+      const qcId = row.qcId || this.ids
+      getMetrics(qcId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[安全环保]指标";
+        this.title = "修改质量指标-统计";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.safetyEpId != null) {
-            updateData(this.form).then(response => {
+          if (this.form.qcId != null) {
+            updateMetrics(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addData(this.form).then(response => {
+            addMetrics(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -250,10 +250,10 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const safetyEpIds = row.safetyEpId || this.ids;
+      const qcIds = row.qcId || this.ids;
       const date = row.yearAndMonth || this.dates;
       this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
-        return delData(safetyEpIds);
+        return delMetrics(qcIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -261,9 +261,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('safety/data/export', {
+      this.download('quality/Metrics/export', {
         ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
+      }, `Metrics_${new Date().getTime()}.xlsx`)
     }
   }
 };

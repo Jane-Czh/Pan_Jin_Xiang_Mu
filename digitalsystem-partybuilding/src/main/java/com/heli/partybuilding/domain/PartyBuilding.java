@@ -34,7 +34,7 @@ public class PartyBuilding extends BaseEntity {
      * 党建排名
      */
     @Excel(name = "党建排名")
-    private Integer ranking;
+    private Integer Ranking;
 
     /**
      * 党建分数

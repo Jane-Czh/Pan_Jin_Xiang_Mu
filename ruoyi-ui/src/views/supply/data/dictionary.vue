@@ -58,7 +58,7 @@
     <el-table v-loading="loading" :data="DictionaryList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="SCM_ID" align="center" prop="scmId" /> -->
-      <el-table-column label="序号" align="center" prop="materialSerialNumber" />
+      <!-- <el-table-column label="序号" align="center" prop="materialSerialNumber" /> -->
       <el-table-column label="物料号" align="center" prop="materialNumber" />
       <el-table-column label="物料名称" align="center" prop="materialName" />
       <el-table-column label="集采类别" align="center" prop="centralizedProcurementCategory" />
@@ -110,6 +110,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      names: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -137,6 +138,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -184,6 +188,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.scmId)
+      this.names = selection.map(item => item.materialNumber)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -226,7 +231,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const scmIds = row.scmId || this.ids;
-      this.$modal.confirm('是否确认删除供应科集采物料字典编号为"' + scmIds + '"的数据项？').then(function () {
+      const name = row.materialNumber || this.names;
+      this.$modal.confirm('是否确认删除物料号为"' + name + '"的数据？').then(function () {
         return delDictionary(scmIds);
       }).then(() => {
         this.getList();

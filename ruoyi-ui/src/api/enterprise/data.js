@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 export function listMonthData(query) {
   return request({
-    url: '/enterprise/Data/list',
+    url: '/enterprise/data/monthly/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listMonthData(query) {
 // 查询[企业管理]指标月度数据详细
 export function getMonthData(esId) {
   return request({
-    url: '/enterprise/Data/' + esId,
+    url: '/enterprise/data/monthly/' + esId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getMonthData(esId) {
 // 新增[企业管理]指标月度数据
 export function addMonthData(data) {
   return request({
-    url: '/enterprise/Data',
+    url: '/enterprise/data/monthly',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addMonthData(data) {
 // 修改[企业管理]指标月度数据
 export function updateMonthData(data) {
   return request({
-    url: '/enterprise/Data',
+    url: '/enterprise/data/monthly',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateMonthData(data) {
 // 删除[企业管理]指标月度数据
 export function delMonthData(esIds) {
   return request({
-    url: '/enterprise/Data/' + esIds,
+    url: '/enterprise/data/monthly/' + esIds,
     method: 'delete'
   })
 }
@@ -47,7 +47,7 @@ export function delMonthData(esIds) {
 // 查询[企业管理]指标年度数据列表
 export function listYearData(query) {
   return request({
-    url: '/enterprise/AnnualData/list',
+    url: '/enterprise/data/annual/list',
     method: 'get',
     params: query
   })
@@ -56,7 +56,7 @@ export function listYearData(query) {
 // 查询[企业管理]指标年度数据详细
 export function getYearData(emasId) {
   return request({
-    url: '/enterprise/AnnualData/' + emasId,
+    url: '/enterprise/data/annual/' + emasId,
     method: 'get'
   })
 }
@@ -64,7 +64,7 @@ export function getYearData(emasId) {
 // 新增[企业管理]指标年度数据
 export function addYearData(data) {
   return request({
-    url: '/enterprise/AnnualData',
+    url: '/enterprise/data/annual',
     method: 'post',
     data: data
   })
@@ -73,7 +73,7 @@ export function addYearData(data) {
 // 修改[企业管理]指标年度数据
 export function updateYearData(data) {
   return request({
-    url: '/enterprise/AnnualData',
+    url: '/enterprise/data/annual',
     method: 'put',
     data: data
   })
@@ -82,7 +82,7 @@ export function updateYearData(data) {
 // 删除[企业管理]指标年度数据
 export function delYearData(emasId) {
   return request({
-    url: '/enterprise/AnnualData/' + emasId,
+    url: '/enterprise/data/annual/' + emasId,
     method: 'delete'
   })
 }

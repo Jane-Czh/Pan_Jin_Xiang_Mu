@@ -7,11 +7,7 @@
           placeholder="请选择年月">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="更新时间" prop="updatedDate">
-        <el-date-picker clearable v-model="queryParams.updatedDate" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择更新时间">
-        </el-date-picker>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -33,10 +29,11 @@
         </el-col>
         <el-col :span="1.5">
           <!--Excel 参数导入 -->
-          <el-button type="primary" @click="showDialog = true" v-if="true"><i class="fa fa-download"></i>导入Excel文件
+          <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true"
+            v-if="true">导入Excel
           </el-button>
 
-          <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+          <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
             <!-- 下拉框 -->
             <el-form :model="form" ref="form" label-width="90px">
               <el-form-item label="选择表类型">
@@ -177,7 +174,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/financial
 // import "font-awesome/css/font-awesome.css";
 import axios from "axios";
 
-
+//TODO当日在制品后端没删？ 无法新增
 export default {
   name: "Data",
   data() {
@@ -187,6 +184,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       showDialog: false,
 
       progress: 0,
@@ -202,12 +200,12 @@ export default {
       total: 0,
       // [财务]手动填报指标表格数据
       dataList: [],
-      dataList2: [],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      open2: false,
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -235,23 +233,18 @@ export default {
         updatedDate: null
 
       },
-      queryParams2: {
-        pageNum: 1,
-        pageSize: 10,
-        inProgressDayRevenue: null,
-        dataTime: null,
-      },
       // 表单参数
       form: {},
-      form2: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
   created() {
     this.getList();
-
     this.sortDataListDescending()
   },
   methods: {
@@ -330,6 +323,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.fihfId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -372,13 +366,16 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const fihfIds = row.fihfId || this.ids;
-      this.$modal.confirm('是否确认删除[财务]手动填报指标编号为"' + fihfIds + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delData(fihfIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+
+    // 导入excel，检查文件类型
     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
@@ -393,11 +390,6 @@ export default {
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
-    handleClose(done) {
-      if (confirm("确定要关闭吗？")) {
-        done(); // 调用 done() 方法来关闭对话框
-      }
-    },
     /** 导入按钮 */
     fileSend() {
       const formData = new FormData();
@@ -410,7 +402,7 @@ export default {
         axios({
           method: "post",
           // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080/financial/interests/importTable",
+          url: "http://localhost:8080//financial/data/interests/import",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),
@@ -430,7 +422,7 @@ export default {
         axios({
           method: "post",
           // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080/financial/balance/importTable",
+          url: "http://localhost:8080/financial/data/balance/import",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),

@@ -33,15 +33,16 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="qihfId" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
+      <!-- <el-table-column label="主键" align="center" prop="qihfId" /> -->
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="外部质量损失率的分子(手动填报)" align="center" prop="moleculeExternalMassLossRate" />
+      <el-table-column label="外部质量损失率的分子" align="center" prop="moleculeExternalMassLossRate" />
       <el-table-column label="外部质量损失率" align="center" prop="externalMassLossRate" />
       <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
       <el-table-column label="平均无故障时间" align="center" prop="meantimeWithoutFailure" width="180">
@@ -64,14 +65,14 @@
 
     <!-- 添加或修改[质量]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="外部质量损失率的分子(手动填报)" prop="moleculeExternalMassLossRate">
-          <el-input v-model="form.moleculeExternalMassLossRate" placeholder="请输入外部质量损失率的分子(手动填报)" />
+        <el-form-item label="外部质量损失率的分子" prop="moleculeExternalMassLossRate">
+          <el-input v-model="form.moleculeExternalMassLossRate" placeholder="请输入外部质量损失率的分子" />
         </el-form-item>
         <el-form-item label="外部质量损失率" prop="externalMassLossRate">
           <el-input v-model="form.externalMassLossRate" placeholder="请输入外部质量损失率" />
@@ -111,6 +112,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -142,6 +144,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -149,6 +154,15 @@ export default {
     this.getList();
   },
   methods: {
+    handleSortChange(sort) {
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.handFillList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.handFillList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
+    },
     /** 查询[质量]指标填报列表 */
     getList() {
       this.loading = true;
@@ -156,6 +170,11 @@ export default {
         this.handFillList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
       });
     },
     // 取消按钮
@@ -195,6 +214,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.qihfId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -237,7 +257,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const qihfIds = row.qihfId || this.ids;
-      this.$modal.confirm('是否确认删除[质量]指标填报编号为"' + qihfIds + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delHandFill(qihfIds);
       }).then(() => {
         this.getList();

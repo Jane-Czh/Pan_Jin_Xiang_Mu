@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年" prop="naturalYear">
+      <el-form-item label="年份" prop="naturalYear">
         <el-input v-model="queryParams.naturalYear" placeholder="请输入年" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
 
@@ -31,10 +31,11 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emasId" /> -->
-      <el-table-column label="年" align="center" prop="naturalYear" />
+      <el-table-column label="年份" align="center" prop="naturalYear" sortable="custom" />
       <el-table-column label="工资总额年度值" align="center" prop="annualTotalSalary" />
       <el-table-column label="日清日结-股份目标值" align="center" prop="stockTargetValue" />
       <el-table-column label="日清日结-盘锦目标值" align="center" prop="panjinTargetValue" />
@@ -53,8 +54,8 @@
 
     <!-- 添加或修改[企业管理]指标年度数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="年" prop="naturalYear">
+      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+        <el-form-item label="年份" prop="naturalYear">
           <el-input v-model="form.naturalYear" placeholder="请输入年" />
         </el-form-item>
         <el-form-item label="工资总额年度值" prop="annualTotalSalary">
@@ -120,6 +121,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'naturalYear') {
+        if (sort.order === 'ascending') {
+          this.dataList.sort((a, b) => new Date(a.naturalYear) - new Date(b.naturalYear));
+        } else if (sort.order === 'descending') {
+          this.dataList.sort((a, b) => new Date(b.naturalYear) - new Date(a.naturalYear));
+        }
+      }
+    },
     /** 查询[企业管理]指标年度数据列表 */
     getList() {
       this.loading = true;
@@ -127,6 +138,11 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'naturalYear',
+          order: 'descending' // 或'descending'
+        });
       });
     },
     // 取消按钮

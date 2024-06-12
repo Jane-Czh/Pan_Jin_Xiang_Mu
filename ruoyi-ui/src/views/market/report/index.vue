@@ -371,14 +371,23 @@ export default {
     return {
       //饼状图数据
       orderReceivedTodayData: [],
+      isAllZeroReceivedDay: false,
       ordersReceivedThisMonthData: [],
+      isAllZeroReceivedMonth: false,
       orderAccumulationThisYearData: [],
+      isAllZeroReceivedYear: false,
       deliveryTodayData: [],
+      isAllZerodeliverydDay: false,
       deliveryWithinTheSystemThisMonthData: [],
+      isAllZerodeliverydMonth: false,
       cumulativeSystemDeliveriesForTheYearData: [],
+      isAllZerodeliverydYear: false,
       issuedThisDayData: [],
+      isAllZeroissuedDay: false,
       issuedThisMonthData: [],
+      isAllZeroissuedMonth: false,
       cumulativeIssuedThisMonthData: [],
+      isAllZeroissuedYear: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -479,45 +488,122 @@ export default {
       // 将后端返回的数据赋值给 reportList
       this.reportList = response.rows;
       // 拆分数据为适合饼状图的格式
+
       this.orderReceivedTodayData = this.reportList.map(item => ({
         value: item.orderReceivedToday, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      // 判断数据是否全部为零
+      this.isAllZeroReceivedDay = this.orderReceivedTodayData.every(item => item.value === 0);
+      // 当数据全部为零时，手动构造一个灰色的数据项
+      if (this.isAllZeroReceivedDay) {
+          this.orderReceivedTodayData.push({
+              value: 1, // 给一个任意非零值
+              name: '无数据' // 用于显示的名称
+          });
+      }
+
       this.ordersReceivedThisMonthData = this.reportList.map(item => ({
         value: item.ordersReceivedThisMonth, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZeroReceivedMonth = this.ordersReceivedThisMonthData.every(item => item.value === 0);
+      if (this.isAllZeroReceivedMonth) {
+        this.ordersReceivedThisMonthData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
       this.orderAccumulationThisYearData = this.reportList.map(item => ({
         value: item.orderAccumulationThisYear, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZeroReceivedYear = this.orderAccumulationThisYearData.every(item => item.value === 0);
+      if (this.isAllZeroReceivedYear) {
+        this.orderAccumulationThisYearData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
       this.deliveryTodayData = this.reportList.map(item => ({
         value: item.deliveryToday, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZerodeliverydDay = this.deliveryTodayData.every(item => item.value === 0);
+      if (this.isAllZerodeliverydDay) {
+        this.deliveryTodayData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
       this.deliveryWithinTheSystemThisMonthData = this.reportList.map(item => ({
         value: item.deliveryWithinTheSystemThisMonth, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZerodeliverydMonth = this.deliveryWithinTheSystemThisMonthData.every(item => item.value === 0);
+      if (this.isAllZerodeliverydMonth) {
+        this.deliveryWithinTheSystemThisMonthData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
       this.cumulativeSystemDeliveriesForTheYearData = this.reportList.map(item => ({
         value: item.cumulativeSystemDeliveriesForTheYear, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZerodeliverydYear = this.cumulativeSystemDeliveriesForTheYearData.every(item => item.value === 0);
+      if (this.isAllZerodeliverydYear) {
+        this.cumulativeSystemDeliveriesForTheYearData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
+
       this.issuedThisDayData = this.reportList.map(item => ({
         value: item.issuedThisDay, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZeroissuedDay = this.issuedThisDayData.every(item => item.value === 0);
+      if (this.isAllZeroissuedDay) {
+        this.issuedThisDayData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
+
       this.issuedThisMonthData = this.reportList.map(item => ({
         value: item.issuedThisMonth, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZeroissuedMonth = this.issuedThisMonthData.every(item => item.value === 0);
+      if (this.isAllZeroissuedMonth) {
+        this.issuedThisMonthData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
+
       this.cumulativeIssuedThisMonthData = this.reportList.map(item => ({
         value: item.cumulativeIssuedThisMonth, // 今日接单数量作为值
         name: item.commercialNetworks // 销售网点名称作为名称
       }));
+      this.isAllZeroissuedYear = this.cumulativeIssuedThisMonthData.every(item => item.value === 0);
+      if (this.isAllZeroissuedYear) {
+        this.cumulativeIssuedThisMonthData.push({
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
+          });
+      }
 
 
       // 初始化饼状图
+
       this.orderReceivedTodayPieChart();
       this.ordersReceivedThisMonthPieChart();
       this.orderAccumulationThisYearPieChart();
@@ -534,36 +620,84 @@ export default {
     /** 显示饼状图 */
     /** 今日接单 */
     orderReceivedTodayPieChart(){
-      // 饼状图配置项
-      const option = {
-        title: {
-          text: '网点今日接单',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        series: [
-          {
-            name: '接单情况',
-            type: 'pie',
-            radius: '50%',
-            data: this.orderReceivedTodayData
-          }
-        ]
+
+      // 如果数据全部为零，则直接显示一个灰色的饼图
+        const option = this.isAllZeroReceivedDay ? {
+          title: {
+              text: '网点今日接单',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
+          title: {
+              text: '网点今日接单',
+              left: 'center'
+          },
+          tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b}: {c} ({d}%)'
+          },
+          series: [
+              {
+                  name: '接单情况',
+                  type: 'pie',
+                  radius: '50%',
+                  data: this.orderReceivedTodayData
+              }
+          ]
       };
+
       const myChart = echarts.init(this.$refs.orderReceivedToday);// 图标初始化
       myChart.setOption(option);// 渲染页面
+      
       //随着屏幕大小调节图表
       window.addEventListener("resize", () => {
-        myChart.resize();
+          myChart.resize();
       });
+
     },
     /** 本月累计接单 */
     ordersReceivedThisMonthPieChart(){
       // 饼状图配置项
-      const option = {
+      const option = this.isAllZeroReceivedMonth ? {
+        title: {
+              text: '网点本月累计接单',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本月累计接单',
           left: 'center'
@@ -581,6 +715,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.ordersReceivedThisMonth);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -590,8 +725,31 @@ export default {
     },
     /** 本年累计接单 */
     orderAccumulationThisYearPieChart(){
+
       // 饼状图配置项
-      const option = {
+      const option = this.isAllZeroReceivedYear ? {
+        title: {
+              text: '网点本年累计接单',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本年累计接单',
           left: 'center'
@@ -609,6 +767,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.orderAccumulationThisYear);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -618,8 +777,30 @@ export default {
     },
     /** 本日交货 */
     deliveryTodayPieChart(){
-        // 饼状图配置项
-        const option = {
+      // 饼状图配置项
+      const option = this.isAllZerodeliverydDay ? {
+        title: {
+              text: '网点本日交货',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本日交货',
           left: 'center'
@@ -637,6 +818,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.deliveryToday);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -646,8 +828,30 @@ export default {
     },
     /** 本月系统内交货 */
     deliveryWithinTheSystemThisMonthPieChart(){
-        // 饼状图配置项
-        const option = {
+      // 饼状图配置项
+      const option = this.isAllZerodeliverydMonth ? {
+        title: {
+              text: '网点本月交货',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本月交货',
           left: 'center'
@@ -665,6 +869,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.deliveryWithinTheSystemThisMonth);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -674,8 +879,30 @@ export default {
     },
     /** 本年累计系统交货数 */
     cumulativeSystemDeliveriesForTheYearPieChart(){
-        // 饼状图配置项
-        const option = {
+      // 饼状图配置项
+      const option = this.isAllZerodeliverydYear ? {
+        title: {
+              text: '网点本年交货',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本年交货',
           left: 'center'
@@ -693,6 +920,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.cumulativeSystemDeliveriesForTheYear);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -702,8 +930,30 @@ export default {
     },
     /** 今日实发 */
     issuedThisDayPieChart(){
-        // 饼状图配置项
-        const option = {
+      // 饼状图配置项
+      const option = this.isAllZeroissuedDay ? {
+        title: {
+              text: '网点今日实发',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点今日实发',
           left: 'center'
@@ -721,6 +971,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.issuedThisDay);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -730,8 +981,30 @@ export default {
     },
     /** 本月实发 */
     issuedThisMonthPieChart(){
-        // 饼状图配置项
-        const option = {
+      // 饼状图配置项
+      const option = this.isAllZeroissuedMonth ? {
+        title: {
+              text: '网点本月实发',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本月实发',
           left: 'center'
@@ -749,6 +1022,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.issuedThisMonth);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表
@@ -758,8 +1032,30 @@ export default {
     },
     /** 本年累计实发 */
     cumulativeIssuedThisMonthPieChart(){
-        // 饼状图配置项
-        const option = {
+      // 饼状图配置项
+      const option = this.isAllZeroissuedYear ? {
+        title: {
+              text: '网点本年实发',
+              left: 'center'
+          },
+          series: [
+              {
+                  type: 'pie',
+                  radius: '50%',
+                  itemStyle: {
+                      color: '#ccc' // 灰色
+                  },
+                  label: {
+                      show: false // 不显示标签
+                  },
+                  emphasis: {
+                      label: {
+                          show: false // 不显示强调时的标签
+                      }
+                  }
+              }
+          ]
+      } : {
         title: {
           text: '网点本年实发',
           left: 'center'
@@ -777,6 +1073,7 @@ export default {
           }
         ]
       };
+
       const myChart = echarts.init(this.$refs.cumulativeIssuedThisMonth);// 图标初始化
       myChart.setOption(option);// 渲染页面
       //随着屏幕大小调节图表

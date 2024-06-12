@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Technology.mapper.TechnologyFunctionChangeorderMapper">
+    
+    <resultMap type="TechnologyFunctionChangeorder" id="TechnologyFunctionChangeorderResult">
+        <result property="tfcoId"    column="TFCO_id"    />
+        <result property="changTime"    column="Chang_time"    />
+        <result property="changeTarget"    column="Change_target"    />
+        <result property="fileState"    column="file_state"    />
+        <result property="examineState"    column="examine_state"    />
+        <result property="consultState"    column="consult_state"    />
+        <result property="userReviewState"    column="User_review_state"    />
+        <result property="sampleState"    column="sample_state"    />
+        <result property="revisionDate"    column="revision_date"    />
+        <result property="revisionContent"    column="revision_content"    />
+        <result property="reviser"    column="reviser"    />
+        <result property="newFlag"    column="new_flag"    />
+        <result property="newRegulationsId"    column="new_regulations_id"    />
+        <result property="oldRegulationsId"    column="old_regulations_id"    />
+        <result property="regulationsTitle"    column="regulations_title"    />
+        <result property="useScope"    column="use_scope"    />
+        <result property="uploadDate"    column="upload_date"    />
+        <result property="effectiveDate"    column="effective_date"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="uploadUsername"    column="upload_username"    />
+        <result property="useState"    column="use_state"    />
+        <result property="departmentCategory"    column="department_category"    />
+        <result property="fileTag"    column="file_tag"    />
+    </resultMap>
+
+    <sql id="selectTechnologyFunctionChangeorderVo">
+        select TFCO_id, Chang_time, Change_target, file_state, examine_state, consult_state, User_review_state, sample_state, revision_date, revision_content, reviser, new_flag, new_regulations_id, old_regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, file_type, file_size, create_date, upload_username, use_state, department_category, file_tag from Technology_Function_Changeorder
+    </sql>
+
+    <select id="selectTechnologyFunctionChangeorderList" parameterType="TechnologyFunctionChangeorder" resultMap="TechnologyFunctionChangeorderResult">
+        <include refid="selectTechnologyFunctionChangeorderVo"/>
+        <where>  
+            <if test="changTime != null "> and Chang_time = #{changTime}</if>
+            <if test="changeTarget != null  and changeTarget != ''"> and Change_target = #{changeTarget}</if>
+            <if test="fileState != null  and fileState != ''"> and file_state = #{fileState}</if>
+            <if test="examineState != null  and examineState != ''"> and examine_state = #{examineState}</if>
+            <if test="consultState != null  and consultState != ''"> and consult_state = #{consultState}</if>
+            <if test="userReviewState != null  and userReviewState != ''"> and User_review_state = #{userReviewState}</if>
+            <if test="sampleState != null  and sampleState != ''"> and sample_state = #{sampleState}</if>
+            <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
+            <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
+            <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="newFlag != null "> and new_flag = #{newFlag}</if>
+            <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
+            <if test="oldRegulationsId != null "> and old_regulations_id = #{oldRegulationsId}</if>
+            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title = #{regulationsTitle}</if>
+            <if test="useScope != null  and useScope != ''"> and use_scope = #{useScope}</if>
+            <if test="uploadDate != null "> and upload_date = #{uploadDate}</if>
+            <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileSize != null "> and file_size = #{fileSize}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="uploadUsername != null  and uploadUsername != ''"> and upload_username like concat('%', #{uploadUsername}, '%')</if>
+            <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
+            <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
+            <if test="fileTag != null  and fileTag != ''"> and file_tag = #{fileTag}</if>
+        </where>
+    </select>
+    
+    <select id="selectTechnologyFunctionChangeorderByTfcoId" parameterType="Long" resultMap="TechnologyFunctionChangeorderResult">
+        <include refid="selectTechnologyFunctionChangeorderVo"/>
+        where TFCO_id = #{tfcoId}
+    </select>
+        
+    <insert id="insertTechnologyFunctionChangeorder" parameterType="TechnologyFunctionChangeorder" useGeneratedKeys="true" keyProperty="tfcoId">
+        insert into Technology_Function_Changeorder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="changTime != null">Chang_time,</if>
+            <if test="changeTarget != null">Change_target,</if>
+            <if test="fileState != null">file_state,</if>
+            <if test="examineState != null">examine_state,</if>
+            <if test="consultState != null">consult_state,</if>
+            <if test="userReviewState != null">User_review_state,</if>
+            <if test="sampleState != null">sample_state,</if>
+            <if test="revisionDate != null">revision_date,</if>
+            <if test="revisionContent != null">revision_content,</if>
+            <if test="reviser != null">reviser,</if>
+            <if test="newFlag != null">new_flag,</if>
+            <if test="newRegulationsId != null">new_regulations_id,</if>
+            <if test="oldRegulationsId != null">old_regulations_id,</if>
+            <if test="regulationsTitle != null">regulations_title,</if>
+            <if test="useScope != null">use_scope,</if>
+            <if test="uploadDate != null">upload_date,</if>
+            <if test="effectiveDate != null">effective_date,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="fileType != null">file_type,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="uploadUsername != null">upload_username,</if>
+            <if test="useState != null">use_state,</if>
+            <if test="departmentCategory != null">department_category,</if>
+            <if test="fileTag != null">file_tag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="changTime != null">#{changTime},</if>
+            <if test="changeTarget != null">#{changeTarget},</if>
+            <if test="fileState != null">#{fileState},</if>
+            <if test="examineState != null">#{examineState},</if>
+            <if test="consultState != null">#{consultState},</if>
+            <if test="userReviewState != null">#{userReviewState},</if>
+            <if test="sampleState != null">#{sampleState},</if>
+            <if test="revisionDate != null">#{revisionDate},</if>
+            <if test="revisionContent != null">#{revisionContent},</if>
+            <if test="reviser != null">#{reviser},</if>
+            <if test="newFlag != null">#{newFlag},</if>
+            <if test="newRegulationsId != null">#{newRegulationsId},</if>
+            <if test="oldRegulationsId != null">#{oldRegulationsId},</if>
+            <if test="regulationsTitle != null">#{regulationsTitle},</if>
+            <if test="useScope != null">#{useScope},</if>
+            <if test="uploadDate != null">#{uploadDate},</if>
+            <if test="effectiveDate != null">#{effectiveDate},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="uploadUsername != null">#{uploadUsername},</if>
+            <if test="useState != null">#{useState},</if>
+            <if test="departmentCategory != null">#{departmentCategory},</if>
+            <if test="fileTag != null">#{fileTag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTechnologyFunctionChangeorder" parameterType="TechnologyFunctionChangeorder">
+        update Technology_Function_Changeorder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="changTime != null">Chang_time = #{changTime},</if>
+            <if test="changeTarget != null">Change_target = #{changeTarget},</if>
+            <if test="fileState != null">file_state = #{fileState},</if>
+            <if test="examineState != null">examine_state = #{examineState},</if>
+            <if test="consultState != null">consult_state = #{consultState},</if>
+            <if test="userReviewState != null">User_review_state = #{userReviewState},</if>
+            <if test="sampleState != null">sample_state = #{sampleState},</if>
+            <if test="revisionDate != null">revision_date = #{revisionDate},</if>
+            <if test="revisionContent != null">revision_content = #{revisionContent},</if>
+            <if test="reviser != null">reviser = #{reviser},</if>
+            <if test="newFlag != null">new_flag = #{newFlag},</if>
+            <if test="newRegulationsId != null">new_regulations_id = #{newRegulationsId},</if>
+            <if test="oldRegulationsId != null">old_regulations_id = #{oldRegulationsId},</if>
+            <if test="regulationsTitle != null">regulations_title = #{regulationsTitle},</if>
+            <if test="useScope != null">use_scope = #{useScope},</if>
+            <if test="uploadDate != null">upload_date = #{uploadDate},</if>
+            <if test="effectiveDate != null">effective_date = #{effectiveDate},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="uploadUsername != null">upload_username = #{uploadUsername},</if>
+            <if test="useState != null">use_state = #{useState},</if>
+            <if test="departmentCategory != null">department_category = #{departmentCategory},</if>
+            <if test="fileTag != null">file_tag = #{fileTag},</if>
+        </trim>
+        where TFCO_id = #{tfcoId}
+    </update>
+
+    <delete id="deleteTechnologyFunctionChangeorderByTfcoId" parameterType="Long">
+        delete from Technology_Function_Changeorder where TFCO_id = #{tfcoId}
+    </delete>
+
+    <delete id="deleteTechnologyFunctionChangeorderByTfcoIds" parameterType="String">
+        delete from Technology_Function_Changeorder where TFCO_id in 
+        <foreach item="tfcoId" collection="array" open="(" separator="," close=")">
+            #{tfcoId}
+        </foreach>
+    </delete>
+</mapper>

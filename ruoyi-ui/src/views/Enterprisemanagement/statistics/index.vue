@@ -1,8 +1,12 @@
 <template>
   <div class="app-container">
-    <div  class="contracted-total">合同工总人数: {{totalNumberOfContractedInFirstRow}}</div>
-    <div class="intern-total">实习生总人数: {{ totalNumberOfInterns1 }}</div>
-    <div class="labor-total">劳动派遣总人数: {{ ttotalNumberOfLaborDispatch1 }}</div>
+    <div>
+      <el-select v-model="selectedItem" placeholder="选择统计数据">
+        <el-option :label="'合同工总人数: ' + totalNumberOfContractedInFirstRow" :value="1" />
+        <el-option :label="'实习生总人数: ' + totalNumberOfInterns1" :value="2" />
+        <el-option :label="'劳动派遣总人数: ' + ttotalNumberOfLaborDispatch1" :value="3" />
+      </el-select>
+    </div>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 <!--      <el-form-item label="员工编号" prop="employeeId">-->
 <!--        <el-input-->
@@ -200,6 +204,7 @@ export default {
   name: "Statistics",
   data() {
     return {
+      selectedItem: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -257,6 +262,7 @@ export default {
     // });
   },
   methods: {
+
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
       fetch('http://localhost:8080/Enterprisemanagement/statistics/synchronization', {

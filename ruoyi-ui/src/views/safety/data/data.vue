@@ -6,47 +6,6 @@
           placeholder="请选择年月">
         </el-date-picker>
       </el-form-item>
-
-      <!-- <el-form-item label="当月设备维修总费用" prop="curEquipmentMaintenanceCost">
-        <el-input
-          v-model="queryParams.curEquipmentMaintenanceCost"
-          placeholder="请输入当月设备维修总费用"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="当月设备故障累计停产时间" prop="curEquipmentFailuresTotaltime">
-        <el-input
-          v-model="queryParams.curEquipmentFailuresTotaltime"
-          placeholder="请输入当月设备故障累计停产时间"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="当月设备维修替换件成本" prop="curEquipmentReplacementCost">
-        <el-input
-          v-model="queryParams.curEquipmentReplacementCost"
-          placeholder="请输入当月设备维修替换件成本"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="重点设备故障率" prop="keyEquipmentFailureRate">
-        <el-input
-          v-model="queryParams.keyEquipmentFailureRate"
-          placeholder="请输入重点设备故障率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
-        <el-input
-          v-model="queryParams.keyEquipmentTotalFailureCount"
-          placeholder="请输入主要设备故障总次数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -66,22 +25,23 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['safety:data:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['safety:data:export']">导出</el-button>
-      </el-col>
+
+      <import-excel :name="'设备维修表'" :url="'/safety/data/importTable'" />
+
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="Safety_EP_ID" align="center" prop="safetyEpId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
       <el-table-column label="当月设备故障累计停产时间" align="center" prop="curEquipmentFailuresTotaltime" />
       <el-table-column label="当月设备维修替换件成本" align="center" prop="curEquipmentReplacementCost" />
@@ -101,8 +61,8 @@
       @pagination="getList" />
 
     <!-- 添加或修改[安全环保]指标填报对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -133,8 +93,10 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
+import importExcel from "@/views/financial/importExcel.vue";
 
 export default {
+  components: { importExcel },
   name: "Data",
   data() {
     return {
@@ -142,6 +104,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -175,6 +138,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -182,6 +148,11 @@ export default {
     this.getList();
   },
   methods: {
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
+    },
     /** 查询[安全环保]指标填报列表 */
     getList() {
       this.loading = true;
@@ -189,6 +160,7 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
+
       });
     },
     // 取消按钮
@@ -226,6 +198,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.safetyEpId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -233,7 +206,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[安全环保]指标";
+      this.title = "添加[安环]数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -242,7 +215,7 @@ export default {
       getData(safetyEpId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[安全环保]指标";
+        this.title = "修改[安环]数据";
       });
     },
     /** 提交按钮 */
@@ -268,19 +241,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const safetyEpIds = row.safetyEpId || this.ids;
-      this.$modal.confirm('是否确认删除[安全环保]指标编号为"' + safetyEpIds + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delData(safetyEpIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('safety/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

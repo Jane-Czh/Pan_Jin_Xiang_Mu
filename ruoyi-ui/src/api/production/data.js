@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询[生产]手动填报指标功能列表
 export function listData(query) {
   return request({
-    url: '/production/FillingInIndicators/list',
+    url: '/production/data/fill/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listData(query) {
 // 查询[生产]手动填报指标功能详细
 export function getData(productionId) {
   return request({
-    url: '/production/FillingInIndicators/' + productionId,
+    url: '/production/data/fill/' + productionId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getData(productionId) {
 // 新增[生产]手动填报指标功能
 export function addData(data) {
   return request({
-    url: '/production/FillingInIndicators',
+    url: '/production/data/fill',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addData(data) {
 // 修改[生产]手动填报指标功能
 export function updateData(data) {
   return request({
-    url: '/production/FillingInIndicators',
+    url: '/production/data/fill',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateData(data) {
 // 删除[生产]手动填报指标功能
 export function delData(productionId) {
   return request({
-    url: '/production/FillingInIndicators/' + productionId,
+    url: '/production/data/fill/' + productionId,
     method: 'delete'
   })
 }

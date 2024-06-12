@@ -46,9 +46,10 @@ public class FinancialDataController extends BaseController {
 
 
     @Log(title = "[财务]数据填报", businessType = BusinessType.INSERT)
-    @PostMapping("/handFillData")
-    public AjaxResult handFillData(FinancialIndicatorsHandfillTable FITable) {
-
+    @PreAuthorize("@ss.hasPermi('financial:fill:add')")
+    @PostMapping("/fill")
+    public AjaxResult handFillData(@RequestBody FinancialIndicatorsHandfillTable FITable) {
+        System.out.println(FITable);
         Date lastMonth = DateUtils.getLastMonth(FITable.getYearAndMonth());
         if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)) {
             return AjaxResult.error("上月数据还未填报");
@@ -78,7 +79,8 @@ public class FinancialDataController extends BaseController {
     }
 
     @Log(title = "[财务]利润表上传", businessType = BusinessType.INSERT)
-    @PostMapping("/interests")
+    @PreAuthorize("@ss.hasPermi('financial:interests:import')")
+    @PostMapping("/interests/import")
     public AjaxResult importIndicatorsTable(Date yearAndMonth, MultipartFile InterestsFile) {
 
         Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
@@ -91,7 +93,7 @@ public class FinancialDataController extends BaseController {
         }
 
         if (financialInterestsTableService.checkInterestsDataIsExisted(yearAndMonth)) {
-            return AjaxResult.error("当月利润表已上传,请检查");
+            return AjaxResult.error("当月利润表已上传");
         }
 
         try {
@@ -110,7 +112,8 @@ public class FinancialDataController extends BaseController {
     }
 
     @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
-    @PostMapping("/balance")
+    @PreAuthorize("@ss.hasPermi('financial:balance:import')")
+    @PostMapping("/balance/import")
     public AjaxResult importBalanceTable(Date yearAndMonth, MultipartFile BalanceFile) {
 
         Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
@@ -141,10 +144,46 @@ public class FinancialDataController extends BaseController {
         return AjaxResult.success();
     }
 
+
+    /**
+     * 修改财务-资产负债
+     */
+    @PreAuthorize("@ss.hasPermi('financial:balance:edit')")
+    @Log(title = "财务-资产负债", businessType = BusinessType.UPDATE)
+    @PutMapping("/balance")
+    public AjaxResult edit(@RequestBody FinancialBalanceTable financialBalanceTable) {
+        financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
+        return toAjax(financialDataService.batchUpdateFinancialData(financialBalanceTable.getYearAndMonth()));
+    }
+
+    /**
+     * 修改[财务]手动填报指标
+     */
+    @PreAuthorize("@ss.hasPermi('financial:fill:edit')")
+    @Log(title = "[财务]手动填报指标", businessType = BusinessType.UPDATE)
+    @PutMapping("/fill")
+    public AjaxResult edit(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+        financialIndicatorsHandfillTableService.updateFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable);
+        return toAjax(financialDataService.batchUpdateFinancialData(financialIndicatorsHandfillTable.getYearAndMonth()));
+    }
+
+    /**
+     * 修改财务-利润
+     */
+    @PreAuthorize("@ss.hasPermi('financial:interests:edit')")
+    @Log(title = "财务-利润", businessType = BusinessType.UPDATE)
+    @PutMapping("/interests")
+    public AjaxResult edit(@RequestBody FinancialInterestsTable financialInterestsTable) {
+        financialInterestsTableService.updateFinancialInterestsTable(financialInterestsTable);
+        return toAjax(financialDataService.batchUpdateFinancialData(financialInterestsTable.getYearAndMonth()));
+
+    }
+
+
     /**
      * 新增[财务]每日填报指标[当日再制品金额]
      */
-//    @PreAuthorize("@ss.hasPermi('financial:data:add')")
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:add')")
     @Log(title = "[财务]每日填报指标[当日在制品金额]", businessType = BusinessType.INSERT)
     @PostMapping("/dailyInProgress")
     public AjaxResult add(@RequestBody FinancialDailyInProgressTable financialDailyInProgressTable) {
@@ -158,7 +197,7 @@ public class FinancialDataController extends BaseController {
     /**
      * 修改[财务]每日填报指标[当日再制品金额]
      */
-//    @PreAuthorize("@ss.hasPermi('financial:data:edit')")
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:edit')")
     @Log(title = "[财务]每日填报指标[当日再制品金额]", businessType = BusinessType.UPDATE)
     @PutMapping("/dailyInProgress")
     public AjaxResult edit(@RequestBody FinancialDailyInProgressTable financialDailyInProgressTable) {
@@ -169,7 +208,7 @@ public class FinancialDataController extends BaseController {
     /**
      * 删除[财务]每日填报指标[当日再制品金额]
      */
-//    @PreAuthorize("@ss.hasPermi('financial:data:remove')")
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:remove')")
     @Log(title = "[财务]每日填报指标[当日再制品金额]", businessType = BusinessType.DELETE)
     @DeleteMapping("/dailyInProgress/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
@@ -179,7 +218,7 @@ public class FinancialDataController extends BaseController {
     /**
      * 查询[财务]每日填报指标[当日再制品金额]列表
      */
-//    @PreAuthorize("@ss.hasPermi('financial:data:list')")
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:list')")
     @GetMapping("/dailyInProgress/list")
     public TableDataInfo list(FinancialDailyInProgressTable financialDailyInProgressTable) {
         startPage();
@@ -190,13 +229,11 @@ public class FinancialDataController extends BaseController {
     /**
      * 查询[财务]每日填报指标[当日再制品金额]
      */
-//    @PreAuthorize("@ss.hasPermi('financial:data:list')")
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:list')")
     @GetMapping("/dailyInProgress/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(financialDailyInProgressTableService.selectFinancialDailyInProgressTableById(id));
-
     }
-
 
 
     /**
@@ -206,11 +243,11 @@ public class FinancialDataController extends BaseController {
      * @param: [year]
      * @return: com.ruoyi.common.core.page.TableDataInfo
      **/
-    @GetMapping("/interests/{year}")
-    public TableDataInfo list(@PathVariable("year") String year) {
-        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableByYear(year);
-        return getDataTable(list);
-    }
+//    @GetMapping("/interests/{year}")
+//    public TableDataInfo list(@PathVariable("year") String year) {
+//        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableByYear(year);
+//        return getDataTable(list);
+//    }
 
     /**
      * @description: 按时间段查询利润表
@@ -219,14 +256,14 @@ public class FinancialDataController extends BaseController {
      * @param: [beginTime, endTime]
      * @return: com.ruoyi.common.core.page.TableDataInfo
      **/
-    @GetMapping("/interests/test")
-    public TableDataInfo list(Date beginTime, Date endTime) {
-
-        System.out.println(beginTime);
-        System.out.println(endTime);
-        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableByTime(beginTime, endTime);
-        return getDataTable(list);
-    }
+//    @GetMapping("/interests/test")
+//    public TableDataInfo list(Date beginTime, Date endTime) {
+//
+//        System.out.println(beginTime);
+//        System.out.println(endTime);
+//        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableByTime(beginTime, endTime);
+//        return getDataTable(list);
+//    }
 
 
     /**
@@ -252,23 +289,23 @@ public class FinancialDataController extends BaseController {
      * @author: hong
      * @date: 2024/4/8 14:55
      **/
-    @GetMapping("/getAllHandFillYearAndMonth")
-    public TableDataInfo getAllHandFillYearAndMonth() {
-        List<Date> list = financialIndicatorsHandfillTableService.selectAllHandFillYearAndMonth();
-        return getDataTable(list);
-    }
+//    @GetMapping("/getAllHandFillYearAndMonth")
+//    public TableDataInfo getAllHandFillYearAndMonth() {
+//        List<Date> list = financialIndicatorsHandfillTableService.selectAllHandFillYearAndMonth();
+//        return getDataTable(list);
+//    }
 
-    @GetMapping("/getAllBalanceYearAndMonth")
-    public TableDataInfo getAllBalanceYearAndMonth() {
-        List<Date> list = financialBalanceTableService.selectAllBalanceYearAndMonth();
-        return getDataTable(list);
-    }
-
-    @GetMapping("/getAllInterestsYearAndMonth")
-    public TableDataInfo getAllInterestsYearAndMonth() {
-        List<Date> list = financialInterestsTableService.selectAllInterestsYearAndMonth();
-        return getDataTable(list);
-    }
+//    @GetMapping("/getAllBalanceYearAndMonth")
+//    public TableDataInfo getAllBalanceYearAndMonth() {
+//        List<Date> list = financialBalanceTableService.selectAllBalanceYearAndMonth();
+//        return getDataTable(list);
+//    }
+//
+//    @GetMapping("/getAllInterestsYearAndMonth")
+//    public TableDataInfo getAllInterestsYearAndMonth() {
+//        List<Date> list = financialInterestsTableService.selectAllInterestsYearAndMonth();
+//        return getDataTable(list);
+//    }
 
     /**
      * @description: 获取单条财务的全部信息
@@ -276,16 +313,16 @@ public class FinancialDataController extends BaseController {
      * @date: 2024/4/8 15:07
      * @param: yearAndMonth
      **/
-    @GetMapping(value = "/yearAndMonth={yearAndMonth}")
-    public TableDataInfo getInfoByYearMonth(@PathVariable("yearAndMonth") @DateTimeFormat(pattern = "yyyy-mm-dd") Date yearAndMonth) {
-
-        List<Object> list = new LinkedList<Object>();
-        list.add(financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth));
-        list.add(financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth));
-        list.add(financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth));
-
-        return getDataTable(list);
-    }
+//    @GetMapping(value = "/yearAndMonth={yearAndMonth}")
+//    public TableDataInfo getInfoByYearMonth(@PathVariable("yearAndMonth") @DateTimeFormat(pattern = "yyyy-mm-dd") Date yearAndMonth) {
+//
+//        List<Object> list = new LinkedList<Object>();
+//        list.add(financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth));
+//        list.add(financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth));
+//        list.add(financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth));
+//
+//        return getDataTable(list);
+//    }
 
 
     /**

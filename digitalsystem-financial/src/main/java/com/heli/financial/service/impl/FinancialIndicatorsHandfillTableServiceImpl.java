@@ -23,6 +23,11 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
     @Autowired
     private FinancialIndicatorsHandfillTableMapper financialIndicatorsHandfillTableMapper;
 
+    @Override
+    public Date selectMaxYearAndMonth() {
+        return financialIndicatorsHandfillTableMapper.selectMaxYearAndMonth();
+    }
+
     /**
      * @description: 检查手动填报数据是否存在
      * @author: hong

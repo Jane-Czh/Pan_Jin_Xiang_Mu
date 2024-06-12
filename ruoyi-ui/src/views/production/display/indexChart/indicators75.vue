@@ -41,8 +41,7 @@
         <div class="block">
           <span class="DataSelect" style="margin-right:10px">年份选择</span>
           <el-date-picker v-model="selectedDateYear" type="monthrange" unlink-panels range-separator="至"
-            start-placeholder="开始年份" end-placeholder="结束年份" :picker-options="pickerOptions" @change="handleDateChange"
-            value-format="yyyy">
+            start-placeholder="开始年份" end-placeholder="结束年份" :picker-options="pickerOptions" @change="handleDateChange">
           </el-date-picker>
         </div>
         <div class="YEAR">
@@ -75,7 +74,7 @@ import moment from 'moment'
 import { getDailyLaunchAndCompletionData, getMonthlyLaunchAndCompletionData, getAnnualLaunchAndCompletionData } from '@/api/production/chartAPI'
 
 export default {
-  name: 'indicators74',
+  name: 'indicators75',
   data() {
     return {
       activeName: '0',

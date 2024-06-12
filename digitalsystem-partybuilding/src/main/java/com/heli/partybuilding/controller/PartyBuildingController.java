@@ -33,19 +33,16 @@ public class PartyBuildingController extends BaseController {
     @Autowired
     private IPartyBuildingService partyBuildingService;
 
-
     /**
      * @description: 按年查询党建数据
      * @author: hong
      * @date: 2024/4/9 15:37
-     * @param:
-     * @return:
      **/
-    @GetMapping("/display/{year}")
-    public TableDataInfo list(@PathVariable("year") int year) {
-        List<PartyBuilding> list = partyBuildingService.selectPartyBuildingListByYear(year);
-        return getDataTable(list);
-    }
+//    @GetMapping("/display/{year}")
+//    public TableDataInfo list(@PathVariable("year") int year) {
+//        List<PartyBuilding> list = partyBuildingService.selectPartyBuildingListByYear(year);
+//        return getDataTable(list);
+//    }
 
     /**
      * 查询[党建]指标填报列表
@@ -56,18 +53,6 @@ public class PartyBuildingController extends BaseController {
         startPage();
         List<PartyBuilding> list = partyBuildingService.selectPartyBuildingList(partyBuilding);
         return getDataTable(list);
-    }
-
-    /**
-     * 导出[党建]指标填报列表
-     */
-    @PreAuthorize("@ss.hasPermi('partybuilding:data:export')")
-    @Log(title = "[党建]指标填报", businessType = BusinessType.EXPORT)
-    @PostMapping("/data/export")
-    public void export(HttpServletResponse response, PartyBuilding partyBuilding) {
-        List<PartyBuilding> list = partyBuildingService.selectPartyBuildingList(partyBuilding);
-        ExcelUtil<PartyBuilding> util = new ExcelUtil<PartyBuilding>(PartyBuilding.class);
-        util.exportExcel(response, list, "[党建]指标填报数据");
     }
 
     /**
@@ -89,6 +74,7 @@ public class PartyBuildingController extends BaseController {
         if (partyBuildingService.checkPartyBuildingDataIsExisted(partyBuilding.getYearAndMonth())){
             return AjaxResult.error("当月党建排名数据已填报");
         }
+        partyBuilding.setCreateBy(getUsername());
         return toAjax(partyBuildingService.insertPartyBuilding(partyBuilding));
     }
 
@@ -99,6 +85,7 @@ public class PartyBuildingController extends BaseController {
     @Log(title = "[党建]指标填报", businessType = BusinessType.UPDATE)
     @PutMapping("/data")
     public AjaxResult edit(@RequestBody PartyBuilding partyBuilding) {
+        partyBuilding.setUpdateBy(getUsername());
         return toAjax(partyBuildingService.updatePartyBuilding(partyBuilding));
     }
 

@@ -33,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-03-31
  */
 @RestController
-@RequestMapping("/financial/interests")
+@RequestMapping("/financial/data/interests")
 public class FinancialInterestsTableController extends BaseController {
     @Autowired
     private IFinancialInterestsTableService financialInterestsTableService;
@@ -46,24 +46,24 @@ public class FinancialInterestsTableController extends BaseController {
      * @return: success
      */
 //    @Log(title = "[财务]利润表表上传", businessType = BusinessType.INSERT)
-    @PostMapping("/importTable")
-    public AjaxResult importTable(MultipartFile excelFile) {
-        System.out.println(excelFile);
-        try {
-            financialInterestsTableService.importInterests(excelFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ServiceException("excel上传失败");
-        }
-        return success();
-    }
+//    @PostMapping("/import")
+//    public AjaxResult importTable(MultipartFile excelFile) {
+//        System.out.println(excelFile);
+//        try {
+//            financialInterestsTableService.importInterests(excelFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new ServiceException("excel上传失败");
+//        }
+//        return success();
+//    }
 
-    @GetMapping("/selectByYearAndMonth")
-    public void selectByYearAndMonth(Date yearAndMonth){
-        System.out.println("controller"+yearAndMonth);
-        FinancialInterestsTable financialInterestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
-        System.out.println(financialInterestsTable);
-    }
+//    @GetMapping("/selectByYearAndMonth")
+//    public void selectByYearAndMonth(Date yearAndMonth){
+//        System.out.println("controller"+yearAndMonth);
+//        FinancialInterestsTable financialInterestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
+//        System.out.println(financialInterestsTable);
+//    }
 
 
     /**
@@ -78,18 +78,6 @@ public class FinancialInterestsTableController extends BaseController {
     }
 
     /**
-     * 导出财务-利润列表
-     */
-    @PreAuthorize("@ss.hasPermi('financial:interests:export')")
-    @Log(title = "财务-利润", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, FinancialInterestsTable financialInterestsTable) {
-        List<FinancialInterestsTable> list = financialInterestsTableService.selectFinancialInterestsTableList(financialInterestsTable);
-        ExcelUtil<FinancialInterestsTable> util = new ExcelUtil<FinancialInterestsTable>(FinancialInterestsTable.class);
-        util.exportExcel(response, list, "财务-利润数据");
-    }
-
-    /**
      * 获取财务-利润详细信息
      */
     @PreAuthorize("@ss.hasPermi('financial:interests:query')")
@@ -101,22 +89,14 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 新增财务-利润
      */
-    @PreAuthorize("@ss.hasPermi('financial:interests:add')")
-    @Log(title = "财务-利润", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody FinancialInterestsTable financialInterestsTable) {
-        return toAjax(financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable));
-    }
+//    @PreAuthorize("@ss.hasPermi('financial:interests:add')")
+//    @Log(title = "财务-利润", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody FinancialInterestsTable financialInterestsTable) {
+//        return toAjax(financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable));
+//    }
 
-    /**
-     * 修改财务-利润
-     */
-    @PreAuthorize("@ss.hasPermi('financial:interests:edit')")
-    @Log(title = "财务-利润", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody FinancialInterestsTable financialInterestsTable) {
-        return toAjax(financialInterestsTableService.updateFinancialInterestsTable(financialInterestsTable));
-    }
+
 
     /**
      * 删除财务-利润

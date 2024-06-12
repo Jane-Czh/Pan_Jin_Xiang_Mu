@@ -171,4 +171,9 @@
             #{fbId}
         </foreach>
     </delete>
+
+    <select id="selectFinancialBalanceTableByFbId" parameterType="Long" resultMap="FinancialBalanceTableResult">
+        <include refid="selectFinancialBalanceTableVo"/>
+        where FB_ID = #{fbId}
+    </select>
 </mapper>

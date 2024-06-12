@@ -16,7 +16,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface TechMapper {
 
-
     /**
      * @description: 统计当年已经研发完成的数目
      * @author: hong
@@ -24,18 +23,42 @@ public interface TechMapper {
      **/
     Long countAnnualCompletionNumber(@Param("yearAndMonth") Date yearAndMonth);
 
+    /**
+     * @description: 查询当年已上传数据的最大月份，用于数据更新
+     * @author: hong
+     * @date: 2024/5/29 19:36
+     */
     Date selectMaxMonthByYear(@Param("year") int year);
 
-
+    /**
+     * @description: 检查当月是否已经上传数据
+     * @author: hong
+     * @date: 2024/5/29 19:37
+     */
     Boolean checkTechMonthlyDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
 
-
+    /**
+     * @description: 查询非标准单平均技术准备天数
+     * @author: hong
+     * @date: 2024/5/29 19:37
+     */
     List<DisplayEntity> selectNonStandardAVGPreparationDays(@Param("startTime") Date startTime,
                                                             @Param("endTime") Date endTime);
 
+    /**
+     * @description: 查询研发项目计划进度完成率
+     * @author: hong
+     * @date: 2024/5/29 19:38
+     */
     List<DisplayEntity> selectPRDScheduleCompletionRate(@Param("startTime") Date startTime,
                                                         @Param("endTime") Date endTime);
 
+    /**
+     * @description: 批量更新月度数据
+     * @author: hong
+     * @date: 2024/5/29 19:38
+     */
+    int batchUpdateTech(@Param("teches") ArrayList<Tech> teches);
 
     /**
      * 查询[技术]指标填报
@@ -84,8 +107,6 @@ public interface TechMapper {
      * @return 结果
      */
     public int deleteTechByTechIds(Long[] techIds);
-
-    int batchUpdateTech(@Param("teches") ArrayList<Tech> teches);
 
     boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
 }

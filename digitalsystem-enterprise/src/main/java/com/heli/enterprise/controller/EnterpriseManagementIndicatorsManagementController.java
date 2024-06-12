@@ -39,7 +39,7 @@ public class EnterpriseManagementIndicatorsManagementController extends BaseCont
     /**
      * 查询十一项管理指标列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Management:list')")
+    @PreAuthorize("@ss.hasPermi('enterprise:management:list')")
     @GetMapping("/list")
     public TableDataInfo list(EnterpriseManagementIndicatorsManagement enterpriseManagementIndicatorsManagement) {
         startPage();
@@ -48,21 +48,9 @@ public class EnterpriseManagementIndicatorsManagementController extends BaseCont
     }
 
     /**
-     * 导出十一项管理指标列表
-     */
-    @PreAuthorize("@ss.hasPermi('enterprise:Management:export')")
-    @Log(title = "十一项管理指标 ", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, EnterpriseManagementIndicatorsManagement enterpriseManagementIndicatorsManagement) {
-        List<EnterpriseManagementIndicatorsManagement> list = enterpriseManagementIndicatorsManagementService.selectEnterpriseManagementIndicatorsManagementList(enterpriseManagementIndicatorsManagement);
-        ExcelUtil<EnterpriseManagementIndicatorsManagement> util = new ExcelUtil<EnterpriseManagementIndicatorsManagement>(EnterpriseManagementIndicatorsManagement.class);
-        util.exportExcel(response, list, "十一项管理指标数据");
-    }
-
-    /**
      * 获取十一项管理指标详细信息
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Management:query')")
+    @PreAuthorize("@ss.hasPermi('enterprise:management:query')")
     @GetMapping(value = "/{emId}")
     public AjaxResult getInfo(@PathVariable("emId") Long emId) {
         return success(enterpriseManagementIndicatorsManagementService.selectEnterpriseManagementIndicatorsManagementByEmId(emId));
@@ -71,7 +59,7 @@ public class EnterpriseManagementIndicatorsManagementController extends BaseCont
     /**
      * 新增十一项管理指标
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Management:add')")
+    @PreAuthorize("@ss.hasPermi('enterprise:management:add')")
     @Log(title = "十一项管理指标 ", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EnterpriseManagementIndicatorsManagement enterpriseManagementIndicatorsManagement) {
@@ -85,7 +73,7 @@ public class EnterpriseManagementIndicatorsManagementController extends BaseCont
     /**
      * 修改十一项管理指标
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Management:edit')")
+    @PreAuthorize("@ss.hasPermi('enterprise:management:edit')")
     @Log(title = "十一项管理指标 ", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EnterpriseManagementIndicatorsManagement enterpriseManagementIndicatorsManagement) {
@@ -96,7 +84,7 @@ public class EnterpriseManagementIndicatorsManagementController extends BaseCont
     /**
      * 删除十一项管理指标
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Management:remove')")
+    @PreAuthorize("@ss.hasPermi('enterprise:management:remove')")
     @Log(title = "十一项管理指标 ", businessType = BusinessType.DELETE)
     @DeleteMapping("/{emIds}")
     public AjaxResult remove(@PathVariable Long[] emIds) {

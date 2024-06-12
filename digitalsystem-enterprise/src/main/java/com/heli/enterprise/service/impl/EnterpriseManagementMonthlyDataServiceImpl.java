@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.heli.enterprise.domain.EnterpriseManagementEmployeesData;
-import com.heli.enterprise.domain.EnterpriseManagementIndicatorsSalaryData;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +39,11 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         return enterpriseManagementMonthlyDataMapper.insertMonthlyFillingDataByMonth(enterpriseManagementMonthlyData);
     }
 
+    @Override
+    public Boolean checkEMMonthlyDataIsExisted() {
+        return enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataIsExisted();
+    }
+
     /**
      * 计算填报相关月度指标
      */
@@ -68,10 +71,10 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         BigDecimal monthlySalary = enterpriseManagementMonthlyDataMapper.selectMonthlySalary(yearAndMonth);
         BigDecimal annualSalary = enterpriseManagementMonthlyDataMapper.selectAnnualSalary(DateUtils.getYear(yearAndMonth));
 
-        monthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 2, ROUND_HALF_UP));
+        monthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
         BigDecimal totalNumber = enterpriseManagementMonthlyDataMapper.selectSalaryTotalNumber(yearAndMonth);
 
-        monthlyData.setAnnualSalaryRatio(totalNumber.divide(annualSalary, 2, ROUND_HALF_UP));
+        monthlyData.setAnnualSalaryRatio(totalNumber.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
 
         log.info("计算月度指标数据：" + monthlyData);
 //        return enterpriseManagementMonthlyDataMapper.updateCalculateEmployeesDataByMonth(monthlyData);
@@ -147,7 +150,18 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
     @Override
     public int updateEnterpriseManagementMonthlyData(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
         enterpriseManagementMonthlyData.setUpdateTime(DateUtils.getNowDate());
-        return enterpriseManagementMonthlyDataMapper.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
+        enterpriseManagementMonthlyDataMapper.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
+        int i = 0;
+        //更新
+        //获取当年数据最大月份
+        Date maxMonth = enterpriseManagementMonthlyDataMapper.selectMaxMonthByYear(enterpriseManagementMonthlyData.getYearAndMonth());
+        log.info("最大月份：" + maxMonth);
+        //从当前月份更新到最大月份
+        for (Date date = enterpriseManagementMonthlyData.getYearAndMonth(); date.before(DateUtils.getNextMonth(maxMonth)); date = DateUtils.getNextMonth(date), i++) {
+            log.info("当前更新的月份为：" + date);
+            calculateHandFillIndicators(date);
+        }
+        return i;
     }
 
     /**

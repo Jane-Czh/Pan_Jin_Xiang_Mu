@@ -17,14 +17,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectEnterpriseManagementAnnualDataVo">
-        select EMAS_id, Natural_Year, Annual_Total_Salary, Stock_Target_Value, Panjin_Target_Value, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Annual_Data
+        select EMAS_id, Natural_Year, Annual_Total_Salary, Stock_Target_Value, Panjin_Target_Value, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Annual_Data
     </sql>
 
 
 
     <!--检查本年数据是否上传-->
     <select id="checkEMAnnualDataIsExisted" parameterType="int" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Annual_Data WHERE Natural_Year=#{naturalYear})
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Annual_Data WHERE Natural_Year=#{naturalYear})
     </select>
 
 
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertEnterpriseManagementAnnualData" parameterType="EnterpriseManagementAnnualData" useGeneratedKeys="true" keyProperty="emasId">
-        insert into Enterprise_Management_Annual_Data
+        insert into Enterprise_Management_Indicators_Annual_Data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="naturalYear != null">Natural_Year,</if>
             <if test="annualTotalSalary != null">Annual_Total_Salary,</if>
@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateEnterpriseManagementAnnualData" parameterType="EnterpriseManagementAnnualData">
-        update Enterprise_Management_Annual_Data
+        update Enterprise_Management_Indicators_Annual_Data
         <trim prefix="SET" suffixOverrides=",">
             <if test="naturalYear != null">Natural_Year = #{naturalYear},</if>
             <if test="annualTotalSalary != null">Annual_Total_Salary = #{annualTotalSalary},</if>
@@ -94,11 +94,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteEnterpriseManagementAnnualDataByEmasId" parameterType="Long">
-        delete from Enterprise_Management_Annual_Data where EMAS_id = #{emasId}
+        delete from Enterprise_Management_Indicators_Annual_Data where EMAS_id = #{emasId}
     </delete>
 
     <delete id="deleteEnterpriseManagementAnnualDataByEmasIds" parameterType="String">
-        delete from Enterprise_Management_Annual_Data where EMAS_id in 
+        delete from Enterprise_Management_Indicators_Annual_Data where EMAS_id in 
         <foreach item="emasId" collection="array" open="(" separator="," close=")">
             #{emasId}
         </foreach>

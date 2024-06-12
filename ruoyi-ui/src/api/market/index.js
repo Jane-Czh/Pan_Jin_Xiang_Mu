@@ -124,6 +124,28 @@ export function getIndex11(data) {
       }
     })
   }
+  export function getIndex43(data) {
+    return request({
+      url: '/market/Index/ElCarAvergaeDay',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+  export function getIndex44(data) {
+    return request({
+      url: '/market/Index/LitterTAvergaeDay',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
   export function getIndex72(data) {
     return request({
       url: '/market/Index/OrderReceiveNumber',

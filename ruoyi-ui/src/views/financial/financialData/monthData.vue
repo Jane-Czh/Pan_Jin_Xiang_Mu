@@ -1,5 +1,6 @@
 <template>
-  <div class="app-container">
+  <div class="currentPage">
+    <!-- 月度数据表 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="年月" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -7,22 +8,11 @@
         </el-date-picker>
       </el-form-item>
 
-      <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
-        <el-input v-model="queryParams.inprogressDayrevenue" placeholder="请输入当日在制品金额" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-
-      <el-form-item label="更新时间" prop="updatedDate">
-        <el-date-picker clearable v-model="queryParams.updatedDate" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择更新时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
@@ -39,10 +29,11 @@
         </el-col>
         <el-col :span="1.5">
           <!--Excel 参数导入 -->
-          <el-button type="primary" @click="showDialog = true" v-if="true"><i class="fa fa-download"></i>导入Excel文件
+          <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true"
+            v-if="true">导入Excel
           </el-button>
 
-          <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+          <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
             <!-- 下拉框 -->
             <el-form :model="form" ref="form" label-width="90px">
               <el-form-item label="选择表类型">
@@ -67,10 +58,6 @@
             </span>
           </el-dialog>
         </el-col>
-        <el-col :span="1.5">
-          <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-            v-hasPermi="['financial:data:export']">导出</el-button>
-        </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
     </div>
@@ -78,7 +65,8 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -163,9 +151,6 @@
         <el-form-item label="一年以上暂估行项目" prop="longEstimatedItems">
           <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目" />
         </el-form-item>
-        <el-form-item label="当日在制品金额" prop="inprogressDayrevenue">
-          <el-input v-model="form.inprogressDayrevenue" placeholder="请输入当日在制品金额" />
-        </el-form-item>
         <el-form-item label="当月经济增加值" prop="addedValueMonthly">
           <el-input v-model="form.addedValueMonthly" placeholder="请输入当月经济增加值" />
         </el-form-item>
@@ -186,15 +171,16 @@ import { listData, getData, delData, addData, updateData } from "@/api/financial
 // import "font-awesome/css/font-awesome.css";
 import axios from "axios";
 
-
 export default {
   name: "Data",
   data() {
     return {
+      activeName: "1",
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       showDialog: false,
 
       progress: 0,
@@ -210,10 +196,12 @@ export default {
       total: 0,
       // [财务]手动填报指标表格数据
       dataList: [],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -245,30 +233,39 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
   created() {
     this.getList();
-    this.sortDataListDescending()
+    // this.sortDataListDescending()
   },
   methods: {
 
-    sortDataListDescending() {
-      this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-    },//默认改为降序排列
-    handleSortChange(sort) {
-      // sort.order: 排序的顺序，'ascending' 或 'descending'
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          // 如果是升序，你可以使用Array的sort方法来排序dataList
-          this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          // 如果是降序，你可以使用Array的sort方法来排序dataList
-          this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
+    // sortDataListDescending() {
+    //   this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+    // },//默认改为降序排列
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
+
+    // handleSortChange(sort) {
+    //   // sort.order: 排序的顺序，'ascending' 或 'descending'
+    //   if (sort.column && sort.prop === 'yearAndMonth') {
+    //     if (sort.order === 'ascending') {
+    //       // 如果是升序，你可以使用Array的sort方法来排序dataList
+    //       this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+    //     } else if (sort.order === 'descending') {
+    //       // 如果是降序，你可以使用Array的sort方法来排序dataList
+    //       this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+    //     }
+    //   }
+    // },
 
 
 
@@ -328,6 +325,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.fihfId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -335,7 +333,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[财务]手动填报指标";
+      this.title = "添加月度数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -344,7 +342,7 @@ export default {
       getData(fihfId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[财务]手动填报指标";
+        this.title = "修改月度数据";
       });
     },
     /** 提交按钮 */
@@ -370,13 +368,16 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const fihfIds = row.fihfId || this.ids;
-      this.$modal.confirm('是否确认删除[财务]手动填报指标编号为"' + fihfIds + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delData(fihfIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+
+    // 导入excel，检查文件类型
     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
@@ -391,11 +392,6 @@ export default {
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
-    handleClose(done) {
-      if (confirm("确定要关闭吗？")) {
-        done(); // 调用 done() 方法来关闭对话框
-      }
-    },
     /** 导入按钮 */
     fileSend() {
       const formData = new FormData();
@@ -408,7 +404,7 @@ export default {
         axios({
           method: "post",
           // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080/financial/interests/importTable",
+          url: "http://localhost:8080//financial/data/interests/import",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),
@@ -428,7 +424,7 @@ export default {
         axios({
           method: "post",
           // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080/financial/balance/importTable",
+          url: "http://localhost:8080/financial/data/balance/import",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),
@@ -493,12 +489,13 @@ export default {
         // location.reload(); // 调用此方法刷新页面数据
       }, 2000); // 2000毫秒后关闭
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('financial/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.currentPage {
+  padding: 16px;
+}
+</style>

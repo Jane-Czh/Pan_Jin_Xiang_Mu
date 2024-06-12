@@ -50,7 +50,7 @@
 <!--    </select>-->
 
     <!--检查当月数据是否上传-->
-    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" >
+    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Tech WHERE Year_And_Month=#{yearAndMonth})
     </select>
 

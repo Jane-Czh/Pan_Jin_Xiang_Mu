@@ -14,7 +14,7 @@ import com.ruoyi.common.core.domain.R;
  */
 public interface IEnterpriseManagementSalaryTableService {
 
-    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream);
+    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream, String username);
 
     /**
      * 查询工资-部分字段

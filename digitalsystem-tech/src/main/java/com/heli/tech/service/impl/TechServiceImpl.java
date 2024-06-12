@@ -34,6 +34,11 @@ public class TechServiceImpl implements ITechService {
 
     private static final Logger log = LoggerFactory.getLogger(TechServiceImpl.class);
 
+    /**
+     * @description: 当月度数据、年度数据修改时，更新数据
+     * @author: hong
+     * @date: 2024/5/29 19:46
+     */
     public int batchUpdateTech(Date date) {
         Date maxMonth = techMapper.selectMaxMonthByYear(DateUtils.getYear(date));
         ArrayList<Tech> teches = new ArrayList<>();
@@ -72,9 +77,10 @@ public class TechServiceImpl implements ITechService {
      * @author: hong
      * @date: 2024/4/27 11:25
      **/
-    public Tech calculateCompletionRate(Tech tech, Long annualNumber) {
-//        Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(DateUtils.getYear(tech.getYearAndMonth())) + tech.getCompletedmonthlyPlancounts();
-//        tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
+    public Tech calculateCompletionRate(Tech tech) {
+        Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
+        Long annualNumber = techAnnualPlanCountMapper.selectTechAnnualNumberByYear(DateUtils.getYear(tech.getYearAndMonth()));
+        tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
         return tech;
     }
 

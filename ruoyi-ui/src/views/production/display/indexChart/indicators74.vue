@@ -41,8 +41,7 @@
         <div class="block">
           <span class="DataSelect" style="margin-right:10px">年份选择</span>
           <el-date-picker v-model="selectedDateYear" type="monthrange" unlink-panels range-separator="至"
-            start-placeholder="开始年份" end-placeholder="结束年份" :picker-options="pickerOptions" @change="handleDateChange"
-            value-format="yyyy">
+            start-placeholder="开始年份" end-placeholder="结束年份" :picker-options="pickerOptions" @change="handleDateChange">
           </el-date-picker>
         </div>
         <div class="YEAR">
@@ -93,10 +92,7 @@ export default {
         startTime: new Date(),
         endTime: new Date(),
       },
-      timeData: {
-        startTime: new Date(),
-        endTime: new Date(),
-      },
+
       checkList: [],
       selectedDate: [],
       selectedDateDay: [],
@@ -134,9 +130,6 @@ export default {
         this.timeData.startTime = this.selectedDateYear[0]
         this.timeData.endTime = this.selectedDateYear[1]
       }
-      // TODO: 年份选择未完成
-      // this.timeData.startTime = this.selectedDate[0]
-      // this.timeData.endTime = this.selectedDate[1]
       try {
 
         this.loading = true

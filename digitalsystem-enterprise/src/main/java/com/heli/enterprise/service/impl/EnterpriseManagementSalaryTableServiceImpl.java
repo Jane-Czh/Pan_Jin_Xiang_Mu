@@ -37,11 +37,11 @@ public class EnterpriseManagementSalaryTableServiceImpl implements IEnterpriseMa
      * @return 返回操作结果，成功则返回成功消息，失败则返回失败消息
      */
     @Override
-    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream) {
+    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream,String username) {
         try {
             // 读取文件内容
             log.info("开始读取文件: {}", fileName);
-            EasyExcel.read(inputStream, EnterpriseManagementSalaryTable.class, new SalaryTableListener(enterpriseManagementSalaryTableMapper)).sheet("Sheet1").doRead();
+            EasyExcel.read(inputStream, EnterpriseManagementSalaryTable.class, new SalaryTableListener(enterpriseManagementSalaryTableMapper,username)).sheet("Sheet1").doRead();
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
             e.printStackTrace();

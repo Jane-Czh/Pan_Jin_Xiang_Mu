@@ -751,6 +751,7 @@ public class MarketIndexController extends BaseController {
 
     /*
      * 指标42 大叉位叉车整机交货天数平均数
+     * TODO 筛选出平均值>20%的数据，过滤对应的车型
      * */
     @PostMapping("/AvergaeDay")
     public  List<VoEntity> AvergaeDay(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
@@ -847,6 +848,207 @@ public class MarketIndexController extends BaseController {
         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(ratioMap);
         return voEntities;
     }
+
+    /*
+     * 指标43 电动车整机交货天数
+超过平均数20%统计台数
+     * */
+    @PostMapping("/ElCarAvergaeDay")
+    public  List<VoEntity> ElCarAvergaeDay(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+
+        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
+        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+
+        //规定年月日的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
+        //然后按照年，分组，再按照月分组，再统计每年的每月的数量
+        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream().filter(a ->
+        {
+            LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+            LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endTime = marketCommercialVehicleTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
+            //并且精准完工期要早于计划完工期
+            return
+                    (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
+                            || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
+                            &&
+                            precisioncompletion != null && precisioncompletion.isBefore(plancompletion);
+//            precisioncompletion.isBefore(plancompletion);
+
+        }).collect(Collectors.groupingBy(
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                Collectors.groupingBy(
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        Collectors.summingLong(MarketCommercialVehicleTable::getNumber)
+                )
+        ));
+
+        System.out.println("计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期"+collect);
+
+        //筛选出计划完工日期在起止时间内的数据，
+        //然后按照年，分组，再按照月分组，再统计每年的每月的数量
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        {
+            LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+            LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endTime = marketCommercialVehicleTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
+            return
+                    (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
+                            || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
+                            &&precisioncompletion!=null;
+
+
+
+        }).collect(Collectors.groupingBy(
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                Collectors.groupingBy(
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        Collectors.summingLong(MarketCommercialVehicleTable::getNumber)
+                )
+        ));
+        System.out.println("筛选出计划完工日期在起止时间内的数据"+collect1);
+
+        Map<String, Map<String, Double>> ratioMap = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Long>> entry1 : collect1.entrySet()) {
+            String year = entry1.getKey();
+            Map<String, Long> monthlyTotal = entry1.getValue();
+            Map<String, Long> collectData = collect.getOrDefault(year, new HashMap<>());
+
+            Map<String, Double> ratioYearMap = new HashMap<>();
+            for (Map.Entry<String, Long> entry : collectData.entrySet()) {
+                String month = entry.getKey();
+                Long collectCount = entry.getValue();
+                Long totalCount = monthlyTotal.getOrDefault(month, 0L);
+
+                // 计算比例
+                double ratio = totalCount != 0 ? (double) collectCount / totalCount : 0.0;
+                ratioYearMap.put(month, ratio);
+            }
+            ratioMap.put(year, ratioYearMap);
+        }
+
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照月份和地区统计数量"+collect);
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(ratioMap);
+        return voEntities;
+    }
+
+    /*
+     * 指标44 小吨位内燃叉车整机交货天数
+超过平均数20%统计台数
+     * */
+    @PostMapping("/LitterTAvergaeDay")
+    public  List<VoEntity> LitterTAvergaeDay(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+
+        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
+        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+
+        //规定年月日的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
+        //然后按照年，分组，再按照月分组，再统计每年的每月的数量
+        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream().filter(a ->
+        {
+            LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+            LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endTime = marketCommercialVehicleTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
+            //并且精准完工期要早于计划完工期
+            return
+                    (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
+                            || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
+                            &&
+                            precisioncompletion != null && precisioncompletion.isBefore(plancompletion);
+//            precisioncompletion.isBefore(plancompletion);
+
+        }).collect(Collectors.groupingBy(
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                Collectors.groupingBy(
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        Collectors.summingLong(MarketCommercialVehicleTable::getNumber)
+                )
+        ));
+
+        System.out.println("计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期"+collect);
+
+        //筛选出计划完工日期在起止时间内的数据，
+        //然后按照年，分组，再按照月分组，再统计每年的每月的数量
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        {
+            LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+            LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endTime = marketCommercialVehicleTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
+            return
+                    (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
+                            || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
+                            &&precisioncompletion!=null;
+
+
+
+        }).collect(Collectors.groupingBy(
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                Collectors.groupingBy(
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        Collectors.summingLong(MarketCommercialVehicleTable::getNumber)
+                )
+        ));
+        System.out.println("筛选出计划完工日期在起止时间内的数据"+collect1);
+
+        Map<String, Map<String, Double>> ratioMap = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Long>> entry1 : collect1.entrySet()) {
+            String year = entry1.getKey();
+            Map<String, Long> monthlyTotal = entry1.getValue();
+            Map<String, Long> collectData = collect.getOrDefault(year, new HashMap<>());
+
+            Map<String, Double> ratioYearMap = new HashMap<>();
+            for (Map.Entry<String, Long> entry : collectData.entrySet()) {
+                String month = entry.getKey();
+                Long collectCount = entry.getValue();
+                Long totalCount = monthlyTotal.getOrDefault(month, 0L);
+
+                // 计算比例
+                double ratio = totalCount != 0 ? (double) collectCount / totalCount : 0.0;
+                ratioYearMap.put(month, ratio);
+            }
+            ratioMap.put(year, ratioYearMap);
+        }
+
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照月份和地区统计数量"+collect);
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(ratioMap);
+        return voEntities;
+    }
+
 
     /*
      * 指标72  日/月/年接单数

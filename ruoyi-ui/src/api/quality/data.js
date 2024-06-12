@@ -43,4 +43,11 @@ export function delHandFill(qihfId) {
   })
 }
 
+// 更新[质量]指标填报状态
+export function updateList() {
+  return request({
+    url: '/quality/data/metrics/updateList',
+    method: 'post',
+  })
+}
 

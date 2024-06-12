@@ -17,7 +17,6 @@ import * as echarts from 'echarts';
 import moment from 'moment'
 import { getPartQualificationRateData } from '@/api/quality/chartAPI'
 
-//TODO 指标104+105两个图
 
 export default {
     data() {

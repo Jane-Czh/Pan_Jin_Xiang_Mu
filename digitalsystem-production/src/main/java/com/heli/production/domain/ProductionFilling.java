@@ -31,28 +31,6 @@ public class ProductionFilling extends BaseEntity {
     private Date yearAndMonth;
 
     /**
-     * 创建人
-     */
-    private String createdBy;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date createdTime;
-
-    /**
-     * 更新人
-     */
-    private String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date updatedTime;
-
-    /**
      * 当月单台非BOM物料费用
      */
     private BigDecimal curNonBomMaterialCost;

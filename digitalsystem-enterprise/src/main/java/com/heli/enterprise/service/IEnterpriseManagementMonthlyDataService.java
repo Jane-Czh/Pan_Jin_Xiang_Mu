@@ -24,7 +24,7 @@ public interface IEnterpriseManagementMonthlyDataService {
     int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
 
 
-
+    Boolean checkEMMonthlyDataIsExisted();
 
 
     /**

@@ -20,11 +20,13 @@ public class SalaryTableListener implements ReadListener<EnterpriseManagementSal
 
     @Autowired
     private EnterpriseManagementSalaryTableMapper enterpriseManagementSalaryTableMapper;
+    private String username;
 
     private List<EnterpriseManagementSalaryTable> cacheDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
 
-    public SalaryTableListener(EnterpriseManagementSalaryTableMapper enterpriseManagementSalaryTableMapper) {
+    public SalaryTableListener(EnterpriseManagementSalaryTableMapper enterpriseManagementSalaryTableMapper, String username) {
         this.enterpriseManagementSalaryTableMapper = enterpriseManagementSalaryTableMapper;
+        this.username = username;
     }
 
     /**
@@ -39,6 +41,7 @@ public class SalaryTableListener implements ReadListener<EnterpriseManagementSal
         if (registerInfoExcel.getSalaryCalculationYearMonth() != null) {
             registerInfoExcel.setSalaryTableIndex(registerInfoExcel.getSalaryCalculationYearMonth().getTime() +"-"+registerInfoExcel.getEmployeeId());
             registerInfoExcel.setCreateTime(DateUtils.getNowDate());
+            registerInfoExcel.setCreateBy(username);
             cacheDataList.add(registerInfoExcel);
         }
         log.info("当前读取的数据为:" + registerInfoExcel);

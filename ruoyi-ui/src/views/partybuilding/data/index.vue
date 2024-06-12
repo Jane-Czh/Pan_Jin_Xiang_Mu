@@ -30,23 +30,22 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['partybuilding:data:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['partybuilding:data:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 
       <el-table-column label="党建分数" align="center" prop="score" />
-
+      <el-table-column label="党建排名" align="center" prop="ranking" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -68,11 +67,11 @@
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="党建排名" prop="Ranking">
-          <el-input v-model="form.Ranking" placeholder="请输入党建排名" />
-        </el-form-item>
         <el-form-item label="党建分数" prop="score">
           <el-input v-model="form.score" placeholder="请输入党建分数" />
+        </el-form-item>
+        <el-form-item label="党建排名" prop="ranking">
+          <el-input v-model="form.ranking" placeholder="请输入党建排名" />
         </el-form-item>
 
       </el-form>
@@ -95,6 +94,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -114,7 +114,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         yearAndMonth: null,
-        Ranking: null,
+        ranking: null,
         score: null,
         createdBy: null,
         createdTime: null,
@@ -125,6 +125,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -132,6 +135,12 @@ export default {
     this.getList();
   },
   methods: {
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
+    },
+
     /** 查询[党建]指标填报列表 */
     getList() {
       this.loading = true;
@@ -139,6 +148,7 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
+
       });
     },
     // 取消按钮
@@ -151,7 +161,7 @@ export default {
       this.form = {
         pbId: null,
         yearAndMonth: null,
-        Ranking: null,
+        ranking: null,
         score: null,
         createdBy: null,
         createdTime: null,
@@ -173,6 +183,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.pbId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -180,7 +191,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[党建]指标填报";
+      this.title = "添加[党建]数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -189,7 +200,7 @@ export default {
       getData(pbId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[党建]指标填报";
+        this.title = "修改[党建]数据";
       });
     },
     /** 提交按钮 */
@@ -215,19 +226,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const pbIds = row.pbId || this.ids;
-      this.$modal.confirm('是否确认删除[党建]指标填报编号为"' + pbIds + '"的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delData(pbIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('partybuilding/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

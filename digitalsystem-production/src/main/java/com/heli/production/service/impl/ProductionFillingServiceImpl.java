@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.production.domain.ProductionFilling;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.production.mapper.ProductionFillingMapper;
@@ -61,6 +62,7 @@ public class ProductionFillingServiceImpl implements IProductionFillingService {
      */
     @Override
     public int insertProduction(ProductionFilling ProductionFilling) {
+        ProductionFilling.setCreateTime(DateUtils.getNowDate());
         return productionFillingMapper.insertProduction(ProductionFilling);
     }
 
@@ -72,6 +74,7 @@ public class ProductionFillingServiceImpl implements IProductionFillingService {
      */
     @Override
     public int updateProduction(ProductionFilling ProductionFilling) {
+        ProductionFilling.setUpdateTime(DateUtils.getNowDate());
         return productionFillingMapper.updateProduction(ProductionFilling);
     }
 

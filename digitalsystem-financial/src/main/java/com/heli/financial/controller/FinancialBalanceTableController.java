@@ -34,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-04-03
  */
 @RestController
-@RequestMapping("/financial/balance")
+@RequestMapping("/financial/data/balance")
 public class FinancialBalanceTableController extends BaseController {
     @Autowired
     private IFinancialBalanceTableService financialBalanceTableService;
@@ -47,17 +47,17 @@ public class FinancialBalanceTableController extends BaseController {
      * @return: com.ruoyi.common.core.domain.AjaxResult
      **/
 //    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
-    @PostMapping("/importTable")
-    public AjaxResult importTable(MultipartFile excelFile) {
-        System.out.println(excelFile);
-        try {
-            financialBalanceTableService.importBalance(excelFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ServiceException("excel上传失败");
-        }
-        return success();
-    }
+//    @PostMapping("/import")
+//    public AjaxResult importTable(MultipartFile excelFile) {
+//        System.out.println(excelFile);
+//        try {
+//            financialBalanceTableService.importBalance(excelFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new ServiceException("excel上传失败");
+//        }
+//        return success();
+//    }
 
     /**
      * 查询财务-资产负债列表
@@ -68,18 +68,6 @@ public class FinancialBalanceTableController extends BaseController {
         startPage();
         List<FinancialBalanceTable> list = financialBalanceTableService.selectFinancialBalanceTableList(financialBalanceTable);
         return getDataTable(list);
-    }
-
-    /**
-     * 导出财务-资产负债列表
-     */
-    @PreAuthorize("@ss.hasPermi('financial:balance:export')")
-    @Log(title = "财务-资产负债", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, FinancialBalanceTable financialBalanceTable) {
-        List<FinancialBalanceTable> list = financialBalanceTableService.selectFinancialBalanceTableList(financialBalanceTable);
-        ExcelUtil<FinancialBalanceTable> util = new ExcelUtil<FinancialBalanceTable>(FinancialBalanceTable.class);
-        util.exportExcel(response, list, "财务-资产负债数据");
     }
 
     /**
@@ -94,22 +82,14 @@ public class FinancialBalanceTableController extends BaseController {
     /**
      * 新增财务-资产负债
      */
-    @PreAuthorize("@ss.hasPermi('financial:balance:add')")
-    @Log(title = "财务-资产负债", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody FinancialBalanceTable financialBalanceTable) {
-        return toAjax(financialBalanceTableService.insertFinancialBalanceTable(financialBalanceTable));
-    }
+//    @PreAuthorize("@ss.hasPermi('financial:balance:add')")
+//    @Log(title = "财务-资产负债", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody FinancialBalanceTable financialBalanceTable) {
+//        return toAjax(financialBalanceTableService.insertFinancialBalanceTable(financialBalanceTable));
+//    }
 
-    /**
-     * 修改财务-资产负债
-     */
-    @PreAuthorize("@ss.hasPermi('financial:balance:edit')")
-    @Log(title = "财务-资产负债", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody FinancialBalanceTable financialBalanceTable) {
-        return toAjax(financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable));
-    }
+
 
     /**
      * 删除财务-资产负债

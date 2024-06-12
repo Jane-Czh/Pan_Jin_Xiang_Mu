@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,8 @@ public class PartyBuildingDisplayController extends BaseController {
      * 当月在制品存货额 指标27
      */
 
-    @PostMapping("/partyBuildingRank")
+    @PreAuthorize("@ss.hasPermi('partybuilding:display:rank')")
+    @PostMapping("/rank")
     public TableDataInfo partyBuildingRank(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = partyBuildingDisplayService.selectPartyBuildingRank(time.getStartTime(),time.getEndTime());
         return getDataTable(list);

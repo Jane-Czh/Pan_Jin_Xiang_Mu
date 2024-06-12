@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date: 2024/4/11 20:11
  **/
 @RestController
-@RequestMapping("/production/FillingInIndicators")
+@RequestMapping("/production/data/fill")
 public class ProductionFillingController extends BaseController {
     @Autowired
     private IProductionFillingService productionFillingService;
@@ -40,17 +40,17 @@ public class ProductionFillingController extends BaseController {
      * @author: hong
      * @date: 2024/4/8 14:55
      **/
-    @GetMapping("/getExistedYearAndMonth")
-    public TableDataInfo getAllYearAndMonth() {
-        List<Date> list = productionFillingService.selectExistedYearAndMonth();
-        return getDataTable(list);
-    }
-
+//    @PreAuthorize("@ss.hasPermi('production:fill:getAllMonth')")
+//    @GetMapping("/getExistedYearAndMonth")
+//    public TableDataInfo getAllYearAndMonth() {
+//        List<Date> list = productionFillingService.selectExistedYearAndMonth();
+//        return getDataTable(list);
+//    }
 
     /**
      * 查询[生产]手动填报指标功能列表
      */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:list')")
+    @PreAuthorize("@ss.hasPermi('production:fill:list')")
     @GetMapping("/list")
     public TableDataInfo list(ProductionFilling ProductionFilling) {
         startPage();
@@ -59,21 +59,9 @@ public class ProductionFillingController extends BaseController {
     }
 
     /**
-     * 导出[生产]手动填报指标功能列表
-     */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:export')")
-    @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, ProductionFilling ProductionFilling) {
-        List<ProductionFilling> list = productionFillingService.selectProductionList(ProductionFilling);
-        ExcelUtil<ProductionFilling> util = new ExcelUtil<ProductionFilling>(ProductionFilling.class);
-        util.exportExcel(response, list, "[生产]手动填报指标功能数据");
-    }
-
-    /**
      * 获取[生产]手动填报指标功能详细信息
      */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:query')")
+    @PreAuthorize("@ss.hasPermi('production:fill:query')")
     @GetMapping(value = "/{productionId}")
     public AjaxResult getInfo(@PathVariable("productionId") Long productionId) {
         return success(productionFillingService.selectProductionByProductionId(productionId));
@@ -82,29 +70,31 @@ public class ProductionFillingController extends BaseController {
     /**
      * 新增[生产]手动填报指标功能
      */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:add')")
+    @PreAuthorize("@ss.hasPermi('production:fill:add')")
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ProductionFilling ProductionFilling) {
-        if (productionFillingService.checkProductionFillingDataIsExisted(ProductionFilling.getYearAndMonth()))
+    public AjaxResult add(@RequestBody ProductionFilling productionFilling) {
+        if (productionFillingService.checkProductionFillingDataIsExisted(productionFilling.getYearAndMonth()))
             return AjaxResult.error("当月数据已填报");
-        return toAjax(productionFillingService.insertProduction(ProductionFilling));
+        productionFilling.setCreateBy(getUsername());
+        return toAjax(productionFillingService.insertProduction(productionFilling));
     }
 
     /**
      * 修改[生产]手动填报指标功能
      */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:edit')")
+    @PreAuthorize("@ss.hasPermi('production:fill:edit')")
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProductionFilling ProductionFilling) {
-        return toAjax(productionFillingService.updateProduction(ProductionFilling));
+    public AjaxResult edit(@RequestBody ProductionFilling productionFilling) {
+        productionFilling.setUpdateBy(getUsername());
+        return toAjax(productionFillingService.updateProduction(productionFilling));
     }
 
     /**
      * 删除[生产]手动填报指标功能
      */
-    @PreAuthorize("@ss.hasPermi('production:FillingInIndicators:remove')")
+    @PreAuthorize("@ss.hasPermi('production:fill:remove')")
     @Log(title = "[生产]手动填报指标功能", businessType = BusinessType.DELETE)
     @DeleteMapping("/{productionIds}")
     public AjaxResult remove(@PathVariable Long[] productionIds) {

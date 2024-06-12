@@ -1,6 +1,7 @@
 package com.heli.enterprise.controller;
 
 import java.util.List;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +37,7 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     /**
      * 查询日清日结列表
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Settlement:list')")
+    @PreAuthorize("@ss.hasPermi('enterprise:dailyclear:list')")
     @GetMapping("/list")
     public TableDataInfo list(EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
         startPage();
@@ -45,21 +46,9 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     }
 
     /**
-     * 导出日清日结列表
-     */
-    @PreAuthorize("@ss.hasPermi('enterprise:Settlement:export')")
-    @Log(title = "日清日结 ", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
-        List<EnterpriseManagementIndicatorsDailyClearingSettlement> list = enterpriseManagementIndicatorsDailyClearingSettlementService.selectEnterpriseManagementIndicatorsDailyClearingSettlementList(enterpriseManagementIndicatorsDailyClearingSettlement);
-        ExcelUtil<EnterpriseManagementIndicatorsDailyClearingSettlement> util = new ExcelUtil<EnterpriseManagementIndicatorsDailyClearingSettlement>(EnterpriseManagementIndicatorsDailyClearingSettlement.class);
-        util.exportExcel(response, list, "日清日结数据");
-    }
-
-    /**
      * 获取日清日结详细信息
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Settlement:query')")
+    @PreAuthorize("@ss.hasPermi('enterprise:dailyclear:query')")
     @GetMapping(value = "/{edId}")
     public AjaxResult getInfo(@PathVariable("edId") Long edId) {
         return success(enterpriseManagementIndicatorsDailyClearingSettlementService.selectEnterpriseManagementIndicatorsDailyClearingSettlementByEdId(edId));
@@ -68,10 +57,11 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     /**
      * 新增日清日结
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Settlement:add')")
+    @PreAuthorize("@ss.hasPermi('enterprise:dailyclear:add')")
     @Log(title = "日清日结 ", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
+        System.out.println('1');
         if (enterpriseManagementIndicatorsDailyClearingSettlementService.checkDailyClearingDataIsExisted(enterpriseManagementIndicatorsDailyClearingSettlement.getYearAndMonth())){
             return AjaxResult.warn("当月数据已上传");
         }
@@ -82,7 +72,7 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     /**
      * 修改日清日结
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Settlement:edit')")
+    @PreAuthorize("@ss.hasPermi('enterprise:dailyclear:edit')")
 //    @Log(title = "日清日结 ", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
@@ -93,7 +83,7 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     /**
      * 删除日清日结
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:Settlement:remove')")
+    @PreAuthorize("@ss.hasPermi('enterprise:dailyclear:remove')")
 //    @Log(title = "日清日结 ", businessType = BusinessType.DELETE)
     @DeleteMapping("/{edIds}")
     public AjaxResult remove(@PathVariable Long[] edIds) {

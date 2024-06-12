@@ -8,6 +8,7 @@ import com.ruoyi.common.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.core.controller.BaseController;
@@ -34,6 +35,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
      * @author: hong
      * @date: 2024/4/28 14:25
      **/
+    @PreAuthorize("@ss.hasPermi('supply:order:read')")
     @PostMapping("/readPurchaseOrderTable")
     @Transactional
     public R<String> readPurchaseOrderTable(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {
@@ -56,6 +58,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
      * @author: hong
      * @date: 2024/4/28 14:25
      **/
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:read')")
     @PostMapping("/readCollectibleMaterialsTable")
     @Transactional
     public R<String> readCollectibleMaterialsTable(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {

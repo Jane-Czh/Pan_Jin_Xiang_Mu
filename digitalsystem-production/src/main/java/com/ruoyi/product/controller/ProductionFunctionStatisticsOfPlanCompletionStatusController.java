@@ -46,6 +46,7 @@ public class ProductionFunctionStatisticsOfPlanCompletionStatusController extend
         System.out.println("-----------同步-------同步------------");
         List<MarketCommercialVehicleTable> list = marketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
         productionFunctionStatisticsOfPlanCompletionStatusService.Synchronization(list, productionFunctionStatisticsOfPlanCompletionStatus1);
+
         System.out.println("-----------同步-------同步------------");
 
     }

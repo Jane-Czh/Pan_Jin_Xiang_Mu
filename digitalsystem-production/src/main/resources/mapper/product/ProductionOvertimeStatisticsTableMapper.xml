@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductionOvertimeStatisticsTableMapper">
+
+    <resultMap type="ProductionOvertimeStatisticsTable" id="ProductionOvertimeStatisticsTableResult">
+        <result property="postId"    column="POST_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="idNumber"    column="ID_number"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="attendanceSituation"    column="Attendance_situation"    />
+        <result property="overtimeDuration"    column="Overtime_duration"    />
+        <result property="abnormalSituation"    column="Abnormal_situation"    />
+        <result property="createTime"    column="Create_time"    />
+    </resultMap>
+
+    <sql id="selectProductionOvertimeStatisticsTableVo">
+        select POST_ID, Number, ID_number, Name, Gender, Attendance_situation, Overtime_duration, Abnormal_situation, Create_time from Production_Overtime_Statistics_Table
+    </sql>
+
+    <select id="selectProductionOvertimeStatisticsTableList" parameterType="ProductionOvertimeStatisticsTable" resultMap="ProductionOvertimeStatisticsTableResult">
+        <include refid="selectProductionOvertimeStatisticsTableVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="attendanceSituation != null "> and Attendance_situation = #{attendanceSituation}</if>
+            <if test="overtimeDuration != null "> and Overtime_duration = #{overtimeDuration}</if>
+            <if test="abnormalSituation != null  and abnormalSituation != ''"> and Abnormal_situation = #{abnormalSituation}</if>
+            <if test="createTime != null "> and Create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectProductionOvertimeStatisticsTableByPostId" parameterType="Long" resultMap="ProductionOvertimeStatisticsTableResult">
+        <include refid="selectProductionOvertimeStatisticsTableVo"/>
+        where POST_ID = #{postId}
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT POST_ID
+        FROM Production_Overtime_Statistics_Table
+        WHERE POST_ID = (SELECT MAX(POST_ID) FROM Production_Overtime_Statistics_Table);
+    </select>
+
+    <insert id="insertProductionOvertimeStatisticsTable" parameterType="ProductionOvertimeStatisticsTable">
+        insert into Production_Overtime_Statistics_Table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postId != null">POST_ID,</if>
+            <if test="Number != null">Number,</if>
+            <if test="idNumber != null">ID_number,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Gender != null">Gender,</if>
+            <if test="attendanceSituation != null">Attendance_situation,</if>
+            <if test="overtimeDuration != null">Overtime_duration,</if>
+            <if test="abnormalSituation != null">Abnormal_situation,</if>
+            <if test="createTime != null">Create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postId != null">#{postId},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Gender != null">#{Gender},</if>
+            <if test="attendanceSituation != null">#{attendanceSituation},</if>
+            <if test="overtimeDuration != null">#{overtimeDuration},</if>
+            <if test="abnormalSituation != null">#{abnormalSituation},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductionOvertimeStatisticsTable" parameterType="ProductionOvertimeStatisticsTable">
+        update Production_Overtime_Statistics_Table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="idNumber != null">ID_number = #{idNumber},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Gender != null">Gender = #{Gender},</if>
+            <if test="attendanceSituation != null">Attendance_situation = #{attendanceSituation},</if>
+            <if test="overtimeDuration != null">Overtime_duration = #{overtimeDuration},</if>
+            <if test="abnormalSituation != null">Abnormal_situation = #{abnormalSituation},</if>
+            <if test="createTime != null">Create_time = #{createTime},</if>
+        </trim>
+        where POST_ID = #{postId}
+    </update>
+
+    <delete id="deleteProductionOvertimeStatisticsTableByPostId" parameterType="Long">
+        delete from Production_Overtime_Statistics_Table where POST_ID = #{postId}
+    </delete>
+
+    <delete id="deleteProductionOvertimeStatisticsTableByPostIds" parameterType="String">
+        delete from Production_Overtime_Statistics_Table where POST_ID in
+        <foreach item="postId" collection="array" open="(" separator="," close=")">
+            #{postId}
+        </foreach>
+    </delete>
+</mapper>

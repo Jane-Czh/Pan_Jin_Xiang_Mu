@@ -17,7 +17,7 @@ import com.ruoyi.common.core.domain.R;
 public interface ISafetyEpMaintenanceTableService {
 
 
-    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date);
+    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date,String username);
 
 
     boolean checkSafetyEpMaintenanceTableIsExisted(Date date);

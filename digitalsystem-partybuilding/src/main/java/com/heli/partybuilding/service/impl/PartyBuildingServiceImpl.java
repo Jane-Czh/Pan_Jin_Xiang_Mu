@@ -3,6 +3,7 @@ package com.heli.partybuilding.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.partybuilding.mapper.PartyBuildingMapper;
@@ -66,6 +67,7 @@ public class PartyBuildingServiceImpl implements IPartyBuildingService {
      */
     @Override
     public int insertPartyBuilding(PartyBuilding partyBuilding) {
+        partyBuilding.setCreateTime(DateUtils.getNowDate());
         return partyBuildingMapper.insertPartyBuilding(partyBuilding);
     }
 
@@ -77,6 +79,7 @@ public class PartyBuildingServiceImpl implements IPartyBuildingService {
      */
     @Override
     public int updatePartyBuilding(PartyBuilding partyBuilding) {
+        partyBuilding.setUpdateTime(DateUtils.getNowDate());
         return partyBuildingMapper.updatePartyBuilding(partyBuilding);
     }
 

@@ -193,10 +193,16 @@
 
 <script>
 import FlowNodeForm from "./node_form";
+//子组件--绑定制度文件
 import CustomTabs from "./CustomTabs.vue";
+//子组件--绑定表单文件
 import CustomForms from "./CustomForms.vue";
 
+// 制度文件api
 import { listFilemanagement } from "@/api/file/filemanagement";
+// 表单文件api
+import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
 export default {
   props: {
     node: Object,
@@ -299,7 +305,7 @@ export default {
     getFormsData() {
       this.selectedFormsNames = [];
 
-      listFilemanagement(this.queryParams)
+      listFormfilemanagement(this.queryParams)
         .then((response) => {
           this.formmanagementList = response.rows;
           // console.log(" this.filemanagementList ==>", this.filemanagementList);
@@ -310,11 +316,11 @@ export default {
             JSON.parse(this.node.type).forEach((stateId) => {
               let row = this.formmanagementList.find(
                 (item) =>
-                  JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+                  JSON.stringify(item.formId) === JSON.stringify(stateId)
               );
               if (row != null) {
-                this.selectedFormsNames.push(row.fileName);
-                this.selectedFormsTemp.push(row.fileName);
+                this.selectedFormsNames.push(row.formName);
+                this.selectedFormsTemp.push(row.formName);
               }
             });
           }

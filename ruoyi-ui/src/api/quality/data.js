@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询[质量]指标填报列表
 export function listHandFill(query) {
   return request({
-    url: '/quality/handFill/list',
+    url: '/quality/data/handfill/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listHandFill(query) {
 // 查询[质量]指标填报详细
 export function getHandFill(qihfId) {
   return request({
-    url: '/quality/handFill/' + qihfId,
+    url: '/quality/data/handfill/' + qihfId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getHandFill(qihfId) {
 // 新增[质量]指标填报
 export function addHandFill(data) {
   return request({
-    url: '/quality/handFill',
+    url: '/quality/data/handfill',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addHandFill(data) {
 // 修改[质量]指标填报
 export function updateHandFill(data) {
   return request({
-    url: '/quality/handFill',
+    url: '/quality/data/handfill',
     method: 'put',
     data: data
   })
@@ -38,32 +38,16 @@ export function updateHandFill(data) {
 // 删除[质量]指标填报
 export function delHandFill(qihfId) {
   return request({
-    url: '/quality/handFill/' + qihfId,
+    url: '/quality/data/handfill/' + qihfId,
     method: 'delete'
   })
 }
 
-
-// 质量考核季度排名 指标63
-export function getQuarterlyRankData(data) {
+// 更新[质量]指标填报状态
+export function updateList() {
   return request({
-    url: `/quality/display/quarterlyRank`,
+    url: '/quality/data/metrics/updateList',
     method: 'post',
-    data: {
-      startTime: data.startTime,
-      endTime: data.endTime
-    }
   })
 }
 
-// 平均无故障时间 指标64
-export function getMeantimeWithoutFailureData(data) {
-  return request({
-    url: `/quality/display/meantimeWithoutFailure`,
-    method: 'post',
-    data: {
-      startTime: data.startTime,
-      endTime: data.endTime
-    }
-  })
-}

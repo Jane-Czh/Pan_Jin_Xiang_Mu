@@ -11,6 +11,7 @@ import com.heli.safety.domain.SafetyEpDeviceFaultData;
 import com.heli.safety.listener.MaintainTableListener;
 import com.heli.safety.mapper.SafetyEpMapper;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
 
 
     @Override
-    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date) {
+    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date,String username) {
 
         //清空维修数据表
         safetyEpMaintenanceTableMapper.truncateTable();
@@ -57,6 +58,8 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
             SafetyEp safetyEp = new SafetyEp();
             safetyEp.setKeyEquipmentTotalFailureCount(count);
             safetyEp.setYearAndMonth(date);
+            safetyEp.setCreateBy(username);
+            safetyEp.setCreateTime(DateUtils.getNowDate());
 
             //统计当月主要设备故障率-目前是写死的状态，看是否需要修改
             safetyEp.setKeyEquipmentFailureRate(safetyEpMapper.countMajorEquipmentFailuresInCurrentMonth().floatValue() / 360000 * 100);

@@ -39,6 +39,16 @@
                   @click="zoomSubMy"
                 ></el-button>
                 <el-divider direction="vertical"></el-divider>
+                <!-- 流程信息的Json数据 -->
+                <!-- <el-button
+                  type="info"
+                  plain
+                  round
+                  icon="el-icon-document"
+                  @click="dataInfo"
+                  size="mini"
+                  >流程信息</el-button
+                > -->
                 <!-- 历史 -->
                 <!-- <el-button
                 type="primary"
@@ -46,13 +56,33 @@
                 size="large"
                 @click="historyView()"
               ></el-button> -->
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="updateDetails(data.id)"
+                  >{{ buttonText }}</el-button
+                >
+
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
           </el-row>
           <!-- 流程展示部分 -->
-          <div style="display: flex; height: calc(100% - 47px)">
-            <div id="myContainer" ref="myContainer" class="container">
+          <!-- <div style="display: flex; height: calc(100% - 47px)"> -->
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              height: calc(100% - 47px);
+            "
+          >
+            <!-- <div id="myContainer" ref="myContainer" class="container"> -->
+            <div
+              id="myContainer"
+              ref="myContainer"
+              class="container"
+              style="flex: 1"
+            >
               <template v-for="node in data.nodeList">
                 <flow-node
                   :id="node.id"
@@ -70,9 +100,19 @@
               <div style="position: absolute; top: 2000px; left: 2000px">
                 &nbsp;
               </div>
-
+            </div>
+            <!-- 新增的详情展示部分 -->
+            <div
+              v-if="showDetails"
+              style="margin-top: 20px; padding: 10px; border: 1px solid #ccc"
+            >
+              <h3 style="font-weight: bold">更新详情内容：</h3>
+              <!-- <p>{{ detailsData.file }}</p> -->
+              <div v-html="formattedContent(detailsData.file)"></div>
             </div>
           </div>
+          <!-- div over -->
+          <!-- 新增的当前流程的 变更详情展示 部分 -->
         </div>
 
         <!-- 2-if、右侧50%历史数据部分 v-if="!showHisPanelVisible" -->
@@ -81,7 +121,13 @@
           class="right-side line-between-divs"
           v-if="!showHisPanelVisible"
         >
-          <el-table v-loading="loading" :data="historyProjectList" stripe>
+          <el-table
+            v-loading="loading"
+            :data="historyProjectList"
+            stripe
+            row-key="id"
+            :expand-row-keys="expandArr"
+          >
             <el-table-column
               label="序号"
               align="center"
@@ -92,7 +138,7 @@
                 <span>{{ scope.$index + 1 }}</span>
               </template>
             </el-table-column>
-            <!-- <el-table-column label="流程名称" align="center" prop="name" /> -->
+            <el-table-column label="流程名称" align="center" prop="name" />
             <el-table-column
               label="创建时间"
               align="center"
@@ -127,15 +173,6 @@
               class-name="small-padding fixed-width"
             >
               <template slot-scope="scope">
-                <!-- <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:project:edit']"
-                >修改</el-button
-              > -->
-
                 <el-button
                   size="mini"
                   type="text"
@@ -153,14 +190,34 @@
                   v-hasPermi="['system:project:remove']"
                   >删除</el-button
                 >
-                <!-- <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit-outline"
-                @click="edit(scope.row)"
-              >
-                更新</el-button
-              > -->
+
+                <!-- 更新详情button -->
+                <el-button
+                  @click="toggleRow(scope.row)"
+                  size="mini"
+                  type="text"
+                  :icon="
+                    isExpanded(scope.row)
+                      ? 'el-icon-caret-top'
+                      : 'el-icon-caret-bottom'
+                  "
+                  >{{
+                    isExpanded(scope.row) ? "关闭详情" : "更新详情"
+                  }}</el-button
+                >
+              </template>
+            </el-table-column>
+
+            <!-- 展开行：展示更新的详细信息 -->
+            <el-table-column type="expand" width="1">
+              <template slot-scope="props">
+                <!-- 根据展开状态显示不同的按钮文本 -->
+                <div v-show="isExpanded(props.row)">
+                  <h3 style="font-weight: bold">更新详情内容：</h3>
+                  <!-- {{ formatFileContent(props.row.file) }} 
+                   -->
+                  <div v-html="formattedContent(props.row.file)"></div>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -203,6 +260,17 @@
                   @click="historyView()"
                 ></el-button>
                 <!-- <el-divider direction="vertical"></el-divider> -->
+
+                <!-- 流程信息的Json数据 -->
+                <!-- <el-button
+                  type="info"
+                  plain
+                  round
+                  icon="el-icon-document"
+                  @click="dataInfo"
+                  size="mini"
+                  >流程信息</el-button
+                > -->
               </div>
             </el-col>
           </el-row>
@@ -230,6 +298,8 @@
         </div>
       </div>
     </el-dialog>
+    <!-- 流程数据详情 -->
+    <!-- <flow-info v-if="flowInfoVisible" ref="flowInfo" :data="data"></flow-info> -->
   </div>
 </template>
 
@@ -256,11 +326,20 @@ import {
 //历史流程的查看
 import HisPanel from "@/views/process/ef/history_panel";
 import HisNode from "@/views/process/ef/history_node";
+import { getProjectEntityById } from "@/api/system/project";
 
 export default {
   inject: ["reload"],
   data() {
     return {
+      // 其他数据
+      showDetails: false, // 控制展示区域显示的变量
+      detailsData: null, // 存储获取到的数据
+      buttonText: "更新详情", // 控制按钮文字的变量
+
+      // 显示历史流程更新详情的查看
+      expandArr: [], // 表示展开的行的 name 数组
+
       // 控制查看[历史]流程数据显示与隐藏
       showHisPanelVisible: false,
       //填写 流程项目名称的提示框
@@ -319,6 +398,9 @@ export default {
       historyProjectList: [],
       //
       empty: [],
+
+      // 控制流程数据显示与隐藏
+      flowInfoVisible: false,
     };
   },
   // 一些基础配置移动该文件中
@@ -380,6 +462,58 @@ export default {
   },
   created() {},
   methods: {
+    // 其他方法
+    async updateDetails(id) {
+      if (this.showDetails) {
+        this.showDetails = false;
+        this.buttonText = "更新详情";
+      } else {
+        // 模拟获取数据
+        const data = await this.fetchData(id);
+        this.detailsData = data;
+        this.showDetails = true;
+        this.buttonText = "关闭详情";
+      }
+    },
+    async fetchData(id) {
+    try {
+      const response = await getProjectEntityById(id);
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return { title: 'Error', content: 'Failed to fetch data.' };
+    }
+  },
+
+    //更新详细数据
+    toggleRow(row) {
+      const rowKey = row.id; // 使用唯一标识 id
+      if (this.expandArr.includes(rowKey)) {
+        // 如果当前行已经展开，则折叠它
+        this.expandArr = this.expandArr.filter((key) => key !== rowKey);
+      } else {
+        // 否则，只展开当前行
+        this.expandArr = [rowKey];
+      }
+    },
+    isExpanded(row) {
+      return this.expandArr.includes(row.id);
+    },
+    
+    //格式化换行
+    formattedContent(content) {
+      if (content) {
+        // 确认替换前内容
+        console.log("Original content:", content);
+        const formatted = content.replace(/\\+/g, "<br>");
+        // 确认替换后内容
+        console.log("Formatted content:", formatted);
+        return formatted;
+      }
+      return "无更新内容！";
+    },
+    // ------------------------------------------------------
     //关闭查看历史流程按钮
     historyView() {
       this.historyData = [];
@@ -424,8 +558,7 @@ export default {
             return new Date(a.updateDate) - new Date(b.updateDate);
           }
         });
-        //TODO 分页功能、分科室搜索功能等
-        // this.total = response.total;
+        console.log("historyProjectList===>", this.historyProjectList);
       });
 
       // console.log("historyProjectList===>", this.historyProjectList)
@@ -524,6 +657,14 @@ export default {
       });
     },
 
+    // 流程数据信息
+    dataInfo() {
+      this.flowInfoVisible = true;
+      this.$nextTick(function () {
+        this.$refs.flowInfo.init();
+      });
+    },
+
     // 加载流程图
     hisrotyLoadEasyFlow() {
       // 初始化[连线]
@@ -541,7 +682,6 @@ export default {
       }
       this.$nextTick(function () {
         this.historyLoadEasyFlowFinish = true;
-             
       });
     },
 
@@ -551,7 +691,7 @@ export default {
     //   this.$refs.nodeForm.nodeInit(this.data, nodeId);
     // },
 
-   //控件大小--当前版本
+    //控件大小--当前版本
     zoomAddMy() {
       if (this.zoom >= 1) {
         return;
@@ -569,8 +709,6 @@ export default {
       this.$refs.myContainer.style.transform = `scale(${this.zoom})`;
       this.jsPlumb.setZoom(this.zoom);
     },
-
-
 
     //控件大小--历史版本
     zoomAdd() {
@@ -645,7 +783,6 @@ export default {
   display: flex;
   width: 100%;
 }
-
 
 .left-side,
 .right-side {

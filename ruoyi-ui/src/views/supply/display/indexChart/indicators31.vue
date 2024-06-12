@@ -13,7 +13,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getControlledPurchaseAmountRatioData } from '@/api/supply/data'
+import { getControlledPurchaseAmountRatioData } from '@/api/supply/chartData'
 
 export default {
   data() {

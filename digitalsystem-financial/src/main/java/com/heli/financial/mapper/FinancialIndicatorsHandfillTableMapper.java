@@ -18,6 +18,8 @@ import java.util.List;
 //@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialIndicatorsHandfillTableMapper {
 
+    Date selectMaxYearAndMonth();
+
     List<Date> selectAllHandFillYearAndMonth();
 
 

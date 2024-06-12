@@ -3,6 +3,7 @@ package com.heli.safety.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.safety.mapper.SafetyEpMapper;
@@ -31,6 +32,7 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
      */
     @Override
     public int InsertOrUpdateSafetyEp(SafetyEp safetyEp) {
+        safetyEp.setCreateTime(DateUtils.getNowDate());
         return safetyEpMapper.InsertOrUpdateSafetyEp(safetyEp);
     }
 
@@ -64,6 +66,7 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
      */
     @Override
     public int insertSafetyEp(SafetyEp safetyEp) {
+        safetyEp.setCreateTime(DateUtils.getNowDate());
         return safetyEpMapper.insertSafetyEp(safetyEp);
     }
 
@@ -75,6 +78,7 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
      */
     @Override
     public int updateSafetyEp(SafetyEp safetyEp) {
+        safetyEp.setUpdateTime(DateUtils.getNowDate());
         return safetyEpMapper.updateSafetyEp(safetyEp);
     }
 

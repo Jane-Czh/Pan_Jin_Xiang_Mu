@@ -50,7 +50,7 @@
 <!--    </select>-->
 
     <!--检查当月数据是否上传-->
-    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" >
+    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Tech WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
@@ -91,7 +91,11 @@
         Year_And_Month = values(Year_And_Month),PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate)
     </insert>
 
-
+    <!--检查当前年度，是否存在月度数据，存在则更新月度数据-->
+    <select id="checkTechMonthlyDataIsExistedByYear" >
+        select count(*) from Tech
+        where DATE_FORMAT(Year_And_Month,'%Y') = #{naturalYear}
+    </select>
 
 
     <select id="selectTechList" parameterType="Tech" resultMap="TechResult">

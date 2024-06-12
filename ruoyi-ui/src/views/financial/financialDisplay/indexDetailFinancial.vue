@@ -1,11 +1,5 @@
 <template>
   <div>
-    <el-radio-group v-if="option && option.showYearDay" v-model="radioDate">
-      <el-radio-button label="日"></el-radio-button>
-      <el-radio-button label="月"></el-radio-button>
-      <el-radio-button label="年"></el-radio-button>
-    </el-radio-group>
-
     <div class="block">
       <span class="DataSelect" style="margin-right:10px">日期选择</span>
       <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
@@ -41,7 +35,6 @@ export default {
       selectedDate: [],
       endSelectedDate: null,
       pickerOptions: [],
-      option: {},
       xAxisData: [],
       yAxisData: [],
       option: { title: '', dataName: '', apiName: '', yDataName: '' }

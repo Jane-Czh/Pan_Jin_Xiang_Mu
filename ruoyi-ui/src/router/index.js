@@ -743,6 +743,35 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
+        path: 'index43',
+        component: () => import('@/views/market/display/indexChart/index43'),
+        name: 'Index43',
+        meta: { title: '指标43：电动车整机交货天数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index44',
+        component: () => import('@/views/market/display/indexChart/index44'),
+        name: 'Index44',
+        meta: { title: '指标44：小吨位内燃叉车整机交货天数' }
+      }
+    ]
+  },
+
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
         path: 'index72',
         component: () => import('@/views/market/display/indexChart/index72'),
         name: 'Index72',

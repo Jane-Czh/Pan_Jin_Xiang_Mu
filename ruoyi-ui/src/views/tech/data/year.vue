@@ -23,10 +23,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['Tech:data:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['Tech:data:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -34,7 +31,8 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="tapcId" /> -->
-      <el-table-column label="年份" align="center" prop="naturalYear" sortable="custom" />
+      <el-table-column label="年份" align="center" prop="naturalYear" :sort-orders="['descending', 'ascending']"
+        sortable="custom" />
       <el-table-column label="年度计划总数" align="center" prop="annualPlancounts" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -114,15 +112,10 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(sort) {
-      // sort.order: 排序的顺序，'ascending' 或 'descending'
-      if (sort.column && sort.prop === 'naturalYear') {
-        if (sort.order === 'ascending') {
-          this.dataList.sort((a, b) => new Date(a.naturalYear) - new Date(b.naturalYear));
-        } else if (sort.order === 'descending') {
-          this.dataList.sort((a, b) => new Date(b.naturalYear) - new Date(a.naturalYear));
-        }
-      }
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
     /** 查询【技术】总计划年初填报列表 */
     getList() {
@@ -131,11 +124,7 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'naturalYear',
-          order: 'descending' // 或'descending'
-        });
+
       });
     },
     // 取消按钮
@@ -177,7 +166,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加【技术】总计划年初填报";
+      this.title = "添加[技术]年度数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -186,7 +175,7 @@ export default {
       getData2(tapcId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改【技术】总计划年初填报";
+        this.title = "修改[技术]年度数据";
       });
     },
     /** 提交按钮 */
@@ -213,19 +202,14 @@ export default {
     handleDelete(row) {
       const tapcIds = row.tapcId || this.ids;
       const date = row.naturalYear || this.dates;
-      this.$modal.confirm('是否确认删除年份为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否确认日期为"' + date + '"的数据？').then(function () {
         return delData2(tapcIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('Tech/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

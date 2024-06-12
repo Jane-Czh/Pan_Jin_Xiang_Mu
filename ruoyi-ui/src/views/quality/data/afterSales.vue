@@ -26,10 +26,7 @@
           v-hasPermi="['quality:Metrics:remove']">删除</el-button>
       </el-col>
       <import-excel :name="'售后表'" :url="'/quality/after-sales/read'" />
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['quality:Metrics:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -37,7 +34,8 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="qcId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -149,14 +147,10 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(sort) {
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          this.MetricsList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          this.MetricsList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
     /** 查询质量指标-统计列表 */
     getList() {
@@ -165,11 +159,7 @@ export default {
         this.MetricsList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
+
       });
     },
     // 取消按钮
@@ -216,7 +206,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加质量指标-统计";
+      this.title = "添加售后数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -225,7 +215,7 @@ export default {
       getMetrics(qcId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改质量指标-统计";
+        this.title = "修改售后数据";
       });
     },
     /** 提交按钮 */
@@ -259,12 +249,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('quality/Metrics/export', {
-        ...this.queryParams
-      }, `Metrics_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

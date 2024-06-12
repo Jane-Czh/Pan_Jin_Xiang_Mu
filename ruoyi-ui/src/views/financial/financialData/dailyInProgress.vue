@@ -29,17 +29,15 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['financial:data:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['financial:data:export']">导出</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="id" /> -->
-      <el-table-column label="日期" align="center" prop="dataTime" width="180">
+      <el-table-column label="日期" align="center" prop="dataTime" width="180" :sort-orders="['descending', 'ascending']"
+        sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.dataTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -125,6 +123,11 @@ export default {
     this.getList();
   },
   methods: {
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
+    },
     /** 查询[财务]每日填报指标[当日再制品金额]列表 */
     getList() {
       this.loading = true;
@@ -173,7 +176,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[财务]每日填报指标[当日再制品金额]";
+      this.title = "添加[当日再制品金额]";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -182,7 +185,7 @@ export default {
       getData(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[财务]每日填报指标[当日再制品金额]";
+        this.title = "修改[当日再制品金额]";
       });
     },
     /** 提交按钮 */
@@ -216,12 +219,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('financial/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

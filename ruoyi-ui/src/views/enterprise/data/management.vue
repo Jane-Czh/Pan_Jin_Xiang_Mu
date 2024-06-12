@@ -25,10 +25,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:Management:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:Management:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -127,6 +124,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -234,6 +232,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.emId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -276,19 +275,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const emIds = row.emId || this.ids;
-      this.$modal.confirm('是否确认删除十一项管理指标编号为' + emIds + '的数据项？').then(function () {
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delManagement(emIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('enterprise/data/management/export', {
-        ...this.queryParams
-      }, `Management_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

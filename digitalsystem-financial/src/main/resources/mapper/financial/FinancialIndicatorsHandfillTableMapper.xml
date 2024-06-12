@@ -106,6 +106,7 @@
             <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
             <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
         </where>
+        order by Year_And_Month DESC
     </select>
 
     <select id="selectFinancialIndicatorsHandfillTableByFihfId" parameterType="Long"

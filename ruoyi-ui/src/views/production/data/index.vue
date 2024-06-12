@@ -54,10 +54,7 @@
             </span>
           </el-dialog>
         </el-col>
-        <el-col :span="1.5">
-          <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-            v-hasPermi="['production:data:export']">导出</el-button>
-        </el-col>
+
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
     </div>
@@ -65,7 +62,8 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column sortable="custom" label="年月" align="center" prop="yearAndMonth" width="150">
+      <el-table-column sortable="custom" :sort-orders="['descending', 'ascending']" label="年月" align="center"
+        prop="yearAndMonth" width="150">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -196,15 +194,20 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(sort) {
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
+    // handleSortChange(sort) {
+    //   if (sort.column && sort.prop === 'yearAndMonth') {
+    //     if (sort.order === 'ascending') {
+    //       this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+    //     } else if (sort.order === 'descending') {
+    //       this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+    //     }
+    //   }
+    // },
 
     /** 查询[生产]手动填报指标列表 */
     getList() {
@@ -214,11 +217,6 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
       });
     },
     // 取消按钮
@@ -263,7 +261,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[生产]手动填报指标";
+      this.title = "添加[生产]数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -272,7 +270,7 @@ export default {
       getData(productionId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[生产]手动填报指标";
+        this.title = "修改[生产]数据";
       });
     },
     /** 提交按钮 */
@@ -360,12 +358,7 @@ export default {
         }, 2000); // 2000毫秒后关闭
       }
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('production/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

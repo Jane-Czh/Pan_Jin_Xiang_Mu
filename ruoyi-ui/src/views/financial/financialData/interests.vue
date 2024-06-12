@@ -56,17 +56,14 @@
           </span>
         </el-dialog>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['financial:interests:export']">导出</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120" sortable="custom">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -75,8 +72,8 @@
       <el-table-column label="集团外主营业务收入" align="center" prop="externalMainrevenue" width="140" />
       <el-table-column label="主营业务收入" align="center" prop="MainRevenue" />
       <el-table-column label="主营业务成本-产品销售SD" align="center" prop="cogsProductsalesSd" width="180" />
-      <el-table-column label="主营业务成本-运费" align="center" prop="cogsFreight" />
-      <el-table-column label="主营业务成本-运费变化" align="center" prop="cogsVariation" />
+      <el-table-column label="主营业务成本-运费" align="center" prop="cogsFreight" width="170" />
+      <el-table-column label="主营业务成本-运费变化" align="center" prop="cogsVariation" width="190" />
       <el-table-column label="主营业务成本" align="center" prop="COGS" />
       <el-table-column label="净利润" align="center" prop="NetProfit" />
       <el-table-column label="管理费用" align="center" prop="ManagementExpense" />
@@ -207,15 +204,10 @@ export default {
 
   },
   methods: {
-    handleSortChange(sort) {
-      // sort.order: 排序的顺序，'ascending' 或 'descending'
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          this.interestsList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          this.interestsList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
     /** 查询财务-利润列表 */
     getList() {
@@ -224,11 +216,7 @@ export default {
         this.interestsList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
+
       });
     },
     // 取消按钮
@@ -277,7 +265,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加财务-利润";
+      this.title = "添加利润表数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -286,7 +274,7 @@ export default {
       getInterests(fiId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改财务-利润";
+        this.title = "修改利润表数据";
       });
     },
     /** 提交按钮 */
@@ -378,12 +366,6 @@ export default {
         }, 2000); // 2000毫秒后关闭
       }
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('financial/interests/export', {
-        ...this.queryParams
-      }, `interests_${new Date().getTime()}.xlsx`)
-    }
   }
 };
 </script>

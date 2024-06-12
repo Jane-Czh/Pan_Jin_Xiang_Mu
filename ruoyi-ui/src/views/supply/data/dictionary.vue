@@ -48,10 +48,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['supply:indicators:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['supply:indicators:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -196,7 +193,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加供应科-指标-集采物料字典";
+      this.title = "添加集采物料字典";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -205,7 +202,7 @@ export default {
       getDictionary(scmId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改供应科-指标-集采物料字典";
+        this.title = "修改集采物料字典";
       });
     },
     /** 提交按钮 */
@@ -239,12 +236,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('supply/Dictionary/export', {
-        ...this.queryParams
-      }, `Dictionary_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

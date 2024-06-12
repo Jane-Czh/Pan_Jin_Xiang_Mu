@@ -70,7 +70,7 @@ public class EnterpriseManagementDataController extends BaseController {
     @PreAuthorize("@ss.hasPermi('enterprise:annual:add')")
     @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.INSERT)
     @PostMapping("/annual")
-    public AjaxResult add(EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
+    public AjaxResult add(@RequestBody EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
         if (enterpriseManagementAnnualDataService.checkEMAnnualDataIsExisted(enterpriseManagementAnnualData.getNaturalYear())) {
             return AjaxResult.error("年度数据已填报");
         }

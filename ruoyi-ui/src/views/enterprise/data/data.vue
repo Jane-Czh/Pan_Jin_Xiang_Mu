@@ -25,10 +25,7 @@
           v-hasPermi="['enterprise:Data:remove']">删除</el-button>
       </el-col>
       <import-excel :name="'工资表'" :url="'/enterprise/data/salary'" />
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:Data:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -78,7 +75,7 @@
         <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
           <el-input v-model="form.employeesAvgMonthlyNumber" placeholder="请输入公司平均从业人数" />
         </el-form-item>
-        <el-form-item label="公司平均从业人数" prop="employeesAvgAnnualNumber">
+        <el-form-item label="公司平均从业人数(年度)" prop="employeesAvgAnnualNumber">
           <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司平均从业人数" />
         </el-form-item>
         <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
@@ -127,6 +124,7 @@ export default {
 
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -234,6 +232,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.esId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -264,7 +263,7 @@ export default {
               this.getList();
             });
           } else {
-            delMonthData(this.form).then(response => {
+            addMonthData(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -276,19 +275,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const esIds = row.esId || this.ids;
-      this.$modal.confirm('是否确认删除[企业管理]指标月度数据编号为"' + esIds + '"的数据项？').then(function () {
-        return addMonthData(esIds);
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+        return delMonthData(esIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('enterprise/Data/export', {
-        ...this.queryParams
-      }, `Data_${new Date().getTime()}.xlsx`)
-    },
+
 
 
   }

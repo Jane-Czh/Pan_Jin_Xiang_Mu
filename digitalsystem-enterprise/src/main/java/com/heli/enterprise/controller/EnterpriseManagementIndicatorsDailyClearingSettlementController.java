@@ -1,6 +1,7 @@
 package com.heli.enterprise.controller;
 
 import java.util.List;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,6 +61,7 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     @Log(title = "日清日结 ", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
+        System.out.println('1');
         if (enterpriseManagementIndicatorsDailyClearingSettlementService.checkDailyClearingDataIsExisted(enterpriseManagementIndicatorsDailyClearingSettlement.getYearAndMonth())){
             return AjaxResult.warn("当月数据已上传");
         }

@@ -30,10 +30,6 @@
 
       <import-excel :name="'供应订单表'" :url="'/supply/data/readPurchaseOrderTable'" />
 
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['supply:controlledAmount:export']">导出</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -41,7 +37,8 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="scpId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -139,15 +136,10 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(sort) {
-      // sort.order: 排序的顺序，'ascending' 或 'descending'
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          this.controlledAmountList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          this.controlledAmountList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
     /** 查询供应-指标-集团管控物资占比列表 */
     getList() {
@@ -156,11 +148,7 @@ export default {
         this.controlledAmountList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
+
       });
     },
     // 取消按钮
@@ -204,7 +192,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加供应-指标-集团管控物资占比";
+      this.title = "添加集团管控物资数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -213,7 +201,7 @@ export default {
       getData(scpId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改供应-指标-集团管控物资占比";
+        this.title = "修改集团管控物资数据";
       });
     },
     /** 提交按钮 */
@@ -247,12 +235,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('supply/controlledAmount/export', {
-        ...this.queryParams
-      }, `controlledAmount_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

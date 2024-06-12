@@ -44,6 +44,10 @@ export function delMonthData(esIds) {
 }
 
 
+
+
+
+
 // 查询[企业管理]指标年度数据列表
 export function listYearData(query) {
   return request({

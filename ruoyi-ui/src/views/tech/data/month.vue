@@ -26,10 +26,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['tech:data:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['tech:data:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -37,7 +34,8 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="Tech_ID" align="center" prop="techId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180" sortable="custom">
+      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+        :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -132,15 +130,10 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(sort) {
-      // sort.order: 排序的顺序，'ascending' 或 'descending'
-      if (sort.column && sort.prop === 'yearAndMonth') {
-        if (sort.order === 'ascending') {
-          this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-        } else if (sort.order === 'descending') {
-          this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-        }
-      }
+    handleSortChange(column) {
+      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
+      this.queryParams.isAsc = column.order;//动态取值排序顺序
+      this.getList();
     },
     /** 查询[技术]指标填报列表 */
     getList() {
@@ -149,11 +142,7 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
+
       });
     },
     // 取消按钮
@@ -198,7 +187,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[技术]指标";
+      this.title = "添加[技术]月度数据";
     },
 
     /** 修改按钮操作 */
@@ -208,7 +197,7 @@ export default {
       getData(techId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[技术]指标填报";
+        this.title = "修改[技术]月度数据";
       });
     },
     /** 提交按钮 */
@@ -242,12 +231,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('tech/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    },
+
 
   }
 };

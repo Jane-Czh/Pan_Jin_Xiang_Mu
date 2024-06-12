@@ -25,10 +25,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:Settlement:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -107,6 +104,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -204,6 +202,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.edId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -228,13 +227,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.edId != null) {
-            delDailyClearData(this.form).then(response => {
+            updateDailyClearData(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            updateDailyClearData(this.form).then(response => {
+            addDailyClearData(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -246,19 +245,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const edIds = row.edId || this.ids;
-      this.$modal.confirm('是否确认删除日清日结编号为"' + edIds + '"的数据项？').then(function () {
-        return addDailyClearData(edIds);
+      const date = row.yearAndMonth || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+        return delDailyClearData(edIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('enterprise/Settlement/export', {
-        ...this.queryParams
-      }, `Settlement_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

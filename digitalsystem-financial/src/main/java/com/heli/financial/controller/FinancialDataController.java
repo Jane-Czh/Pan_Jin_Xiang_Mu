@@ -48,8 +48,8 @@ public class FinancialDataController extends BaseController {
     @Log(title = "[财务]数据填报", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:fill:add')")
     @PostMapping("/fill")
-    public AjaxResult handFillData(FinancialIndicatorsHandfillTable FITable) {
-
+    public AjaxResult handFillData(@RequestBody FinancialIndicatorsHandfillTable FITable) {
+        System.out.println(FITable);
         Date lastMonth = DateUtils.getLastMonth(FITable.getYearAndMonth());
         if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)) {
             return AjaxResult.error("上月数据还未填报");

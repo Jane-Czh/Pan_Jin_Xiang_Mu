@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="年份" prop="naturalYear">
-        <el-input v-model="queryParams.naturalYear" placeholder="请输入年" clearable @keyup.enter.native="handleQuery" />
+        <el-input v-model="queryParams.naturalYear" placeholder="请输入年份" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
 
       <el-form-item>
@@ -24,10 +24,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:data:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:data:export']">导出</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -87,6 +84,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -178,6 +176,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.emasId)
+      this.dates = selection.map(item => item.naturalYear)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -220,19 +219,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const emasIds = row.emasId || this.ids;
-      this.$modal.confirm('是否确认删除[企业管理]指标年度数据编号为"' + emasIds + '"的数据项？').then(function () {
+      const date = row.naturalYear || this.dates;
+      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
         return delYearData(emasIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('enterprise/data/export', {
-        ...this.queryParams
-      }, `data_${new Date().getTime()}.xlsx`)
-    }
+
   }
 };
 </script>

@@ -54,9 +54,9 @@ public class EnterpriseManagementAnnualDataController extends BaseController {
         return success(enterpriseManagementAnnualDataService.selectEnterpriseManagementAnnualDataByEmasId(emasId));
     }
 
-    /**
-     * 新增[企业管理]指标年度数据
-     */
+//    /**
+//     * 新增[企业管理]指标年度数据
+//     */
 //    @PreAuthorize("@ss.hasPermi('enterprise:data:add')")
 //    @Log(title = "[企业管理]指标年度数据", businessType = BusinessType.INSERT)
 //    @PostMapping

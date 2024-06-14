@@ -50,7 +50,13 @@ export default {
                 this.loading = false
             }
         },
-        handleDateChange() {
+        handleDateChange(value) {
+            if (value && value[1]) {
+                let endDate = new Date(value[1]);
+                endDate.setMonth(endDate.getMonth() + 1);
+                endDate.setDate(0);
+                this.selectedDate[1] = endDate;
+            }
             this.initData()
         },
         updateChart() {
@@ -203,8 +209,9 @@ export default {
                     data: this.data.map(item => item.GrowthRate_Sales),
                 }]
             };
-
             this.option && this.myChart.setOption(this.option);
+
+            //折线图切换
             this.myChart.on('magictypechanged', (params) => {
                 var magicType = params.currentType;
                 if (magicType == 'line') {

@@ -182,6 +182,8 @@ export default {
       };
 
       this.option && this.myChart.setOption(this.option);
+
+      //折线图切换
       this.myChart.on('magictypechanged', (params) => {
         var magicType = params.currentType;
         if (magicType == 'line') {

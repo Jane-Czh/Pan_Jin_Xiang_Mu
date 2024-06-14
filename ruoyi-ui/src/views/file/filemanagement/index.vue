@@ -1010,9 +1010,10 @@
             const pdfFilePath = this.convertToPdfPath(filePath);
             console.log("filePath:",filePath);
             console.log("pdfFilePath:",pdfFilePath);
-            // word2Pdf(filePath,pdfFilePath).then(response => {
-            // })
-            window.open(pdfFilePath, '_blank');
+            word2Pdf(filePath,pdfFilePath).then(response => {
+              window.open(pdfFilePath, '_blank');
+            })
+
             break;
         }
         // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口

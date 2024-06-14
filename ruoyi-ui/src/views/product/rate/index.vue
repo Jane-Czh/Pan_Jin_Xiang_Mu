@@ -87,7 +87,7 @@
 
     <el-table v-loading="loading" :data="rateList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="pqrId" />
+<!--      <el-table-column label="主键id" align="center" prop="pqrId" />-->
       <el-table-column label="合格率" align="center" prop="qualificationRate" />
       <el-table-column label="合格数量" align="center" prop="qualifiedNumber" />
       <el-table-column label="生产数量" align="center" prop="productionNumber" />

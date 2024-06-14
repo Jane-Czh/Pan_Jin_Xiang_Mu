@@ -82,7 +82,7 @@ public class CommonController
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
-//            String url = "http://172.17.101.85:8080" + fileName;
+//            String url = "http://172.19.14.253:8080" + fileName;
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
             System.out.println("上传文件的 url=============>"+url);

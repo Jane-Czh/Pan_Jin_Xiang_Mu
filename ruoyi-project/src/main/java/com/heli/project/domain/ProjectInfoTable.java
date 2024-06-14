@@ -68,7 +68,7 @@ public class ProjectInfoTable extends BaseEntity
 
     /** 历史项目 */
     @Excel(name = "历史项目")
-    private Long oldProjectId;
+    private String oldProjectId;
 
     /** 关联时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -219,12 +219,12 @@ public class ProjectInfoTable extends BaseEntity
     {
         return remake;
     }
-    public void setOldProjectId(Long oldProjectId) 
+    public void setOldProjectId(String oldProjectId)
     {
         this.oldProjectId = oldProjectId;
     }
 
-    public Long getOldProjectId() 
+    public String getOldProjectId()
     {
         return oldProjectId;
     }

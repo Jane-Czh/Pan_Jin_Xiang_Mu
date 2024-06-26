@@ -1,6 +1,7 @@
 package com.ruoyi.file.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ruoyi.file.domain.RegulationsInfoTable;
@@ -21,6 +22,23 @@ public class FormInfoTableServiceImpl implements IFormInfoTableService
 {
     @Autowired
     private FormInfoTableMapper formInfoTableMapper;
+
+    /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     * @param formsIds
+     * @return
+     */
+    @Override
+    public List<String> selectFileNamesByIds(String formsIds) {
+        // 去除方括号和空格，将字符串解析为ID列表
+        String cleanedIds = formsIds.replaceAll("[\\[\\]\\s]", "");
+        List<String> idsList = Arrays.asList(cleanedIds.split(","));
+        System.out.println("formsIdsList===========>"+idsList);
+        List<String> fileNames = formInfoTableMapper.selectFileNamesByIds(idsList);
+        System.out.println("formsFileNamesList===>"+fileNames);
+        return fileNames;
+    }
 
     /**
      * 查询表单文件管理

@@ -17,6 +17,13 @@ import org.apache.ibatis.annotations.Param;
 public interface RegulationsInfoTableMapper
 {
     /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     */
+    List<String> selectFileNamesByIds(@Param("regulationsIds") List<String> regulationsIds);
+
+
+    /**
      * 查询文件管理
      *
      * @param regulationsId 文件管理主键

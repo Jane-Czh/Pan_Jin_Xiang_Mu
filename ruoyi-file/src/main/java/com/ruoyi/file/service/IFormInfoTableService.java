@@ -13,6 +13,13 @@ import com.ruoyi.file.domain.RegulationsInfoTable;
 public interface IFormInfoTableService 
 {
     /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     */
+
+    List<String> selectFileNamesByIds(String formsIds);
+
+    /**
      * 查询表单文件管理
      * 
      * @param formId 表单文件管理主键

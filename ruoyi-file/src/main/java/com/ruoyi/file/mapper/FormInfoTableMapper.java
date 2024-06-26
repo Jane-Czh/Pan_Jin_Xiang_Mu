@@ -2,6 +2,7 @@ package com.ruoyi.file.mapper;
 
 import java.util.List;
 import com.ruoyi.file.domain.FormInfoTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 表单文件管理Mapper接口
@@ -9,8 +10,16 @@ import com.ruoyi.file.domain.FormInfoTable;
  * @author ruoyi
  * @date 2024-04-14
  */
-public interface FormInfoTableMapper 
+public interface FormInfoTableMapper
 {
+
+    /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     */
+    List<String> selectFileNamesByIds(@Param("formsIds") List<String> formsIds);
+
+
     /**
      * 查询表单文件管理
      * 

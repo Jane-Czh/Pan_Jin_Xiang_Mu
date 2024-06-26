@@ -117,12 +117,12 @@
 
   <script>
 import FlowNodeForm from "./node_form";
-//制度文件api
-import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
-//表单文件api
-import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+// //制度文件api
+// import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
+// //表单文件api
+// import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 export default {
   props: {
     node: Object,

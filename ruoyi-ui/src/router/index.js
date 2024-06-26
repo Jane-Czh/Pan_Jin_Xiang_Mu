@@ -699,13 +699,13 @@ export const dynamicRoutes = [
 
 
   //流程模块
-  {
-    path: '/project',
-    component: Layout,
-    hidden: true,
-    permissions: ['system:user:edit'],
+  // {
+  //   path: '/project',
+  //   component: Layout,
+  //   hidden: true,
+  //   permissions: ['system:user:edit'],
 
-  },
+  // },
   //文件模块
   {
     path: '/file/filemanagement/index',

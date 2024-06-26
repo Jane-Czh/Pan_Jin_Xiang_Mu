@@ -101,10 +101,12 @@ import {
   updateProject,
   getProjectByName,
 } from "@/api/system/project";
-// 制度文件api
-import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
-// 表单文件api
-import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+// // 制度文件api
+// import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
+// // 表单文件api
+// import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";

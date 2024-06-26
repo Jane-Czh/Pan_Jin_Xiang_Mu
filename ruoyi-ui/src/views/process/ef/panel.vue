@@ -88,6 +88,7 @@
               round
               icon="el-icon-folder-add"
               @click="bandFiles()"
+                
               size="mini"
               >绑定文件</el-button
             >
@@ -100,13 +101,14 @@
               size="mini"
               >更改已绑定文件</el-button
             >
-            <!-- 对流程进行保存 -->
+            <!-- 对流程进行保存 v-hasPermi="['process:ef:add']" -->
             <el-button
               type="success"
               plain
               round
               icon="el-icon-check"
               @click="openDialog()"
+              
               size="mini"
               >保存流程</el-button
             >
@@ -258,8 +260,13 @@ import CustomFiles from "./CustomFiles.vue";
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
 import { getDept } from "@/api/system/dept";
-//流程名称重名检测
-import { listProject } from "@/api/system/project";
+//流程名称重名检测, 保存project数据, 保存节点数据, 保存连线数据
+import {
+  listProject,
+  saveProject,
+  saveNode,
+  saveLine,
+} from "@/api/system/project";
 
 export default {
   data() {
@@ -1012,41 +1019,72 @@ export default {
       console.log("projectData =======", projectData);
 
       // 发送项目数据到后端
-      axios
-        .post("http://localhost:8081/project/saveProject", projectData)
+      // axios
+      //   .post("http://localhost:8080/project/saveProject", projectData)
+      //   .then((response) => {
+      //     console.log("Project saved successfully:", response.data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error saving project:", error);
+      //   });
+      // 发送项目数据到后端
+      saveProject(projectData)
         .then((response) => {
-          console.log("Project saved successfully:", response.data);
+          console.log("Project saved successfully:", response);
         })
         .catch((error) => {
           console.error("Error saving project:", error);
         });
 
       // // 发送节点数据到后端
-      for (var i = 0; i < nodeData.length; i++) {
-        // console.log("this.data.node ===>", nodeData[i]);
-        console.log("this.data.node.state ===>", nodeData[i].state);
-        // console.log("type data state===>",typeof(nodeData[i].state))
-        axios
-          .post("http://localhost:8081/node/saveNode", nodeData[i])
-          .then((response) => {
-            console.log("Nodes saved successfully:", response.data);
-          })
-          .catch((error) => {
-            console.error("Error saving nodes:", error);
-          });
-      }
+      // for (var i = 0; i < nodeData.length; i++) {
+      //   // console.log("this.data.node ===>", nodeData[i]);
+      //   console.log("this.data.node.state ===>", nodeData[i].state);
+      //   // console.log("type data state===>",typeof(nodeData[i].state))
+      //   axios
+      //     .post("http://localhost:8080/node/saveNode", nodeData[i])
+      //     .then((response) => {
+      //       console.log("Nodes saved successfully:", response.data);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error saving nodes:", error);
+      //     });
+      // }
 
       // // 发送连线数据到后端
-      for (var i = 0; i < lineData.length; i++) {
-        axios
-          .post("http://localhost:8081/line/saveLine", lineData[i])
+      // for (var i = 0; i < lineData.length; i++) {
+      //   axios
+      //     .post("http://localhost:8080/line/saveLine", lineData[i])
+      //     .then((response) => {
+      //       console.log("Lines saved successfully:", response.data);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error saving lines:", error);
+      //     });
+      // }
+
+      // 发送节点数据到后端
+      nodeData.forEach((node) => {
+        console.log("this.data.node.state ===>", node.state);
+        saveNode(node)
           .then((response) => {
-            console.log("Lines saved successfully:", response.data);
+            console.log("Node saved successfully:", response);
           })
           .catch((error) => {
-            console.error("Error saving lines:", error);
+            console.error("Error saving node:", error);
           });
-      }
+      });
+
+      // 发送连线数据到后端
+      lineData.forEach((line) => {
+        saveLine(line)
+          .then((response) => {
+            console.log("Line saved successfully:", response);
+          })
+          .catch((error) => {
+            console.error("Error saving line:", error);
+          });
+      });
 
       //填写项目流程名称面板关闭
       this.dialogVisible = false;

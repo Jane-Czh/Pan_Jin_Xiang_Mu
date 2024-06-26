@@ -13,8 +13,15 @@ import com.ruoyi.file.entity.regulationRespondEntity;
  * @author ruoyi
  * @date 2024-04-17
  */
-public interface IRegulationsInfoTableService
-{
+public interface IRegulationsInfoTableService {
+    /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     */
+
+    List<String> selectFileNamesByIds(String regulationsIds);
+
+
     /**
      * 查询文件管理
      *
@@ -75,5 +82,5 @@ public interface IRegulationsInfoTableService
     /**
      * 制度修订频率
      */
-    List<regulationRespondEntity> selectRevisionFrequency(Date startTime, Date endTime,Long regulationId);
+    List<regulationRespondEntity> selectRevisionFrequency(Date startTime, Date endTime, Long regulationId);
 }

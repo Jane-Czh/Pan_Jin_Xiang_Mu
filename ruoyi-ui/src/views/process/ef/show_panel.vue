@@ -124,6 +124,8 @@
           <el-table
             v-loading="loading"
             :data="historyProjectList"
+            height="calc(100% - 10px)"
+         
             stripe
             row-key="id"
             :expand-row-keys="expandArr"

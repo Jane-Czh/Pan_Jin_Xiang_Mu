@@ -25,6 +25,23 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
     private RegulationsInfoTableMapper regulationsInfoTableMapper;
 
     /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     * @param regulationsIds
+     * @return
+     */
+    @Override
+    public List<String> selectFileNamesByIds(String regulationsIds) {
+        // 去除方括号和空格，将字符串解析为ID列表
+        String cleanedIds = regulationsIds.replaceAll("[\\[\\]\\s]", "");
+        List<String> idsList = Arrays.asList(cleanedIds.split(","));
+        System.out.println("regulationsIdsList==========>"+idsList);
+        List<String> fileNames = regulationsInfoTableMapper.selectFileNamesByIds(idsList);
+        System.out.println("regulationsFileNamesList===>"+fileNames);
+        return fileNames;
+    }
+
+    /**
      * 查询文件管理
      *
      * @param regulationsId 文件管理主键

@@ -71,7 +71,7 @@ export default {
       getProjectName(id).then((res) => {
         this.projectName = res;
         // console.log("this.projectName===>", this.projectName);
-      });
+      }); 
     },
 
     // -----------------------------------------------------------------------

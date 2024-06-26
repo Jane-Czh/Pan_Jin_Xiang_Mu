@@ -49,6 +49,18 @@ public class FormInfoTableController extends BaseController
     }
 
     /**
+        提供给流程部分使用绑定文件
+        不需要绑定权限
+     */
+    @GetMapping("/list2")
+    public TableDataInfo list2(FormInfoTable formInfoTable)
+    {
+        startPage();
+        List<FormInfoTable> list = formInfoTableService.selectFormInfoTableList(formInfoTable);
+        return getDataTable(list);
+    }
+
+    /**
      * 查询历史版本文件列表
      * @return
      */

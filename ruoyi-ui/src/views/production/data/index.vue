@@ -16,20 +16,20 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-            v-hasPermi="['production:data:add']">新增</el-button>
+            v-hasPermi="['production:fill:add']">新增</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-            v-hasPermi="['production:data:edit']">修改</el-button>
+            v-hasPermi="['production:fill:edit']">修改</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-            v-hasPermi="['production:data:remove']">删除</el-button>
+            v-hasPermi="['production:fill:remove']">删除</el-button>
         </el-col>
         <el-col :span="1.5">
           <!--Excel 参数导入 -->
-          <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain
-            v-if="true">导入Excel文件
+          <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
+            v-hasPermi="['production:fill:import']">导入Excel文件
           </el-button>
 
           <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
@@ -79,9 +79,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['production:data:edit']">修改</el-button>
+            v-hasPermi="['production:fill:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['production:data:remove']">删除</el-button>
+            v-hasPermi="['production:fill:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -304,12 +304,13 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    /** 导入按钮 */
     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
         this.$refs.fileInput.value = ""; // 清空文件选择框
       }
@@ -318,7 +319,6 @@ export default {
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
-    /** 导入按钮 */
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象

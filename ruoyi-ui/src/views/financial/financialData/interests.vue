@@ -28,7 +28,8 @@
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
-        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true">导入Excel
+        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true"
+          v-hasPermi="['financial:interests:import']">导入Excel
         </el-button>
 
         <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
@@ -315,7 +316,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
         // this.$refs.fileInput.value = ""; // 清空文件选择框
       }

@@ -164,15 +164,7 @@ export default {
         this.initData(2)
       }
     },
-    // handleSelectChange() {
-    //   if (this.checkList.length === 0) {
-    //     this.initData(0)
-    //     this.initData(1)
-    //     this.initData(2)
-    //   } else {
-    //     this.initData(this.checkList[0])
-    //   }
-    // },
+
     updateChart(rows) {
       // if (num === 1) {
 

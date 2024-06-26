@@ -150,7 +150,6 @@ export default {
           let endDate = new Date(value[1]);
           endDate.setHours(endDate.getHours() + 13);
           this.selectedDateDay[1] = endDate;
-
         }
         this.initData(0)
       } else if (this.activeName === '1') {

@@ -14,17 +14,45 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:Data:add']">新增</el-button>
+          v-hasPermi="['enterprise:monthly:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:Data:edit']">修改</el-button>
+          v-hasPermi="['enterprise:monthly:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:Data:remove']">删除</el-button>
+          v-hasPermi="['enterprise:monthly:remove']">删除</el-button>
       </el-col>
-      <import-excel :name="'工资表'" :url="'/enterprise/data/salary'" />
+      <el-col :span="1.5">
+        <!--Excel 参数导入 -->
+        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
+          v-hasPermi="['enterprise:monthly:import']">导入Excel文件
+        </el-button>
+
+        <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+
+          <el-form :model="form" ref="form" label-width="90px">
+            <el-form-item label="选择表类型">
+              <el-select v-model="selectedType" placeholder="请选择Excel类型">
+                <el-option label="工资表" value="profit"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <i class="el-icon-upload"></i>
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+          <!-- 进度动画条 -->
+          <div v-if="progress > 0">
+            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="showDialog = false">取 消</el-button>
+            <el-button type="primary" @click="fileSend()">确 定</el-button>
+          </span>
+        </el-dialog>
+      </el-col>
+
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -51,9 +79,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:Data:edit']">修改</el-button>
+            v-hasPermi="['enterprise:monthly:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:Data:remove']">删除</el-button>
+            v-hasPermi="['enterprise:monthly:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -111,16 +139,22 @@
 
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
-import importExcel from "@/views/financial/importExcel.vue";
+import axios from "axios";
 
 export default {
   name: "Data",
-  components: { importExcel },
+
   data() {
     return {
 
       // 遮罩层
       loading: true,
+
+
+
+      showDialog: false,
+      progress: 0,
+      selectedType: '',
 
       // 选中数组
       ids: [],
@@ -283,6 +317,61 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    /** 导入按钮 */
+    checkFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileName = file.name;
+      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+        this.$message.error("只能上传 Excel 文件！");
+        this.$refs.fileInput.value = ""; // 清空文件选择框
+      }
+    },
+    //导入excel，取消按钮绑定取消所选的xlsx
+    resetFileInput() {
+      this.$refs.fileInput.value = "";
+    },
+    fileSend() {
+      const formData = new FormData();
+      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      formData.append("excelFile", file);
+      // 根据用户选择的 Excel 类型执行不同的操作
+      if (this.selectedType === 'profit') {
+        axios({
+          method: "post",
+          // url: this.$http.url('/production/data/upload'),
+          url: "http://localhost:8080/enterprise/data/salary",
+          // params: this.$http.adornParams({
+          //   userName: this.$store.state.user.name,
+          // }),
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+          data: formData,
+          onUploadProgress: (progressEvent) => {
+            this.progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+          },
+        }).then(response => {
+          // 处理请求成功的情况
+          this.showDialog = false; // 关闭上传面板
+        })
+          .catch(error => {
+            // 处理请求失败的情况
+            console.error('上传失败：', error);
+          });
+        console.log("工资表")
+        this.$message.success("上传成功");
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 2000); // 2000毫秒后关闭
+      }
+    },
+
 
 
 

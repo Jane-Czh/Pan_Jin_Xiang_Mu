@@ -17,20 +17,20 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-            v-hasPermi="['financial:data:add']">新增</el-button>
+            v-hasPermi="['financial:fill:add']">新增</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-            v-hasPermi="['financial:data:edit']">修改</el-button>
+            v-hasPermi="['financial:fill:edit']">修改</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-            v-hasPermi="['financial:data:remove']">删除</el-button>
+            v-hasPermi="['financial:fill:remove']">删除</el-button>
         </el-col>
         <el-col :span="1.5">
           <!--Excel 参数导入 -->
-          <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true"
-            v-if="true">导入Excel
+          <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true"
+            v-hasPermi="['financial:fill:import']">导入Excel
           </el-button>
 
           <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">

@@ -47,7 +47,7 @@
 
     <!-- 添加或修改重点设备字典对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="重点设备编号" prop="seKeyEquipmentId">
           <el-input v-model="form.seKeyEquipmentId" placeholder="重点设备编号" />
         </el-form-item>
@@ -128,6 +128,9 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        seKeyEquipmentId: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -182,7 +185,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加重点设备字典";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -191,7 +194,7 @@ export default {
       getDictionary(skId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改重点设备字典";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

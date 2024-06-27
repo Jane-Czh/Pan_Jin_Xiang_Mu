@@ -60,7 +60,7 @@
     <!-- 添加或修改日清日结
 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -135,6 +135,27 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        orderEntryDelayRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        shipmentDelayRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        productionReportDelayRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inspectionDelayRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        invoicePostingDelayRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        unsettledAccountsRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -210,7 +231,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加日清日结";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -219,7 +240,7 @@ export default {
       getDailyClearData(edId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改日清日结";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

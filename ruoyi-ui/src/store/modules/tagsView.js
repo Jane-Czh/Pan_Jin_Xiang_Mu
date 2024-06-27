@@ -5,6 +5,16 @@ const state = {
 }
 
 const mutations = {
+  //动态改变tab 页签
+  EDIT_VISITED_VIEWS: (state, view) => {
+    for (var Index in state.visitedViews) {
+      console.log(state.visitedViews[Index].path)
+      if (state.visitedViews[Index].path == view.path) {
+        state.visitedViews[Index].title = view.meta.title
+      }
+    }
+  },
+
   ADD_IFRAME_VIEW: (state, view) => {
     if (state.iframeViews.some(v => v.path === view.path)) return
     state.iframeViews.push(
@@ -88,7 +98,7 @@ const mutations = {
       if (i > -1) {
         state.cachedViews.splice(i, 1)
       }
-      if(item.meta.link) {
+      if (item.meta.link) {
         const fi = state.iframeViews.findIndex(v => v.path === item.path)
         state.iframeViews.splice(fi, 1)
       }
@@ -108,7 +118,7 @@ const mutations = {
       if (i > -1) {
         state.cachedViews.splice(i, 1)
       }
-      if(item.meta.link) {
+      if (item.meta.link) {
         const fi = state.iframeViews.findIndex(v => v.path === item.path)
         state.iframeViews.splice(fi, 1)
       }
@@ -118,6 +128,16 @@ const mutations = {
 }
 
 const actions = {
+
+  // this.$route.meta.title = reportName    
+  // this.$store.dispatch('tagsView/editVisitedViews', this.$route)
+  editVisitedViews({ commit, state }, view) {
+    return new Promise((resolve) => {
+      commit('EDIT_VISITED_VIEWS', view)
+      resolve([...state.visitedViews])
+    })
+  },
+
   addView({ dispatch }, view) {
     dispatch('addVisitedView', view)
     dispatch('addCachedView', view)

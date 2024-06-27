@@ -116,6 +116,9 @@ export default {
         dataTime: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        inProgressDayRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -176,7 +179,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[当日再制品金额]";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -185,7 +188,7 @@ export default {
       getData(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[当日再制品金额]";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

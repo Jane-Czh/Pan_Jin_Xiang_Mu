@@ -33,10 +33,12 @@
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
 
           <el-form :model="form" ref="form" label-width="90px">
-            <el-form-item label="选择表类型">
-              <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                <el-option label="工资表" value="profit"></el-option>
-              </el-select>
+            <el-form-item label="上传表类">
+              <span style="color: rgb(68, 140, 39);">工资表</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
@@ -91,7 +93,7 @@
 
     <!-- 添加或修改[企业管理]指标月度数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -193,8 +195,42 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        employeesNumber: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        employeesAvgMonthlyNumber: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        employeesAvgAnnualNumber: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalMonthlySalary: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlySalaryRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        annualSalaryRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        cumulativeAverageIncome: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlyProductionAvgIncome: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlyFunctionalAvgIncome: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        functionalDeptOvertimeCost: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -274,7 +310,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[企业管理]指标月度数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -283,7 +319,7 @@ export default {
       getMonthData(esId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[企业管理]指标月度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -318,33 +354,36 @@ export default {
       }).catch(() => { });
     },
     /** 导入按钮 */
+
     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm" && fileExt.toLowerCase() !== "et") {
         this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     },
     //导入excel，取消按钮绑定取消所选的xlsx
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
+    /** 导入按钮 */
     fileSend() {
+
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      // 根据用户选择的 Excel 类型执行不同的操作
-      if (this.selectedType === 'profit') {
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        const yearAndMonth = this.form3.yearAndMonth;
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("multipartFile", file);
         axios({
           method: "post",
-          // url: this.$http.url('/production/data/upload'),
           url: "http://localhost:8080/enterprise/data/salary",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -355,26 +394,13 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
-        }).then(response => {
-          // 处理请求成功的情况
-          this.showDialog = false; // 关闭上传面板
-        })
-          .catch(error => {
-            // 处理请求失败的情况
-            console.error('上传失败：', error);
-          });
-        console.log("工资表")
+        });
         this.$message.success("上传成功");
         setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
-          // location.reload(); // 调用此方法刷新页面数据
         }, 2000); // 2000毫秒后关闭
       }
     },
-
-
-
-
   }
 };
 </script>

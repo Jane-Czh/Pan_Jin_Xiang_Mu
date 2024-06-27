@@ -2,9 +2,9 @@
 
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -36,10 +36,12 @@
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
 
           <el-form :model="form" ref="form" label-width="90px">
-            <el-form-item label="选择表类型">
-              <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                <el-option label="供应订单表" value="profit"></el-option>
-              </el-select>
+            <el-form-item label="上传表类:">
+              <span style="color: rgb(68, 140, 39);">供应订单表</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
@@ -64,7 +66,7 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="scpId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -88,10 +90,10 @@
 
     <!-- 添加或修改供应-指标-集团管控物资占比对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="170px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="当月采购总金额" prop="totalPurchaseAmount">
@@ -158,11 +160,22 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        totalPurchaseAmount: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        controlledMaterialPurchases: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        controlledPurchaseAmountRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
@@ -226,7 +239,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加集团管控物资数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -235,7 +248,7 @@ export default {
       getData(scpId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改集团管控物资数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -277,26 +290,27 @@ export default {
 
       if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     },
     //导入excel，取消按钮绑定取消所选的xlsx
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
+    /** 导入按钮 */
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      // 根据用户选择的 Excel 类型执行不同的操作
-      if (this.selectedType === 'profit') {
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        const yearAndMonth = this.form3.yearAndMonth;
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("multipartFile", file);
         axios({
           method: "post",
-          // url: this.$http.url('/production/data/upload'),
           url: "http://localhost:8080/supply/data/readPurchaseOrderTable",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -307,23 +321,13 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
-        }).then(response => {
-          // 处理请求成功的情况
-          this.showDialog = false; // 关闭上传面板
-        })
-          .catch(error => {
-            // 处理请求失败的情况
-            console.error('上传失败：', error);
-          });
-        console.log("供应订单表")
+        });
         this.$message.success("上传成功");
         setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
-          // location.reload(); // 调用此方法刷新页面数据
         }, 2000); // 2000毫秒后关闭
       }
-    },
-
-  }
+    }
+  },
 };
 </script>

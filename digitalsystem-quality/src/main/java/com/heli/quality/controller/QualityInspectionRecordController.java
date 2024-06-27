@@ -41,11 +41,13 @@ public class QualityInspectionRecordController extends BaseController {
     @PostMapping("/read")
     public AjaxResult importTable(Date yearAndMonth, MultipartFile excelFile) {
         //检查当月数据是否上传
+        System.out.println(excelFile.getOriginalFilename());
+        System.out.println(yearAndMonth);
         if (qualityInspectionRecordService.checkQualityInspectionTableIsExisted(yearAndMonth)) {
             return error("当月数据已上传");
         }
         try {
-            qualityInspectionRecordService.importQualityInspectionTable(excelFile, yearAndMonth, getUsername());
+            qualityInspectionRecordService.importQualityInspectionTable(excelFile, yearAndMonth, "admin");
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel上传失败");

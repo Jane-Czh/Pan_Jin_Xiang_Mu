@@ -65,7 +65,7 @@
 
     <!-- 添加或修改十一项管理指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="220px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="230px">
         <el-form-item label="年月" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -160,6 +160,41 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        sdSalesordervalidity: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ppManualpocreationratio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ppDeliveredunreportedratio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        mesLateworkreportingrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        qmExternalinspectiondelay: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        mmPurchaseorderlatedelivery: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ], mmManualpocreation: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        mmUnsettledpurchaserequests: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ficoMonthlystandardpricevariation: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        CrossMonthProductionOrders: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        pmLatemaintenanceordercompletion: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -240,7 +275,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加十一项管理指标";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -249,7 +284,7 @@ export default {
       getManagement(emId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改十一项管理指标";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

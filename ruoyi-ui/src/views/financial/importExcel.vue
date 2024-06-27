@@ -38,9 +38,6 @@ export default {
     name: { type: String, default: null },
     url: { type: String, default: null },
     purview: { type: Array, default: () => [] },
-    // dataName: { type: String, default: '金额' },
-    // xAxisData: { type: Array, default: () => [] },
-    // yAxisData: { type: Array, default: () => [] },
   },
   data() {
     return {

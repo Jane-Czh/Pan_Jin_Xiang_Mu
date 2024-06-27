@@ -105,6 +105,9 @@ export default {
         naturalYear: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        annualPlancounts: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -166,7 +169,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[技术]年度数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -175,7 +178,7 @@ export default {
       getData2(tapcId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[技术]年度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

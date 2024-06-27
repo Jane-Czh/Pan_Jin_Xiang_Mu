@@ -1,9 +1,6 @@
 package com.heli.financial.controller;
 
-import com.heli.financial.domain.FinancialBalanceTable;
-import com.heli.financial.domain.FinancialDailyInProgressTable;
-import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
-import com.heli.financial.domain.FinancialInterestsTable;
+import com.heli.financial.domain.*;
 import com.heli.financial.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -91,10 +88,64 @@ public class FinancialDataController extends BaseController {
 
     }
 
-    @Log(title = "[财务]利润表上传", businessType = BusinessType.INSERT)
-    @PreAuthorize("@ss.hasPermi('financial:interests:import')")
+//    @Log(title = "[财务]利润表上传", businessType = BusinessType.INSERT)
+//    @PreAuthorize("@ss.hasPermi('financial:interests:import')")
+//    @PostMapping("/interests/import")
+//    public void importIndicatorsTable(@RequestParam("yearAndMonth") Date yearAndMonth,@RequestParam("InterestsFile") MultipartFile InterestsFile) {
+
+//        log.info("12312312312------------------------------------");
+//
+//        log.info("yearAndMonth: " + yearAndMonth);
+//        log.info("InterestsFile: " + InterestsFile.getName());
+//    }
+
+//    @Log(title = "[财务]利润表上传", businessType = BusinessType.INSERT)
+//    @PreAuthorize("@ss.hasPermi('financial:interests:import')")
+//    @PostMapping("/interests/import")
+//    public void importIndicatorsTable( @RequestBody FinancialImportEntity financialImportEntity) {
+//
+//        log.info("yearAndMonth: " + financialImportEntity.getYearAndMonth());
+//        log.info("InterestsFile: " + financialImportEntity.getInterestsFile());
+//    }
+
+//        Date lastMonth = DateUtils.getLastMonth(financialImportEntity.getYearAndMonth());
+//        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)
+//                && financialInterestsTableService.checkDataExists()) {
+//            return AjaxResult.error("上月利润表未上传");
+//        }
+////        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
+////            return AjaxResult.error("上月资产负债表未上传");
+////        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
+////            return AjaxResult.error("上月利润表未上传");
+////        }
+//
+//        if (financialInterestsTableService.checkInterestsDataIsExisted(financialImportEntity.getYearAndMonth())) {
+//            return AjaxResult.error("当月利润表已上传");
+//        }
+//
+//        try {
+//            toAjax(financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), financialImportEntity.getYearAndMonth(), InterestsFile));
+//        } catch (Exception e) {
+//            logger.info(String.valueOf(e));
+//        }
+//
+//        // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+//        if (financialDataService.checkDataUploadedForCurrentMonth(financialImportEntity.getYearAndMonth())
+//                && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(financialImportEntity.getYearAndMonth()))) {
+//            // 开始计算
+//            financialDataService.calculateCurrentMonthFinancialData(financialImportEntity.getYearAndMonth());
+//        }
+//
+//        return AjaxResult.success();
+//    }
+
     @PostMapping("/interests/import")
-    public AjaxResult importIndicatorsTable(Date yearAndMonth, MultipartFile InterestsFile) {
+    public AjaxResult importIndicatorsTable(Date yearAndMonth, MultipartFile excelFile) {
+
+        log.info("yearAndMonth: " + yearAndMonth);
+        log.info("InterestsFile: " + excelFile);
+        log.info("InterestsFile: " + excelFile.getOriginalFilename());
+
 
         Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
         if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)
@@ -112,7 +163,7 @@ public class FinancialDataController extends BaseController {
         }
 
         try {
-            toAjax(financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, InterestsFile));
+            toAjax(financialInterestsTableService.importInterestsTable("admin", DateUtils.getNowDate(), yearAndMonth, excelFile));
         } catch (Exception e) {
             logger.info(String.valueOf(e));
         }
@@ -127,8 +178,8 @@ public class FinancialDataController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
-    @PreAuthorize("@ss.hasPermi('financial:balance:import')")
+//    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
+//    @PreAuthorize("@ss.hasPermi('financial:balance:import')")
     @PostMapping("/balance/import")
     public AjaxResult importBalanceTable(Date yearAndMonth, MultipartFile BalanceFile) {
 
@@ -148,7 +199,7 @@ public class FinancialDataController extends BaseController {
         }
 
         try {
-            financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
+            financialBalanceTableService.importBalanceTable("admin", DateUtils.getNowDate(), yearAndMonth, BalanceFile);
         } catch (Exception e) {
             logger.info(String.valueOf(e));
         }

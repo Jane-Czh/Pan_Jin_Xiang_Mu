@@ -2,9 +2,9 @@
   <div class="currentPage">
     <!-- 月度数据表 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -65,7 +65,7 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -104,9 +104,9 @@
     <!-- 添加或修改[财务]手动填报指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-        <el-form-item label="年月" prop="yearAndMonth">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="整机销售收入" prop="totalSalesRevenue">
@@ -236,6 +236,49 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        totalSalesRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        externalGroupSalesRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalVehicleProduction: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalVehicleSales: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        newProductSalesRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        specialtyProductRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalSalesCost: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        manufacturingExpensesMonth: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        reserveCarAmount: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        capitalTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inventoryTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        rawMaterialTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inprogressTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        addedValueMonthly: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
@@ -333,7 +376,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加月度数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -342,7 +385,7 @@ export default {
       getData(fihfId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改月度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

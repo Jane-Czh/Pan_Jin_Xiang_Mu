@@ -5,30 +5,7 @@
         <el-input v-model="queryParams.materialSerialNumber" placeholder="请输入序号" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <!-- <el-form-item label="物料号" prop="materialNumber">
-        <el-input
-          v-model="queryParams.materialNumber"
-          placeholder="请输入物料号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="物料名称" prop="materialName">
-        <el-input
-          v-model="queryParams.materialName"
-          placeholder="请输入物料名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="集采类别" prop="centralizedProcurementCategory">
-        <el-input
-          v-model="queryParams.centralizedProcurementCategory"
-          placeholder="请输入集采类别"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -57,10 +34,9 @@
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
 
           <el-form :model="form" ref="form" label-width="90px">
-            <el-form-item label="选择表类型">
-              <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                <el-option label="管控物资字典" value="profit"></el-option>
-              </el-select>
+            <el-form-item label="上传表类:">
+              <span style="color: rgb(68, 140, 39);">管控物资字典</span>
+              <br>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
@@ -102,7 +78,7 @@
 
     <!-- 添加或修改供应科-指标-集采物料字典对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="序号" prop="materialSerialNumber">
           <el-input v-model="form.materialSerialNumber" placeholder="请输入序号" />
         </el-form-item>
@@ -141,7 +117,7 @@ export default {
       showDialog: false,
       progress: 0,
       selectedType: '',
-
+      selectedFile: null,
 
       single: true,
       // 非多个禁用
@@ -167,10 +143,20 @@ export default {
       },
       // 表单参数
       form: {},
+
       // 表单校验
       rules: {
-        yearAndMonth: [
-          { required: true, message: "日期不能为空", trigger: "blur" }
+        materialSerialNumber: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        materialNumber: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        materialName: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        centralizedProcurementCategory: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
         ],
       }
     };
@@ -227,7 +213,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加集采物料字典";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -236,7 +222,7 @@ export default {
       getDictionary(scmId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改集采物料字典";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -278,26 +264,26 @@ export default {
 
       if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     },
     //导入excel，取消按钮绑定取消所选的xlsx
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
+    /** 导入按钮 */
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      // 根据用户选择的 Excel 类型执行不同的操作
-      if (this.selectedType === 'profit') {
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+
+        formData.append("multipartFile", file);
         axios({
           method: "post",
-          // url: this.$http.url('/production/data/upload'),
           url: "http://localhost:8080/supply/data/readCollectibleMaterialsTable",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -308,23 +294,13 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
-        }).then(response => {
-          // 处理请求成功的情况
-          this.showDialog = false; // 关闭上传面板
-        })
-          .catch(error => {
-            // 处理请求失败的情况
-            console.error('上传失败：', error);
-          });
-        console.log("供应订单表")
+        });
         this.$message.success("上传成功");
         setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
-          // location.reload(); // 调用此方法刷新页面数据
         }, 2000); // 2000毫秒后关闭
       }
     },
-
   }
 };
 </script>

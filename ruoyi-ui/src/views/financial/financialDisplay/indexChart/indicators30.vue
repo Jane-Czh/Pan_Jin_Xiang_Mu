@@ -7,6 +7,9 @@
                 @change="handleDateChange">
             </el-date-picker>
         </div>
+        <div v-if="loading"
+            style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……
+        </div>
         <div id="main" ref="main"></div>
     </div>
 </template>
@@ -14,7 +17,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getGrowthRateInventorySalesData } from '@/api/financial/data'
+import { getGrowthRateInventorySalesData } from '@/api/financial/chartAPI'
 
 export default {
     data() {

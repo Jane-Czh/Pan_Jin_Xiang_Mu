@@ -29,6 +29,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     private FinancialInterestsTableMapper financialInterestsTableMapper;
 
 
+    @Override
+    public boolean checkDataExists() {
+        return financialInterestsTableMapper.checkDataExists();
+    }
+
     /**
      * @description: 利润表导入
      * @author: hong

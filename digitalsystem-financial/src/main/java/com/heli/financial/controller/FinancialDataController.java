@@ -11,6 +11,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +46,9 @@ public class FinancialDataController extends BaseController {
     @Autowired
     private IFinancialDataService financialDataService;
 
+    private static final Logger log = LoggerFactory.getLogger(FinancialDataController.class);
+
+
 
     @Log(title = "[财务]数据填报", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:fill:add')")
@@ -51,13 +56,20 @@ public class FinancialDataController extends BaseController {
     public AjaxResult handFillData(@RequestBody FinancialIndicatorsHandfillTable FITable) {
         System.out.println(FITable);
         Date lastMonth = DateUtils.getLastMonth(FITable.getYearAndMonth());
-        if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)) {
+
+        boolean b = financialIndicatorsHandfillTableService.checkDataExists();
+        log.info(String.valueOf(b));
+
+
+        if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)
+            && financialIndicatorsHandfillTableService.checkDataExists()) {
             return AjaxResult.error("上月数据还未填报");
-        } else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
-            return AjaxResult.error("上月资产负债表未上传");
-        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
-            return AjaxResult.error("上月利润表未上传");
         }
+//        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
+//            return AjaxResult.error("上月资产负债表未上传");
+//        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
+//            return AjaxResult.error("上月利润表未上传");
+//        }
 
         if (financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(FITable.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
@@ -68,8 +80,9 @@ public class FinancialDataController extends BaseController {
 
         financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(FITable);
 
-        // 检查当月文件是否上传完成，全部上传后开始计算
-        if (financialDataService.checkDataUploadedForCurrentMonth(FITable.getYearAndMonth())) {
+        // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+        if (financialDataService.checkDataUploadedForCurrentMonth(FITable.getYearAndMonth())
+            && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(FITable.getYearAndMonth()))) {
             // 开始计算
             financialDataService.calculateCurrentMonthFinancialData(FITable.getYearAndMonth());
         }
@@ -84,13 +97,15 @@ public class FinancialDataController extends BaseController {
     public AjaxResult importIndicatorsTable(Date yearAndMonth, MultipartFile InterestsFile) {
 
         Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
-        if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)) {
-            return AjaxResult.error("上月数据还未填报");
-        } else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
-            return AjaxResult.error("上月资产负债表未上传");
-        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
+        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)
+                && financialInterestsTableService.checkDataExists()) {
             return AjaxResult.error("上月利润表未上传");
         }
+//        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
+//            return AjaxResult.error("上月资产负债表未上传");
+//        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
+//            return AjaxResult.error("上月利润表未上传");
+//        }
 
         if (financialInterestsTableService.checkInterestsDataIsExisted(yearAndMonth)) {
             return AjaxResult.error("当月利润表已上传");
@@ -102,8 +117,9 @@ public class FinancialDataController extends BaseController {
             logger.info(String.valueOf(e));
         }
 
-        // 检查当月文件是否上传完成，全部上传后开始计算
-        if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)) {
+        // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+        if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
+                && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
             // 开始计算
             financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
         }
@@ -117,13 +133,15 @@ public class FinancialDataController extends BaseController {
     public AjaxResult importBalanceTable(Date yearAndMonth, MultipartFile BalanceFile) {
 
         Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
-        if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)) {
-            return AjaxResult.error("上月数据还未填报");
-        } else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
+        if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)
+                && financialBalanceTableService.checkDataExists()) {
             return AjaxResult.error("上月资产负债表未上传");
-        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
-            return AjaxResult.error("上月利润表未上传");
         }
+//        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
+//            return AjaxResult.error("上月资产负债表未上传");
+//        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
+//            return AjaxResult.error("上月利润表未上传");
+//        }
 
         if (financialBalanceTableService.checkBalanceDataIsExisted(yearAndMonth)) {
             return AjaxResult.error("当月资产负债表已上传");
@@ -135,11 +153,16 @@ public class FinancialDataController extends BaseController {
             logger.info(String.valueOf(e));
         }
 
-//         检查当月文件是否上传完成，全部上传后开始计算
-        if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)) {
+
+
+        // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+        if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
+                && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
             // 开始计算
             financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
         }
+
+
 
         return AjaxResult.success();
     }

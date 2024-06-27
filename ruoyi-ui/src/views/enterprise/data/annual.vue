@@ -14,15 +14,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:data:add']">新增</el-button>
+          v-hasPermi="['enterprise:annual:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:data:edit']">修改</el-button>
+          v-hasPermi="['enterprise:annual:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:data:remove']">删除</el-button>
+          v-hasPermi="['enterprise:annual:remove']">删除</el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -39,9 +39,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:data:edit']">修改</el-button>
+            v-hasPermi="['enterprise:annual:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:data:remove']">删除</el-button>
+            v-hasPermi="['enterprise:annual:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -51,7 +51,7 @@
 
     <!-- 添加或修改[企业管理]指标年度数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="170px">
         <el-form-item label="年份" prop="naturalYear">
           <el-input v-model="form.naturalYear" placeholder="请输入年" />
         </el-form-item>
@@ -112,6 +112,19 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        naturalYear: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        annualTotalSalary: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        stockTargetValue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        panjinTargetValue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
@@ -184,7 +197,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[企业管理]指标年度数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -193,7 +206,7 @@ export default {
       getYearData(emasId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[企业管理]指标年度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

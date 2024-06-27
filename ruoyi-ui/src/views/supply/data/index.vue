@@ -2,9 +2,9 @@
 
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -17,18 +17,47 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['supply:controlledAmount:add']">新增</el-button>
+          v-hasPermi="['supply:data:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['supply:controlledAmount:edit']">修改</el-button>
+          v-hasPermi="['supply:data:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['supply:controlledAmount:remove']">删除</el-button>
+          v-hasPermi="['supply:data:remove']">删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <!--Excel 参数导入 -->
+        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
+          v-hasPermi="['supply:data:import']">导入Excel文件
+        </el-button>
+
+        <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+
+          <el-form :model="form" ref="form" label-width="90px">
+            <el-form-item label="上传表类:">
+              <span style="color: rgb(68, 140, 39);">供应订单表</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-form>
+          <i class="el-icon-upload"></i>
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+          <!-- 进度动画条 -->
+          <div v-if="progress > 0">
+            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="showDialog = false">取 消</el-button>
+            <el-button type="primary" @click="fileSend()">确 定</el-button>
+          </span>
+        </el-dialog>
       </el-col>
 
-      <import-excel :name="'供应订单表'" :url="'/supply/data/readPurchaseOrderTable'" />
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -37,7 +66,7 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="scpId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -49,9 +78,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['supply:controlledAmount:edit']">修改</el-button>
+            v-hasPermi="['supply:data:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['supply:controlledAmount:remove']">删除</el-button>
+            v-hasPermi="['supply:data:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,10 +90,10 @@
 
     <!-- 添加或修改供应-指标-集团管控物资占比对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="170px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="当月采购总金额" prop="totalPurchaseAmount">
@@ -87,10 +116,10 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/supply/data";
-import importExcel from "@/views/financial/importExcel.vue";
+import axios from "axios";
 
 export default {
-  components: { importExcel },
+
   name: "ControlledAmount",
   data() {
     return {
@@ -101,6 +130,13 @@ export default {
       dates: [],
       // 非单个禁用
       single: true,
+
+
+      showDialog: false,
+      progress: 0,
+      selectedType: '',
+
+
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -124,11 +160,22 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        totalPurchaseAmount: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        controlledMaterialPurchases: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        controlledPurchaseAmountRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
@@ -192,7 +239,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加集团管控物资数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -201,7 +248,7 @@ export default {
       getData(scpId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改集团管控物资数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -235,7 +282,52 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    /** 导入按钮 */
+    checkFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileName = file.name;
+      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-  }
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+        this.$message.error("只能上传 Excel 文件！");
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
+      }
+    },
+    //导入excel，取消按钮绑定取消所选的xlsx
+    resetFileInput() {
+      this.$refs.fileInput.value = "";
+    },
+    /** 导入按钮 */
+    fileSend() {
+      const formData = new FormData();
+      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        const yearAndMonth = this.form3.yearAndMonth;
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("multipartFile", file);
+        axios({
+          method: "post",
+          url: "http://localhost:8080/supply/data/readPurchaseOrderTable",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+          data: formData,
+          onUploadProgress: (progressEvent) => {
+            this.progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+          },
+        });
+        this.$message.success("上传成功");
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+        }, 2000); // 2000毫秒后关闭
+      }
+    }
+  },
 };
 </script>

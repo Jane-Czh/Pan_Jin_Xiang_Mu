@@ -22,6 +22,8 @@ public interface FinancialIndicatorsHandfillTableMapper {
 
     List<Date> selectAllHandFillYearAndMonth();
 
+    boolean checkDataExists();
+
 
     /**
      * @description: 按月查询手动填报数据

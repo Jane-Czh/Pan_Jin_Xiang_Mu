@@ -21,8 +21,11 @@ import moment from 'moment'
 import chartAPI from '@/api/financial/chartAPI.js'
 import indicatorChart from './indexChart/indicatorChart.vue';
 
+
 export default {
   components: { indicatorChart },
+  name: 'indexDetailFinancial',
+
   data() {
     return {
       radioDate: '月',
@@ -37,21 +40,27 @@ export default {
       pickerOptions: [],
       xAxisData: [],
       yAxisData: [],
-      option: { title: '', dataName: '', apiName: '', yDataName: '' }
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '' },
+      name: '',
     }
+
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { title: '', dataName: '', apiName: '', yDataName: '' }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+    this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
+    this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()
     this.initData()
+  },
+  created() {
+
   },
   methods: {
     async initData() {
 
       this.timeData.startTime = this.selectedDate[0]
       this.timeData.endTime = this.selectedDate[1]
-
 
       try {
         this.loading = true

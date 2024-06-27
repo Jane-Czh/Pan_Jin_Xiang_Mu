@@ -2,10 +2,13 @@
     <div>
         <div class="block">
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+            <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange">
             </el-date-picker>
+        </div>
+        <div v-if="loading"
+            style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……
         </div>
         <div id="main" ref="main"></div>
     </div>
@@ -14,7 +17,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getInprogressDayrevenueData } from '@/api/financial/data'
+import { getInprogressDayrevenueData } from '@/api/financial/chartAPI'
 
 export default {
     data() {
@@ -32,14 +35,14 @@ export default {
         }
     },
     mounted() {
-        this.defaultMonth()
+        this.defaultDay()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = this.selectedDate[0];
+            this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
                 const res = await getInprogressDayrevenueData(this.timeData);
@@ -50,7 +53,10 @@ export default {
                 this.loading = false
             }
         },
-        handleDateChange() {
+        handleDateChange(value) {
+            let endDate = new Date(value[1]);
+            endDate.setHours(endDate.getHours() + 13);
+            this.selectedDate[1] = endDate;
             this.initData()
         },
         updateChart() {
@@ -207,12 +213,12 @@ export default {
                 }
             });
         },
-        defaultMonth() {
+        defaultDay() {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
-            const startDate = new Date(currentYear, 0, 1);
-            const endDate = new Date(currentYear, currentMonth, 0);
+            const currentMonth = currentDate.getMonth();
+            const startDate = new Date(currentYear, currentMonth, 1);
+            const endDate = new Date(currentYear, currentMonth + 1, 0);
             this.selectedDate = [startDate, endDate];
         },
     }

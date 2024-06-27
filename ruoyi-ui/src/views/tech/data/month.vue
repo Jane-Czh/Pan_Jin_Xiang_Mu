@@ -1,9 +1,9 @@
 <template>
   <div class="current-page">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+      <el-form-item label="日期" prop="yearAndMonth">
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -16,15 +16,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['tech:data:add']">新增</el-button>
+          v-hasPermi="['tech:monthly:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['tech:data:edit']">修改</el-button>
+          v-hasPermi="['tech:monthly:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['tech:data:remove']">删除</el-button>
+          v-hasPermi="['tech:monthly:remove']">删除</el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -34,10 +34,10 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="Tech_ID" align="center" prop="techId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays" />
@@ -46,9 +46,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['tech:data:edit']">修改</el-button>
+            v-hasPermi="['tech:monthly:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['tech:data:remove']">删除</el-button>
+            v-hasPermi="['tech:monthly:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,11 +57,11 @@
       @pagination="getList" />
 
     <!-- 添加或修改[技术]指标填报对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="非标准单平均技术准备天数" prop="nonStandardAvgPreparationDays">
@@ -113,8 +113,8 @@ export default {
         yearAndMonth: null,
         nonStandardAvgPreparationDays: null,
         completedmonthlyPlancounts: null,
-        annualPlancounts: null,
-        prdscheduleCompletionrate: null,
+
+
       },
       // 表单参数
       form: {},
@@ -123,8 +123,24 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        nonStandardAvgPreparationDays: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        completedmonthlyPlancounts: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
+  },
+  computed: {
+    formattedDate(date) {
+      // 获取年份和月份
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; // 月份要加1，因为getMonth返回的是0-11
+
+      // 返回格式化后的字符串，例如："2024年6月"
+      return `${year}-${month}`;
+    }
   },
   created() {
     this.getList();
@@ -157,8 +173,6 @@ export default {
         yearAndMonth: null,
         nonStandardAvgPreparationDays: null,
         completedmonthlyPlancounts: null,
-        annualPlancounts: null,
-        prdscheduleCompletionrate: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -187,7 +201,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[技术]月度数据";
+      this.title = "新增";
     },
 
     /** 修改按钮操作 */
@@ -197,7 +211,7 @@ export default {
       getData(techId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[技术]月度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -220,11 +234,20 @@ export default {
         }
       });
     },
+
     /** 删除按钮操作 */
     handleDelete(row) {
       const techIds = row.techId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否确认删除日期为"${yearMonth}"的数据？`).then(() => {
         return delData(techIds);
       }).then(() => {
         this.getList();

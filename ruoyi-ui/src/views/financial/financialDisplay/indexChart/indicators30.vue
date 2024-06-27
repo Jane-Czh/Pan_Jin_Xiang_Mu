@@ -7,6 +7,9 @@
                 @change="handleDateChange">
             </el-date-picker>
         </div>
+        <div v-if="loading"
+            style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……
+        </div>
         <div id="main" ref="main"></div>
     </div>
 </template>
@@ -14,7 +17,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getGrowthRateInventorySalesData } from '@/api/financial/data'
+import { getGrowthRateInventorySalesData } from '@/api/financial/chartAPI'
 
 export default {
     data() {
@@ -50,7 +53,13 @@ export default {
                 this.loading = false
             }
         },
-        handleDateChange() {
+        handleDateChange(value) {
+            if (value && value[1]) {
+                let endDate = new Date(value[1]);
+                endDate.setMonth(endDate.getMonth() + 1);
+                endDate.setDate(0);
+                this.selectedDate[1] = endDate;
+            }
             this.initData()
         },
         updateChart() {
@@ -203,8 +212,9 @@ export default {
                     data: this.data.map(item => item.GrowthRate_Sales),
                 }]
             };
-
             this.option && this.myChart.setOption(this.option);
+
+            //折线图切换
             this.myChart.on('magictypechanged', (params) => {
                 var magicType = params.currentType;
                 if (magicType == 'line') {

@@ -26,6 +26,8 @@ public interface FinancialInterestsTableMapper {
      **/
     boolean checkInterestsDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
 
+    boolean checkDataExists();
+
 
     FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
 

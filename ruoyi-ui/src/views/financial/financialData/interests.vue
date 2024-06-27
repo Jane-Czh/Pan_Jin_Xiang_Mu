@@ -2,9 +2,9 @@
   <div class="currentPage">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <!-- 利润表 -->
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -28,17 +28,19 @@
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
-        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true">导入Excel
+        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true"
+          v-hasPermi="['financial:interests:import']">导入Excel
         </el-button>
 
         <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
           <!-- 下拉框 -->
           <el-form :model="form" ref="form" label-width="90px">
-            <el-form-item label="选择表类型">
-              <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                <el-option label="利润表" value="profit"></el-option>
-                <!-- <el-option label="资产负债表" value="balance"></el-option> -->
-              </el-select>
+            <el-form-item label="上传表类:">
+              <span style="color: rgb(68, 140, 39);">利润表</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
             </el-form-item>
           </el-form>
 
@@ -62,7 +64,7 @@
     <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -93,10 +95,10 @@
 
     <!-- 添加或修改财务-利润对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="集团内主营业务收入" prop="internalMainrevenue">
@@ -146,6 +148,7 @@ export default {
   name: "Interests",
   data() {
     return {
+      yearAndMonth: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -190,11 +193,46 @@ export default {
         rdExpense: null
       },
       // 表单参数
-      form: {},
+      form: {
+
+      },
+      form3: {
+        yearAndMonth: null
+      },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        internalMainrevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        externalMainrevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        MainRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        cogsProductsalesSd: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        cogsFreight: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        cogsVariation: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        COGS: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        NetProfit: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ManagementExpense: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        rdExpense: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
         ],
       }
     };
@@ -265,7 +303,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加利润表数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -274,7 +312,7 @@ export default {
       getInterests(fiId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改利润表数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -308,14 +346,13 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-
     // 导入excel，检查文件类型
     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
         // this.$refs.fileInput.value = ""; // 清空文件选择框
       }
@@ -328,12 +365,17 @@ export default {
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      if (this.selectedType === 'profit') {
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        const yearAndMonth = this.form3.yearAndMonth;
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("excelFile", file);
         axios({
           method: "post",
           // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080//financial/data/interests/import",
+          url: "http://localhost:8080/financial/data/interests/import",
           // params: this.$http.adornParams({
           //   userName: this.$store.state.user.name,
           // }),
@@ -347,25 +389,83 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
-        })
-          .then(response => {
-            // 处理请求成功的情况
-            this.showDialog = false; // 关闭上传面板
-          })
-          .catch(error => {
-            // 处理请求失败的情况
-            console.error('上传失败：', error);
-          });
-        console.log("利润表")
-        // }
+        });
         this.$message.success("上传成功");
         setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
-
-          // location.reload(); // 调用此方法刷新页面数据
         }, 2000); // 2000毫秒后关闭
       }
     },
+    // // 导入excel，检查文件类型
+    // checkFile() {
+    //   const file = this.$refs.fileInput.files[0];
+    //   const fileName = file.name;
+    //   const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+
+    //   if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+    //     this.$message.error("只能上传 Excel 文件！");
+    //     // this.$refs.fileInput.value = ""; // 清空文件选择框
+    //   }
+    // },
+    // //导入excel，取消按钮绑定取消所选的xlsx
+    // resetFileInput() {
+    //   this.$refs.fileInput.value = "";
+    // },
+    // /** 导入按钮 */
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0];// 获取文件对象
+    //   if (file === undefined) {
+    //     this.$message.error("请选择文件!");
+    //     return;
+    //   } else {
+
+    //     formData.append("InterestsFile", file);
+    //     formData.append("yearAndMonth", this.form.yearAndMonth);
+
+    //     // formData.append('file', fileInput.files[0]);
+    //     // formData.append('yearAndMonth', '2021-07-01');
+
+    //     // 将日期数据添加到一个对象中
+    //     // const dataToSend = {
+    //     //   InterestsFile: file,
+    //     //   yearAndMonth: this.form.yearAndMonth 
+    //     // };
+
+    //     axios({
+    //       method: "post",
+    //       url: "http://localhost:8080/financial/data/interests/import",
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //       withCredentials: true,
+    //       data: formData,
+    //       onUploadProgress: (progressEvent) => {
+    //         this.progress = Math.round(
+    //           (progressEvent.loaded * 100) / progressEvent.total
+    //         );
+    //       },
+    //     })
+    //       .then(response => {
+    //         // 处理请求成功的情况
+    //         this.showDialog = false; // 关闭上传面板
+    //         this.$message.success("上传成功");
+    //       })
+    //       .catch(error => {
+    //         // 处理请求失败的情况
+    //         console.error('上传失败：', error);
+    //       });
+    //     console.log("利润表")
+    //     // }
+
+    //     setTimeout(() => {
+    //       this.showDialog = false; // 关闭上传面板
+
+    //       // location.reload(); // 调用此方法刷新页面数据
+    //     }, 2000); // 2000毫秒后关闭
+
+    //   }
+    // },
   }
 };
 </script>

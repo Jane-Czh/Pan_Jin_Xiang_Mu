@@ -45,11 +45,12 @@ public class TechController extends BaseController {
     @PreAuthorize("@ss.hasPermi('tech:monthly:add')")
     @Log(title = "[技术]指标填报", businessType = BusinessType.INSERT)
     @PostMapping("/data/monthly")
-    public AjaxResult add(Tech tech) {
+    public AjaxResult add(@RequestBody Tech tech) {
         if (!techAnnualPlanCountService.checkTechAnnualDataIsExisted(DateUtils.getYear(tech.getYearAndMonth()))) {
             return AjaxResult.error("年度总计划未上传");
         }
-        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))) {
+        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))
+            && techService.checkDataExist()) {
             return AjaxResult.error("上月数据未填报");
         }
         if (techService.checkTechMonthlyDataIsExisted(tech.getYearAndMonth())) {

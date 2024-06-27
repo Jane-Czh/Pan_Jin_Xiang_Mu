@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -37,7 +37,7 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="qihfId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -66,10 +66,10 @@
 
     <!-- 添加或修改[质量]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="外部质量损失金额" prop="moleculeExternalMassLossRate">
@@ -148,6 +148,27 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        moleculeExternalMassLossRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        externalMassLossRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        quarterlyRank: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        meantimeWithoutFailure: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        intimeReturnrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        selfcheckPassrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        nextprocessFeedbackPassrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -215,7 +236,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[质量]数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -224,7 +245,7 @@ export default {
       getHandFill(qihfId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[质量]数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

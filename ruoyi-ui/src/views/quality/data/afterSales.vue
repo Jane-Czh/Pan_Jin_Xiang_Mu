@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -15,17 +15,51 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['quality:Metrics:add']">新增</el-button>
+          v-hasPermi="['quality:data:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['quality:Metrics:edit']">修改</el-button>
+          v-hasPermi="['quality:data:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['quality:Metrics:remove']">删除</el-button>
+          v-hasPermi="['quality:data:remove']">删除</el-button>
       </el-col>
-      <import-excel :name="'售后表'" :url="'/quality/after-sales/read'" />
+      <el-col :span="1.5">
+        <!--Excel 参数导入 -->
+        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
+          v-hasPermi="['quality:aftersales:import']">导入Excel文件
+        </el-button>
+
+        <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
+
+          <el-form :model="form" ref="form" label-width="90px">
+            <el-form-item label="上传表类：">
+              <span style="color: rgb(68, 140, 39);">售后表</span>
+              <br>
+              <div>
+                注：售后表时间格式请保持一致（例：2023/1/3）
+              </div>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
+            </el-form-item>
+
+          </el-form>
+          <i class="el-icon-upload"></i>
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+          <!-- 进度动画条 -->
+          <div v-if="progress > 0">
+            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="showDialog = false">取 消</el-button>
+            <el-button type="primary" @click="fileSend()">确 定</el-button>
+          </span>
+        </el-dialog>
+      </el-col>
+
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -34,7 +68,7 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="qcId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -49,9 +83,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['quality:Metrics:edit']">修改</el-button>
+            v-hasPermi="['quality:data:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['quality:Metrics:remove']">删除</el-button>
+            v-hasPermi="['quality:data:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,10 +95,10 @@
 
     <!-- 添加或修改质量指标-统计对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="当月反馈新车病车数" prop="newCarDefects">
@@ -96,10 +130,10 @@
 
 <script>
 import { listMetrics, getMetrics, delMetrics, addMetrics, updateMetrics } from "@/api/quality/afterSales";
-import importExcel from "@/views/financial/importExcel.vue";
+import axios from "axios";
 export default {
   name: "Metrics",
-  components: { importExcel },
+
   data() {
     return {
       // 遮罩层
@@ -107,6 +141,14 @@ export default {
       // 选中数组
       ids: [],
       dates: [],
+
+
+      showDialog: false,
+      progress: 0,
+      selectedType: '',
+
+
+
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -135,10 +177,29 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        newCarDefects: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        warrantyRepairRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlyAfterSalesIssues: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        warrantyVehicleRepairRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        externalLossRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        productionLiabilityIssues: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
         ],
       }
     };
@@ -206,7 +267,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加售后数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -215,7 +276,7 @@ export default {
       getMetrics(qcId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改售后数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -249,7 +310,55 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    /** 导入按钮 */
 
+    checkFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileName = file.name;
+      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+        this.$message.error("只能上传 Excel 文件！");
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
+      }
+    },
+    //导入excel，取消按钮绑定取消所选的xlsx
+    resetFileInput() {
+      this.$refs.fileInput.value = "";
+    },
+    /** 导入按钮 */
+    fileSend() {
+
+      const formData = new FormData();
+      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        const yearAndMonth = this.form3.yearAndMonth;
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("multipartFile", file);
+        axios({
+          method: "post",
+          url: "http://localhost:8080/quality/data/after-sales/read",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+          data: formData,
+          onUploadProgress: (progressEvent) => {
+            this.progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+          },
+        });
+        this.$message.success("上传成功");
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+        }, 2000); // 2000毫秒后关闭
+      }
+    },
   }
+
 };
 </script>

@@ -77,6 +77,7 @@ export default {
   name: 'indicators74',
   data() {
     return {
+      NewDate: [],
       activeName: '0',
       loading: false,
       data1: [],//0123分别为日月年
@@ -143,10 +144,21 @@ export default {
         this.loading = false
       }
     },
-    handleDateChange() {
+    handleDateChange(value) {
       if (this.activeName === '0') {
+        if (value && value[1]) {
+          let endDate = new Date(value[1]);
+          endDate.setHours(endDate.getHours() + 13);
+          this.selectedDateDay[1] = endDate;
+        }
         this.initData(0)
       } else if (this.activeName === '1') {
+        if (value && value[1]) {
+          let endDate = new Date(value[1]);
+          endDate.setMonth(endDate.getMonth() + 1);
+          endDate.setDate(0);
+          this.selectedDateMonth[1] = endDate;
+        }
         this.initData(1)
       } else if (this.activeName === '2') {
         this.initData(2)

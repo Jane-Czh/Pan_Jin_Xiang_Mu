@@ -34,7 +34,7 @@ public class PartyBuildingDisplayController extends BaseController {
      */
 
     @PreAuthorize("@ss.hasPermi('partybuilding:display:rank')")
-    @PostMapping("/rank")
+    @PostMapping("/partyBuildingRank")
     public TableDataInfo partyBuildingRank(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = partyBuildingDisplayService.selectPartyBuildingRank(time.getStartTime(),time.getEndTime());
         return getDataTable(list);

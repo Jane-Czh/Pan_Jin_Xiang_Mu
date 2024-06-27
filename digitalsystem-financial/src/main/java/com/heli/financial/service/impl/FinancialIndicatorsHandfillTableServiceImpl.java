@@ -28,6 +28,11 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
         return financialIndicatorsHandfillTableMapper.selectMaxYearAndMonth();
     }
 
+    @Override
+    public boolean checkDataExists() {
+        return financialIndicatorsHandfillTableMapper.checkDataExists();
+    }
+
     /**
      * @description: 检查手动填报数据是否存在
      * @author: hong

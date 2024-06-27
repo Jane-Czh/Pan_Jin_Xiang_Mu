@@ -2,9 +2,9 @@
   <div class="currentPage">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <!-- 资产负债表 -->
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -28,17 +28,21 @@
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
-        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true">导入Excel
+        <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true"
+          v-hasPermi="['financial:balance:import']">导入Excel
         </el-button>
 
         <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
           <!-- 下拉框 -->
           <el-form :model="form" ref="form" label-width="90px">
-            <el-form-item label="选择表类型">
-              <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                <!-- <el-option label="利润表" value="profit"></el-option> -->
-                <el-option label="资产负债表" value="balance"></el-option>
-              </el-select>
+
+            <el-form-item label="上传表类">
+              <span style="color: rgb(68, 140, 39);">资产负债表</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
+
             </el-form-item>
           </el-form>
 
@@ -63,7 +67,7 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id(主键)" align="center" prop="fbId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
@@ -100,10 +104,10 @@
 
     <!-- 添加或修改财务-资产负债对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="在途物资" prop="inTransitInventory">
@@ -176,7 +180,7 @@ export default {
       // 选中数组
       ids: [],
       dates: [],
-      balanceList: [],
+
       // 导入Excel对话框
       selectedType: '',
       progress: 0,
@@ -202,6 +206,7 @@ export default {
         pageSize: 10,
         createdBy: null,
         createdTime: null,
+
         yearAndMonth: null,
         inTransitInventory: null,
         materials: null,
@@ -222,11 +227,57 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: {
+        yearAndMonth: null
+      },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        inTransitInventory: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        materials: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        materialCostVariance: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        materialCostVarianceUnallocated: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlyRawMaterialInventory: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        workInProgressSemiFinishedGoods: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlyWorkInProgressInventory: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inventoryVehicles: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        pcvFinished: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthAmountInStock: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        monthlyInventoryTotalAmount: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        growthRateInventorySales: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        receivables: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        turnoverRateReceivable: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
@@ -303,7 +354,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加财务-资产负债";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -312,7 +363,7 @@ export default {
       getBalance(fbId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改财务-资产负债";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -352,9 +403,9 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     },
     //导入excel，取消按钮绑定取消所选的xlsx
@@ -365,14 +416,16 @@ export default {
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      if (this.selectedType === 'profit') {
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        const yearAndMonth = this.form3.yearAndMonth;
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("BalanceFile", file);
         axios({
           method: "post",
           url: "http://localhost:8080/financial/data/balance/import",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -383,22 +436,10 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
-        })
-          .then(response => {
-            // 处理请求成功的情况
-            this.showDialog = false; // 关闭上传面板
-          })
-          .catch(error => {
-            // 处理请求失败的情况
-            console.error('上传失败：', error);
-          });
-
+        });
         this.$message.success("上传成功");
-
         setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
-
-          // location.reload(); // 调用此方法刷新页面数据
         }, 2000); // 2000毫秒后关闭
       }
     },

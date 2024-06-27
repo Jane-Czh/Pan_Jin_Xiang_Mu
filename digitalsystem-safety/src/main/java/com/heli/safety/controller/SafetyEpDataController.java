@@ -70,7 +70,7 @@ public class SafetyEpDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('safety:data:add')")
     @Log(title = "[安全环保]指标填报", businessType = BusinessType.INSERT)
-    @PostMapping("/filling")
+    @PostMapping
     public AjaxResult add(@RequestBody SafetyEp safetyEp) {
         if(safetyEpService.checkSafetyFillingDataIsExisted(safetyEp.getYearAndMonth()))
             return AjaxResult.error("当月数据已填报");

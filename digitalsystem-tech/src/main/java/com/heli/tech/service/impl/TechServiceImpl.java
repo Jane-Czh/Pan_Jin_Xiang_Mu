@@ -41,14 +41,16 @@ public class TechServiceImpl implements ITechService {
      */
     public int batchUpdateTech(Date date) {
         Date maxMonth = techMapper.selectMaxMonthByYear(DateUtils.getYear(date));
+        Date minMonth = techMapper.selectMinMonthByYear(DateUtils.getYear(date));
+        log.info(maxMonth.toString());
         ArrayList<Tech> teches = new ArrayList<>();
         Long annualNumber = techAnnualPlanCountMapper.selectTechAnnualNumberByYear(DateUtils.getYear(date));
 
-        for (int i = DateUtils.getMonth(date); i <= DateUtils.getMonth(maxMonth); i++, date = DateUtils.getNextMonth(date)) {
+        for (int i = DateUtils.getMonth(minMonth); i <= DateUtils.getMonth(maxMonth); i++, minMonth = DateUtils.getNextMonth(minMonth)) {
 
             Tech tech = new Tech();
-            tech.setYearAndMonth(date);
-            Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(date);
+            tech.setYearAndMonth(minMonth);
+            Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(minMonth);
             tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
 
             teches.add(tech);
@@ -78,7 +80,13 @@ public class TechServiceImpl implements ITechService {
      * @date: 2024/4/27 11:25
      **/
     public Tech calculateCompletionRate(Tech tech) {
-        Long annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
+        Long annualCompletionNumber;
+        if(checkDataExist()){
+
+            annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
+        }else {
+            annualCompletionNumber = tech.getCompletedmonthlyPlancounts();
+        }
         Long annualNumber = techAnnualPlanCountMapper.selectTechAnnualNumberByYear(DateUtils.getYear(tech.getYearAndMonth()));
         tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
         return tech;
@@ -114,6 +122,11 @@ public class TechServiceImpl implements ITechService {
     @Override
     public Boolean checkTechMonthlyDataIsExisted(Date date) {
         return techMapper.checkTechMonthlyDataIsExisted(date);
+    }
+
+    @Override
+    public Boolean checkDataExist() {
+        return techMapper.checkDataExist();
     }
 
     /**

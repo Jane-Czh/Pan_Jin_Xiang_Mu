@@ -116,6 +116,7 @@ export default {
   watch: {},
   created() {
   },
+
   mounted() { },
   methods: {
     toDetail(item) {

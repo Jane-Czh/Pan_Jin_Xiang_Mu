@@ -42,16 +42,16 @@ public class SafetyEpMaintenanceTableController extends BaseController {
      * @author: hong
      * @date: 2024/4/11 16:38
      */
-    @PreAuthorize("@ss.hasPermi('safety:table:import')")
+//    @PreAuthorize("@ss.hasPermi('safety:table:import')")
     @PostMapping("/import")
     @Transactional
-    public R<String> simpleRead(Date yearAndMonth, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
+    public R<String> simpleRead(Date yearAndMonth,  MultipartFile multipartFile) {
         //检查当月数据是否上传
         if (safetyEpMaintenanceTableService.checkSafetyEpMaintenanceTableIsExisted(yearAndMonth)){
             return R.fail("当月数据已上传");
         }
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth,getUsername());
+            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth,"admin");
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
             throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");

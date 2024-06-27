@@ -62,7 +62,8 @@ public class QualityIndicatorsHandfillTableController extends BaseController {
     @PreAuthorize("@ss.hasPermi('quality:handFill:add')")
     @Log(title = "[质量]指标填报", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(QualityIndicatorsHandfillTable qualityIndicatorsHandfillTable) {
+    public AjaxResult add(@RequestBody QualityIndicatorsHandfillTable qualityIndicatorsHandfillTable) {
+        logger.info(String.valueOf(qualityIndicatorsHandfillTable));
         if (qualityIndicatorsHandfillTableService.checkQualityFillingDataIsExisted(qualityIndicatorsHandfillTable.getYearAndMonth())){
             return AjaxResult.error("当月数据已填报");
         }

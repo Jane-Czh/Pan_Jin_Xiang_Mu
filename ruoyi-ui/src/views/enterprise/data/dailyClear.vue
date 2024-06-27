@@ -15,15 +15,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:Settlement:add']">新增</el-button>
+          v-hasPermi="['enterprise:dailyclear:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
+          v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
+          v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -47,9 +47,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
+            v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
+            v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,7 +60,7 @@
     <!-- 添加或修改日清日结
 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -135,6 +135,27 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        orderEntryDelayRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        shipmentDelayRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        productionReportDelayRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inspectionDelayRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        invoicePostingDelayRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        unsettledAccountsRatio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -210,7 +231,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加日清日结";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -219,7 +240,7 @@ export default {
       getDailyClearData(edId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改日清日结";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */

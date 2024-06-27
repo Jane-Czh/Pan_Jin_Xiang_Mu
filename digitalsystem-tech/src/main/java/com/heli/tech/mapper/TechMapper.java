@@ -31,6 +31,13 @@ public interface TechMapper {
     Date selectMaxMonthByYear(@Param("year") int year);
 
     /**
+     * @description: 查询当年已上传数据的最小月份，用于数据更新
+     * @author: hong
+     * @date: 2024/5/29 19:36
+     */
+    Date selectMinMonthByYear(@Param("year") int year);
+
+    /**
      * @description: 检查当月是否已经上传数据
      * @author: hong
      * @date: 2024/5/29 19:37
@@ -109,4 +116,6 @@ public interface TechMapper {
     public int deleteTechByTechIds(Long[] techIds);
 
     boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
+
+    boolean checkDataExist();
 }

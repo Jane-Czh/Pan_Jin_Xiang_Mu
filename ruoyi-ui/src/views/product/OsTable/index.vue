@@ -72,27 +72,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['product:OsTable:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['product:OsTable:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['product:OsTable:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['product:OsTable:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -104,16 +104,16 @@
           v-hasPermi="['product:OsTable:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['product:OsTable:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['product:OsTable:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -131,10 +131,10 @@
 <!--      <el-table-column label="主键" align="center" prop="postId" />-->
 <!--      <el-table-column label="序号" align="center" prop="Number" />-->
       <el-table-column label="员工编号" align="center" prop="idNumber" />
-      <el-table-column label="姓名" align="center" prop="Name" />
-      <el-table-column label="性别" align="center" prop="Gender" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="性别" align="center" prop="gender" />
       <el-table-column label="出勤次数" align="center" prop="attendanceSituation" />
-      <el-table-column label="加班时长(单位:小时)" align="center" prop="overtimeDuration" />
+      <el-table-column label="加班时长(单位:分钟)" align="center" prop="overtimeDuration" />
       <el-table-column label="异常情况" align="center" prop="abnormalSituation" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
@@ -270,6 +270,7 @@ export default {
       .catch(error => {
         console.error('There was an error!', error);
       });
+    this.getList();
   },
   /** 查
     /** 查询加班统计列表 */

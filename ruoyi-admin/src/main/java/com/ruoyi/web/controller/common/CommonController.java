@@ -74,10 +74,18 @@ public class CommonController {
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
 
-            // IPAddressUtil.getLocalIPAddress() ==> 获取本机ip地址
-//            String localIPAddress = IPAddressUtil.getLocalIPAddress();
+            // TODO IPAddressUtil.getLocalIPAddress() ==> 获取本机ip地址
+            // String localIPAddress = IPAddressUtil.getLocalIPAddress();
+            // String url = localIPAddress + ":8080" + fileName;
+
+
+            // 原方法
             String url = serverConfig.getUrl() + fileName;
-//            String url = localIPAddress + ":8080" + fileName;
+
+            //手动替换ip为当前机方法
+//            String url = "http://ip:8080" + fileName;
+
+
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
             System.out.println("上传文件的 url=============>" + url);

@@ -217,6 +217,7 @@ public class ProductionClockInFormServiceImpl implements IProductionClockInFormS
 //            productionClockInForm1.setNormalWorkingHours(Normalstartstr);
 //            productionClockInForm1.setNormalClosingTime(enddate);
             result.put(idnumber,productionClockInForm);
+            System.out.println("------------"+result+"-------------");
             count1++;
         }
 
@@ -241,8 +242,6 @@ public class ProductionClockInFormServiceImpl implements IProductionClockInFormS
             Long[] deleteId = new Long[list1.size()];
             while (x < list1.size()){
                 ProductionClockInForm value = list1.get(x);
-
-                if (SplitDate.splitDate(value.getFirstTimeClockingInAtWork())[0] == year&&SplitDate.splitDate(value.getFirstTimeClockingInAtWork())[1] == month)
                     deleteId[x] = value.getPcifId();
                 x++;
             }

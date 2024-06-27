@@ -478,20 +478,24 @@ export default {
       this.nodeFormNames = [];
       //存储相应的下载地址
       this.formHyperLinks = [];
+      console.log("1.1 查询表单文件列表 row=====>", row);
 
       listFormfilemanagement(this.queryParams).then((response) => {
         this.formList = response.rows;
+        console.log("this.formList===>", this.formList);
       });
+
+      
       //对 formList 查找符合type中ids的文件 将其放入 nodeFormNames
       JSON.parse(row.type).forEach((stateId) => {
         let row = this.formList.find(
           (item) =>
-            JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+            JSON.stringify(item.formId) === JSON.stringify(stateId)
         );
         if (row != null) {
           //将匹配的记录的文件名、链接保存 (nodeFileNames )
-          this.nodeFormNames.push(row.fileName);
-          this.formHyperLinks.push(row.filePath);
+          this.nodeFormNames.push(row.formName);
+          this.formHyperLinks.push(row.formPath);
         }
       });
     },

@@ -56,26 +56,26 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['product:Oaform:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          @click="handleUpdate"
-          v-hasPermi="['product:Oaform:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['product:Oaform:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['product:Oaform:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -87,16 +87,16 @@
           v-hasPermi="['product:Oaform:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['product:Oaform:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['product:Oaform:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -137,8 +137,8 @@
 <!--      <el-table-column label="主键" align="center" prop="poafId" />-->
 <!--      <el-table-column label="序号" align="center" prop="Number" />-->
       <el-table-column label="员工编号" align="center" prop="idNumber" />
-      <el-table-column label="姓名" align="center" prop="Name" />
-      <el-table-column label="性别" align="center" prop="Gender" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="性别" align="center" prop="gender" />
       <el-table-column label="申请加班开始时间" align="center" prop="applicationForOvertimeStartTime" width="180">
 
       </el-table-column>
@@ -394,6 +394,7 @@ export default {
 
         // location.reload(); // 调用此方法刷新页面数据
       }, 2000); // 2000毫秒后关闭
+      this.getList();
     },
 
     handleClose(done) {
@@ -418,6 +419,7 @@ export default {
         this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     }
+
   }
 };
 </script>

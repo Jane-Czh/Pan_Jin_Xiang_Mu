@@ -35,7 +35,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
      * @author: hong
      * @date: 2024/4/28 14:25
      **/
-    @PreAuthorize("@ss.hasPermi('supply:order:read')")
+//    @PreAuthorize("@ss.hasPermi('supply:data:read')")
     @PostMapping("/readPurchaseOrderTable")
     @Transactional
     public R<String> readPurchaseOrderTable(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {
@@ -44,7 +44,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
             //将采购订单存入数据库
             supplyIndicatorsPurchaseOrderTableService.readSupplyOrderExcelToDB(multipartFile.getOriginalFilename(), inputStream);
             //计算
-            supplyIndicatorsPurchaseOrderTableService.calculateControlledPurchaseAmountRatio(getUsername());
+            supplyIndicatorsPurchaseOrderTableService.calculateControlledPurchaseAmountRatio("admin");
             return R.ok();
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());

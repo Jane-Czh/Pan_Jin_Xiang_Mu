@@ -205,7 +205,7 @@ export default {
     handleDelete(row) {
       const tapcIds = row.tapcId || this.ids;
       const date = row.naturalYear || this.dates;
-      this.$modal.confirm('是否确认日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData2(tapcIds);
       }).then(() => {
         this.getList();

@@ -41,7 +41,7 @@ export default {
       selectedDate: [],
       endSelectedDate: null,
       pickerOptions: [],
-      
+
       xAxisData: [],
       yAxisData: [],
       option: { id: '', title: '', dataName: '', apiName: '', yDataName: '' }

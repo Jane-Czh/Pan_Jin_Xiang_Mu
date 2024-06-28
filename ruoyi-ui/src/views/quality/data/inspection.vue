@@ -322,7 +322,7 @@ export default {
 
       const yearMonth = year && month ? `${year}-${month}` : '';
 
-      this.$modal.confirm(`是否确认删除日期为"${yearMonth}"的数据？`).then(() => {
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delInspection(qiIds);
       }).then(() => {
         this.getList();
@@ -349,11 +349,16 @@ export default {
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      if (file === undefined) {
-        this.$message.error("请选择文件!");
-        return;
+      const yearAndMonth = this.form3.yearAndMonth;
+      if (file === undefined || yearAndMonth == null) {
+        if (file === undefined) {
+          this.$message.error("请选择文件!");
+          return;
+        } else {
+          this.$message.error("请选择日期!");
+          return;
+        }
       } else {
-        const yearAndMonth = this.form3.yearAndMonth;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
         axios({
@@ -369,11 +374,18 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
+        }).then(response => {
+          // 处理请求成功的情况
+          this.$message.success("上传成功");
+          this.getList();
+        }).catch(error => {
+          // 处理请求失败的情况
+          console.error('上传失败：', error);
+          this.$message.error("上传失败，请重试");
+        }).finally(() => {
+          // 无论成功或失败，都关闭上传面板
+          this.showDialog = false;
         });
-        this.$message.success("上传成功");
-        // setTimeout(() => {
-        //   this.showDialog = false; // 关闭上传面板
-        // }, 20000); // 2000毫秒后关闭
       }
     },
   }

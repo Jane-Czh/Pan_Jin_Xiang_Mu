@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
           placeholder="请选择年月">
         </el-date-picker>
@@ -33,7 +33,7 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120" sortable="custom">
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
@@ -66,7 +66,7 @@
     <!-- 添加或修改十一项管理指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="230px">
-        <el-form-item label="年月" prop="yearAndMonth">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
           </el-date-picker>
@@ -311,7 +311,7 @@ export default {
     handleDelete(row) {
       const emIds = row.emId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delManagement(emIds);
       }).then(() => {
         this.getList();

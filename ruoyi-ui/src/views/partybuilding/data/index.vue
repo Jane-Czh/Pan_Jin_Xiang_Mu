@@ -240,7 +240,7 @@ export default {
 
       const yearMonth = year && month ? `${year}-${month}` : '';
 
-      this.$modal.confirm(`是否确认删除日期为"${yearMonth}"的数据？`).then(() => {
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delData(pbIds);
       }).then(() => {
         this.getList();

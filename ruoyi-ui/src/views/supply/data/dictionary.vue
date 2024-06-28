@@ -59,7 +59,7 @@
     <el-table v-loading="loading" :data="DictionaryList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="SCM_ID" align="center" prop="scmId" /> -->
-      <!-- <el-table-column label="序号" align="center" prop="materialSerialNumber" /> -->
+      <el-table-column label="序号" align="center" prop="materialSerialNumber" />
       <el-table-column label="物料号" align="center" prop="materialNumber" />
       <el-table-column label="物料名称" align="center" prop="materialName" />
       <el-table-column label="集采类别" align="center" prop="centralizedProcurementCategory" />
@@ -249,7 +249,7 @@ export default {
     handleDelete(row) {
       const scmIds = row.scmId || this.ids;
       const name = row.materialNumber || this.names;
-      this.$modal.confirm('是否确认删除物料号为"' + name + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除物料号为"' + name + '"的数据？').then(function () {
         return delDictionary(scmIds);
       }).then(() => {
         this.getList();
@@ -294,11 +294,18 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
+        }).then(response => {
+          // 处理请求成功的情况
+          this.$message.success("上传成功");
+          this.getList();
+        }).catch(error => {
+          // 处理请求失败的情况
+          console.error('上传失败：', error);
+          this.$message.error("上传失败，请重试");
+        }).finally(() => {
+          // 无论成功或失败，都关闭上传面板
+          this.showDialog = false;
         });
-        this.$message.success("上传成功");
-        setTimeout(() => {
-          this.showDialog = false; // 关闭上传面板
-        }, 2000); // 2000毫秒后关闭
       }
     },
   }

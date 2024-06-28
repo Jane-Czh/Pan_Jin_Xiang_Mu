@@ -215,7 +215,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData(ids);
       }).then(() => {
         this.getList();

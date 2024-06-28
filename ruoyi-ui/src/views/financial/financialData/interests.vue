@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <!-- 利润表 -->
       <el-form-item label="日期" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
@@ -67,18 +67,18 @@
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="集团内主营业务收入" align="center" prop="internalMainrevenue" width="140" />
-      <el-table-column label="集团外主营业务收入" align="center" prop="externalMainrevenue" width="140" />
-      <el-table-column label="主营业务收入" align="center" prop="MainRevenue" />
-      <el-table-column label="主营业务成本-产品销售SD" align="center" prop="cogsProductsalesSd" width="180" />
+      <el-table-column label="集团内主营业务收入" align="center" prop="internalMainRevenue" width="140" />
+      <el-table-column label="集团外主营业务收入" align="center" prop="externalMainRevenue" width="140" />
+      <el-table-column label="主营业务收入" align="center" prop="mainRevenue" />
+      <el-table-column label="主营业务成本-产品销售SD" align="center" prop="cogsProductSalesSd" width="180" />
       <el-table-column label="主营业务成本-运费" align="center" prop="cogsFreight" width="170" />
       <el-table-column label="主营业务成本-运费变化" align="center" prop="cogsVariation" width="190" />
-      <el-table-column label="主营业务成本" align="center" prop="COGS" />
-      <el-table-column label="净利润" align="center" prop="NetProfit" />
-      <el-table-column label="管理费用" align="center" prop="ManagementExpense" />
+      <el-table-column label="主营业务成本" align="center" prop="cogs" />
+      <el-table-column label="净利润" align="center" prop="netProfit" />
+      <el-table-column label="管理费用" align="center" prop="managementExpense" />
       <el-table-column label="研发费用" align="center" prop="rdExpense" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -97,21 +97,21 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="集团内主营业务收入" prop="internalMainrevenue">
-          <el-input v-model="form.internalMainrevenue" placeholder="请输入集团内主营业务收入" />
+        <el-form-item label="集团内主营业务收入" prop="internalMainRevenue">
+          <el-input v-model="form.internalMainRevenue" placeholder="请输入集团内主营业务收入" />
         </el-form-item>
-        <el-form-item label="集团外主营业务收入" prop="externalMainrevenue">
-          <el-input v-model="form.externalMainrevenue" placeholder="请输入集团外主营业务收入" />
+        <el-form-item label="集团外主营业务收入" prop="externalMainRevenue">
+          <el-input v-model="form.externalMainRevenue" placeholder="请输入集团外主营业务收入" />
         </el-form-item>
-        <el-form-item label="主营业务收入" prop="MainRevenue">
-          <el-input v-model="form.MainRevenue" placeholder="请输入主营业务收入" />
+        <el-form-item label="主营业务收入" prop="mainRevenue">
+          <el-input v-model="form.mainRevenue" placeholder="请输入主营业务收入" />
         </el-form-item>
-        <el-form-item label="主营业务成本-产品销售SD" prop="cogsProductsalesSd">
-          <el-input v-model="form.cogsProductsalesSd" placeholder="请输入主营业务成本-产品销售SD" />
+        <el-form-item label="主营业务成本-产品销售SD" prop="cogsProductSalesSd">
+          <el-input v-model="form.cogsProductSalesSd" placeholder="请输入主营业务成本-产品销售SD" />
         </el-form-item>
         <el-form-item label="主营业务成本-运费" prop="cogsFreight">
           <el-input v-model="form.cogsFreight" placeholder="请输入主营业务成本-运费" />
@@ -119,14 +119,14 @@
         <el-form-item label="主营业务成本-运费变化" prop="cogsVariation">
           <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-运费变化" />
         </el-form-item>
-        <el-form-item label="主营业务成本" prop="COGS">
-          <el-input v-model="form.COGS" placeholder="请输入主营业务成本" />
+        <el-form-item label="主营业务成本" prop="cogs">
+          <el-input v-model="form.cogs" placeholder="请输入主营业务成本" />
         </el-form-item>
-        <el-form-item label="净利润" prop="NetProfit">
-          <el-input v-model="form.NetProfit" placeholder="请输入净利润" />
+        <el-form-item label="净利润" prop="netProfit">
+          <el-input v-model="form.netProfit" placeholder="请输入净利润" />
         </el-form-item>
-        <el-form-item label="管理费用" prop="ManagementExpense">
-          <el-input v-model="form.ManagementExpense" placeholder="请输入管理费用" />
+        <el-form-item label="管理费用" prop="managementExpense">
+          <el-input v-model="form.managementExpense" placeholder="请输入管理费用" />
         </el-form-item>
         <el-form-item label="研发费用" prop="rdExpense">
           <el-input v-model="form.rdExpense" placeholder="请输入研发费用" />
@@ -181,15 +181,15 @@ export default {
         createdBy: null,
         createdTime: null,
         yearAndMonth: null,
-        internalMainrevenue: null,
-        externalMainrevenue: null,
-        MainRevenue: null,
-        cogsProductsalesSd: null,
+        internalMainRevenue: null,
+        externalMainRevenue: null,
+        mainRevenue: null,
+        cogsProductSalesSd: null,
         cogsFreight: null,
         cogsVariation: null,
-        COGS: null,
-        NetProfit: null,
-        ManagementExpense: null,
+        cogs: null,
+        netProfit: null,
+        managementExpense: null,
         rdExpense: null
       },
       // 表单参数
@@ -204,16 +204,16 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
-        internalMainrevenue: [
+        internalMainRevenue: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        externalMainrevenue: [
+        externalMainRevenue: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        MainRevenue: [
+        mainRevenue: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        cogsProductsalesSd: [
+        cogsProductSalesSd: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
         cogsFreight: [
@@ -222,13 +222,13 @@ export default {
         cogsVariation: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        COGS: [
+        cogs: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        NetProfit: [
+        netProfit: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        ManagementExpense: [
+        managementExpense: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
         rdExpense: [
@@ -269,15 +269,15 @@ export default {
         createdBy: null,
         createdTime: null,
         yearAndMonth: null,
-        internalMainrevenue: null,
-        externalMainrevenue: null,
-        MainRevenue: null,
-        cogsProductsalesSd: null,
+        internalMainRevenue: null,
+        externalMainRevenue: null,
+        mainRevenue: null,
+        cogsProductSalesSd: null,
         cogsFreight: null,
         cogsVariation: null,
-        COGS: null,
-        NetProfit: null,
-        ManagementExpense: null,
+        cogs: null,
+        netProfit: null,
+        managementExpense: null,
         rdExpense: null
       };
       this.resetForm("form");
@@ -339,7 +339,14 @@ export default {
     handleDelete(row) {
       const fiIds = row.fiId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delInterests(fiIds);
       }).then(() => {
         this.getList();
@@ -365,11 +372,16 @@ export default {
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      if (file === undefined) {
-        this.$message.error("请选择文件!");
-        return;
+      const yearAndMonth = this.form3.yearAndMonth;
+      if (file === undefined || yearAndMonth == null) {
+        if (file === undefined) {
+          this.$message.error("请选择文件!");
+          return;
+        } else {
+          this.$message.error("请选择日期!");
+          return;
+        }
       } else {
-        const yearAndMonth = this.form3.yearAndMonth;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
         axios({
@@ -389,11 +401,18 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
+        }).then(response => {
+          // 处理请求成功的情况
+          this.$message.success("上传成功");
+          this.getList();
+        }).catch(error => {
+          // 处理请求失败的情况
+          console.error('上传失败：', error);
+          this.$message.error("上传失败，请重试");
+        }).finally(() => {
+          // 无论成功或失败，都关闭上传面板
+          this.showDialog = false;
         });
-        this.$message.success("上传成功");
-        setTimeout(() => {
-          this.showDialog = false; // 关闭上传面板
-        }, 2000); // 2000毫秒后关闭
       }
     },
     // // 导入excel，检查文件类型

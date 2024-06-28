@@ -33,8 +33,8 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '47', icon: 'el-icon-s-data', title: '非标订单平均技术准备天数', content: '企业主要营业产品财务收入', path: '/tech/indicators47' },
-        { id: '71', icon: 'el-icon-s-data', title: '研发项目计划进度完成率', content: '企业主要营业产品财务收入', path: '/tech/indicators71' },
+        { id: '47', icon: 'el-icon-s-data', title: '非标订单平均技术准备天数', content: '非标订单平均技术准备天数', path: '/tech/indicators47' },
+        { id: '71', icon: 'el-icon-s-data', title: '研发项目计划进度完成率', content: '研发项目计划进度完成率', path: '/tech/indicators71' },
       ],
 
       formData: {},

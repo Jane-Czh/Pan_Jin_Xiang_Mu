@@ -173,7 +173,8 @@
 
 <script>
 import { listBalance, getBalance, delBalance, addBalance, updateBalance } from "@/api/financial/balance";
-import axios from "axios";
+
+import { uploadFile } from '@/api/financial/excelImport';
 
 export default {
   name: "Balance",
@@ -443,31 +444,23 @@ export default {
       } else {
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("BalanceFile", file);
-        axios({
-          method: "post",
-          url: "http://localhost:8080/financial/data/balance/import",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        }).then(response => {
-          // 处理请求成功的情况
-          this.$message.success("上传成功");
-          this.getList();
-        }).catch(error => {
-          // 处理请求失败的情况
-          console.error('上传失败：', error);
-          this.$message.error("上传失败，请重试");
-        }).finally(() => {
-          // 无论成功或失败，都关闭上传面板
-          this.showDialog = false;
-        });
+        const aimUrl = `/financial/data/balance/import`
+        uploadFile(formData, aimUrl)
+          .then(data => {
+            // 处理上传成功的情况
+            this.$message.success("上传成功");
+            this.getList();
+          })
+          .catch(error => {
+            // 处理上传失败的情况
+            console.error('上传失败：', error);
+            this.$message.error("上传失败，请重试");
+          })
+          .finally(() => {
+            // 无论成功或失败，都关闭上传面板
+            this.showDialog = false;
+          });
+
       }
     },
   }

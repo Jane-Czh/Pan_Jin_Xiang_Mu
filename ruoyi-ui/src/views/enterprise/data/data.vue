@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -96,7 +96,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="一线从业人数" prop="employeesNumber">

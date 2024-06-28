@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <!-- 资产负债表 -->
       <el-form-item label="日期" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
@@ -70,7 +70,7 @@
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="在途物资" align="center" prop="inTransitInventory" />
@@ -86,7 +86,8 @@
       <el-table-column label="产品成本差异-产成品" align="center" prop="pcvFinished" width="160" />
       <el-table-column label="当月库存商品存货额" align="center" prop="monthAmountInStock" width="160" />
       <el-table-column label="月度存货总金额" align="center" prop="monthlyInventoryTotalAmount" width="120" />
-      <el-table-column label="存货增长率/销售增长率" align="center" prop="growthRateInventorySales" width="160" />
+      <el-table-column label="存货增长率" align="center" prop="growthRateInventory" width="160" />
+      <el-table-column label="销售增长率" align="center" prop="growthRateSales" width="160" />
       <el-table-column label="应收账款" align="center" prop="receivables" width="120" />
       <el-table-column label="应收帐款周转率" align="center" prop="turnoverRateReceivable" width="120" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -106,7 +107,7 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
@@ -149,8 +150,11 @@
         <el-form-item label="月度存货总金额" prop="monthlyInventoryTotalAmount">
           <el-input v-model="form.monthlyInventoryTotalAmount" placeholder="请输入月度存货总金额" />
         </el-form-item>
-        <el-form-item label="存货增长率/销售增长率" prop="growthRateInventorySales">
-          <el-input v-model="form.growthRateInventorySales" placeholder="请输入存货增长率/销售增长率" />
+        <el-form-item label="存货增长率" prop="growthRateInventory">
+          <el-input v-model="form.growthRateInventory" placeholder="请输入存货增长率/销售增长率" />
+        </el-form-item>
+        <el-form-item label="销售增长率" prop="growthRateSales">
+          <el-input v-model="form.growthRateSales" placeholder="请输入存货增长率/销售增长率" />
         </el-form-item>
         <el-form-item label="应收账款" prop="receivables">
           <el-input v-model="form.receivables" placeholder="请输入应收账款" />
@@ -221,7 +225,8 @@ export default {
         pcvFinished: null,
         monthAmountInStock: null,
         monthlyInventoryTotalAmount: null,
-        growthRateInventorySales: null,
+        growthRateInventory: null,
+        growthRateSales: null,
         receivables: null,
         turnoverRateReceivable: null
       },
@@ -268,7 +273,10 @@ export default {
         monthlyInventoryTotalAmount: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        growthRateInventorySales: [
+        growthRateInventory: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        growthRateSales: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
         receivables: [
@@ -299,7 +307,6 @@ export default {
         this.balanceList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮
@@ -327,7 +334,8 @@ export default {
         pcvFinished: null,
         monthAmountInStock: null,
         monthlyInventoryTotalAmount: null,
-        growthRateInventorySales: null,
+        growthRateInventory: null,
+        growthRateSales: null,
         receivables: null,
         turnoverRateReceivable: null
       };
@@ -390,7 +398,14 @@ export default {
     handleDelete(row) {
       const fbIds = row.fbId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delBalance(fbIds);
       }).then(() => {
         this.getList();
@@ -416,11 +431,16 @@ export default {
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      if (file === undefined) {
-        this.$message.error("请选择文件!");
-        return;
+      const yearAndMonth = this.form3.yearAndMonth;
+      if (file === undefined || yearAndMonth == null) {
+        if (file === undefined) {
+          this.$message.error("请选择文件!");
+          return;
+        } else {
+          this.$message.error("请选择日期!");
+          return;
+        }
       } else {
-        const yearAndMonth = this.form3.yearAndMonth;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("BalanceFile", file);
         axios({
@@ -436,11 +456,18 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
+        }).then(response => {
+          // 处理请求成功的情况
+          this.$message.success("上传成功");
+          this.getList();
+        }).catch(error => {
+          // 处理请求失败的情况
+          console.error('上传失败：', error);
+          this.$message.error("上传失败，请重试");
+        }).finally(() => {
+          // 无论成功或失败，都关闭上传面板
+          this.showDialog = false;
         });
-        this.$message.success("上传成功");
-        setTimeout(() => {
-          this.showDialog = false; // 关闭上传面板
-        }, 2000); // 2000毫秒后关闭
       }
     },
   }

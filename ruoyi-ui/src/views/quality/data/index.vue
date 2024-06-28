@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
@@ -40,7 +40,7 @@
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="外部质量损失金额" align="center" prop="moleculeExternalMassLossRate" />
@@ -68,7 +68,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
@@ -272,7 +272,14 @@ export default {
     handleDelete(row) {
       const qihfIds = row.qihfId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delHandFill(qihfIds);
       }).then(() => {
         this.getList();
@@ -280,23 +287,8 @@ export default {
       }).catch(() => { });
     },
     /** 更新按钮操作 */
-    // TODO 未完成
     handleUpdateList() {
-      updateList()
-        .then(response => {
-          if (response.code === 500) {
-            const errorMsg = response.data;
-            // 处理错误信息
-            this.$modal.msgError(errorMsg);
-          } else {
-            this.getList();
-            this.$modal.msgSuccess("更新成功");
-          }
-        })
-        .catch(error => {
-          console.error("更新失败", error);
-          this.$modal.msgError("更新失败");
-        });
+      this.getList()
     }
   }
 };

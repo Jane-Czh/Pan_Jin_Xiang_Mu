@@ -15,6 +15,9 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface EnterpriseManagementMonthlyDataMapper {
 
+    int selectCountEmployeesNumberByYear(@Param("yearAndMonth") Date yearAndMonth);
+    int selectCountMonthsByYear(@Param("yearAndMonth") Date yearAndMonth);
+
 
     Boolean checkEMEmployeesDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
     Long selectEmployeesNumberByMonth(@Param("yearAndMonth") Date yearAndMonth);

@@ -79,6 +79,23 @@
         WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
     </select>
 
+    <!--  查询当年累计发放工资的次数  -->
+    <select id="selectCountEmployeesNumberByYear" parameterType="date" resultType="int">
+        select count(*)
+        from Enterprise_Management_Salary_Table
+        where YEAR(Salary_Calculation_Year_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!--  查询当年已上传月数  -->
+    <select id="selectCountMonthsByYear" parameterType="date" resultType="int">
+        SELECT COUNT(*)
+        FROM(
+                SELECT count( * ) FROM Enterprise_Management_Salary_Table
+                WHERE YEAR ( Salary_Calculation_Year_Month ) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+                GROUP BY Salary_Calculation_Year_Month
+            ) groups;
+    </select>
+
     <!-- 计算数据员工人数，存入数据库 -->
     <update id="updateCalculateMonthlyDataByMonth" parameterType="EnterpriseManagementMonthlyData">
         update Enterprise_Management_Indicators_Monthly_Data

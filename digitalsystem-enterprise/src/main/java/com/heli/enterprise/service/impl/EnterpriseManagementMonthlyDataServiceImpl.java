@@ -90,7 +90,11 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         monthlyData.setYearAndMonth(date);
         // 计算累计人均收入
         BigDecimal allIncome = enterpriseManagementMonthlyDataMapper.selectAnnualAllIncome(date);
-        monthlyData.setCumulativeAverageIncome(allIncome.divide(BigDecimal.valueOf(DateUtils.getMonth(date)), 2, ROUND_HALF_UP));
+        int countEmployeesNumberByYear = enterpriseManagementMonthlyDataMapper.selectCountEmployeesNumberByYear(date);
+        int monthsByYear = enterpriseManagementMonthlyDataMapper.selectCountMonthsByYear(date);
+        log.info("当年工资总额"+allIncome +"年度总人工数");
+        monthlyData.setCumulativeAverageIncome(allIncome.divide(BigDecimal.valueOf(countEmployeesNumberByYear), 2, ROUND_HALF_UP)
+                .divide(BigDecimal.valueOf(monthsByYear), 2, ROUND_HALF_UP));
         System.out.println("当前月份："+BigDecimal.valueOf(DateUtils.getMonth(date)));
 
         // 当月生产人均收入

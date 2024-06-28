@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
@@ -71,7 +71,7 @@
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="当月反馈新车病车数" align="center" prop="newCarDefects" />
@@ -97,7 +97,7 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
@@ -303,7 +303,7 @@ export default {
     handleDelete(row) {
       const qcIds = row.qcId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delMetrics(qcIds);
       }).then(() => {
         this.getList();
@@ -331,11 +331,16 @@ export default {
 
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      if (file === undefined) {
-        this.$message.error("请选择文件!");
-        return;
+      const yearAndMonth = this.form3.yearAndMonth;
+      if (file === undefined || yearAndMonth == null) {
+        if (file === undefined) {
+          this.$message.error("请选择文件!");
+          return;
+        } else {
+          this.$message.error("请选择日期!");
+          return;
+        }
       } else {
-        const yearAndMonth = this.form3.yearAndMonth;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         axios({
@@ -351,11 +356,18 @@ export default {
               (progressEvent.loaded * 100) / progressEvent.total
             );
           },
+        }).then(response => {
+          // 处理请求成功的情况
+          this.$message.success("上传成功");
+          this.getList();
+        }).catch(error => {
+          // 处理请求失败的情况
+          console.error('上传失败：', error);
+          this.$message.error("上传失败，请重试");
+        }).finally(() => {
+          // 无论成功或失败，都关闭上传面板
+          this.showDialog = false;
         });
-        this.$message.success("上传成功");
-        setTimeout(() => {
-          this.showDialog = false; // 关闭上传面板
-        }, 2000); // 2000毫秒后关闭
       }
     },
   }

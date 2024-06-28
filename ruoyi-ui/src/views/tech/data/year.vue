@@ -51,7 +51,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="年份" prop="naturalYear">
-          <el-input v-model="form.naturalYear" placeholder="请输入自然年" />
+          <el-input v-model="form.naturalYear" placeholder="请输入年份" />
         </el-form-item>
         <el-form-item label="年度计划总数" prop="annualPlancounts">
           <el-input v-model="form.annualPlancounts" placeholder="请输入年度计划总数" />
@@ -205,7 +205,7 @@ export default {
     handleDelete(row) {
       const tapcIds = row.tapcId || this.ids;
       const date = row.naturalYear || this.dates;
-      this.$modal.confirm('是否确认日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData2(tapcIds);
       }).then(() => {
         this.getList();

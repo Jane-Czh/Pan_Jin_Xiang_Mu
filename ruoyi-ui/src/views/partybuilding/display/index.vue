@@ -33,7 +33,7 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '50', icon: 'el-icon-s-data', title: '党建月度考核排名', content: '企业主要营业产品财务收入', path: '/partybuilding/indicators50' },
+        { id: '50', icon: 'el-icon-s-data', title: '党建月度考核排名', content: '党建月度考核排名', path: '/partybuilding/indicators50' },
       ],
 
       formData: {},

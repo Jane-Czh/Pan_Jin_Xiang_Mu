@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -63,14 +63,14 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="esId" /> -->
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180" sortable="custom">
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" />
       <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" />
-      <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgAnnualNumber" />
+      <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
       <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" />
       <el-table-column label="工资总额月度占比" align="center" prop="monthlySalaryRatio" />
       <el-table-column label="工资总额年度占比" align="center" prop="annualSalaryRatio" />
@@ -96,7 +96,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="一线从业人数" prop="employeesNumber">
@@ -105,8 +105,8 @@
         <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
           <el-input v-model="form.employeesAvgMonthlyNumber" placeholder="请输入公司平均从业人数" />
         </el-form-item>
-        <el-form-item label="公司平均从业人数(年度)" prop="employeesAvgAnnualNumber">
-          <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司平均从业人数" />
+        <el-form-item label="公司年度平均从业人数" prop="employeesAvgAnnualNumber">
+          <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司年度平均从业人数" />
         </el-form-item>
         <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
           <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
@@ -141,7 +141,7 @@
 
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
-import axios from "axios";
+import { uploadFile } from '@/api/financial/excelImport';
 
 export default {
   name: "Data",
@@ -346,7 +346,12 @@ export default {
     handleDelete(row) {
       const esIds = row.esId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+      const yearMonth = year && month ? `${year}-${month}` : '';
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delMonthData(esIds);
       }).then(() => {
         this.getList();
@@ -386,31 +391,22 @@ export default {
       } else {
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
-        axios({
-          method: "post",
-          url: "http://localhost:8080/enterprise/data/salary",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        }).then(response => {
-          // 处理请求成功的情况
-          this.$message.success("上传成功");
-          this.getList();
-        }).catch(error => {
-          // 处理请求失败的情况
-          console.error('上传失败：', error);
-          this.$message.error("上传失败，请重试");
-        }).finally(() => {
-          // 无论成功或失败，都关闭上传面板
-          this.showDialog = false;
-        });
+        const aimUrl = `/enterprise/data/salary`
+        uploadFile(formData, aimUrl)
+          .then(data => {
+            // 处理上传成功的情况
+            this.$message.success("上传成功");
+            this.getList();
+          })
+          .catch(error => {
+            // 处理上传失败的情况
+            console.error('上传失败：', error);
+            this.$message.error("上传失败，请重试");
+          })
+          .finally(() => {
+            // 无论成功或失败，都关闭上传面板
+            this.showDialog = false;
+          });
       }
     },
   }

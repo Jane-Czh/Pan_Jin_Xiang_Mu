@@ -1,7 +1,8 @@
 <template>
   <el-col :span="1.5">
     <!--Excel 参数导入 -->
-    <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true">导入Excel
+    <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true"
+      :v-hasPermi="purview">导入Excel
     </el-button>
 
     <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
@@ -30,15 +31,13 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 
 export default {
   props: {
     name: { type: String, default: null },
     url: { type: String, default: null },
-    // dataName: { type: String, default: '金额' },
-    // xAxisData: { type: Array, default: () => [] },
-    // yAxisData: { type: Array, default: () => [] },
+    purview: { type: Array, default: () => [] },
   },
   data() {
     return {
@@ -58,7 +57,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
         this.$refs.fileInput.value = ""; // 清空文件选择框
       }

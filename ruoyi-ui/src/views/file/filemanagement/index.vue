@@ -45,14 +45,14 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件路径" prop="filePath">
-              <el-input
-                v-model="queryParams.filePath"
-                placeholder="请输入文件路径"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="文件路径" prop="filePath">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.filePath"-->
+<!--                placeholder="请输入文件路径"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="文件类型" prop="fileType">
               <el-input
                 v-model="queryParams.fileType"
@@ -61,14 +61,14 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件大小" prop="fileSize">
-              <el-input
-                v-model="queryParams.fileSize"
-                placeholder="请输入文件大小"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="文件大小" prop="fileSize">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.fileSize"-->
+<!--                placeholder="请输入文件大小"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="制度创建日期" prop="createDate">
               <el-date-picker clearable
                               v-model="queryParams.createDate"
@@ -101,38 +101,38 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="制度标签名称" prop="fileTag">
-              <el-input
-                v-model="queryParams.fileTag"
-                placeholder="请输入制度标签名称"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="历史版本制度" prop="oldRegulationsId">
-              <el-input
-                v-model="queryParams.oldRegulationsId"
-                placeholder="请输入历史版本制度"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="修订时间" prop="revisionDate">
-              <el-date-picker clearable
-                              v-model="queryParams.revisionDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择修订时间">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="修订人" prop="reviser">
-              <el-input
-                v-model="queryParams.reviser"
-                placeholder="请输入修订人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="制度标签名称" prop="fileTag">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.fileTag"-->
+<!--                placeholder="请输入制度标签名称"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.oldRegulationsId"-->
+<!--                placeholder="请输入历史版本制度"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订时间" prop="revisionDate">-->
+<!--              <el-date-picker clearable-->
+<!--                              v-model="queryParams.revisionDate"-->
+<!--                              type="date"-->
+<!--                              value-format="yyyy-MM-dd"-->
+<!--                              placeholder="请选择修订时间">-->
+<!--              </el-date-picker>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订人" prop="reviser">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.reviser"-->
+<!--                placeholder="请输入修订人"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -289,15 +289,13 @@
                 class="upload-file-uploader"
                 :action="uploadFileUrl"
                 :headers="headers"
-
+                :before-upload="handleBeforeUpload"
                 :on-change="handleFileChange"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
-                :before-remove="beforeRemove"
                 :on-exceed="handleExceed"
                 :on-success="handleUploadSuccess"
-                multiple
-                :limit="3"
+                :limit=limit
                 :file-list="fileList"
               >
                 <el-button size="small" type="primary">点击上传</el-button>
@@ -369,14 +367,13 @@
           class="update-file-uploader"
           :action="uploadFileUrl"
           :headers="headers"
+          :before-upload="handleBeforeUpload"
           :on-change="handleFileChange"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
-          :before-remove="beforeRemove"
           :on-exceed="handleExceed"
-          :on-success="handleUpdateSuccess"
-          multiple
-          :limit="3"
+          :on-success="handleUploadSuccess"
+          :limit=limit
           :file-list="fileList"
         >
           <el-button size="small" type="primary">点击上传</el-button>
@@ -459,9 +456,30 @@
   import {getDept} from '@/api/system/dept'
   import {getToken} from "@/utils/auth"
   import {word2Pdf} from "../../../api/file/filemanagement";
+  import mammoth from 'mammoth';
+  // import pdfjsLib from 'pdfjs-dist';
 
   export default {
     name: "Filemanagement",
+    props: {
+      value: [String, Object, Array],
+      limit: {
+        type: Number,
+        default: 1,
+      },
+      fileSize: {
+        type: Number,
+        default: 5,
+      },
+      fileType: {
+        type: Array,
+        default: () => ["doc", "docx", "pdf"],
+      },
+      isShowTip: {
+        type: Boolean,
+        default: true,
+      },
+    },
     data() {
       return {
         activeNames: [], // 默认展开的折叠项的名字
@@ -510,6 +528,7 @@
           filePath: null,
           fileType: null,
           fileSize: null,
+          fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
@@ -533,6 +552,7 @@
           filePath: null,
           fileType: null,
           fileSize: null,
+          fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
@@ -623,10 +643,17 @@
     created() {
       this.getList();
     },
+    // 路由钩子，每次进入该路由时都会调用getList方法
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.getList(); // 在路由导航完成后调用getList
+      });
+    },
     methods: {
       /** 查询文件管理列表 */
       getList() {
         this.loading = true;
+        console.log("刷新页面");
         listFilemanagement(this.queryParams).then(response => {
           console.log("response:：",response);
           this.filemanagementList = response.rows;
@@ -639,6 +666,7 @@
       uploadCancel() {
         this.fileUploadDialogVisible = false;
         this.reset();
+        this.fileList = [];
       },
       // 文件修改取消按钮
       modifyCancel() {
@@ -649,6 +677,7 @@
       updateCancel() {
         this.fileUpdateDialogVisible = false;
         this.reset();
+        this.fileList = [];
       },
       // 表单重置
       reset() {
@@ -742,6 +771,7 @@
               });
           }
         });
+        this.fileList = [];
       },
       /** 修改文件提交按钮 */
       modifySubmitForm() {
@@ -777,42 +807,67 @@
                   lastForm.newRegulationsId = newId;
                   console.log("上一表单=>",lastForm);
                   updateFilemanagement(lastForm).then(response => {
+                    this.getList();
                   });
-                  // updateFilemanagement(this.form).then(response => {
-                  // });
                 });
-                this.getList();
+                // this.getList();
                 console.log("更新文件提交按钮1=>",this.form);
                 console.log("response=>",response);
               });
-              this.getList();
             }
           }
         });
+        this.fileList = [];
       },
       /** 删除按钮操作 */
       handleDelete(row) {
         console.log("当前表单1=>",row);
-        const regulationsIds = row.regulationsId || this.ids;
-        this.$modal.confirm('是否确认删除制度文件编号为"' + regulationsIds + '"的数据项？').then(function () {
-          return delFilemanagement(regulationsIds);
-        }).then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {
-        });
-        if(row.oldRegulationsId != null) {
-          getFilemanagement(row.oldRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
-            const lastForm = response.data;
-            console.log("上一表单=>",lastForm);
-            lastForm.newFlag = 1;
-            console.log("上一表单=>",lastForm);
-            updateFilemanagement(lastForm).then(response => {
+        //将id或ids统一转换为数组
+        const regulationsIds = [].concat(row.regulationsId || this.ids);
+        // const regulationsIds = row.regulationsId || this.ids;
+        console.log("regulationsIds=>",regulationsIds);
+        this.$modal.confirm('是否确认删除？').then(function () {
+          regulationsIds.forEach(id => {
+            console.log("Processing ID:", id);
+            getFilemanagement(id).then(response => {
+              const thisForm = response.data;
+              console.log("response------>:", response);
+              if(thisForm.oldRegulationsId != null) {
+                getFilemanagement(thisForm.oldRegulationsId).then(response => {
+                  const lastForm = response.data;
+                  console.log("上一表单=>",lastForm);
+                  lastForm.newFlag = 1;
+                  console.log("上一表单=>",lastForm);
+                  updateFilemanagement(lastForm).then(response => {
+                  });
+                });
+              }
             });
           });
+          return delFilemanagement(regulationsIds);
+        }).then(() => {
+          this.$modal.msgSuccess("删除成功");
           this.getList();
-        }
+          console.log("删除文件刷新");
+        }).then(() => {
+          this.getList();
+          console.log("删除文件刷新2");
+        }).catch(() => {
+        });
+
+
+        // if(row.oldRegulationsId != null) {
+        //   getFilemanagement(row.oldRegulationsId).then(response => {
+        //     console.log("当前表单3=>",this.form);
+        //     const lastForm = response.data;
+        //     console.log("上一表单=>",lastForm);
+        //     lastForm.newFlag = 1;
+        //     console.log("上一表单=>",lastForm);
+        //     updateFilemanagement(lastForm).then(response => {
+        //     });
+        //   });
+        //   this.getList();
+        // }
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -822,45 +877,103 @@
       },
       // 上传前校检格式和大小
       handleBeforeUpload(file) {
-        // 校检文件类型
-        if (this.fileType) {
-          const fileName = file.name.split('.');
-          const fileExt = fileName[fileName.length - 1];
-          const isTypeOk = this.fileType.indexOf(fileExt) >= 0;
-          if (!isTypeOk) {
-            this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}格式文件!`);
-            return false;
-          }
+        console.log("handleBeforeUpload:file=====>",file);
+        // 上传前校检文件格式
+        const allowedTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
+        const isAllowedType = allowedTypes.includes(file.type);
+        if (!isAllowedType) {
+          this.$message.error('文件类型不匹配，请重新上传word或pdf文件');
         }
-        // 校检文件大小
-        if (this.fileSize) {
-          const isLt = file.size / 1024 / 1024 < this.fileSize;
-          if (!isLt) {
-            this.$modal.msgError(`上传文件大小不能超过 ${this.fileSize} MB!`);
-            return false;
-          }
-        }
-        // this.$modal.loading("正在上传文件，请稍候...");
-        this.number++;
-        return true;
+        return isAllowedType;
       },
       /** 上传文件时的动作*/
       handleFileChange(file, fileList) {
+        console.log("file====>",file);
+        console.log("fileList====>",fileList);
         console.log(this.filemanagementList);
+
+
         const uploadedFile = file.raw; // 获取上传的文件对象
+
+        // // 使用 FileReader 读取文件内容
+        // const reader = new FileReader();
+        // reader.onload = (e) => {
+        //   this.form.fileContent = e.target.result; // 将文件内容赋值给 fileContent
+        //   console.log("fileContent=======>", this.form.fileContent);
+        //   // 在这里你可以调用 getUserInfo 或者其他需要在读取文件后执行的操作
+        //   // this.getUserInfo();
+        // };
+        // reader.readAsText(uploadedFile, 'UTF-8'); // 读取文件内容为字符串，指定UTF-8编码
+
+
         // 将文件名填充到对应的输入框
         this.form.fileName = uploadedFile.name;
         //将文件路径填充到对应的输入框
         this.form.filePath = this.path;
+        console.log("filePath=======>", this.form.filePath);
         // 将文件类型填充到对应的输入框
         this.form.fileType = this.getFileType(this.form.filePath);
+        console.log("fileType=======>", this.form.fileType);
         // 将文件大小填充到对应的输入框
         // this.form.fileSize = this.formatFileSize(uploadedFile.size);
         this.form.fileSize = uploadedFile.size;
         // 获取当前时间作为上传日期，并填充到对应的输入框
         const currentDate = new Date();
         this.form.uploadDate = currentDate.toISOString().split('T')[0];
+        if (this.form.fileType === 'word') {
+          this.readWordFile(uploadedFile);
+        } else if (this.form.fileType === 'pdf') {
+          this.readPdfFile(uploadedFile);
+        }
         this.getUserInfo();
+      },
+      readWordFile(file) {
+        console.log("readWordFile=======>");
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          mammoth.extractRawText({arrayBuffer: e.target.result})
+            .then((result) => {
+              this.form.fileContent = result.value; // 将文件内容赋值给 fileContent
+              console.log("fileContent=======>", this.form.fileContent);
+              this.getUserInfo();
+            })
+            .catch((err) => {
+              console.error('Error reading Word file:', err);
+            });
+        };
+        reader.readAsArrayBuffer(file); // 读取文件内容为 ArrayBuffer
+      },
+
+      readPdfFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const typedArray = new Uint8Array(e.target.result);
+          pdfjsLib.getDocument({ data: typedArray }).promise.then((pdf) => {
+            let content = '';
+            const numPages = pdf.numPages;
+
+            const extractTextFromPage = (pageNum) => {
+              return pdf.getPage(pageNum).then((page) => {
+                return page.getTextContent().then((textContent) => {
+                  const pageText = textContent.items.map(item => item.str).join(' ');
+                  content += pageText + ' ';
+                  if (pageNum < numPages) {
+                    return extractTextFromPage(pageNum + 1);
+                  } else {
+                    this.form.fileContent = content.trim();
+                    console.log("fileContent=======>", this.form.fileContent);
+                    this.getUserInfo();
+                  }
+                });
+              });
+            };
+
+            return extractTextFromPage(1);
+          }).catch((err) => {
+            console.error('Error reading PDF file:', err);
+          });
+        };
+        reader.readAsArrayBuffer(file); // 读取文件内容为 ArrayBuffer
       },
       // 上传成功回调
       handleUploadSuccess(res, file) {
@@ -923,11 +1036,11 @@
         console.log(file);
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 1 个文件`);
       },
-      beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${file.name}？`);
-      },
+      // beforeRemove(file, fileList) {
+      //   return this.$confirm(`确定移除 ${file.name}？`);
+      // },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {
         const KB = 1024;
@@ -1010,9 +1123,11 @@
             const pdfFilePath = this.convertToPdfPath(filePath);
             console.log("filePath:",filePath);
             console.log("pdfFilePath:",pdfFilePath);
-            // word2Pdf(filePath,pdfFilePath).then(response => {
-            // })
-            window.open(pdfFilePath, '_blank');
+            word2Pdf(filePath,pdfFilePath).then(response => {
+              window.open(pdfFilePath, '_blank');
+            })
+//http://172.19.4.28:81/file/172.19.4.28:8080/profile/upload/2024/06/27/%E6%96%87%E4%BB%B64_20240627173517A010.pdf
+            //http://172.19.4.28:8080/profile/upload/2024/06/27/%E6%96%87%E4%BB%B64_20240627173517A010.pdf
             break;
         }
         // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口

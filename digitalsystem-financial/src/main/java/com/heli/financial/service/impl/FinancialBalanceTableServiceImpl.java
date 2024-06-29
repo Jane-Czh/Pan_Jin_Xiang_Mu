@@ -51,6 +51,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     }
 
     @Override
+    public boolean checkDataExists() {
+        return financialBalanceTableMapper.checkDataExists();
+    }
+
+    @Override
     public boolean checkBalanceDataIsExisted(Date date) {
         return financialBalanceTableMapper.checkBalanceDataIsExisted(date);
     }

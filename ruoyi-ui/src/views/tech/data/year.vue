@@ -13,15 +13,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['Tech:data:add']">新增</el-button>
+          v-hasPermi="['Tech:annual:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['Tech:data:edit']">修改</el-button>
+          v-hasPermi="['Tech:annual:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['Tech:data:remove']">删除</el-button>
+          v-hasPermi="['Tech:annual:remove']">删除</el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -37,9 +37,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['Tech:data:edit']">修改</el-button>
+            v-hasPermi="['Tech:annual:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['Tech:data:remove']">删除</el-button>
+            v-hasPermi="['Tech:annual:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -51,7 +51,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="年份" prop="naturalYear">
-          <el-input v-model="form.naturalYear" placeholder="请输入自然年" />
+          <el-input v-model="form.naturalYear" placeholder="请输入年份" />
         </el-form-item>
         <el-form-item label="年度计划总数" prop="annualPlancounts">
           <el-input v-model="form.annualPlancounts" placeholder="请输入年度计划总数" />
@@ -104,6 +104,9 @@ export default {
       rules: {
         naturalYear: [
           { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        annualPlancounts: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
         ],
       }
     };
@@ -166,7 +169,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[技术]年度数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -175,7 +178,7 @@ export default {
       getData2(tapcId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[技术]年度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -202,7 +205,7 @@ export default {
     handleDelete(row) {
       const tapcIds = row.tapcId || this.ids;
       const date = row.naturalYear || this.dates;
-      this.$modal.confirm('是否确认日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData2(tapcIds);
       }).then(() => {
         this.getList();

@@ -281,17 +281,7 @@ const api = {
     })
   },
 
-  // 当日在制品金额
-  getInprogressDayrevenueData(data) {
-    return request({
-      url: `/financial/display/inprogressDayrevenue`,
-      method: 'post',
-      data: {
-        startTime: data.startTime,
-        endTime: data.endTime
-      }
-    })
-  },
+
 
   // 月度存货总金额
   getMonthlyInventoryTotalAmountData(data) {
@@ -319,3 +309,31 @@ const api = {
 }
 
 export default api
+
+
+
+
+// 当日在制品金额
+export function getInprogressDayrevenueData(data) {
+  return request({
+    url: `/financial/display/inprogressDayrevenue`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+
+// 存货增长率/销售增长率
+export function getGrowthRateInventorySalesData(data) {
+  return request({
+    url: `/financial/display/growthRateInventoryAndSales`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}

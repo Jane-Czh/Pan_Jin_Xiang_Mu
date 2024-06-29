@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+    <div>
+      <el-select v-model="selectedItem" placeholder="选择统计数据">
+        <el-option :label="'车体上线总数: ' + totalNumberWaitingTimeForProduction1" :value="1" />
+        <el-option :label="'门架合装完工总数: ' + totalNumberCompletionPeriodOfDoorFrameAssembly1" :value="2" />
+        <el-option :label="'试车完工总数: ' + totalNumberTrialCompletionPeriod1" :value="3" />
+        <el-option :label="'特种作业总数: ' + totalNumberSpecialOperations1" :value="4" />
+        <el-option :label="'精整完工期总数: ' + totalNumberPrecisionCompletionPeriod1" :value="5" />
+      </el-select>
+    </div>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 
 <!--      <el-form-item label="车号" prop="carNumber">
@@ -130,27 +139,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['product:status:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['product:status:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['product:status:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['product:status:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -162,16 +171,16 @@
           v-hasPermi="['product:status:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['product:status:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['product:status:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -218,7 +227,7 @@
 
     <el-table v-loading="loading" :data="statusList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="MPC_ID" align="center" prop="mpcId" />
+<!--      <el-table-column label="MPC_ID" align="center" prop="mpcId" />-->
       <el-table-column label="车号" align="center" prop="carNumber" />
       <el-table-column label="接单日期" align="center" prop="acceptanceDate" width="180">
         <template slot-scope="scope">
@@ -248,11 +257,11 @@
         </template>
       </el-table-column>
       <el-table-column label="超期天数" align="center" prop="overdueDays" />
-      <el-table-column label="车体上线日期总条数" align="center" prop="totalNumberWaitingTimeForProduction" />
-      <el-table-column label="门架合装完工期总条数" align="center" prop="totalNumberCompletionPeriodOfDoorFrameAssembly" />
-      <el-table-column label="试车完工期总条数" align="center" prop="totalNumberTrialCompletionPeriod" />
-      <el-table-column label="特种作业总条数" align="center" prop="totalNumberSpecialOperations" />
-      <el-table-column label="精整完工期总条数" align="center" prop="totalNumberPrecisionCompletionPeriod" />
+<!--      <el-table-column label="车体上线日期总条数" align="center" prop="totalNumberWaitingTimeForProduction" />-->
+<!--      <el-table-column label="门架合装完工期总条数" align="center" prop="totalNumberCompletionPeriodOfDoorFrameAssembly" />-->
+<!--      <el-table-column label="试车完工期总条数" align="center" prop="totalNumberTrialCompletionPeriod" />-->
+<!--      <el-table-column label="特种作业总条数" align="center" prop="totalNumberSpecialOperations" />-->
+<!--      <el-table-column label="精整完工期总条数" align="center" prop="totalNumberPrecisionCompletionPeriod" />-->
       <el-table-column label="计划兑现率" align="center" prop="planRate" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -372,6 +381,7 @@ export default {
   name: "Status",
   data() {
     return {
+      selectedItem: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -414,25 +424,20 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      totalNumberWaitingTimeForProduction1:null,
+      totalNumberCompletionPeriodOfDoorFrameAssembly1:null,
+      totalNumberTrialCompletionPeriod1:null,
+      totalNumberSpecialOperations1:null,
+      totalNumberPrecisionCompletionPeriod1:null,
     };
   },
   created() {
     this.getList();
-    this.getFirstRecordData();
   },
   methods: {
 
-    // 获取第一条数据的方法
-    getFirstRecordData() {
-      // 调用获取第一条数据的接口方法，假设该方法为 getFirstRecord
-      getFirstRecord().then(response => {
-        // 从返回的数据中获取车体上线总条数字段的值
-        this.firstRecordVehicleLaunchCount = response.totalNumberWaitingTimeForProduction; // 假设返回的字段为totalNumberVehicleLaunchDate
-        // 将获取的值赋值给需要展示的变量
-        document.getElementById('totalNumberWaitingTimeForProduction').innerText = this.firstRecordVehicleLaunchCount;
-      });
-    },
+
     /*同步*/
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
@@ -451,12 +456,18 @@ export default {
         .catch(error => {
           console.error('There was an error!', error);
         });
+      this.getList();
     },
     /** 查询计划完成情况列表 */
     getList() {
       this.loading = true;
       listStatus(this.queryParams).then(response => {
         this.statusList = response.rows;
+        this.totalNumberWaitingTimeForProduction1 = this.statusList[0].totalNumberWaitingTimeForProduction;
+        this.totalNumberCompletionPeriodOfDoorFrameAssembly1 = this.statusList[0].totalNumberCompletionPeriodOfDoorFrameAssembly;
+        this.totalNumberTrialCompletionPeriod1 = this.statusList[0].totalNumberTrialCompletionPeriod;
+        this.totalNumberSpecialOperations1 = this.statusList[0].totalNumberSpecialOperations;
+        this.totalNumberPrecisionCompletionPeriod1 = this.statusList[0].totalNumberPrecisionCompletionPeriod;
         this.total = response.total;
         this.loading = false;
       });
@@ -559,3 +570,24 @@ export default {
   }
 };
 </script>
+<style>
+.contracted-total {
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+.intern-total {
+  font-size: 20px;
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 15px;
+}
+
+.labor-total {
+  font-size: 20px;
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 15px;
+}
+</style>

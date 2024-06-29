@@ -69,6 +69,10 @@
         SELECT EXISTS(SELECT 1 FROM Financial_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
+    <select id="checkDataExists" resultType="boolean">
+        select count(*) from Financial_Indicators_HandFill_table
+    </select>
+
     <!--  查询已上传数据的最大月份  -->
     <select id="selectMaxYearAndMonth" resultType="Date">
         select max(Year_And_Month) from Financial_Indicators_HandFill_table

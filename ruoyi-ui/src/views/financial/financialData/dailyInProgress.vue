@@ -19,15 +19,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['financial:data:add']">新增</el-button>
+          v-hasPermi="['financial:dailyInProgress:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['financial:data:edit']">修改</el-button>
+          v-hasPermi="['financial:dailyInProgress:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['financial:data:remove']">删除</el-button>
+          v-hasPermi="['financial:dailyInProgress:remove']">删除</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -47,9 +47,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['financial:data:edit']">修改</el-button>
+            v-hasPermi="['financial:dailyInProgress:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['financial:data:remove']">删除</el-button>
+            v-hasPermi="['financial:dailyInProgress:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -116,6 +116,9 @@ export default {
         dataTime: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        inProgressDayRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -176,7 +179,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[当日再制品金额]";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -185,7 +188,7 @@ export default {
       getData(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[当日再制品金额]";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -212,7 +215,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData(ids);
       }).then(() => {
         this.getList();

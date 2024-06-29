@@ -142,8 +142,23 @@
           <span>{{ parseTime(scope.row.rectificationCompletionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="整改前照片" align="center" prop="preRectificationPhoto" />
-      <el-table-column label="整改后照片" align="center" prop="postRectificationPhoto" />
+      <el-table-column label="整改前照片" align="center" prop="preRectificationPhoto">
+        <template slot-scope="scope">
+          <!-- 假设 preRectificationPhoto 是一个图片 URL -->
+          <!-- <img :src="scope.row.preRectificationPhoto" alt="整改前后照片" style="max-width: 100px; max-height: 100px;" /> -->
+          <!-- 添加预览按钮 -->
+          <el-button type="text" @click="previewImage(scope.row.preRectificationPhoto)">预览</el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="整改后照片" align="center" prop="postRectificationPhoto">
+        <template slot-scope="scope">
+          <!-- 假设 preRectificationPhoto 是一个图片 URL -->
+          <!-- 添加预览按钮 -->
+          <el-button type="text" @click="previewImage(scope.row.postRectificationPhoto)">预览</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column label="考核分数" align="center" prop="assessmentScore" />
       <el-table-column label="验收人" align="center" prop="accepter" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -203,43 +218,50 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="整改前照片" prop="preRectificationPhoto">
-          <el-input v-model="form.preRectificationPhoto" placeholder="请输入整改前照片" />
+          <!-- <el-input v-model="form.preRectificationPhoto" placeholder="请输入整改前后照片" /> -->
+          <el-upload
+            ref="fileUpload"
+            v-model="fileInfo.filePath"
+            class="upload-file-uploader"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-change="handleFileChange"
+            :on-success="prehandleUploadSuccess"
+            multiple
+            :limit="3"
+            :file-list="fileList"
+            :accept="acceptedFileTypes"
+            list-type="picture-card"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
         </el-form-item>
-
-        <!-- <el-upload
-              ref="upload"
-              :http-request="httpRequest"
-              :limit="5"
-              accept=".jpg, .png"
-              :action="upload.url"
-              :headers="upload.headers"
-              :multiple="true"
-              :show-file-list="true"
-              :file-list="upload.fileList"
-              :on-progress="handleFileUploadProgress"
-              :on-success="handleFileSuccess"
-              :on-error="handleUploadError"
-              :auto-upload="false"
-            >
-              <el-button slot="trigger" size="small" type="primary"
-              >选取文件
-              </el-button
-              >
-              <br>
-              <el-button
-                style=""
-                size="small"
-                type="success"
-                :loading="upload.isUploading"
-                @click="submitUpload(index)"
-              >确认上传
-              </el-button
-              >
-        </el-upload> -->
 
         <el-form-item label="整改后照片" prop="postRectificationPhoto">
-          <el-input v-model="form.postRectificationPhoto" placeholder="请输入整改后照片" />
+          <!-- <el-input v-model="form.preRectificationPhoto" placeholder="请输入整改前后照片" /> -->
+          <el-upload
+            ref="fileUpload"
+            v-model="fileInfo.filePath"
+            class="upload-file-uploader"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-change="handleFileChange"
+            :on-success="posthandleUploadSuccess"
+            multiple
+            :limit="3"
+            :file-list="fileList"
+            :accept="acceptedFileTypes"
+            list-type="picture-card"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
         </el-form-item>
+
+
+
+        <!-- <el-form-item label="整改后照片" prop="postRectificationPhoto">
+          <el-input v-model="form.postRectificationPhoto" placeholder="请输入整改后照片" />
+        </el-form-item> -->
         <el-form-item label="考核分数" prop="assessmentScore">
           <el-input v-model="form.assessmentScore" placeholder="请输入考核分数" />
         </el-form-item>
@@ -257,6 +279,9 @@
 
 <script>
 import { listEntering, getEntering, delEntering, addEntering, updateEntering } from "@/api/safety/entering";
+import {getUserProfile} from '@/api/system/user'
+import {getDept} from '@/api/system/dept'
+import {getToken} from "@/utils/auth"
 
 export default {
   name: "Entering",
@@ -311,18 +336,23 @@ export default {
           { required: true, message: "验收人不能为空", trigger: "blur" }
         ]
       },
-
-      //新增
-      upload: {
-          // 是否禁用上传
-          isUploading: false,
-          // 设置上传的请求头部
-          headers: {},
-          // 上传的地址
-          url: "",
-          // 上传的文件列表
-          fileList: []
-        },
+      
+      fileInfo: {
+        filePath: '',
+        fileName: '',
+        fileType: '',
+        fileSize: 0,
+        uploadDate: '',
+        createUsername: '',
+        departmentCategory: ''
+      },
+      fileList: [],
+      uploadList: [],
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload",
+      acceptedFileTypes: '.jpg,.png' // 只接受 .jpg 和 .png 文件
 
     };
   },
@@ -427,66 +457,112 @@ export default {
       this.download('safety/entering/export', {
         ...this.queryParams
       }, `entering_${new Date().getTime()}.xlsx`)
-    }
+    },
+
+      //&&&&&&&&&&&&&&&&&&&&&&&&&&//
+      handleFileChange(file, fileList) {
+      const uploadedFile = file.raw; // 获取上传的文件对象
+
+      // 更新文件信息
+      this.$set(this.fileInfo, 'fileName', uploadedFile.name);
+      this.$set(this.fileInfo, 'filePath', '');
+      this.$set(this.fileInfo, 'fileType', this.getFileType(uploadedFile.type));
+      this.$set(this.fileInfo, 'fileSize', this.formatFileSize(uploadedFile.size));
+      this.$set(this.fileInfo, 'uploadDate', new Date().toISOString().split('T')[0]);
+      this.getUserInfo();
+    },
+    prehandleUploadSuccess(res, file) {
+      //将返回的地址存入数据库中
+      // console.log(res.url);
+      this.form.preRectificationPhoto = res.url;
+
+      if (res.code === 200) {
+        this.path = res.url;
+        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadedSuccessfully();
+      } else {
+        this.number--;
+        this.$refs.fileUpload.handleRemove(file);
+        this.uploadedSuccessfully();
+      }
+    },
+    posthandleUploadSuccess(res, file) {
+      //将返回的地址存入数据库中
+      // console.log(res.url);
+      this.form.postRectificationPhoto = res.url;
+
+      if (res.code === 200) {
+        this.path = res.url;
+        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadedSuccessfully();
+      } else {
+        this.number--;
+        this.$refs.fileUpload.handleRemove(file);
+        this.uploadedSuccessfully();
+      }
+    },
+    formatFileSize(sizeInBytes) {
+      const KB = 1024;
+      const MB = KB * 1024;
+      const GB = MB * 1024;
+
+      if (sizeInBytes < KB) {
+        return sizeInBytes + "B";
+      } else if (sizeInBytes < MB) {
+        return (sizeInBytes / KB).toFixed(2) + "KB";
+      } else if (sizeInBytes < GB) {
+        return (sizeInBytes / MB).toFixed(2) + "MB";
+      } else {
+        return (sizeInBytes / GB).toFixed(2) + "GB";
+      }
+    },
+    getFileType(fullType) {
+      if (fullType.includes('jpeg') || fullType.includes('jpg')) {
+        return 'jpg';
+      } else if (fullType.includes('png')) {
+        return 'png';
+      } else {
+        return 'other';
+      }
+    },
+    getUserInfo() {
+      getUserProfile().then(response => {
+        const userInfo = response.data;
+        this.$set(this.fileInfo, 'createUsername', userInfo.userName);
+        getDept(userInfo.deptId).then(response => {
+          const deptInfo = response.data;
+          this.$set(this.fileInfo, 'departmentCategory', deptInfo.deptName);
+        });
+      }).catch(error => {
+        console.error('获取用户信息失败:', error);
+      });
+    },
+    uploadedSuccessfully() {
+      if (this.number > 0 && this.uploadList.length === this.number) {
+        this.fileList = this.fileList.concat(this.uploadList);
+        this.uploadList = [];
+        this.number = 0;
+        this.$emit("input", this.fileList.map(file => file.url).join(','));
+      }
+    },
+    previewImage(photoUrl) {
+      // 在这里实现预览图片的逻辑
+      // 例如，可以打开一个模态框显示图片
+      // console.log('预览图片', photoUrl);
+      if (!photoUrl) {
+        // 如果URL为空，显示提示信息
+        this.$message({
+          message: '没有图片可供预览',
+          type: 'warning'
+        });
+        return;
+      }
+      window.open(photoUrl, '_blank');
+    },
   },
 
-  //&&&&&&&&&&&&&&&&&&&&&&&&&&//
 
-//点击上传按钮后执行的方法
-	 async submitUpload(type) {
-        this.upload.url =
-          process.env.VUE_APP_BASE_API +
-          "/后端接口地址/upload/file?id=" +
-          this.id +
-          "&type=" +
-          type;
-        // 此处在地址中传输了id和type两个参数，可以根据实际需要来更改
-        await this.$refs.upload[type].submit();
-        this.upload.fileList = [];
-      },
-      // 上传用到的http请求方法
-       httpRequest(param) {
-        let fileObj = param.file; // 相当于input里取得的files
-        let fd = new FormData(); 
-        fd.append("file", fileObj); // 文件对象
-
-        let url = this.upload.url;
-        let config = {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + getToken()
-          }
-        };
-        axios.post(url, fd, config).then(res => {
-          if (res.status === 200) {
-            this.getListFile();
-          }
-        });
-      },
-      // 文件上传中处理
-      handleFileUploadProgress(event, file, fileList) {
-        this.loading = this.$loading({
-          lock: true,
-          text: "上传中",
-          background: "rgba(0, 0, 0, 0.7)",
-        });
-        this.upload.isUploading = true;
-      },
-      // 文件上传成功处理
-      handleFileSuccess(response, file, fileList) {
-        this.upload.isUploading = false;
-        this.msgSuccess(response.msg);
-        this.loading.close();
-        this.upload.fileList = [];
-      },
-      //错误处理
-      handleUploadError() {
-        this.$message({
-          type: "error",
-          message: "上传失败",
-        });
-        this.loading.close();
-      },
+  
 
      
 
@@ -494,3 +570,9 @@ export default {
 
 };
 </script>
+
+<style scoped>
+.upload-file-uploader {
+  display: inline-block;
+}
+</style>

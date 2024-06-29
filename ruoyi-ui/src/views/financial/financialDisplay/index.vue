@@ -58,7 +58,7 @@
               <i :class="item.icon" />
               <div class="main-content">
                 <h3>{{ item.title }}</h3>
-                <!-- <div>{{ item.content }}</div> -->
+                <div>{{ item.content }}</div>
               </div>
             </div>
             <div class="allIndex-item__footer">
@@ -84,31 +84,31 @@ export default {
       // 企业运营指标: 1, 成本指标: 2, 效率指标: 3
       allIndex: [
         { id: '1', apiName: 'getMainRevenueData', yDataName: 'MainRevenue', type: '1', icon: 'el-icon-s-data', title: '主营业务收入', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '2', apiName: 'getTotalSalesRevenueData', yDataName: 'Total_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '整机销售收入', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '3', apiName: 'getExternalGroupSalesRevenueData', yDataName: 'External_Group_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '集团外部销售收入', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '4', apiName: 'getTotalVehicleProductionData', yDataName: 'Total_Vehicle_Production', type: '1', icon: 'el-icon-s-data', title: '整车产量', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '5', apiName: 'getTotalVehicleSalesData', yDataName: 'Total_Vehicle_Sales', type: '1', icon: 'el-icon-s-data', title: '整车销量', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '6', apiName: 'getNewProductSalesRevenueData', yDataName: 'New_Product_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '新产品销售收入', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '7', apiName: 'getSpecialtyProductRevenueData', yDataName: 'Specialty_Product_Revenue', type: '1', icon: 'el-icon-s-data', title: '特色产品收入', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '8', apiName: 'getCOGSData', yDataName: 'COGS', type: '1', icon: 'el-icon-s-data', title: '主营业务成本', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '9', apiName: 'getTotalSalesCostData', yDataName: 'Total_Sales_Cost', type: '1', icon: 'el-icon-s-data', title: '整机销售成本', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '10', apiName: 'getNetProfitData', yDataName: 'NetProfit', type: '1', icon: 'el-icon-s-data', title: '净利润', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '20', apiName: 'getManagementExpenseData', yDataName: 'ManagementExpense', type: '2', icon: 'el-icon-s-data', title: '当月管理费用', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '21', apiName: 'getRdExpenseData', yDataName: 'RD_Expense', type: '2', icon: 'el-icon-s-data', title: '当月研发费用', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '22', apiName: 'getManufacturingExpensesMonthData', yDataName: 'Manufacturing_Expenses_Month', type: '2', icon: 'el-icon-s-data', title: '当月制造费用', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '26', apiName: 'getMonthlyRawMaterialInventoryData', yDataName: 'MonthlyRawMaterialInventory', type: '2', icon: 'el-icon-s-data', title: '当月原材料存货额', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '27', apiName: 'getMonthlyWorkInProgressInventoryData', yDataName: 'MonthlyWorkInProgressInventory', type: '2', icon: 'el-icon-s-data', title: '当月在制品存货额', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '28', apiName: 'getMonthAmountInStockData', yDataName: 'Month_Amount_InStock', type: '2', icon: 'el-icon-s-data', title: '当月库存商品存货额', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '30', apiName: 'getGrowthRateInventoryAndSalesData', yDataName: 'GrowthRate_Sales', yDataName2: 'GrowthRate_Inventory', type: '2', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', dataName: '增长率', content: '企业主要营业产品财务收入', },
-        { id: '32', apiName: 'getTurnoverRateReceivableData', yDataName: 'TurnoverRate_Receivable', type: '3', icon: 'el-icon-s-data', title: '应收账款周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
-        { id: '33', apiName: 'getCapitalTurnoverRateData', yDataName: 'Capital_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '资金周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
-        { id: '34', apiName: 'getInventoryTurnoverRateData', yDataName: 'Inventory_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '库存商品周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
-        { id: '35', apiName: 'getRawMaterialTurnoverRateData', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '原材料周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
-        { id: '36', apiName: 'getInprogressTurnoverRateData', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '在制品周转率', dataName: '周转率', content: '企业主要营业产品财务收入' },
-        { id: '66', apiName: 'getLongEstimatedItemsData', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '企业主要营业产品财务收入' },
-        { id: '70', apiName: 'getInprogressDayrevenueData', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '77', apiName: 'getMonthlyInventoryTotalAmountData', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '月度存货金额', dataName: '金额', content: '企业主要营业产品财务收入' },
-        { id: '78', apiName: 'getAddedValueMonthlyData', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '企业主要营业产品财务收入' },
+        { id: '2', apiName: 'getTotalSalesRevenueData', yDataName: 'Total_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '整机销售收入', dataName: '金额', content: '整机销售收入' },
+        { id: '3', apiName: 'getExternalGroupSalesRevenueData', yDataName: 'External_Group_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '集团外部销售收入', dataName: '金额', content: '集团外部销售收入' },
+        { id: '4', apiName: 'getTotalVehicleProductionData', yDataName: 'Total_Vehicle_Production', type: '1', icon: 'el-icon-s-data', title: '整车产量', dataName: '金额', content: '整车产量' },
+        { id: '5', apiName: 'getTotalVehicleSalesData', yDataName: 'Total_Vehicle_Sales', type: '1', icon: 'el-icon-s-data', title: '整车销量', dataName: '金额', content: '整车销量' },
+        { id: '6', apiName: 'getNewProductSalesRevenueData', yDataName: 'New_Product_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '新产品销售收入', dataName: '金额', content: '新产品销售收入' },
+        { id: '7', apiName: 'getSpecialtyProductRevenueData', yDataName: 'Specialty_Product_Revenue', type: '1', icon: 'el-icon-s-data', title: '特色产品收入', dataName: '金额', content: '特色产品收入' },
+        { id: '8', apiName: 'getCOGSData', yDataName: 'COGS', type: '1', icon: 'el-icon-s-data', title: '主营业务成本', dataName: '金额', content: '主营业务成本' },
+        { id: '9', apiName: 'getTotalSalesCostData', yDataName: 'Total_Sales_Cost', type: '1', icon: 'el-icon-s-data', title: '整机销售成本', dataName: '金额', content: '整机销售成本' },
+        { id: '10', apiName: 'getNetProfitData', yDataName: 'NetProfit', type: '1', icon: 'el-icon-s-data', title: '净利润', dataName: '金额', content: '净利润' },
+        { id: '20', apiName: 'getManagementExpenseData', yDataName: 'ManagementExpense', type: '2', icon: 'el-icon-s-data', title: '当月管理费用', dataName: '金额', content: '当月管理费用' },
+        { id: '21', apiName: 'getRdExpenseData', yDataName: 'RD_Expense', type: '2', icon: 'el-icon-s-data', title: '当月研发费用', dataName: '金额', content: '当月研发费用' },
+        { id: '22', apiName: 'getManufacturingExpensesMonthData', yDataName: 'Manufacturing_Expenses_Month', type: '2', icon: 'el-icon-s-data', title: '当月制造费用', dataName: '金额', content: '当月制造费用' },
+        { id: '26', apiName: 'getMonthlyRawMaterialInventoryData', yDataName: 'MonthlyRawMaterialInventory', type: '2', icon: 'el-icon-s-data', title: '当月原材料存货额', dataName: '金额', content: '当月原材料存货额' },
+        { id: '27', apiName: 'getMonthlyWorkInProgressInventoryData', yDataName: 'MonthlyWorkInProgressInventory', type: '2', icon: 'el-icon-s-data', title: '当月在制品存货额', dataName: '金额', content: '当月在制品存货额' },
+        { id: '28', apiName: 'getMonthAmountInStockData', yDataName: 'Month_Amount_InStock', type: '2', icon: 'el-icon-s-data', title: '当月库存商品存货额', dataName: '金额', content: '当月库存商品存货额' },
+        { id: '30', apiName: 'getGrowthRateInventoryAndSalesData', yDataName: 'GrowthRate_Sales', yDataName2: 'GrowthRate_Inventory', type: '2', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', dataName: '增长率', content: '存货增长率和销售增长率', },
+        { id: '32', apiName: 'getTurnoverRateReceivableData', yDataName: 'TurnoverRate_Receivable', type: '3', icon: 'el-icon-s-data', title: '应收账款周转率', dataName: '周转率', content: '应收账款周转率' },
+        { id: '33', apiName: 'getCapitalTurnoverRateData', yDataName: 'Capital_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '资金周转率', dataName: '周转率', content: '资金周转率' },
+        { id: '34', apiName: 'getInventoryTurnoverRateData', yDataName: 'Inventory_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '库存商品周转率', dataName: '周转率', content: '库存商品周转率' },
+        { id: '35', apiName: 'getRawMaterialTurnoverRateData', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '原材料周转率', dataName: '周转率', content: '原材料周转率' },
+        { id: '36', apiName: 'getInprogressTurnoverRateData', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '在制品周转率', dataName: '周转率', content: '在制品周转率' },
+        { id: '66', apiName: 'getLongEstimatedItemsData', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '一年以上暂估行项目' },
+        { id: '70', apiName: 'getInprogressDayrevenueData', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '当日在制品金额' },
+        { id: '77', apiName: 'getMonthlyInventoryTotalAmountData', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '月度存货金额', dataName: '金额', content: '月度存货金额' },
+        { id: '78', apiName: 'getAddedValueMonthlyData', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '当月经济增加值' },
       ]
     }
   },
@@ -116,6 +116,7 @@ export default {
   watch: {},
   created() {
   },
+
   mounted() { },
   methods: {
     toDetail(item) {

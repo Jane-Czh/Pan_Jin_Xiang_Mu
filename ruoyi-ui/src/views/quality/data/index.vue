@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+      <el-form-item label="日期" prop="yearAndMonth">
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -37,10 +37,10 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="qihfId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="外部质量损失金额" align="center" prop="moleculeExternalMassLossRate" />
@@ -66,10 +66,10 @@
 
     <!-- 添加或修改[质量]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="外部质量损失金额" prop="moleculeExternalMassLossRate">
@@ -148,6 +148,27 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        moleculeExternalMassLossRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        externalMassLossRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        quarterlyRank: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        meantimeWithoutFailure: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        intimeReturnrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        selfcheckPassrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        nextprocessFeedbackPassrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -215,7 +236,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[质量]数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -224,7 +245,7 @@ export default {
       getHandFill(qihfId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[质量]数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -251,7 +272,14 @@ export default {
     handleDelete(row) {
       const qihfIds = row.qihfId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delHandFill(qihfIds);
       }).then(() => {
         this.getList();
@@ -259,23 +287,8 @@ export default {
       }).catch(() => { });
     },
     /** 更新按钮操作 */
-    // TODO 未完成
     handleUpdateList() {
-      updateList()
-        .then(response => {
-          if (response.code === 500) {
-            const errorMsg = response.data;
-            // 处理错误信息
-            this.$modal.msgError(errorMsg);
-          } else {
-            this.getList();
-            this.$modal.msgSuccess("更新成功");
-          }
-        })
-        .catch(error => {
-          console.error("更新失败", error);
-          this.$modal.msgError("更新失败");
-        });
+      this.getList()
     }
   }
 };

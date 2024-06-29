@@ -87,13 +87,13 @@ public class EnterpriseManagementDataController extends BaseController {
      * @author: hong
      * @date: 2024/4/11 16:38
      */
-    @PreAuthorize("@ss.hasPermi('enterprise:salary:import')")
+//    @PreAuthorize("@ss.hasPermi('enterprise:salary:import')")
     @PostMapping("/salary")
     public R<String> simpleRead(Date yearAndMonth, MultipartFile multipartFile) {
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
-            enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, getUsername());
+            enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, "admin");
 
             enterpriseManagementMonthlyDataService.calculateSalaryTableIndicators(yearAndMonth);
             return R.ok("上传成功");

@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-//import com.ruoyi.file.Word2PdfAsposeUtil;
+//import com.ruoyi.file.util.Word2PdfAsposeUtil;
 import com.ruoyi.file.Word2PdfAsposeUtil;
 import com.ruoyi.file.domain.RegulationsInfoTable;
 import com.ruoyi.file.entity.regulationRespondEntity;
@@ -51,6 +51,16 @@ public class RegulationsInfoTableController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 提供给流程部分使用绑定文件
+     * 不需要绑定权限
+     */
+    @GetMapping("/list2")
+    public TableDataInfo list2(RegulationsInfoTable regulationsInfoTable) {
+        startPage();
+        List<RegulationsInfoTable> list = regulationsInfoTableService.selectRegulationsInfoTableList(regulationsInfoTable);
+        return getDataTable(list);
+    }
 
 
     /**

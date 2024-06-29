@@ -2,9 +2,9 @@
   <div class="currentPage">
     <!-- 月度数据表 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
 
@@ -17,46 +17,15 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-            v-hasPermi="['financial:data:add']">新增</el-button>
+            v-hasPermi="['financial:fill:add']">新增</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-            v-hasPermi="['financial:data:edit']">修改</el-button>
+            v-hasPermi="['financial:fill:edit']">修改</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-            v-hasPermi="['financial:data:remove']">删除</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <!--Excel 参数导入 -->
-          <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true"
-            v-if="true">导入Excel
-          </el-button>
-
-          <el-dialog title="导入Excel" :visible.sync="showDialog" width="30%" @close="resetFileInput">
-            <!-- 下拉框 -->
-            <el-form :model="form" ref="form" label-width="90px">
-              <el-form-item label="选择表类型">
-                <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                  <el-option label="利润表" value="profit"></el-option>
-                  <el-option label="资产负债表" value="balance"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-
-            <i class="el-icon-upload"></i>
-            <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
-
-            <!-- 进度动画条 -->
-            <div v-if="progress > 0">
-              <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-            </div>
-
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="showDialog = false">取 消</el-button>
-              <el-button type="primary" @click="fileSend()">确 定</el-button>
-            </span>
-          </el-dialog>
+            v-hasPermi="['financial:fill:remove']">删除</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
@@ -65,10 +34,10 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="整机销售收入" align="center" prop="totalSalesRevenue" width="100" />
@@ -85,7 +54,7 @@
       <el-table-column label="原材料周转率" align="center" prop="rawMaterialTurnoverRate" width="100" />
       <el-table-column label="在制品周转率" align="center" prop="inprogressTurnoverRate" width="100" />
       <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" width="140" />
-      <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" />
+      <!-- <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" /> -->
       <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" width="120" />
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -104,9 +73,9 @@
     <!-- 添加或修改[财务]手动填报指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-        <el-form-item label="年月" prop="yearAndMonth">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="整机销售收入" prop="totalSalesRevenue">
@@ -236,39 +205,64 @@ export default {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        totalSalesRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        externalGroupSalesRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalVehicleProduction: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalVehicleSales: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        newProductSalesRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        specialtyProductRevenue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        totalSalesCost: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        manufacturingExpensesMonth: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        reserveCarAmount: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        capitalTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inventoryTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        rawMaterialTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inprogressTurnoverRate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        addedValueMonthly: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        longEstimatedItems: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
   created() {
     this.getList();
-    // this.sortDataListDescending()
   },
   methods: {
-
-    // sortDataListDescending() {
-    //   this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-    // },//默认改为降序排列
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
       this.getList();
     },
-
-    // handleSortChange(sort) {
-    //   // sort.order: 排序的顺序，'ascending' 或 'descending'
-    //   if (sort.column && sort.prop === 'yearAndMonth') {
-    //     if (sort.order === 'ascending') {
-    //       // 如果是升序，你可以使用Array的sort方法来排序dataList
-    //       this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-    //     } else if (sort.order === 'descending') {
-    //       // 如果是降序，你可以使用Array的sort方法来排序dataList
-    //       this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-    //     }
-    //   }
-    // },
-
-
-
     /** 查询[财务]手动填报指标列表 */
     getList() {
       this.loading = true;
@@ -333,7 +327,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加月度数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -342,7 +336,7 @@ export default {
       getData(fihfId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改月度数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -369,125 +363,19 @@ export default {
     handleDelete(row) {
       const fihfIds = row.fihfId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delData(fihfIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
-    },
-
-    // 导入excel，检查文件类型
-    checkFile() {
-      const file = this.$refs.fileInput.files[0];
-      const fileName = file.name;
-      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
-
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
-        this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
-      }
-    },
-    //导入excel，取消按钮绑定取消所选的xlsx
-    resetFileInput() {
-      this.$refs.fileInput.value = "";
-    },
-    /** 导入按钮 */
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-
-
-      // 根据用户选择的 Excel 类型执行不同的操作
-      if (this.selectedType === 'profit') {
-        axios({
-          method: "post",
-          // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080//financial/data/interests/import",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        });
-        console.log("利润表")
-      } else if (this.selectedType === 'balance') {
-        axios({
-          method: "post",
-          // url: this.$http.url('/financial/data/upload'),
-          url: "http://localhost:8080/financial/data/balance/import",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        });
-        //  axios.post('financial/balance/importTable', formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   },
-        //   onUploadProgress: (progressEvent) => {
-        //     this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        //   }
-        // });
-        console.log("资产负债表类型")
-      }
-      // axios({
-      //   method: "post",
-      //   // url: this.$http.url('/financial/data/upload'),
-      //     url:"http://localhost:8080/financial/interests/importTable",
-      //   // params: this.$http.adornParams({
-      //   //   userName: this.$store.state.user.name,
-      //   // }),
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      //   withCredentials: true,
-      //   data: formData,
-      //   onUploadProgress: (progressEvent) => {
-      //     this.progress = Math.round(
-      //       (progressEvent.loaded * 100) / progressEvent.total
-      //     );
-      //   },
-      // });
-      this.$message.success("上传成功");
-
-      // .then((response) => {
-
-      //   if(response === 导入成功){
-      //      // 处理成功后的操作
-      //   this.progress = 100; // 确保进度条显示100%
-      //   this.$message.success("上传成功");
-      //   }
-
-      // })
-      // .catch((error) => {
-      //   // 处理错误
-      //   this.$message.error("上传失败");
-      // });
-
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
     },
 
   }

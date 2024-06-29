@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
+      <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -16,29 +16,27 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-            v-hasPermi="['production:data:add']">新增</el-button>
+            v-hasPermi="['production:fill:add']">新增</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-            v-hasPermi="['production:data:edit']">修改</el-button>
+            v-hasPermi="['production:fill:edit']">修改</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-            v-hasPermi="['production:data:remove']">删除</el-button>
+            v-hasPermi="['production:fill:remove']">删除</el-button>
         </el-col>
         <el-col :span="1.5">
           <!--Excel 参数导入 -->
-          <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain
-            v-if="true">导入Excel文件
+          <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
+            v-hasPermi="['production:fill:import']">导入Excel文件
           </el-button>
 
           <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
-
             <el-form :model="form" ref="form" label-width="90px">
-              <el-form-item label="选择表类型">
-                <el-select v-model="selectedType" placeholder="请选择Excel类型">
-                  <el-option label="商品车台账" value="profit"></el-option>
-                </el-select>
+              <el-form-item label="上传表类:">
+                <span style="color: rgb(68, 140, 39);">商品车台账表</span>
+                <br>
               </el-form-item>
             </el-form>
             <i class="el-icon-upload"></i>
@@ -62,10 +60,10 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column sortable="custom" :sort-orders="['descending', 'ascending']" label="年月" align="center"
+      <el-table-column sortable="custom" :sort-orders="['descending', 'ascending']" label="日期" align="center"
         prop="yearAndMonth" width="150">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="当月单台非BOM物料费用" align="center" prop="curNonBomMaterialCost" width="180" />
@@ -79,9 +77,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['production:data:edit']">修改</el-button>
+            v-hasPermi="['production:fill:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['production:data:remove']">删除</el-button>
+            v-hasPermi="['production:fill:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -91,10 +89,10 @@
 
     <!-- 添加或修改[生产]手动填报指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="当月单台非BOM物料费用" prop="curNonBomMaterialCost">
@@ -134,7 +132,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/productio
 // import "font-awesome/css/font-awesome.css";
 //引入font-awesome
 // import "font-awesome/css/font-awesome.css";
-import axios from "axios";
+import { uploadFile } from '@/api/financial/excelImport';
 
 
 export default {
@@ -177,15 +175,37 @@ export default {
         outputPercapitavalue: null,
         onlineOntimerate: null,
         overtimeFrontlinemonth: null,
-        upload: null,                         //未完成待处理
+        upload: null,
 
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        curNonBomMaterialCost: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        curLowValueConsumables: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        inventoryTurnoverdays: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        outputPercapitacounts: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        outputPercapitavalue: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        onlineOntimerate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        overtimeFrontlinemonth: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
         ],
       }
     };
@@ -236,7 +256,7 @@ export default {
         outputPercapitavalue: null,
         onlineOntimerate: null,
         overtimeFrontlinemonth: null,
-        upload: null,                         //未完成待处理
+        upload: null,
       };
       this.resetForm("form");
     },
@@ -261,7 +281,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[生产]数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -270,7 +290,7 @@ export default {
       getData(productionId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[生产]数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -297,21 +317,29 @@ export default {
     handleDelete(row) {
       const productionIds = row.productionId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delData(productionIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    // 导入excel，检查文件类型
     checkFile() {
       const file = this.$refs.fileInput.files[0];
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     },
     //导入excel，取消按钮绑定取消所选的xlsx
@@ -322,43 +350,31 @@ export default {
     fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      formData.append("excelFile", file);
-      // 根据用户选择的 Excel 类型执行不同的操作
-      if (this.selectedType === 'profit') {
-        axios({
-          method: "post",
-          // url: this.$http.url('/production/data/upload'),
-          url: "http://localhost:8080/production/table/simpleRead",
-          // params: this.$http.adornParams({
-          //   userName: this.$store.state.user.name,
-          // }),
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-          onUploadProgress: (progressEvent) => {
-            this.progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
-        }).then(response => {
-          // 处理请求成功的情况
-          this.showDialog = false; // 关闭上传面板
-        })
+      if (file === undefined) {
+        this.$message.error("请选择文件!");
+        return;
+      } else {
+        // const yearAndMonth = this.form3.yearAndMonth;
+        // formData.append("yearAndMonth", yearAndMonth);
+        formData.append("multipartFile", file);
+        const aimUrl = `/production/table/simpleRead`
+        uploadFile(formData, aimUrl)
+          .then(data => {
+            // 处理上传成功的情况
+            this.$message.success("上传成功");
+            this.getList();
+          })
           .catch(error => {
-            // 处理请求失败的情况
+            // 处理上传失败的情况
             console.error('上传失败：', error);
+            this.$message.error("上传失败，请重试");
+          })
+          .finally(() => {
+            // 无论成功或失败，都关闭上传面板
+            this.showDialog = false;
           });
-        console.log("商品车台账")
-        this.$message.success("上传成功");
-        setTimeout(() => {
-          this.showDialog = false; // 关闭上传面板
-          // location.reload(); // 调用此方法刷新页面数据
-        }, 2000); // 2000毫秒后关闭
       }
     },
-
   }
 };
 </script>

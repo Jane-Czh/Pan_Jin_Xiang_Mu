@@ -1,5 +1,6 @@
 package com.ruoyi.product.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
@@ -64,7 +65,7 @@ public interface IProductionOvertimeStatisticsTableService
      */
     public int deleteProductionOvertimeStatisticsTableByPostId(Long postId);
 
-    public void Synchronization(List<ProductionClockInForm> list1,List<ProductionOvertimeApplicationForm> list2, ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable);
+    public void Synchronization(List<ProductionClockInForm> list1,List<ProductionOvertimeApplicationForm> list2, ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable) throws ParseException;
 
 //    public void Synchronization1(List<ProductionOvertimeApplicationForm> list2, ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1);
 }

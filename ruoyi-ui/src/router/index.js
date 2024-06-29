@@ -91,7 +91,8 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
+
   {
     path: '/financial',
     component: Layout,
@@ -102,22 +103,25 @@ export const constantRoutes = [
         path: 'indicators30',
         component: () => import('@/views/financial/financialDisplay/indexChart/indicators30'),
         name: 'Indicators30',
-        meta: { title: '指标数据' }
+        meta: { title: '指标30：存货增长率/销售增长率' }
       },
 
       {
         path: 'indicators70',
         component: () => import('@/views/financial/financialDisplay/indexChart/indicators70'),
         name: 'Indicators70',
-        meta: { title: '指标数据' }
+        meta: { title: '指标70：当日在制品金额' }
       },
 
       {
         path: 'index-detail-financial',
         component: () => import('@/views/financial/financialDisplay/indexDetailFinancial'),
         name: 'IndexDetailFinancial',
+        props: true,
+
         meta: {
           title: '指标详情',
+
         }
       }
     ]
@@ -296,7 +300,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   {
     path: '/market',
     component: Layout,
@@ -338,25 +342,25 @@ export const constantRoutes = [
       }
     ]
   },
-  
-  
-  
-  
-  
 
 
-  
-  
-  
-  
-  
-  
-  
-  
- 
 
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -621,6 +625,8 @@ export const dynamicRoutes = [
       }
     ]
   },
+
+
   {
     path: '/system/dict-data',
     component: Layout,
@@ -635,6 +641,8 @@ export const dynamicRoutes = [
       }
     ]
   },
+
+
   {
     path: '/monitor/job-log',
     component: Layout,
@@ -713,13 +721,13 @@ export const dynamicRoutes = [
 
 
   //流程模块
-  {
-    path: '/project',
-    component: Layout,
-    hidden: true,
-    permissions: ['system:user:edit'],
+  // {
+  //   path: '/project',
+  //   component: Layout,
+  //   hidden: true,
+  //   permissions: ['system:user:edit'],
 
-  },
+  // },
   //文件模块
   {
     path: '/file/filemanagement/index',
@@ -735,21 +743,21 @@ export const dynamicRoutes = [
       }
     ]
   },
-    //表单文件管理
-    {
-      path: '/file/formfilemanagement/index',
-      component: Layout,
-      hidden: true,
-      permissions: ['file:formfilemanagement:list'],
-      children: [
-        {
-          path: '/file/formfilemanagement/historyVersions/:formId(\\d+)', // 路由路径
-          component: () => import('@/views/file/formfilemanagement/historyVersions'), // 对应的组件
-          name: 'historyVersions', // 路由名称
-          meta: { title: '历史版本管理' } // 元信息，用于设置标题等
-        }
-      ]
-    },
+  //表单文件管理
+  {
+    path: '/file/formfilemanagement/index',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:formfilemanagement:list'],
+    children: [
+      {
+        path: '/file/formfilemanagement/historyVersions/:formId(\\d+)', // 路由路径
+        component: () => import('@/views/file/formfilemanagement/historyVersions'), // 对应的组件
+        name: 'historyVersions', // 路由名称
+        meta: { title: '历史版本管理' } // 元信息，用于设置标题等
+      }
+    ]
+  },
   //制度修订频率
   {
     path: '/file/filemanagement/index',

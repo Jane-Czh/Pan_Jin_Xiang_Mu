@@ -28,14 +28,14 @@
                               placeholder="请选择表单上传时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="表单大小" prop="formSize">
-              <el-input
-                v-model="queryParams.formSize"
-                placeholder="请输入表单大小"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="表单大小" prop="formSize">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.formSize"-->
+<!--                placeholder="请输入表单大小"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="上传人" prop="createUsername">
               <el-input
                 v-model="queryParams.createUsername"
@@ -52,30 +52,30 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="历史表单" prop="oldFormId">
-              <el-input
-                v-model="queryParams.oldFormId"
-                placeholder="请输入历史表单"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="修订时间" prop="revisionTime">
-              <el-date-picker clearable
-                              v-model="queryParams.revisionTime"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择修订时间">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="修订人" prop="reviser">
-              <el-input
-                v-model="queryParams.reviser"
-                placeholder="请输入修订人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="历史表单" prop="oldFormId">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.oldFormId"-->
+<!--                placeholder="请输入历史表单"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订时间" prop="revisionTime">-->
+<!--              <el-date-picker clearable-->
+<!--                              v-model="queryParams.revisionTime"-->
+<!--                              type="date"-->
+<!--                              value-format="yyyy-MM-dd"-->
+<!--                              placeholder="请选择修订时间">-->
+<!--              </el-date-picker>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订人" prop="reviser">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.reviser"-->
+<!--                placeholder="请输入修订人"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -210,16 +210,14 @@
                 class="upload-form-uploader"
                 :action="uploadFileUrl"
                 :headers="headers"
-
+                :before-upload="handleBeforeUpload"
                 :on-change="handleFileChange"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
-                :before-remove="beforeRemove"
                 :on-exceed="handleExceed"
                 :on-success="handleUploadSuccess"
-                multiple
-                :limit="3"
-                :form-list="formList"
+                :limit=limit
+                :file-list="formList"
               >
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
@@ -262,17 +260,17 @@
     <el-dialog :title="title" :visible.sync="formUpdateDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-upload
-          class="update-form-uploader"
+          v-model="form.formPath"
+          class="upload-form-uploader"
           :action="uploadFileUrl"
           :headers="headers"
+          :before-upload="handleBeforeUpload"
           :on-change="handleFileChange"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
-          :before-remove="beforeRemove"
           :on-exceed="handleExceed"
-          :on-success="handleUpdateSuccess"
-          multiple
-          :limit="3"
+          :on-success="handleUploadSuccess"
+          :limit=limit
           :file-list="formList"
         >
           <el-button size="small" type="primary">点击上传</el-button>
@@ -318,6 +316,25 @@ import {word2Pdf} from "../../../api/file/filemanagement";
 
 export default {
   name: "Formfilemanagement",
+  props: {
+    value: [String, Object, Array],
+    limit: {
+      type: Number,
+      default: 1,
+    },
+    fileSize: {
+      type: Number,
+      default: 5,
+    },
+    fileType: {
+      type: Array,
+      default: () => ["doc", "docx", "pdf"],
+    },
+    isShowTip: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
       activeNames: [], // 默认展开的折叠项的名字
@@ -420,6 +437,12 @@ export default {
   created() {
     this.getList();
   },
+  // 路由钩子，每次进入该路由时都会调用getList方法
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getList(); // 在路由导航完成后调用getList
+    });
+  },
   methods: {
     /** 查询文件管理列表 */
     getList() {
@@ -436,6 +459,7 @@ export default {
     uploadCancel() {
       this.formUploadDialogVisible = false;
       this.reset();
+      this.formList = [];
     },
     // 文件修改取消按钮
     modifyCancel() {
@@ -446,6 +470,7 @@ export default {
     updateCancel() {
       this.formUpdateDialogVisible = false;
       this.reset();
+      this.formList = [];
     },
     // 表单重置
     reset() {
@@ -482,7 +507,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.regulationsId)
+      this.ids = selection.map(item => item.formId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -532,6 +557,7 @@ export default {
           });
         }
       });
+      this.formList = [];
     },
     /** 修改表单文件提交按钮 */
     modifySubmitForm() {
@@ -567,67 +593,87 @@ export default {
                 lastForm.newFormId = newId;
                 console.log("上一表单=>",lastForm);
                 updateFormfilemanagement(lastForm).then(response => {
+                  this.getList();
                 });
-                // updateFilemanagement(this.form).then(response => {
-                // });
               });
-              this.getList();
               console.log("更新文件提交按钮1=>",this.form);
               console.log("response=>",response);
             });
-            this.getList();
           }
         }
       });
+      this.formList = [];
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       console.log("当前表单1=>",row);
-      const formIds = row.formId || this.ids;
-      this.$modal.confirm('是否确认删除表单文件编号为"' + formIds + '"的数据项？').then(function () {
-        return delFormfilemanagement(formIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {
-      });
-      if(row.oldFormId != null) {
-        getFormfilemanagement(row.oldFormId).then(response => {
-          console.log("当前表单3=>",this.form);
-          const lastForm = response.data;
-          console.log("上一表单=>",lastForm);
-          lastForm.newFlag = 1;
-          console.log("上一表单=>",lastForm);
-          updateFormfilemanagement(lastForm).then(response => {
+      //将id或ids统一转换为数组
+      const formIds = [].concat(row.formId || this.ids);
+      // const regulationsIds = row.regulationsId || this.ids;
+      console.log("formIds=>",formIds);
+      this.$modal.confirm('是否确认删除？').then(function () {
+        formIds.forEach(id => {
+          console.log("Processing ID:", id);
+          getFormfilemanagement(id).then(response => {
+            const thisForm = response.data;
+            console.log("response------>:", response);
+            if(thisForm.oldFormId != null) {
+              getFormfilemanagement(thisForm.oldFormId).then(response => {
+                const lastForm = response.data;
+                lastForm.newFlag = 1;
+                console.log("上一表单=>",lastForm);
+                updateFormfilemanagement(lastForm).then(response => {
+                });
+              });
+            }
           });
         });
+        return delFormfilemanagement(formIds);
+      }).then(() => {
+        this.$modal.msgSuccess("删除成功");
         this.getList();
-      }
+        console.log("删除文件刷新");
+      }).then(() => {
+        this.getList();
+        console.log("删除文件刷新2");
+      }).catch(() => {
+      });
     },
-    // // 上传前校检格式和大小
-    // handleBeforeUpload(file) {
-    //   // 校检文件类型
-    //   if (this.formType) {
-    //     const fileName = file.name.split('.');
-    //     const fileExt = fileName[fileName.length - 1];
-    //     const isTypeOk = this.formType.indexOf(fileExt) >= 0;
-    //     if (!isTypeOk) {
-    //       this.$modal.msgError(`文件格式不正确, 请上传${this.formType.join("/")}格式文件!`);
-    //       return false;
-    //     }
+    // /** 删除按钮操作 */
+    // handleDelete(row) {
+    //   console.log("当前表单1=>",row);
+    //   const formIds = row.formId || this.ids;
+    //   this.$modal.confirm('是否确认删除？').then(function () {
+    //     return delFormfilemanagement(formIds);
+    //   }).then(() => {
+    //     this.getList();
+    //     this.$modal.msgSuccess("删除成功");
+    //   }).catch(() => {
+    //   });
+    //   if(row.oldFormId != null) {
+    //     getFormfilemanagement(row.oldFormId).then(response => {
+    //       console.log("当前表单3=>",this.form);
+    //       const lastForm = response.data;
+    //       console.log("上一表单=>",lastForm);
+    //       lastForm.newFlag = 1;
+    //       console.log("上一表单=>",lastForm);
+    //       updateFormfilemanagement(lastForm).then(response => {
+    //       });
+    //     });
+    //     this.getList();
     //   }
-    //   // 校检文件大小
-    //   if (this.formSize) {
-    //     const isLt = file.size / 1024 / 1024 < this.formSize;
-    //     if (!isLt) {
-    //       this.$modal.msgError(`上传文件大小不能超过 ${this.formSize} MB!`);
-    //       return false;
-    //     }
-    //   }
-    //   // this.$modal.loading("正在上传文件，请稍候...");
-    //   this.number++;
-    //   return true;
     // },
+    // 上传前校检格式和大小
+    handleBeforeUpload(file) {
+      console.log("handleBeforeUpload:file=====>",file);
+      // 上传前校检文件格式
+      const allowedTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
+      const isAllowedType = allowedTypes.includes(file.type);
+      if (!isAllowedType) {
+        this.$message.error('文件类型不匹配，请重新上传word或pdf文件');
+      }
+      return isAllowedType;
+    },
     /** 上传文件时的动作*/
     handleFileChange(file, formList) {
       console.log('上传文件时的form1',this.form);
@@ -708,10 +754,7 @@ export default {
       console.log(file);
     },
     handleExceed(files, formList) {
-      this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + formList.length} 个文件`);
-    },
-    beforeRemove(file, formList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      this.$message.warning(`当前限制选择 1 个文件`);
     },
     // 文件大小自动转换单位
     formatFileSize(sizeInBytes) {
@@ -794,8 +837,9 @@ export default {
           console.log("filePath:",filePath);
           console.log("pdfFilePath:",pdfFilePath);
           word2Pdf(filePath,pdfFilePath).then(response => {
+            window.open(pdfFilePath, '_blank');
           })
-          window.open(pdfFilePath, '_blank');
+
           break;
       }
       // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口

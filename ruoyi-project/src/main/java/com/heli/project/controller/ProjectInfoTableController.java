@@ -101,8 +101,13 @@ public class ProjectInfoTableController extends BaseController
     {
         System.out.println("-----test------"+projectInfoTable);
         Long[] oldProjectList = projectInfoTable.getOldProjectList();
-        List<Long> collect = Arrays.stream(oldProjectList).collect(Collectors.toList());
-        projectInfoTable.setOldProjectId(collect.get(0));
+        StringBuilder message = new StringBuilder();
+        for (Long aLong : oldProjectList) {
+            message.append(aLong.toString());
+            message.append(",");
+        }
+//        List<Long> collect = Arrays.stream(oldProjectList).collect(Collectors.toList());
+        projectInfoTable.setOldProjectId(message.toString());
 //        System.out.println(Arrays.toString(oldProjectList));
 //        System.out.println(oldProjectList);
 

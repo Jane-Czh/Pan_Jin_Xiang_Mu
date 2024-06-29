@@ -208,25 +208,25 @@ public class EnterpriseManagementFunctionLaborReminderServiceImpl implements IEn
 //                    System.out.println(3);
 //                }
 //                else enterpriseManagementFunctionSpecialOperationWarning2.setWarn("否");
-                System.out.println("--------------");
-                System.out.println(Thirdstatus==null);
-                System.out.println(Secondstatus==null);
-                System.out.println(Firststatus!=null);
-                System.out.println(FirstEnd!=null);
-                System.out.println(Thirdstatus==null&&Secondstatus==null&&Firststatus!=null&&FirstEnd!=null);
-                System.out.printf(String.valueOf((FirstEnd.getTime()-currentDate.getTime())<(((long) 30 * 24 * 60 * 60 * 1000))));
-                System.out.println("---------------");
-                System.out.println(((long) 30 * 24 * 60 * 60 * 1000)-(FirstEnd.getTime()-currentDate.getTime()));
-                System.out.println(1 * 30 * 24 * 60 * 60 * 1000-644331294);
-                System.out.println(FirstEnd.getTime()-currentDate.getTime());
-                System.out.println("-------------------");
+//                System.out.println("--------------");
+//                System.out.println(Thirdstatus==null);
+//                System.out.println(Secondstatus==null);
+//                System.out.println(Firststatus!=null);
+//                System.out.println(FirstEnd!=null);
+//                System.out.println(Thirdstatus==null&&Secondstatus==null&&Firststatus!=null&&FirstEnd!=null);
+//                System.out.printf(String.valueOf((FirstEnd.getTime()-currentDate.getTime())<(((long) 30 * 24 * 60 * 60 * 1000))));
+//                System.out.println("---------------");
+//                System.out.println(((long) 30 * 24 * 60 * 60 * 1000)-(FirstEnd.getTime()-currentDate.getTime()));
+//                System.out.println(1 * 30 * 24 * 60 * 60 * 1000-644331294);
+//                System.out.println(FirstEnd.getTime()-currentDate.getTime());
+//                System.out.println("-------------------");
                 if (Thirdstatus==null&&Secondstatus!=null&&SecondEnd!=null&&(SecondEnd.getTime()-currentDate.getTime())<((long) 30 * 24 * 60 * 60 * 1000)&&(SecondEnd.getTime()-currentDate.getTime())>0){
                     enterpriseManagementFunctionLaborReminder2.setWarn("是");
                     result.put(IDnumber,enterpriseManagementFunctionLaborReminder2);
                 } else if (Thirdstatus==null&&Secondstatus==null&&Firststatus!=null&&FirstEnd!=null&&(FirstEnd.getTime()-currentDate.getTime())<((long) 30 * 24 * 60 * 60 * 1000)&&(FirstEnd.getTime()-currentDate.getTime())>0){
                     enterpriseManagementFunctionLaborReminder2.setWarn("是");
                     result.put(IDnumber,enterpriseManagementFunctionLaborReminder2);
-                    System.out.println("Cahrucehgngong*********************************");
+//                    System.out.println("Cahrucehgngong*********************************");
                 }
                 else {enterpriseManagementFunctionLaborReminder2.setWarn("否");}
                 System.out.println(enterpriseManagementFunctionLaborReminder2);

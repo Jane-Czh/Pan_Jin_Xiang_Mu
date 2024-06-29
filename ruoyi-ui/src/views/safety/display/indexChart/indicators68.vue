@@ -53,7 +53,13 @@ export default {
         this.loading = false
       }
     },
-    handleDateChange() {
+    handleDateChange(value) {
+      if (value && value[1]) {
+        let endDate = new Date(value[1]);
+        endDate.setMonth(endDate.getMonth() + 1);
+        endDate.setDate(0);
+        this.selectedDate[1] = endDate;
+      }
       this.initData()
     },
     updateChart() {

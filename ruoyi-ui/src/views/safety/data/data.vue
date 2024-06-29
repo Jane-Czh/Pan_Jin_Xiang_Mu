@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择年月">
+      <el-form-item label="日期" prop="yearAndMonth">
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -25,9 +25,36 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['safety:data:remove']">删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <!--Excel 参数导入 -->
+        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
+          v-hasPermi="['safety:data:import']">导入Excel文件
+        </el-button>
 
-      <import-excel :name="'设备维修表'" :url="'/safety/data/importTable'" />
+        <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
 
+          <el-form :model="form" ref="form" label-width="90px">
+            <el-form-item label="上传表类:">
+              <span style="color: rgb(68, 140, 39);">设备维修表</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-form>
+          <i class="el-icon-upload"></i>
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+          <!-- 进度动画条 -->
+          <div v-if="progress > 0">
+            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="showDialog = false">取 消</el-button>
+            <el-button type="primary" @click="fileSend()">确 定</el-button>
+          </span>
+        </el-dialog>
+      </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -36,10 +63,10 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="Safety_EP_ID" align="center" prop="safetyEpId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="180"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
@@ -62,10 +89,10 @@
 
     <!-- 添加或修改[安全环保]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="年月" prop="yearAndMonth">
+      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+        <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择年月">
+            placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
 
@@ -79,9 +106,9 @@
           <el-input v-model="form.curEquipmentReplacementCost" placeholder="请输入当月设备维修替换件成本" />
         </el-form-item>
 
-        <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
+        <!-- <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
           <el-input v-model="form.keyEquipmentTotalFailureCount" placeholder="请输入主要设备故障总次数" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -93,10 +120,8 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
-import importExcel from "@/views/financial/importExcel.vue";
-
+import { uploadFile } from '@/api/financial/excelImport';
 export default {
-  components: { importExcel },
   name: "Data",
   data() {
     return {
@@ -107,6 +132,11 @@ export default {
       dates: [],
       // 非单个禁用
       single: true,
+
+      showDialog: false,
+      progress: 0,
+      selectedType: '',
+
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -136,11 +166,24 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
+        curEquipmentMaintenanceCost: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        curEquipmentFailuresTotaltime: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        curEquipmentReplacementCost: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        // keyEquipmentTotalFailureCount: [
+        //   { required: true, message: "数据不能为空", trigger: "blur" }
+        // ],
       }
     };
   },
@@ -160,7 +203,6 @@ export default {
         this.dataList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮
@@ -206,7 +248,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加[安环]数据";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -215,7 +257,7 @@ export default {
       getData(safetyEpId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改[安环]数据";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -242,12 +284,69 @@ export default {
     handleDelete(row) {
       const safetyEpIds = row.safetyEpId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delData(safetyEpIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => { });
+      }).catch(() => { this.$modal.msgSuccess("删除失败"); });
+    },
+
+    // 导入excel，检查文件类型
+    checkFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileName = file.name;
+      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+        this.$message.error("只能上传 Excel 文件！");
+        // this.$refs.fileInput.value = ""; // 清空文件选择框
+      }
+    },
+    //导入excel，取消按钮绑定取消所选的xlsx
+    resetFileInput() {
+      this.$refs.fileInput.value = "";
+    },
+    /** 导入按钮 */
+    fileSend() {
+      const formData = new FormData();
+      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      const yearAndMonth = this.form3.yearAndMonth;
+      if (file === undefined || yearAndMonth == null) {
+        if (file === undefined) {
+          this.$message.error("请选择文件!");
+          return;
+        } else {
+          this.$message.error("请选择日期!");
+          return;
+        }
+      } else {
+        formData.append("yearAndMonth", yearAndMonth);
+        formData.append("multipartFile", file);
+        const aimUrl = `/safety/data/import`
+        uploadFile(formData, aimUrl)
+          .then(data => {
+            // 处理上传成功的情况
+            this.$message.success("上传成功");
+            this.getList();
+          })
+          .catch(error => {
+            // 处理上传失败的情况
+            console.error('上传失败：', error);
+            this.$message.error("上传失败，请重试");
+          })
+          .finally(() => {
+            // 无论成功或失败，都关闭上传面板
+            this.showDialog = false;
+          });
+      }
     },
 
   }

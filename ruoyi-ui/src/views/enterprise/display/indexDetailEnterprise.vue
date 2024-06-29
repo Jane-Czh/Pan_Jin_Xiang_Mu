@@ -41,15 +41,17 @@ export default {
       selectedDate: [],
       endSelectedDate: null,
       pickerOptions: [],
-      option: {},
+
       xAxisData: [],
       yAxisData: [],
-      option: { title: '', dataName: '', apiName: '', yDataName: '' }
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
     }
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { title: '', dataName: '', apiName: '', yDataName: '' }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+    this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
+    this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()
     this.initData()
   },

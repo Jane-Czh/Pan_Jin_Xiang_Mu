@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="年月" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+      <el-form-item label="日期" prop="yearAndMonth">
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择年月">
         </el-date-picker>
       </el-form-item>
@@ -15,15 +15,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:Management:add']">新增</el-button>
+          v-hasPermi="['enterprise:management:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:Management:edit']">修改</el-button>
+          v-hasPermi="['enterprise:management:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:Management:remove']">删除</el-button>
+          v-hasPermi="['enterprise:management:remove']">删除</el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -33,9 +33,9 @@
       @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emId" /> -->
-      <el-table-column label="年月" align="center" prop="yearAndMonth" width="120" sortable="custom">
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="SD 销售订单有效性考核" align="center" prop="sdSalesordervalidity" width="170" />
@@ -53,9 +53,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:Management:edit']">修改</el-button>
+            v-hasPermi="['enterprise:management:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:Management:remove']">删除</el-button>
+            v-hasPermi="['enterprise:management:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,9 +65,9 @@
 
     <!-- 添加或修改十一项管理指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="220px">
-        <el-form-item label="年月" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+      <el-form ref="form" :model="form" :rules="rules" label-width="230px">
+        <el-form-item label="日期" prop="yearAndMonth">
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
           </el-date-picker>
         </el-form-item>
@@ -160,6 +160,41 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        sdSalesordervalidity: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ppManualpocreationratio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ppDeliveredunreportedratio: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        mesLateworkreportingrate: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        qmExternalinspectiondelay: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        mmPurchaseorderlatedelivery: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ], mmManualpocreation: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        mmUnsettledpurchaserequests: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        ficoMonthlystandardpricevariation: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        CrossMonthProductionOrders: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+        pmLatemaintenanceordercompletion: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -240,7 +275,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加十一项管理指标";
+      this.title = "新增";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -249,7 +284,7 @@ export default {
       getManagement(emId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改十一项管理指标";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -276,7 +311,14 @@ export default {
     handleDelete(row) {
       const emIds = row.emId || this.ids;
       const date = row.yearAndMonth || this.dates;
-      this.$modal.confirm('是否确认删除日期为"' + date + '"的数据？').then(function () {
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
         return delManagement(emIds);
       }).then(() => {
         this.getList();

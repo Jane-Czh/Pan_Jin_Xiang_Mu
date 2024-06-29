@@ -62,6 +62,8 @@
     </select>
 
 
+
+
     <insert id="insertRegulationsInfoTable" parameterType="RegulationsInfoTable" useGeneratedKeys="true" keyProperty="regulationsId">
         insert into Regulations_Info_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -146,6 +148,7 @@
     </delete>
 
 
+
 <!--    &lt;!&ndash; 制度修订频率 &ndash;&gt;-->
 <!--    <select id="selectRevisionFrequency" resultType="map">-->
 <!--    select * from (-->
@@ -156,5 +159,17 @@
 <!--        ) as t-->
 <!--        order by upload_date ASC-->
 <!--    </select>-->
+    <!--流程部分依赖使用-->
+    <!-- 根据 ID 查询文件名称 -->
+    <!-- 根据多个ID查询文件名称 -->
+    <select id="selectFileNamesByIds" resultType="java.lang.String">
+        SELECT file_name
+        FROM Regulations_Info_table
+        WHERE regulations_id IN
+        <foreach item="id" collection="regulationsIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 
 </mapper>

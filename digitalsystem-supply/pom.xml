@@ -16,10 +16,10 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi</artifactId>
-            <version>3.8.7</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 

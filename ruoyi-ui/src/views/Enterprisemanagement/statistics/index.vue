@@ -1,8 +1,12 @@
 <template>
   <div class="app-container">
-    <div  class="contracted-total">合同工总人数: {{totalNumberOfContractedInFirstRow}}</div>
-    <div class="intern-total">实习生总人数: {{ totalNumberOfInterns1 }}</div>
-    <div class="labor-total">劳动派遣总人数: {{ ttotalNumberOfLaborDispatch1 }}</div>
+    <div>
+      <el-select v-model="selectedItem" placeholder="选择统计数据">
+        <el-option :label="'合同工总人数: ' + totalNumberOfContractedInFirstRow" :value="1" />
+        <el-option :label="'实习生总人数: ' + totalNumberOfInterns1" :value="2" />
+        <el-option :label="'劳动派遣总人数: ' + ttotalNumberOfLaborDispatch1" :value="3" />
+      </el-select>
+    </div>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 <!--      <el-form-item label="员工编号" prop="employeeId">-->
 <!--        <el-input-->
@@ -68,27 +72,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['Enterprisemanagement:statistics:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['Enterprisemanagement:statistics:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['Enterprisemanagement:statistics:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['Enterprisemanagement:statistics:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -100,16 +104,16 @@
           v-hasPermi="['Enterprisemanagement:statistics:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['Enterprisemanagement:statistics:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['Enterprisemanagement:statistics:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -200,6 +204,7 @@ export default {
   name: "Statistics",
   data() {
     return {
+      selectedItem: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -257,6 +262,7 @@ export default {
     // });
   },
   methods: {
+
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
       fetch('http://localhost:8080/Enterprisemanagement/statistics/synchronization', {
@@ -274,6 +280,7 @@ export default {
         .catch(error => {
           console.error('There was an error!', error);
         });
+      this.getList();
     },
 
     /** 查询员工统计列表 */

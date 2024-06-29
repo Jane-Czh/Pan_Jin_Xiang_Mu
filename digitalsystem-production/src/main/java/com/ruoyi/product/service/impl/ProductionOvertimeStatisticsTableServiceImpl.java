@@ -1,12 +1,14 @@
 package com.ruoyi.product.service.impl;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
-
+//import com.google.common.collect.HashBasedTable;
+//import com.google.common.collect.Table;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
 import com.ruoyi.market.utils.GenerateId;
@@ -15,6 +17,7 @@ import com.ruoyi.market.utils.getTime;
 import com.ruoyi.product.domain.ProductionClockInForm;
 import com.ruoyi.product.domain.ProductionFunctionStatisticsOfPlanCompletionStatus;
 import com.ruoyi.product.domain.ProductionOvertimeApplicationForm;
+import com.ruoyi.product.utils.HolidayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.product.mapper.ProductionOvertimeStatisticsTableMapper;
@@ -106,9 +109,20 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
     }
 
     @Override
-    public void Synchronization(List<ProductionClockInForm> list1, List<ProductionOvertimeApplicationForm> list2,ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable) {
+    public void Synchronization(List<ProductionClockInForm> list1, List<ProductionOvertimeApplicationForm> list2,ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable) throws ParseException {
         int count1 = 0;
         int count2 = 0;
+//testAPI
+//        String testdate1 = "2024-04-18";
+//        String test1 = HolidayUtil.isWorkingDay(testdate1);
+//        String testdate2 = "2024-06-09";
+//        String test2 = HolidayUtil.isWorkingDay(testdate2);
+//        String testdate3 = "2024-06-10";
+//        String test3 = HolidayUtil.isWorkingDay(testdate3);
+//        System.out.println("***********"+test1+"*****************");
+//        System.out.println("***********"+test2+"*****************");
+//        System.out.println("***********"+test3+"*****************");
+
 
         HashMap<String, ProductionOvertimeStatisticsTable> result = new HashMap<String, ProductionOvertimeStatisticsTable>();
 //        Map<String, Map<String, ProductionOvertimeStatisticsTable>> attendanceMap = new HashMap<>();
@@ -124,7 +138,7 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
 
         long totalover = 0;
 
-        //        先删除数据库中本月的所有数据
+        //        先删除数据库中本月所统计的上个月数据
         List<ProductionOvertimeStatisticsTable> listnew = selectProductionOvertimeStatisticsTableList(productionOvertimeStatisticsTable);
         if (list1 != null&& listnew.size()>0){
             int x = 0;
@@ -139,7 +153,6 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
             System.out.println("删除成功");
         }
 
-
         while (count1<list1.size()){
             ProductionClockInForm productionClockInForm = list1.get(count1);
             //记录是否有加班申请
@@ -150,6 +163,18 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
             Date Firststart = productionClockInForm.getFirstTimeClockingInAtWork();
             //转换成String类型用于作为键
             String dateAsString = currentDate.toString();
+            //获取第一次打卡年月日信息用于判断是否是节假日
+            int Firststartyear = SplitDate.splitDate(Firststart)[0];
+            int Firststartmonth = SplitDate.splitDate(Firststart)[1];
+            int Firststartday = SplitDate.splitDate(Firststart)[2];
+            String FirstStarttime = String.format("%04d-%02d-%02d", Firststartyear, Firststartmonth, Firststartday);
+            //判断是否是节假日,节假日为2,周末为1,其他为0
+            String ifovertime = HolidayUtil.isWorkingDay(FirstStarttime);
+            if (ifovertime.equals("1")){
+                ifovertime ="0";
+            }
+
+
 
             Date Firstend = productionClockInForm.getFirstTimeClockingInAfterWork();
             Date Secondstart = productionClockInForm.getSecondTimeClockingInAtWork();
@@ -166,13 +191,14 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 count2++;
             }
 
+
             if(result.get(idnumber)==null){
                 ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = new ProductionOvertimeStatisticsTable();
                 //新增数据
 //                if(Firststart!=null&&Firstend!=null)
 //                    productionOvertimeStatisticsTable1.set
                 productionOvertimeStatisticsTable1.setCreateTime(currentDateold);//设置现在时间便于管理本月
-                productionOvertimeStatisticsTable1.setGender(name);
+                productionOvertimeStatisticsTable1.setName(name);
                 productionOvertimeStatisticsTable1.setGender(gender);
                 productionOvertimeStatisticsTable1.setIdNumber(idnumber);
 
@@ -180,11 +206,23 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 if(Firstend!=null){
                     productionOvertimeStatisticsTable1.setAttendanceSituation(Long.valueOf(1));
                     //计算加班时长
-                    if (Secondend!=null&&key==1){
-                        totalover = (Secondend.getTime()-Normalend.getTime())/(1000 * 60 * 60 * 24);
-                        productionOvertimeStatisticsTable1.setOvertimeDuration(totalover);
+                    if (Secondend!=null&&key==1&&ifovertime.equals("0")){
+                        totalover = (Secondend.getTime()-Normalend.getTime())/(1000 * 60 );
+                        System.out.println("+++++++"+(Secondend.getTime()-Normalend.getTime())+"加班时长");
+                        System.out.println("+++++++"+totalover+"加班时长");
+                        if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
+                            productionOvertimeStatisticsTable1.setOvertimeDuration(0L);
+                        }
+                        productionOvertimeStatisticsTable1.setOvertimeDuration(productionOvertimeStatisticsTable1.getOvertimeDuration()+totalover+1);
                     }
-                    else if (Secondend!=null&&key==0){
+                    if (Firstend!=null&&key==1&&ifovertime.equals("2")){
+                        totalover = (Firstend.getTime()-Firststart.getTime())/(1000 * 60 );
+                        if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
+                            productionOvertimeStatisticsTable1.setOvertimeDuration(0L);
+                        }
+                        productionOvertimeStatisticsTable1.setOvertimeDuration(productionOvertimeStatisticsTable1.getOvertimeDuration()+totalover+1);
+                    }
+                    if ((Secondend!=null||ifovertime.equals("2"))&&key==0){
                         productionOvertimeStatisticsTable1.setAbnormalSituation("未申请加班而有加班打卡记录");
                     }
                 }
@@ -195,13 +233,23 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = result.get(idnumber);
                 //判断是否出勤
                 if(Firstend!=null){
-                    productionOvertimeStatisticsTable1.setAttendanceSituation(productionOvertimeStatisticsTable1.getAttendanceSituation()+1);
+                    productionOvertimeStatisticsTable1.setAttendanceSituation(productionOvertimeStatisticsTable1.getAttendanceSituation());
                     //计算加班时长
-                    if (Secondend!=null&&key==1){
-                        totalover = (Secondend.getTime()-Normalend.getTime())/(1000 * 60 * 60 * 24);
-                        productionOvertimeStatisticsTable1.setOvertimeDuration(totalover);
+                    if (Secondend!=null&&key==1&&ifovertime.equals("0")){
+                        totalover = (Secondend.getTime()-Normalend.getTime())/(1000 * 60 );
+                        if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
+                            productionOvertimeStatisticsTable1.setOvertimeDuration(0L);
+                        }
+                        productionOvertimeStatisticsTable1.setOvertimeDuration(productionOvertimeStatisticsTable1.getOvertimeDuration()+totalover+1);
                     }
-                    else if (Secondend!=null&&key==0){
+                    if (Firstend!=null&&key==1&&ifovertime.equals("2")){
+                        totalover = (Firstend.getTime()-Firststart.getTime())/(1000 * 60 );
+                        if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
+                            productionOvertimeStatisticsTable1.setOvertimeDuration(0L);
+                        }
+                        productionOvertimeStatisticsTable1.setOvertimeDuration(productionOvertimeStatisticsTable1.getOvertimeDuration()+totalover+1);
+                    }
+                    if ((Secondend!=null||ifovertime.equals("2"))&&key==0){
                         productionOvertimeStatisticsTable1.setAbnormalSituation("未申请加班而有加班打卡记录");
                     }
                 }

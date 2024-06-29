@@ -55,7 +55,7 @@
 
       </el-tab-pane> -->
       <!-- <div>
-      
+
       <div class="DAYandMONTH">
         <div id="main1" ref="main1"></div>
         <div id="main2" ref="main2"></div>
@@ -92,10 +92,7 @@ export default {
         startTime: new Date(),
         endTime: new Date(),
       },
-      timeData: {
-        startTime: new Date(),
-        endTime: new Date(),
-      },
+
       checkList: [],
       selectedDate: [],
       selectedDateDay: [],
@@ -147,24 +144,27 @@ export default {
         this.loading = false
       }
     },
-    handleDateChange() {
+    handleDateChange(value) {
       if (this.activeName === '0') {
+        if (value && value[1]) {
+          let endDate = new Date(value[1]);
+          endDate.setHours(endDate.getHours() + 13);
+          this.selectedDateDay[1] = endDate;
+        }
         this.initData(0)
       } else if (this.activeName === '1') {
+        if (value && value[1]) {
+          let endDate = new Date(value[1]);
+          endDate.setMonth(endDate.getMonth() + 1);
+          endDate.setDate(0);
+          this.selectedDateMonth[1] = endDate;
+        }
         this.initData(1)
       } else if (this.activeName === '2') {
         this.initData(2)
       }
     },
-    // handleSelectChange() {
-    //   if (this.checkList.length === 0) {
-    //     this.initData(0)
-    //     this.initData(1)
-    //     this.initData(2)
-    //   } else {
-    //     this.initData(this.checkList[0])
-    //   }
-    // },
+
     updateChart(rows) {
       // if (num === 1) {
 

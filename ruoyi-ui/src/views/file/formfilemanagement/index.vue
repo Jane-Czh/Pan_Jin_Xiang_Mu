@@ -28,14 +28,14 @@
                               placeholder="请选择表单上传时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="表单大小" prop="formSize">
-              <el-input
-                v-model="queryParams.formSize"
-                placeholder="请输入表单大小"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="表单大小" prop="formSize">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.formSize"-->
+<!--                placeholder="请输入表单大小"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="上传人" prop="createUsername">
               <el-input
                 v-model="queryParams.createUsername"
@@ -52,30 +52,30 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="历史表单" prop="oldFormId">
-              <el-input
-                v-model="queryParams.oldFormId"
-                placeholder="请输入历史表单"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="修订时间" prop="revisionTime">
-              <el-date-picker clearable
-                              v-model="queryParams.revisionTime"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择修订时间">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="修订人" prop="reviser">
-              <el-input
-                v-model="queryParams.reviser"
-                placeholder="请输入修订人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="历史表单" prop="oldFormId">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.oldFormId"-->
+<!--                placeholder="请输入历史表单"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订时间" prop="revisionTime">-->
+<!--              <el-date-picker clearable-->
+<!--                              v-model="queryParams.revisionTime"-->
+<!--                              type="date"-->
+<!--                              value-format="yyyy-MM-dd"-->
+<!--                              placeholder="请选择修订时间">-->
+<!--              </el-date-picker>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订人" prop="reviser">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.reviser"-->
+<!--                placeholder="请输入修订人"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -96,7 +96,7 @@
           v-hasPermi="['file:formfilemanagement:add']"
         >上传</el-button>
       </el-col>
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -106,7 +106,7 @@
           @click="handleDelete"
           v-hasPermi="['file:formfilemanagement:remove']"
         >删除</el-button>
-      </el-col> -->
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -437,6 +437,12 @@ export default {
   created() {
     this.getList();
   },
+  // 路由钩子，每次进入该路由时都会调用getList方法
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getList(); // 在路由导航完成后调用getList
+    });
+  },
   methods: {
     /** 查询文件管理列表 */
     getList() {
@@ -601,27 +607,62 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       console.log("当前表单1=>",row);
-      const formIds = row.formId || this.ids;
+      //将id或ids统一转换为数组
+      const formIds = [].concat(row.formId || this.ids);
+      // const regulationsIds = row.regulationsId || this.ids;
+      console.log("formIds=>",formIds);
       this.$modal.confirm('是否确认删除？').then(function () {
-        return delFormfilemanagement(formIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {
-      });
-      if(row.oldFormId != null) {
-        getFormfilemanagement(row.oldFormId).then(response => {
-          console.log("当前表单3=>",this.form);
-          const lastForm = response.data;
-          console.log("上一表单=>",lastForm);
-          lastForm.newFlag = 1;
-          console.log("上一表单=>",lastForm);
-          updateFormfilemanagement(lastForm).then(response => {
+        formIds.forEach(id => {
+          console.log("Processing ID:", id);
+          getFormfilemanagement(id).then(response => {
+            const thisForm = response.data;
+            console.log("response------>:", response);
+            if(thisForm.oldFormId != null) {
+              getFormfilemanagement(thisForm.oldFormId).then(response => {
+                const lastForm = response.data;
+                lastForm.newFlag = 1;
+                console.log("上一表单=>",lastForm);
+                updateFormfilemanagement(lastForm).then(response => {
+                });
+              });
+            }
           });
         });
+        return delFormfilemanagement(formIds);
+      }).then(() => {
+        this.$modal.msgSuccess("删除成功");
         this.getList();
-      }
+        console.log("删除文件刷新");
+      }).then(() => {
+        this.getList();
+        console.log("删除文件刷新2");
+      }).catch(() => {
+      });
     },
+    // /** 删除按钮操作 */
+    // handleDelete(row) {
+    //   console.log("当前表单1=>",row);
+    //   const formIds = row.formId || this.ids;
+    //   this.$modal.confirm('是否确认删除？').then(function () {
+    //     return delFormfilemanagement(formIds);
+    //   }).then(() => {
+    //     this.getList();
+    //     this.$modal.msgSuccess("删除成功");
+    //   }).catch(() => {
+    //   });
+    //   if(row.oldFormId != null) {
+    //     getFormfilemanagement(row.oldFormId).then(response => {
+    //       console.log("当前表单3=>",this.form);
+    //       const lastForm = response.data;
+    //       console.log("上一表单=>",lastForm);
+    //       lastForm.newFlag = 1;
+    //       console.log("上一表单=>",lastForm);
+    //       updateFormfilemanagement(lastForm).then(response => {
+    //       });
+    //     });
+    //     this.getList();
+    //   }
+    // },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
       console.log("handleBeforeUpload:file=====>",file);

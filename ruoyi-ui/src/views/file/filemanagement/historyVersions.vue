@@ -145,7 +145,7 @@
 
     <el-table v-loading="loading" :data="filemanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>
+<!--      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>-->
       <el-table-column label="制度标题" align="center" prop="regulationsTitle"/>
       <el-table-column label="适用范围" align="center" prop="useScope"/>
       <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
@@ -476,40 +476,6 @@
           console.log("filemanagementList:：",this.filemanagementList);
           this.loading = false;
         })
-        // getFilemanagement(newRegulationId).then(response => {
-        //   console.log("response=>：",response);
-        //   this.filemanagementList[0] = response.data;
-        //   console.log("filemanagementList=>",this.filemanagementList);
-        //   this.loading = false;
-        // });
-        // getFilemanagement(newRegulationId).then(response => {
-        //   console.log("response:：",response);
-        //   const newForm = response.data;
-        //   let flag = 0;
-        //   while (newForm.oldRegulationsId){
-        //     getFilemanagement(newForm.oldRegulationsId).then(response => {
-        //       this.filemanagementList[flag] = response.data;
-        //       flag++;
-        //     });
-        //   }
-        //   console.log("filemanagementList:：",this.filemanagementList);
-        //   this.loading = false;
-        // });
-
-
-        // listFilemanagement(this.queryParams).then(response => {
-        //   console.log("response:：",response);
-        //   const responseList = response.rows;
-        //   let i = 0;
-        //   while (responseList[i].oldRegulationsId){
-        //     getFilemanagement(responseList[i].oldRegulationsId).then(response => {
-        //       this.filemanagementList[i] = responseList[i];
-        //       i++;
-        //     });
-        //   }
-        //   this.total = response.total;
-        //   this.loading = false;
-        // });
       },
       // 文件修改取消按钮
       modifyCancel() {
@@ -595,20 +561,20 @@
         });
         if(row.oldRegulationsId != null) {
           getFilemanagement(row.oldRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
+            console.log("当前表单1=>",this.form);
             const lastForm = response.data;
-            console.log("上一表单=>",lastForm);
+            console.log("上一表单1=>",lastForm);
             lastForm.newRegulationsId = row.newRegulationsId;
-            console.log("上一表单=>",lastForm);
+            console.log("上一表单1=>",lastForm);
             updateFilemanagement(lastForm).then(response => {
             });
           });
           getFilemanagement(row.newRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
+            console.log("当前表单2=>",this.form);
             const newForm = response.data;
-            console.log("上一表单=>",newForm);
+            console.log("上一表单2=>",newForm);
             newForm.oldRegulationsId = row.oldRegulationsId;
-            console.log("上一表单=>",newForm);
+            console.log("上一表单2=>",newForm);
             updateFilemanagement(newForm).then(response => {
             });
           });

@@ -155,7 +155,7 @@
         >上传
         </el-button>
       </el-col>
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -166,7 +166,7 @@
           v-hasPermi="['file:filemanagement:remove']"
         >删除
         </el-button>
-      </el-col> -->
+      </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -643,10 +643,17 @@
     created() {
       this.getList();
     },
+    // 路由钩子，每次进入该路由时都会调用getList方法
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.getList(); // 在路由导航完成后调用getList
+      });
+    },
     methods: {
       /** 查询文件管理列表 */
       getList() {
         this.loading = true;
+        console.log("刷新页面");
         listFilemanagement(this.queryParams).then(response => {
           console.log("response:：",response);
           this.filemanagementList = response.rows;
@@ -815,26 +822,52 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         console.log("当前表单1=>",row);
-        const regulationsIds = row.regulationsId || this.ids;
+        //将id或ids统一转换为数组
+        const regulationsIds = [].concat(row.regulationsId || this.ids);
+        // const regulationsIds = row.regulationsId || this.ids;
+        console.log("regulationsIds=>",regulationsIds);
         this.$modal.confirm('是否确认删除？').then(function () {
-          return delFilemanagement(regulationsIds);
-        }).then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {
-        });
-        if(row.oldRegulationsId != null) {
-          getFilemanagement(row.oldRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
-            const lastForm = response.data;
-            console.log("上一表单=>",lastForm);
-            lastForm.newFlag = 1;
-            console.log("上一表单=>",lastForm);
-            updateFilemanagement(lastForm).then(response => {
+          regulationsIds.forEach(id => {
+            console.log("Processing ID:", id);
+            getFilemanagement(id).then(response => {
+              const thisForm = response.data;
+              console.log("response------>:", response);
+              if(thisForm.oldRegulationsId != null) {
+                getFilemanagement(thisForm.oldRegulationsId).then(response => {
+                  const lastForm = response.data;
+                  console.log("上一表单=>",lastForm);
+                  lastForm.newFlag = 1;
+                  console.log("上一表单=>",lastForm);
+                  updateFilemanagement(lastForm).then(response => {
+                  });
+                });
+              }
             });
           });
+          return delFilemanagement(regulationsIds);
+        }).then(() => {
+          this.$modal.msgSuccess("删除成功");
           this.getList();
-        }
+          console.log("删除文件刷新");
+        }).then(() => {
+          this.getList();
+          console.log("删除文件刷新2");
+        }).catch(() => {
+        });
+
+
+        // if(row.oldRegulationsId != null) {
+        //   getFilemanagement(row.oldRegulationsId).then(response => {
+        //     console.log("当前表单3=>",this.form);
+        //     const lastForm = response.data;
+        //     console.log("上一表单=>",lastForm);
+        //     lastForm.newFlag = 1;
+        //     console.log("上一表单=>",lastForm);
+        //     updateFilemanagement(lastForm).then(response => {
+        //     });
+        //   });
+        //   this.getList();
+        // }
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -1093,7 +1126,8 @@
             word2Pdf(filePath,pdfFilePath).then(response => {
               window.open(pdfFilePath, '_blank');
             })
-
+//http://172.19.4.28:81/file/172.19.4.28:8080/profile/upload/2024/06/27/%E6%96%87%E4%BB%B64_20240627173517A010.pdf
+            //http://172.19.4.28:8080/profile/upload/2024/06/27/%E6%96%87%E4%BB%B64_20240627173517A010.pdf
             break;
         }
         // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口

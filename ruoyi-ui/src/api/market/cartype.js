@@ -42,3 +42,23 @@ export function delCartype(mctId) {
     method: 'delete'
   })
 }
+
+//导入 excel文件
+export function uploadImport(formData) {
+  return request({
+    url: '/market/cartype/import',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+    onUploadProgress: (progressEvent) => {
+      let progress = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      // 这里可以处理上传进度，例如通过事件发射给外部组件
+      // this.$emit('progress', progress);
+    },
+  });
+}

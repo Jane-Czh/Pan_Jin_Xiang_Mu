@@ -42,3 +42,14 @@ export function delRecurrence(masrrId) {
     method: 'delete'
   })
 }
+
+export function synchronization(){
+  return request({
+    url: '/market/recurrence/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+  });
+}

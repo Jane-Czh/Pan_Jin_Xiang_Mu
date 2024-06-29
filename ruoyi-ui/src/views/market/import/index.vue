@@ -540,7 +540,7 @@
 </template>
 
 <script>
-import { listImport, getImport, delImport, addImport, updateImport } from "@/api/market/import";
+import { listImport, getImport, delImport, addImport, updateImport, uploadImport } from "@/api/market/import";
 import axios from 'axios'
 
 export default {
@@ -787,32 +787,48 @@ export default {
       console.log(file);
       formData.append("file", file);
       console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/market/import/import",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+      // console.log("uploadImport function: ", uploadImport);
+      uploadImport(formData)
+        .then(response => {
+          // 文件上传成功
+          // console.log('File uploaded successfully:', response);
+          
+          // 2秒后关闭上传面板并刷新页面
+          setTimeout(() => {
+            this.showDialog = false; // 关闭上传面板
+            location.reload(); // 刷新页面数据
+          }, 10000); // 2000毫秒后执行
+        })
+        .catch(error => {
+          // 处理错误
+          console.error('Error uploading file:', error);
+        });
+    
+  
+      // axios({
+      //   method: "post",
+      //   // this $axios.post,
+      //   url: "http://localhost:8080/market/import/import",
+      //   // params:{
+      //   //   userName: this.$store.state.user.name,
+      //   // },
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      //   withCredentials: true,
+      //   data: formData,
+      //   onUploadProgress: (progressEvent) => {
+      //     this.progress = Math.round(
+      //       (progressEvent.loaded * 100) / progressEvent.total
+      //     );
+      //   },
+      // });
+      // setTimeout(() => {
+      //     this.showDialog = false; // 关闭上传面板
 
-
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
+      //     location.reload(); // 调用此方法刷新页面数据
+      //   }, 2000); // 2000毫秒后关闭
+   
     },
 
     handleClose(done) {

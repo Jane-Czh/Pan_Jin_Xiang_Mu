@@ -337,7 +337,7 @@
 </template>
 
 <script>
-import { listPresentation, getPresentation, delPresentation, addPresentation, updatePresentation } from "@/api/safety/presentation";
+import { listPresentation, getPresentation, delPresentation, addPresentation, updatePresentation, synchronization } from "@/api/safety/presentation";
 import * as echarts from 'echarts'
 
 export default {
@@ -756,23 +756,36 @@ export default {
 
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/safety/presentation/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // fetch('http://localhost:8080/safety/presentation/synchronization', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   // 如果请求成功，可以进行下一步操作
+      // })
+      // .catch(error => {
+      //   console.error('There was an error!', error);
+      // });
+
+      synchronization()
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        // if (!response.ok) {
+        //   throw new Error('Network response was not ok');
+        // }
         // 如果请求成功，可以进行下一步操作
+        this.$message.success("同步成功");
+        //页面刷新
+        location.reload();
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
-      // 页面刷新
-      window.location.reload();
+
     },
   }
 };

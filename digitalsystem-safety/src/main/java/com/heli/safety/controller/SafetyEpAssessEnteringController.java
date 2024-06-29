@@ -88,6 +88,7 @@ public class SafetyEpAssessEnteringController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SafetyEpAssessEntering safetyEpAssessEntering)
     {
+        System.out.println("-------"+ safetyEpAssessEntering);
         return toAjax(safetyEpAssessEnteringService.updateSafetyEpAssessEntering(safetyEpAssessEntering));
     }
 

@@ -480,12 +480,7 @@
             placeholder="请选择计划结项时间">
           </el-date-picker>
         </el-form-item>
-        <!-- <el-form-item label="已过天数(自动计算)" prop="daysPassed">
-          <el-input v-model="form.daysPassed" placeholder="请输入已过天数(自动计算)" />
-        </el-form-item>
-        <el-form-item label="剩余天数(自动计算)" prop="daysRemaining">
-          <el-input v-model="form.daysRemaining" placeholder="请输入剩余天数(自动计算)" />
-        </el-form-item> -->
+
         <el-form-item label="完成内容概述" prop="completionSummary">
           <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
         </el-form-item>

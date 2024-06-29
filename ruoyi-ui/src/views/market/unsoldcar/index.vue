@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { listUnsoldcar, getUnsoldcar, delUnsoldcar, addUnsoldcar, updateUnsoldcar } from "@/api/market/unsoldcar";
+import { listUnsoldcar, getUnsoldcar, delUnsoldcar, addUnsoldcar, updateUnsoldcar, synchronization } from "@/api/market/unsoldcar";
 
 export default {
   name: "Unsoldcar",
@@ -277,22 +277,38 @@ export default {
       }, `unsoldcar_${new Date().getTime()}.xlsx`)
     },
     syncReport() {
-      // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/market/unsoldcar/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+
+      synchronization()
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        // if (!response.ok) {
+        //   throw new Error('Network response was not ok');
+        // }
+        this.$message.success("同步成功");
+        location.reload();
         // 如果请求成功，可以进行下一步操作
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
+      // 使用 Fetch API 发送 POST 请求到后端
+      // fetch('http://localhost:8080/market/unsoldcar/synchronization', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   // 如果请求成功，可以进行下一步操作
+      // })
+      // .catch(error => {
+      //   console.error('There was an error!', error);
+      // });
+
+
+
     }
   }
 };

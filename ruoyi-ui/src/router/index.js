@@ -465,6 +465,20 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
+        path: 'index19',
+        component: () => import('@/views/market/display/indexChart/index19'),
+        name: 'Index19',
+        meta: { title: '指标19：各网点已到期未完工订单数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
         path: 'index18',
         component: () => import('@/views/market/display/indexChart/index18'),
         name: 'Index18',

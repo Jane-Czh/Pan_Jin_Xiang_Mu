@@ -110,7 +110,7 @@ export default {
         { id: '16', icon: 'el-icon-s-data', title: '各网点已接单未发车总台数', content: '各网点已接单未发车总台数', path: '/market/index16' },
         { id: '17', icon: 'el-icon-s-data', title: '各网点未排产订单台数', content: '各网点未排产订单台数', path: '/market/index17' },
         { id: '18', icon: 'el-icon-s-data', title: '各网点已完工未发车订单数', content: '各网点已完工未发车订单数', path: '/market/index18' },
-        { id: '19', icon: 'el-icon-s-data', title: '各网点已到期未完工订单数', content: '企业主要营业产品财务收入', path: '/financial/totalSalesCost' },
+        { id: '19', icon: 'el-icon-s-data', title: '各网点已到期未完工订单数', content: '各网点已到期未完工订单数', path: '/market/index19' },
         { id: '39', icon: 'el-icon-s-data', title: '商品车计划兑现率', content: '商品车计划兑现率', path: '/market/index39' },
         { id: '40', icon: 'el-icon-s-data', title: '订单兑现率', content: '订单兑现率', path: '/market/index40' },
         { id: '42', icon: 'el-icon-s-data', title: '大叉位叉车整机交货天数平均数', content: '大叉位叉车整机交货天数平均数', path: '/market/index42' },
@@ -129,7 +129,7 @@ export default {
         { id: '17', icon: 'el-icon-s-data', title: '各网点未排产订单台数', content: '各网点未排产订单台数', path: '/market/index17' },
         { id: '18', icon: 'el-icon-s-data', title: '各网点已完工未发车订单数', content: '各网点已完工未发车订单数', path: '/market/index18' },
 
-        // { id: '19', icon: 'el-icon-s-data', title: '各网点已到期未完工订单数', content: '企业主要营业产品财务收入', path: '/financial/totalSalesCost' },
+        { id: '19', icon: 'el-icon-s-data', title: '各网点已到期未完工订单数', content: '各网点已到期未完工订单数', path: '/market/index19' },
       ],
       OperatingEfficiencyIndex: [
         { id: '39', icon: 'el-icon-s-data', title: '商品车计划兑现率', content: '商品车计划兑现率', path: '/market/index39' },

@@ -91,6 +91,17 @@ export function getIndex11(data) {
       }
     })
   }
+  export function getIndex19(data) {
+    return request({
+      url: '/market/Index/OvertimedOrderNumber',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
   export function getIndex39(data) {
     return request({
       url: '/market/Index/CommercialVehicleRate',

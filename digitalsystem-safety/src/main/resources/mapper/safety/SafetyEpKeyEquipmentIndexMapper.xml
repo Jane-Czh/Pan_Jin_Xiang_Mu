@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.safety.mapper.SafetyEpKeyEquipmentIndexMapper">
+
+    <resultMap type="SafetyEpKeyEquipmentIndex" id="SafetyEpKeyEquipmentIndexResult">
+        <result property="skId"    column="SK_ID"    />
+        <result property="seKeyEquipmentId"    column="SE_Key_Equipment_ID"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectSafetyEpKeyEquipmentIndexVo">
+        select SK_ID, SE_Key_Equipment_ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Safety_EP_Key_Equipment_index
+    </sql>
+
+    <!--  检查重点设备是否存在  -->
+    <select id="checkSafetyEpKeyEquipmentIndexIsExisted" parameterType="String" resultType="boolean">
+        select count(1) from Safety_EP_Key_Equipment_index where SE_Key_Equipment_ID = #{seKeyEquipmentId}
+    </select>
+
+    <select id="selectSafetyEpKeyEquipmentIndexList" parameterType="SafetyEpKeyEquipmentIndex" resultMap="SafetyEpKeyEquipmentIndexResult">
+        <include refid="selectSafetyEpKeyEquipmentIndexVo"/>
+        <where>
+            <if test="seKeyEquipmentId != null  and seKeyEquipmentId != ''"> and SE_Key_Equipment_ID = #{seKeyEquipmentId}</if>
+        </where>
+    </select>
+
+    <select id="selectSafetyEpKeyEquipmentIndexBySkId" parameterType="Long" resultMap="SafetyEpKeyEquipmentIndexResult">
+        <include refid="selectSafetyEpKeyEquipmentIndexVo"/>
+        where SK_ID = #{skId}
+    </select>
+
+    <insert id="insertSafetyEpKeyEquipmentIndex" parameterType="SafetyEpKeyEquipmentIndex" useGeneratedKeys="true" keyProperty="skId">
+        insert into Safety_EP_Key_Equipment_index
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seKeyEquipmentId != null">SE_Key_Equipment_ID,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seKeyEquipmentId != null">#{seKeyEquipmentId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSafetyEpKeyEquipmentIndex" parameterType="SafetyEpKeyEquipmentIndex">
+        update Safety_EP_Key_Equipment_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="seKeyEquipmentId != null">SE_Key_Equipment_ID = #{seKeyEquipmentId},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where SK_ID = #{skId}
+    </update>
+
+    <delete id="deleteSafetyEpKeyEquipmentIndexBySkId" parameterType="Long">
+        delete from Safety_EP_Key_Equipment_index where SK_ID = #{skId}
+    </delete>
+
+    <delete id="deleteSafetyEpKeyEquipmentIndexBySkIds" parameterType="String">
+        delete from Safety_EP_Key_Equipment_index where SK_ID in
+        <foreach item="skId" collection="array" open="(" separator="," close=")">
+            #{skId}
+        </foreach>
+    </delete>
+</mapper>

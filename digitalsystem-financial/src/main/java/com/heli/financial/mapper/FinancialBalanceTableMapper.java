@@ -20,6 +20,8 @@ public interface FinancialBalanceTableMapper {
 
     List<Date> selectAllBalanceYearAndMonth();
 
+    boolean checkDataExists();
+
 
     /**
      * @description: 检查当月资产负债表数据是否存在

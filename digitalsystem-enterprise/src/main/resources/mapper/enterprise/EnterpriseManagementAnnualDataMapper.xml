@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementAnnualDataMapper">
+    
+    <resultMap type="EnterpriseManagementAnnualData" id="EnterpriseManagementAnnualDataResult">
+        <result property="emasId"    column="EMAS_id"    />
+        <result property="naturalYear"    column="Natural_Year"    />
+        <result property="annualTotalSalary"    column="Annual_Total_Salary"    />
+        <result property="stockTargetValue"    column="Stock_Target_Value"    />
+        <result property="panjinTargetValue"    column="Panjin_Target_Value"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectEnterpriseManagementAnnualDataVo">
+        select EMAS_id, Natural_Year, Annual_Total_Salary, Stock_Target_Value, Panjin_Target_Value, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Annual_Data
+    </sql>
+
+
+
+    <!--检查本年数据是否上传-->
+    <select id="checkEMAnnualDataIsExisted" parameterType="int" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Annual_Data WHERE Natural_Year=#{naturalYear})
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="selectEnterpriseManagementAnnualDataList" parameterType="EnterpriseManagementAnnualData" resultMap="EnterpriseManagementAnnualDataResult">
+        <include refid="selectEnterpriseManagementAnnualDataVo"/>
+        <where>  
+            <if test="naturalYear != null "> and Natural_Year = #{naturalYear}</if>
+            <if test="annualTotalSalary != null "> and Annual_Total_Salary = #{annualTotalSalary}</if>
+            <if test="stockTargetValue != null "> and Stock_Target_Value = #{stockTargetValue}</if>
+            <if test="panjinTargetValue != null "> and Panjin_Target_Value = #{panjinTargetValue}</if>
+        </where>
+    </select>
+    
+    <select id="selectEnterpriseManagementAnnualDataByEmasId" parameterType="Long" resultMap="EnterpriseManagementAnnualDataResult">
+        <include refid="selectEnterpriseManagementAnnualDataVo"/>
+        where EMAS_id = #{emasId}
+    </select>
+        
+    <insert id="insertEnterpriseManagementAnnualData" parameterType="EnterpriseManagementAnnualData" useGeneratedKeys="true" keyProperty="emasId">
+        insert into Enterprise_Management_Indicators_Annual_Data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="naturalYear != null">Natural_Year,</if>
+            <if test="annualTotalSalary != null">Annual_Total_Salary,</if>
+            <if test="stockTargetValue != null">Stock_Target_Value,</if>
+            <if test="panjinTargetValue != null">Panjin_Target_Value,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="naturalYear != null">#{naturalYear},</if>
+            <if test="annualTotalSalary != null">#{annualTotalSalary},</if>
+            <if test="stockTargetValue != null">#{stockTargetValue},</if>
+            <if test="panjinTargetValue != null">#{panjinTargetValue},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEnterpriseManagementAnnualData" parameterType="EnterpriseManagementAnnualData">
+        update Enterprise_Management_Indicators_Annual_Data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="naturalYear != null">Natural_Year = #{naturalYear},</if>
+            <if test="annualTotalSalary != null">Annual_Total_Salary = #{annualTotalSalary},</if>
+            <if test="stockTargetValue != null">Stock_Target_Value = #{stockTargetValue},</if>
+            <if test="panjinTargetValue != null">Panjin_Target_Value = #{panjinTargetValue},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where EMAS_id = #{emasId}
+    </update>
+
+    <delete id="deleteEnterpriseManagementAnnualDataByEmasId" parameterType="Long">
+        delete from Enterprise_Management_Indicators_Annual_Data where EMAS_id = #{emasId}
+    </delete>
+
+    <delete id="deleteEnterpriseManagementAnnualDataByEmasIds" parameterType="String">
+        delete from Enterprise_Management_Indicators_Annual_Data where EMAS_id in 
+        <foreach item="emasId" collection="array" open="(" separator="," close=")">
+            #{emasId}
+        </foreach>
+    </delete>
+</mapper>

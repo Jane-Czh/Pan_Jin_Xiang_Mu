@@ -58,6 +58,9 @@
         </where>
     </select>
 
+    <select id="checkDataExists" resultType="boolean">
+        select count(*) from Financial_Balance_table
+    </select>
 
     <!--  按月查询MonthlyInventoryTotalAmount  -->
     <select id="selectMonthlyInventoryTotalAmountByYearAndMonth" resultType="java.math.BigDecimal">
@@ -171,4 +174,9 @@
             #{fbId}
         </foreach>
     </delete>
+
+    <select id="selectFinancialBalanceTableByFbId" parameterType="Long" resultMap="FinancialBalanceTableResult">
+        <include refid="selectFinancialBalanceTableVo"/>
+        where FB_ID = #{fbId}
+    </select>
 </mapper>

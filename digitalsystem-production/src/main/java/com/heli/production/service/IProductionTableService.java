@@ -31,7 +31,7 @@ public interface IProductionTableService {
      * @return 商品车台账集合
      */
     public List<ProductionTable> selectProductionTableList(ProductionTable productionTable);
-
+    public List<ProductionTable> selectProductionTableList();
     /**
      * 新增商品车台账
      *

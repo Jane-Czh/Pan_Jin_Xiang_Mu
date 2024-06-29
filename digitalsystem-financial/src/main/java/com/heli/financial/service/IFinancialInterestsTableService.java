@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IFinancialInterestsTableService {
 
+    boolean checkDataExists();
+
 
     /**
      * @description: 利润表导入

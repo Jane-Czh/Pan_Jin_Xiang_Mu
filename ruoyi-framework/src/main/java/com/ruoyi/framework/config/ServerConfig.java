@@ -20,6 +20,7 @@ public class ServerConfig
     public String getUrl()
     {
         HttpServletRequest request = ServletUtils.getRequest();
+        System.out.println("===>"+getDomain(request));
         return getDomain(request);
     }
 

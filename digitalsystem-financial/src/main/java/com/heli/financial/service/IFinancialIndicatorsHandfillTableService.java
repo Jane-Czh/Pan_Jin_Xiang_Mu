@@ -14,6 +14,10 @@ import java.util.List;
  */
 public interface IFinancialIndicatorsHandfillTableService {
 
+    Date selectMaxYearAndMonth();
+
+    boolean checkDataExists();
+
 
     boolean checkHandFillDataIsExisted(Date date);
 

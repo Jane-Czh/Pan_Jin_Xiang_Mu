@@ -9,6 +9,15 @@ export function listFilemanagement(query) {
   })
 }
 
+// 查询历史文件列表
+export function getRegulationsHistory(currentId) {
+  return request({
+    url: '/file/filemanagement/history/' + currentId,
+    method: 'get',
+    // params: query
+  });
+}
+
 // 查询文件管理详细
 export function getFilemanagement(regulationsId) {
   return request({
@@ -43,31 +52,33 @@ export function delFilemanagement(regulationsId) {
   })
 }
 
-
-function submitHandler() {
-  if ($.validate.form()) {
-    uploadFile();
-  }
+// 修改文件管理
+export function getLastId(data) {
+  return request({
+    url: '/file/filemanagement',
+    method: 'put',
+    data: data
+  })
 }
 
-function uploadFile() {
-  var formData = new FormData();
-  if ($('#filePath')[0].files[0] == null) {
-    $.modal.alertWarning("请先选择文件路径");
-    return false;
-  }
-  formData.append('fileName', $("#fileName").val());
-  formData.append('file', $('#filePath')[0].files[0]);
-  $.ajax({
-    url: prefix + "/add",
-    type: 'post',
-    cache: false,
-    data: formData,
-    processData: false,
-    contentType: false,
-    dataType: "json",
-    success: function(result) {
-      $.operate.successCallback(result);
-    }
+// word转pdf
+export function word2Pdf(inPath, outPath) {
+  return request({
+    url: '/file/filemanagement/convert',
+    method: 'post',
+    params: { inPath, outPath }
   });
+}
+
+// 指标:制度修订频率
+export function getRevisionCounts(data) {
+  return request({
+    url: `/file/filemanagement/revisionCounts`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      regulationsId: data.regulationsId,
+    }
+  })
 }

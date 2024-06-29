@@ -12,11 +12,18 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 文件管理对象 Regulations_Info_table
  *
  * @author ruoyi
- * @date 2024-04-10
+ * @date 2024-04-17
  */
 public class RegulationsInfoTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+
+
+    // 指标查询流程更改次数时通过api传递过来的 时间参数：startTime、endTime
+
+    private Date startTime;
+
+    private Date endTime;
 
     /** id(主键) */
     private Long regulationsId;
@@ -39,10 +46,6 @@ public class RegulationsInfoTable extends BaseEntity
     @Excel(name = "生效日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date effectiveDate;
 
-    /** 制度内容（链接地址） */
-    @Excel(name = "制度内容", readConverterExp = "链=接地址")
-    private String regulationsAddress;
-
     /** 文件名称 */
     @Excel(name = "文件名称")
     private String fileName;
@@ -64,9 +67,9 @@ public class RegulationsInfoTable extends BaseEntity
     @Excel(name = "制度创建日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createDate;
 
-    /** 制度创建人 */
-    @Excel(name = "制度创建人")
-    private String createUsername;
+    /** 制度上传人 */
+    @Excel(name = "制度上传人")
+    private String uploadUsername;
 
     /** 制度使用状态 */
     @Excel(name = "制度使用状态")
@@ -96,6 +99,31 @@ public class RegulationsInfoTable extends BaseEntity
     /** 修订人 */
     @Excel(name = "修订人")
     private String reviser;
+
+    /** 标志位(是否为最新文件) */
+    @Excel(name = "标志位(是否为最新文件)")
+    private Integer newFlag;
+
+    /** 标志位(本文件上一旧文件id) */
+    @Excel(name = "标志位(本文件上一旧文件id)")
+    private Long newRegulationsId;
+
+    // startTime和endTime的getter和setter
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public void setRegulationsId(Long regulationsId)
     {
@@ -142,15 +170,6 @@ public class RegulationsInfoTable extends BaseEntity
     {
         return effectiveDate;
     }
-    public void setRegulationsAddress(String regulationsAddress)
-    {
-        this.regulationsAddress = regulationsAddress;
-    }
-
-    public String getRegulationsAddress()
-    {
-        return regulationsAddress;
-    }
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
@@ -196,14 +215,14 @@ public class RegulationsInfoTable extends BaseEntity
     {
         return createDate;
     }
-    public void setCreateUsername(String createUsername)
+    public void setUploadUsername(String uploadUsername)
     {
-        this.createUsername = createUsername;
+        this.uploadUsername = uploadUsername;
     }
 
-    public String getCreateUsername()
+    public String getUploadUsername()
     {
-        return createUsername;
+        return uploadUsername;
     }
     public void setUseState(String useState)
     {
@@ -268,6 +287,24 @@ public class RegulationsInfoTable extends BaseEntity
     {
         return reviser;
     }
+    public void setNewFlag(Integer newFlag)
+    {
+        this.newFlag = newFlag;
+    }
+
+    public Integer getNewFlag()
+    {
+        return newFlag;
+    }
+    public void setNewRegulationsId(Long NewRegulationsId)
+    {
+        this.newRegulationsId = NewRegulationsId;
+    }
+
+    public Long getNewRegulationsId()
+    {
+        return newRegulationsId;
+    }
 
     @Override
     public String toString() {
@@ -277,13 +314,12 @@ public class RegulationsInfoTable extends BaseEntity
                 .append("useScope", getUseScope())
                 .append("uploadDate", getUploadDate())
                 .append("effectiveDate", getEffectiveDate())
-                .append("regulationsAddress", getRegulationsAddress())
                 .append("fileName", getFileName())
                 .append("filePath", getFilePath())
                 .append("fileType", getFileType())
                 .append("fileSize", getFileSize())
                 .append("createDate", getCreateDate())
-                .append("createUsername", getCreateUsername())
+                .append("uploadUsername", getUploadUsername())
                 .append("useState", getUseState())
                 .append("departmentCategory", getDepartmentCategory())
                 .append("fileTag", getFileTag())
@@ -291,6 +327,8 @@ public class RegulationsInfoTable extends BaseEntity
                 .append("revisionDate", getRevisionDate())
                 .append("revisionContent", getRevisionContent())
                 .append("reviser", getReviser())
+                .append("newFlag", getNewFlag())
+                .append("newRegulationsId", getNewRegulationsId())
                 .toString();
     }
 }

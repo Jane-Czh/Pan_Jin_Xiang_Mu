@@ -5,14 +5,13 @@
     <el-dialog
       :title="`查看[ ${data.name} ]流程详情`"
       :visible.sync="easyFlowVisible"
-      width="90%"
+      width="85%"
       :before-close="handleClose"
       destroy-on-close="true"
       append-to-body
     >
-      <div class="container">
-        <!-- 1、左侧流程图内容 -->
-
+      <div class="containers">
+        <!-- 1、左侧50%流程图内容 -->
         <div
           v-if="easyFlowVisible"
           style="width: 50%; height: calc(80vh)"
@@ -30,16 +29,26 @@
                   type="text"
                   icon="el-icon-plus"
                   size="large"
-                  @click="zoomAdd"
+                  @click="zoomAddMy"
                 ></el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button
                   type="text"
                   icon="el-icon-minus"
                   size="large"
-                  @click="zoomSub"
+                  @click="zoomSubMy"
                 ></el-button>
                 <el-divider direction="vertical"></el-divider>
+                <!-- 流程信息的Json数据 -->
+                <!-- <el-button
+                  type="info"
+                  plain
+                  round
+                  icon="el-icon-document"
+                  @click="dataInfo"
+                  size="mini"
+                  >流程信息</el-button
+                > -->
                 <!-- 历史 -->
                 <!-- <el-button
                 type="primary"
@@ -47,16 +56,32 @@
                 size="large"
                 @click="historyView()"
               ></el-button> -->
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="updateDetails(data.id)"
+                  >{{ buttonText }}</el-button
+                >
+
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
           </el-row>
-          <div style="display: flex; height: calc(100% - 47px)">
+          <!-- 流程展示部分 -->
+          <!-- <div style="display: flex; height: calc(100% - 47px)"> -->
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              height: calc(100% - 47px);
+            "
+          >
+            <!-- <div id="myContainer" ref="myContainer" class="container"> -->
             <div
               id="myContainer"
               ref="myContainer"
               class="container"
-
+              style="flex: 1"
             >
               <template v-for="node in data.nodeList">
                 <flow-node
@@ -76,12 +101,35 @@
                 &nbsp;
               </div>
             </div>
+            <!-- 新增的详情展示部分 -->
+            <div
+              v-if="showDetails"
+              style="margin-top: 20px; padding: 10px; border: 1px solid #ccc"
+            >
+              <h3 style="font-weight: bold">更新详情内容：</h3>
+              <!-- <p>{{ detailsData.file }}</p> -->
+              <div v-html="formattedContent(detailsData.file)"></div>
+            </div>
           </div>
+          <!-- div over -->
+          <!-- 新增的当前流程的 变更详情展示 部分 -->
         </div>
 
-        <!-- 2、右侧历史数据部分 v-if="!showHisPanelVisible" -->
-        <div style="width: 50" class="right-side line-between-divs" v-if="!showHisPanelVisible">
-          <el-table v-loading="loading" :data="historyProjectList" stripe>
+        <!-- 2-if、右侧50%历史数据部分 v-if="!showHisPanelVisible" -->
+        <div
+          style="width: 50%"
+          class="right-side line-between-divs"
+          v-if="!showHisPanelVisible"
+        >
+          <el-table
+            v-loading="loading"
+            :data="historyProjectList"
+            height="calc(100% - 10px)"
+         
+            stripe
+            row-key="id"
+            :expand-row-keys="expandArr"
+          >
             <el-table-column
               label="序号"
               align="center"
@@ -92,7 +140,7 @@
                 <span>{{ scope.$index + 1 }}</span>
               </template>
             </el-table-column>
-            <!-- <el-table-column label="流程名称" align="center" prop="name" /> -->
+            <el-table-column label="流程名称" align="center" prop="name" />
             <el-table-column
               label="创建时间"
               align="center"
@@ -106,9 +154,9 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="创建人" align="center" prop="createBy" />
+            <el-table-column label="更新人" align="center" prop="createBy" />
             <el-table-column
-              label="修改时间"
+              label="更新时间"
               align="center"
               prop="updateDate"
               width="180"
@@ -120,22 +168,13 @@
                 }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="修改人" align="center" prop="updataBy" />
+            <el-table-column label="修改人" align="center" prop="updateBy" />
             <el-table-column
               label="操作"
               align="center"
               class-name="small-padding fixed-width"
             >
               <template slot-scope="scope">
-                <!-- <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:project:edit']"
-                >修改</el-button
-              > -->
-
                 <el-button
                   size="mini"
                   type="text"
@@ -153,21 +192,45 @@
                   v-hasPermi="['system:project:remove']"
                   >删除</el-button
                 >
-                <!-- <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit-outline"
-                @click="edit(scope.row)"
-              >
-                更新</el-button
-              > -->
+
+                <!-- 更新详情button -->
+                <el-button
+                  @click="toggleRow(scope.row)"
+                  size="mini"
+                  type="text"
+                  :icon="
+                    isExpanded(scope.row)
+                      ? 'el-icon-caret-top'
+                      : 'el-icon-caret-bottom'
+                  "
+                  >{{
+                    isExpanded(scope.row) ? "关闭详情" : "更新详情"
+                  }}</el-button
+                >
+              </template>
+            </el-table-column>
+
+            <!-- 展开行：展示更新的详细信息 -->
+            <el-table-column type="expand" width="1">
+              <template slot-scope="props">
+                <!-- 根据展开状态显示不同的按钮文本 -->
+                <div v-show="isExpanded(props.row)">
+                  <h3 style="font-weight: bold">更新详情内容：</h3>
+                  <!-- {{ formatFileContent(props.row.file) }} 
+                   -->
+                  <div v-html="formattedContent(props.row.file)"></div>
+                </div>
               </template>
             </el-table-column>
           </el-table>
         </div>
 
-        <!-- 2、右侧展示部分 -->
-        <div v-else style="width: 50%; height: calc(80vh)" class="left-side line-between-divss">
+        <!-- 2-else、右侧展示部分 -->
+        <div
+          v-else
+          style="width: 50%; height: calc(80vh)"
+          class="left-right line-between-divss"
+        >
           <el-row>
             <!--顶部工具菜单-->
             <el-col :span="24">
@@ -199,15 +262,22 @@
                   @click="historyView()"
                 ></el-button>
                 <!-- <el-divider direction="vertical"></el-divider> -->
+
+                <!-- 流程信息的Json数据 -->
+                <!-- <el-button
+                  type="info"
+                  plain
+                  round
+                  icon="el-icon-document"
+                  @click="dataInfo"
+                  size="mini"
+                  >流程信息</el-button
+                > -->
               </div>
             </el-col>
           </el-row>
           <div style="display: flex; height: calc(100% - 47px)">
-            <div
-              id="efContainer"
-              ref="efContainer"
-              class="container"
-            >
+            <div id="efContainer" ref="efContainer" class="container">
               <template v-for="node in this.historyData.nodeList">
                 <flow-node
                   :id="node.id"
@@ -222,14 +292,16 @@
                 </flow-node>
               </template>
               <!-- 给画布一个默认的宽度和高度 -->
-              <div style="position: absolute; top: 2000px; right: 2000px">
+              <!-- <div style="position: absolute; top: 2000px; right: 2000px">
                 &nbsp;
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </div>
     </el-dialog>
+    <!-- 流程数据详情 -->
+    <!-- <flow-info v-if="flowInfoVisible" ref="flowInfo" :data="data"></flow-info> -->
   </div>
 </template>
 
@@ -238,6 +310,7 @@ import draggable from "vuedraggable";
 // import { jsPlumb } from 'jsplumb'
 // 使用修改后的jsplumb
 import "./jsplumb";
+import "./hjsplumb";
 import { easyFlowMixin } from "@/views/process/ef/mixins";
 import flowNode from "@/views/process/ef/show_node";
 
@@ -255,11 +328,20 @@ import {
 //历史流程的查看
 import HisPanel from "@/views/process/ef/history_panel";
 import HisNode from "@/views/process/ef/history_node";
+import { getProjectEntityById } from "@/api/system/project";
 
 export default {
   inject: ["reload"],
   data() {
     return {
+      // 其他数据
+      showDetails: false, // 控制展示区域显示的变量
+      detailsData: null, // 存储获取到的数据
+      buttonText: "更新详情", // 控制按钮文字的变量
+
+      // 显示历史流程更新详情的查看
+      expandArr: [], // 表示展开的行的 name 数组
+
       // 控制查看[历史]流程数据显示与隐藏
       showHisPanelVisible: false,
       //填写 流程项目名称的提示框
@@ -318,6 +400,9 @@ export default {
       historyProjectList: [],
       //
       empty: [],
+
+      // 控制流程数据显示与隐藏
+      flowInfoVisible: false,
     };
   },
   // 一些基础配置移动该文件中
@@ -379,6 +464,58 @@ export default {
   },
   created() {},
   methods: {
+    // 其他方法
+    async updateDetails(id) {
+      if (this.showDetails) {
+        this.showDetails = false;
+        this.buttonText = "更新详情";
+      } else {
+        // 模拟获取数据
+        const data = await this.fetchData(id);
+        this.detailsData = data;
+        this.showDetails = true;
+        this.buttonText = "关闭详情";
+      }
+    },
+    async fetchData(id) {
+    try {
+      const response = await getProjectEntityById(id);
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return { title: 'Error', content: 'Failed to fetch data.' };
+    }
+  },
+
+    //更新详细数据
+    toggleRow(row) {
+      const rowKey = row.id; // 使用唯一标识 id
+      if (this.expandArr.includes(rowKey)) {
+        // 如果当前行已经展开，则折叠它
+        this.expandArr = this.expandArr.filter((key) => key !== rowKey);
+      } else {
+        // 否则，只展开当前行
+        this.expandArr = [rowKey];
+      }
+    },
+    isExpanded(row) {
+      return this.expandArr.includes(row.id);
+    },
+    
+    //格式化换行
+    formattedContent(content) {
+      if (content) {
+        // 确认替换前内容
+        console.log("Original content:", content);
+        const formatted = content.replace(/\\+/g, "<br>");
+        // 确认替换后内容
+        console.log("Formatted content:", formatted);
+        return formatted;
+      }
+      return "无更新内容！";
+    },
+    // ------------------------------------------------------
     //关闭查看历史流程按钮
     historyView() {
       this.historyData = [];
@@ -423,8 +560,7 @@ export default {
             return new Date(a.updateDate) - new Date(b.updateDate);
           }
         });
-        //TODO 分页功能、分科室搜索功能等
-        // this.total = response.total;
+        console.log("historyProjectList===>", this.historyProjectList);
       });
 
       // console.log("historyProjectList===>", this.historyProjectList)
@@ -470,9 +606,9 @@ export default {
         this.jsPlumb.bind("beforeDetach", (evt) => {
           console.log("beforeDetach", evt);
         });
+        // console.log("this.$refs.myContainer====>", this.$refs.myContainer);
         this.jsPlumb.setContainer(this.$refs.myContainer);
       });
-
     },
 
     // 加载流程图
@@ -518,7 +654,16 @@ export default {
         this.hjsPlumb.bind("beforeDetach", (evt) => {
           console.log("beforeDetach", evt);
         });
+        // console.log("this.$refs.efContainer====>", this.$refs.efContainer);
         this.hjsPlumb.setContainer(this.$refs.efContainer);
+      });
+    },
+
+    // 流程数据信息
+    dataInfo() {
+      this.flowInfoVisible = true;
+      this.$nextTick(function () {
+        this.$refs.flowInfo.init();
       });
     },
 
@@ -548,6 +693,26 @@ export default {
     //   this.$refs.nodeForm.nodeInit(this.data, nodeId);
     // },
 
+    //控件大小--当前版本
+    zoomAddMy() {
+      if (this.zoom >= 1) {
+        return;
+      }
+      this.zoom = this.zoom + 0.1;
+      this.$refs.myContainer.style.transform = `scale(${this.zoom})`;
+      this.jsPlumb.setZoom(this.zoom);
+    },
+
+    zoomSubMy() {
+      if (this.zoom <= 0) {
+        return;
+      }
+      this.zoom = this.zoom - 0.1;
+      this.$refs.myContainer.style.transform = `scale(${this.zoom})`;
+      this.jsPlumb.setZoom(this.zoom);
+    },
+
+    //控件大小--历史版本
     zoomAdd() {
       if (this.zoom >= 1) {
         return;
@@ -556,7 +721,7 @@ export default {
       this.$refs.efContainer.style.transform = `scale(${this.zoom})`;
       this.jsPlumb.setZoom(this.zoom);
     },
-    //控件大小
+
     zoomSub() {
       if (this.zoom <= 0) {
         return;
@@ -616,7 +781,7 @@ export default {
 </script>
 
 <style>
-.container {
+.containers {
   display: flex;
   width: 100%;
 }
@@ -655,5 +820,4 @@ export default {
   background-image: linear-gradient(to bottom, gray 50%, transparent 50%);
   background-size: 1px 5px; /* 控制虚线的高度和间隔 */
 }
-
 </style>

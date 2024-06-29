@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementDisplayMapper">
+
+    <!-- 一线从业人数(实习生单列) 指标49 -->
+    <select id="selectEmployeesNumber" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Employees_Number as employeesNumber
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 公司平均从业人数（月度） 指标51 -->
+    <select id="selectEmployeesAVGMonthlyNumber" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Employees_AVG_Monthly_Number as employeesAVGMonthlyNumber
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 公司平均从业人数（年度） 指标51 -->
+    <select id="selectEmployeesAVGAnnualNumber" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Employees_AVG_Annual_Number  as employeesAVGAnnualNumber
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+    <!-- 工资总额年度占比 指标52 -->
+    <select id="selectAnnualSalaryRatio" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Annual_Salary_Ratio as annualSalaryRatio
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 累计人均收入 指标54 -->
+    <select id="selectCumulativeAverageIncome" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Cumulative_Average_Income as cumulativeAverageIncome
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 月度累计生产人均收入 指标55 -->
+    <select id="selectMonthlyProductionAVGIncome" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Monthly_Production_AVG_Income as monthlyProductionAVGIncome
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 月度累计职能人均收入 指标56 -->
+    <select id="selectMonthlyFunctionalAVGIncome" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Monthly_Functional_AVG_Income as monthlyFunctionalAVGIncome
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+    <!-- 职能部门人均加班费用 指标76 -->
+    <select id="selectFunctionalDeptOvertimeCost" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Functional_Dept_Overtime_Cost as functionalDeptOvertimeCost
+              from Enterprise_Management_Indicators_Monthly_Data
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+    <resultMap type="EnterpriseManagementIndicatorsDailyClearingSettlement" id="EnterpriseManagementIndicatorsDailyClearingSettlementResult">
+        <result property="edId"    column="ED_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="orderEntryDelayRatio"    column="Order_Entry_Delay_Ratio"    />
+        <result property="shipmentDelayRatio"    column="Shipment_Delay_Ratio"    />
+        <result property="productionReportDelayRatio"    column="Production_Report_Delay_Ratio"    />
+        <result property="inspectionDelayRate"    column="Inspection_Delay_Rate"    />
+        <result property="invoicePostingDelayRate"    column="Invoice_Posting_Delay_Rate"    />
+        <result property="unsettledAccountsRatio"    column="Unsettled_Accounts_Ratio"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <!-- 日清日结  -->
+    <select id="selectDailyClearingSettlement" resultMap="EnterpriseManagementIndicatorsDailyClearingSettlementResult">
+        select *
+        from (  select Year_And_Month, Order_Entry_Delay_Ratio, Shipment_Delay_Ratio, Production_Report_Delay_Ratio, Inspection_Delay_Rate, Invoice_Posting_Delay_Rate, Unsettled_Accounts_Ratio
+                from Enterprise_Management_Indicators_Daily_Clearing_Settlement
+                where Year_And_Month between #{startTime} and #{endTime}
+                order by Year_And_Month DESC
+             ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
+    <resultMap type="EnterpriseManagementIndicatorsManagement" id="EnterpriseManagementIndicatorsManagementResult">
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="sdSalesordervalidity"    column="SD_SalesOrderValidity"    />
+        <result property="ppManualpocreationratio"    column="PP_ManualPOCreationRatio"    />
+        <result property="ppDeliveredunreportedratio"    column="PP_DeliveredUnreportedRatio"    />
+        <result property="mesLateworkreportingrate"    column="MES_LateWorkReportingRate"    />
+        <result property="qmExternalinspectiondelay"    column="QM_ExternalInspectionDelay"    />
+        <result property="mmPurchaseorderlatedelivery"    column="MM_PurchaseOrderLateDelivery"    />
+        <result property="mmManualpocreation"    column="MM_ManualPOCreation"    />
+        <result property="mmUnsettledpurchaserequests"    column="MM_UnsettledPurchaseRequests"    />
+        <result property="ficoMonthlystandardpricevariation"    column="FICO_MonthlyStandardPriceVariation"    />
+        <result property="crossMonthProductionOrders"    column="CrossMonthProductionOrders"    />
+        <result property="pmLatemaintenanceordercompletion"    column="PM_LateMaintenanceOrderCompletion"    />
+    </resultMap>
+
+    <!-- 11项管理指标 -->
+    <select id="selectManagement" resultMap="EnterpriseManagementIndicatorsManagementResult">
+        select *
+        from (  select Year_And_Month, SD_SalesOrderValidity, PP_ManualPOCreationRatio, PP_DeliveredUnreportedRatio, MES_LateWorkReportingRate, QM_ExternalInspectionDelay, MM_PurchaseOrderLateDelivery, MM_ManualPOCreation, MM_UnsettledPurchaseRequests, FICO_MonthlyStandardPriceVariation, CrossMonthProductionOrders, PM_LateMaintenanceOrderCompletion
+                from Enterprise_Management_Indicators_Management
+                where Year_And_Month between #{startTime} and #{endTime}
+                order by Year_And_Month DESC
+             ) as t
+        order by Year_And_Month ASC
+    </select>
+
+
+</mapper>

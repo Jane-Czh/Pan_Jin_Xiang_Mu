@@ -14,6 +14,14 @@ import java.util.List;
  **/
 public interface ProductionTableMapper {
 
+    int batchInsertOrUpdateMonthlyLaunchAndCompletion(@Param("productionCountNumberEntityList") List<ProductionCountNumberEntity> productionCountNumberEntityList);
+
+    int batchInsertOrUpdateYearlyLaunchAndCompletion(@Param("productionCountNumberEntityList") List<ProductionCountNumberEntity> productionCountNumberEntityList);
+
+    List<ProductionCountNumberEntity> selectProductionCountNumberByMonth();
+
+    List<ProductionCountNumberEntity> selectProductionCountNumberByYear();
+
     List<ProductionCountNumberEntity> selectLaunchNumGroupByDate();
 
     List<ProductionCountNumberEntity> selectCompletionNumGroupByDate();
@@ -70,4 +78,6 @@ public interface ProductionTableMapper {
      * @return 结果
      */
     public int deleteProductionTableByMcvIds(Long[] mcvIds);
+
+    List<ProductionTable> selectProductionTableList1();
 }

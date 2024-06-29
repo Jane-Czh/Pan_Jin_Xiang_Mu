@@ -3,6 +3,7 @@ package com.heli.safety.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.safety.mapper.SafetyEpMapper;
@@ -20,8 +21,6 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
     @Autowired
     private SafetyEpMapper safetyEpMapper;
 
-
-
     @Override
     public Boolean checkSafetyFillingDataIsExisted(Date date) {
         return safetyEpMapper.checkSafetyFillingDataIsExisted(date);
@@ -33,10 +32,9 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
      */
     @Override
     public int InsertOrUpdateSafetyEp(SafetyEp safetyEp) {
+        safetyEp.setCreateTime(DateUtils.getNowDate());
         return safetyEpMapper.InsertOrUpdateSafetyEp(safetyEp);
     }
-
-
 
     /**
      * 查询[安全环保]指标填报
@@ -68,6 +66,7 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
      */
     @Override
     public int insertSafetyEp(SafetyEp safetyEp) {
+        safetyEp.setCreateTime(DateUtils.getNowDate());
         return safetyEpMapper.insertSafetyEp(safetyEp);
     }
 
@@ -79,6 +78,7 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
      */
     @Override
     public int updateSafetyEp(SafetyEp safetyEp) {
+        safetyEp.setUpdateTime(DateUtils.getNowDate());
         return safetyEpMapper.updateSafetyEp(safetyEp);
     }
 

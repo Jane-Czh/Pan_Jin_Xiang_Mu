@@ -1,7 +1,6 @@
 //import com.spire.xls.FileFormat;
 //import com.spire.xls.Workbook;
 import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
-import jdk.internal.instrumentation.TypeMapping;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -179,7 +179,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -335,7 +335,7 @@ export default {
           { required: true, message: "验收人不能为空", trigger: "blur" }
         ]
       },
-      
+
       fileInfo: {
         filePath: '',
         fileName: '',
@@ -561,9 +561,9 @@ export default {
   },
 
 
-  
 
-     
+
+
 
 
 

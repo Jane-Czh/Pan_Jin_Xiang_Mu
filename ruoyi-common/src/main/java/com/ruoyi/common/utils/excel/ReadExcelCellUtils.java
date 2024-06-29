@@ -90,6 +90,9 @@ public class ReadExcelCellUtils {
             cellValue = String.valueOf(cell.getStringCellValue());
         } else if (cell.getCellType() == CellType.BOOLEAN) {
             cellValue = String.valueOf(cell.getBooleanCellValue());
+        } else if (cell.getCellType() == CellType.FORMULA) {
+            cell.setCellType(CellType.STRING);
+            cellValue = String.valueOf(cell.getStringCellValue());
         } else if (cell.getCellType() == CellType.ERROR) {
             cellValue = "错误类型";
             throw new ServiceException("单元格" + name + ": " + cellValue);
@@ -172,8 +175,11 @@ public class ReadExcelCellUtils {
         } else if (type.equals(Boolean.class)) {
             targetValue = Boolean.getBoolean(value);
         } else if (type.equals(BigDecimal.class)) {
-            //反射使用，将string转换为bigdecimal，保存导利润表实体类中
+            //反射使用，将string转换为bigdecimal
             targetValue = new BigDecimal(value);
+        } else if (type.equals(Long.class)) {
+            //反射使用，将string转换为Long
+            targetValue = Long.parseLong(value);
         } else {
             targetValue = value;
         }

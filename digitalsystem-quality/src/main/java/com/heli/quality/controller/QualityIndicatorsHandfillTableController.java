@@ -29,12 +29,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2024-04-26
  */
 @RestController
-@RequestMapping("/quality/handFill")
+@RequestMapping("/quality/data/handfill")
 public class QualityIndicatorsHandfillTableController extends BaseController {
     @Autowired
     private IQualityIndicatorsHandfillTableService qualityIndicatorsHandfillTableService;
-
-
 
 
     /**
@@ -48,17 +46,6 @@ public class QualityIndicatorsHandfillTableController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 导出[质量]指标填报列表
-     */
-    @PreAuthorize("@ss.hasPermi('quality:handFill:export')")
-    @Log(title = "[质量]指标填报", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, QualityIndicatorsHandfillTable qualityIndicatorsHandfillTable) {
-        List<QualityIndicatorsHandfillTable> list = qualityIndicatorsHandfillTableService.selectQualityIndicatorsHandfillTableList(qualityIndicatorsHandfillTable);
-        ExcelUtil<QualityIndicatorsHandfillTable> util = new ExcelUtil<QualityIndicatorsHandfillTable>(QualityIndicatorsHandfillTable.class);
-        util.exportExcel(response, list, "[质量]指标填报数据");
-    }
 
     /**
      * 获取[质量]指标填报详细信息
@@ -75,7 +62,8 @@ public class QualityIndicatorsHandfillTableController extends BaseController {
     @PreAuthorize("@ss.hasPermi('quality:handFill:add')")
     @Log(title = "[质量]指标填报", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(QualityIndicatorsHandfillTable qualityIndicatorsHandfillTable) {
+    public AjaxResult add(@RequestBody QualityIndicatorsHandfillTable qualityIndicatorsHandfillTable) {
+        logger.info(String.valueOf(qualityIndicatorsHandfillTable));
         if (qualityIndicatorsHandfillTableService.checkQualityFillingDataIsExisted(qualityIndicatorsHandfillTable.getYearAndMonth())){
             return AjaxResult.error("当月数据已填报");
         }

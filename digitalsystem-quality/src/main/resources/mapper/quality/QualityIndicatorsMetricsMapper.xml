@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.quality.mapper.QualityIndicatorsMetricsMapper">
+
+    <resultMap type="QualityIndicatorsMetrics" id="QualityIndicatorsMetricsResult">
+        <result property="qcId"    column="QC_ID"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="newCarDefects"    column="New_Car_Defects"    />
+        <result property="warrantyRepairRate"    column="Warranty_Repair_Rate"    />
+        <result property="monthlyAfterSalesIssues"    column="Monthly_After_Sales_Issues"    />
+        <result property="warrantyVehicleRepairRate"    column="Warranty_Vehicle_Repair_Rate"    />
+        <result property="externalLossRate"    column="External_Loss_Rate"    />
+        <result property="productionLiabilityIssues"    column="Production_Liability_Issues"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectQualityIndicatorsMetricsVo">
+        select QC_ID, Year_And_Month, New_Car_Defects, Warranty_Repair_Rate, Monthly_After_Sales_Issues, Warranty_Vehicle_Repair_Rate, External_Loss_Rate, Production_Liability_Issues, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_Indicators_Metrics
+    </sql>
+
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertMetrics" parameterType="java.util.List">
+        insert into Quality_Indicators_Metrics(Year_And_Month,New_Car_Defects,Monthly_After_Sales_Issues,Production_Liability_Issues)
+        VALUES
+        <foreach collection="metricsList" item="item" separator=",">
+            (#{item.yearAndMonth},#{item.newCarDefects},#{item.monthlyAfterSalesIssues},#{item.productionLiabilityIssues})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        Year_And_Month = values(Year_And_Month),New_Car_Defects = values(New_Car_Defects),
+        Monthly_After_Sales_Issues = values(Monthly_After_Sales_Issues)
+        ,Production_Liability_Issues = values(Production_Liability_Issues)
+    </insert>
+
+    <!--  安全插入数据库  -->
+    <insert id="insertOrUpdateMetrics" parameterType="QualityIndicatorsMetrics">
+        insert into Quality_Indicators_Metrics(Year_And_Month,New_Car_Defects,Warranty_Repair_Rate,
+                                               Monthly_After_Sales_Issues,Warranty_Vehicle_Repair_Rate,External_Loss_Rate,Production_Liability_Issues)
+        VALUES(#{yearAndMonth},#{newCarDefects},#{warrantyRepairRate},
+             #{monthlyAfterSalesIssues},#{warrantyVehicleRepairRate},#{externalLossRate},#{productionLiabilityIssues})
+        ON DUPLICATE KEY UPDATE
+        Year_And_Month = #{yearAndMonth},New_Car_Defects = #{newCarDefects},Warranty_Repair_Rate = #{warrantyRepairRate},
+        Monthly_After_Sales_Issues = #{monthlyAfterSalesIssues},Warranty_Vehicle_Repair_Rate = #{warrantyVehicleRepairRate},
+        External_Loss_Rate = #{externalLossRate},Production_Liability_Issues = #{productionLiabilityIssues}
+    </insert>
+
+
+    <select id="selectQualityIndicatorsMetricsByMonth" parameterType="Date" resultMap="QualityIndicatorsMetricsResult">
+        <include refid="selectQualityIndicatorsMetricsVo"/>
+        where Year_And_Month = #{date}
+    </select>
+
+
+
+
+
+
+
+
+
+    <select id="selectQualityIndicatorsMetricsList" parameterType="QualityIndicatorsMetrics" resultMap="QualityIndicatorsMetricsResult">
+        <include refid="selectQualityIndicatorsMetricsVo"/>
+        <where>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="newCarDefects != null "> and New_Car_Defects = #{newCarDefects}</if>
+            <if test="warrantyRepairRate != null "> and Warranty_Repair_Rate = #{warrantyRepairRate}</if>
+            <if test="monthlyAfterSalesIssues != null "> and Monthly_After_Sales_Issues = #{monthlyAfterSalesIssues}</if>
+            <if test="warrantyVehicleRepairRate != null "> and Warranty_Vehicle_Repair_Rate = #{warrantyVehicleRepairRate}</if>
+            <if test="externalLossRate != null "> and External_Loss_Rate = #{externalLossRate}</if>
+            <if test="productionLiabilityIssues != null "> and Production_Liability_Issues = #{productionLiabilityIssues}</if>
+        </where>
+    </select>
+
+    <select id="selectQualityIndicatorsMetricsByQcId" parameterType="Long" resultMap="QualityIndicatorsMetricsResult">
+        <include refid="selectQualityIndicatorsMetricsVo"/>
+        where QC_ID = #{qcId}
+    </select>
+
+    <insert id="insertQualityIndicatorsMetrics" parameterType="QualityIndicatorsMetrics" useGeneratedKeys="true" keyProperty="qcId">
+        insert into Quality_Indicators_Metrics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="newCarDefects != null">New_Car_Defects,</if>
+            <if test="warrantyRepairRate != null">Warranty_Repair_Rate,</if>
+            <if test="monthlyAfterSalesIssues != null">Monthly_After_Sales_Issues,</if>
+            <if test="warrantyVehicleRepairRate != null">Warranty_Vehicle_Repair_Rate,</if>
+            <if test="externalLossRate != null">External_Loss_Rate,</if>
+            <if test="productionLiabilityIssues != null">Production_Liability_Issues,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="newCarDefects != null">#{newCarDefects},</if>
+            <if test="warrantyRepairRate != null">#{warrantyRepairRate},</if>
+            <if test="monthlyAfterSalesIssues != null">#{monthlyAfterSalesIssues},</if>
+            <if test="warrantyVehicleRepairRate != null">#{warrantyVehicleRepairRate},</if>
+            <if test="externalLossRate != null">#{externalLossRate},</if>
+            <if test="productionLiabilityIssues != null">#{productionLiabilityIssues},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateQualityIndicatorsMetrics" parameterType="QualityIndicatorsMetrics">
+        update Quality_Indicators_Metrics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="newCarDefects != null">New_Car_Defects = #{newCarDefects},</if>
+            <if test="warrantyRepairRate != null">Warranty_Repair_Rate = #{warrantyRepairRate},</if>
+            <if test="monthlyAfterSalesIssues != null">Monthly_After_Sales_Issues = #{monthlyAfterSalesIssues},</if>
+            <if test="warrantyVehicleRepairRate != null">Warranty_Vehicle_Repair_Rate = #{warrantyVehicleRepairRate},</if>
+            <if test="externalLossRate != null">External_Loss_Rate = #{externalLossRate},</if>
+            <if test="productionLiabilityIssues != null">Production_Liability_Issues = #{productionLiabilityIssues},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where QC_ID = #{qcId}
+    </update>
+
+    <delete id="deleteQualityIndicatorsMetricsByQcId" parameterType="Long">
+        delete from Quality_Indicators_Metrics where QC_ID = #{qcId}
+    </delete>
+
+    <delete id="deleteQualityIndicatorsMetricsByQcIds" parameterType="String">
+        delete from Quality_Indicators_Metrics where QC_ID in
+        <foreach item="qcId" collection="array" open="(" separator="," close=")">
+            #{qcId}
+        </foreach>
+    </delete>
+</mapper>

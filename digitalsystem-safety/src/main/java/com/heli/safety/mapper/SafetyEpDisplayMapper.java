@@ -1,6 +1,6 @@
 package com.heli.safety.mapper;
 
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -36,6 +36,7 @@ public interface SafetyEpDisplayMapper {
     /**
      * 与其他的展示方式不同-设备故障类别次数分布图 指标68
      */
+//    List<DisplayEntity> selectOutputPercapitavalue(@Param("paramTime") Date paramTime);
     List<DisplayEntity> selectOutputPercapitavalue(@Param("startTime") Date startTime,
                                                    @Param("endTime") Date endTime);
 

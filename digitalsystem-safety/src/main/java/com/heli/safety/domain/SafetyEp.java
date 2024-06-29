@@ -52,7 +52,7 @@ public class SafetyEp extends BaseEntity {
      * 重点设备故障率
      */
     @Excel(name = "重点设备故障率")
-    private Long keyEquipmentFailureRate;
+    private Float keyEquipmentFailureRate;
 
     /**
      * 主要设备故障总次数

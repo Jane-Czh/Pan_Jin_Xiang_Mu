@@ -1,16 +1,27 @@
 package com.ruoyi.file.service;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.file.domain.RegulationsInfoTable;
+import com.ruoyi.file.entity.regulationRespondEntity;
 
 /**
  * 文件管理Service接口
  *
  * @author ruoyi
- * @date 2024-04-10
+ * @date 2024-04-17
  */
-public interface IRegulationsInfoTableService
-{
+public interface IRegulationsInfoTableService {
+    /**
+     * 根据id查找filename
+     * 流程部分依赖使用
+     */
+
+    List<String> selectFileNamesByIds(String regulationsIds);
+
+
     /**
      * 查询文件管理
      *
@@ -26,6 +37,15 @@ public interface IRegulationsInfoTableService
      * @return 文件管理集合
      */
     public List<RegulationsInfoTable> selectRegulationsInfoTableList(RegulationsInfoTable regulationsInfoTable);
+
+
+    /**
+     * 查询历史版本文件管理列表
+     *
+     * @param currentId 文件管理
+     * @return 文件管理集合
+     */
+    public List<RegulationsInfoTable> getRegulationsHistory(Long currentId);
 
     /**
      * 新增文件管理
@@ -58,4 +78,9 @@ public interface IRegulationsInfoTableService
      * @return 结果
      */
     public int deleteRegulationsInfoTableByRegulationsId(Long regulationsId);
+
+    /**
+     * 制度修订频率
+     */
+    List<regulationRespondEntity> selectRevisionFrequency(Date startTime, Date endTime, Long regulationId);
 }

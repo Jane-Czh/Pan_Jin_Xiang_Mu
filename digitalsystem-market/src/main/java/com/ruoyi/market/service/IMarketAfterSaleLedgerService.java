@@ -38,6 +38,7 @@ public interface IMarketAfterSaleLedgerService
      * @return 售后台账导入集合
      */
     public List<MarketAfterSaleLedger> selectMarketAfterSaleLedgerList(MarketAfterSaleLedger marketAfterSaleLedger);
+    public List<MarketAfterSaleLedger> selectMarketAfterSaleLedgerList();
 
     /**
      * 新增售后台账导入

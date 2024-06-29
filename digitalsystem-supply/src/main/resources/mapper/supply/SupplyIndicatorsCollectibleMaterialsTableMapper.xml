@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.supply.mapper.SupplyIndicatorsCollectibleMaterialsTableMapper">
+    
+    <resultMap type="SupplyIndicatorsCollectibleMaterialsTable" id="SupplyIndicatorsCollectibleMaterialsTableResult">
+        <result property="scmId"    column="SCM_ID"    />
+        <result property="materialSerialNumber"    column="Material_Serial_Number"    />
+        <result property="materialNumber"    column="Material_Number"    />
+        <result property="materialName"    column="Material_Name"    />
+        <result property="centralizedProcurementCategory"    column="Centralized_Procurement_Category"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectSupplyIndicatorsCollectibleMaterialsTableVo">
+        select SCM_ID, Material_Serial_Number, Material_Number, Material_Name, Centralized_Procurement_Category, CREATE_BY, CREATE_TIME from Supply_Indicators_Collectible_Materials_table
+    </sql>
+
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertCollectibleMaterialsTable" parameterType="java.util.List">
+        insert into Supply_Indicators_Collectible_Materials_table(Material_Serial_Number,Material_Number,Material_Name,
+        Centralized_Procurement_Category,CREATE_BY,CREATE_TIME)
+        values
+        <foreach collection="collectibleMaterialsTableList" item="e" separator=",">
+            (#{e.materialSerialNumber},#{e.materialNumber},#{e.materialName},
+            #{e.centralizedProcurementCategory},#{e.createBy},#{e.createTime})
+        </foreach>
+    </insert>
+
+    <!--  清空表  -->
+    <update id="truncateCollectibleMaterialsTable">
+        TRUNCATE TABLE Supply_Indicators_Collectible_Materials_table
+    </update>
+
+
+
+    <select id="selectSupplyIndicatorsCollectibleMaterialsTableList" parameterType="SupplyIndicatorsCollectibleMaterialsTable" resultMap="SupplyIndicatorsCollectibleMaterialsTableResult">
+        <include refid="selectSupplyIndicatorsCollectibleMaterialsTableVo"/>
+        <where>  
+            <if test="materialSerialNumber != null "> and Material_Serial_Number = #{materialSerialNumber}</if>
+            <if test="materialNumber != null  and materialNumber != ''"> and Material_Number = #{materialNumber}</if>
+            <if test="materialName != null  and materialName != ''"> and Material_Name like concat('%', #{materialName}, '%')</if>
+            <if test="centralizedProcurementCategory != null  and centralizedProcurementCategory != ''"> and Centralized_Procurement_Category = #{centralizedProcurementCategory}</if>
+        </where>
+    </select>
+    
+    <select id="selectSupplyIndicatorsCollectibleMaterialsTableByScmId" parameterType="Long" resultMap="SupplyIndicatorsCollectibleMaterialsTableResult">
+        <include refid="selectSupplyIndicatorsCollectibleMaterialsTableVo"/>
+        where SCM_ID = #{scmId}
+    </select>
+        
+    <insert id="insertSupplyIndicatorsCollectibleMaterialsTable" parameterType="SupplyIndicatorsCollectibleMaterialsTable" useGeneratedKeys="true" keyProperty="scmId">
+        insert into Supply_Indicators_Collectible_Materials_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialSerialNumber != null">Material_Serial_Number,</if>
+            <if test="materialNumber != null">Material_Number,</if>
+            <if test="materialName != null">Material_Name,</if>
+            <if test="centralizedProcurementCategory != null">Centralized_Procurement_Category,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialSerialNumber != null">#{materialSerialNumber},</if>
+            <if test="materialNumber != null">#{materialNumber},</if>
+            <if test="materialName != null">#{materialName},</if>
+            <if test="centralizedProcurementCategory != null">#{centralizedProcurementCategory},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplyIndicatorsCollectibleMaterialsTable" parameterType="SupplyIndicatorsCollectibleMaterialsTable">
+        update Supply_Indicators_Collectible_Materials_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialSerialNumber != null">Material_Serial_Number = #{materialSerialNumber},</if>
+            <if test="materialNumber != null">Material_Number = #{materialNumber},</if>
+            <if test="materialName != null">Material_Name = #{materialName},</if>
+            <if test="centralizedProcurementCategory != null">Centralized_Procurement_Category = #{centralizedProcurementCategory},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+        </trim>
+        where SCM_ID = #{scmId}
+    </update>
+
+    <delete id="deleteSupplyIndicatorsCollectibleMaterialsTableByScmId" parameterType="Long">
+        delete from Supply_Indicators_Collectible_Materials_table where SCM_ID = #{scmId}
+    </delete>
+
+    <delete id="deleteSupplyIndicatorsCollectibleMaterialsTableByScmIds" parameterType="String">
+        delete from Supply_Indicators_Collectible_Materials_table where SCM_ID in 
+        <foreach item="scmId" collection="array" open="(" separator="," close=")">
+            #{scmId}
+        </foreach>
+    </delete>
+</mapper>

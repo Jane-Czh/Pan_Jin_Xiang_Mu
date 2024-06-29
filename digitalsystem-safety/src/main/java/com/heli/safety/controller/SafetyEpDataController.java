@@ -36,11 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class SafetyEpDataController extends BaseController {
     @Autowired
     private ISafetyEpService safetyEpService;
-    @Autowired
-    private ISafetyEpMaintenanceTableService safetyEpMaintenanceTableService;
 
     private static final Logger log = LoggerFactory.getLogger(SafetyEpDataController.class);
-
 
 
     /**
@@ -49,19 +46,23 @@ public class SafetyEpDataController extends BaseController {
      * @author: hong
      * @date: 2024/4/11 16:38
      */
-    @PostMapping("/importTable")
-    public R<String> simpleRead(Date yearAndMonth, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
-        //检查当月数据是否上传
-        if (safetyEpMaintenanceTableService.checkSafetyEpMaintenanceTableIsExisted(yearAndMonth)){
-            return R.fail("当月数据已上传");
-        }
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
-        } catch (Exception e) {
-            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
-            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
-        }
-    }
+//    @PostMapping("/importTable")
+//    public R<String> simpleRead(Date yearAndMonth, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
+//
+//        //检查当月数据是否上传
+//        if (safetyEpMaintenanceTableService.checkSafetyEpMaintenanceTableIsExisted(yearAndMonth)){
+//            return R.fail("当月数据已上传");
+//        }
+//        try (InputStream inputStream = multipartFile.getInputStream()) {
+//            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
+//        } catch (Exception e) {
+//            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
+//            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
+//        }
+//
+//    }
+
+
 
 
     /**
@@ -69,20 +70,13 @@ public class SafetyEpDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('safety:data:add')")
     @Log(title = "[安全环保]指标填报", businessType = BusinessType.INSERT)
-    @PostMapping("/fillingData")
+    @PostMapping
     public AjaxResult add(@RequestBody SafetyEp safetyEp) {
         if(safetyEpService.checkSafetyFillingDataIsExisted(safetyEp.getYearAndMonth()))
             return AjaxResult.error("当月数据已填报");
-
         safetyEp.setCreateBy(getUsername());
-        safetyEp.setCreateTime(DateUtils.getNowDate());
-
         return toAjax(safetyEpService.InsertOrUpdateSafetyEp(safetyEp));
     }
-
-
-
-
 
     /**
      * 修改[安全环保]指标填报
@@ -91,15 +85,9 @@ public class SafetyEpDataController extends BaseController {
     @Log(title = "[安全环保]-已有指标修改", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SafetyEp safetyEp) {
-        return toAjax(safetyEpService.InsertOrUpdateSafetyEp(safetyEp));
+        safetyEp.setUpdateBy(getUsername());
+        return toAjax(safetyEpService.updateSafetyEp(safetyEp));
     }
-
-
-
-
-
-
-
 
     /**
      * 查询[安全环保]指标填报列表
@@ -113,18 +101,6 @@ public class SafetyEpDataController extends BaseController {
     }
 
     /**
-     * 导出[安全环保]指标填报列表
-     */
-    @PreAuthorize("@ss.hasPermi('safety:data:export')")
-    @Log(title = "[安全环保]指标填报", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SafetyEp safetyEp) {
-        List<SafetyEp> list = safetyEpService.selectSafetyEpList(safetyEp);
-        ExcelUtil<SafetyEp> util = new ExcelUtil<SafetyEp>(SafetyEp.class);
-        util.exportExcel(response, list, "[安全环保]指标填报数据");
-    }
-
-    /**
      * 获取[安全环保]指标填报详细信息
      */
     @PreAuthorize("@ss.hasPermi('safety:data:query')")
@@ -132,8 +108,6 @@ public class SafetyEpDataController extends BaseController {
     public AjaxResult getInfo(@PathVariable("safetyEpId") Long safetyEpId) {
         return success(safetyEpService.selectSafetyEpBySafetyEpId(safetyEpId));
     }
-
-
 
     /**
      * 删除[安全环保]指标填报
@@ -144,8 +118,6 @@ public class SafetyEpDataController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] safetyEpIds) {
         return toAjax(safetyEpService.deleteSafetyEpBySafetyEpIds(safetyEpIds));
     }
-
-
 
 
 

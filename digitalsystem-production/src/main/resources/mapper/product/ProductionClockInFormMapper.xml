@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductionClockInFormMapper">
+    
+    <resultMap type="ProductionClockInForm" id="ProductionClockInFormResult">
+        <result property="pcifId"    column="PCIF_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="idNumber"    column="ID_number"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="firstTimeClockingInAtWork"    column="First_time_clocking_in_at_work"    />
+        <result property="firstTimeClockingInAfterWork"    column="First_time_clocking_in_after_work"    />
+        <result property="secondTimeClockingInAtWork"    column="Second_time_clocking_in_at_work"    />
+        <result property="secondTimeClockingInAfterWork"    column="Second_time_clocking_in_after_work"    />
+        <result property="normalWorkingHours"    column="Normal_working_hours"    />
+        <result property="normalClosingTime"    column="Normal_closing_time"    />
+    </resultMap>
+
+    <sql id="selectProductionClockInFormVo">
+        select PCIF_ID, Number, ID_number, Name, Gender, First_time_clocking_in_at_work, First_time_clocking_in_after_work, Second_time_clocking_in_at_work, Second_time_clocking_in_after_work, Normal_working_hours, Normal_closing_time from Production_Clock_in_form
+    </sql>
+
+    <select id="selectProductionClockInFormList" parameterType="ProductionClockInForm" resultMap="ProductionClockInFormResult">
+        <include refid="selectProductionClockInFormVo"/>
+        <where>  
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="firstTimeClockingInAtWork != null "> and First_time_clocking_in_at_work = #{firstTimeClockingInAtWork}</if>
+            <if test="firstTimeClockingInAfterWork != null "> and First_time_clocking_in_after_work = #{firstTimeClockingInAfterWork}</if>
+            <if test="secondTimeClockingInAtWork != null "> and Second_time_clocking_in_at_work = #{secondTimeClockingInAtWork}</if>
+            <if test="secondTimeClockingInAfterWork != null "> and Second_time_clocking_in_after_work = #{secondTimeClockingInAfterWork}</if>
+            <if test="normalWorkingHours != null "> and Normal_working_hours = #{normalWorkingHours}</if>
+            <if test="normalClosingTime != null "> and Normal_closing_time = #{normalClosingTime}</if>
+        </where>
+    </select>
+    <select id="selectProductionClockInFormList1" parameterType="ProductionClockInForm" resultMap="ProductionClockInFormResult">
+        <include refid="selectProductionClockInFormVo"/>
+        <where>
+            <if test="Number != null "> and Number = #{Number}</if>
+            <if test="idNumber != null  and idNumber != ''"> and ID_number = #{idNumber}</if>
+            <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
+            <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
+            <if test="firstTimeClockingInAtWork != null "> and First_time_clocking_in_at_work = #{firstTimeClockingInAtWork}</if>
+            <if test="firstTimeClockingInAfterWork != null "> and First_time_clocking_in_after_work = #{firstTimeClockingInAfterWork}</if>
+            <if test="secondTimeClockingInAtWork != null "> and Second_time_clocking_in_at_work = #{secondTimeClockingInAtWork}</if>
+            <if test="secondTimeClockingInAfterWork != null "> and Second_time_clocking_in_after_work = #{secondTimeClockingInAfterWork}</if>
+            <if test="normalWorkingHours != null "> and Normal_working_hours = #{normalWorkingHours}</if>
+            <if test="normalClosingTime != null "> and Normal_closing_time = #{normalClosingTime}</if>
+        </where>
+    </select>
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT PCIF_ID
+        FROM Production_Clock_in_form
+        WHERE PCIF_ID = (SELECT MAX(PCIF_ID) FROM Production_Clock_in_form);
+    </select>
+    
+    <select id="selectProductionClockInFormByPcifId" parameterType="Long" resultMap="ProductionClockInFormResult">
+        <include refid="selectProductionClockInFormVo"/>
+        where PCIF_ID = #{pcifId}
+    </select>
+        
+    <insert id="insertProductionClockInForm" parameterType="ProductionClockInForm">
+        insert into Production_Clock_in_form
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pcifId != null">PCIF_ID,</if>
+            <if test="Number != null">Number,</if>
+            <if test="idNumber != null">ID_number,</if>
+            <if test="Name != null">Name,</if>
+            <if test="Gender != null">Gender,</if>
+            <if test="firstTimeClockingInAtWork != null">First_time_clocking_in_at_work,</if>
+            <if test="firstTimeClockingInAfterWork != null">First_time_clocking_in_after_work,</if>
+            <if test="secondTimeClockingInAtWork != null">Second_time_clocking_in_at_work,</if>
+            <if test="secondTimeClockingInAfterWork != null">Second_time_clocking_in_after_work,</if>
+            <if test="normalWorkingHours != null">Normal_working_hours,</if>
+            <if test="normalClosingTime != null">Normal_closing_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pcifId != null">#{pcifId},</if>
+            <if test="Number != null">#{Number},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="Name != null">#{Name},</if>
+            <if test="Gender != null">#{Gender},</if>
+            <if test="firstTimeClockingInAtWork != null">#{firstTimeClockingInAtWork},</if>
+            <if test="firstTimeClockingInAfterWork != null">#{firstTimeClockingInAfterWork},</if>
+            <if test="secondTimeClockingInAtWork != null">#{secondTimeClockingInAtWork},</if>
+            <if test="secondTimeClockingInAfterWork != null">#{secondTimeClockingInAfterWork},</if>
+            <if test="normalWorkingHours != null">#{normalWorkingHours},</if>
+            <if test="normalClosingTime != null">#{normalClosingTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductionClockInForm" parameterType="ProductionClockInForm">
+        update Production_Clock_in_form
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Number != null">Number = #{Number},</if>
+            <if test="idNumber != null">ID_number = #{idNumber},</if>
+            <if test="Name != null">Name = #{Name},</if>
+            <if test="Gender != null">Gender = #{Gender},</if>
+            <if test="firstTimeClockingInAtWork != null">First_time_clocking_in_at_work = #{firstTimeClockingInAtWork},</if>
+            <if test="firstTimeClockingInAfterWork != null">First_time_clocking_in_after_work = #{firstTimeClockingInAfterWork},</if>
+            <if test="secondTimeClockingInAtWork != null">Second_time_clocking_in_at_work = #{secondTimeClockingInAtWork},</if>
+            <if test="secondTimeClockingInAfterWork != null">Second_time_clocking_in_after_work = #{secondTimeClockingInAfterWork},</if>
+            <if test="normalWorkingHours != null">Normal_working_hours = #{normalWorkingHours},</if>
+            <if test="normalClosingTime != null">Normal_closing_time = #{normalClosingTime},</if>
+        </trim>
+        where PCIF_ID = #{pcifId}
+    </update>
+
+    <delete id="deleteProductionClockInFormByPcifId" parameterType="Long">
+        delete from Production_Clock_in_form where PCIF_ID = #{pcifId}
+    </delete>
+
+    <delete id="deleteProductionClockInFormByPcifIds" parameterType="String">
+        delete from Production_Clock_in_form where PCIF_ID in 
+        <foreach item="pcifId" collection="array" open="(" separator="," close=")">
+            #{pcifId}
+        </foreach>
+    </delete>
+</mapper>

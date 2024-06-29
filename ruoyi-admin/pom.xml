@@ -109,7 +109,13 @@
             <artifactId>digitalsystem-quality</artifactId>
         </dependency>
 
-        <!-- 供应-->
+        <!-- 企管-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>digitalsystem-enterprise</artifactId>
+        </dependency>
+
+        <!--供应-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>digitalsystem-supply</artifactId>
@@ -121,6 +127,23 @@
             <artifactId>ruoyi-project</artifactId>
         </dependency>
 
+        <!-- 文件模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-file</artifactId>
+        </dependency>
+
+<!--        流程模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-ef</artifactId>
+        </dependency>
+
+        <!--lombook-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
 
         <dependency>

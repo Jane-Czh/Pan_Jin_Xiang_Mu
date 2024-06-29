@@ -2,8 +2,8 @@ package com.heli.safety.controller;
 
 import com.heli.safety.service.ISafetyEpDisplayService;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.entity.DisplayEntity;
-import com.ruoyi.common.core.domain.entity.DisplayRequestParam;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +31,7 @@ public class SafetyEpDisplayController extends BaseController {
     /**
      * 当月度设备维修总费用 指标23
      */
-    @PreAuthorize("@ss.hasPermi('safetyEp:display:curEquipmentMaintenanceCost')")
+    @PreAuthorize("@ss.hasPermi('safety:display:curEquipmentMaintenanceCost')")
     @PostMapping("/curEquipmentMaintenanceCost")
     public TableDataInfo selectCurEquipmentMaintenanceCost(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = safetyEpDisplayService.selectCurEquipmentMaintenanceCost(time.getStartTime(), time.getEndTime());
@@ -41,7 +41,7 @@ public class SafetyEpDisplayController extends BaseController {
     /**
      * 重点设备故障率 指标45
      */
-    @PreAuthorize("@ss.hasPermi('safetyEp:display:keyEquipmentFailureRate')")
+    @PreAuthorize("@ss.hasPermi('safety:display:keyEquipmentFailureRate')")
     @PostMapping("/keyEquipmentFailureRate")
     public TableDataInfo selectKeyEquipmentFailureRate(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = safetyEpDisplayService.selectKeyEquipmentFailureRate(time.getStartTime(), time.getEndTime());
@@ -51,7 +51,7 @@ public class SafetyEpDisplayController extends BaseController {
     /**
      * 当月设备故障累计停产时间 指标46
      */
-    @PreAuthorize("@ss.hasPermi('safetyEp:display:curEquipmentFailuresTotaltime')")
+    @PreAuthorize("@ss.hasPermi('safety:display:curEquipmentFailuresTotaltime')")
     @PostMapping("/curEquipmentFailuresTotaltime")
     public TableDataInfo selectCurEquipmentFailuresTotaltime(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = safetyEpDisplayService.selectCurEquipmentFailuresTotaltime(time.getStartTime(), time.getEndTime());
@@ -61,7 +61,7 @@ public class SafetyEpDisplayController extends BaseController {
     /**
      * 主要设备故障总次数 指标67
      */
-    @PreAuthorize("@ss.hasPermi('safetyEp:display:keyEquipmentTotalFailureCount')")
+    @PreAuthorize("@ss.hasPermi('safety:display:keyEquipmentTotalFailureCount')")
     @PostMapping("/keyEquipmentTotalFailureCount")
     public TableDataInfo selectKeyEquipmentTotalFailureCount(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = safetyEpDisplayService.selectKeyEquipmentTotalFailureCount(time.getStartTime(), time.getEndTime());
@@ -71,7 +71,7 @@ public class SafetyEpDisplayController extends BaseController {
     /**
      * 与其他的展示方式不同-设备故障类别次数分布图 指标68
      */
-    @PreAuthorize("@ss.hasPermi('safetyEp:display:outputPercapitavalue')")
+    @PreAuthorize("@ss.hasPermi('safety:display:outputPercapitavalue')")
     @PostMapping("/outputPercapitavalue")
     public TableDataInfo selectOutputPercapitavalue(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = safetyEpDisplayService.selectOutputPercapitavalue(time.getStartTime(), time.getEndTime());
@@ -81,7 +81,7 @@ public class SafetyEpDisplayController extends BaseController {
     /**
      * 当月设备维修成本-替换件成本 指标69
      */
-    @PreAuthorize("@ss.hasPermi('safetyEp:display:curEquipmentReplacementCost')")
+    @PreAuthorize("@ss.hasPermi('safety:display:curEquipmentReplacementCost')")
     @PostMapping("/curEquipmentReplacementCost")
     public TableDataInfo selectCurEquipmentReplacementCost(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = safetyEpDisplayService.selectCurEquipmentReplacementCost(time.getStartTime(), time.getEndTime());

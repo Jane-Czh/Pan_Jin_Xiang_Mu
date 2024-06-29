@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024-03-29
  */
 @RestController
-@RequestMapping("/financial/data")
+@RequestMapping("/financial/data/fill")
 public class FinancialIndicatorsHandfillTableController extends BaseController {
     @Autowired
     private IFinancialIndicatorsHandfillTableService financialIndicatorsHandfillTableService;
@@ -58,17 +58,17 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //    }
 
 
-    @PostMapping("/upload")
+//    @PostMapping("/upload")
 //    @OperationLog(logType = "1",operationName = "hihi", content = "excel上传")
-    public String importExcel(@RequestParam("file") MultipartFile file, @RequestParam Map<String, Object> params) {
+//    public String importExcel(@RequestParam("file") MultipartFile file, @RequestParam Map<String, Object> params) {
 
 //        LogUtils.get().setLog("operationName", (String) params.get("userName"));
 
 //        LogUtils.get().setLog("content", "上传航标参数Excel文件");//操作or修改的内容
-        System.out.println(file+"_______________--------------------");
-        if (file.isEmpty()) {
-            return "上传失败，请选择文件";
-        }
+//        System.out.println(file+"_______________--------------------");
+//        if (file.isEmpty()) {
+//            return "上传失败，请选择文件";
+//        }
 //        try {
 //            List<DBExcelEntity> dbExcelEntities = ExcelUtils.parseExcel(file);
 //
@@ -102,9 +102,9 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //            return "导入失败";
 //        }
 
-        return "待返回";
-
-}
+//        return "待返回";
+//
+//}
 
 
 
@@ -117,7 +117,7 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     /**
      * 查询[财务]手动填报指标列表
      */
-    @PreAuthorize("@ss.hasPermi('financial:data:list')")
+    @PreAuthorize("@ss.hasPermi('financial:fill:list')")
     @GetMapping("/list")
     public TableDataInfo list(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
         System.out.println("-------------test___________________");
@@ -127,21 +127,9 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     }
 
     /**
-     * 导出[财务]手动填报指标列表
-     */
-    @PreAuthorize("@ss.hasPermi('financial:data:export')")
-    @Log(title = "[财务]手动填报指标", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
-        List<FinancialIndicatorsHandfillTable> list = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableList(financialIndicatorsHandfillTable);
-        ExcelUtil<FinancialIndicatorsHandfillTable> util = new ExcelUtil<FinancialIndicatorsHandfillTable>(FinancialIndicatorsHandfillTable.class);
-        util.exportExcel(response, list, "[财务]手动填报指标数据");
-    }
-
-    /**
      * 获取[财务]手动填报指标详细信息
      */
-    @PreAuthorize("@ss.hasPermi('financial:data:query')")
+    @PreAuthorize("@ss.hasPermi('financial:fill:query')")
     @GetMapping(value = "/{fihfId}")
     public AjaxResult getInfo(@PathVariable("fihfId") Long fihfId) {
         return success(financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByFihfId(fihfId));
@@ -150,29 +138,21 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     /**
      * 新增[财务]手动填报指标
      */
-    @PreAuthorize("@ss.hasPermi('financial:data:add')")
-    @Log(title = "[财务]手动填报指标", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+//    @PreAuthorize("@ss.hasPermi('financial:data:add')")
+//    @Log(title = "[财务]手动填报指标", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+//
+//        System.out.println(financialIndicatorsHandfillTable);
+//        return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
+//    }
 
-        System.out.println(financialIndicatorsHandfillTable);
-        return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
-    }
 
-    /**
-     * 修改[财务]手动填报指标
-     */
-    @PreAuthorize("@ss.hasPermi('financial:data:edit')")
-    @Log(title = "[财务]手动填报指标", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
-        return toAjax(financialIndicatorsHandfillTableService.updateFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
-    }
 
     /**
      * 删除[财务]手动填报指标
      */
-    @PreAuthorize("@ss.hasPermi('financial:data:remove')")
+    @PreAuthorize("@ss.hasPermi('financial:fill:remove')")
     @Log(title = "[财务]手动填报指标", businessType = BusinessType.DELETE)
     @DeleteMapping("/{fihfIds}")
     public AjaxResult remove(@PathVariable Long[] fihfIds) {

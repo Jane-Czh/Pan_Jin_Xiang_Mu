@@ -1,109 +1,177 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heli.tech.mapper.TechMapper">
-    
+
     <resultMap type="Tech" id="TechResult">
-        <result property="techId"    column="Tech_ID"    />
-        <result property="yearAndMonth"    column="Year_And_Month"    />
-        <result property="createdBy"    column="CREATED_BY"    />
-        <result property="createdTime"    column="CREATED_TIME"    />
-        <result property="updatedBy"    column="UPDATED_BY"    />
-        <result property="updatedTime"    column="UPDATED_TIME"    />
-        <result property="nonStandardAvgPreparationDays"    column="Non_Standard_AVG_Preparation_Days"    />
-        <result property="completedmonthlyPlancounts"    column="CompletedMonthly_PlanCounts"    />
-        <result property="annualPlancounts"    column="Annual_PlanCounts"    />
-        <result property="prdscheduleCompletionrate"    column="PRDSchedule_CompletionRate"    />
+        <result property="techId" column="Tech_ID"/>
+        <result property="yearAndMonth" column="Year_And_Month"/>
+        <result property="nonStandardAvgPreparationDays" column="Non_Standard_AVG_Preparation_Days"/>
+        <result property="completedmonthlyPlancounts" column="CompletedMonthly_PlanCounts"/>
+        <result property="prdscheduleCompletionrate" column="PRDSchedule_CompletionRate"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
     </resultMap>
 
     <sql id="selectTechVo">
-        select Tech_ID, Year_And_Month, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, Non_Standard_AVG_Preparation_Days, CompletedMonthly_PlanCounts, Annual_PlanCounts, PRDSchedule_CompletionRate from Tech
+        select Tech_ID,
+               Year_And_Month,
+               Non_Standard_AVG_Preparation_Days,
+               CompletedMonthly_PlanCounts,
+               PRDSchedule_CompletionRate,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME
+        from Tech
     </sql>
+    
+    <!--  检查数据库是否有数据  -->
+    <select id="checkDataExist" resultType="boolean">
+        select count(*) from Tech
+    </select>
 
-    <!-- 统计当年已经完成的数量 -->
-    <select id="countAnnualCompletionNumber" resultType="long">
+    <!--  获取当年已经上传数据的最大月份  -->
+    <select id="selectMaxMonthByYear" resultType="Date">
+        select max(Year_And_Month) as yearAndMonth
+        from Tech
+        where Year_And_Month like concat(#{year}, '%')
+    </select>
+
+    <!--  获取当年已经上传数据的最小月份  -->
+    <select id="selectMinMonthByYear" resultType="Date">
+        select min(Year_And_Month) as yearAndMonth
+        from Tech
+        where Year_And_Month like concat(#{year}, '%')
+    </select>
+
+    <!-- 统计当年已经完成的数量,要求年份相同，月份小于等于传入参数的月份 -->
+    <select id="countAnnualCompletionNumber" parameterType="Date" resultType="long">
         select sum(CompletedMonthly_PlanCounts) as num
         from Tech
-        where Year_And_Month like concat('%',#{year},'%')
+        where DATE_FORMAT(Year_And_Month,'%y') like DATE_FORMAT(#{yearAndMonth},'%y')
+        and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth}
+    </select>
+<!--    <select id="countAnnualCompletionNumber" parameterType="int" resultType="long">-->
+<!--        select sum(CompletedMonthly_PlanCounts) as num-->
+<!--        from Tech-->
+<!--        where Year_And_Month like concat('%', #{year}, '%') and Year_And_Month-->
+<!--    </select>-->
+
+    <!--检查当月数据是否上传-->
+    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM Tech WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
-    <!-- 按年查询数据 -->
-    <select id="selectTechListByYear" resultMap="TechResult">
-        <include refid="selectTechVo"/>
-        where Year_And_Month like concat('%',#{year},'%')
+
+
+    <!-- 非标订单平均技术准备天数 指标47 -->
+    <select id="selectNonStandardAVGPreparationDays" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays
+              from Tech
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
     </select>
 
+    <!-- 研发项目计划进度完成率 指标71 -->
+    <select id="selectPRDScheduleCompletionRate" resultType="map">
+        select *
+        from (select Year_And_Month as yearAndMonth, PRDSchedule_CompletionRate as prdScheduleCompletionRate
+              from Tech
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
+
+
+    <!--  批量更新tech表  -->
+    <insert id="batchUpdateTech" parameterType="ArrayList">
+        insert into Tech(Year_And_Month,PRDSchedule_CompletionRate)
+        VALUES
+        <foreach collection="teches" item="item" separator=",">
+            (#{item.yearAndMonth},#{item.prdscheduleCompletionrate})
+        </foreach>
+        on duplicate key update
+        Year_And_Month = values(Year_And_Month),PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate)
+    </insert>
+
+    <!--检查当前年度，是否存在月度数据，存在则更新月度数据-->
+    <select id="checkTechMonthlyDataIsExistedByYear" >
+        select count(*) from Tech
+        where DATE_FORMAT(Year_And_Month,'%Y') = #{naturalYear}
+    </select>
 
 
     <select id="selectTechList" parameterType="Tech" resultMap="TechResult">
         <include refid="selectTechVo"/>
-        <where>  
-            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
-            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
-            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
-            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
-            <if test="updatedTime != null "> and UPDATED_TIME = #{updatedTime}</if>
-            <if test="nonStandardAvgPreparationDays != null "> and Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays}</if>
-            <if test="completedmonthlyPlancounts != null "> and CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts}</if>
-            <if test="annualPlancounts != null "> and Annual_PlanCounts = #{annualPlancounts}</if>
-            <if test="prdscheduleCompletionrate != null "> and PRDSchedule_CompletionRate = #{prdscheduleCompletionrate}</if>
+        <where>
+            <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>
+            <if test="nonStandardAvgPreparationDays != null ">and Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays}</if>
+            <if test="completedmonthlyPlancounts != null ">and CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts}</if>
+            <if test="prdscheduleCompletionrate != null ">and PRDSchedule_CompletionRate = #{prdscheduleCompletionrate}</if>
         </where>
     </select>
-    
+
     <select id="selectTechByTechId" parameterType="Long" resultMap="TechResult">
         <include refid="selectTechVo"/>
         where Tech_ID = #{techId}
     </select>
-        
+
     <insert id="insertTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
         insert into Tech
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
-            <if test="createdBy != null">CREATED_BY,</if>
-            <if test="createdTime != null">CREATED_TIME,</if>
-            <if test="updatedBy != null">UPDATED_BY,</if>
-            <if test="updatedTime != null">UPDATED_TIME,</if>
             <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days,</if>
             <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts,</if>
-            <if test="annualPlancounts != null">Annual_PlanCounts,</if>
             <if test="prdscheduleCompletionrate != null">PRDSchedule_CompletionRate,</if>
-         </trim>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
-            <if test="createdBy != null">#{createdBy},</if>
-            <if test="createdTime != null">#{createdTime},</if>
-            <if test="updatedBy != null">#{updatedBy},</if>
-            <if test="updatedTime != null">#{updatedTime},</if>
             <if test="nonStandardAvgPreparationDays != null">#{nonStandardAvgPreparationDays},</if>
             <if test="completedmonthlyPlancounts != null">#{completedmonthlyPlancounts},</if>
-            <if test="annualPlancounts != null">#{annualPlancounts},</if>
             <if test="prdscheduleCompletionrate != null">#{prdscheduleCompletionrate},</if>
-         </trim>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
     </insert>
 
     <update id="updateTech" parameterType="Tech">
         update Tech
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
-            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
-            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
-            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
-            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
             <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays},</if>
             <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts},</if>
-            <if test="annualPlancounts != null">Annual_PlanCounts = #{annualPlancounts},</if>
             <if test="prdscheduleCompletionrate != null">PRDSchedule_CompletionRate = #{prdscheduleCompletionrate},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
         </trim>
         where Tech_ID = #{techId}
     </update>
 
     <delete id="deleteTechByTechId" parameterType="Long">
-        delete from Tech where Tech_ID = #{techId}
+        delete
+        from Tech
+        where Tech_ID = #{techId}
     </delete>
 
     <delete id="deleteTechByTechIds" parameterType="String">
-        delete from Tech where Tech_ID in 
+        delete from Tech where Tech_ID in
         <foreach item="techId" collection="array" open="(" separator="," close=")">
             #{techId}
         </foreach>

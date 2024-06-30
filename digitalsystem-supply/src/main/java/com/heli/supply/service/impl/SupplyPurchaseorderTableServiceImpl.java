@@ -29,17 +29,14 @@ public class SupplyPurchaseorderTableServiceImpl implements ISupplyPurchaseorder
 
     @Override
     public void importInterests(MultipartFile excelFile) throws IOException {
-
         SupplyPurchaseorderTable supplyPurchaseorderTable = new SupplyPurchaseorderTable();
         InputStream is = null;
-
         try {
             List<SupplyPurchaseorderTable> SupplyPurchaseorderTables = ExcelUtils.parseExcel2SupplyPurchaseorderTable(excelFile);
 
             int i = 0;
             while (i < SupplyPurchaseorderTables.size()){
                 supplyPurchaseorderTable = SupplyPurchaseorderTables.get(i);
-
                 insertSupplyPurchaseorderTable(supplyPurchaseorderTable);
                 i++;
             }

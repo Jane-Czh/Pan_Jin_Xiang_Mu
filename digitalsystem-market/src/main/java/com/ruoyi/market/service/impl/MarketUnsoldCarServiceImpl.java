@@ -81,7 +81,7 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
                 }
                 insert_order++;
             }
-            System.out.println(insert);
+//            System.out.println(insert);
             //放入UC_id后插入
             Long UC_ID = 0L;
             for (Map.Entry<String, MarketUnsoldCar> entry : insert.entrySet()){

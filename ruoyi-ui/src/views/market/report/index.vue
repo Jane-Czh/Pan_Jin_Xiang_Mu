@@ -358,7 +358,7 @@
 </template>
 
 <script>
-import { listReport, getReport, delReport, addReport, updateReport } from "@/api/market/report";
+import { listReport, getReport, delReport, addReport, updateReport, synchronization } from "@/api/market/report";
 import PieChart from '@/components/PieChart.vue'; // 导入饼状图组件
 import * as echarts from "echarts";
 
@@ -1084,21 +1084,35 @@ export default {
 
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/market/report/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // fetch('http://localhost:8080/market/report/synchronization', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   // 如果请求成功，可以进行下一步操作
+      // })
+      // .catch(error => {
+      //   console.error('There was an error!', error);
+      // });
+
+      synchronization()
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        // if (!response.ok) {
+        //   throw new Error('Network response was not ok');
+        // }
         // 如果请求成功，可以进行下一步操作
+        this.$message.success("同步成功");
+        location.reload();
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
+
     },
 
     /** 查询市场科销售快报功能列表 */

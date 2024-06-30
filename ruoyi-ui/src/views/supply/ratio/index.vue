@@ -280,7 +280,7 @@
 </template>
 
 <script>
-import { listRatio, getRatio, delRatio, addRatio, updateRatio } from "@/api/supply/ratio";
+import { listRatio, getRatio, delRatio, addRatio, updateRatio, synchronization, uploadImport } from "@/api/supply/ratio";
 import axios from 'axios'
 
 export default {
@@ -451,58 +451,79 @@ export default {
     },
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/supply/ratio/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // fetch('http://localhost:8080/supply/ratio/synchronization', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   // 如果请求成功，可以进行下一步操作
+      // })
+      // .catch(error => {
+      //   console.error('There was an error!', error);
+      // });
+
+      synchronization()
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        this.$message.success("同步成功");
+        location.reload();
         // 如果请求成功，可以进行下一步操作
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
+
       // 页面刷新
-      window.location.reload();
+      // window.location.reload();
     },
 
         /*  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
         fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
+      // console.log(file);
       formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/supply/ratio/import",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
+      // console.log("file====>",formData)
+      // axios({
+      //   method: "post",
+      //   // this $axios.post,
+      //   url: "http://localhost:8080/supply/ratio/import",
+      //   // params:{
+      //   //   userName: this.$store.state.user.name,
+      //   // },
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      //   withCredentials: true,
+      //   data: formData,
+      //   onUploadProgress: (progressEvent) => {
+      //     this.progress = Math.round(
+      //       (progressEvent.loaded * 100) / progressEvent.total
+      //     );
+      //   },
+      // });
       // this.$message.success("上传成功");
 
+      uploadImport(formData)
+        .then(response => {
+          // 文件上传成功
+          // console.log('File uploaded successfully:', response);
+          
+          // 2秒后关闭上传面板并刷新页面
+          setTimeout(() => {
+            this.showDialog = false; // 关闭上传面板
+            location.reload(); // 刷新页面数据
+          }, 2000); // 2000毫秒后执行
+        })
+        .catch(error => {
+          // 处理错误
+          console.error('Error uploading file:', error);
+        });
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
     },
 
     handleClose(done) {

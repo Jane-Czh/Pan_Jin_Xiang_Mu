@@ -42,3 +42,14 @@ export function delRegional(masrcId) {
     method: 'delete'
   })
 }
+
+export function synchronization(){
+  return request({
+    url: '/market/regional/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+  });
+}

@@ -153,7 +153,6 @@
 
       <el-table-column label="整改后照片" align="center" prop="postRectificationPhoto">
         <template slot-scope="scope">
-          <!-- 假设 preRectificationPhoto 是一个图片 URL -->
           <!-- 添加预览按钮 -->
           <el-button type="text" @click="previewImage(scope.row.postRectificationPhoto)">预览</el-button>
         </template>
@@ -180,7 +179,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -336,7 +335,7 @@ export default {
           { required: true, message: "验收人不能为空", trigger: "blur" }
         ]
       },
-      
+
       fileInfo: {
         filePath: '',
         fileName: '',
@@ -461,15 +460,15 @@ export default {
 
       //&&&&&&&&&&&&&&&&&&&&&&&&&&//
       handleFileChange(file, fileList) {
-      const uploadedFile = file.raw; // 获取上传的文件对象
+        const uploadedFile = file.raw; // 获取上传的文件对象
 
-      // 更新文件信息
-      this.$set(this.fileInfo, 'fileName', uploadedFile.name);
-      this.$set(this.fileInfo, 'filePath', '');
-      this.$set(this.fileInfo, 'fileType', this.getFileType(uploadedFile.type));
-      this.$set(this.fileInfo, 'fileSize', this.formatFileSize(uploadedFile.size));
-      this.$set(this.fileInfo, 'uploadDate', new Date().toISOString().split('T')[0]);
-      this.getUserInfo();
+        // 更新文件信息
+        this.$set(this.fileInfo, 'fileName', uploadedFile.name);
+        this.$set(this.fileInfo, 'filePath', '');
+        this.$set(this.fileInfo, 'fileType', this.getFileType(uploadedFile.type));
+        this.$set(this.fileInfo, 'fileSize', this.formatFileSize(uploadedFile.size));
+        this.$set(this.fileInfo, 'uploadDate', new Date().toISOString().split('T')[0]);
+        this.getUserInfo();
     },
     prehandleUploadSuccess(res, file) {
       //将返回的地址存入数据库中
@@ -548,7 +547,7 @@ export default {
     previewImage(photoUrl) {
       // 在这里实现预览图片的逻辑
       // 例如，可以打开一个模态框显示图片
-      // console.log('预览图片', photoUrl);
+      console.log('预览图片', photoUrl);
       if (!photoUrl) {
         // 如果URL为空，显示提示信息
         this.$message({
@@ -562,9 +561,9 @@ export default {
   },
 
 
-  
 
-     
+
+
 
 
 

@@ -54,6 +54,12 @@
         limit 1
     </select>
 
+    <!--  检查当前上传数据的月份是否为最小月份，如果是最小月份则允许上传  -->
+    <select id="checkEMMonthlyDataIsMinMonth" resultType="boolean">
+        select count(*) from Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
     <!--  查询当年已上传数据的最大月份  -->
     <select id="selectMaxMonthByYear" resultType="date">
         select max(Year_And_Month) from Enterprise_Management_Indicators_Monthly_Data

@@ -42,7 +42,7 @@ public class EnterpriseManagementDataController extends BaseController {
     @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.INSERT)
     @PostMapping("/monthly")
     @Transactional
-    public AjaxResult add(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+    public AjaxResult add(@RequestBody EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
 
         System.out.println(enterpriseManagementMonthlyData);
 
@@ -50,8 +50,9 @@ public class EnterpriseManagementDataController extends BaseController {
         if (enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(enterpriseManagementMonthlyData.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
         }
-        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth())) &&
-            enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()) {
+        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))
+                && enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()
+                && !enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsMinMonth(enterpriseManagementMonthlyData.getYearAndMonth())) {
             return AjaxResult.error("上月数据未填报");
         }
         enterpriseManagementMonthlyData.setCreateBy(getUsername());
@@ -93,7 +94,7 @@ public class EnterpriseManagementDataController extends BaseController {
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
-            enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, "admin");
+            enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, getUsername());
 
             enterpriseManagementMonthlyDataService.calculateSalaryTableIndicators(yearAndMonth);
             return R.ok("上传成功");

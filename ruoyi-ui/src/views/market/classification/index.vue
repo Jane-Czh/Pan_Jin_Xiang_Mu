@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import { listClassification, getClassification, delClassification, addClassification, updateClassification } from "@/api/market/classification";
+import { listClassification, getClassification, delClassification, addClassification, updateClassification, synchronization } from "@/api/market/classification";
 
 export default {
   name: "Classification",
@@ -311,17 +311,30 @@ export default {
 
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/market/classification/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // fetch('http://localhost:8080/market/classification/synchronization', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   // 如果请求成功，可以进行下一步操作
+      // })
+      // .catch(error => {
+      //   console.error('There was an error!', error);
+      // });
+
+      synchronization()
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        // if (!response.ok) {
+        //   throw new Error('Network response was not ok');
+        // }
         // 如果请求成功，可以进行下一步操作
+        this.$message.success("同步成功");
+        location.reload();
       })
       .catch(error => {
         console.error('There was an error!', error);

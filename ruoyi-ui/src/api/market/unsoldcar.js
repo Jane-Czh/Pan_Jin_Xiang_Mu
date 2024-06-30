@@ -42,3 +42,14 @@ export function delUnsoldcar(ucId) {
     method: 'delete'
   })
 }
+
+export function synchronization(){
+  return request({
+    url: '/market/unsoldcar/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+  });
+}

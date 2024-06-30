@@ -42,3 +42,14 @@ export function delPresentation(searpId) {
     method: 'delete'
   })
 }
+
+export function synchronization(){
+  return request({
+    url: '/safety/presentation/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+  });
+}

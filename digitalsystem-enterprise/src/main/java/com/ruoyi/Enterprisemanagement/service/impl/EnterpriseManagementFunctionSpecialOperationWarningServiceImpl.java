@@ -185,22 +185,56 @@ public class EnterpriseManagementFunctionSpecialOperationWarningServiceImpl impl
                     enterpriseManagementFunctionSpecialOperationWarning2.setThirdExpiration(enterpriseManagementFunctionSpecialOperationWarning.getThirdExpiration());
                     enterpriseManagementFunctionSpecialOperationWarning2.setReexaminationThirdly(enterpriseManagementFunctionSpecialOperationWarning.getReexaminationThirdly());
                     //判断作业证是否快要到期，先从第三次到期时间对比currentDate.getTime()
-                    if (ThirdExpiration!=null&&(ThirdExpiration.getTime()-currentDate.getTime())<=twoMonthsInMillis&&(ThirdExpiration.getTime()-currentDate.getTime())>0){
+                    if (ThirdExpiration!=null&&(ThirdExpiration.getTime()-currentDate.getTime())<=((long) 2 * 30 * 24 * 60 * 60 * 1000)&&(ThirdExpiration.getTime()-currentDate.getTime())>0){
                         enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
                         result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
                         System.out.println(1);
                     }
-                    else if (ThirdExpiration==null&&SecondExpiration!=null&&(SecondExpiration.getTime()-currentDate.getTime())<=twoMonthsInMillis&&(SecondExpiration.getTime()-currentDate.getTime())>0) {
+                    else if (ThirdExpiration==null&&SecondExpiration!=null&&(SecondExpiration.getTime()-currentDate.getTime())<=((long) 2 * 30 * 24 * 60 * 60 * 1000)&&(SecondExpiration.getTime()-currentDate.getTime())>0) {
                         enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
                         result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
                         System.out.println(2);
                     }
-                    else if (ThirdExpiration==null&&SecondExpiration==null&&FirstExpiration!=null&&(FirstExpiration.getTime()-currentDate.getTime())<=twoMonthsInMillis&&(FirstExpiration.getTime()-currentDate.getTime())>0) {
+                    else if (ThirdExpiration==null&&SecondExpiration==null&&FirstExpiration!=null&&(FirstExpiration.getTime()-currentDate.getTime())<=((long) 2 * 30 * 24 * 60 * 60 * 1000)&&(FirstExpiration.getTime()-currentDate.getTime())>0) {
                         enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
                         result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
                         System.out.println(currentDate.getTime()-FirstExpiration.getTime()+"=======");
                     }
                     else enterpriseManagementFunctionSpecialOperationWarning2.setWarn("否");
+//                    if (ThirdExpiration!=null) {
+//                        System.out.println("====" + ThirdExpiration.getTime() );
+//                        System.out.println("====" + currentDate.getTime() );
+//                        System.out.println("====" + (ThirdExpiration.getTime() - currentDate.getTime()));
+//                        System.out.println("----" + (ThirdExpiration.getTime() - currentDate.getTime()));
+//                    }
+                    if (ThirdExpiration != null) {
+                        System.out.println("====" + (ThirdExpiration.getTime() - currentDate.getTime()));
+                        System.out.println("******"+twoMonthsInMillis);
+                        System.out.println("ThirdExpiration is not null: true");
+                        if ((ThirdExpiration.getTime() - currentDate.getTime()) <= twoMonthsInMillis) {
+                            System.out.println("ThirdExpiration is within two months from now: true");
+                            if ((ThirdExpiration.getTime() - currentDate.getTime()) > 0) {
+                                System.out.println("ThirdExpiration is after the current date: true");
+                                enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
+                                result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
+                                System.out.println(1);
+                            } else {
+                                System.out.println("ThirdExpiration is after the current date: false");
+                            }
+                        } else {
+                            System.out.println("ThirdExpiration is within two months from now: false");
+                        }
+                    } else {
+                        System.out.println("ThirdExpiration is not null: false");
+                    }
+
+                    if(SecondExpiration!=null){
+                        System.out.println("====" + SecondExpiration.getTime());
+                    System.out.println("----"+(SecondExpiration.getTime()-currentDate.getTime()));}
+                    if (FirstExpiration!=null){
+                        System.out.println("====" + FirstExpiration.getTime());
+                    System.out.println("===="+(FirstExpiration.getTime()-currentDate.getTime()));}
+
 
                 }else
                 {System.out.println("此证件已存在");}

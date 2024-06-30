@@ -2,11 +2,11 @@
   <div class="app-container">
     <div>
       <el-select v-model="selectedItem" placeholder="选择统计数据">
-        <el-option :label="'车体上线总数: ' + totalNumberWaitingTimeForProduction1" :value="1" />
-        <el-option :label="'门架合装完工总数: ' + totalNumberCompletionPeriodOfDoorFrameAssembly1" :value="2" />
-        <el-option :label="'试车完工总数: ' + totalNumberTrialCompletionPeriod1" :value="3" />
-        <el-option :label="'特种作业总数: ' + totalNumberSpecialOperations1" :value="4" />
-        <el-option :label="'精整完工期总数: ' + totalNumberPrecisionCompletionPeriod1" :value="5" />
+        <el-option :label="'本日车体上线总数: ' + totalNumberWaitingTimeForProduction1" :value="1" />
+        <el-option :label="'本日门架合装完工总数: ' + totalNumberCompletionPeriodOfDoorFrameAssembly1" :value="2" />
+        <el-option :label="'本日试车完工总数: ' + totalNumberTrialCompletionPeriod1" :value="3" />
+        <el-option :label="'本日特种作业总数: ' + totalNumberSpecialOperations1" :value="4" />
+        <el-option :label="'本日精整完工总数: ' + totalNumberPrecisionCompletionPeriod1" :value="5" />
       </el-select>
     </div>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
@@ -262,7 +262,12 @@
 <!--      <el-table-column label="试车完工期总条数" align="center" prop="totalNumberTrialCompletionPeriod" />-->
 <!--      <el-table-column label="特种作业总条数" align="center" prop="totalNumberSpecialOperations" />-->
 <!--      <el-table-column label="精整完工期总条数" align="center" prop="totalNumberPrecisionCompletionPeriod" />-->
-      <el-table-column label="计划兑现率" align="center" prop="planRate" />
+<!--      <el-table-column label="计划兑现率" align="center" prop="planRate" />-->
+      <el-table-column label="计划兑现率" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.planRate }}%
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

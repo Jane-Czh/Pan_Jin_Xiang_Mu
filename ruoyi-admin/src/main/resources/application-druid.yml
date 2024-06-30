@@ -6,16 +6,23 @@ spring:
         druid:
             # 主库数据源
             master:
+              #docker 测试
+#              url: jdbc:mysql://172.19.4.28:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#              username: root
+#              password: 123456
 
+              #本即测试
 #                url: jdbc:mysql://172.19.4.28:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
 #                password: 123456
+              #s实验室测试
                 url: jdbc:mysql://172.17.101.85:3307/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: helipanjin
 
             # 从库数据源
             slave:
+              #本地测试
 #                url: jdbc:mysql://172.19.4.28:3306/panjin_project?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
 #                password: 123456

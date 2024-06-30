@@ -1,225 +1,225 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="变更时间" prop="changTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.changTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择变更时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="发放对象" prop="changeTarget">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.changeTarget"-->
-<!--          placeholder="请输入发放对象"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="变更单状态" prop="fileState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.fileState"-->
-<!--          placeholder="请输入变更单状态"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="审查状态" prop="examineState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.examineState"-->
-<!--          placeholder="请输入审查状态"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="协商状态" prop="consultState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.consultState"-->
-<!--          placeholder="请输入协商状态"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="用户审核状态" prop="userReviewState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userReviewState"-->
-<!--          placeholder="请输入用户审核状态"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="样品状态" prop="sampleState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.sampleState"-->
-<!--          placeholder="请输入样品状态"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="修订时间" prop="revisionDate">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.revisionDate"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择修订时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="修订人" prop="reviser">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.reviser"-->
-<!--          placeholder="请输入修订人"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="标志位(是否为最新文件)" prop="newFlag">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.newFlag"-->
-<!--          placeholder="请输入标志位(是否为最新文件)"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="该制度下一制度id" prop="newRegulationsId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.newRegulationsId"-->
-<!--          placeholder="请输入该制度下一制度id"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.oldRegulationsId"-->
-<!--          placeholder="请输入历史版本制度"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="变更单标题" prop="regulationsTitle">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.regulationsTitle"-->
-<!--          placeholder="请输入变更单标题"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="适用范围" prop="useScope">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.useScope"-->
-<!--          placeholder="请输入适用范围"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="上传日期" prop="uploadDate">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.uploadDate"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择上传日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="生效日期" prop="effectiveDate">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.effectiveDate"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择生效日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="变更单名称" prop="fileName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.fileName"-->
-<!--          placeholder="请输入变更单名称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="文件路径" prop="filePath">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.filePath"-->
-<!--          placeholder="请输入文件路径"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="文件大小" prop="fileSize">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.fileSize"-->
-<!--          placeholder="请输入文件大小"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制度创建日期" prop="createDate">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.createDate"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择制度创建日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制度上传人" prop="uploadUsername">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.uploadUsername"-->
-<!--          placeholder="请输入制度上传人"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制度使用状态" prop="useState">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.useState"-->
-<!--          placeholder="请输入制度使用状态"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制度所属科室" prop="departmentCategory">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.departmentCategory"-->
-<!--          placeholder="请输入制度所属科室"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="制度标签名称" prop="fileTag">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.fileTag"-->
-<!--          placeholder="请输入制度标签名称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item>-->
-<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="变更时间" prop="changTime">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.changTime"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择变更时间">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="发放对象" prop="changeTarget">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.changeTarget"-->
+      <!--          placeholder="请输入发放对象"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="变更单状态" prop="fileState">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.fileState"-->
+      <!--          placeholder="请输入变更单状态"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="审查状态" prop="examineState">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.examineState"-->
+      <!--          placeholder="请输入审查状态"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="协商状态" prop="consultState">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.consultState"-->
+      <!--          placeholder="请输入协商状态"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="用户审核状态" prop="userReviewState">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.userReviewState"-->
+      <!--          placeholder="请输入用户审核状态"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="样品状态" prop="sampleState">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.sampleState"-->
+      <!--          placeholder="请输入样品状态"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="修订时间" prop="revisionDate">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.revisionDate"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择修订时间">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="修订人" prop="reviser">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.reviser"-->
+      <!--          placeholder="请输入修订人"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="标志位(是否为最新文件)" prop="newFlag">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.newFlag"-->
+      <!--          placeholder="请输入标志位(是否为最新文件)"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="该制度下一制度id" prop="newRegulationsId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.newRegulationsId"-->
+      <!--          placeholder="请输入该制度下一制度id"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.oldRegulationsId"-->
+      <!--          placeholder="请输入历史版本制度"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="变更单标题" prop="regulationsTitle">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.regulationsTitle"-->
+      <!--          placeholder="请输入变更单标题"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="适用范围" prop="useScope">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.useScope"-->
+      <!--          placeholder="请输入适用范围"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="上传日期" prop="uploadDate">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.uploadDate"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择上传日期">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="生效日期" prop="effectiveDate">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.effectiveDate"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择生效日期">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="变更单名称" prop="fileName">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.fileName"-->
+      <!--          placeholder="请输入变更单名称"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="文件路径" prop="filePath">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.filePath"-->
+      <!--          placeholder="请输入文件路径"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="文件大小" prop="fileSize">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.fileSize"-->
+      <!--          placeholder="请输入文件大小"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="制度创建日期" prop="createDate">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.createDate"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择制度创建日期">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="制度上传人" prop="uploadUsername">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.uploadUsername"-->
+      <!--          placeholder="请输入制度上传人"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="制度使用状态" prop="useState">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.useState"-->
+      <!--          placeholder="请输入制度使用状态"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="制度所属科室" prop="departmentCategory">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.departmentCategory"-->
+      <!--          placeholder="请输入制度所属科室"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="制度标签名称" prop="fileTag">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.fileTag"-->
+      <!--          placeholder="请输入制度标签名称"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item>-->
+      <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+      <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+      <!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleUpload"-->
+      <!--          v-hasPermi="['file:filemanagement:add']"-->
+      <!--        >上传-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleUpload"
-          v-hasPermi="['file:filemanagement:add']"
-        >上传
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['file:filemanagement:remove']"
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
+            v-hasPermi="['file:filemanagement:remove']"
         >删除
         </el-button>
       </el-col>
@@ -228,32 +228,28 @@
 
     <el-table v-loading="loading" :data="ChangeorderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="主键" align="center" prop="tfcoId" />-->
+      <!--      <el-table-column label="主键" align="center" prop="tfcoId" />-->
       <el-table-column label="变更单名称" align="center" prop="fileName" />
-<!--      <el-table-column label="变更时间" align="center" prop="changTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.changTime, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="发放对象" align="center" prop="changeTarget" />-->
+      <!--      <el-table-column label="变更时间" align="center" prop="changTime" width="180">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.changTime, '{y}-{m}-{d}') }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <!--      <el-table-column label="发放对象" align="center" prop="changeTarget" />-->
       <el-table-column label="变更单状态" align="center" prop="fileState" />
       <el-table-column label="审查状态" align="center" prop="examineState" />
-
       <!-- 在examineState列后添加审核按钮列 -->
       <el-table-column label="审查操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
-            :disabled="scope.row.examineState === '已通过'||scope.row.examineState === '未通过'"
-            @click="handleExamine(scope.row)"
+              size="mini"
+              type="text"
+              :disabled="scope.row.examineState === '已通过'||scope.row.examineState === '未通过'"
+              @click="handleExamine(scope.row)"
           >审查
           </el-button>
         </template>
       </el-table-column>
-
-
-
       <el-table-column label="协商状态" align="center" prop="consultState" />
       <el-table-column label="协商操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -269,79 +265,90 @@
         </template>
       </el-table-column>
       <el-table-column label="采样状态" align="center" prop="sampleState" />
-          <el-table-column label="采样检测操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button size="mini" type="text":disabled="scope.row.userReviewState !== '已通过'|| scope.row.sampleState === '已通过' || scope.row.sampleState === '未通过'||scope.row.fileState === '审核通过,请更新样品检查文件'"
-                     @click="handleSample(scope.row)">样品检查</el-button>
-        </template>
-      </el-table-column>
-<!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
+<!--      <el-table-column label="采样检测操作" align="center" class-name="small-padding fixed-width">-->
 <!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>-->
+<!--          <el-button size="mini" type="text":disabled="scope.row.userReviewState !== '已通过'|| scope.row.sampleState === '已通过' || scope.row.sampleState === '未通过'||scope.row.fileState === '审核通过,请更新样品检查文件'"-->
+<!--                     @click="handleSample(scope.row)">样品检查</el-button>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-<!--      <el-table-column label="修订内容" align="center" prop="revisionContent" />-->
-<!--      <el-table-column label="修订人" align="center" prop="reviser" />-->
-<!--      <el-table-column label="标志位(是否为最新文件)" align="center" prop="newFlag" />-->
-<!--      <el-table-column label="该制度下一制度id" align="center" prop="newRegulationsId" />-->
-<!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId" />-->
-<!--      <el-table-column label="变更单标题" align="center" prop="regulationsTitle" />-->
-<!--      <el-table-column label="适用范围" align="center" prop="useScope" />-->
+      <el-table-column label="采样检测操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            :disabled="scope.row.userReviewState !== '已通过'|| scope.row.sampleState === '已通过' || scope.row.sampleState === '未通过'||scope.row.fileState === '审核通过,请更新样品检查文件'"
+            @click="handleSample(scope.row)"
+          >采样检测
+          </el-button>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <!--      <el-table-column label="修订内容" align="center" prop="revisionContent" />-->
+      <!--      <el-table-column label="修订人" align="center" prop="reviser" />-->
+      <!--      <el-table-column label="标志位(是否为最新文件)" align="center" prop="newFlag" />-->
+      <!--      <el-table-column label="该制度下一制度id" align="center" prop="newRegulationsId" />-->
+      <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId" />-->
+      <!--      <el-table-column label="变更单标题" align="center" prop="regulationsTitle" />-->
+      <!--      <el-table-column label="适用范围" align="center" prop="useScope" />-->
       <el-table-column label="变更单上传人" align="center" prop="uploadUsername" />
       <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="生效日期" align="center" prop="effectiveDate" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="生效日期" align="center" prop="effectiveDate" width="180">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="下载" align="center" prop="filePath">
         <template slot-scope="scope">
           <a :href="baseUrl + scope.row.filePath" download>点击下载</a>
         </template>
       </el-table-column>
-<!--      <el-table-column label="文件类型" align="center" prop="fileType" />-->
-<!--      <el-table-column label="文件大小" align="center" prop="fileSize" />-->
+      <!--      <el-table-column label="文件类型" align="center" prop="fileType" />-->
+      <!--      <el-table-column label="文件大小" align="center" prop="fileSize" />-->
       <el-table-column label="变更单创建日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 
-<!--      <el-table-column label="制度使用状态" align="center" prop="useState" />-->
-<!--      <el-table-column label="制度所属科室" align="center" prop="departmentCategory" />-->
-<!--      <el-table-column label="制度标签名称" align="center" prop="fileTag" />-->
-<!--      <el-table-column label="审核标签" align="center" prop="reviewLayer" />-->
-<!--      <el-table-column label="协商标签" align="center" prop="negotiationLayer" />-->
-<!--      <el-table-column label="用户审核标签" align="center" prop="userReviewlayer" />-->
-<!--      <el-table-column label="样品检测标签" align="center" prop="sampleLayer" />-->
+      <!--      <el-table-column label="制度使用状态" align="center" prop="useState" />-->
+      <!--      <el-table-column label="制度所属科室" align="center" prop="departmentCategory" />-->
+      <!--      <el-table-column label="制度标签名称" align="center" prop="fileTag" />-->
+      <!--      <el-table-column label="审核标签" align="center" prop="reviewLayer" />-->
+      <!--      <el-table-column label="协商标签" align="center" prop="negotiationLayer" />-->
+      <!--      <el-table-column label="用户审核标签" align="center" prop="userReviewlayer" />-->
+      <!--      <el-table-column label="样品检测标签" align="center" prop="sampleLayer" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-upload"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['file:filemanagement:edit']"
+              size="mini"
+              type="text"
+              icon="el-icon-upload"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['file:filemanagement:edit']"
           >更新
           </el-button>
 <!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleModify(scope.row)"-->
-<!--            v-hasPermi="['file:filemanagement:edit']"-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              @click="handleModify(scope.row)"-->
+<!--              v-hasPermi="['file:filemanagement:edit']"-->
 <!--          >修改-->
 <!--          </el-button>-->
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['file:filemanagement:remove']"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['file:filemanagement:remove']"
           >删除
           </el-button>
         </template>
@@ -349,29 +356,29 @@
       <el-table-column label="查看" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-view"
-            @click="previewFile(scope.row.filePath)"
+              size="mini"
+              type="text"
+              icon="el-icon-view"
+              @click="previewFile(scope.row.filePath)"
           >预览
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-operation"
-            @click="handleHistoryVersions(scope.row)"
-          >协商文件
-          </el-button>
+<!--          <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-s-operation"-->
+<!--              @click="handleHistoryVersions(scope.row)"-->
+<!--          >用户审核-->
+<!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
     />
     <!-- 上传文件对话框 -->
     <el-dialog :title="title" :visible.sync="fileUploadDialogVisible" width="1000px" :center="true" append-to-body>
@@ -382,20 +389,20 @@
             <div style="display: flex; justify-content: center;height: 100px;">
               <!--文件上传-->
               <el-upload
-                v-model="form.filePath"
-                class="upload-file-uploader"
-                :action="uploadFileUrl"
-                :headers="headers"
+                  v-model="form.filePath"
+                  class="upload-file-uploader"
+                  :action="uploadFileUrl"
+                  :headers="headers"
 
-                :on-change="handleFileChange"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                :on-exceed="handleExceed"
-                :on-success="handleUploadSuccess"
-                multiple
-                :limit="3"
-                :file-list="fileList"
+                  :on-change="handleFileChange"
+                  :on-preview="handlePreview"
+                  :on-remove="handleRemove"
+                  :before-remove="beforeRemove"
+                  :on-exceed="handleExceed"
+                  :on-success="handleUploadSuccess"
+                  multiple
+                  :limit="3"
+                  :file-list="fileList"
               >
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
@@ -417,11 +424,11 @@
         </el-row>
 
         <el-row>
-<!--          <el-col :span='12'>-->
-<!--            <el-form-item label="文件大小" prop="fileSize">-->
-<!--              <el-input v-model="form.fileSize" placeholder="请输入文件大小" :disabled="false"/>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
+          <!--          <el-col :span='12'>-->
+          <!--            <el-form-item label="文件大小" prop="fileSize">-->
+          <!--              <el-input v-model="form.fileSize" placeholder="请输入文件大小" :disabled="false"/>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -433,18 +440,18 @@
     <el-dialog :title="title" :visible.sync="fileUpdateDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-upload
-          class="update-file-uploader"
-          :action="uploadFileUrl"
-          :headers="headers"
-          :on-change="handleFileChange"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :on-exceed="handleExceed"
-          :on-success="handleUpdateSuccess"
-          multiple
-          :limit="3"
-          :file-list="fileList"
+            class="update-file-uploader"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-change="handleFileChange"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :on-exceed="handleExceed"
+            :on-success="handleUpdateSuccess"
+            multiple
+            :limit="3"
+            :file-list="fileList"
         >
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
@@ -475,8 +482,6 @@
         <el-button @click="modifyCancel">取 消</el-button>
       </div>
     </el-dialog>
-
-
     <custom-confirm-dialog
       :title="'提示'"
       :message="'是否通过审查？'"
@@ -487,7 +492,6 @@
     ></custom-confirm-dialog>
 
   </div>
-
 </template>
 
 <script>
@@ -495,17 +499,17 @@ import { listChangeorder, getChangeorder, delChangeorder, addChangeorder, update
 import {getUserProfile} from '@/api/system/user'
 import {getDept} from '@/api/system/dept'
 import {getToken} from "@/utils/auth"
+import CustomConfirmDialog from "@/views/Technology/Changeorder/CustomConfirmDialog.vue";
 // import {
 //   word2Pdf
 // } from "../../../api/file/filemanagement";
 
-import CustomConfirmDialog from "@/views/Technology/Changeorder/CustomConfirmDialog.vue";
 export default {
   name: "Changeorder",
   components: {CustomConfirmDialog},
   data() {
     return {
-      //审查弹窗
+
       dialogExamineVisible: false,
       currentRow: null,
 
@@ -573,10 +577,10 @@ export default {
         useState: null,
         departmentCategory: null,
         fileTag: null,
-        reviewLayer: '',
-        negotiationLayer: 0,
-        userReviewlayer: 0,
-        sampleLayer: 0
+        reviewLayer: null,
+        negotiationLayer: null,
+        userReviewlayer: null,
+        sampleLayer: null
       },
       // 表单参数
       form: {},
@@ -622,12 +626,13 @@ export default {
     /** 查询变更单留存列表 */
     getList() {
       this.loading = true;
-      listChangeorder({
-        ...this.queryParams,
-        reviewLayer: this.queryParams.reviewLayer //固定显示
-    }).then(response => {
-        this.ChangeorderList = response.rows;
-        this.total = response.total;
+      const newRegulationId = this.$route.params.userReviewlayer;
+
+      listChangeorder(this.queryParams
+      ).then(response => {
+        // 过滤数据，只保留 negotiationLayer 和 newRegulationId 相等的记录
+        this.ChangeorderList = response.rows.filter(item => item.sampleLayer ===  Number(newRegulationId) );
+        this.total = this.ChangeorderList.length; // 更新总记录数
         this.loading = false;
       });
     },
@@ -703,7 +708,7 @@ export default {
     handleUpload() {
       this.reset();
       this.fileUploadDialogVisible = true;
-      this.title = "上传文件";
+      this.title = "上传制度文件";
     },
     /** 修改制度文件 */
     handleModify(row) {
@@ -726,8 +731,6 @@ export default {
         // 加入判断条件
         if (this.form.fileState === "审查通过,请更新协商文件") {
           this.form.fileState = "等待协商";
-          this.form.negotiationLayer = this.form.reviewLayer;
-          this.form.reviewLayer = 0;
         }
         if (this.form.fileState === "审查不通过,等待更新文件并重新审查") {
           this.form.fileState = "等待审查";
@@ -735,6 +738,7 @@ export default {
         }
         if (this.form.fileState === "协商通过,请更新用户审核文件") {
           this.form.fileState = "等待审核";
+
         }
         if (this.form.fileState === "协商不通过,等待更新文件并重新协商") {
           this.form.fileState = "等待协商";
@@ -755,11 +759,10 @@ export default {
         this.title = "更新变更单";
       });
     },
-    /** 协商文件管理 */
+    /** 历史版本管理 */
     handleHistoryVersions(row) {
-      const reviewLayer = row.reviewLayer;
-      console.log("ReviewLayer=>：",reviewLayer);
-      this.$router.push("/negotiation/nego/" +reviewLayer);
+      const userReviewlayer = row.userReviewlayer;
+      this.$router.push("/file/SampleLayer/historyVersions/" + userReviewlayer);
     },
     // /** 制度修改频率 */
     // handleRevisionFrequency(row) {
@@ -767,30 +770,29 @@ export default {
     //   this.$router.push("/file/filemanagement/revisionFrequency/" + tfcoId);
     // },
     /** 上传文件提交按钮 */
-    uploadSubmitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          this.form.newFlag = 1;
-          // 设置 examineState 为未审核
-          this.form.fileState = "等待审查";
-          this.form.examineState = "未审查";
-          this.form.consultState = "未协商";
-          this.form.userReviewState = "未审核";
-          this.form.sampleState = "未采样";
-          this.form.negotiationLayer =0;
-          this.form.userReviewlayer =0;
-          this.form.sampleLayer =0;
-          addChangeorder(this.form).then(response => {
-            this.$modal.msgSuccess("上传成功");
-            this.fileUploadDialogVisible = false;
-            this.getList();
-            console.log("上传文件提交按钮=>",this.form);
-          });
-        }
-      });
-    },
-
-
+    // uploadSubmitForm() {
+    //   this.$refs["form"].validate(valid => {
+    //     if (valid) {
+    //       this.form.newFlag = 1;
+    //       // 设置 examineState 为未审核
+    //       this.form.fileState = "等待审查";
+    //       this.form.examineState = "未审查";
+    //       this.form.consultState = "未协商";
+    //       this.form.userReviewState = "未审核";
+    //       this.form.sampleState = "未采样";
+    //       this.form.reviewLayer =1;
+    //       this.form.negotiationLayer =0;
+    //       this.form.userReviewlayer =0;
+    //       this.form.sampleLayer =0;
+    //       addChangeorder(this.form).then(response => {
+    //         this.$modal.msgSuccess("上传成功");
+    //         this.fileUploadDialogVisible = false;
+    //         this.getList();
+    //         console.log("上传文件提交按钮=>",this.form);
+    //       });
+    //     }
+    //   });
+    // },
     /** 修改文件提交按钮 */
     modifySubmitForm() {
       this.$refs["form"].validate(valid => {
@@ -863,39 +865,73 @@ export default {
       }
     },
     // 在 methods 部分添加 handleExamine 方法
+    // handleExamine(row) {
+    //   this.$confirm('是否通过审查？', '提示', {
+    //     confirmButtonText: '通过',
+    //     cancelButtonText: '不通过',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     // 设置examineState为已通过
+    //     row.examineState = "已通过";
+    //     row.fileState = "审查通过,请更新协商文件";
+    //     // 调用API将更新后的数据保存到数据库中
+    //     saveToDatabase(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '审查通过',
+    //       customClass: 'success-message' // 添加自定义类名
+    //     });
+    //     // 在此处执行审核通过的逻辑操作
+    //   }).catch(() => {
+    //     row.examineState = "未通过";
+    //     row.fileState = "审查不通过,等待更新文件并重新审查";
+    //     saveToDatabase(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '审查未通过',
+    //       customClass: 'error-message' // 添加自定义类名
+    //     });
+        // this.$message({
+        //   type: 'info',
+        //   message: '取消审查'
+        // });
+    //
+    //   });
+    // },
     handleExamine(row) {
-      this.currentRow = row;
-      this.dialogExamineVisible = true;
-    },
-    handleDialogConfirm() {
-      this.currentRow.examineState = "已通过";
-      this.currentRow.fileState = "审查通过,请更新协商文件";
-      saveToDatabase(this.currentRow);
-      this.$message({
-        type: 'success',
-        message: '审查通过',
-        customClass: 'success-message' // 添加自定义类名
+      this.$confirm('是否通过审查？', '提示', {
+        confirmButtonText: '通过',
+        cancelButtonText: '不通过',
+        type: 'warning'
+      }).then(() => {
+        // 设置examineState为已通过
+        row.examineState = "已通过";
+        row.fileState = "审查通过,请更新协商文件";
+        // 调用API将更新后的数据保存到数据库中
+        saveToDatabase(row);
+        this.$message({
+          type: 'success',
+          message: '审查通过',
+          customClass: 'success-message' // 添加自定义类名
+        });
+        // 在此处执行审核通过的逻辑操作
+      }).catch((error) => {
+        if (error === 'cancel') {
+          // 用户点击了取消按钮
+          row.examineState = "未通过";
+          row.fileState = "审查不通过,等待更新文件并重新审查";
+          saveToDatabase(row);
+          this.$message({
+            type: 'success',
+            message: '审查未通过',
+            customClass: 'error-message' // 添加自定义类名
+          });
+        } else {
+          // 用户关闭了对话框，不执行任何操作
+          console.log('用户关闭了对话框');
+        }
       });
-      this.dialogExamineVisible = false;
     },
-    handleDialogCancel() {
-      this.currentRow.examineState = "未通过";
-      this.currentRow.fileState = "审查不通过,等待更新文件并重新审查";
-      saveToDatabase(this.currentRow);
-      this.$message({
-        type: 'error',
-        message: '审查未通过',
-        customClass: 'error-message' // 添加自定义类名
-      });
-      this.dialogExamineVisible = false;
-    },
-    handleDialogClose() {
-      // 用户关闭了对话框，不做任何事情
-      console.log('用户关闭了对话框');
-      this.dialogExamineVisible = false;
-    },
-
-
     // 在 methods 部分添加 handleConsult 方法
     handleConsult(row) {
       this.$confirm('是否通过协商？', '提示', {
@@ -970,40 +1006,71 @@ export default {
     },
     // 在 methods 部分添加 handleSample 方法
     handleSample(row) {
-      this.$confirm('是否通过检查？', '提示', {
-        confirmButtonText: '通过',
-        cancelButtonText: '不通过',
-        type: 'warning'
-      }).then(() => {
-        // 设置examineState为已通过
-        row.sampleState = "已通过";
-        row.fileState = "变更单等待发放"
-        // 调用API将更新后的数据保存到数据库中
-        saveToDatabaseusample(row);
-        this.$message({
-          type: 'success',
-          message: '样品检查通过',
-          customClass: 'success-message' // 添加自定义类名
-        });
-        // 在此处执行审核通过的逻辑操作
-      }).catch(() => {
-        // 设置examineState为未通过
-        row.sampleState = "未通过";
-        row.fileState = "样品检查不通过,等待更新文件并重新检测"
-        // 调用API将更新后的数据保存到数据库中
-        saveToDatabaseusample(row);
-        this.$message({
-          type: 'success',
-          message: '样品检查未通过',
-          customClass: 'error-message' // 添加自定义类名
-        });
-        // this.$message({
-        //   type: 'info',
-        //   message: '取消通过'
-        // });
-        // 在此处执行审核不通过的逻辑操作
-      });
+      this.currentRow = row;
+      this.dialogExamineVisible = true;
     },
+    handleDialogConfirm() {
+      this.currentRow.sampleState = "已通过";
+      this.currentRow.fileState = "检测通过,请更新协商文件";
+      saveToDatabase(this.currentRow);
+      this.$message({
+        type: 'success',
+        message: '检测通过',
+        customClass: 'success-message' // 添加自定义类名
+      });
+      this.dialogExamineVisible = false;
+    },
+    handleDialogCancel() {
+      this.currentRow.sampleState = "未通过";
+      this.currentRow.fileState = "检测不通过,等待更新文件并重新检测";
+      saveToDatabase(this.currentRow);
+      this.$message({
+        type: 'error',
+        message: '检测未通过',
+        customClass: 'error-message' // 添加自定义类名
+      });
+      this.dialogExamineVisible = false;
+    },
+    handleDialogClose() {
+      // 用户关闭了对话框，不做任何事情
+      console.log('用户关闭了对话框');
+      this.dialogExamineVisible = false;
+    },
+    // handleSample(row) {
+    //   this.$confirm('是否通过检查？', '提示', {
+    //     confirmButtonText: '通过',
+    //     cancelButtonText: '不通过',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     // 设置sampleState为已通过
+    //     row.sampleState = "已通过";
+    //     row.fileState = "变更单等待发放"
+    //     // 调用API将更新后的数据保存到数据库中
+    //     saveToDatabaseusample(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '样品检查通过',
+    //       customClass: 'success-message' // 添加自定义类名
+    //     });
+    //     // 在此处执行审核通过的逻辑操作
+    //   }).catch(() => {
+    //     // 设置examineState为未通过
+    //     row.sampleState = "未通过";
+    //     row.fileState = "样品检查不通过,等待更新文件并重新检测"
+    //     // 调用API将更新后的数据保存到数据库中
+    //     saveToDatabaseusample(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '样品检查未通过',
+    //       customClass: 'error-message' // 添加自定义类名
+    //     });
+    //     // this.$message({
+    //     //   type: 'info',
+    //     //   message: '取消通过'
+    //     // });
+    //     // 在此处执行审核不通过的逻辑操作
+    //   });
+    // },
 
 
 
@@ -1155,7 +1222,7 @@ export default {
         case 'ppt':
         case 'pptx':
           return 'PowerPoint 文档';
-        // 可以根据需要添加更多的文件类型判断
+          // 可以根据需要添加更多的文件类型判断
         default:
           return '未知类型';
       }
@@ -1328,3 +1395,4 @@ function saveToDatabaseusample(data) {
 }
 
 </style>
+

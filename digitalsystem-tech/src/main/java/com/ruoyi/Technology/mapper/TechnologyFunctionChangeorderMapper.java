@@ -58,4 +58,7 @@ public interface TechnologyFunctionChangeorderMapper
      * @return 结果
      */
     public int deleteTechnologyFunctionChangeorderByTfcoIds(Long[] tfcoIds);
+
+    //查询数据库最后一条数据id
+    public  Long selectLastId();
 }

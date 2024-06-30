@@ -64,10 +64,13 @@ public class MarketFunctionComparisonDeliverydaysServiceImpl implements IMarketF
         //筛选出今天的车型
         List<MarketCommercialVehicleTable> vehiclesweek = new ArrayList<>();
         for (MarketCommercialVehicleTable velocity1 : list) {
+            System.out.println("开始");
             LocalDate launchDate = velocity1.getLaunchDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int weekOfYear = launchDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+            System.out.println("weekOfYear" + weekOfYear);
             if (SplitDate.splitDate(velocity1.getLaunchDate())[0] == year && weekOfYear == weeknow) {
                 vehiclesweek.add(velocity1);
+                System.out.println("本周存在数据");
             }
         }
 //        // 您的MarketCommercialVehicleTable列表

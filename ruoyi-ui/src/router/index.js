@@ -759,6 +759,51 @@ export const dynamicRoutes = [
       }
     ]
   },
+  //协商文件跳转
+  {
+    path: '/negotiation',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:filemanagement:list'],
+    children: [
+      {
+        path: 'nego/:reviewLayer(\\d+)', // 路由路径
+        component: () => import('@/views/Technology/negotiation/index'), // 对应的组件
+        name: 'Nego', // 路由名称
+        meta: { title: '协商文件' } // 元信息，用于设置标题等
+      }
+    ]
+  },
+  //用户审核文件跳转
+  {
+    path: '/userReviewlayer',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:filemanagement:list'],
+    children: [
+      {
+        path: 'userreviewlayer/:negotiationLayer(\\d+)', // 路由路径
+        component: () => import('@/views/Technology/userReviewlayer/userReviewlayer.vue'), // 对应的组件
+        name: 'Nego', // 路由名称
+        meta: { title: '用户审核文件' } // 元信息，用于设置标题等
+      }
+    ]
+  },
+  //样品检测文件跳转
+  {
+    path: '/sampleLayer',
+    component: Layout,
+    hidden: true,
+    permissions: ['file:filemanagement:list'],
+    children: [
+      {
+        path: 'SampleLayer/:userReviewlayer(\\d+)', // 路由路径
+        component: () => import('@/views/Technology/sampleLayer/index.vue'), // 对应的组件
+        name: 'Nego', // 路由名称
+        meta: { title: '样品检测文件' } // 元信息，用于设置标题等
+      }
+    ]
+  },
 
 ]
 

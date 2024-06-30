@@ -65,7 +65,7 @@
     </select>
 
 
-    <select id="checkHandFillDataIsExisted" parameterType="Date" >
+    <select id="checkHandFillDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Financial_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 

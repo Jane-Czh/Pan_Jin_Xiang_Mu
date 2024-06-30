@@ -116,6 +116,11 @@
         SELECT EXISTS(SELECT 1 FROM Safety_EP WHERE Year_And_Month=#{date} and Cur_Equipment_Maintenance_Cost is not null)
     </select>
 
+    <!--  删除设备故障分布表  -->
+    <delete id="deleteEquipmentFailureCategoryDistributionByMonth" parameterType="date">
+        delete from Safety_EP_Equipment_Failure_Category_Distribution where Year_And_Month = #{yearAndMonth}
+    </delete>
+
 
 
     <!--  数据若存在则更新，不存在则插入  未完成-->

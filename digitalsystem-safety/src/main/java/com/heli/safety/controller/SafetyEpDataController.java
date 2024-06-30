@@ -116,6 +116,7 @@ public class SafetyEpDataController extends BaseController {
     @Log(title = "[安全环保]指标填报", businessType = BusinessType.DELETE)
     @DeleteMapping("/{safetyEpIds}")
     public AjaxResult remove(@PathVariable Long[] safetyEpIds) {
+        safetyEpService.deleteEquipmentFailureCategoryDistributionByMonth(safetyEpIds);
         return toAjax(safetyEpService.deleteSafetyEpBySafetyEpIds(safetyEpIds));
     }
 

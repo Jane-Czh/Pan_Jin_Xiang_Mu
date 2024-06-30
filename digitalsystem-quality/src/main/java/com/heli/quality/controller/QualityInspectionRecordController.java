@@ -47,7 +47,7 @@ public class QualityInspectionRecordController extends BaseController {
             return error("当月数据已上传");
         }
         try {
-            qualityInspectionRecordService.importQualityInspectionTable(excelFile, yearAndMonth, "admin");
+            qualityInspectionRecordService.importQualityInspectionTable(excelFile, yearAndMonth, getUsername());
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel上传失败");

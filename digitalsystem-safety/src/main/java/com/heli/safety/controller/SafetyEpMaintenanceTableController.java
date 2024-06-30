@@ -51,7 +51,7 @@ public class SafetyEpMaintenanceTableController extends BaseController {
             return R.fail("当月数据已上传");
         }
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth,"admin");
+            return safetyEpMaintenanceTableService.readSafetyEpMaintenanceTableToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth,getUsername());
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
             throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");

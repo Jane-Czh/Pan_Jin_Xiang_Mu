@@ -13,6 +13,8 @@ import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
  */
 public interface IEnterpriseManagementMonthlyDataService {
 
+    boolean checkEMMonthlyDataIsMinMonth(Date yearAndMonth);
+
 
     public int calculateHandFillIndicators(Date yearAndMonth);
 

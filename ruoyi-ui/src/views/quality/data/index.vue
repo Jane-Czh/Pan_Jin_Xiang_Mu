@@ -289,6 +289,7 @@ export default {
     /** 更新按钮操作 */
     handleUpdateList() {
       this.getList()
+      this.$modal.msgSuccess("更新成功");
     }
   }
 };

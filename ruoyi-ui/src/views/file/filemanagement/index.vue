@@ -567,7 +567,7 @@ import {
 import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
-import { word2Pdf } from "../../../api/file/filemanagement";
+import { word2Pdf } from "@/api/file/filemanagement";
 import mammoth from "mammoth";
 // import pdfjsLib from 'pdfjs-dist';
 

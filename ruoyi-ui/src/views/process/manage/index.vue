@@ -264,6 +264,7 @@
             round
             icon="el-icon-edit-outline"
             @click="edit(scope.row)"
+            v-hasPermi="['system:project:update']"
           >
             更新</el-button
           >
@@ -277,6 +278,7 @@
             round
             icon="el-icon-document"
             @click="view(scope.row)"
+            v-hasPermi="['system:project:view']"
           >
             查看</el-button
           >
@@ -288,7 +290,7 @@
             round
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:project:remove']"
+            v-hasPermi="['system:project:delete']"
             >删除</el-button
           >
         </template>
@@ -326,12 +328,14 @@
 import {
   listProject,
   getProject,
+  getProject1,
+  getProject2,
   delProject,
   addProject,
   updateProject,
   getProjectByName,
 } from "@/api/system/project";
-import { listFilemanagement } from "@/api/file/filemanagement";
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import "@/views/process/ef/button.css";
@@ -474,20 +478,24 @@ export default {
       this.nodeFormNames = [];
       //存储相应的下载地址
       this.formHyperLinks = [];
+      console.log("1.1 查询表单文件列表 row=====>", row);
 
-      listFilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.formList = response.rows;
+        console.log("this.formList===>", this.formList);
       });
+
+      
       //对 formList 查找符合type中ids的文件 将其放入 nodeFormNames
       JSON.parse(row.type).forEach((stateId) => {
         let row = this.formList.find(
           (item) =>
-            JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
+            JSON.stringify(item.formId) === JSON.stringify(stateId)
         );
         if (row != null) {
           //将匹配的记录的文件名、链接保存 (nodeFileNames )
-          this.nodeFormNames.push(row.fileName);
-          this.formHyperLinks.push(row.filePath);
+          this.nodeFormNames.push(row.formName);
+          this.formHyperLinks.push(row.formPath);
         }
       });
     },
@@ -574,7 +582,7 @@ export default {
       //加载流程面板可见
       this.editPanelVisible = true;
       //getProject 从后端读取数据
-      getProject(row.id).then((response) => {
+      getProject1(row.id).then((response) => {
         // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
         this.$refs.EditPanel.dataReload(
           response.data,
@@ -593,7 +601,7 @@ export default {
       //加载流程面板可见
       this.showPanelVisible = true;
       //getProject 从后端读取数据
-      getProject(row.id).then((response) => {
+      getProject2(row.id).then((response) => {
         // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
         this.$refs.ShowPanel.dataReload(response.data);
       });

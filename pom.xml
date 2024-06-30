@@ -224,6 +224,31 @@
                 <version>2.0.4</version>
             </dependency>
 
+            <!-- 流程-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-ef</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- 集成mybatis plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -236,6 +261,7 @@
         <module>ruoyi-common</module>
         <module>ruoyi-project</module>
         <module>ruoyi-file</module>
+        <module>ruoyi-ef</module>
         <module>digitalsystem-financial</module>
         <module>digitalsystem-market</module>
         <module>digitalsystem-tech</module>

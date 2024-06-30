@@ -132,19 +132,19 @@ public class ExcelUtilsPro {
             //4.性别
             productionClockInForm.setGender(getStringCellValue(row.getCell(count++)));
             //5.第一次上班打卡时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionClockInForm.setFirstTimeClockingInAtWork(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionClockInForm.setFirstTimeClockingInAtWork(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
-            else {
-                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
-                count++;
-            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
             //6.第一次下班打卡时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionClockInForm.setFirstTimeClockingInAfterWork(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionClockInForm.setFirstTimeClockingInAfterWork(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
             else {
@@ -152,9 +152,9 @@ public class ExcelUtilsPro {
                 count++;
             }
             //7.第二次上班打卡时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionClockInForm.setSecondTimeClockingInAtWork(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionClockInForm.setSecondTimeClockingInAtWork(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
             else {
@@ -162,9 +162,9 @@ public class ExcelUtilsPro {
                 count++;
             }
             //7.第二次下班打卡时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionClockInForm.setSecondTimeClockingInAfterWork(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionClockInForm.setSecondTimeClockingInAfterWork(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
             else {
@@ -172,9 +172,9 @@ public class ExcelUtilsPro {
                 count++;
             }
             //8.正常上班时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionClockInForm.setNormalWorkingHours(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionClockInForm.setNormalWorkingHours(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
             else {
@@ -182,9 +182,9 @@ public class ExcelUtilsPro {
                 count++;
             }
             //9.正常下班时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionClockInForm.setNormalClosingTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionClockInForm.setNormalClosingTime(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
             else {
@@ -277,7 +277,7 @@ public class ExcelUtilsPro {
             //5.申请加班开始时间
             if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
 
-                productionOvertimeApplicationForm.setApplicationForOvertimeStartTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionOvertimeApplicationForm.setApplicationForOvertimeStartTime(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
             }
             else {
@@ -285,15 +285,16 @@ public class ExcelUtilsPro {
                 count++;
             }
             //6.申请加班结束时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+                System.out.println("---------0"+getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))));;
 
-                productionOvertimeApplicationForm.setApplicationForOvertimeEndTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                productionOvertimeApplicationForm.setApplicationForOvertimeEndTime(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
-            }
-            else {
-                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
-                count++;
-            }
+//            }
+//            else {
+//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
+//                count++;
+//            }
 
 //            //1、合格率
 //            prouctionFunctionQualifiedRate.setDisqualifiedNumber(getIntegerCellValue(row.getCell(count++)));
@@ -373,6 +374,16 @@ public class ExcelUtilsPro {
 
     private static Date getDateCellValue(String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            return sdf.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Date getDateTimeCellValue(String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         try {
             return sdf.parse(dateString);
         } catch (ParseException e) {

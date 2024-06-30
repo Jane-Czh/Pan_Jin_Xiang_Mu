@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ef.dao.LineDao">
+    
+    <resultMap type="com.ruoyi.ef.entity.LineEntity" id="LineResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="from"    column="from"    />
+        <result property="to"    column="to"    />
+        <result property="label"    column="label"    />
+    </resultMap>
+
+<!--    <sql id="selectFlowLineVo">-->
+<!--        select id, project_id, from, to, label from flow_line-->
+<!--    </sql>-->
+
+<!--    <select id="selectFlowLineList" parameterType="FlowLine" resultMap="FlowLineResult">-->
+<!--        <include refid="selectFlowLineVo"/>-->
+<!--        <where>  -->
+<!--            <if test="projectId != null  and projectId != ''"> and project_id = #{projectId}</if>-->
+<!--            <if test="from != null  and from != ''"> and from = #{from}</if>-->
+<!--            <if test="to != null  and to != ''"> and to = #{to}</if>-->
+<!--            <if test="label != null  and label != ''"> and label = #{label}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+<!--    -->
+<!--    <select id="selectFlowLineById" parameterType="String" resultMap="FlowLineResult">-->
+<!--        <include refid="selectFlowLineVo"/>-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+<!--        -->
+<!--    <insert id="insertFlowLine" parameterType="FlowLine">-->
+<!--        insert into flow_line-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="id != null">id,</if>-->
+<!--            <if test="projectId != null and projectId != ''">project_id,</if>-->
+<!--            <if test="from != null and from != ''">from,</if>-->
+<!--            <if test="to != null and to != ''">to,</if>-->
+<!--            <if test="label != null and label != ''">label,</if>-->
+<!--         </trim>-->
+<!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+<!--            <if test="id != null">#{id},</if>-->
+<!--            <if test="projectId != null and projectId != ''">#{projectId},</if>-->
+<!--            <if test="from != null and from != ''">#{from},</if>-->
+<!--            <if test="to != null and to != ''">#{to},</if>-->
+<!--            <if test="label != null and label != ''">#{label},</if>-->
+<!--         </trim>-->
+<!--    </insert>-->
+
+<!--    <update id="updateFlowLine" parameterType="FlowLine">-->
+<!--        update flow_line-->
+<!--        <trim prefix="SET" suffixOverrides=",">-->
+<!--            <if test="projectId != null and projectId != ''">project_id = #{projectId},</if>-->
+<!--            <if test="from != null and from != ''">from = #{from},</if>-->
+<!--            <if test="to != null and to != ''">to = #{to},</if>-->
+<!--            <if test="label != null and label != ''">label = #{label},</if>-->
+<!--        </trim>-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+<!--    <delete id="deleteFlowLineById" parameterType="String">-->
+<!--        delete from flow_line where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteFlowLineByIds" parameterType="String">-->
+<!--        delete from flow_line where id in -->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+</mapper>

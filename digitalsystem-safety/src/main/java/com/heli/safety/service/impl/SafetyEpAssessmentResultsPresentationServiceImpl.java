@@ -35,7 +35,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年1月份的数据
             return month == 1;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -46,7 +46,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年2月份的数据
             return month == 2;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -57,7 +57,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年3月份的数据
             return month == 3;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -79,7 +79,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年5月份的数据
             return month == 5;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -90,7 +90,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年6月份的数据
             return month == 6;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -101,7 +101,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年7月份的数据
             return month == 7;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -112,7 +112,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年8月份的数据
             return month == 8;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -123,7 +123,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年9月份的数据
             return month == 9;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -134,7 +134,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年10月份的数据
             return month == 10;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -145,7 +145,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年11月份的数据
             return month == 11;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -156,7 +156,7 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkTime);
             int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH 返回的是0-11，所以要加1
-            // 选出时间为当年4月份的数据
+            // 选出时间为当年12月份的数据
             return month == 12;
         }).filter(entry -> entry.getAssessmentScore() != null).collect(Collectors.groupingBy(SafetyEpAssessEntering::getCheckTeam, Collectors.averagingDouble(SafetyEpAssessEntering::getAssessmentScore)));
 
@@ -329,33 +329,40 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             BigDecimal First_Quarter_Results = null;
             BigDecimal Second_Quarter_Results = null;
             BigDecimal Third_Quarter_Results = null;
+            BigDecimal Fourth_Quarter_Results = null;
             BigDecimal Annual_Results = null;
+
+            //计算第一季度分数
             BigDecimal JanuaryResults = safetyEpAssessmentResultsPresentation.getJanuaryResults();
             BigDecimal FebruaryResults = safetyEpAssessmentResultsPresentation.getFebruaryResults();
             BigDecimal MarchResults = safetyEpAssessmentResultsPresentation.getMarchResults();
-            BigDecimal AprilResults = safetyEpAssessmentResultsPresentation.getAprilResults();
-            if (JanuaryResults != null && FebruaryResults != null && MarchResults != null && AprilResults != null){
-                First_Quarter_Results = JanuaryResults.add(FebruaryResults).add(MarchResults).add(AprilResults).divide(BigDecimal.valueOf(4));
+            if (JanuaryResults != null && FebruaryResults != null && MarchResults != null ){
+                First_Quarter_Results = JanuaryResults.add(FebruaryResults).add(MarchResults).divide(BigDecimal.valueOf(3));
             }
-
+            //计算第二季度分数
+            BigDecimal AprilResults = safetyEpAssessmentResultsPresentation.getAprilResults();
             BigDecimal MayResults = safetyEpAssessmentResultsPresentation.getMayResults();
             BigDecimal JuneResults = safetyEpAssessmentResultsPresentation.getJuneResults();
+            if (AprilResults != null && MayResults != null && JuneResults != null ){
+                Second_Quarter_Results = AprilResults.add(MayResults).add(JuneResults).divide(BigDecimal.valueOf(3));
+            }
+            //计算第三季度分数
             BigDecimal JulyResults = safetyEpAssessmentResultsPresentation.getJulyResults();
             BigDecimal AugustResults = safetyEpAssessmentResultsPresentation.getAugustResults();
-            if (MayResults != null && JuneResults != null && JulyResults != null && AugustResults != null){
-                Second_Quarter_Results = MayResults.add(JuneResults).add(JulyResults).add(AugustResults).divide(BigDecimal.valueOf(4));
-            }
-
             BigDecimal SeptemberResults = safetyEpAssessmentResultsPresentation.getSeptemberResults();
+            if (JulyResults != null && AugustResults != null && SeptemberResults != null ){
+                Third_Quarter_Results = JulyResults.add(AugustResults).add(SeptemberResults).divide(BigDecimal.valueOf(3));
+            }
+            //计算第四季度分数
             BigDecimal OctoberResults = safetyEpAssessmentResultsPresentation.getOctoberResults();
             BigDecimal NovemberResults = safetyEpAssessmentResultsPresentation.getNovemberResults();
             BigDecimal DecemberResults = safetyEpAssessmentResultsPresentation.getDecemberResults();
-            if (MayResults != null && JuneResults != null && JulyResults != null && AugustResults != null){
-                Third_Quarter_Results = SeptemberResults.add(OctoberResults).add(NovemberResults).add(DecemberResults).divide(BigDecimal.valueOf(4));
+            if (OctoberResults != null && NovemberResults != null && DecemberResults != null ){
+                Fourth_Quarter_Results = OctoberResults.add(NovemberResults).add(DecemberResults).divide(BigDecimal.valueOf(3));
             }
             //全年得分
-            if (First_Quarter_Results != null && Second_Quarter_Results != null && Third_Quarter_Results != null){
-                Annual_Results = First_Quarter_Results.add(Second_Quarter_Results).add(Third_Quarter_Results).divide(BigDecimal.valueOf(3));
+            if (First_Quarter_Results != null && Second_Quarter_Results != null && Third_Quarter_Results != null && Fourth_Quarter_Results != null ){
+                Annual_Results = First_Quarter_Results.add(Second_Quarter_Results).add(Third_Quarter_Results).add(Fourth_Quarter_Results).divide(BigDecimal.valueOf(4));
             }
 
             if (First_Quarter_Results != null){
@@ -366,6 +373,9 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             }
             if (Third_Quarter_Results != null){
                 safetyEpAssessmentResultsPresentation.setThirdQuarterResults(Third_Quarter_Results);
+            }
+            if (Fourth_Quarter_Results != null){
+                safetyEpAssessmentResultsPresentation.setFourthQuarterResults(Fourth_Quarter_Results);
             }
             if (Annual_Results != null){
                 safetyEpAssessmentResultsPresentation.setAnnualResults(Annual_Results);

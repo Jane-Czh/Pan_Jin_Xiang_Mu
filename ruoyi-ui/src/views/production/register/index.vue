@@ -146,27 +146,25 @@
         </el-form-item>
         
         <el-form-item label="文件上传" >
-
-        
-
+          <el-upload
+          v-model="form.filePath"
+          class="upload-file-uploader"
+          :action="uploadFileUrl"
+          :headers="headers"
+          :on-change="handleFileChange"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          :on-exceed="handleExceed"
+          :on-success="handleUploadSuccess"
+          multiple
+          :limit="3"
+          :file-list="fileList"
+          >
+          <el-button size="small" type="primary">点击上传</el-button>
+        </el-upload>
         </el-form-item>
-        <el-upload
-                v-model="form.filePath"
-                class="upload-file-uploader"
-                :action="uploadFileUrl"
-                :headers="headers"
-                :on-change="handleFileChange"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                :on-exceed="handleExceed"
-                :on-success="handleUploadSuccess"
-                multiple
-                :limit="3"
-                :file-list="fileList"
-              >
-                <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -381,9 +379,9 @@ export default {
         this.form.uploadDate = currentDate.toISOString().split('T')[0];
         this.getUserInfo();
 
-      },
-      // 上传成功回调
-      handleUploadSuccess(res, file) {
+    },
+    // 上传成功回调
+    handleUploadSuccess(res, file) {
         if (res.code === 200) {
           console.log("上传成功回调");
           console.log(res);
@@ -399,9 +397,9 @@ export default {
           this.$refs.fileUpload.handleRemove(file);
           this.uploadedSuccessfully();
         }
-      },
-      // 上传结束处理
-      uploadedSuccessfully() {
+    },
+    // 上传结束处理
+    uploadedSuccessfully() {
         if (this.number > 0 && this.uploadList.length === this.number) {
           this.fileList = this.fileList.concat(this.uploadList);
           this.uploadList = [];
@@ -409,21 +407,21 @@ export default {
           this.$emit("input", this.listToString(this.fileList));
           this.$modal.closeLoading();
         }
-      },
-      handleRemove(file, fileList) {
+    },
+    handleRemove(file, fileList) {
         console.log(file, fileList);
-      },
-      handlePreview(file) {
+    },
+    handlePreview(file) {
         console.log(file);
-      },
-      handleExceed(files, fileList) {
+    },
+    handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 2 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-      beforeRemove(file, fileList) {
+    },
+    beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${file.name}？`);
-      },
-      // 文件大小自动转换单位
-      formatFileSize(sizeInBytes) {
+    },
+    // 文件大小自动转换单位
+    formatFileSize(sizeInBytes) {
         const KB = 1024;
         const MB = KB * 1024;
         const GB = MB * 1024;
@@ -437,10 +435,10 @@ export default {
         } else {
           return (sizeInBytes / GB).toFixed(2) + "GB";
         }
-      },
-      getFileType(fullType) {  //获取详细的文件类型
-        // 根据完整的文件类型(fullType)获取简短的文件类型
-        if (fullType.includes('pdf')) {
+    },
+    getFileType(fullType) {  //获取详细的文件类型
+      // 根据完整的文件类型(fullType)获取简短的文件类型
+      if (fullType.includes('pdf')) {
           return 'pdf';
         } else if (fullType.includes('word')) {
           return 'word';
@@ -448,9 +446,9 @@ export default {
           // 其他类型的文件处理方式
           return 'other';
         }
-      },
-      // 调用接口获取用户信息
-      getUserInfo() {
+    },
+    // 调用接口获取用户信息
+    getUserInfo() {
         getUserProfile().then(response => {
           // 处理成功的情况
           console.log('成功获取用户信息:', response.data)
@@ -466,12 +464,12 @@ export default {
           // 处理失败的情况
           console.error('获取用户信息失败:', error)
         })
-      },
-      //文件预览
-      previewFile(filePath) {
+    },
+    //文件预览
+    previewFile(filePath) {
         // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
         window.open(filePath, '_blank');
-      }
+    }
   }
 };
 </script>

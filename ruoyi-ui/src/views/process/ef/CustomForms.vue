@@ -53,7 +53,9 @@
   
   <script>
 //表单文件api
-import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+// import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 
 export default {
   props: {

@@ -42,3 +42,14 @@ export function delReport(mfqrId) {
     method: 'delete'
   })
 }
+
+export function synchronization(){
+  return request({
+    url: '/market/report/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+  });
+}

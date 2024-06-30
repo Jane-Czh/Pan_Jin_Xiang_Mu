@@ -127,4 +127,17 @@
             #{formId}
         </foreach>
     </delete>
+
+
+    <!--流程部分依赖使用-->
+    <!-- 根据 ID 查询文件名称 -->
+    <!-- 根据多个ID查询文件名称 -->
+    <select id="selectFileNamesByIds" resultType="java.lang.String">
+        SELECT form_name
+        FROM Form_Info_table
+        WHERE form_id IN
+        <foreach item="id" collection="formsIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

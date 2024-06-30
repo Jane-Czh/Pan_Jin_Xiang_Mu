@@ -197,12 +197,15 @@ import { getDept } from "@/api/system/dept";
 
 // 绑定文件(制度与表单)
 import CustomFiles from "./CustomFiles.vue";
-// 制度文件api
-import { listFilemanagement } from "@/api/file/filemanagement";
-// 表单文件api
-import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+// // 制度文件api
+// import { listFilemanagement } from "@/api/file/filemanagement";
+// // 表单文件api
+// import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 
 import { compareProjects } from "@/api/system/project";
+//更新数据api
+import { saveNode, saveLine, updateProjectFromOld } from "@/api/system/project";
 
 export default {
   inject: ["reload"],
@@ -740,7 +743,8 @@ export default {
      * @param nodeId 被删除节点的ID
      */
     deleteNode(nodeId) {
-      this.$confirm("确定要删除节点" + nodeId + "?", "提示", {
+      // this.$confirm("确定要删除节点" + nodeId + "?", "提示", {
+      this.$confirm("确定要删除节点" + "?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -1004,24 +1008,33 @@ export default {
           JSON.stringify(oldProjectName)
         );
 
-        // 创建保存节点和连线的 axios 请求数组
-        const nodePromises = nodeData.map((node) =>
-          axios.post("http://localhost:8081/node/saveNode", node)
-        );
+        // // 创建保存节点和连线的 axios 请求数组
+        // const nodePromises = nodeData.map((node) =>
+        //   axios.post("http://localhost:8080/node/saveNode", node)
+        // );
 
-        const linePromises = lineData.map((line) =>
-          axios.post("http://localhost:8081/line/saveLine", line)
-        );
+        // const linePromises = lineData.map((line) =>
+        //   axios.post("http://localhost:8080/line/saveLine", line)
+        // );
+
+        // // 保存 project 数据的请求
+        // const projectPromise = axios.post(
+        //   "http://localhost:8080/project/updateProjectFromOld",
+        //   projectData
+        // );
+
+        
+        // 创建保存节点和连线的请求数组
+        const nodePromises = nodeData.map((node) => saveNode(node));
+        const linePromises = lineData.map((line) => saveLine(line));
 
         // 保存 project 数据的请求
-        const projectPromise = axios.post(
-          "http://localhost:8081/project/updateProjectFromOld",
-          projectData
-        );
+        const projectPromise = updateProjectFromOld(projectData);
 
-        // 合并所有的请求
+        // // 合并所有的请求
         const allPromises = [...nodePromises, ...linePromises, projectPromise];
 
+        // 使用 Promise.all 并行执行所有请求
         // 等待所有的请求完成
         Promise.all(allPromises)
           .then((responses) => {

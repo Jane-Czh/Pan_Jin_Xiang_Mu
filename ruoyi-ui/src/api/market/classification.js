@@ -42,3 +42,14 @@ export function delClassification(maspcId) {
     method: 'delete'
   })
 }
+
+export function synchronization(){
+  return request({
+    url: '/market/classification/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+  });
+}

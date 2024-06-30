@@ -145,7 +145,7 @@
 
     <el-table v-loading="loading" :data="filemanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>
+<!--      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>-->
       <el-table-column label="制度标题" align="center" prop="regulationsTitle"/>
       <el-table-column label="适用范围" align="center" prop="useScope"/>
       <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
@@ -175,8 +175,8 @@
       <el-table-column label="制度使用状态" align="center" prop="useState"/>
       <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
       <el-table-column label="制度标签名称" align="center" prop="fileTag"/>
-      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>
-      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>
+<!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
+<!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
       <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>
@@ -210,7 +210,7 @@
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="previewFile(baseUrl+scope.row.filePath)"
+            @click="previewFile(scope.row.filePath)"
           >预览
           </el-button>
         </template>
@@ -476,40 +476,6 @@
           console.log("filemanagementList:：",this.filemanagementList);
           this.loading = false;
         })
-        // getFilemanagement(newRegulationId).then(response => {
-        //   console.log("response=>：",response);
-        //   this.filemanagementList[0] = response.data;
-        //   console.log("filemanagementList=>",this.filemanagementList);
-        //   this.loading = false;
-        // });
-        // getFilemanagement(newRegulationId).then(response => {
-        //   console.log("response:：",response);
-        //   const newForm = response.data;
-        //   let flag = 0;
-        //   while (newForm.oldRegulationsId){
-        //     getFilemanagement(newForm.oldRegulationsId).then(response => {
-        //       this.filemanagementList[flag] = response.data;
-        //       flag++;
-        //     });
-        //   }
-        //   console.log("filemanagementList:：",this.filemanagementList);
-        //   this.loading = false;
-        // });
-
-
-        // listFilemanagement(this.queryParams).then(response => {
-        //   console.log("response:：",response);
-        //   const responseList = response.rows;
-        //   let i = 0;
-        //   while (responseList[i].oldRegulationsId){
-        //     getFilemanagement(responseList[i].oldRegulationsId).then(response => {
-        //       this.filemanagementList[i] = responseList[i];
-        //       i++;
-        //     });
-        //   }
-        //   this.total = response.total;
-        //   this.loading = false;
-        // });
       },
       // 文件修改取消按钮
       modifyCancel() {
@@ -586,7 +552,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         const regulationsIds = row.regulationsId || this.ids;
-        this.$modal.confirm('是否确认删除文件管理编号为"' + regulationsIds + '"的数据项？').then(function () {
+        this.$modal.confirm('是否确认删除？').then(function () {
           return delFilemanagement(regulationsIds);
         }).then(() => {
           this.getList();
@@ -595,20 +561,20 @@
         });
         if(row.oldRegulationsId != null) {
           getFilemanagement(row.oldRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
+            console.log("当前表单1=>",this.form);
             const lastForm = response.data;
-            console.log("上一表单=>",lastForm);
+            console.log("上一表单1=>",lastForm);
             lastForm.newRegulationsId = row.newRegulationsId;
-            console.log("上一表单=>",lastForm);
+            console.log("上一表单1=>",lastForm);
             updateFilemanagement(lastForm).then(response => {
             });
           });
           getFilemanagement(row.newRegulationsId).then(response => {
-            console.log("当前表单3=>",this.form);
+            console.log("当前表单2=>",this.form);
             const newForm = response.data;
-            console.log("上一表单=>",newForm);
+            console.log("上一表单2=>",newForm);
             newForm.oldRegulationsId = row.oldRegulationsId;
-            console.log("上一表单=>",newForm);
+            console.log("上一表单2=>",newForm);
             updateFilemanagement(newForm).then(response => {
             });
           });
@@ -631,15 +597,27 @@
           return (sizeInBytes / GB).toFixed(2) + "GB";
         }
       },
-      getFileType(fullType) {  //获取详细的文件类型
-        // 根据完整的文件类型(fullType)获取简短的文件类型
-        if (fullType.includes('pdf')) {
-          return 'pdf';
-        } else if (fullType.includes('word')) {
-          return 'word';
-        } else {
-          // 其他类型的文件处理方式
-          return 'other';
+      getFileType(filePath) {
+        // 获取文件名的后缀名
+        const fileExtension = filePath.split('.').pop();
+        console.log("fileExtension=>",fileExtension);
+
+        // 根据文件后缀名判断文件类型
+        switch (fileExtension.toLowerCase()) {
+          case 'pdf':
+            return 'pdf';
+          case 'doc':
+          case 'docx':
+            return 'word';
+          case 'xls':
+          case 'xlsx':
+            return 'Excel 文档';
+          case 'ppt':
+          case 'pptx':
+            return 'PowerPoint 文档';
+          // 可以根据需要添加更多的文件类型判断
+          default:
+            return '未知类型';
         }
       },
       // 调用接口获取用户信息
@@ -663,18 +641,27 @@
       //文件预览
       previewFile(filePath) {
         const fileType = this.getFileType(filePath);
+        console.log("filePath:",filePath);
+        console.log("fileType:",fileType);
         switch (fileType) {
-          case 'pdf':window.open(filePath, '_blank');
+          case 'pdf':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
           case 'word':
             const pdfFilePath = this.convertToPdfPath(filePath);
-            word2Pdf(filePath,pdfFilePath);
-            window.open(pdfFilePath, '_blank');
+            console.log("filePath:",filePath);
+            console.log("pdfFilePath:",pdfFilePath);
+            word2Pdf(filePath,pdfFilePath).then(response => {
+              window.open(pdfFilePath, '_blank');
+            })
+
+            break;
         }
-          // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
-        window.open(filePath, '_blank');
+        // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
+
       },
 
-      //word文件路径后缀改为.pdf
       convertToPdfPath(wordFilePath) {
         // 找到文件路径中的最后一个点的位置
         const lastDotIndex = wordFilePath.lastIndexOf('.');

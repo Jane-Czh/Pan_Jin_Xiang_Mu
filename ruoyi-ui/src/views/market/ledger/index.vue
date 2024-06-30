@@ -553,7 +553,7 @@
 </template>
 
 <script>
-import { listLedger, getLedger, delLedger, addLedger, updateLedger } from "@/api/market/ledger";
+import { listLedger, getLedger, delLedger, addLedger, updateLedger, uploadImport } from "@/api/market/ledger";
 import axios from 'axios'
 
 export default {
@@ -758,37 +758,45 @@ export default {
     
       /*  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
       fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/market/ledger/import",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        // console.log(file);
+        formData.append("file", file);
+        // console.log("file====>",formData)
+        // axios({
+        //   method: "post",
+        //   // this $axios.post,
+        //   url: "http://localhost:8080/market/ledger/import",
+        //   // params:{
+        //   //   userName: this.$store.state.user.name,
+        //   // },
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        //   withCredentials: true,
+        //   data: formData,
+        //   onUploadProgress: (progressEvent) => {
+        //     this.progress = Math.round(
+        //       (progressEvent.loaded * 100) / progressEvent.total
+        //     );
+        //   },
+        // });
 
+        uploadImport(formData)
+        .then(response => {
+          // 文件上传成功
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
+          setTimeout(() => {
+            this.showDialog = false; // 关闭上传面板
+            location.reload(); // 调用此方法刷新页面数据
+          }, 5000); // 2000毫秒后关闭
+          this.$message.success("上传成功");
+        })
+        .catch(error => {
+          // 处理错误
+          console.error('Error uploading file:', error);
+        });
 
-        location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
     },
 
     handleClose(done) {

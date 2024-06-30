@@ -37,16 +37,16 @@ public class TechnologyFunctionMaterialRetentionController extends BaseControlle
     /**
      * 执行Word到PDF转换
      */
-    @PostMapping("/convert")
-    public AjaxResult convertWordToPdf(@RequestParam("filePath") String filePath, @RequestParam("pdfFilePath") String pdfFilePath) {
-        try {
-            System.out.println("-----------"+"filePath"+"-----------");
-            fileConversionService.convertWordToPdf(filePath, pdfFilePath);
-            return AjaxResult.success("Word文件转换为PDF文件成功！");
-        } catch (IOException e) {
-            return AjaxResult.error("Word文件转换为PDF文件失败: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/convert")
+//    public AjaxResult convertWordToPdf(@RequestParam("filePath") String filePath, @RequestParam("pdfFilePath") String pdfFilePath) {
+//        try {
+//            System.out.println("-----------"+"filePath"+"-----------");
+//            fileConversionService.convertWordToPdf(filePath, pdfFilePath);
+//            return AjaxResult.success("Word文件转换为PDF文件成功！");
+//        } catch (IOException e) {
+//            return AjaxResult.error("Word文件转换为PDF文件失败: " + e.getMessage());
+//        }
+//    }
     /**
      * 查询申报材料统计列表
      */

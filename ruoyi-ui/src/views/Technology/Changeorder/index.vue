@@ -476,9 +476,7 @@ import { listChangeorder, getChangeorder, delChangeorder, addChangeorder, update
 import {getUserProfile} from '@/api/system/user'
 import {getDept} from '@/api/system/dept'
 import {getToken} from "@/utils/auth"
-import {
-  word2Pdf
-} from "../../../api/file/filemanagement";
+import {word2Pdf} from "../../../api/file/filemanagement";
 
 export default {
   name: "Changeorder",
@@ -691,11 +689,27 @@ export default {
         if (this.form.fileState === "审查通过,请更新协商文件") {
           this.form.fileState = "等待协商";
         }
+        if (this.form.fileState === "审查不通过,等待更新文件并重新审查") {
+          this.form.fileState = "等待审查";
+          this.form.examineState = "未审查"
+        }
         if (this.form.fileState === "协商通过,请更新用户审核文件") {
           this.form.fileState = "等待审核";
         }
+        if (this.form.fileState === "协商不通过,等待更新文件并重新协商") {
+          this.form.fileState = "等待协商";
+          this.form.consultState = "未协商"
+        }
         if (this.form.fileState === "审核通过,请更新样品检查文件") {
           this.form.fileState = "等待样品检查";
+        }
+        if (this.form.fileState === "用户审核不通过,等待更新文件并重新审核") {
+          this.form.fileState = "等待审核";
+          this.form.userReviewState = "未审核"
+        }
+        if (this.form.fileState === "样品检查不通过,等待更新文件并重新检测") {
+          this.form.fileState = "等待检测";
+          this.form.sampleState = "未采样"
         }
         this.fileUpdateDialogVisible = true;
         this.title = "更新变更单";
@@ -816,7 +830,8 @@ export default {
           saveToDatabase(row);
           this.$message({
             type: 'success',
-            message: '审查通过'
+            message: '审查通过',
+            customClass: 'success-message' // 添加自定义类名
           });
           // 在此处执行审核通过的逻辑操作
         }).catch(() => {
@@ -825,7 +840,8 @@ export default {
           saveToDatabase(row);
           this.$message({
             type: 'success',
-            message: '审查未通过'
+            message: '审查未通过',
+            customClass: 'error-message' // 添加自定义类名
           });
           // this.$message({
           //   type: 'info',
@@ -848,7 +864,8 @@ export default {
         saveToDatabasecon(row);
         this.$message({
           type: 'success',
-          message: '协商通过'
+          message: '协商通过',
+          customClass: 'success-message' // 添加自定义类名
         });
         // 在此处执行审核通过的逻辑操作
       }).catch(() => {
@@ -859,7 +876,8 @@ export default {
         saveToDatabasecon(row);
         this.$message({
           type: 'success',
-          message: '协商未通过'
+          message: '协商未通过',
+          customClass: 'error-message' // 添加自定义类名
         });
         // this.$message({
         //   type: 'info',
@@ -882,7 +900,8 @@ export default {
         saveToDatabaseuser(row);
         this.$message({
           type: 'success',
-          message: '审核通过'
+          message: '审核通过',
+          customClass: 'success-message' // 添加自定义类名
         });
         // 在此处执行审核通过的逻辑操作
       }).catch(() => {
@@ -893,7 +912,8 @@ export default {
         saveToDatabaseuser(row);
         this.$message({
           type: 'success',
-          message: '审核未通过'
+          message: '审核未通过',
+          customClass: 'error-message' // 添加自定义类名
         });
         // this.$message({
         //   type: 'info',
@@ -916,7 +936,8 @@ export default {
         saveToDatabaseusample(row);
         this.$message({
           type: 'success',
-          message: '样品检查通过'
+          message: '样品检查通过',
+          customClass: 'success-message' // 添加自定义类名
         });
         // 在此处执行审核通过的逻辑操作
       }).catch(() => {
@@ -927,7 +948,8 @@ export default {
         saveToDatabaseusample(row);
         this.$message({
           type: 'success',
-          message: '样品检查未通过'
+          message: '样品检查未通过',
+          customClass: 'error-message' // 添加自定义类名
         });
         // this.$message({
         //   type: 'info',
@@ -1110,7 +1132,7 @@ export default {
         console.error('获取用户信息失败:', error)
       })
     },
-    //文件预览
+    // //文件预览
     previewFile(filePath) {
       const fileType = this.getFileType(filePath);
       console.log("filePath:",filePath);
@@ -1125,6 +1147,7 @@ export default {
           console.log("filePath:",filePath);
           console.log("pdfFilePath:",pdfFilePath);
           word2Pdf(filePath,pdfFilePath).then(response => {
+            
             window.open(pdfFilePath, '_blank');
           })
 
@@ -1249,3 +1272,14 @@ function saveToDatabaseusample(data) {
   });
 }
 </script>
+<style>
+/* 在项目的样式文件中添加以下CSS */
+.el-message--success {
+  color: green;
+}
+
+.el-message--error {
+  color: red;
+}
+
+</style>

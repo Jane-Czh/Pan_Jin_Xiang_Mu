@@ -198,10 +198,12 @@ import CustomTabs from "./CustomTabs.vue";
 //子组件--绑定表单文件
 import CustomForms from "./CustomForms.vue";
 
-// 制度文件api
-import { listFilemanagement } from "@/api/file/filemanagement";
-// 表单文件api
-import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+// // 制度文件api
+// import { listFilemanagement } from "@/api/file/filemanagement";
+// // 表单文件api
+// import { listFormfilemanagement } from "@/api/file/formfilemanagement";
+
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 
 export default {
   props: {

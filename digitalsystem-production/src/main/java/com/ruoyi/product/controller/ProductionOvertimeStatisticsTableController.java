@@ -1,5 +1,6 @@
 package com.ruoyi.product.controller;
 
+import java.text.ParseException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,7 +49,7 @@ public class ProductionOvertimeStatisticsTableController extends BaseController
     private IProductionOvertimeApplicationFormService productionOvertimeApplicationFormService;
 
     @PostMapping("/synchronization")
-    public void Database_Synchronization(ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1){
+    public void Database_Synchronization(ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1) throws ParseException {
         System.out.println("-----------同步-------同步------------");
         List<ProductionClockInForm> list1 = productionClockInFormService.selectProductionClockInFormList1();
         List<ProductionOvertimeApplicationForm> list2 =productionOvertimeApplicationFormService.selectProductionOvertimeApplicationFormList1();

@@ -49,19 +49,12 @@ export function delRetention(tfemId) {
     method: 'delete'
   })
 }
-//获取最大ID
-export function getLastId(data) {
-  return request({
-    url: '/Technology/retention',
-    method: 'put',
-    data: data
-  })
-}
+
 // word转pdf
-export function word2Pdf(inPath, outPath) {
-  return request({
-    url: '/Technology/retention/convert',
-    method: 'post',
-    params: { inPath, outPath }
-  });
-}
+// export function word2Pdf(inPath, outPath) {
+//   return request({
+//     url: '/Technology/retention/convert',
+//     method: 'post',
+//     params: { inPath, outPath }
+//   });
+// }

@@ -6,11 +6,11 @@
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
         <h2>盘锦合力管理系统</h2>
-        <p>
+        <!-- <p>
           盘锦合力管理系统
-        </p>
+        </p> -->
       </el-col>
-
+<!-- 
       <el-col :sm="24" :lg="12" style="padding-left: 50px">
         <el-row>
           <el-col :span="12">
@@ -18,11 +18,13 @@
         </el-row>
         <el-row>
         </el-row>
-      </el-col>
+      </el-col> -->
     </el-row>
+
     <el-divider />
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
+
+    <el-row :gutter="200">
+      <el-col :xs="200" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
           <div slot="header" class="clearfix">
 
@@ -33,6 +35,7 @@
         </el-card>
       </el-col>
     </el-row>
+
   </div>
 </template>
 

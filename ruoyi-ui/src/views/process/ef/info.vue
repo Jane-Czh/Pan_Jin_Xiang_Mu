@@ -46,6 +46,7 @@ export default {
     init() {
       this.dialogVisible = true;
       this.flowJsonData = JSON.stringify(this.data, null, 4).toString();
+      console.log("flowJsonData=========>"+this.flowJsonData);
     },
 
   },

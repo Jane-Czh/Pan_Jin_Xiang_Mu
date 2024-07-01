@@ -12,9 +12,10 @@
       size="small"
       :inline="true"
       v-show="showSearch"
-      label-width="68px"
+      label-width="40px"
     >
-      <el-form-item label="流程名称" prop="name">
+      <!-- 搜索 流程名称进行搜索 -->
+      <el-form-item label="搜索" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入流程名称"
@@ -28,6 +29,28 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
+          >搜索</el-button
+        >
+        <!-- <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+        >重置</el-button
+      > -->
+      </el-form-item>
+
+      <!-- 搜索 制度文件名称进行搜索 -->
+      <el-form-item label="或" prop="filename">
+        <el-input
+          v-model="queryParams.filename"
+          placeholder="请输入制度文件名称"
+          clearable
+          @keyup.enter.native="handleQueryFile"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQueryFile"
           >搜索</el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
@@ -314,7 +337,13 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="流程名称" prop="name">
-          <el-input v-model="form.name" placeholder="输入流程名称" />
+          <el-input
+            v-model="form.name"
+            placeholder="输入流程名称"
+            @input="validateSB"
+            maxlength="20"
+            show-word-limit
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -335,6 +364,7 @@ import {
   addProject,
   updateProject,
   getProjectByName,
+  getProjectFileName,
 } from "@/api/system/project";
 import {
   listFilemanagement,
@@ -414,6 +444,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
+        filename: null,
       },
 
       dataList: [],
@@ -446,6 +477,13 @@ export default {
   },
 
   methods: {
+    validateSB() {
+      const regex = /^[\u4e00-\u9fa5\dA-Za-z.]*$/;
+      this.form.name = this.form.name
+        .split("")
+        .filter((char) => regex.test(char))
+        .join("");
+    },
     /** 文件下载 */
     downloadFile(url) {
       fetch(url)
@@ -660,12 +698,40 @@ export default {
     },
 
     /** 搜索流程by name */
-
     searchByName() {
       this.projectList = [];
 
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
+        // console.log("manage/index从后端获取的response===>", response);
+        for (var i = 0; i < response.length; i++) {
+          this.projectList.push(response[i]);
+        }
+
+        // // 按照updateDate字段进行排序
+        // this.projectList.sort((a, b) => {
+        //   // 按照updateDate字段从小到大排序
+        //   return new Date(a.createDate) - new Date(b.createDate);
+        // });
+
+        //分页功能
+        this.totalPage = response.length;
+
+        //数据分页
+        this.projectList = this.projectList.slice(
+          (this.pageIndex - 1) * this.pageSize,
+          this.pageIndex * this.pageSize
+        );
+
+        this.loading = false;
+      });
+    },
+    /** 搜索流程by 制度文件名称 */
+    searchFileName() {
+      this.projectList = [];
+
+      this.loading = true;
+      getProjectFileName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
         for (var i = 0; i < response.length; i++) {
           this.projectList.push(response[i]);
@@ -709,6 +775,14 @@ export default {
       // this.getList();
       this.searchByName();
     },
+
+    /** 根据制度名称进行搜索 */
+    handleQueryFile() {
+      this.queryParams.pageNum = 1;
+      // this.getList();
+      this.searchFileName();
+    },
+
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");

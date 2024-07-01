@@ -8,6 +8,7 @@ ruoyi:
   copyrightYear: 2023
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath  (docker也用Linux的配置)）
   profile: D:/ruoyi/uploadPath # 文件保存路径：D:\ruoyi\uploadPath\upload\2024\05\06
+#  profile: /home/ruoyi/uploadPath
 
 #  profile: /home/ruoyi/uploadPath # 文件保存路径：/home/ruoyi/uploadPath
   # 获取ip地址开关
@@ -70,21 +71,20 @@ spring:
       enabled: true
   # redis 配置
   redis:
+    # docker
+#    host: 172.19.4.28
+#    port: 6379
+#    password:
 
     # 实验室 地址、端口，默认为6379
-    host: 172.17.101.85
-    port: 6378
-    password:
+#    host: 172.17.101.85
+#    port: 6378
+#    password:
 
     # 本地测试
-#    host: 128.10.10.85
-#    port: 6379
-#    password: 1234qwer
-
-    # docker
-    #    host: 172.19.4.28
-    #    port: 6379
-    #    password:
+    host: 192.168.10.132
+    port: 6379
+    password: 1234qwer
 
 
     # 数据库索引

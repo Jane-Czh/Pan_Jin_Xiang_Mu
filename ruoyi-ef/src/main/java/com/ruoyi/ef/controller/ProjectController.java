@@ -12,6 +12,7 @@ import com.ruoyi.ef.entity.ProjectEntity;
 import com.ruoyi.ef.service.IProjectService;
 import com.ruoyi.ef.vo.ProjectVo;
 import com.ruoyi.ef.vo.R;
+import com.ruoyi.file.domain.RegulationsInfoTable;
 import com.ruoyi.file.service.IFormInfoTableService;
 import com.ruoyi.file.service.IRegulationsInfoTableService;
 import org.apache.ibatis.jdbc.Null;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -157,7 +159,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
                         if ("no".equals(oldNode.getType())) {
                             oldFormNames = new ArrayList<>();
                             oldFormNames.add("原无文件绑定");
-                        }else{
+                        } else {
                             oldFormNames = formInfoTableService.selectFileNamesByIds(oldNode.getType());
                             System.out.println("oldFormNames ==>" + oldFormNames);
                         }
@@ -166,7 +168,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
                         //否则将newNode 得到的 ids 替换为 filenames
                         List<String> newFormNames = formInfoTableService.selectFileNamesByIds(newNode.getType());
                         System.out.println("newFormNames size==>" + newFormNames.size());
-                        if ( newFormNames.size() == 0) {
+                        if (newFormNames.size() == 0) {
                             newFormNames = new ArrayList<>();
                             newFormNames.add("取消文件绑定");
                         }
@@ -191,7 +193,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
                         if ("no".equals(oldNode.getState())) {
                             oldFileName = new ArrayList<>();
                             oldFileName.add("原无文件绑定");
-                        }else{
+                        } else {
                             oldFileName = regulationsInfoTableService.selectFileNamesByIds(oldNode.getState());
                             System.out.println("oldFileName ==>" + oldFileName);
                         }
@@ -200,7 +202,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
                         // 否则将newNode.getState() 得到的 ids 替换为 filenames
                         List<String> newFileName = regulationsInfoTableService.selectFileNamesByIds(newNode.getState());
                         System.out.println("newFileName size==>" + newFileName.size());
-                        if ( newFileName.size() == 0) {
+                        if (newFileName.size() == 0) {
                             newFileName = new ArrayList<>();
                             newFileName.add("取消文件绑定");
                         }
@@ -311,6 +313,57 @@ public class ProjectController extends SuperController<ProjectEntity> {
 
         System.out.println("projectEntitys ==>" + projectEntitys);
         return projectEntitys;
+    }
+
+    /**
+     * 按照制度文件的 file name查询流程
+     *
+     * @param
+     * @return newest == 1
+     */
+    @PostMapping("/searchListByFileName")
+    public List<ProjectEntity> searchListByFileName(@RequestBody ProjectEntity projectEntity) {
+        System.out.println("searchListByFileName projectEntity ==>" + projectEntity);
+        //精准查询
+        // List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().eq("name", projectEntity.getName()).eq("newest", 1));
+        //模糊查询
+        // 获取
+        String filename = projectEntity.getFilename();
+        // 在制度文件中按照 filename 进行 模糊查询
+        RegulationsInfoTable regulationsInfoTable = new RegulationsInfoTable();
+        regulationsInfoTable.setFileName(filename);
+        List<RegulationsInfoTable> regulationsFileList = regulationsInfoTableService.selectRegulationsInfoTableList(regulationsInfoTable);
+        System.out.println("regulationsFileList==" + regulationsFileList);
+        //将regulationsFileList中的regulationsId加入到 Long fileIds[]
+        Long fileIds[] = regulationsFileList.stream().map(RegulationsInfoTable::getRegulationsId).toArray(Long[]::new);
+        for (Long fileId : fileIds) {
+            System.out.println("fileId==" + fileId);
+        }
+
+
+        /**
+         * state为 String类型,先将其转换为[],再与fileIds进行对比, 返回满足条件的ProjectEntity
+         * 对projectEntitys进行遍历
+         * 将state转换为[]
+         * 将stateArrayLong与fileIds进行对比
+         * 将满足条件的ProjectEntity加入到res中
+         */
+        List<ProjectEntity> projectEntitys = projectService.queryDatas();
+
+        // 根据 fileIds查询 projectEntitys 中的 state 中包含 fileIds的流程Entity
+        List<ProjectEntity> filteredProjectEntities = projectService.filterProjectEntities(fileIds, projectEntitys);
+
+        // 打印结果
+        if (filteredProjectEntities != null) {
+            for (ProjectEntity entity : filteredProjectEntities) {
+                System.out.println("Matched ProjectEntity with state: " + entity.getState());
+            }
+        } else {
+            System.out.println("No matching ProjectEntity found.");
+        }
+
+        System.out.println("filteredProjectEntities ==>" + filteredProjectEntities);
+        return filteredProjectEntities;
     }
 
 

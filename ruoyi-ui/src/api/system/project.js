@@ -5,6 +5,32 @@ import request from '@/utils/request'
 // 同时还有：pane.vue--save()、 edit_panel.vue--updateProject() 
 
 
+
+//保存sb 流程模板数据
+export function saveSBModelProject(data) {
+  return request({
+    url: '/ef/model/save',
+    method: 'post',
+    data: data
+  })
+}
+//查询sb 流程模板数据
+export function listSBModelProject() {
+  return request({
+    url: '/ef/model/list',
+    method: 'get',
+  })
+}
+
+export function delSBProject(id) {
+  return request({
+    url: '/ef/model/delete/' + id,
+    method: 'delete'
+  })
+}
+
+//--------
+
 //pane.vue--save()的接口改造 saveProject()、saveNode() 、saveLine()
 export function saveProject(data) {
   return request({
@@ -79,6 +105,18 @@ export function getProjectByName(query) {
     method: 'post',
     data: {
       name: query.name
+    }
+
+  })
+}
+
+// 按照制度流程 file name查询流程
+export function getProjectFileName(query) {
+  return request({
+    url: '/project/searchListByFileName',
+    method: 'post',
+    data: {
+      filename: query.filename
     }
 
   })

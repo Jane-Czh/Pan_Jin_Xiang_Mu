@@ -298,6 +298,16 @@ public class ProjectController extends SuperController<ProjectEntity> {
     }
 
     /**
+     * 给panel无权限使用的
+     * @return
+     */
+    @GetMapping("/list/list")
+    public List<ProjectEntity> list2() {
+        List<ProjectEntity> projectEntitys = projectService.queryDatas();
+        return projectEntitys;
+    }
+
+    /**
      * 按照name查询流程
      *
      * @param
@@ -397,6 +407,13 @@ public class ProjectController extends SuperController<ProjectEntity> {
         return new R<ProjectVo>().setCode(0).setData(projectVo);
     }
 
+    @GetMapping("/data0/{id}")
+    public R<ProjectVo> data0(@PathVariable("id") String id) {
+        ProjectVo projectVo = projectService.queryData(id);
+        System.out.println("getById projectVo ==>" + projectVo);
+        return new R<ProjectVo>().setCode(0).setData(projectVo);
+    }
+
     /**
      * 查询指定id流程的 历史相关流程列表
      */
@@ -414,7 +431,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
      * @param project
      * @return
      */
-//    @PreAuthorize("@ss.hasPermi('process:ef:add')")
+    @PreAuthorize("@ss.hasPermi('process:ef:add')")
     @PostMapping("/saveProject")
     public R save(@RequestBody ProjectEntity project) {
         //保存流程还需要进行验证是否当前流程已存在(流程名重复) --> 在前端实现了

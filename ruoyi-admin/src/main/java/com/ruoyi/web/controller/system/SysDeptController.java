@@ -68,6 +68,13 @@ public class SysDeptController extends BaseController
         return success(deptService.selectDeptById(deptId));
     }
 
+    @GetMapping(value = "/dept/{deptId}")
+    public AjaxResult getInfo2(@PathVariable Long deptId)
+    {
+        deptService.checkDeptDataScope(deptId);
+        return success(deptService.selectDeptById(deptId));
+    }
+
     /**
      * 新增部门
      */

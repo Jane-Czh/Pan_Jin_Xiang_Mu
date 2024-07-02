@@ -193,7 +193,8 @@ import { nanoid } from "nanoid";
 //获取用户信息-用户名
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
-import { getDept } from "@/api/system/dept";
+// import { getDept } from "@/api/system/dept";
+import { getDept } from "@/api/system/project";
 
 // 绑定文件(制度与表单)
 import CustomFiles from "./CustomFiles.vue";

@@ -154,6 +154,14 @@ export function listProject(query) {
   })
 }
 
+// 查询流程列表--panel
+export function listProject2(query) {
+  return request({
+    url: '/project/list/list',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询指定id的流程详细
 //edit编辑
@@ -174,6 +182,14 @@ export function getProject1(id) {
 export function getProject2(id) {
   return request({
     url: '/project/data2/' + id,
+    method: 'get'
+  })
+}
+
+//指标
+export function getProject0(id) {
+  return request({
+    url: '/project/data0/' + id,
     method: 'get'
   })
 }
@@ -229,5 +245,15 @@ export function listFormfilemanagement(query) {
     url: '/file/formfilemanagement/list2',
     method: 'get',
     params: query
+  })
+}
+
+
+
+// 查询部门详细
+export function getDept(deptId) {
+  return request({
+    url: '/system/dept/dept/' + deptId,
+    method: 'get'
   })
 }

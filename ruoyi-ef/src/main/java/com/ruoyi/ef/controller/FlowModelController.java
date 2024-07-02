@@ -42,7 +42,7 @@ public class FlowModelController extends BaseController {
      * @param modelEntity
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('ef:model:add')")
+    @PreAuthorize("@ss.hasPermi('process:ef:addModel')")
     @PostMapping("/save")
     public String add(@RequestBody ModelEntity modelEntity) {
         System.out.println("modelEntity===============:"+modelEntity);
@@ -55,7 +55,7 @@ public class FlowModelController extends BaseController {
     /**
      * 查询【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('ef:model:list')")
+//    @PreAuthorize("@ss.hasPermi('ef:model:list')")
     @GetMapping("/list")
     public List<ModelEntity> list(ModelEntity modelEntity) {
         startPage();
@@ -64,24 +64,10 @@ public class FlowModelController extends BaseController {
     }
 
 
-
-
-
     /**
-     * 修改【请填写功能名称】
+     * 删除 指定id的用户自定义流程模板
      */
-//    @PreAuthorize("@ss.hasPermi('ef:model:edit')")
-//    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
-//    @PutMapping
-//    public AjaxResult edit(@RequestBody FlowModel flowModel)
-//    {
-//        return toAjax(iModelService.updateFlowModel(flowModel));
-//    }
-
-    /**
-     * 删除【请填写功能名称】
-     */
-//    @PreAuthorize("@ss.hasPermi('ef:model:remove')")
+    @PreAuthorize("@ss.hasPermi('process:ef:deleteModel')")
     @DeleteMapping("/delete/{ids}")
     public String delete(@PathVariable("ids") String ids) {
         System.out.println("删除的id为" + ids);

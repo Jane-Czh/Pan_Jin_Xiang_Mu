@@ -120,6 +120,7 @@
                     plain
                     icon="el-icon-delete"
                     @click="handleDelete(scope.row)"
+                     v-hasPermi="['process:ef:deleteModel']"
                     >删除</el-button
                   >
                 </template>
@@ -142,6 +143,7 @@
             plain
             icon="el-icon-document-add"
             @click="openSBDialog()"
+            v-hasPermi="['process:ef:addModel']"
             size="mini"
             >保存为模板</el-button
           >
@@ -191,6 +193,7 @@
               icon="el-icon-check"
               @click="openDialog()"
               size="mini"
+              v-hasPermi="['process:ef:add']"
               >保存流程</el-button
             >
           </div>
@@ -244,6 +247,7 @@
                 ></el-input>
               </el-form-item>
             </el-form>
+            
 
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogSBVisible = false">取消</el-button>
@@ -379,10 +383,11 @@ import CustomFiles from "./CustomFiles.vue";
 //获取用户信息-用户名
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
-import { getDept } from "@/api/system/dept";
+// import { getDept } from "@/api/system/dept";
+import { getDept } from "@/api/system/project";
 //流程名称重名检测, 保存project数据, 保存节点数据, 保存连线数据
 import {
-  listProject,
+  listProject2,
   saveProject,
   saveSBModelProject,
   listSBModelProject,
@@ -516,7 +521,7 @@ export default {
     this.jsPlumb = jsPlumb.getInstance();
     this.$nextTick(() => {
       // 默认加载流程A的数据(模板)、在这里可以根据具体的业务返回符合流程数据格式的数据即可
-      this.dataReload(getDataA());
+      this.dataReload(getDataB());
     });
     //获取当前用户信息
     this.getUserInfo();
@@ -1135,7 +1140,7 @@ export default {
       this.projectList = [];
       this.modelProjectList = [];
 
-      listProject(this.queryParams).then((response) => {
+      listProject2(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
         for (var i = 0; i < response.length; i++) {
           this.projectList.push(response[i]);

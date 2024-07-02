@@ -1,5 +1,5 @@
 let dataB = {
-    name: '流程模板B',
+    name: '系统默认模板',
     nodeList: [
         {
             id: 'nodeA',

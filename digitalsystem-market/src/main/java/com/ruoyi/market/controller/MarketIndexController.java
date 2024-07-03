@@ -511,37 +511,90 @@ public class MarketIndexController extends BaseController {
     }
 
     /*
+    TODO没看懂当日是什么意思
      * 指标19各网点已到期未完工订单数
+     * 销售台账）
+    未排产=当日>订单系统交货期 且 车号为空或汉字的台数
+    （商品车台账）
+    排产未完工=精整日期为空 且 当日 > 计划完工期
      * */
     @PostMapping("/OvertimedOrderNumber")
-    public  MarketIndexResult OvertimedOrderNumber(@RequestBody MarketSalesTable marketSalesTable){
+    public   List<VoEntity> OvertimedOrderNumber(@RequestBody MarketSalesTable marketSalesTable){
 
         System.out.println("获取到的实体类"+marketSalesTable);
         System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
         System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
-
-        //获取到全部的数据
+        //规定年月日的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        //获取到销售台账全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        //获取到商品车台账全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        {          LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // 检查日期是否在起止时间范围内，包括等于起止时间的情况,并且满足车型为空或者车型中不包含中文的数据
+            return
+                    (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
+                            && (a.getCarNumber() == null || containsChinese(a.getCarNumber()));
+//                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
+//                   LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//
+//            // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+//            return (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+//                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+//                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
 
-        Map<String, Map<Integer, Long>> cpc =
-                marketSalesTables.stream().filter((MarketSalesTable a) ->
-                {         return  a.getActualDepartureDate()==null&&a.getSystemDeliveryTime()!=null&&
-                        marketSalesTable.getStartTime().getMonth()<= a.getOrderAcceptanceTime().getMonth()
-                        && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth();
-
-                })
-                        .collect(Collectors.groupingBy(MarketSalesTable::getBranch
-                                , Collectors.groupingBy(
-                                        a -> a.getOrderAcceptanceTime().getMonth()
-                                        , Collectors.summingLong(MarketSalesTable::getNumber))
-                        ));
-        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+cpc);
+        })
+                .collect(Collectors.groupingBy(
+                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
+                        , Collectors.groupingBy(MarketSalesTable::getBranch
+                                , Collectors.summingLong(MarketSalesTable::getNumber))
+                ));
+        System.out.println("选出车号为空或者为汉字的,再按照地区和月份统计数量"+collect);
 
 
+        //规定年月日的格式
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
+        //然后按照年，分组，再按照月分组，再统计每年的每月的数量
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        {
+            LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+            LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
+            //并且精准完工期要早于计划完工期
+            return
+                    (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
+                            || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
+                            &&
+                            precisioncompletion != null && precisioncompletion.isBefore(plancompletion);
+//            precisioncompletion.isBefore(plancompletion);
 
-        MarketIndexResult marketIndexResult = new MarketIndexResult();
-        marketIndexResult.setIntegerMap(cpc);
-        return marketIndexResult;
+        }).collect(Collectors.groupingBy(
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                Collectors.groupingBy(
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        Collectors.summingLong(MarketCommercialVehicleTable::getNumber)
+                )
+        ));
+        System.out.println("排产未完工=精整日期为空 且 当日 > 计划完工期,再按照地区和月份统计数量"+collect);
+
+
+        //销售台账
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+        //商品车台账
+        List<VoEntity> voEntities1 = VoEntity.convertCpdToVoEntities(collect1);
+        return voEntities;
     }
     /*
      * 指标39 商品车计划兑现率

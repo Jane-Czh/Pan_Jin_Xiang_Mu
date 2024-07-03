@@ -88,16 +88,18 @@
     <el-table v-loading="loading" :data="rateList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="主键id" align="center" prop="pqrId" />-->
-      <el-table-column label="合格率" align="center" prop="qualificationRate" />
-      <el-table-column label="合格数量" align="center" prop="qualifiedNumber" />
+      <el-table-column label="型号" align="center" prop="model" />
       <el-table-column label="生产数量" align="center" prop="productionNumber" />
+      <el-table-column label="合格数量" align="center" prop="qualifiedNumber" />
+      <el-table-column label="不合格数量" align="center" prop="disqualifiedNumber" />
+      <el-table-column label="合格率" align="center" prop="qualificationRate" />
       <el-table-column label="日期" align="center" prop="date" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.date, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="型号" align="center" prop="model" />
-      <el-table-column label="不合格数量" align="center" prop="disqualifiedNumber" />
+
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -187,6 +189,7 @@ export default {
     /** 查询自制件合格率列表 */
     getList() {
       this.loading = true;
+      const newRegulationId =1;
       listRate(this.queryParams).then(response => {
         this.rateList = response.rows;
         this.total = response.total;

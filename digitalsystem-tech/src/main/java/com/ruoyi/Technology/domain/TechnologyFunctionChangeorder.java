@@ -10,9 +10,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 变更单留存对象 Technology_Function_Changeorder
- * 
+ *
  * @author ruoyi
- * @date 2024-06-09
+ * @date 2024-06-28
  */
 public class TechnologyFunctionChangeorder extends BaseEntity
 {
@@ -130,280 +130,337 @@ public class TechnologyFunctionChangeorder extends BaseEntity
     @Excel(name = "制度标签名称")
     private String fileTag;
 
-    public void setTfcoId(Long tfcoId) 
+    /** 审核标签 */
+    @Excel(name = "审核标签")
+    private Long reviewLayer;
+
+    /** 协商标签
+     */
+    @Excel(name = "协商标签 ")
+            private Long negotiationLayer;
+
+            /** 用户审核标签 */
+            @Excel(name = "用户审核标签")
+            private Long userReviewlayer;
+
+            /** 样品检测标签 */
+            @Excel(name = "样品检测标签")
+            private Long sampleLayer;
+
+            public void setTfcoId(Long tfcoId)
     {
         this.tfcoId = tfcoId;
     }
 
-    public Long getTfcoId() 
+    public Long getTfcoId()
     {
         return tfcoId;
     }
-    public void setChangTime(Date changTime) 
+    public void setChangTime(Date changTime)
     {
         this.changTime = changTime;
     }
 
-    public Date getChangTime() 
+    public Date getChangTime()
     {
         return changTime;
     }
-    public void setChangeTarget(String changeTarget) 
+    public void setChangeTarget(String changeTarget)
     {
         this.changeTarget = changeTarget;
     }
 
-    public String getChangeTarget() 
+    public String getChangeTarget()
     {
         return changeTarget;
     }
-    public void setFileState(String fileState) 
+    public void setFileState(String fileState)
     {
         this.fileState = fileState;
     }
 
-    public String getFileState() 
+    public String getFileState()
     {
         return fileState;
     }
-    public void setExamineState(String examineState) 
+    public void setExamineState(String examineState)
     {
         this.examineState = examineState;
     }
 
-    public String getExamineState() 
+    public String getExamineState()
     {
         return examineState;
     }
-    public void setConsultState(String consultState) 
+    public void setConsultState(String consultState)
     {
         this.consultState = consultState;
     }
 
-    public String getConsultState() 
+    public String getConsultState()
     {
         return consultState;
     }
-    public void setUserReviewState(String userReviewState) 
+    public void setUserReviewState(String userReviewState)
     {
         this.userReviewState = userReviewState;
     }
 
-    public String getUserReviewState() 
+    public String getUserReviewState()
     {
         return userReviewState;
     }
-    public void setSampleState(String sampleState) 
+    public void setSampleState(String sampleState)
     {
         this.sampleState = sampleState;
     }
 
-    public String getSampleState() 
+    public String getSampleState()
     {
         return sampleState;
     }
-    public void setRevisionDate(Date revisionDate) 
+    public void setRevisionDate(Date revisionDate)
     {
         this.revisionDate = revisionDate;
     }
 
-    public Date getRevisionDate() 
+    public Date getRevisionDate()
     {
         return revisionDate;
     }
-    public void setRevisionContent(String revisionContent) 
+    public void setRevisionContent(String revisionContent)
     {
         this.revisionContent = revisionContent;
     }
 
-    public String getRevisionContent() 
+    public String getRevisionContent()
     {
         return revisionContent;
     }
-    public void setReviser(String reviser) 
+    public void setReviser(String reviser)
     {
         this.reviser = reviser;
     }
 
-    public String getReviser() 
+    public String getReviser()
     {
         return reviser;
     }
-    public void setNewFlag(Integer newFlag) 
+    public void setNewFlag(Integer newFlag)
     {
         this.newFlag = newFlag;
     }
 
-    public Integer getNewFlag() 
+    public Integer getNewFlag()
     {
         return newFlag;
     }
-    public void setNewRegulationsId(Long newRegulationsId) 
+    public void setNewRegulationsId(Long newRegulationsId)
     {
         this.newRegulationsId = newRegulationsId;
     }
 
-    public Long getNewRegulationsId() 
+    public Long getNewRegulationsId()
     {
         return newRegulationsId;
     }
-    public void setOldRegulationsId(Long oldRegulationsId) 
+    public void setOldRegulationsId(Long oldRegulationsId)
     {
         this.oldRegulationsId = oldRegulationsId;
     }
 
-    public Long getOldRegulationsId() 
+    public Long getOldRegulationsId()
     {
         return oldRegulationsId;
     }
-    public void setRegulationsTitle(String regulationsTitle) 
+    public void setRegulationsTitle(String regulationsTitle)
     {
         this.regulationsTitle = regulationsTitle;
     }
 
-    public String getRegulationsTitle() 
+    public String getRegulationsTitle()
     {
         return regulationsTitle;
     }
-    public void setUseScope(String useScope) 
+    public void setUseScope(String useScope)
     {
         this.useScope = useScope;
     }
 
-    public String getUseScope() 
+    public String getUseScope()
     {
         return useScope;
     }
-    public void setUploadDate(Date uploadDate) 
+    public void setUploadDate(Date uploadDate)
     {
         this.uploadDate = uploadDate;
     }
 
-    public Date getUploadDate() 
+    public Date getUploadDate()
     {
         return uploadDate;
     }
-    public void setEffectiveDate(Date effectiveDate) 
+    public void setEffectiveDate(Date effectiveDate)
     {
         this.effectiveDate = effectiveDate;
     }
 
-    public Date getEffectiveDate() 
+    public Date getEffectiveDate()
     {
         return effectiveDate;
     }
-    public void setFileName(String fileName) 
+    public void setFileName(String fileName)
     {
         this.fileName = fileName;
     }
 
-    public String getFileName() 
+    public String getFileName()
     {
         return fileName;
     }
-    public void setFilePath(String filePath) 
+    public void setFilePath(String filePath)
     {
         this.filePath = filePath;
     }
 
-    public String getFilePath() 
+    public String getFilePath()
     {
         return filePath;
     }
-    public void setFileType(String fileType) 
+    public void setFileType(String fileType)
     {
         this.fileType = fileType;
     }
 
-    public String getFileType() 
+    public String getFileType()
     {
         return fileType;
     }
-    public void setFileSize(BigDecimal fileSize) 
+    public void setFileSize(BigDecimal fileSize)
     {
         this.fileSize = fileSize;
     }
 
-    public BigDecimal getFileSize() 
+    public BigDecimal getFileSize()
     {
         return fileSize;
     }
-    public void setCreateDate(Date createDate) 
+    public void setCreateDate(Date createDate)
     {
         this.createDate = createDate;
     }
 
-    public Date getCreateDate() 
+    public Date getCreateDate()
     {
         return createDate;
     }
-    public void setUploadUsername(String uploadUsername) 
+    public void setUploadUsername(String uploadUsername)
     {
         this.uploadUsername = uploadUsername;
     }
 
-    public String getUploadUsername() 
+    public String getUploadUsername()
     {
         return uploadUsername;
     }
-    public void setUseState(String useState) 
+    public void setUseState(String useState)
     {
         this.useState = useState;
     }
 
-    public String getUseState() 
+    public String getUseState()
     {
         return useState;
     }
-    public void setDepartmentCategory(String departmentCategory) 
+    public void setDepartmentCategory(String departmentCategory)
     {
         this.departmentCategory = departmentCategory;
     }
 
-    public String getDepartmentCategory() 
+    public String getDepartmentCategory()
     {
         return departmentCategory;
     }
-    public void setFileTag(String fileTag) 
+    public void setFileTag(String fileTag)
     {
         this.fileTag = fileTag;
     }
 
-    public String getFileTag() 
+    public String getFileTag()
     {
         return fileTag;
+    }
+    public void setReviewLayer(Long reviewLayer)
+    {
+        this.reviewLayer = reviewLayer;
+    }
+
+    public Long getReviewLayer()
+    {
+        return reviewLayer;
+    }
+    public void setNegotiationLayer(Long negotiationLayer)
+    {
+        this.negotiationLayer = negotiationLayer;
+    }
+
+    public Long getNegotiationLayer()
+    {
+        return negotiationLayer;
+    }
+    public void setUserReviewlayer(Long userReviewlayer)
+    {
+        this.userReviewlayer = userReviewlayer;
+    }
+
+    public Long getUserReviewlayer()
+    {
+        return userReviewlayer;
+    }
+    public void setSampleLayer(Long sampleLayer)
+    {
+        this.sampleLayer = sampleLayer;
+    }
+
+    public Long getSampleLayer()
+    {
+        return sampleLayer;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("tfcoId", getTfcoId())
-            .append("changTime", getChangTime())
-            .append("changeTarget", getChangeTarget())
-            .append("fileState", getFileState())
-            .append("examineState", getExamineState())
-            .append("consultState", getConsultState())
-            .append("userReviewState", getUserReviewState())
-            .append("sampleState", getSampleState())
-            .append("revisionDate", getRevisionDate())
-            .append("revisionContent", getRevisionContent())
-            .append("reviser", getReviser())
-            .append("newFlag", getNewFlag())
-            .append("newRegulationsId", getNewRegulationsId())
-            .append("oldRegulationsId", getOldRegulationsId())
-            .append("regulationsTitle", getRegulationsTitle())
-            .append("useScope", getUseScope())
-            .append("uploadDate", getUploadDate())
-            .append("effectiveDate", getEffectiveDate())
-            .append("fileName", getFileName())
-            .append("filePath", getFilePath())
-            .append("fileType", getFileType())
-            .append("fileSize", getFileSize())
-            .append("createDate", getCreateDate())
-            .append("uploadUsername", getUploadUsername())
-            .append("useState", getUseState())
-            .append("departmentCategory", getDepartmentCategory())
-            .append("fileTag", getFileTag())
-            .toString();
+                .append("tfcoId", getTfcoId())
+                .append("changTime", getChangTime())
+                .append("changeTarget", getChangeTarget())
+                .append("fileState", getFileState())
+                .append("examineState", getExamineState())
+                .append("consultState", getConsultState())
+                .append("userReviewState", getUserReviewState())
+                .append("sampleState", getSampleState())
+                .append("revisionDate", getRevisionDate())
+                .append("revisionContent", getRevisionContent())
+                .append("reviser", getReviser())
+                .append("newFlag", getNewFlag())
+                .append("newRegulationsId", getNewRegulationsId())
+                .append("oldRegulationsId", getOldRegulationsId())
+                .append("regulationsTitle", getRegulationsTitle())
+                .append("useScope", getUseScope())
+                .append("uploadDate", getUploadDate())
+                .append("effectiveDate", getEffectiveDate())
+                .append("fileName", getFileName())
+                .append("filePath", getFilePath())
+                .append("fileType", getFileType())
+                .append("fileSize", getFileSize())
+                .append("createDate", getCreateDate())
+                .append("uploadUsername", getUploadUsername())
+                .append("useState", getUseState())
+                .append("departmentCategory", getDepartmentCategory())
+                .append("fileTag", getFileTag())
+                .append("reviewLayer", getReviewLayer())
+                .append("negotiationLayer", getNegotiationLayer())
+                .append("userReviewlayer", getUserReviewlayer())
+                .append("sampleLayer", getSampleLayer())
+                .toString();
     }
 }

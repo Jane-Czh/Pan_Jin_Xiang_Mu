@@ -357,7 +357,7 @@ export default {
         // const yearAndMonth = this.form3.yearAndMonth;
         // formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
-        const aimUrl = `/production/table/simpleRead`
+        const aimUrl = `/production/table/import`
         uploadFile(formData, aimUrl)
           .then(data => {
             // 处理上传成功的情况

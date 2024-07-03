@@ -274,20 +274,25 @@ export default {
         monthlyInventoryTotalAmount: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        growthRateInventory: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
-        growthRateSales: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
+        // growthRateInventory: [
+        //   { required: true, message: "数据不能为空", trigger: "blur" }
+        // ],
+        // growthRateSales: [
+        //   { required: true, message: "数据不能为空", trigger: "blur" }
+        // ],
         receivables: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        turnoverRateReceivable: [
+        // turnoverRateReceivable: [
+        //   { required: true, message: "数据不能为空", trigger: "blur" }
+        // ],
+        productCostVarianceSemiFinishedGoods: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-
-      }
+        workInProgressEndOfMonth: [
+          { required: true, message: "数据不能为空", trigger: "blur" }
+        ],
+      }//TODO 填报优化
     };
   },
   created() {
@@ -454,7 +459,7 @@ export default {
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
+            // this.$message.error("上传失败，请重试");
           })
           .finally(() => {
             // 无论成功或失败，都关闭上传面板

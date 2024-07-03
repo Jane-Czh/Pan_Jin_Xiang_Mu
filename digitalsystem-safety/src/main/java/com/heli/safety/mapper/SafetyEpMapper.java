@@ -16,9 +16,13 @@ import org.apache.ibatis.annotations.Param;
 public interface SafetyEpMapper {
 
 
+
     Long countMajorEquipmentFailuresInCurrentMonth();
 
     Boolean checkSafetyFillingDataIsExisted(@Param("date") Date date);
+    Boolean deleteEquipmentFailureCategoryDistributionByMonth(@Param("yearAndMonth") Date yearAndMonth);
+
+
 
     int InsertOrUpdateSafetyEp(SafetyEp safetyEp);
 

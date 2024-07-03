@@ -207,17 +207,17 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleUpload"
-          v-hasPermi="['file:filemanagement:add']"
-          >上传
-        </el-button>
-      </el-col>
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleUpload"-->
+      <!--          v-hasPermi="['file:filemanagement:add']"-->
+      <!--        >上传-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -252,7 +252,6 @@
       <!--      <el-table-column label="发放对象" align="center" prop="changeTarget" />-->
       <el-table-column label="变更单状态" align="center" prop="fileState" />
       <el-table-column label="审查状态" align="center" prop="examineState" />
-
       <!-- 在examineState列后添加审核按钮列 -->
       <el-table-column
         label="审查操作"
@@ -272,7 +271,6 @@
           </el-button>
         </template>
       </el-table-column>
-
       <el-table-column label="协商状态" align="center" prop="consultState" />
       <el-table-column
         label="协商操作"
@@ -320,6 +318,12 @@
         </template>
       </el-table-column>
       <el-table-column label="采样状态" align="center" prop="sampleState" />
+      <!--      <el-table-column label="采样检测操作" align="center" class-name="small-padding fixed-width">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <el-button size="mini" type="text":disabled="scope.row.userReviewState !== '已通过'|| scope.row.sampleState === '已通过' || scope.row.sampleState === '未通过'||scope.row.fileState === '审核通过,请更新样品检查文件'"-->
+      <!--                     @click="handleSample(scope.row)">样品检查</el-button>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column
         label="采样检测操作"
         align="center"
@@ -336,8 +340,8 @@
               scope.row.fileState === '审核通过,请更新样品检查文件'
             "
             @click="handleSample(scope.row)"
-            >样品检查</el-button
-          >
+            >采样检测
+          </el-button>
         </template>
       </el-table-column>
       <!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
@@ -417,11 +421,11 @@
             >更新
           </el-button>
           <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            type="text"-->
-          <!--            icon="el-icon-edit"-->
-          <!--            @click="handleModify(scope.row)"-->
-          <!--            v-hasPermi="['file:filemanagement:edit']"-->
+          <!--              size="mini"-->
+          <!--              type="text"-->
+          <!--              icon="el-icon-edit"-->
+          <!--              @click="handleModify(scope.row)"-->
+          <!--              v-hasPermi="['file:filemanagement:edit']"-->
           <!--          >修改-->
           <!--          </el-button>-->
           <el-button
@@ -447,13 +451,13 @@
             @click="previewFile(scope.row.filePath)"
             >预览
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-operation"
-            @click="handleHistoryVersions(scope.row)"
-            >协商文件
-          </el-button>
+          <!--          <el-button-->
+          <!--              size="mini"-->
+          <!--              type="text"-->
+          <!--              icon="el-icon-s-operation"-->
+          <!--              @click="handleHistoryVersions(scope.row)"-->
+          <!--          >用户审核-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -588,7 +592,6 @@
         <el-button @click="modifyCancel">取 消</el-button>
       </div>
     </el-dialog>
-
     <custom-confirm-dialog
       :title="'提示'"
       :message="'是否通过审查？'"
@@ -611,18 +614,17 @@ import {
 import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
-// import {import
+import CustomConfirmDialog from "@/views/Technology/Changeorder/CustomConfirmDialog.vue";
+import { word2Pdf } from "@/api/file/filemanagement";
+// import {
 //   word2Pdf
 // } from "../../../api/file/filemanagement";
-import { word2Pdf } from "@/api/file/filemanagement";
 
-import CustomConfirmDialog from "@/views/Technology/Changeorder/CustomConfirmDialog.vue";
 export default {
   name: "Changeorder",
   components: { CustomConfirmDialog },
   data() {
     return {
-      //审查弹窗
       dialogExamineVisible: false,
       currentRow: null,
 
@@ -690,10 +692,10 @@ export default {
         useState: null,
         departmentCategory: null,
         fileTag: null,
-        reviewLayer: "",
-        negotiationLayer: 0,
-        userReviewlayer: 0,
-        sampleLayer: 0,
+        reviewLayer: null,
+        negotiationLayer: null,
+        userReviewlayer: null,
+        sampleLayer: null,
       },
       // 表单参数
       form: {},
@@ -757,12 +759,14 @@ export default {
     /** 查询变更单留存列表 */
     getList() {
       this.loading = true;
-      listChangeorder({
-        ...this.queryParams,
-        reviewLayer: this.queryParams.reviewLayer, //固定显示
-      }).then((response) => {
-        this.ChangeorderList = response.rows;
-        this.total = response.total;
+      const newRegulationId = this.$route.params.userReviewlayer;
+
+      listChangeorder(this.queryParams).then((response) => {
+        // 过滤数据，只保留 negotiationLayer 和 newRegulationId 相等的记录
+        this.ChangeorderList = response.rows.filter(
+          (item) => item.sampleLayer === Number(newRegulationId)
+        );
+        this.total = this.ChangeorderList.length; // 更新总记录数
         this.loading = false;
       });
     },
@@ -838,7 +842,7 @@ export default {
     handleUpload() {
       this.reset();
       this.fileUploadDialogVisible = true;
-      this.title = "上传文件";
+      this.title = "上传制度文件";
     },
     /** 修改制度文件 */
     handleModify(row) {
@@ -861,8 +865,6 @@ export default {
         // 加入判断条件
         if (this.form.fileState === "审查通过,请更新协商文件") {
           this.form.fileState = "等待协商";
-          this.form.negotiationLayer = this.form.reviewLayer;
-          this.form.reviewLayer = 0;
         }
         if (this.form.fileState === "审查不通过,等待更新文件并重新审查") {
           this.form.fileState = "等待审查";
@@ -890,11 +892,10 @@ export default {
         this.title = "更新变更单";
       });
     },
-    /** 协商文件管理 */
+    /** 历史版本管理 */
     handleHistoryVersions(row) {
-      const reviewLayer = row.reviewLayer;
-      console.log("ReviewLayer=>：", reviewLayer);
-      this.$router.push("/negotiation/nego/" + reviewLayer);
+      const userReviewlayer = row.userReviewlayer;
+      this.$router.push("/file/SampleLayer/historyVersions/" + userReviewlayer);
     },
     // /** 制度修改频率 */
     // handleRevisionFrequency(row) {
@@ -902,29 +903,29 @@ export default {
     //   this.$router.push("/file/filemanagement/revisionFrequency/" + tfcoId);
     // },
     /** 上传文件提交按钮 */
-    uploadSubmitForm() {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          this.form.newFlag = 1;
-          // 设置 examineState 为未审核
-          this.form.fileState = "等待审查";
-          this.form.examineState = "未审查";
-          this.form.consultState = "未协商";
-          this.form.userReviewState = "未审核";
-          this.form.sampleState = "未采样";
-          this.form.negotiationLayer = 0;
-          this.form.userReviewlayer = 0;
-          this.form.sampleLayer = 0;
-          addChangeorder(this.form).then((response) => {
-            this.$modal.msgSuccess("上传成功");
-            this.fileUploadDialogVisible = false;
-            this.getList();
-            console.log("上传文件提交按钮=>", this.form);
-          });
-        }
-      });
-    },
-
+    // uploadSubmitForm() {
+    //   this.$refs["form"].validate(valid => {
+    //     if (valid) {
+    //       this.form.newFlag = 1;
+    //       // 设置 examineState 为未审核
+    //       this.form.fileState = "等待审查";
+    //       this.form.examineState = "未审查";
+    //       this.form.consultState = "未协商";
+    //       this.form.userReviewState = "未审核";
+    //       this.form.sampleState = "未采样";
+    //       this.form.reviewLayer =1;
+    //       this.form.negotiationLayer =0;
+    //       this.form.userReviewlayer =0;
+    //       this.form.sampleLayer =0;
+    //       addChangeorder(this.form).then(response => {
+    //         this.$modal.msgSuccess("上传成功");
+    //         this.fileUploadDialogVisible = false;
+    //         this.getList();
+    //         console.log("上传文件提交按钮=>",this.form);
+    //       });
+    //     }
+    //   });
+    // },
     /** 修改文件提交按钮 */
     modifySubmitForm() {
       this.$refs["form"].validate((valid) => {
@@ -998,38 +999,75 @@ export default {
       }
     },
     // 在 methods 部分添加 handleExamine 方法
+    // handleExamine(row) {
+    //   this.$confirm('是否通过审查？', '提示', {
+    //     confirmButtonText: '通过',
+    //     cancelButtonText: '不通过',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     // 设置examineState为已通过
+    //     row.examineState = "已通过";
+    //     row.fileState = "审查通过,请更新协商文件";
+    //     // 调用API将更新后的数据保存到数据库中
+    //     saveToDatabase(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '审查通过',
+    //       customClass: 'success-message' // 添加自定义类名
+    //     });
+    //     // 在此处执行审核通过的逻辑操作
+    //   }).catch(() => {
+    //     row.examineState = "未通过";
+    //     row.fileState = "审查不通过,等待更新文件并重新审查";
+    //     saveToDatabase(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '审查未通过',
+    //       customClass: 'error-message' // 添加自定义类名
+    //     });
+    // this.$message({
+    //   type: 'info',
+    //   message: '取消审查'
+    // });
+    //
+    //   });
+    // },
     handleExamine(row) {
-      this.currentRow = row;
-      this.dialogExamineVisible = true;
+      this.$confirm("是否通过审查？", "提示", {
+        confirmButtonText: "通过",
+        cancelButtonText: "不通过",
+        type: "warning",
+      })
+        .then(() => {
+          // 设置examineState为已通过
+          row.examineState = "已通过";
+          row.fileState = "审查通过,请更新协商文件";
+          // 调用API将更新后的数据保存到数据库中
+          saveToDatabase(row);
+          this.$message({
+            type: "success",
+            message: "审查通过",
+            customClass: "success-message", // 添加自定义类名
+          });
+          // 在此处执行审核通过的逻辑操作
+        })
+        .catch((error) => {
+          if (error === "cancel") {
+            // 用户点击了取消按钮
+            row.examineState = "未通过";
+            row.fileState = "审查不通过,等待更新文件并重新审查";
+            saveToDatabase(row);
+            this.$message({
+              type: "success",
+              message: "审查未通过",
+              customClass: "error-message", // 添加自定义类名
+            });
+          } else {
+            // 用户关闭了对话框，不执行任何操作
+            console.log("用户关闭了对话框");
+          }
+        });
     },
-    handleDialogConfirm() {
-      this.currentRow.examineState = "已通过";
-      this.currentRow.fileState = "审查通过,请更新协商文件";
-      saveToDatabase(this.currentRow);
-      this.$message({
-        type: "success",
-        message: "审查通过",
-        customClass: "success-message", // 添加自定义类名
-      });
-      this.dialogExamineVisible = false;
-    },
-    handleDialogCancel() {
-      this.currentRow.examineState = "未通过";
-      this.currentRow.fileState = "审查不通过,等待更新文件并重新审查";
-      saveToDatabase(this.currentRow);
-      this.$message({
-        type: "error",
-        message: "审查未通过",
-        customClass: "error-message", // 添加自定义类名
-      });
-      this.dialogExamineVisible = false;
-    },
-    handleDialogClose() {
-      // 用户关闭了对话框，不做任何事情
-      console.log("用户关闭了对话框");
-      this.dialogExamineVisible = false;
-    },
-
     // 在 methods 部分添加 handleConsult 方法
     handleConsult(row) {
       this.$confirm("是否通过协商？", "提示", {
@@ -1108,42 +1146,71 @@ export default {
     },
     // 在 methods 部分添加 handleSample 方法
     handleSample(row) {
-      this.$confirm("是否通过检查？", "提示", {
-        confirmButtonText: "通过",
-        cancelButtonText: "不通过",
-        type: "warning",
-      })
-        .then(() => {
-          // 设置examineState为已通过
-          row.sampleState = "已通过";
-          row.fileState = "变更单等待发放";
-          // 调用API将更新后的数据保存到数据库中
-          saveToDatabaseusample(row);
-          this.$message({
-            type: "success",
-            message: "样品检查通过",
-            customClass: "success-message", // 添加自定义类名
-          });
-          // 在此处执行审核通过的逻辑操作
-        })
-        .catch(() => {
-          // 设置examineState为未通过
-          row.sampleState = "未通过";
-          row.fileState = "样品检查不通过,等待更新文件并重新检测";
-          // 调用API将更新后的数据保存到数据库中
-          saveToDatabaseusample(row);
-          this.$message({
-            type: "success",
-            message: "样品检查未通过",
-            customClass: "error-message", // 添加自定义类名
-          });
-          // this.$message({
-          //   type: 'info',
-          //   message: '取消通过'
-          // });
-          // 在此处执行审核不通过的逻辑操作
-        });
+      this.currentRow = row;
+      this.dialogExamineVisible = true;
     },
+    handleDialogConfirm() {
+      this.currentRow.sampleState = "已通过";
+      this.currentRow.fileState = "样品检测通过";
+      saveToDatabase(this.currentRow);
+      this.$message({
+        type: "success",
+        message: "检测通过",
+        customClass: "success-message", // 添加自定义类名
+      });
+      this.dialogExamineVisible = false;
+    },
+    handleDialogCancel() {
+      this.currentRow.sampleState = "未通过";
+      this.currentRow.fileState = "样品检查不通过,等待更新文件并重新检测";
+      saveToDatabase(this.currentRow);
+      this.$message({
+        type: "error",
+        message: "检测未通过",
+        customClass: "error-message", // 添加自定义类名
+      });
+      this.dialogExamineVisible = false;
+    },
+    handleDialogClose() {
+      // 用户关闭了对话框，不做任何事情
+      console.log("用户关闭了对话框");
+      this.dialogExamineVisible = false;
+    },
+    // handleSample(row) {
+    //   this.$confirm('是否通过检查？', '提示', {
+    //     confirmButtonText: '通过',
+    //     cancelButtonText: '不通过',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     // 设置sampleState为已通过
+    //     row.sampleState = "已通过";
+    //     row.fileState = "变更单等待发放"
+    //     // 调用API将更新后的数据保存到数据库中
+    //     saveToDatabaseusample(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '样品检查通过',
+    //       customClass: 'success-message' // 添加自定义类名
+    //     });
+    //     // 在此处执行审核通过的逻辑操作
+    //   }).catch(() => {
+    //     // 设置examineState为未通过
+    //     row.sampleState = "未通过";
+    //     row.fileState = "样品检查不通过,等待更新文件并重新检测"
+    //     // 调用API将更新后的数据保存到数据库中
+    //     saveToDatabaseusample(row);
+    //     this.$message({
+    //       type: 'success',
+    //       message: '样品检查未通过',
+    //       customClass: 'error-message' // 添加自定义类名
+    //     });
+    //     // this.$message({
+    //     //   type: 'info',
+    //     //   message: '取消通过'
+    //     // });
+    //     // 在此处执行审核不通过的逻辑操作
+    //   });
+    // },
 
     /** 导出按钮操作 */
     handleExport() {
@@ -1332,8 +1399,7 @@ export default {
           console.error("获取用户信息失败:", error);
         });
     },
-
-    //文件预览
+    // //文件预览
     previewFile(filePath) {
       const fileType = this.getFileType(filePath);
       console.log("filePath:", filePath);
@@ -1356,7 +1422,6 @@ export default {
       }
       // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
     },
-
     convertToPdfPath(wordFilePath) {
       // 找到文件路径中的最后一个点的位置
       const lastDotIndex = wordFilePath.lastIndexOf(".");
@@ -1497,3 +1562,4 @@ function saveToDatabaseusample(data) {
   color: red;
 }
 </style>
+

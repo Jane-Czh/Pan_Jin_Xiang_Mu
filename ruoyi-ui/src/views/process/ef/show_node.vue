@@ -48,9 +48,12 @@
               <!-- {{ this.fileHyperLinks[index] }} -->
               <el-divider direction="vertical"></el-divider>
               <!-- 下载文件  -->
-              <i class="el-icon-download download-icon">
+              <!-- <i class="el-icon-download download-icon">
                 <a :href="baseUrl + fileHyperLinks[index]" download>点击下载</a>
-              </i>
+              </i> -->
+              <a @click.prevent="downloadFile(fileHyperLinks[index])"
+                >点击下载</a
+              >
               <el-divider direction="vertical"></el-divider>
               <!-- 预览文件 -->
               <i
@@ -95,9 +98,14 @@
               <!-- {{ this.formHyperLinks[index] }} -->
               <el-divider direction="vertical"></el-divider>
               <!-- 下载文件  -->
-              <i class="el-icon-download download-icon">
+              <!-- <i class="el-icon-download download-icon">
                 <a :href="baseUrl + formHyperLinks[index]" download>点击下载</a>
-              </i>
+              </i> -->
+
+              <a @click.prevent="downloadFile(formHyperLinks[index])"
+                >点击下载</a
+              >
+
               <el-divider direction="vertical"></el-divider>
               <!-- 预览文件 -->
               <i
@@ -118,11 +126,14 @@
   <script>
 import FlowNodeForm from "./node_form";
 // //制度文件api
-// import { listFilemanagement, word2Pdf } from "@/api/file/filemanagement";
+import { word2Pdf } from "@/api/file/filemanagement";
 // //表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
 export default {
   props: {
     node: Object,
@@ -212,6 +223,26 @@ export default {
     this.getFormFileData();
   },
   methods: {
+    /** 文件下载 */
+    downloadFile(url) {
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.setAttribute(
+            "download",
+            decodeURIComponent(url.split("/").pop())
+          ); // 解码文件名
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(downloadUrl);
+        })
+        .catch((error) => console.error("Download error:", error));
+    },
+
     // 文件预览
     previewFile(filePath) {
       console.log("filePath=======>", filePath);

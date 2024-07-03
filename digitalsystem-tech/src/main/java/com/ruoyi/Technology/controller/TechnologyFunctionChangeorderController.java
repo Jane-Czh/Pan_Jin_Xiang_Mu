@@ -43,8 +43,20 @@ public class TechnologyFunctionChangeorderController extends BaseController
     {
         startPage();
         List<TechnologyFunctionChangeorder> list = technologyFunctionChangeorderService.selectTechnologyFunctionChangeorderList(technologyFunctionChangeorder);
+//        List<TechnologyFunctionChangeorder> list = technologyFunctionChangeorderService.selectTechnologyFunctionChangeorderList1(list1);
         return getDataTable(list);
     }
+//    /**
+//     * 查询变更单留存列表
+//     */
+//    @PreAuthorize("@ss.hasPermi('Technology:Changeorder:list')")
+//    @GetMapping("/listnego")
+//    public TableDataInfo listnego(TechnologyFunctionChangeorder technologyFunctionChangeorder)
+//    {
+//        startPage();
+//        List<TechnologyFunctionChangeorder> list = technologyFunctionChangeorderService.selectTechnologyFunctionChangeorderList(technologyFunctionChangeorder);
+//        return getDataTable(list);
+//    }
 
     /**
      * 导出变更单留存列表

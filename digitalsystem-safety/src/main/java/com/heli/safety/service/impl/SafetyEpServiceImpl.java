@@ -22,6 +22,17 @@ public class SafetyEpServiceImpl implements ISafetyEpService {
     private SafetyEpMapper safetyEpMapper;
 
     @Override
+    public Boolean deleteEquipmentFailureCategoryDistributionByMonth(Long[] safetyEpIds) {
+
+        for (int i = 0; i < safetyEpIds.length; i++) {
+            SafetyEp safetyEp = safetyEpMapper.selectSafetyEpBySafetyEpId(safetyEpIds[i]);
+            safetyEpMapper.deleteEquipmentFailureCategoryDistributionByMonth(safetyEp.getYearAndMonth());
+        }
+
+        return true;
+    }
+
+    @Override
     public Boolean checkSafetyFillingDataIsExisted(Date date) {
         return safetyEpMapper.checkSafetyFillingDataIsExisted(date);
     }

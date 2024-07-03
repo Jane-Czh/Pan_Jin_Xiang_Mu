@@ -91,7 +91,7 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>

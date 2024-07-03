@@ -1,6 +1,8 @@
 package com.ruoyi.product.mapper;
 
 import java.util.List;
+
+import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.product.domain.ProuctionFunctionQualifiedRate;
 
 /**
@@ -61,4 +63,7 @@ public interface ProuctionFunctionQualifiedRateMapper
 
     //查询数据库最后一条数据id
     public Long selectLastId();
+
+    //无参数方法
+    public List<ProuctionFunctionQualifiedRate> selectProuctionFunctionQualifiedRateList1();
 }

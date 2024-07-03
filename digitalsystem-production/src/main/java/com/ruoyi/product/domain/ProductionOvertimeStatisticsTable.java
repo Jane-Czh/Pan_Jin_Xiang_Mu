@@ -46,6 +46,10 @@ public class ProductionOvertimeStatisticsTable extends BaseEntity
     @Excel(name = "异常情况")
     private String abnormalSituation;
 
+    /** 标志是否存在 */
+    @Excel(name = "标志是否存在")
+    private Long isExist;
+
     public void setPostId(Long postId)
     {
         this.postId = postId;
@@ -119,6 +123,16 @@ public class ProductionOvertimeStatisticsTable extends BaseEntity
         return abnormalSituation;
     }
 
+    public void setIsExist(Long isExist)
+    {
+        this.isExist = isExist;
+    }
+
+    public Long getIsExist()
+    {
+        return isExist;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -130,6 +144,7 @@ public class ProductionOvertimeStatisticsTable extends BaseEntity
                 .append("attendanceSituation", getAttendanceSituation())
                 .append("overtimeDuration", getOvertimeDuration())
                 .append("abnormalSituation", getAbnormalSituation())
+                .append("isExist", getIsExist())
                 .append("createTime", getCreateTime())
                 .toString();
     }

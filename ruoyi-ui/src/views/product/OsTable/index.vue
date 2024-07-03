@@ -207,6 +207,8 @@ import { listOsTable, getOsTable, delOsTable, addOsTable, updateOsTable } from "
 
 export default {
   name: "OsTable",
+  // name: "Project",
+  inject: ["reload"],
   data() {
     return {
       // 遮罩层
@@ -270,7 +272,7 @@ export default {
       .catch(error => {
         console.error('There was an error!', error);
       });
-    this.getList();
+    this.reload();
   },
   /** 查
     /** 查询加班统计列表 */

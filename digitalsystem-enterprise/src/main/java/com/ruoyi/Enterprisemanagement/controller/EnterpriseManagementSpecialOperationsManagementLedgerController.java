@@ -33,6 +33,7 @@ public class EnterpriseManagementSpecialOperationsManagementLedgerController ext
 
     /*表单导入功能*/
     @Log(title = "[市场]特种作业管理台账上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('Enterprisemanagement:Ledger:import')")
     @PostMapping("/SOimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

@@ -9,6 +9,7 @@ import java.util.*;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementPersonnelRoster;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
 import com.ruoyi.market.utils.GenerateId;
@@ -109,20 +110,8 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
     }
 
     @Override
-    public void Synchronization(List<ProductionClockInForm> list1, List<ProductionOvertimeApplicationForm> list2,ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable) throws ParseException {
+    public void Synchronization(List<ProductionClockInForm> list1, List<ProductionOvertimeApplicationForm> list2, List<EnterpriseManagementPersonnelRoster> list3,ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable) throws ParseException {
         int count1 = 0;
-
-//testAPI
-//        String testdate1 = "2024-04-18";
-//        String test1 = HolidayUtil.isWorkingDay(testdate1);
-//        String testdate2 = "2024-06-09";
-//        String test2 = HolidayUtil.isWorkingDay(testdate2);
-//        String testdate3 = "2024-06-10";
-//        String test3 = HolidayUtil.isWorkingDay(testdate3);
-//        System.out.println("***********"+test1+"*****************");
-//        System.out.println("***********"+test2+"*****************");
-//        System.out.println("***********"+test3+"*****************");
-
 
         HashMap<String, ProductionOvertimeStatisticsTable> result = new HashMap<String, ProductionOvertimeStatisticsTable>();
 //        Map<String, Map<String, ProductionOvertimeStatisticsTable>> attendanceMap = new HashMap<>();
@@ -191,13 +180,13 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 boolean monthMatch = SplitDate.splitDate(Firststart)[1] == SplitDate.splitDate(Firststartapp)[1];
                 boolean dayMatch = SplitDate.splitDate(Firststart)[2] == SplitDate.splitDate(Firststartapp)[2];
 
-//                System.out.println("Year Match: " + yearMatch);
-//                System.out.println(count2);
-//                System.out.println(list2.size());
-//                System.out.println("Month Match: " + monthMatch);
-//                System.out.println("Day Match: " + dayMatch);
-//                System.out.println(productionClockInForm);
-//                System.out.println(productionOvertimeApplicationForm);
+                System.out.println("Year Match: " + yearMatch);
+                System.out.println(count2);
+                System.out.println(list2.size());
+                System.out.println("Month Match: " + monthMatch);
+                System.out.println("Day Match: " + dayMatch);
+                System.out.println(productionClockInForm);
+                System.out.println(productionOvertimeApplicationForm);
                 if(idnumberapp.equals(idnumber)&&(SplitDate.splitDate(Firststart)[0]==SplitDate.splitDate(Firststartapp)[0])&&(SplitDate.splitDate(Firststart)[1]==SplitDate.splitDate(Firststartapp)[1])&&(SplitDate.splitDate(Firststart)[2]==SplitDate.splitDate(Firststartapp)[2])){
                     key=1;
                 }
@@ -274,6 +263,33 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
 
             count1++;
         }
+
+        for (String idNumber : result.keySet()) {
+            int count3 = 0;
+            while (count3<list3.size()){
+                EnterpriseManagementPersonnelRoster enterpriseManagementPersonnelRoster = list3.get(count3);
+                String employeeId = enterpriseManagementPersonnelRoster.getEmployeeId();
+                System.out.println("++++++"+employeeId+"++++++");
+                if (employeeId.equals(idNumber)) {
+                    System.out.println("ID Number " + idNumber + " exists in the roster.");
+                    ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = result.get(idNumber);
+                    productionOvertimeStatisticsTable1.setIsExist(1L);
+                    result.replace(idNumber,productionOvertimeStatisticsTable1);
+                    break;
+                } else {
+                    System.out.println("ID Number " + idNumber + " does not exist in the roster.");
+                }
+                count3++;
+            }
+            ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = result.get(idNumber);
+            Long isExist = productionOvertimeStatisticsTable1.getIsExist();
+            if (isExist==null){
+                productionOvertimeStatisticsTable1.setAbnormalSituation("该员工不存在");
+                result.replace(idNumber,productionOvertimeStatisticsTable1);
+            }
+        }
+
+
         //依次插入新生成的加班情况
         Long id = 0L;
         for (Map.Entry<String, ProductionOvertimeStatisticsTable> entry : result.entrySet()){

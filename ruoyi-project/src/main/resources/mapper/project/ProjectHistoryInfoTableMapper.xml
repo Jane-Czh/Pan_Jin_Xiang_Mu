@@ -143,4 +143,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{projectId}
         </foreach>
     </delete>
+
+    <!-- 批量插入的 SQL 语句 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO project_history_info (project_name, category, level, department, attribute, description, start_date, progress_allover_progress, import_date, remake, manager, team_members, status, progress, current_status, goal, scope, planned_completion_time, completion_summary)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.projectName},
+             #{item.category},
+             #{item.level},
+             #{item.department},
+             #{item.attribute},
+             #{item.description},
+             #{item.startDate},
+             #{item.progressAlloverProgress},
+             #{item.importDate},
+             #{item.remake},
+             #{item.manager},
+             #{item.teamMembers},
+             #{item.status},
+             #{item.progress},
+             #{item.currentStatus},
+             #{item.goal},
+             #{item.scope},
+             #{item.plannedCompletionTime},
+             #{item.completionSummary},
+            )
+        </foreach>
+    </insert>
 </mapper>

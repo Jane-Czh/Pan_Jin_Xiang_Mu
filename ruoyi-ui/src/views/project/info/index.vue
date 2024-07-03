@@ -199,7 +199,7 @@
           v-hasPermi="['project:Info:edit']"
         >修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -209,7 +209,7 @@
           @click="handleDelete"
           v-hasPermi="['project:Info:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -223,85 +223,77 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-row v-for="(infodata, index) in rowList" :key="index"  :gutter="20">
-    <el-col v-for="(info, index1) in infodata" :key="index1" :span="6">
-      <div class="grid-content bg-purple">
-      <el-card>
-        <div slot="header" class="clearfix">
-          <span>项目信息</span>
-        </div>
-        
-        <div class="card-container">
-          <el-card class="user-card">
-            <p>项目id: {{ info.projectId }}</p>
-            <p>项目名称: {{ info.projectName }}</p>
-            <p>项目类别: {{ info.category }}</p>
-            <p>项目等级: {{ info.level }}</p>
-
-            <!-- 详情查看 -->
-            <el-popover placement="right" trigger="click" width="750">
-
-              <div class="two-column">
-                <div class="column" style="width: 50%">
-                  <pre>
-                    <pre>项目id: {{ info.projectId }}</pre>
-                    <pre>项目名称: {{ info.projectName }}</pre>
-                    <pre>项目类别: {{ info.category }}</pre>
-                    <pre>项目等级: {{ info.level }}</pre>
-                    <pre>主责部门: {{ info.department }}</pre>
-                    <pre>承接属性: {{ info.attribute }}</pre>
-                    <pre>项目描述: {{ info.description }}</pre>
-                    <pre>立项时间: {{ info.startDate }}</pre>
-                    <pre>项目总进度: {{ info.progressAlloverProgress }}</pre>
-                    <pre>导入时间: {{ info.importDate }}</pre>
-                    <pre>描述: {{ info.remake }}</pre>
-                    <pre>历史项目: {{ info.oldProjectId }}</pre>
-                    <pre>关联时间: {{ info.associationDate }}</pre>
-                  </pre>
-                </div>
-                <div class="column" style="width: 50%">
-                  <pre>
-                    <pre>负责人: {{ info.manager }}</pre>
-                    <pre>组成员: {{ info.teamMembers }}</pre>
-                    <pre>项目状态: {{ info.status }}</pre>
-                    <pre>项目进度: {{ info.progress }}</pre>
-                    <pre>项目现状: {{ info.currentStatus }}</pre>
-                    <pre>目标: {{ info.goal }}</pre>
-                    <pre>范围: {{ info.scope }}</pre>
-                    <pre>计划结项时间: {{ info.plannedCompletionTime }}</pre>
-                    <pre>已过天数: {{ formattedDaysPassed(info.startDate) }}</pre>
-                    <pre>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</pre>
-                    <pre>完成内容概述: {{ info.completionSummary }}</pre>
-                  </pre>
-                </div>
-            </div>
-
-              <el-button slot="reference">查看详情</el-button>
-            </el-popover>
-
-            <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
-              <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
-              <div v-if="loading">加载中...</div>
-              <div v-else>
-                <h3>历史项目列表</h3>
-                <!-- <el-table :data="historyList" @row-click="handleRowClick" style="width: 100%"> -->
-                <el-table :data="historyList" @selection-change="handleRowClick" style="width: 100%">
-                  <el-table-column type="selection"  width="55"></el-table-column>
-                  <el-table-column prop="projectName" label="项目名称"></el-table-column>
-                </el-table>
-                <el-button type="primary" @click="confirmSelection(info)">确认</el-button>
-                <el-button @click="cancelSelection">取消</el-button>
+    <!-- <el-row v-for="(infodata, index) in rowList" :key="index"  :gutter="20">
+      <el-col v-for="(info, index1) in infodata" :key="index1" :span="6">
+        <div class="grid-content bg-purple">
+        <el-card>
+          <div slot="header" class="clearfix">
+            <span>项目信息</span>
+          </div>
+          <div class="card-container">
+            <el-card class="user-card">
+              <p>项目id: {{ info.projectId }}</p>
+              <p>项目名称: {{ info.projectName }}</p>
+              <p>项目类别: {{ info.category }}</p>
+              <p>项目等级: {{ info.level }}</p>
+              <el-popover placement="right" trigger="click" width="750">
+                <div class="two-column">
+                  <div class="column" style="width: 50%">
+                    <pre>
+                      <pre>项目id: {{ info.projectId }}</pre>
+                      <pre>项目名称: {{ info.projectName }}</pre>
+                      <pre>项目类别: {{ info.category }}</pre>
+                      <pre>项目等级: {{ info.level }}</pre>
+                      <pre>主责部门: {{ info.department }}</pre>
+                      <pre>承接属性: {{ info.attribute }}</pre>
+                      <pre>项目描述: {{ info.description }}</pre>
+                      <pre>立项时间: {{ info.startDate }}</pre>
+                      <pre>项目总进度: {{ info.progressAlloverProgress }}</pre>
+                      <pre>导入时间: {{ info.importDate }}</pre>
+                      <pre>描述: {{ info.remake }}</pre>
+                      <pre>历史项目: {{ info.oldProjectId }}</pre>
+                      <pre>关联时间: {{ info.associationDate }}</pre>
+                    </pre>
+                  </div>
+                  <div class="column" style="width: 50%">
+                    <pre>
+                      <pre>负责人: {{ info.manager }}</pre>
+                      <pre>组成员: {{ info.teamMembers }}</pre>
+                      <pre>项目状态: {{ info.status }}</pre>
+                      <pre>项目进度: {{ info.progress }}</pre>
+                      <pre>项目现状: {{ info.currentStatus }}</pre>
+                      <pre>目标: {{ info.goal }}</pre>
+                      <pre>范围: {{ info.scope }}</pre>
+                      <pre>计划结项时间: {{ info.plannedCompletionTime }}</pre>
+                      <pre>已过天数: {{ formattedDaysPassed(info.startDate) }}</pre>
+                      <pre>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</pre>
+                      <pre>完成内容概述: {{ info.completionSummary }}</pre>
+                    </pre>
+                  </div>
               </div>
-            </el-popover>
+                <el-button slot="reference">查看详情</el-button>
+              </el-popover>
+              <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
+                <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
+                <div v-if="loading">加载中...</div>
+                <div v-else>
+                  <h3>历史项目列表</h3>
+                  <el-table :data="historyList" @selection-change="handleRowClick" style="width: 100%">
+                    <el-table-column type="selection"  width="55"></el-table-column>
+                    <el-table-column prop="projectName" label="项目名称"></el-table-column>
+                  </el-table>
+                  <el-button type="primary" @click="confirmSelection(info)">确认</el-button>
+                  <el-button @click="cancelSelection">取消</el-button>
+                </div>
+              </el-popover>
 
 
-          </el-card>
+            </el-card>
+          </div>
+        </el-card>
         </div>
-      </el-card>
-      </div>
-    </el-col>
-
-    </el-row>
+      </el-col>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="InfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
@@ -349,20 +341,42 @@
       <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['project:Info:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['project:Info:remove']"
-          >删除</el-button>
+          <div class="button-group">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['project:Info:edit']"
+            >修改</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDeletefinish(scope.row)"
+              v-hasPermi="['project:Info:remove']"
+            >项目完成</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDeleteaborted(scope.row)"
+              v-hasPermi="['project:Info:remove']"
+            >项目终止</el-button>
+            <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
+              <el-button size="mini" type="text" slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
+              <div v-if="loading">加载中...</div>
+              <div v-else>
+                <h3>历史项目列表</h3>
+                <el-table :data="historyList" @selection-change="handleRowClick" style="width: 100%">
+                  <el-table-column type="selection" width="55"></el-table-column>
+                  <el-table-column prop="projectName" label="项目名称"></el-table-column>
+                </el-table>
+                <el-button type="primary" @click="confirmSelection(scope.row)">确认</el-button>
+                <el-button @click="cancelSelection">取消</el-button>
+              </div>
+            </el-popover>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -495,7 +509,7 @@
 
 <script>
 import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
-import { listHistory } from "@/api/project/history";
+import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadImport } from "@/api/project/history";
 
 export default {
   name: "Info",
@@ -612,14 +626,14 @@ export default {
           value: '滞后',
           label: '滞后'
         },
-        {
-          value: '已完成',
-          label: '已完成'
-        },
-        {
-          value: '已取消',
-          label: '已取消'
-        }
+        // {
+        //   value: '已完成',
+        //   label: '已完成'
+        // },
+        // {
+        //   value: '已取消',
+        //   label: '已取消'
+        // }
       ],
 
       // 表单参数
@@ -762,7 +776,7 @@ export default {
         this.$message.error('关联失败: ' + error);
       });
 
-      location.reload();
+      // location.reload();
     },
 
 
@@ -772,8 +786,11 @@ export default {
       // 重置状态
       this.selectedHistoryList = [];
       this.isPopoverVisible = false;
-      console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
-      // this.$refs.historyPopover.doClose(); // 手动关闭弹窗
+      this.$nextTick(() => {
+        if (this.$refs.historyPopover) {
+          this.$refs.historyPopover.doClose(); // 手动关闭弹窗
+        }
+      });
     },
 
     /** 查询项目基本信息列表 */
@@ -882,15 +899,33 @@ export default {
       });
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
+    handleDeletefinish(row) {
       const projectIds = row.projectId || this.ids;
-      this.$modal.confirm('是否确认删除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认移除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
         return delInfo(projectIds);
+      }).then(function(){
+        row.status = "已完成";
+        return addHistory(row);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess("移除成功，已加入历史项目");
       }).catch(() => {});
+
     },
+    handleDeleteaborted(row) {
+      const projectIds = row.projectId || this.ids;
+      this.$modal.confirm('是否确认移除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
+        return delInfo(projectIds);
+      }).then(function(){
+        row.status = "已取消";
+        return addHistory(row);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("移除成功，已加入历史项目");
+      }).catch(() => {});
+
+    },
+
     /** 导出按钮操作 */
     handleExport() {
       this.download('project/Info/export', {
@@ -931,4 +966,10 @@ export default {
   .column {
     flex: 1;
   }
+  /* .button-group {
+  display: flex;
+  gap: 8px; 
+  justify-content: flex-start; 
+  margin-right: 16px;
+} */
 </style>

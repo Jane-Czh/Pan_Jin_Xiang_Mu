@@ -265,9 +265,7 @@ export default {
           // 将数据存入对应级别的数组中
           this.ProjectDevelopmentStatusData[item.level].push(item.progressAlloverProgress);
             
-          // if (item.hasOwnProperty('department')) {
-          //   this.DepartmentProjectStatisticsData[item.department] = (this.DepartmentProjectStatisticsData[item.department] || 0) + 1;
-          // }
+
 
           if (item.hasOwnProperty('department')) {
             // 更新已出现的部门项目数量
@@ -561,7 +559,7 @@ export default {
 
     const option = {
       title: {
-        text: '平均进度统计',
+        text: '部门项目统计',
         left: 'center'
       },
       xAxis: {

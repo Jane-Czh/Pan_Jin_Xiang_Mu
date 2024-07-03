@@ -32,10 +32,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="useState"    column="use_state"    />
         <result property="departmentCategory"    column="department_category"    />
         <result property="fileTag"    column="file_tag"    />
+        <result property="reviewLayer"    column="Review_layer"    />
+        <result property="negotiationLayer"    column="Negotiation_layer"    />
+        <result property="userReviewlayer"    column="User_reviewlayer"    />
+        <result property="sampleLayer"    column="Sample_layer"    />
     </resultMap>
 
     <sql id="selectTechnologyFunctionChangeorderVo">
-        select TFCO_id, Chang_time, Change_target, file_state, examine_state, consult_state, User_review_state, sample_state, revision_date, revision_content, reviser, new_flag, new_regulations_id, old_regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, file_type, file_size, create_date, upload_username, use_state, department_category, file_tag from Technology_Function_Changeorder
+        select TFCO_id, Chang_time, Change_target, file_state, examine_state, consult_state, User_review_state, sample_state, revision_date, revision_content, reviser, new_flag, new_regulations_id, old_regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, file_type, file_size, create_date, upload_username, use_state, department_category, file_tag, Review_layer, Negotiation_layer, User_reviewlayer, Sample_layer from Technology_Function_Changeorder
     </sql>
 
     <select id="selectTechnologyFunctionChangeorderList" parameterType="TechnologyFunctionChangeorder" resultMap="TechnologyFunctionChangeorderResult">
@@ -67,6 +71,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
             <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
             <if test="fileTag != null  and fileTag != ''"> and file_tag = #{fileTag}</if>
+            <if test="reviewLayer != null "> and Review_layer = #{reviewLayer}</if>
+            <if test="negotiationLayer != null "> and Negotiation_layer = #{negotiationLayer}</if>
+            <if test="userReviewlayer != null "> and User_reviewlayer = #{userReviewlayer}</if>
+            <if test="sampleLayer != null "> and Sample_layer = #{sampleLayer}</if>
         </where>
     </select>
     
@@ -104,6 +112,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="useState != null">use_state,</if>
             <if test="departmentCategory != null">department_category,</if>
             <if test="fileTag != null">file_tag,</if>
+            <if test="reviewLayer != null">Review_layer,</if>
+            <if test="negotiationLayer != null">Negotiation_layer,</if>
+            <if test="userReviewlayer != null">User_reviewlayer,</if>
+            <if test="sampleLayer != null">Sample_layer,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="changTime != null">#{changTime},</if>
@@ -132,6 +144,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="useState != null">#{useState},</if>
             <if test="departmentCategory != null">#{departmentCategory},</if>
             <if test="fileTag != null">#{fileTag},</if>
+            <if test="reviewLayer != null">#{reviewLayer},</if>
+            <if test="negotiationLayer != null">#{negotiationLayer},</if>
+            <if test="userReviewlayer != null">#{userReviewlayer},</if>
+            <if test="sampleLayer != null">#{sampleLayer},</if>
          </trim>
     </insert>
 
@@ -164,9 +180,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="useState != null">use_state = #{useState},</if>
             <if test="departmentCategory != null">department_category = #{departmentCategory},</if>
             <if test="fileTag != null">file_tag = #{fileTag},</if>
+            <if test="reviewLayer != null">Review_layer = #{reviewLayer},</if>
+            <if test="negotiationLayer != null">Negotiation_layer = #{negotiationLayer},</if>
+            <if test="userReviewlayer != null">User_reviewlayer = #{userReviewlayer},</if>
+            <if test="sampleLayer != null">Sample_layer = #{sampleLayer},</if>
         </trim>
         where TFCO_id = #{tfcoId}
     </update>
+
+    <select id="selectLastId" resultType="java.lang.Long">
+        SELECT TFCO_id
+        FROM Technology_Function_Changeorder
+        WHERE TFCO_id = (SELECT MAX(TFCO_id) FROM Technology_Function_Changeorder);
+    </select>
 
     <delete id="deleteTechnologyFunctionChangeorderByTfcoId" parameterType="Long">
         delete from Technology_Function_Changeorder where TFCO_id = #{tfcoId}

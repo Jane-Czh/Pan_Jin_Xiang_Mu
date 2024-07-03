@@ -1,7 +1,9 @@
 package com.heli.project.service;
 
+import java.io.IOException;
 import java.util.List;
 import com.heli.project.domain.ProjectHistoryInfoTable;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 历史项目信息管理Service接口
@@ -11,6 +13,15 @@ import com.heli.project.domain.ProjectHistoryInfoTable;
  */
 public interface IProjectHistoryInfoTableService 
 {
+
+    /**
+     * 导入市场科销售台账
+     *
+     *
+     *
+     */
+    public void importInterests(MultipartFile excelFile) throws IOException;
+
     /**
      * 查询历史项目信息管理
      * 

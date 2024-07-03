@@ -40,8 +40,16 @@ public class TechnologyFunctionChangeorderServiceImpl implements ITechnologyFunc
     @Override
     public List<TechnologyFunctionChangeorder> selectTechnologyFunctionChangeorderList(TechnologyFunctionChangeorder technologyFunctionChangeorder)
     {
+
         return technologyFunctionChangeorderMapper.selectTechnologyFunctionChangeorderList(technologyFunctionChangeorder);
     }
+
+    @Override
+    public List<TechnologyFunctionChangeorder> selectTechnologyFunctionChangeorderList1(List<TechnologyFunctionChangeorder> list) {
+
+        return list;
+    }
+
 
     /**
      * 新增变更单留存
@@ -52,8 +60,23 @@ public class TechnologyFunctionChangeorderServiceImpl implements ITechnologyFunc
     @Override
     public int insertTechnologyFunctionChangeorder(TechnologyFunctionChangeorder technologyFunctionChangeorder)
     {
+        long lastid = selectLastId();
+        if (selectLastId()==null){
+            lastid = 1;
+        }
+        if (technologyFunctionChangeorder.getFileState().equals("等待审查")){
+        technologyFunctionChangeorder.setReviewLayer(lastid);}
+        System.out.println(lastid+"-------");
         return technologyFunctionChangeorderMapper.insertTechnologyFunctionChangeorder(technologyFunctionChangeorder);
     }
+    private Long selectLastId() {
+//        return technologyFunctionChangeorderMapper.selectLastId();
+        if (technologyFunctionChangeorderMapper.selectLastId() == null){
+            return 1L;
+        }
+        else return technologyFunctionChangeorderMapper.selectLastId();
+    }
+
 
     /**
      * 修改变更单留存

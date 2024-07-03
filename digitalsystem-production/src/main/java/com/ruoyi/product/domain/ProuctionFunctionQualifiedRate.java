@@ -22,7 +22,7 @@ public class ProuctionFunctionQualifiedRate extends BaseEntity
 
     /** 合格率 */
     @Excel(name = "合格率")
-    private Long qualificationRate;
+    private String qualificationRate;
 
     /** 合格数量 */
     @Excel(name = "合格数量")
@@ -54,12 +54,12 @@ public class ProuctionFunctionQualifiedRate extends BaseEntity
     {
         return pqrId;
     }
-    public void setQualificationRate(Long qualificationRate) 
+    public void setQualificationRate(String qualificationRate)
     {
         this.qualificationRate = qualificationRate;
     }
 
-    public Long getQualificationRate() 
+    public String getQualificationRate()
     {
         return qualificationRate;
     }

@@ -216,11 +216,17 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名称" align="center" prop="fileName" />
-      <el-table-column label="文件路径" align="center" prop="filePath">
+      <!-- <el-table-column label="文件路径" align="center" prop="filePath">
         <template slot-scope="scope">
           <a :href="scope.row.filePath" download>点击下载</a>
         </template>
+      </el-table-column> -->
+      <el-table-column label="文件路径" align="center" prop="filePath">
+        <template slot-scope="scope">
+          <a @click.prevent="downloadFile(scope.row.filePath)">点击下载</a>
+        </template>
       </el-table-column>
+
       <el-table-column label="文件类型" align="center" prop="fileType" />
       <!--      <el-table-column label="文件大小" align="center" prop="fileSize" />-->
       <el-table-column
@@ -293,7 +299,7 @@
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="previewFile1(scope.row.filePath)"
+            @click="previewFile(scope.row.filePath)"
             >预览
           </el-button>
           <!--          <el-button-->
@@ -600,7 +606,7 @@ import {
 import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
-import { word2Pdf } from "../../../api/file/filemanagement";
+import { word2Pdf } from "@/api/file/filemanagement";
 
 export default {
   name: "Retention",
@@ -723,6 +729,26 @@ export default {
     this.getList();
   },
   methods: {
+    /** 文件下载 */
+    downloadFile(url) {
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.setAttribute(
+            "download",
+            decodeURIComponent(url.split("/").pop())
+          ); // 解码文件名
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(downloadUrl);
+        })
+        .catch((error) => console.error("Download error:", error));
+    },
+
     /** 查询申报材料统计列表 */
     getList() {
       this.loading = true;
@@ -796,7 +822,7 @@ export default {
     handleUpload() {
       this.reset();
       this.fileUploadDialogVisible = true;
-      this.title = "上传制度文件";
+      this.title = "上传文件";
     },
     /** 新增按钮操作 */
     // handleAdd() {
@@ -1123,37 +1149,32 @@ export default {
           console.error("获取用户信息失败:", error);
         });
     },
-    // //文件预览
-    previewFile1(filePath) {
-      console.log("11111111111111111111112");
-
+    //文件预览
+    previewFile(filePath) {
       const fileType = this.getFileType(filePath);
-      console.log("11111111111111111111113");
-
       console.log("filePath:", filePath);
       console.log("fileType:", fileType);
       switch (fileType) {
         case "pdf":
-          console.log("11111111111111111111114");
           console.log("fileType1111:", fileType);
           window.open(filePath, "_blank");
           break;
         case "word":
+          console.log("fileType2222:", fileType);
           const pdfFilePath = this.convertToPdfPath(filePath);
           console.log("filePath:", filePath);
           console.log("pdfFilePath:", pdfFilePath);
-          console.log("1111111111111111111111");
-
-          word2Pdf(filePath, pdfFilePath).then((response) => {
-            console.log("22222222222222222222222");
-            window.open(pdfFilePath, "_blank");
-          });
-
+          word2Pdf(filePath, pdfFilePath).then((response) => {});
+          window.open(pdfFilePath, "_blank");
           break;
+        // this.convertToPdfPath(filePath).then(pdfFilePath => {
+        //   console.log("pdfFilePath:",pdfFilePath);
+        //   window.open(pdfFilePath, '_blank');
+        // });
+        // break;
       }
       // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
     },
-
     convertToPdfPath(wordFilePath) {
       // 找到文件路径中的最后一个点的位置
       const lastDotIndex = wordFilePath.lastIndexOf(".");
@@ -1165,29 +1186,21 @@ export default {
         // 将文件名部分与 .pdf 后缀拼接，形成 PDF 文件路径
         const pdfFilePath = prefix + ".pdf";
 
-        return pdfFilePath;
+        return pdfFilePath; // 显式地返回名为 pdfFilePath 的值
       } else {
         // 文件路径中没有点，无法更改后缀
         throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
       }
     },
-
     // convertToPdfPath(wordFilePath) {
-    //   // 找到文件路径中的最后一个点的位置
-    //   const lastDotIndex = wordFilePath.lastIndexOf('.');
-
-    //   if (lastDotIndex != -1) {
-    //     // 获取文件路径中最后一个点之前的部分（文件名部分）
-    //     const prefix = wordFilePath.substring(0, lastDotIndex);
-
-    //     // 将文件名部分与 .pdf 后缀拼接，形成 PDF 文件路径
-    //     const pdfFilePath = prefix + ".pdf";
-
-    //     return pdfFilePath;
-    //   } else {
-    //     // 文件路径中没有点，无法更改后缀
-    //     throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
-    //   }
+    //   return new Promise((resolve, reject) => {
+    //     // 使用后端接口将Word转换为PDF
+    //     word2Pdf(wordFilePath).then(response => {
+    //       resolve(response.data.pdfFilePath);
+    //     }).catch(error => {
+    //       reject(error);
+    //     });
+    //   });
     // },
   },
 };

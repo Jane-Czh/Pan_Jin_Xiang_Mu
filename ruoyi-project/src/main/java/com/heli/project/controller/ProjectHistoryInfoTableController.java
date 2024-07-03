@@ -1,17 +1,13 @@
 package com.heli.project.controller;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.exception.ServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -20,6 +16,7 @@ import com.heli.project.domain.ProjectHistoryInfoTable;
 import com.heli.project.service.IProjectHistoryInfoTableService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 历史项目信息管理Controller
@@ -33,6 +30,24 @@ public class ProjectHistoryInfoTableController extends BaseController
 {
     @Autowired
     private IProjectHistoryInfoTableService projectHistoryInfoTableService;
+
+
+    /**
+     * 导入excel表格功能
+     */
+    @Log(title = "[项目]历史项目导入", businessType = BusinessType.INSERT)
+    @PostMapping("/import")
+    public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
+        System.out.println("------------import-------import------------");
+        try {
+            projectHistoryInfoTableService.importInterests(excelFile);
+            return success();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ServiceException("excel上传失败");
+        }
+
+    }
 
     /**
      * 查询历史项目信息管理列表

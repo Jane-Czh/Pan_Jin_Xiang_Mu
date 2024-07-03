@@ -42,3 +42,21 @@ export function delHistory(projectId) {
     method: 'delete'
   })
 }
+
+//导入XX excel文件
+export function uploadImport(formData) {
+  return request({
+    url: '/project/history/import',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+    onUploadProgress: (progressEvent) => {
+      let progress = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+    },
+  });
+}

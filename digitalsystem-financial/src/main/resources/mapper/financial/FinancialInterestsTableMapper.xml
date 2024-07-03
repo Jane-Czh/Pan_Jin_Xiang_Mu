@@ -63,7 +63,7 @@
 
 
 
-    <select id="checkInterestsDataIsExisted" parameterType="Date" >
+    <select id="checkInterestsDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Financial_Interests_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 

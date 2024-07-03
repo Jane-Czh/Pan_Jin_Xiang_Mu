@@ -43,16 +43,16 @@ public class ExcelUtilsPro {
 //            marketSalesTable.setMsId(GenerateId.getUUid());
 
             int count = 0;
-            //1、合格率
-            prouctionFunctionQualifiedRate.setDisqualifiedNumber(getIntegerCellValue(row.getCell(count++)));
+            //5、产品型号
+            prouctionFunctionQualifiedRate.setModel(getStringCellValue(row.getCell(count++)));
+
+            //生产数量
+            prouctionFunctionQualifiedRate.setProductionNumber(getIntegerCellValue(row.getCell(count++)));
+
             //2、合格数量
             prouctionFunctionQualifiedRate.setQualifiedNumber(getIntegerCellValue(row.getCell(count++)));
             //3、不合格数量
             prouctionFunctionQualifiedRate.setDisqualifiedNumber(getIntegerCellValue(row.getCell(count++)));
-            System.out.println(date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count))))));
-            System.out.println(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))));
-            System.out.println(row.getCell(count).getCellType());
-            System.out.println(row.getCell(count).getDateCellValue());
             String dateString;
             if (row.getCell(count).getCellType() == CellType.NUMERIC) {
                 if (DateUtil.isCellDateFormatted(row.getCell(count))) {
@@ -66,6 +66,20 @@ public class ExcelUtilsPro {
             } else {
                 // 处理其他类型
             }
+            //1、合格率
+            // 获取合格率并设置到对象中
+            String rawQualificationRate = getStringCellValue(row.getCell(count++));
+
+// 将合格率转换为浮点数
+            double qualificationRate = Double.parseDouble(rawQualificationRate);
+
+// 格式化为百分比形式
+            String formattedRate = String.format("%.0f%%", qualificationRate * 100);
+
+// 将格式化后的合格率设置到对象中
+            prouctionFunctionQualifiedRate.setQualificationRate(formattedRate);
+
+//            System.out.println("========"+prouctionFunctionQualifiedRate.getQualificationRate()+"*******");
 
 
 
@@ -80,10 +94,7 @@ public class ExcelUtilsPro {
                 // 如果单元格数据为空，则跳过设置 Java 对象的属性值
                 count++;
             }
-            //5、产品型号
-            prouctionFunctionQualifiedRate.setModel(getStringCellValue(row.getCell(count++)));
-            //生产数量
-            prouctionFunctionQualifiedRate.setProductionNumber(getIntegerCellValue(row.getCell(count++)));
+
 
 
             dataList.add(prouctionFunctionQualifiedRate);

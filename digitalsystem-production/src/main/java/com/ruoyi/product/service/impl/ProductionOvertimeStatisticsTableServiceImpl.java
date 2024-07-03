@@ -7,8 +7,8 @@ import java.time.ZoneId;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
-//import com.google.common.collect.HashBasedTable;
-//import com.google.common.collect.Table;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
 import com.ruoyi.market.utils.GenerateId;
@@ -111,7 +111,7 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
     @Override
     public void Synchronization(List<ProductionClockInForm> list1, List<ProductionOvertimeApplicationForm> list2,ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable) throws ParseException {
         int count1 = 0;
-        int count2 = 0;
+
 //testAPI
 //        String testdate1 = "2024-04-18";
 //        String test1 = HolidayUtil.isWorkingDay(testdate1);
@@ -154,6 +154,7 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
         }
 
         while (count1<list1.size()){
+            int count2 = 0;
             ProductionClockInForm productionClockInForm = list1.get(count1);
             //记录是否有加班申请
             int key = 0;
@@ -185,9 +186,23 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 ProductionOvertimeApplicationForm productionOvertimeApplicationForm =list2.get(count2);
                 String idnumberapp = productionOvertimeApplicationForm.getIdNumber();
                 Date Firststartapp = productionOvertimeApplicationForm.getApplicationForOvertimeStartTime();
-                if((SplitDate.splitDate(Firststart)[0]==SplitDate.splitDate(Firststartapp)[0])&&(SplitDate.splitDate(Firststart)[1]==SplitDate.splitDate(Firststartapp)[1])&&(SplitDate.splitDate(Firststart)[2]==SplitDate.splitDate(Firststartapp)[2])){
+                // 打印每个判断条件的正确性
+                boolean yearMatch = SplitDate.splitDate(Firststart)[0] == SplitDate.splitDate(Firststartapp)[0];
+                boolean monthMatch = SplitDate.splitDate(Firststart)[1] == SplitDate.splitDate(Firststartapp)[1];
+                boolean dayMatch = SplitDate.splitDate(Firststart)[2] == SplitDate.splitDate(Firststartapp)[2];
+
+//                System.out.println("Year Match: " + yearMatch);
+//                System.out.println(count2);
+//                System.out.println(list2.size());
+//                System.out.println("Month Match: " + monthMatch);
+//                System.out.println("Day Match: " + dayMatch);
+//                System.out.println(productionClockInForm);
+//                System.out.println(productionOvertimeApplicationForm);
+                if(idnumberapp.equals(idnumber)&&(SplitDate.splitDate(Firststart)[0]==SplitDate.splitDate(Firststartapp)[0])&&(SplitDate.splitDate(Firststart)[1]==SplitDate.splitDate(Firststartapp)[1])&&(SplitDate.splitDate(Firststart)[2]==SplitDate.splitDate(Firststartapp)[2])){
                     key=1;
                 }
+                System.out.println(SplitDate.splitDate(Firststart)[2]);
+                System.out.println(SplitDate.splitDate(Firststartapp)[2]);
                 count2++;
             }
 

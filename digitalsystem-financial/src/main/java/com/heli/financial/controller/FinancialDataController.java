@@ -163,7 +163,7 @@ public class FinancialDataController extends BaseController {
         }
 
         try {
-            toAjax(financialInterestsTableService.importInterestsTable("admin", DateUtils.getNowDate(), yearAndMonth, excelFile));
+            toAjax(financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, excelFile));
         } catch (Exception e) {
             logger.info(String.valueOf(e));
         }
@@ -199,7 +199,7 @@ public class FinancialDataController extends BaseController {
         }
 
         try {
-            financialBalanceTableService.importBalanceTable("admin", DateUtils.getNowDate(), yearAndMonth, BalanceFile);
+            financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
         } catch (Exception e) {
             logger.info(String.valueOf(e));
         }

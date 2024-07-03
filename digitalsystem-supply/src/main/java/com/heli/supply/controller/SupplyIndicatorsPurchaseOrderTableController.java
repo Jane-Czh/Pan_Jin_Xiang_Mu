@@ -44,7 +44,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
             //将采购订单存入数据库
             supplyIndicatorsPurchaseOrderTableService.readSupplyOrderExcelToDB(multipartFile.getOriginalFilename(), inputStream);
             //计算
-            supplyIndicatorsPurchaseOrderTableService.calculateControlledPurchaseAmountRatio("admin");
+            supplyIndicatorsPurchaseOrderTableService.calculateControlledPurchaseAmountRatio(getUsername());
             return R.ok();
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());

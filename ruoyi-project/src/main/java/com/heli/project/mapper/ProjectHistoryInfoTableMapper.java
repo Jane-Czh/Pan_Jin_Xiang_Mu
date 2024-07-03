@@ -58,4 +58,11 @@ public interface ProjectHistoryInfoTableMapper
      * @return 结果
      */
     public int deleteProjectHistoryInfoTableByProjectIds(Long[] projectIds);
+
+    /**
+     * 批量插入历史项目信息管理
+     *
+     * @return 结果
+     */
+    public void batchInsert(List<ProjectHistoryInfoTable> projectHistoryInfos);
 }

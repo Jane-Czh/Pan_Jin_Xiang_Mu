@@ -102,21 +102,21 @@
         <el-form-item label="一线从业人数" prop="employeesNumber">
           <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数" />
         </el-form-item>
-        <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
+        <!-- <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
           <el-input v-model="form.employeesAvgMonthlyNumber" placeholder="请输入公司平均从业人数" />
-        </el-form-item>
-        <el-form-item label="公司年度平均从业人数" prop="employeesAvgAnnualNumber">
+        </el-form-item> -->
+        <!-- <el-form-item label="公司年度平均从业人数" prop="employeesAvgAnnualNumber">
           <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司年度平均从业人数" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
           <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
         </el-form-item>
-        <el-form-item label="工资总额月度占比" prop="monthlySalaryRatio">
+        <!-- <el-form-item label="工资总额月度占比" prop="monthlySalaryRatio">
           <el-input v-model="form.monthlySalaryRatio" placeholder="请输入工资总额月度占比" />
-        </el-form-item>
-        <el-form-item label="工资总额年度占比" prop="annualSalaryRatio">
+        </el-form-item> -->
+        <!-- <el-form-item label="工资总额年度占比" prop="annualSalaryRatio">
           <el-input v-model="form.annualSalaryRatio" placeholder="请输入工资总额年度占比" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="累计人均收入" prop="cumulativeAverageIncome">
           <el-input v-model="form.cumulativeAverageIncome" placeholder="请输入累计人均收入" />
         </el-form-item>

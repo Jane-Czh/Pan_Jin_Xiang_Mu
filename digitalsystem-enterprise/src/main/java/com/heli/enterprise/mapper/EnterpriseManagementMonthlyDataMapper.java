@@ -20,6 +20,7 @@ public interface EnterpriseManagementMonthlyDataMapper {
 
 
     Boolean checkEMEmployeesDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+    Boolean checkEMMonthlyDataIsMinMonth(@Param("yearAndMonth") Date yearAndMonth);
     Long selectEmployeesNumberByMonth(@Param("yearAndMonth") Date yearAndMonth);
 
     Integer selectEmployeesAVGMonthlyNumber(@Param("yearAndMonth") Date yearAndMonth);

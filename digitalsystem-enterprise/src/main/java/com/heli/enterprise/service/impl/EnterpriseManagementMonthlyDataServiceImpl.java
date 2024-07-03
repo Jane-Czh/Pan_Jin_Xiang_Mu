@@ -44,6 +44,12 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         return enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataIsExisted();
     }
 
+    @Override
+    public boolean checkEMMonthlyDataIsMinMonth(Date yearAndMonth) {
+        return enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataIsMinMonth(yearAndMonth);
+
+    }
+
     /**
      * 计算填报相关月度指标
      */

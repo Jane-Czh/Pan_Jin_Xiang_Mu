@@ -163,7 +163,11 @@
                     <el-divider direction="vertical"></el-divider>
                     <!-- 下载文件  -->
                     <i class="el-icon-download download-icon">
-                      <a :href="baseUrl + fileHyperLinks[index]" download
+                      <!-- <a :href="baseUrl + fileHyperLinks[index]" download
+                        >点击下载</a
+                      > -->
+
+                      <a @click.prevent="downloadFile(fileHyperLinks[index])"
                         >点击下载</a
                       >
                     </i>
@@ -199,12 +203,6 @@
             >
               <!-- slot插槽展示自定义内容 -->
               <template slot="reference">
-                <!-- <el-button
-                  type="file1"
-                  size="small"
-                  round
-                  icon="el-icon-files"
-                ></el-button> -->
                 <span class="file">
                   <i class="el-icon-tickets"></i>
                 </span>
@@ -217,7 +215,10 @@
                     <el-divider direction="vertical"></el-divider>
                     <!-- 下载文件  -->
                     <i class="el-icon-download download-icon">
-                      <a :href="baseUrl + formHyperLinks[index]" download
+                      <!-- <a :href="baseUrl + formHyperLinks[index]" download
+                        >点击下载</a
+                      > -->
+                      <a @click.prevent="downloadFile(formHyperLinks[index])"
                         >点击下载</a
                       >
                     </i>
@@ -335,7 +336,10 @@ import {
   updateProject,
   getProjectByName,
 } from "@/api/system/project";
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import "@/views/process/ef/button.css";
@@ -442,6 +446,26 @@ export default {
   },
 
   methods: {
+    /** 文件下载 */
+    downloadFile(url) {
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.setAttribute(
+            "download",
+            decodeURIComponent(url.split("/").pop())
+          ); // 解码文件名
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(downloadUrl);
+        })
+        .catch((error) => console.error("Download error:", error));
+    },
+
     /**搜索功能1、按照project name进行搜索 */
 
     /**根据project的state(制度文件ids)、type(表单文件ids)查找filenames */
@@ -485,12 +509,10 @@ export default {
         console.log("this.formList===>", this.formList);
       });
 
-      
       //对 formList 查找符合type中ids的文件 将其放入 nodeFormNames
       JSON.parse(row.type).forEach((stateId) => {
         let row = this.formList.find(
-          (item) =>
-            JSON.stringify(item.formId) === JSON.stringify(stateId)
+          (item) => JSON.stringify(item.formId) === JSON.stringify(stateId)
         );
         if (row != null) {
           //将匹配的记录的文件名、链接保存 (nodeFileNames )
@@ -735,14 +757,14 @@ export default {
                 message: `名称为 ${this.form.name} 的流程已存在!!!`,
               });
               return;
-            } else {//进行流程名称修改的else
+            } else {
+              //进行流程名称修改的else
               updateProject(this.form).then((response) => {
                 this.$modal.msgSuccess("修改成功");
                 this.open = false;
                 this.reload();
               });
-            }//else--over
-
+            } //else--over
           } else {
             addProject(this.form).then((response) => {
               this.$modal.msgSuccess("新增成功");

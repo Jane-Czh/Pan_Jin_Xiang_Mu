@@ -74,17 +74,17 @@ public class CommonController {
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
 
-            // TODO IPAddressUtil.getLocalIPAddress() ==> 获取本机ip地址
+            // TODO IPAddressUtil.getLocalIPAddress() ==> 自动获取本机ip地址
             // String localIPAddress = IPAddressUtil.getLocalIPAddress();
             // String url = localIPAddress + ":8080" + fileName;
 
 
-            // 原方法
+            // 本即测试原方法
 //            String url = serverConfig.getUrl() + fileName;
 
-            //手动替换ip为当前机方法
+            //docker 手动替换ip为当前机方法
 //            String url = "http://172.19.4.28:8085" + fileName;
-            String url = "http://172.19.4.28:8080" + fileName;
+            String url = "http://172.19.0.138:8080" + fileName;
 
 
             AjaxResult ajax = AjaxResult.success();

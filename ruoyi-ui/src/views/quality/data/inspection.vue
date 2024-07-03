@@ -361,7 +361,7 @@ export default {
       } else {
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
-        const aimUrl = `/quality/inspection/importExcel`;
+        const aimUrl = `/quality/data/inspection/read`;
         uploadFile(formData, aimUrl)
           .then(data => {
             // 处理上传成功的情况

@@ -202,7 +202,7 @@
             @click="syncReport"
           >同步数据</el-button>
         </el-col>
-      </el-col>
+<!--      </el-col>-->
 <!--      <el-col>-->
 <!--        &lt;!&ndash;Excel 参数导入 &ndash;&gt;-->
 <!--        <el-button-->

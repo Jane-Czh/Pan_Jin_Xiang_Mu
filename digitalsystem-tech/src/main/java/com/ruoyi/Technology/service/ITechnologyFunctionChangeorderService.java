@@ -27,6 +27,8 @@ public interface ITechnologyFunctionChangeorderService
      */
     public List<TechnologyFunctionChangeorder> selectTechnologyFunctionChangeorderList(TechnologyFunctionChangeorder technologyFunctionChangeorder);
 
+    public List<TechnologyFunctionChangeorder> selectTechnologyFunctionChangeorderList1(List<TechnologyFunctionChangeorder> list);
+
     /**
      * 新增变更单留存
      * 

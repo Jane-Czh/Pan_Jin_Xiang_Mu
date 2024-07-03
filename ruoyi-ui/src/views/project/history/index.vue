@@ -186,6 +186,42 @@
           v-hasPermi="['project:history:export']"
         >导出</el-button>
       </el-col>
+
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="showDialog = true"
+          v-hasPermi="['market:import:export']"
+        >导入Excel文件</el-button>
+
+        <el-dialog
+          title="导入Excel文件"
+          :visible.sync="showDialog"
+          width="30%"
+          :before-close="handleClose"
+          @close="resetFileInput"
+        >
+          <i class="el-icon-upload"></i>
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+
+          <!-- 进度动画条 -->
+          <div v-if="progress > 0">
+            <el-progress
+              :percentage="progress"
+              color="rgb(19, 194, 194)"
+            ></el-progress>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="fileSend()">确 定</el-button>
+        </span>
+        </el-dialog>
+      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -355,7 +391,7 @@
 </template>
 
 <script>
-import { listHistory, getHistory, delHistory, addHistory, updateHistory } from "@/api/project/history";
+import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadImport } from "@/api/project/history";
 
 export default {
   name: "History",
@@ -450,17 +486,17 @@ export default {
       ],
       //项目状态选项
       statusOptions:[
-        { 
-          value: '未开始',
-          label: '未开始'},
-        {
-          value: '进行中',
-          label: '进行中'
-        },
-        {
-          value: '滞后',
-          label: '滞后'
-        },
+        // { 
+        //   value: '未开始',
+        //   label: '未开始'},
+        // {
+        //   value: '进行中',
+        //   label: '进行中'
+        // },
+        // {
+        //   value: '滞后',
+        //   label: '滞后'
+        // },
         {
           value: '已完成',
           label: '已完成'
@@ -511,7 +547,11 @@ export default {
         plannedCompletionTime: [
           { required: true, message: "计划结项时间不能为空", trigger: "blur" }
         ],
-      }
+      },
+
+      //新增参数
+      showDialog: false,
+      progress: 0
     };
   },
   created() {
@@ -625,7 +665,56 @@ export default {
       this.download('project/history/export', {
         ...this.queryParams
       }, `history_${new Date().getTime()}.xlsx`)
+    },
+
+    /*  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
+    fileSend() {
+      const formData = new FormData();
+      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+      console.log(file);
+      formData.append("file", file);
+      console.log("file====>",formData)
+      // console.log("uploadImport function: ", uploadImport);
+      uploadImport(formData)
+        .then(response => {
+          // 文件上传成功
+          
+          // 2秒后关闭上传面板并刷新页面
+          setTimeout(() => {
+            this.showDialog = false; // 关闭上传面板
+            location.reload(); // 刷新页面数据
+          }, 2000); // 2000毫秒后执行
+        })
+        .catch(error => {
+          // 处理错误
+          console.error('Error uploading file:', error);
+        });
+   
+    },
+
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+    //导入excel，取消按钮绑定取消所选的xlsx
+    resetFileInput() {
+      this.$refs.fileInput.value = "";
+    },
+    //检查文件是否为excel
+    checkFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileName = file.name;
+      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+
+      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+        this.$message.error("只能上传 Excel 文件！");
+        this.$refs.fileInput.value = ""; // 清空文件选择框
+      }
     }
+
   }
 };
 </script>

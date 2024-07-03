@@ -3,6 +3,7 @@ package com.ruoyi.market.service.impl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.IsoFields;
 import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -40,7 +41,7 @@ public class MarketFunctionComparisonDeliverydaysServiceImpl implements IMarketF
         int year = getTime.getYear(currentDateTime);
         int month = getTime.getMonth(currentDateTime);
         int day = getTime.getDay(currentDateTime);
-        int weeknow = currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+        int weeknow = currentDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 
 
 
@@ -64,10 +65,13 @@ public class MarketFunctionComparisonDeliverydaysServiceImpl implements IMarketF
         //筛选出今天的车型
         List<MarketCommercialVehicleTable> vehiclesweek = new ArrayList<>();
         for (MarketCommercialVehicleTable velocity1 : list) {
+            System.out.println("开始");
             LocalDate launchDate = velocity1.getLaunchDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            int weekOfYear = launchDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+            int weekOfYear = launchDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+            System.out.println("weekOfYear" + weekOfYear);
             if (SplitDate.splitDate(velocity1.getLaunchDate())[0] == year && weekOfYear == weeknow) {
                 vehiclesweek.add(velocity1);
+                System.out.println("本周存在数据");
             }
         }
 //        // 您的MarketCommercialVehicleTable列表

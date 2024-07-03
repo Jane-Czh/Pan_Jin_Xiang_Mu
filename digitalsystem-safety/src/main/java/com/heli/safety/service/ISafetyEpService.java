@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.safety.domain.SafetyEp;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * [安全环保]指标填报Service接口
@@ -12,6 +13,9 @@ import com.heli.safety.domain.SafetyEp;
  * @date 2024-04-16
  */
 public interface ISafetyEpService {
+
+    Boolean deleteEquipmentFailureCategoryDistributionByMonth(Long[] safetyEpIds);
+
 
 
 

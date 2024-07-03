@@ -337,32 +337,32 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
             BigDecimal FebruaryResults = safetyEpAssessmentResultsPresentation.getFebruaryResults();
             BigDecimal MarchResults = safetyEpAssessmentResultsPresentation.getMarchResults();
             if (JanuaryResults != null && FebruaryResults != null && MarchResults != null ){
-                First_Quarter_Results = JanuaryResults.add(FebruaryResults).add(MarchResults).divide(BigDecimal.valueOf(3));
+                First_Quarter_Results = JanuaryResults.add(FebruaryResults).add(MarchResults).divide(BigDecimal.valueOf(3), BigDecimal.ROUND_CEILING);
             }
             //计算第二季度分数
             BigDecimal AprilResults = safetyEpAssessmentResultsPresentation.getAprilResults();
             BigDecimal MayResults = safetyEpAssessmentResultsPresentation.getMayResults();
             BigDecimal JuneResults = safetyEpAssessmentResultsPresentation.getJuneResults();
             if (AprilResults != null && MayResults != null && JuneResults != null ){
-                Second_Quarter_Results = AprilResults.add(MayResults).add(JuneResults).divide(BigDecimal.valueOf(3));
+                Second_Quarter_Results = AprilResults.add(MayResults).add(JuneResults).divide(BigDecimal.valueOf(3), BigDecimal.ROUND_CEILING);
             }
             //计算第三季度分数
             BigDecimal JulyResults = safetyEpAssessmentResultsPresentation.getJulyResults();
             BigDecimal AugustResults = safetyEpAssessmentResultsPresentation.getAugustResults();
             BigDecimal SeptemberResults = safetyEpAssessmentResultsPresentation.getSeptemberResults();
             if (JulyResults != null && AugustResults != null && SeptemberResults != null ){
-                Third_Quarter_Results = JulyResults.add(AugustResults).add(SeptemberResults).divide(BigDecimal.valueOf(3));
+                Third_Quarter_Results = JulyResults.add(AugustResults).add(SeptemberResults).divide(BigDecimal.valueOf(3), BigDecimal.ROUND_CEILING);
             }
             //计算第四季度分数
             BigDecimal OctoberResults = safetyEpAssessmentResultsPresentation.getOctoberResults();
             BigDecimal NovemberResults = safetyEpAssessmentResultsPresentation.getNovemberResults();
             BigDecimal DecemberResults = safetyEpAssessmentResultsPresentation.getDecemberResults();
             if (OctoberResults != null && NovemberResults != null && DecemberResults != null ){
-                Fourth_Quarter_Results = OctoberResults.add(NovemberResults).add(DecemberResults).divide(BigDecimal.valueOf(3));
+                Fourth_Quarter_Results = OctoberResults.add(NovemberResults).add(DecemberResults).divide(BigDecimal.valueOf(3), BigDecimal.ROUND_CEILING);
             }
             //全年得分
             if (First_Quarter_Results != null && Second_Quarter_Results != null && Third_Quarter_Results != null && Fourth_Quarter_Results != null ){
-                Annual_Results = First_Quarter_Results.add(Second_Quarter_Results).add(Third_Quarter_Results).add(Fourth_Quarter_Results).divide(BigDecimal.valueOf(4));
+                Annual_Results = First_Quarter_Results.add(Second_Quarter_Results).add(Third_Quarter_Results).add(Fourth_Quarter_Results).divide(BigDecimal.valueOf(4), BigDecimal.ROUND_CEILING);
             }
 
             if (First_Quarter_Results != null){

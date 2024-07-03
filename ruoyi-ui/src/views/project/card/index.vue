@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 查询 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="项目名称" prop="projectName">
         <el-input
@@ -40,24 +41,24 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="项目描述" prop="description">
+      </el-form-item> -->
+      <!-- <el-form-item label="项目描述" prop="description">
         <el-input
           v-model="queryParams.description"
           placeholder="请输入项目描述"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="立项时间" prop="startDate">
+      </el-form-item> -->
+      <!-- <el-form-item label="立项时间" prop="startDate">
         <el-date-picker clearable
           v-model="queryParams.startDate"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="请选择立项时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="项目总进度" prop="progressAlloverProgress">
+      </el-form-item> -->
+      <!-- <el-form-item label="项目总进度" prop="progressAlloverProgress">
         <el-input
           v-model="queryParams.progressAlloverProgress"
           placeholder="请输入项目总进度"
@@ -80,6 +81,22 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="历史项目" prop="oldProjectId">
+        <el-input
+          v-model="queryParams.oldProjectId"
+          placeholder="请输入历史项目"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="关联时间" prop="associationDate">
+        <el-date-picker clearable
+          v-model="queryParams.associationDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择关联时间">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="负责人" prop="manager">
         <el-input
@@ -129,6 +146,22 @@
           placeholder="请选择计划结项时间">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="已过天数(自动计算)" prop="daysPassed">
+        <el-input
+          v-model="queryParams.daysPassed"
+          placeholder="请输入已过天数(自动计算)"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="剩余天数(自动计算)" prop="daysRemaining">
+        <el-input
+          v-model="queryParams.daysRemaining"
+          placeholder="请输入剩余天数(自动计算)"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="完成内容概述" prop="completionSummary">
         <el-input
           v-model="queryParams.completionSummary"
@@ -143,7 +176,8 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!-- 操作栏 -->
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -151,7 +185,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['project:history:add']"
+          v-hasPermi="['project:Info:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -162,7 +196,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['project:history:edit']"
+          v-hasPermi="['project:Info:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -173,7 +207,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['project:history:remove']"
+          v-hasPermi="['project:Info:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -183,51 +217,94 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['project:history:export']"
+          v-hasPermi="['project:Info:export']"
         >导出</el-button>
       </el-col>
-
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="showDialog = true"
-          v-hasPermi="['market:import:export']"
-        >导入Excel文件</el-button>
-
-        <el-dialog
-          title="导入Excel文件"
-          :visible.sync="showDialog"
-          width="30%"
-          :before-close="handleClose"
-          @close="resetFileInput"
-        >
-          <i class="el-icon-upload"></i>
-          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
-
-          <!-- 进度动画条 -->
-          <div v-if="progress > 0">
-            <el-progress
-              :percentage="progress"
-              color="rgb(19, 194, 194)"
-            ></el-progress>
-          </div>
-
-          <span slot="footer" class="dialog-footer">
-          <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="fileSend()">确 定</el-button>
-        </span>
-        </el-dialog>
-      </el-col>
-
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row> -->
+
+    <el-row v-for="(infodata, index) in rowList" :key="index"  :gutter="20">
+    <el-col v-for="(info, index1) in infodata" :key="index1" :span="6">
+      <div class="grid-content bg-purple">
+      <el-card>
+        <div slot="header" class="clearfix">
+          <span>项目信息</span>
+        </div>
+        
+        <div class="card-container">
+          <el-card class="user-card">
+            <p>项目id: {{ info.projectId }}</p>
+            <p>项目名称: {{ info.projectName }}</p>
+            <p>项目类别: {{ info.category }}</p>
+            <p>项目等级: {{ info.level }}</p>
+
+            <!-- 详情查看 -->
+            <el-popover placement="right" trigger="click" width="750">
+
+              <div class="two-column">
+                <div class="column" style="width: 50%">
+                  <pre>
+                    <pre>项目id: {{ info.projectId }}</pre>
+                    <pre>项目名称: {{ info.projectName }}</pre>
+                    <pre>项目类别: {{ info.category }}</pre>
+                    <pre>项目等级: {{ info.level }}</pre>
+                    <pre>主责部门: {{ info.department }}</pre>
+                    <pre>承接属性: {{ info.attribute }}</pre>
+                    <pre>项目描述: {{ info.description }}</pre>
+                    <pre>立项时间: {{ info.startDate }}</pre>
+                    <pre>项目总进度: {{ info.progressAlloverProgress }}</pre>
+                    <pre>导入时间: {{ info.importDate }}</pre>
+                    <pre>描述: {{ info.remake }}</pre>
+                    <pre>历史项目: {{ info.oldProjectId }}</pre>
+                    <pre>关联时间: {{ info.associationDate }}</pre>
+                  </pre>
+                </div>
+                <div class="column" style="width: 50%">
+                  <pre>
+                    <pre>负责人: {{ info.manager }}</pre>
+                    <pre>组成员: {{ info.teamMembers }}</pre>
+                    <pre>项目状态: {{ info.status }}</pre>
+                    <pre>项目进度: {{ info.progress }}</pre>
+                    <pre>项目现状: {{ info.currentStatus }}</pre>
+                    <pre>目标: {{ info.goal }}</pre>
+                    <pre>范围: {{ info.scope }}</pre>
+                    <pre>计划结项时间: {{ info.plannedCompletionTime }}</pre>
+                    <pre>已过天数: {{ formattedDaysPassed(info.startDate) }}</pre>
+                    <pre>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</pre>
+                    <pre>完成内容概述: {{ info.completionSummary }}</pre>
+                  </pre>
+                </div>
+            </div>
+
+              <el-button slot="reference">查看详情</el-button>
+            </el-popover>
+
+            <!-- <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
+              <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
+              <div v-if="loading">加载中...</div>
+              <div v-else>
+                <h3>历史项目列表</h3>
+                <el-table :data="historyList" @selection-change="handleRowClick" style="width: 100%">
+                  <el-table-column type="selection"  width="55"></el-table-column>
+                  <el-table-column prop="projectName" label="项目名称"></el-table-column>
+                </el-table>
+                <el-button type="primary" @click="confirmSelection(info)">确认</el-button>
+                <el-button @click="cancelSelection">取消</el-button>
+              </div>
+            </el-popover> -->
+
+
+          </el-card>
+        </div>
+      </el-card>
+      </div>
+    </el-col>
+
     </el-row>
 
-    <el-table v-loading="loading" :data="historyList" @selection-change="handleSelectionChange">
+    <!-- <el-table v-loading="loading" :data="InfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="项目编号" align="center" prop="projectId" />
+      <el-table-column label="id(主键)" align="center" prop="projectId" />
       <el-table-column label="项目名称" align="center" prop="projectName" />
       <el-table-column label="项目类别" align="center" prop="category" />
       <el-table-column label="项目等级" align="center" prop="level" />
@@ -246,6 +323,14 @@
         </template>
       </el-table-column>
       <el-table-column label="描述" align="center" prop="remake" />
+      <el-table-column label="历史项目" align="center" prop="oldProjectId" />
+      <el-table-column label="关联时间" align="center" prop="associationDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.associationDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+
+
       <el-table-column label="负责人" align="center" prop="manager" />
       <el-table-column label="组成员" align="center" prop="teamMembers" />
       <el-table-column label="项目状态" align="center" prop="status" />
@@ -258,6 +343,8 @@
           <span>{{ parseTime(scope.row.plannedCompletionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="已过天数(自动计算)" align="center" prop="daysPassed" />
+      <el-table-column label="剩余天数(自动计算)" align="center" prop="daysRemaining" />
       <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -266,18 +353,18 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['project:history:edit']"
+            v-hasPermi="['project:Info:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['project:history:remove']"
+            v-hasPermi="['project:Info:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
-    </el-table>
+    </el-table> -->
     
     <pagination
       v-show="total>0"
@@ -287,8 +374,8 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改历史项目信息管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <!-- 添加或修改项目基本信息对话框 -->
+    <!-- <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="项目名称" prop="projectName">
           <el-input v-model="form.projectName" placeholder="请输入项目名称" />
@@ -307,7 +394,6 @@
           </el-select>
         </el-form-item>
         <el-form-item label="主责部门" prop="department">
-          <!-- <el-input v-model="form.department" placeholder="请输入主责部门" /> -->
           <el-select v-model="form.department" placeholder="请选择主责部门">
             <el-option
               v-for="item in departmentOptions"
@@ -345,6 +431,17 @@
         <el-form-item label="描述" prop="remake">
           <el-input v-model="form.remake" placeholder="请输入描述" />
         </el-form-item>
+        <el-form-item label="历史项目" prop="oldProjectId">
+          <el-input v-model="form.oldProjectId" placeholder="请输入历史项目" />
+        </el-form-item>
+        <el-form-item label="关联时间" prop="associationDate">
+          <el-date-picker clearable
+            v-model="form.associationDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择关联时间">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item label="负责人" prop="manager">
           <el-input v-model="form.manager" placeholder="请输入负责人" />
         </el-form-item>
@@ -364,6 +461,9 @@
         <el-form-item label="项目进度" prop="progress">
           <el-input v-model="form.progress" placeholder="请输入项目进度" />
         </el-form-item>
+        <el-form-item label="项目现状" prop="currentStatus">
+          <el-input v-model="form.currentStatus" placeholder="请输入项目现状" />
+        </el-form-item>
         <el-form-item label="目标" prop="goal">
           <el-input v-model="form.goal" placeholder="请输入目标" />
         </el-form-item>
@@ -378,6 +478,7 @@
             placeholder="请选择计划结项时间">
           </el-date-picker>
         </el-form-item>
+
         <el-form-item label="完成内容概述" prop="completionSummary">
           <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
         </el-form-item>
@@ -386,17 +487,24 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
-import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadImport } from "@/api/project/history";
+import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
+import { listHistory } from "@/api/project/history";
 
 export default {
-  name: "History",
+  name: "Info",
   data() {
     return {
+
+      historyList: [],
+      selectedHistoryList: [],
+      loading: false,
+      isPopoverVisible: false,
+
       // 遮罩层
       loading: true,
       // 选中数组
@@ -409,14 +517,16 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 历史项目信息管理表格数据
-      historyList: [],
+      // 项目基本信息表格数据
+      InfoList: [],
+      rowList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        oldProjectList:null,
         pageNum: 1,
         pageSize: 10,
         projectName: null,
@@ -429,6 +539,8 @@ export default {
         progressAlloverProgress: null,
         importDate: null,
         remake: null,
+        oldProjectId: null,
+        associationDate: null,
         manager: null,
         teamMembers: null,
         status: null,
@@ -437,9 +549,10 @@ export default {
         goal: null,
         scope: null,
         plannedCompletionTime: null,
+        daysPassed: null,
+        daysRemaining: null,
         completionSummary: null
       },
-
       //项目等级选项
       levelOptions:[
         { 
@@ -486,17 +599,17 @@ export default {
       ],
       //项目状态选项
       statusOptions:[
-        // { 
-        //   value: '未开始',
-        //   label: '未开始'},
-        // {
-        //   value: '进行中',
-        //   label: '进行中'
-        // },
-        // {
-        //   value: '滞后',
-        //   label: '滞后'
-        // },
+        { 
+          value: '未开始',
+          label: '未开始'},
+        {
+          value: '进行中',
+          label: '进行中'
+        },
+        {
+          value: '滞后',
+          label: '滞后'
+        },
         {
           value: '已完成',
           label: '已完成'
@@ -539,7 +652,7 @@ export default {
           { required: true, message: "导入时间不能为空", trigger: "blur" }
         ],
         status: [
-          { required: true, message: "项目状态不能为空", trigger: "change" }
+          { required: true, message: "项目状态不能为空", trigger: "blur" }
         ],
         progress: [
           { required: true, message: "项目进度不能为空", trigger: "blur" }
@@ -547,26 +660,138 @@ export default {
         plannedCompletionTime: [
           { required: true, message: "计划结项时间不能为空", trigger: "blur" }
         ],
-      },
-
-      //新增参数
-      showDialog: false,
-      progress: 0
+      }
     };
   },
   created() {
     this.getList();
   },
+
   methods: {
-    /** 查询历史项目信息管理列表 */
-    getList() {
-      this.loading = true;
-      listHistory(this.queryParams).then(response => {
+
+    formattedDaysPassed(startDate) {
+      // 获取当前日期
+      const currentDate = new Date();
+      const startDateObj = new Date(startDate);
+
+      // 计算已过天数
+      const daysPassed = Math.floor((currentDate - startDateObj) / (1000 * 60 * 60 * 24));
+
+      // 判断并返回结果
+      if (daysPassed < 0) {
+        return '未开始';
+      } else {
+        return daysPassed;
+      }
+    },
+
+    formattedDaysRemaining(endDate) {
+      // 获取当前日期
+      const currentDate = new Date();
+      const endDateObj = new Date(endDate);
+      
+      // 计算已过天数
+      const daysRemaining = Math.floor((endDateObj - currentDate) / (1000 * 60 * 60 * 24));
+
+      // 判断并返回结果
+      if (daysRemaining < 0) {
+        return '0';
+      } else {
+        return daysRemaining;
+      }
+
+    },
+
+    //获取历史项目信息
+    async fetchHistoryList() {
+      try {
+        this.loading = true; // 开始加载数据，显示加载中提示
+        // 调用 API 方法获取历史项目列表
+        const response = await listHistory(this.queryParams);
         this.historyList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.isPopoverVisible = true; // 打开弹窗
+
+      } catch (error) {
+        console.error("获取历史项目列表失败:", error);
+        this.loading = false;
+      }
+    },
+
+    handleRowClick(rows) {
+      // 获取当前选中行的项目ID集合
+      const selectedIds = new Set(rows.map(row => row.projectId));
+      this.selectedHistoryList = Array.from(selectedIds);
+      console.log(JSON.parse(JSON.stringify(this.selectedHistoryList)))
+    },
+
+
+
+    confirmSelection(info) {
+      // 处理确认选项的逻辑，例如将选中的历史项目进行关联操作
+      console.log("确认选择的历史项目:", this.selectedHistoryList);
+      if (this.selectedHistoryList.length === 0) {
+        this.$message.error('请选择至少一个历史项目！');
+        return;
+      }
+
+      const data = {
+        projectId: info, // 项目ID，假设您从 this.form 中获取
+        selectedHistoryList: this.selectedHistoryList // 选中的历史项目列表
+      };
+      // 填充数据
+      // info.oldProjectId = this.selectedHistoryList;
+      info.oldProjectList = this.selectedHistoryList;
+      info.associationDate = new Date();
+
+      this.selectedHistoryList = [];
+      this.isPopoverVisible = false; // 关闭弹窗
+
+
+      console.log("projectId========="+info.projectId);
+      console.log("history========="+info.oldProjectId)
+      // 调用更新数据库的函数
+      updateInfoHistory(info).then(response => {
+        this.$message.success('关联成功');
+        this.isPopoverVisible = false; // 关闭弹窗
+        this.getList(); // 重新获取数据
+      }).catch(error => {
+        this.$message.error('关联失败: ' + error);
+      });
+
+      location.reload();
+    },
+
+
+    cancelSelection() {
+      // 处理取消选项的逻辑，例如清空选中的历史项目
+      console.log("取消选择");
+      // 重置状态
+      this.selectedHistoryList = [];
+      this.isPopoverVisible = false;
+      console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
+      // this.$refs.historyPopover.doClose(); // 手动关闭弹窗
+    },
+
+    /** 查询项目基本信息列表 */
+    getList() {
+      this.loading = true;
+      listInfo(this.queryParams).then(response => {
+        this.InfoList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        this.split(this.InfoList,this.total);
       });
     },
+
+    split(data, total){
+      for (let i = 0; i < total; i += 4) {
+          // 4表示每行4条
+          this.rowList.push(data.slice(i, i + 4));
+        }
+    }, 
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -586,6 +811,8 @@ export default {
         progressAlloverProgress: null,
         importDate: null,
         remake: null,
+        oldProjectId: null,
+        associationDate: null,
         manager: null,
         teamMembers: null,
         status: null,
@@ -594,6 +821,8 @@ export default {
         goal: null,
         scope: null,
         plannedCompletionTime: null,
+        daysPassed: null,
+        daysRemaining: null,
         completionSummary: null
       };
       this.resetForm("form");
@@ -618,16 +847,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加历史项目信息管理";
+      this.title = "添加项目基本信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const projectId = row.projectId || this.ids
-      getHistory(projectId).then(response => {
+      getInfo(projectId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改历史项目信息管理";
+        this.title = "修改项目基本信息";
       });
     },
     /** 提交按钮 */
@@ -635,13 +864,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.projectId != null) {
-            updateHistory(this.form).then(response => {
+            updateInfo(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addHistory(this.form).then(response => {
+            addInfo(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -653,8 +882,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const projectIds = row.projectId || this.ids;
-      this.$modal.confirm('是否确认删除历史项目信息管理编号为"' + projectIds + '"的数据项？').then(function() {
-        return delHistory(projectIds);
+      this.$modal.confirm('是否确认删除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
+        return delInfo(projectIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -662,59 +891,42 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('project/history/export', {
+      this.download('project/Info/export', {
         ...this.queryParams
-      }, `history_${new Date().getTime()}.xlsx`)
-    },
-
-    /*  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      // console.log("uploadImport function: ", uploadImport);
-      uploadImport(formData)
-        .then(response => {
-          // 文件上传成功
-          
-          // 2秒后关闭上传面板并刷新页面
-          setTimeout(() => {
-            this.showDialog = false; // 关闭上传面板
-            location.reload(); // 刷新页面数据
-          }, 2000); // 2000毫秒后执行
-        })
-        .catch(error => {
-          // 处理错误
-          console.error('Error uploading file:', error);
-        });
-   
-    },
-
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
-    },
-    //导入excel，取消按钮绑定取消所选的xlsx
-    resetFileInput() {
-      this.$refs.fileInput.value = "";
-    },
-    //检查文件是否为excel
-    checkFile() {
-      const file = this.$refs.fileInput.files[0];
-      const fileName = file.name;
-      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
-
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
-        this.$message.error("只能上传 Excel 文件！");
-        this.$refs.fileInput.value = ""; // 清空文件选择框
-      }
+      }, `Info_${new Date().getTime()}.xlsx`)
     }
-
   }
 };
 </script>
+
+<style>
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+  .two-column {
+  display: flex;
+}
+  .column {
+    flex: 1;
+  }
+</style>

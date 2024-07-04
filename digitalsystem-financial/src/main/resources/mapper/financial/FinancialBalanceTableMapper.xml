@@ -59,7 +59,7 @@
     </select>
 
     <select id="checkDataExists" resultType="boolean">
-        select count(*) from Financial_Balance_table
+        SELECT EXISTS(SELECT 1 FROM Financial_Balance_table)
     </select>
 
     <!--  按月查询MonthlyInventoryTotalAmount  -->

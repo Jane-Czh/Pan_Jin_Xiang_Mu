@@ -1,16 +1,9 @@
 <template>
   <div class="app-container">
-    <el-collapse v-model="activeNames">
+    <el-collapse v-model="activeNames" >
       <el-collapse-item title="表单检索" name="search">
         <div>
-          <el-form
-            :model="queryParams"
-            ref="queryForm"
-            size="small"
-            :inline="true"
-            v-show="showSearch"
-            label-width="68px"
-          >
+          <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
             <el-form-item label="表单名称" prop="formTitle">
               <el-input
                 v-model="queryParams.formTitle"
@@ -28,23 +21,21 @@
               />
             </el-form-item>
             <el-form-item label="表单上传时间" prop="effectiveDate">
-              <el-date-picker
-                clearable
-                v-model="queryParams.effectiveDate"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请选择表单上传时间"
-              >
+              <el-date-picker clearable
+                              v-model="queryParams.effectiveDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="请选择表单上传时间">
               </el-date-picker>
             </el-form-item>
-            <!--            <el-form-item label="表单大小" prop="formSize">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.formSize"-->
-            <!--                placeholder="请输入表单大小"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
+<!--            <el-form-item label="表单大小" prop="formSize">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.formSize"-->
+<!--                placeholder="请输入表单大小"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="上传人" prop="createUsername">
               <el-input
                 v-model="queryParams.createUsername"
@@ -61,41 +52,33 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <!--            <el-form-item label="历史表单" prop="oldFormId">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.oldFormId"-->
-            <!--                placeholder="请输入历史表单"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
-            <!--            <el-form-item label="修订时间" prop="revisionTime">-->
-            <!--              <el-date-picker clearable-->
-            <!--                              v-model="queryParams.revisionTime"-->
-            <!--                              type="date"-->
-            <!--                              value-format="yyyy-MM-dd"-->
-            <!--                              placeholder="请选择修订时间">-->
-            <!--              </el-date-picker>-->
-            <!--            </el-form-item>-->
-            <!--            <el-form-item label="修订人" prop="reviser">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.reviser"-->
-            <!--                placeholder="请输入修订人"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
+<!--            <el-form-item label="历史表单" prop="oldFormId">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.oldFormId"-->
+<!--                placeholder="请输入历史表单"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订时间" prop="revisionTime">-->
+<!--              <el-date-picker clearable-->
+<!--                              v-model="queryParams.revisionTime"-->
+<!--                              type="date"-->
+<!--                              value-format="yyyy-MM-dd"-->
+<!--                              placeholder="请选择修订时间">-->
+<!--              </el-date-picker>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="修订人" prop="reviser">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.reviser"-->
+<!--                placeholder="请输入修订人"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item>
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                size="mini"
-                @click="handleQuery"
-                >搜索</el-button
-              >
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-                >重置</el-button
-              >
+              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -111,8 +94,7 @@
           size="mini"
           @click="handleUpload"
           v-hasPermi="['file:formfilemanagement:add']"
-          >上传</el-button
-        >
+        >上传</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -123,76 +105,43 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['file:formfilemanagement:remove']"
-          >删除</el-button
-        >
+        >删除</el-button>
       </el-col>
-      <right-toolbar
-        :showSearch.sync="showSearch"
-        @queryTable="getList"
-      ></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table
-      v-loading="loading"
-      :data="formmanagementList"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="formmanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!--      <el-table-column label="id" align="center" prop="formId" />-->
+<!--      <el-table-column label="id" align="center" prop="formId" />-->
       <el-table-column label="表单标题" align="center" prop="formTitle" />
       <el-table-column label="存储表单内容" align="center" prop="scope" />
-      <el-table-column
-        label="表单上传时间"
-        align="center"
-        prop="effectiveDate"
-        width="180"
-      >
+      <el-table-column label="表单上传时间" align="center" prop="effectiveDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.effectiveDate, "{y}-{m}-{d}") }}</span>
+          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="表单名称" align="center" prop="formName" />
       <el-table-column label="表单类型" align="center" prop="formType" />
-      <!-- <el-table-column label="表单路径" align="center" prop="formPath">
+      <el-table-column label="表单路径" align="center" prop="formPath">
         <template slot-scope="scope">
           <a :href="baseUrl + scope.row.formPath" download>点击下载</a>
         </template>
-      </el-table-column> -->
-
-      <el-table-column label="表单路径" align="center" prop="formPath">
-        <template slot-scope="scope">
-          <a @click.prevent="downloadFile(scope.row.formPath)">点击下载</a>
-        </template>
       </el-table-column>
-
       <el-table-column label="表单大小" align="center" prop="formSize" />
       <el-table-column label="上传人" align="center" prop="createUsername" />
-      <el-table-column
-        label="表单所属科室"
-        align="center"
-        prop="departmentCategory"
-      />
+      <el-table-column label="表单所属科室" align="center" prop="departmentCategory" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
-      <!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
-      <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
-      <el-table-column
-        label="修订时间"
-        align="center"
-        prop="revisionTime"
-        width="180"
-      >
+<!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
+<!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
+<!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
+      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.revisionTime, "{y}-{m}-{d}") }}</span>
+          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="修订内容" align="center" prop="revisionContent" />
       <el-table-column label="修订人" align="center" prop="reviser" />
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -200,7 +149,8 @@
             icon="el-icon-upload"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
-            >更新
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
+          >更新
           </el-button>
           <el-button
             size="mini"
@@ -208,7 +158,8 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
-            >修改
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
+          >修改
           </el-button>
           <el-button
             size="mini"
@@ -216,36 +167,33 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:formfilemanagement:remove']"
-            >删除
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
+          >删除
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column
-        label="查看"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="查看" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-view"
             @click="previewFile(scope.row.formPath)"
-            >预览
+          >预览
           </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-s-operation"
             @click="handleHistoryVersions(scope.row)"
-            >历史版本
+          >历史版本
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total > 0"
+      v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -253,18 +201,12 @@
     />
 
     <!-- 上传文件对话框 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="formUploadDialogVisible"
-      width="1000px"
-      :center="true"
-      append-to-body
-    >
+    <el-dialog :title="title" :visible.sync="formUploadDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col :span="24">
             <!-- 使用Flex布局将上传文件按钮水平居中 -->
-            <div style="display: flex; justify-content: center; height: 100px">
+            <div style="display: flex; justify-content: center;height: 100px;">
               <!--表单上传-->
               <el-upload
                 v-model="form.formPath"
@@ -277,7 +219,7 @@
                 :on-remove="handleRemove"
                 :on-exceed="handleExceed"
                 :on-success="handleUploadSuccess"
-                :limit="limit"
+                :limit=limit
                 :file-list="formList"
               >
                 <el-button size="small" type="primary">点击上传</el-button>
@@ -289,29 +231,35 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="表单标题" prop="formTitle">
-              <el-input v-model="form.formTitle" placeholder="请输入制度标题" />
+              <el-input v-model="form.formTitle" placeholder="请输入制度标题"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span='12'>
             <el-form-item label="表单存储内容" prop="scope">
-              <el-input v-model="form.scope" placeholder="请输入表单存储内容" />
+              <el-input v-model="form.scope" placeholder="请输入表单存储内容"/>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
-          <el-col :span="12">
+          <el-col :span='12'>
             <el-form-item label="表单大小" prop="formSize">
-              <el-input
-                v-model="form.formSize"
-                placeholder="请输入表单大小"
-                :disabled="true"
-              />
+              <el-input v-model="form.formSize" placeholder="请输入表单大小" :disabled="true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span='12'>
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注信息" />
+              <el-input v-model="form.remark" placeholder="请输入备注信息"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="所属科室" prop="departmentCategory">
+              <el-select v-model="form.departmentCategory" placeholder="请输入表单所属科室">
+                <!-- 循环遍历this.deptList中的部门数据 -->
+                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -322,13 +270,7 @@
       </div>
     </el-dialog>
     <!-- 更新文件对话框 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="formUpdateDialogVisible"
-      width="1000px"
-      :center="true"
-      append-to-body
-    >
+    <el-dialog :title="title" :visible.sync="formUpdateDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-upload
           v-model="form.formPath"
@@ -341,7 +283,7 @@
           :on-remove="handleRemove"
           :on-exceed="handleExceed"
           :on-success="handleUploadSuccess"
-          :limit="limit"
+          :limit=limit
           :file-list="formList"
         >
           <el-button size="small" type="primary">点击上传</el-button>
@@ -354,18 +296,24 @@
     </el-dialog>
 
     <!-- 修改文件对话框 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="formModifyDialogVisible"
-      width="1000px"
-      :center="true"
-      append-to-body
-    >
+    <el-dialog :title="title" :visible.sync="formModifyDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="表单标题" prop="formTitle">
-              <el-input v-model="form.formTitle" placeholder="请输入表单标题" />
+              <el-input v-model="form.formTitle" placeholder="请输入表单标题"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="表单存储内容" prop="scope">
+              <el-input v-model="form.scope" placeholder="请输入表单存储内容"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注信息"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -384,12 +332,13 @@ import {
   getFormfilemanagement,
   delFormfilemanagement,
   addFormfilemanagement,
-  updateFormfilemanagement,
+  updateFormfilemanagement
 } from "@/api/file/formfilemanagement";
-import { getUserProfile } from "@/api/system/user";
-import { getDept } from "@/api/system/dept";
-import { getToken } from "@/utils/auth";
-import { word2Pdf } from "../../../api/file/filemanagement";
+import {getUserProfile02} from '@/api/file/filemanagement'
+import {listDept02} from "../../../api/file/filemanagement";
+import {getDept02} from '@/api/file/filemanagement'
+import {getToken} from "@/utils/auth"
+import {word2Pdf} from "../../../api/file/filemanagement";
 
 export default {
   name: "Formfilemanagement",
@@ -414,12 +363,18 @@ export default {
   },
   data() {
     return {
+      //部门列表
+      deptList: [],
+      //当前账号的dept
+      thisDept: null,
+      //文件上传绑定的部门
+      fileDept: null,
       activeNames: [], // 默认展开的折叠项的名字
       number: 0,
       uploadList: [],
       formList: [],
       fd: {},
-      path: "",
+      path: '',
       baseUrl: process.env.VUE_APP_BASE_API,
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload",
       // uploadFileUrl:"/profile/upload"+"/"+this.file.name,
@@ -427,7 +382,7 @@ export default {
         Authorization: "Bearer " + getToken(),
       },
       userProfile: {}, // 存储用户个人信息的对象
-      input: "",
+      input: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -466,19 +421,19 @@ export default {
         revisionContent: null,
         reviser: null,
         newFlag: null,
-        newFormId: null,
+        newFormId: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         formTitle: [
-          { required: true, message: "表单名称不能为空", trigger: "blur" },
+          { required: true, message: "表单名称不能为空", trigger: "blur" }
         ],
         scope: [
-          { required: true, message: "表单存储内容不能为空", trigger: "blur" },
+          { required: true, message: "表单存储内容不能为空", trigger: "blur" }
         ],
-      },
+      }
     };
   },
   watch: {
@@ -487,11 +442,11 @@ export default {
         if (val) {
           let temp = 1;
           // 首先将值转为数组
-          const list = Array.isArray(val) ? val : this.value.split(",");
+          const list = Array.isArray(val) ? val : this.value.split(',');
           // 然后将数组转为对象数组
-          this.formList = list.map((item) => {
+          this.formList = list.map(item => {
             if (typeof item === "string") {
-              item = { name: item, url: item };
+              item = {name: item, url: item};
             }
             item.uid = item.uid || new Date().getTime() + temp++;
             return item;
@@ -502,8 +457,8 @@ export default {
         }
       },
       deep: true,
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   computed: {
     // 是否显示提示
@@ -513,41 +468,43 @@ export default {
   },
   created() {
     this.getList();
+    getUserProfile02().then(response => {
+      // 处理成功的情况
+      console.log('成功获取用户信息response.data====>', response.data.dept.deptName
+      );
+      // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+      this.thisDept =  response.data.dept.deptName;
+      //根据部门id获取部门名称
+      // getDept02(userInfo.deptId).then(response => {
+      //   const deptInfo = response.data;
+      //   console.log("deptInfo======>",deptInfo);
+      //   this.thisDept = deptInfo.deptName;
+      //   console.log("thisDept======>",this.thisDept);
+      // })
+    }).catch(error => {
+      // 处理失败的情况
+      console.error('获取用户信息失败:', error);
+    });
+
+    //获取部门列表
+    listDept02().then(response => {
+      this.deptList = response.data;
+    });
   },
   // 路由钩子，每次进入该路由时都会调用getList方法
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
+    next(vm => {
       vm.getList(); // 在路由导航完成后调用getList
     });
   },
   methods: {
-    /** 文件下载 */
-    downloadFile(url) {
-      fetch(url)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.setAttribute(
-            "download",
-            decodeURIComponent(url.split("/").pop())
-          ); // 解码文件名
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(downloadUrl);
-        })
-        .catch((error) => console.error("Download error:", error));
-    },
-
     /** 查询文件管理列表 */
     getList() {
       this.loading = true;
-      listFormfilemanagement(this.queryParams).then((response) => {
-        console.log("response:：", response);
+      listFormfilemanagement(this.queryParams).then(response => {
+        console.log("response:：",response);
         this.formmanagementList = response.rows;
-        console.log("formmanagementList=>", this.formmanagementList);
+        console.log("formmanagementList=>",this.formmanagementList);
         this.total = response.total;
         this.loading = false;
       });
@@ -588,7 +545,7 @@ export default {
         revisionContent: null,
         reviser: null,
         newFlag: null,
-        newFormId: null,
+        newFormId: null
       };
       this.resetForm("form");
     },
@@ -604,9 +561,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.formId);
-      this.single = selection.length !== 1;
-      this.multiple = !selection.length;
+      this.ids = selection.map(item => item.formId)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
     },
     /** 上传表单文件 */
     handleUpload() {
@@ -617,21 +574,21 @@ export default {
     /** 修改表单文件 */
     handleModify(row) {
       this.reset();
-      const formId = row.formId || this.ids;
-      getFormfilemanagement(formId).then((response) => {
+      const formId = row.formId || this.ids
+      getFormfilemanagement(formId).then(response => {
         this.form = response.data;
         this.formModifyDialogVisible = true;
         this.title = "修改表单文件";
       });
     },
     /** 更新表单文件 */
-    handleUpdate(row) {
+    handleUpdate(row){
       this.reset();
       const formId = row.formId || this.ids;
-      getFormfilemanagement(formId).then((response) => {
+      getFormfilemanagement(formId).then(response => {
         this.form = response.data;
         // this.form.newFlag = 0;
-        console.log("更新表单文件=>", this.form);
+        console.log("更新表单文件=>",this.form);
         this.formUpdateDialogVisible = true;
         this.title = "更新表单文件";
       });
@@ -643,14 +600,14 @@ export default {
     },
     /** 上传文件提交按钮 */
     uploadSubmitForm() {
-      this.$refs["form"].validate((valid) => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.newFlag = 1;
-          addFormfilemanagement(this.form).then((response) => {
+          addFormfilemanagement(this.form).then(response => {
             this.$modal.msgSuccess("上传成功");
             this.formUploadDialogVisible = false;
             this.getList();
-            console.log("上传文件提交按钮=>", this.form);
+            console.log("上传文件提交按钮=>",this.form);
           });
         }
       });
@@ -658,14 +615,14 @@ export default {
     },
     /** 修改表单文件提交按钮 */
     modifySubmitForm() {
-      this.$refs["form"].validate((valid) => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.formId != null) {
-            updateFormfilemanagement(this.form).then((response) => {
+            updateFormfilemanagement(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.formModifyDialogVisible = false;
               this.getList();
-              console.log("修改表单文件提交按钮=>", this.form);
+              console.log("修改表单文件提交按钮=>",this.form);
             });
           }
         }
@@ -673,28 +630,28 @@ export default {
     },
     /** 更新表单文件提交按钮 */
     updateSubmitForm() {
-      this.$refs["form"].validate((valid) => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.formId != null) {
-            console.log("newform=>", this.form);
+            console.log("newform=>",this.form);
             this.form.oldFormId = this.form.formId;
-            addFormfilemanagement(this.form).then((response) => {
+            addFormfilemanagement(this.form).then(response => {
               const newId = response.data;
               this.$modal.msgSuccess("更新成功");
               this.formUpdateDialogVisible = false;
               this.form.newformId = null;
               //更新历史版本制度
-              getFormfilemanagement(this.form.oldFormId).then((response) => {
+              getFormfilemanagement(this.form.oldFormId).then(response => {
                 const lastForm = response.data;
                 lastForm.newFlag = 0;
                 lastForm.newFormId = newId;
-                console.log("上一表单=>", lastForm);
-                updateFormfilemanagement(lastForm).then((response) => {
+                console.log("上一表单=>",lastForm);
+                updateFormfilemanagement(lastForm).then(response => {
                   this.getList();
                 });
               });
-              console.log("更新文件提交按钮1=>", this.form);
-              console.log("response=>", response);
+              console.log("更新文件提交按钮1=>",this.form);
+              console.log("response=>",response);
             });
           }
         }
@@ -703,41 +660,38 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      console.log("当前表单1=>", row);
+      console.log("当前表单1=>",row);
       //将id或ids统一转换为数组
       const formIds = [].concat(row.formId || this.ids);
       // const regulationsIds = row.regulationsId || this.ids;
-      console.log("formIds=>", formIds);
-      this.$modal
-        .confirm("是否确认删除？")
-        .then(function () {
-          formIds.forEach((id) => {
-            console.log("Processing ID:", id);
-            getFormfilemanagement(id).then((response) => {
-              const thisForm = response.data;
-              console.log("response------>:", response);
-              if (thisForm.oldFormId != null) {
-                getFormfilemanagement(thisForm.oldFormId).then((response) => {
-                  const lastForm = response.data;
-                  lastForm.newFlag = 1;
-                  console.log("上一表单=>", lastForm);
-                  updateFormfilemanagement(lastForm).then((response) => {});
+      console.log("formIds=>",formIds);
+      this.$modal.confirm('是否确认删除？').then(function () {
+        formIds.forEach(id => {
+          console.log("Processing ID:", id);
+          getFormfilemanagement(id).then(response => {
+            const thisForm = response.data;
+            console.log("response------>:", response);
+            if(thisForm.oldFormId != null) {
+              getFormfilemanagement(thisForm.oldFormId).then(response => {
+                const lastForm = response.data;
+                lastForm.newFlag = 1;
+                console.log("上一表单=>",lastForm);
+                updateFormfilemanagement(lastForm).then(response => {
                 });
-              }
-            });
+              });
+            }
           });
-          return delFormfilemanagement(formIds);
-        })
-        .then(() => {
-          this.$modal.msgSuccess("删除成功");
-          this.getList();
-          console.log("删除文件刷新");
-        })
-        .then(() => {
-          this.getList();
-          console.log("删除文件刷新2");
-        })
-        .catch(() => {});
+        });
+        return delFormfilemanagement(formIds);
+      }).then(() => {
+        this.$modal.msgSuccess("删除成功");
+        this.getList();
+        console.log("删除文件刷新");
+      }).then(() => {
+        this.getList();
+        console.log("删除文件刷新2");
+      }).catch(() => {
+      });
     },
     // /** 删除按钮操作 */
     // handleDelete(row) {
@@ -765,22 +719,18 @@ export default {
     // },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
-      console.log("handleBeforeUpload:file=====>", file);
+      console.log("handleBeforeUpload:file=====>",file);
       // 上传前校检文件格式
-      const allowedTypes = [
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/pdf",
-      ];
+      const allowedTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
       const isAllowedType = allowedTypes.includes(file.type);
       if (!isAllowedType) {
-        this.$message.error("文件类型不匹配，请重新上传word或pdf文件");
+        this.$message.error('文件类型不匹配，请重新上传word或pdf文件');
       }
       return isAllowedType;
     },
     /** 上传文件时的动作*/
     handleFileChange(file, formList) {
-      console.log("上传文件时的form1", this.form);
+      console.log('上传文件时的form1',this.form);
       const uploadedFile = file.raw; // 获取上传的文件对象
       // 将文件名填充到对应的输入框
       this.form.formName = uploadedFile.name;
@@ -793,33 +743,29 @@ export default {
       this.form.formSize = uploadedFile.size;
       // 获取当前时间作为上传日期，并填充到对应的输入框
       const currentDate = new Date();
-      this.form.effectiveDate = currentDate.toISOString().split("T")[0];
+      this.form.effectiveDate = currentDate.toISOString().split('T')[0];
       this.getUserInfo();
-      console.log("上传文件时的form2", this.form);
+      console.log('上传文件时的form2',this.form);
     },
     // 上传成功回调
     handleUploadSuccess(res, file) {
       const uploadedFile = file.raw; // 获取上传的文件对象
       const uploadedFileName = uploadedFile.name; // 获取上传文件的文件名
       // 发起请求检查文件名是否存在于数据库中
-      const isFormNameDuplicate = this.formmanagementList.some(
-        (item) => item.formName === uploadedFileName
-      );
-      console.log("发起请求检查文件名是否存在于数据库中", isFormNameDuplicate);
+      const isFormNameDuplicate = this.formmanagementList.some(item => item.formName === uploadedFileName);
+      console.log("发起请求检查文件名是否存在于数据库中",isFormNameDuplicate);
 
       if (isFormNameDuplicate) {
         // 如果文件名重复，弹出警告框
-        this.$modal.msgError(
-          "同名文件已存在，如需上传该制度新版本，请到“更新”处上传！"
-        );
-        console.log("同名文件已存在，如需上传该制度新版本，请到“更新”处上传！");
+        this.$modal.msgError('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
+        console.log('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
         return false; // 中断上传流程
       }
       if (res.code === 200) {
         console.log("上传成功回调");
         console.log(res);
         this.path = res.url;
-        this.uploadList.push({ name: res.formName, url: res.formName });
+        this.uploadList.push({name: res.formName, url: res.formName});
         this.uploadedSuccessfully();
       } else {
         this.number--;
@@ -835,7 +781,7 @@ export default {
         console.log("上传成功回调");
         console.log(res);
         this.path = res.url;
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadList.push({name: res.fileName, url: res.fileName});
         this.uploadedSuccessfully();
       } else {
         this.number--;
@@ -893,71 +839,70 @@ export default {
     // },
     getFileType(formPath) {
       // 获取文件名的后缀名
-      const formExtension = formPath.split(".").pop();
+      const formExtension = formPath.split('.').pop();
       // 根据文件后缀名判断文件类型
       switch (formExtension.toLowerCase()) {
-        case "pdf":
-          return "pdf";
-        case "doc":
-        case "docx":
-          return "word";
-        case "xls":
-        case "xlsx":
-          return "Excel 文档";
-        case "ppt":
-        case "pptx":
-          return "PowerPoint 文档";
+        case 'pdf':
+          return 'pdf';
+        case 'doc':
+        case 'docx':
+          return 'word';
+        case 'xls':
+        case 'xlsx':
+          return 'Excel 文档';
+        case 'ppt':
+        case 'pptx':
+          return 'PowerPoint 文档';
         // 可以根据需要添加更多的文件类型判断
         default:
-          return "未知类型";
+          return '未知类型';
       }
     },
     // 调用接口获取用户信息
     getUserInfo() {
-      getUserProfile()
-        .then((response) => {
-          // 处理成功的情况
-          console.log("成功获取用户信息:", response.data);
-          const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
-          // 填充到对应的输入框中
-          this.form.createUsername = userInfo.userName;
-          //根据部门id获取部门名称
-          getDept(userInfo.deptId).then((response) => {
-            const deptInfo = response.data;
-            this.form.departmentCategory = deptInfo.deptName;
-          });
+      getUserProfile02().then(response => {
+        // 处理成功的情况
+        console.log('成功获取用户信息:', response.data)
+        const userInfo = response.data // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        // 填充到对应的输入框中
+        this.form.createUsername = userInfo.userName
+        //根据部门id获取部门名称
+        getDept02(userInfo.deptId).then(response => {
+          const deptInfo = response.data
+          this.form.departmentCategory = deptInfo.deptName
         })
-        .catch((error) => {
-          // 处理失败的情况
-          console.error("获取用户信息失败:", error);
-        });
+      }).catch(error => {
+        // 处理失败的情况
+        console.error('获取用户信息失败:', error)
+      })
     },
     //文件预览
     previewFile(filePath) {
       const fileType = this.getFileType(filePath);
-      console.log("filePath:", filePath);
-      console.log("fileType:", fileType);
+      console.log("filePath:",filePath);
+      console.log("fileType:",fileType);
       switch (fileType) {
-        case "pdf":
-          console.log("fileType1111:", fileType);
-          window.open(filePath, "_blank");
+        case 'pdf':
+          console.log("fileType1111:",fileType);
+          window.open(filePath, '_blank');
           break;
-        case "word":
+        case 'word':
           const pdfFilePath = this.convertToPdfPath(filePath);
-          console.log("filePath:", filePath);
-          console.log("pdfFilePath:", pdfFilePath);
-          word2Pdf(filePath, pdfFilePath).then((response) => {
-            window.open(pdfFilePath, "_blank");
-          });
+          console.log("filePath:",filePath);
+          console.log("pdfFilePath:",pdfFilePath);
+          word2Pdf(filePath,pdfFilePath).then(response => {
+            window.open(pdfFilePath, '_blank');
+          })
 
           break;
       }
       // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
+
     },
 
     convertToPdfPath(wordFilePath) {
       // 找到文件路径中的最后一个点的位置
-      const lastDotIndex = wordFilePath.lastIndexOf(".");
+      const lastDotIndex = wordFilePath.lastIndexOf('.');
 
       if (lastDotIndex != -1) {
         // 获取文件路径中最后一个点之前的部分（文件名部分）
@@ -972,6 +917,7 @@ export default {
         throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
       }
     },
-  },
+
+  }
 };
 </script>

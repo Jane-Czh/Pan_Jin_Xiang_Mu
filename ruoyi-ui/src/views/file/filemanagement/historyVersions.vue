@@ -192,6 +192,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:filemanagement:edit']"
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >修改
           </el-button>
           <el-button
@@ -200,6 +201,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >删除
           </el-button>
         </template>
@@ -289,8 +291,8 @@
     updateFilemanagement,
     getRegulationsHistory
   } from "@/api/file/filemanagement";
-  import {getUserProfile} from '@/api/system/user'
-  import {getDept} from '@/api/system/dept'
+  import {getUserProfile02} from '@/api/file/filemanagement'
+  import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
   import {word2Pdf} from "../../../api/file/filemanagement";
 
@@ -298,6 +300,11 @@
     name: "HistoryVersions",
     data() {
       return {
+
+        //当前账号的dept
+        thisDept: null,
+        //文件上传绑定的部门
+        fileDept: null,
         number: 0,
         uploadList: [],
         fileList: [],
@@ -461,6 +468,23 @@
     },
     created() {
       this.getList();
+      getUserProfile02().then(response => {
+        // 处理成功的情况
+        console.log('成功获取用户信息response.data====>', response.data.dept.deptName
+        );
+        // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        this.thisDept =  response.data.dept.deptName;
+        //根据部门id获取部门名称
+        // getDept02(userInfo.deptId).then(response => {
+        //   const deptInfo = response.data;
+        //   console.log("deptInfo======>",deptInfo);
+        //   this.thisDept = deptInfo.deptName;
+        //   console.log("thisDept======>",this.thisDept);
+        // })
+      }).catch(error => {
+        // 处理失败的情况
+        console.error('获取用户信息失败:', error);
+      });
     },
     methods: {
       /** 查询文件管理列表 */
@@ -622,14 +646,14 @@
       },
       // 调用接口获取用户信息
       getUserInfo() {
-        getUserProfile().then(response => {
+        getUserProfile02().then(response => {
           // 处理成功的情况
           console.log('成功获取用户信息:', response.data)
           const userInfo = response.data // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
           // 填充到对应的输入框中
           this.form.uploadUsername = userInfo.userName
           //根据部门id获取部门名称
-          getDept(userInfo.deptId).then(response => {
+          getDept02(userInfo.deptId).then(response => {
             const deptInfo = response.data
             this.form.departmentCategory = deptInfo.deptName
           })

@@ -288,9 +288,11 @@ export default {
       this.loading = true;
       listStatistics(this.queryParams).then(response => {
         this.statisticsList = response.rows;
-        this.totalNumberOfContractedInFirstRow = this.statisticsList[0].totalNumberOfContracted;
-        this.totalNumberOfInterns1 = this.statisticsList[0].totalNumberOfInterns;
-        this.ttotalNumberOfLaborDispatch1 = this.statisticsList[0].ttotalNumberOfLaborDispatch;
+        if(this.statisticsList.length>0) {
+          this.totalNumberOfContractedInFirstRow = this.statisticsList[0].totalNumberOfContracted;
+          this.totalNumberOfInterns1 = this.statisticsList[0].totalNumberOfInterns;
+          this.ttotalNumberOfLaborDispatch1 = this.statisticsList[0].ttotalNumberOfLaborDispatch;
+        }
         // console.log('123',this.statisticsList);
         // console.log('000',this.statisticsList[0].totalNumberOfContracted);
         this.total = response.total;

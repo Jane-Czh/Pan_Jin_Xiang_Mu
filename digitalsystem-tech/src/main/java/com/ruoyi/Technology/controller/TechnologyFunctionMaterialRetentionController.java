@@ -61,7 +61,7 @@ public class TechnologyFunctionMaterialRetentionController extends BaseControlle
     /**
      * 查询历史版本文件列表
      */
-    @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")
+    @PreAuthorize("@ss.hasPermi('Technology:retention:list')")
     @GetMapping(value = "/history/{currentId}")
     public List<TechnologyFunctionMaterialRetention> getRegulationsHistory(@PathVariable Long currentId) {
 //        startPage();

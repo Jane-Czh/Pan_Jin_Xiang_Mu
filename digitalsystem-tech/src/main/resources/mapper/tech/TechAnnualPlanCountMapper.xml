@@ -20,7 +20,7 @@
 
 
     <!--检查本年数据是否上传-->
-    <select id="checkTechAnnualDataIsExisted" parameterType="int" >
+    <select id="checkTechAnnualDataIsExisted" parameterType="int" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Tech_Annual_Plan_Count WHERE Natural_Year=#{naturalYear})
     </select>
 

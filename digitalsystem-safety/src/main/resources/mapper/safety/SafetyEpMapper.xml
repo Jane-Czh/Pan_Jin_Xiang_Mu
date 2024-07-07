@@ -112,7 +112,7 @@
 
 
     <!-- 根据月份，检查当月数据是否上传 -->
-    <select id="checkSafetyFillingDataIsExisted" parameterType="Date" >
+    <select id="checkSafetyFillingDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Safety_EP WHERE Year_And_Month=#{date} and Cur_Equipment_Maintenance_Cost is not null)
     </select>
 

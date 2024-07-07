@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
 
-    <select id="checkPartyBuildingDataIsExisted" parameterType="Date" >
+    <select id="checkPartyBuildingDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM PartyBuilding WHERE Year_And_Month=#{yearAndMonth})
     </select>
 

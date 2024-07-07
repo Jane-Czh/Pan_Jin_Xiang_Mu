@@ -708,7 +708,7 @@ export const dynamicRoutes = [
     path: '/process/statistics/index', //ori from 路径
     component: Layout,
     hidden: true,
-    permissions: ['system:user:edit'],
+    permissions: ['process:ef:statistics'],
     children: [
       {
         path: '/process/statistics/indicators/:id',// to 路径

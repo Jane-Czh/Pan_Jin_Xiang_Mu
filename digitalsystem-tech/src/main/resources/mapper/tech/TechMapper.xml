@@ -28,7 +28,7 @@
                UPDATE_TIME
         from Tech
     </sql>
-    
+
     <!--  检查数据库是否有数据  -->
     <select id="checkDataExist" resultType="boolean">
         select count(*) from Tech
@@ -104,7 +104,7 @@
     </insert>
 
     <!--检查当前年度，是否存在月度数据，存在则更新月度数据-->
-    <select id="checkTechMonthlyDataIsExistedByYear" >
+    <select id="checkTechMonthlyDataIsExistedByYear" resultType="boolean">
         select count(*) from Tech
         where DATE_FORMAT(Year_And_Month,'%Y') = #{naturalYear}
     </select>

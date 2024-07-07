@@ -737,6 +737,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
+          v-hasPermi="['Enterprisemanagement:roster:import']"
         >导入Excel文件</el-button>
         <el-dialog
           title="导入Excel文件"
@@ -1235,6 +1236,7 @@ import { listRoster, getRoster, delRoster, addRoster, updateRoster } from "@/api
 import axios from "axios";
 export default {
   name: "Roster",
+  inject: ["reload"],
   data() {
     return {
       // 遮罩层

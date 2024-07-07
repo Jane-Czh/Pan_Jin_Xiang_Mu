@@ -59,7 +59,7 @@
     </select>
 
     <select id="checkDataExists" resultType="boolean">
-        select count(*) from Financial_Balance_table
+        SELECT EXISTS(SELECT 1 FROM Financial_Balance_table)
     </select>
 
     <!--  按月查询MonthlyInventoryTotalAmount  -->
@@ -68,7 +68,7 @@
         where date_format(Year_And_Month,'%y-%m') = date_format(#{yearAndMonth},'%y-%m')
     </select>
 
-    <select id="checkBalanceDataIsExisted" parameterType="Date" >
+    <select id="checkBalanceDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Financial_Balance_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 

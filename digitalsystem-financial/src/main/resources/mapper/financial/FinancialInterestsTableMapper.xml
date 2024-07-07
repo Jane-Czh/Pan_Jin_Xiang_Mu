@@ -27,7 +27,7 @@
     </sql>
 
     <select id="checkDataExists" resultType="boolean">
-        select count(*) from Financial_Interests_table
+        SELECT EXISTS(SELECT 1 FROM Financial_Interests_table)
     </select>
 
 

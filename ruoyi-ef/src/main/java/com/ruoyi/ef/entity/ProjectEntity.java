@@ -21,7 +21,8 @@ public class ProjectEntity {
     private Date startTime;
     @TableField(exist = false)
     private Date endTime;
-
+    @TableField(exist = false)
+    private String filename;
 
 //    @TableId(type = IdType.ID_WORKER_STR)
     private String id;

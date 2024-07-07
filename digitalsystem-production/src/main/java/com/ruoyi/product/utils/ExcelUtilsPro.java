@@ -53,34 +53,38 @@ public class ExcelUtilsPro {
             prouctionFunctionQualifiedRate.setQualifiedNumber(getIntegerCellValue(row.getCell(count++)));
             //3、不合格数量
             prouctionFunctionQualifiedRate.setDisqualifiedNumber(getIntegerCellValue(row.getCell(count++)));
-            String dateString;
-            if (row.getCell(count).getCellType() == CellType.NUMERIC) {
-                if (DateUtil.isCellDateFormatted(row.getCell(count))) {
-                    Date date1 = row.getCell(count).getDateCellValue();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                    dateString = sdf.format(date1);
-                    System.out.println(dateString);
-                } else {
-                    // 处理其他数值类型
-                }
-            } else {
-                // 处理其他类型
-            }
+//            String dateString;
+//            if (row.getCell(count).getCellType() == CellType.NUMERIC) {
+//                if (DateUtil.isCellDateFormatted(row.getCell(count))) {
+//                    Date date1 = row.getCell(count).getDateCellValue();
+//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+//                    dateString = sdf.format(date1);
+//                    System.out.println(dateString);
+//                } else {
+//                    // 处理其他数值类型
+//                }
+//            } else {
+//                // 处理其他类型
+//            }
             //1、合格率
             // 获取合格率并设置到对象中
-            String rawQualificationRate = getStringCellValue(row.getCell(count++));
+            if (getStringCellValue(row.getCell(count))!=null) {
+                String rawQualificationRate = getStringCellValue(row.getCell(count++));
 
 // 将合格率转换为浮点数
-            double qualificationRate = Double.parseDouble(rawQualificationRate);
+                double qualificationRate = Double.parseDouble(rawQualificationRate);
 
 // 格式化为百分比形式
-            String formattedRate = String.format("%.0f%%", qualificationRate * 100);
+                String formattedRate = String.format("%.0f%%", qualificationRate * 100);
 
 // 将格式化后的合格率设置到对象中
-            prouctionFunctionQualifiedRate.setQualificationRate(formattedRate);
+                prouctionFunctionQualifiedRate.setQualificationRate(formattedRate);
 
 //            System.out.println("========"+prouctionFunctionQualifiedRate.getQualificationRate()+"*******");
-
+            }
+            else {
+                count++;
+            }
 
 
 

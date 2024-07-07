@@ -104,6 +104,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
+          v-hasPermi="['product:Oaform:import']"
         >导入Excel文件</el-button>
         <el-dialog
           title="导入Excel文件"
@@ -188,19 +189,28 @@
         <el-form-item label="性别" prop="Gender">
           <el-input v-model="form.Gender" placeholder="请输入性别" />
         </el-form-item>
+<!--        <el-form-item label="申请加班开始时间" prop="applicationForOvertimeStartTime">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.applicationForOvertimeStartTime"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择申请加班开始时间">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
         <el-form-item label="申请加班开始时间" prop="applicationForOvertimeStartTime">
-          <el-date-picker clearable
+          <el-date-picker
+            clearable
             v-model="form.applicationForOvertimeStartTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="请选择申请加班开始时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="申请加班结束时间" prop="applicationForOvertimeEndTime">
           <el-date-picker clearable
             v-model="form.applicationForOvertimeEndTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="请选择申请加班结束时间">
           </el-date-picker>
         </el-form-item>

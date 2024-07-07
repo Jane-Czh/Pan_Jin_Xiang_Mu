@@ -104,13 +104,22 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         System.out.println("当前月份："+BigDecimal.valueOf(DateUtils.getMonth(date)));
 
         // 当月生产人均收入
-        monthlyData.setMonthlyProductionAvgIncome(enterpriseManagementMonthlyDataMapper.selectMonthlyProductionAverageIncome(date));
+        BigDecimal monthlyProductionAverageIncome = enterpriseManagementMonthlyDataMapper.selectMonthlyProductionAverageIncome(date);
+        log.info("当月生产人均收入"+monthlyProductionAverageIncome);
+        monthlyData.setMonthlyProductionAvgIncome(monthlyProductionAverageIncome);
 
         //当月职能人均收入
-        monthlyData.setMonthlyFunctionalAvgIncome(enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageIncome(date));
+        BigDecimal monthlyFunctionalAverageIncome = enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageIncome(date);
+        log.info("当月职能人均收入"+monthlyFunctionalAverageIncome);
+        monthlyData.setMonthlyFunctionalAvgIncome(monthlyFunctionalAverageIncome);
+
 
         //当月职能人均加班费
-        monthlyData.setFunctionalDeptOvertimeCost(enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOvertimeCost(date));
+        BigDecimal monthlyFunctionalAverageOvertimeCost = enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOvertimeCost(date);
+        log.info("当月职能人均加班费"+monthlyFunctionalAverageOvertimeCost);
+        monthlyData.setFunctionalDeptOvertimeCost(monthlyFunctionalAverageOvertimeCost);
+
+        log.info("计算工资表中相关数据：" + monthlyData);
 
         enterpriseManagementMonthlyDataMapper.updateCalculateSalaryDataByMonth(monthlyData);
     }

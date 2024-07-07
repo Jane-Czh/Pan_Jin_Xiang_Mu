@@ -67,4 +67,6 @@ public interface IProjectService extends IService<ProjectEntity> {
      * 自定义的mapper方法
      */
     List<ProjectEntity> queryNewestEqualsOneDatas();
+
+    public List<ProjectEntity> filterProjectEntities(Long[] fileIds, List<ProjectEntity> projectEntitys);
 }

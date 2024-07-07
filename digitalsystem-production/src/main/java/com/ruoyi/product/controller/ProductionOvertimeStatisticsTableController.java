@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementPersonnelRoster;
+import com.ruoyi.Enterprisemanagement.service.IEnterpriseManagementPersonnelRosterService;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.product.domain.ProductionClockInForm;
 import com.ruoyi.product.domain.ProductionFunctionStatisticsOfPlanCompletionStatus;
@@ -47,13 +49,16 @@ public class ProductionOvertimeStatisticsTableController extends BaseController
     private IProductionClockInFormService productionClockInFormService;
     @Autowired
     private IProductionOvertimeApplicationFormService productionOvertimeApplicationFormService;
+    @Autowired
+    private IEnterpriseManagementPersonnelRosterService enterpriseManagementPersonnelRosterService;
 
     @PostMapping("/synchronization")
     public void Database_Synchronization(ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1) throws ParseException {
         System.out.println("-----------同步-------同步------------");
         List<ProductionClockInForm> list1 = productionClockInFormService.selectProductionClockInFormList1();
         List<ProductionOvertimeApplicationForm> list2 =productionOvertimeApplicationFormService.selectProductionOvertimeApplicationFormList1();
-        productionOvertimeStatisticsTableService.Synchronization(list1, list2,productionOvertimeStatisticsTable1);
+        List<EnterpriseManagementPersonnelRoster> list3 = enterpriseManagementPersonnelRosterService.selectEnterpriseManagementPersonnelRosterList1();
+        productionOvertimeStatisticsTableService.Synchronization(list1, list2,list3,productionOvertimeStatisticsTable1);
         System.out.println("-----------同步-------同步------------");
 
     }

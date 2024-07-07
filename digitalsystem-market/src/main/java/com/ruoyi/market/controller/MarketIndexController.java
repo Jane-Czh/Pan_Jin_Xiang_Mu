@@ -511,7 +511,8 @@ public class MarketIndexController extends BaseController {
     }
 
     /*
-    TODO没看懂当日是什么意思
+    TODO 只返回数量吗？
+
      * 指标19各网点已到期未完工订单数
      * 销售台账）
     未排产=当日>订单系统交货期 且 车号为空或汉字的台数
@@ -530,15 +531,30 @@ public class MarketIndexController extends BaseController {
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
         //获取到商品车台账全部的数据
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+
+
         Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter((MarketSalesTable a) ->
         {          LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            //获取系统交货日期
+            LocalDate SystemDeliveryTime = Optional.ofNullable(a.getSystemDeliveryTime())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+            if(SystemDeliveryTime!=null){
+                System.out.println("系统交货期"+SystemDeliveryTime);
+            }
+
+            // 获取当前日期
+            LocalDate currentDate = LocalDate.now();
             // 检查日期是否在起止时间范围内，包括等于起止时间的情况,并且满足车型为空或者车型中不包含中文的数据
             return
-                    (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
-                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
-                            && (a.getCarNumber() == null || containsChinese(a.getCarNumber()));
+                    SystemDeliveryTime!=null&&  (!SystemDeliveryTime.isBefore(startTime) && !SystemDeliveryTime.isAfter(endTime)
+                            || SystemDeliveryTime.isEqual(startTime) || SystemDeliveryTime.isEqual(endTime))
+            //当日>订单系统交货期
+                            && (currentDate.isAfter(SystemDeliveryTime))
+            //且车号为空或汉字
+                            &&(a.getCarNumber() == null || containsChinese(a.getCarNumber()));
 //                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
 //                   LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 //            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -568,6 +584,8 @@ public class MarketIndexController extends BaseController {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                     .orElse(null);
+            // 获取当前日期
+            LocalDate currentDate = LocalDate.now();
             LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -576,8 +594,10 @@ public class MarketIndexController extends BaseController {
             return
                     (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
                             || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
-                            &&
-                            precisioncompletion != null && precisioncompletion.isBefore(plancompletion);
+                         //  当日 > 计划完工期
+                            &&(currentDate.isAfter(plancompletion))&&
+                          //  精整日期为空
+                             precisioncompletion == null ;
 //            precisioncompletion.isBefore(plancompletion);
 
         }).collect(Collectors.groupingBy(

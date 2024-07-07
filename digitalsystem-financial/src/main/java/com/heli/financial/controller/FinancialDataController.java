@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -146,10 +147,20 @@ public class FinancialDataController extends BaseController {
         log.info("InterestsFile: " + excelFile);
         log.info("InterestsFile: " + excelFile.getOriginalFilename());
 
+//        将yearAndMonth时间转化为中国标准时间
+//        Date test = DateUtils.parseDate(yearAndMonth);
+//        log.info("中国时间" + test);
+
 
         Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
-        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)
-                && financialInterestsTableService.checkDataExists()) {
+
+        log.info("上月判断   "+ financialInterestsTableService.checkInterestsDataIsExisted(lastMonth));
+        log.info("全部数据判断   "+ financialInterestsTableService.checkDataExists());
+
+        log.info("上月判断   "+ !financialInterestsTableService.checkInterestsDataIsExisted(lastMonth));
+        log.info("全部数据判断   "+ financialInterestsTableService.checkDataExists());
+
+        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth) && financialInterestsTableService.checkDataExists()) {
             return AjaxResult.error("上月利润表未上传");
         }
 //        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {

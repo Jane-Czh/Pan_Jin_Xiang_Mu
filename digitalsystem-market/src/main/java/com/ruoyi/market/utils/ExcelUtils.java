@@ -78,17 +78,29 @@ public class ExcelUtils {
             //21、订单超期预警
             marketSalesTable.setOrderOverdueWarning(getStringCellValue(row.getCell(count++)));
             //22、计划发车日期
-            marketSalesTable.setPlannedDepartureDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            if(getNumericCellValue(row.getCell(count)) != 0.0){
+                marketSalesTable.setPlannedDepartureDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }else {
+                count++;
+            }
             //23、实际发车日期
-            marketSalesTable.setActualDepartureDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            if (getNumericCellValue(row.getCell(count)) != 0.0){
+                marketSalesTable.setActualDepartureDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }else {
+                count++;
+            }
             //24、系统交货期
-            marketSalesTable.setSystemDeliveryTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            if (getNumericCellValue(row.getCell(count)) != 0.0){
+                marketSalesTable.setSystemDeliveryTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }else {
+                count++;
+            }
             //25、交货单号
             marketSalesTable.setDeliveryNoteNumber(getStringCellValue(row.getCell(count++)));
             //26、技术准备完成时间
-            marketSalesTable.setTechnicalPreparationCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
-
-
+            if (getNumericCellValue(row.getCell(count)) != 0.0){
+                marketSalesTable.setTechnicalPreparationCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
 
             dataList.add(marketSalesTable);
         }

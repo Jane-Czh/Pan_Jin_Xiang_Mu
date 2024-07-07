@@ -122,6 +122,12 @@ public class MarketInventoryCarDetailServiceImpl implements IMarketInventoryCarD
     @Override
     public int insertMarketInventoryCarDetail(MarketInventoryCarDetail marketInventoryCarDetail)
     {
+        Long lastid = selectLastId();
+        if(lastid == null){
+            lastid = 0L;
+        }
+        Long MicdId = GenerateId.getNextId(lastid);
+        marketInventoryCarDetail.setMicdId(MicdId);
         return marketInventoryCarDetailMapper.insertMarketInventoryCarDetail(marketInventoryCarDetail);
     }
 

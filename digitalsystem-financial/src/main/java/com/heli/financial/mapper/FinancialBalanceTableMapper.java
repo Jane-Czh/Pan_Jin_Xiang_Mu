@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 //@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialBalanceTableMapper {
 
+    Date selectMaxYearAndMonth();
 
     List<Date> selectAllBalanceYearAndMonth();
 

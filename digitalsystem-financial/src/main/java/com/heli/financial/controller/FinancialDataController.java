@@ -172,11 +172,16 @@ public class FinancialDataController extends BaseController {
         if (financialInterestsTableService.checkInterestsDataIsExisted(yearAndMonth)) {
             return AjaxResult.error("当月利润表已上传");
         }
+        int status = 0;
 
         try {
-            toAjax(financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, excelFile));
+            status = financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, excelFile);
         } catch (Exception e) {
             logger.info(String.valueOf(e));
+        }
+
+        if (status == 0) {
+            return AjaxResult.error("excel格式错误");
         }
 
         // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
@@ -209,11 +214,18 @@ public class FinancialDataController extends BaseController {
             return AjaxResult.error("当月资产负债表已上传");
         }
 
+        int status = 0;
+
         try {
-            financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
+            status = financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
         } catch (Exception e) {
             logger.info(String.valueOf(e));
         }
+
+        if (status == 0) {
+            return AjaxResult.error("excel格式错误");
+        }
+
 
 
 

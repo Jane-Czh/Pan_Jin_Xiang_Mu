@@ -14,12 +14,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="unit"    column="Unit"    />
         <result property="quantity"    column="Quantity"    />
         <result property="orderNetValue"    column="Order_NetValue"    />
+        <result property="supplier"    column="Supplier"    />
         <result property="createBy"    column="CREATE_BY"    />
         <result property="createTime"    column="CREATE_TIME"    />
     </resultMap>
 
     <sql id="selectSupplyIndicatorsPurchaseOrderTableVo">
-        select SP_ID, Document_Date, Purchasing_Documents, Material_Number, Collective_Procurement, ShortText, Unit, Quantity, Order_NetValue, CREATE_BY, CREATE_TIME from Supply_Indicators_PurchaseOrder_table
+        select SP_ID, Document_Date, Purchasing_Documents, Material_Number, Collective_Procurement, ShortText, Unit, Quantity, Order_NetValue, Supplier, CREATE_BY, CREATE_TIME from Supply_Indicators_PurchaseOrder_table
     </sql>
 
 
@@ -27,11 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!--  批量插入数据库  -->
     <insert id="batchInsertSupplyOrderTable" parameterType="java.util.List">
         insert into Supply_Indicators_PurchaseOrder_table(Document_Date,Purchasing_Documents,Material_Number,
-        Collective_Procurement,ShortText,Unit,Quantity,Order_NetValue)
+        Collective_Procurement,ShortText,Unit,Quantity,Order_NetValue,Supplier)
         values
         <foreach collection="supplyOrderTableList" item="e" separator=",">
             (#{e.documentDate},#{e.purchasingDocuments},#{e.materialNumber},
-            #{e.collectiveProcurement},#{e.shortText},#{e.unit},#{e.quantity},#{e.orderNetValue})
+            #{e.collectiveProcurement},#{e.shortText},#{e.unit},#{e.quantity},#{e.orderNetValue},#{e.supplier})
         </foreach>
     </insert>
 
@@ -70,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="unit != null  and unit != ''"> and Unit = #{unit}</if>
             <if test="quantity != null "> and Quantity = #{quantity}</if>
             <if test="orderNetValue != null "> and Order_NetValue = #{orderNetValue}</if>
+            <if test="supplier != null "> and Supplier = #{supplier}</if>
         </where>
     </select>
 
@@ -89,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="unit != null">Unit,</if>
             <if test="quantity != null">Quantity,</if>
             <if test="orderNetValue != null">Order_NetValue,</if>
+            <if test="supplier != null">Supplier,</if>
             <if test="createBy != null">CREATE_BY,</if>
             <if test="createTime != null">CREATE_TIME,</if>
          </trim>
@@ -101,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="unit != null">#{unit},</if>
             <if test="quantity != null">#{quantity},</if>
             <if test="orderNetValue != null">#{orderNetValue},</if>
+            <if test="supplier != null">#{supplier},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
          </trim>
@@ -117,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="unit != null">Unit = #{unit},</if>
             <if test="quantity != null">Quantity = #{quantity},</if>
             <if test="orderNetValue != null">Order_NetValue = #{orderNetValue},</if>
+            <if test="supplier != null">Supplier = #{supplier},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>
         </trim>

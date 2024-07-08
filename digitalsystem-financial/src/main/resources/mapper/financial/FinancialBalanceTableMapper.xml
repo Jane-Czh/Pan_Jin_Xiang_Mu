@@ -72,6 +72,11 @@
         SELECT EXISTS(SELECT 1 FROM Financial_Balance_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
+    <!--  查询已上传数据的最大月份  -->
+    <select id="selectMaxYearAndMonth" resultType="Date">
+        select max(Year_And_Month) from Financial_Balance_table
+    </select>
+
     <!--  按年月查询  -->
     <select id="selectFinancialBalanceTableByYearAndMonth" parameterType="Date" resultMap="FinancialBalanceTableResult">
         <include refid="selectFinancialBalanceTableVo"/>

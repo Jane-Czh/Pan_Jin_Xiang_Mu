@@ -105,6 +105,11 @@
 
     </select>
 
+    <!--  查询已上传数据的最大月份  -->
+    <select id="selectMaxYearAndMonth" resultType="Date">
+        select max(Year_And_Month) from Financial_Interests_table
+    </select>
+
     <insert id="insertFinancialInterestsTable" parameterType="FinancialInterestsTable">
         insert into Financial_Interests_table
         <trim prefix="(" suffix=")" suffixOverrides=",">

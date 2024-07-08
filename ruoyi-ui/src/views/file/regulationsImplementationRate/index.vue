@@ -107,6 +107,15 @@
         regulationImplementationRateRespondEntity: {},
         // 表单校验
         rules: {
+          yearAndMonth: [
+            {required: true, message: "时间不能为空", trigger: "blur"}
+          ],
+          actualImplementedTimes: [
+            {required: true, message: "实际执行制度次数不能为空", trigger: "blur"}
+          ],
+          shouldImplementedTimes: [
+            {required: true, message: "应执行制度次数不能为空", trigger: "blur"}
+          ],
         },
         loading: false,
         data: [],
@@ -161,7 +170,7 @@
           if (valid) {
             this.form.yearAndMonth = `${this.form.yearAndMonth}-01`;
             addRegulationsImplementationRate(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess("上传成功");
               this.open = false;
               this.initData();
             });

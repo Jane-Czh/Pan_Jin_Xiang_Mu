@@ -294,26 +294,26 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col :span="24">
-            <!-- 使用Flex布局将上传文件按钮水平居中 -->
-            <div style="display: flex; justify-content: center;height: 100px;">
-              <!--文件上传-->
-              <el-upload
-                v-model="form.filePath"
-                class="upload-file-uploader"
-                :action="uploadFileUrl"
-                :headers="headers"
-                :before-upload="handleBeforeUpload"
-                :on-change="handleFileChange"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :on-exceed="handleExceed"
-                :on-success="handleUploadSuccess"
-                :limit=limit
-                :file-list="fileList"
-              >
-                <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
-            </div>
+              <!-- 使用Flex布局将上传文件按钮水平居中 -->
+              <div style="display: flex; justify-content: center;height: 100px;">
+                <!--文件上传-->
+                <el-upload
+                  v-model="form.filePath"
+                  class="upload-file-uploader"
+                  :action="uploadFileUrl"
+                  :headers="headers"
+                  :before-upload="handleBeforeUpload"
+                  :on-change="handleFileChange"
+                  :on-preview="handlePreview"
+                  :on-remove="handleRemove"
+                  :on-exceed="handleExceed"
+                  :on-success="handleUploadSuccess"
+                  :limit=limit
+                  :file-list="fileList"
+                >
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+              </div>
           </el-col>
         </el-row>
 
@@ -451,6 +451,14 @@
               <el-select v-model="form.useState" placeholder="请选择制度使用状态">
                 <el-option label="正常" value="正常"></el-option>
                 <el-option label="停用" value="停用"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="所属科室" prop="departmentCategory">
+              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">
+                <!-- 循环遍历this.deptList中的部门数据 -->
+                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -814,6 +822,11 @@
       },
       /** 上传文件提交按钮 */
       uploadSubmitForm() {
+        // 首先检查 fileList 是否为空
+        if (!this.form.filePath) {
+          this.$message.error("请上传文件");
+          return;
+        }
         this.$refs["form"].validate(valid => {
           if (valid) {
               this.form.newFlag = 1;
@@ -944,6 +957,13 @@
             window.URL.revokeObjectURL(downloadUrl);
           })
           .catch(error => console.error('Download error:', error));
+      },
+      validateFile(rule, value, callback) {
+        if (this.form.fileList.length === 0) {
+          return callback(new Error('文件路径不能为空'));
+        }
+        // 可以添加其他校验逻辑，例如文件类型等
+        callback();
       },
       // 上传前校检格式和大小
       handleBeforeUpload(file) {

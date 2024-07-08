@@ -316,6 +316,14 @@
               <el-input v-model="form.remark" placeholder="请输入备注信息"/>
             </el-form-item>
           </el-col>
+          <el-col :span='12'>
+            <el-form-item label="所属科室" prop="departmentCategory">
+              <el-select v-model="form.departmentCategory" placeholder="请输入表单所属科室">
+                <!-- 循环遍历this.deptList中的部门数据 -->
+                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -600,6 +608,11 @@ export default {
     },
     /** 上传文件提交按钮 */
     uploadSubmitForm() {
+      // 首先检查 fileList 是否为空
+      if (!this.form.formPath) {
+        this.$message.error("请上传文件");
+        return;
+      }
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.newFlag = 1;

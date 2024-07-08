@@ -168,6 +168,26 @@
               <el-input v-model="form.formTitle" placeholder="请输入表单标题"/>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="表单存储内容" prop="scope">
+              <el-input v-model="form.scope" placeholder="请输入表单存储内容"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注信息"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="所属科室" prop="departmentCategory">
+              <el-select v-model="form.departmentCategory" placeholder="请输入表单所属科室">
+                <!-- 循环遍历this.deptList中的部门数据 -->
+                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -190,12 +210,14 @@
   import {getUserProfile02} from '@/api/file/filemanagement'
   import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
-  import {word2Pdf} from "../../../api/file/filemanagement";
+  import {listDept02, word2Pdf} from "../../../api/file/filemanagement";
 
   export default {
     name: "HistoryVersions",
     data() {
       return {
+        //部门列表
+        deptList: [],
         //当前账号的dept
         thisDept: null,
         //文件上传绑定的部门
@@ -335,6 +357,10 @@
       }).catch(error => {
         // 处理失败的情况
         console.error('获取用户信息失败:', error);
+      });
+      //获取部门列表
+      listDept02().then(response => {
+        this.deptList = response.data;
       });
     },
     methods: {

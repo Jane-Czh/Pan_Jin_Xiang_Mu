@@ -66,55 +66,86 @@ public class MarketCommercialVehicleTableServiceImpl implements IMarketCommercia
 //        return 0;
 //    }
     public int CVimportInterests(MultipartFile excelFile) throws IOException {
-
-        MarketCommercialVehicleTable marketCommercialVehicleTable = new MarketCommercialVehicleTable();
-
-        try {
-
-
-
-            InputStream is = null;
-            List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
-
-            for (MarketCommercialVehicleTable commercialVehicleTable : marketCommercialVehicleTables) {
-                if(commercialVehicleTable != null){
-
-                    Long lastid = selectLastId();
-                    if(lastid == null){
-                        lastid = 0L;
-                    }
-                    Long MCV_id = GenerateId.getNextId(lastid);
-                    marketCommercialVehicleTable.setMcvId(MCV_id);
-                    marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
-                    if (marketCommercialVehicleTable.getVehicleModel() == null){
-                        continue;
-                    }
-                    marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
-                }
-            }
-//            int i = 0;
-//            while (i < marketCommercialVehicleTables.size()){
-//                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
-//                Long lastid = selectLastId();
-//                if(lastid == null){
-//                    lastid = 0L;
+//
+//        MarketCommercialVehicleTable marketCommercialVehicleTable = new MarketCommercialVehicleTable();
+//
+//        try {
+//
+//
+//
+//            InputStream is = null;
+//            List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
+//
+//            for (MarketCommercialVehicleTable commercialVehicleTable : marketCommercialVehicleTables) {
+//                if(commercialVehicleTable != null){
+//
+//                    Long lastid = selectLastId();
+//                    if(lastid == null){
+//                        lastid = 0L;
+//                    }
+//                    Long MCV_id = GenerateId.getNextId(lastid);
+//                    marketCommercialVehicleTable.setMcvId(MCV_id);
+//                    marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+//                    if (marketCommercialVehicleTable.getVehicleModel() == null){
+//                        continue;
+//                    }
+//                    marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
 //                }
-//                Long MCV_id = GenerateId.getNextId(lastid);
-//                marketCommercialVehicleTable.setMcvId(MCV_id);
-//                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
-//                if (marketCommercialVehicleTable.getVehicleModel() == null){
-//                    continue;
-//                }
-//                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
-//                i++;
 //            }
+////            int i = 0;
+////            while (i < marketCommercialVehicleTables.size()){
+////                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
+////                Long lastid = selectLastId();
+////                if(lastid == null){
+////                    lastid = 0L;
+////                }
+////                Long MCV_id = GenerateId.getNextId(lastid);
+////                marketCommercialVehicleTable.setMcvId(MCV_id);
+////                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+////                if (marketCommercialVehicleTable.getVehicleModel() == null){
+////                    continue;
+////                }
+////                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
+////                i++;
+////            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new ServiceException("excel解析失败");
+//        } finally {
+////            if (is != null) {
+////                is.close();
+////            }
+//        }
+//
+//        return 0;
+//    }
+        MarketCommercialVehicleTable marketCommercialVehicleTable;
+        InputStream is = null;
+        try {
+            List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
+            int i = 0;
+            while (i < marketCommercialVehicleTables.size()){
+                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
+                Long lastid = selectLastId();
+                if(lastid == null){
+                    lastid = 0L;
+                }
+                Long MCV_id = GenerateId.getNextId(lastid);
+                marketCommercialVehicleTable.setMcvId(MCV_id);
+                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+                if (marketCommercialVehicleTable.getVehicleModel() == null){
+                    continue;
+                }
+                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
+                i++;
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel解析失败");
         } finally {
-//            if (is != null) {
-//                is.close();
-//            }
+            if (is != null) {
+                is.close();
+            }
         }
 
         return 0;

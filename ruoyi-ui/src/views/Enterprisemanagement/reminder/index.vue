@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -252,7 +252,14 @@
 </template>
 
 <script>
-import { listReminder, getReminder, delReminder, addReminder, updateReminder } from "@/api/Enterprisemanagement/reminder";
+import {
+  listReminder,
+  getReminder,
+  delReminder,
+  addReminder,
+  updateReminder,
+  syncReport
+} from "@/api/Enterprisemanagement/reminder";
 import axios from "axios";
 
 export default {
@@ -297,26 +304,33 @@ export default {
     this.getList();
   },
   methods: {
-    syncReport() {
-      // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/Enterprisemanagement/reminder/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // 如果请求成功，可以进行下一步操作
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-        });
-      this.getList();
+    // syncReport() {
+    //   // 使用 Fetch API 发送 POST 请求到后端
+    //   fetch('http://localhost:8080/Enterprisemanagement/reminder/synchronization', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       // 如果请求成功，可以进行下一步操作
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    //   this.getList();
+    // },
+    async syncReport() {
+      try {
+        await syncReport();
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
-
     /** 查询企管劳动合同到期提醒列表 */
     getList() {
       this.loading = true;
@@ -422,40 +436,41 @@ export default {
         ...this.queryParams
       }, `reminder_${new Date().getTime()}.xlsx`)
     },
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/Enterprisemanagement/reminder/LRimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+    //   console.log(file);
+    //   formData.append("file", file);
+    //   console.log("file====>",formData)
+    //   axios({
+    //     method: "post",
+    //     // this $axios.post,
+    //     url: "http://localhost:8080/Enterprisemanagement/reminder/LRimport",
+    //     // params:{
+    //     //   userName: this.$store.state.user.name,
+    //     // },
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     withCredentials: true,
+    //     data: formData,
+    //     onUploadProgress: (progressEvent) => {
+    //       this.progress = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //     },
+    //   });
+    //   // this.$message.success("上传成功");
+    //
+    //
+    //   setTimeout(() => {
+    //     this.showDialog = false; // 关闭上传面板
+    //
+    //     // location.reload(); // 调用此方法刷新页面数据
+    //   }, 2000); // 2000毫秒后关闭
+    //   this.reload();
+    // },
 
-
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
-      this.reload();
-    },
 
     handleClose(done) {
       this.$confirm('确认关闭？')

@@ -42,3 +42,15 @@ export function delCVimport(mcvId) {
     method: 'delete'
   })
 }
+
+export function uploadFile(formData) {
+  return request({
+    url: '/market/CVimport/CVimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

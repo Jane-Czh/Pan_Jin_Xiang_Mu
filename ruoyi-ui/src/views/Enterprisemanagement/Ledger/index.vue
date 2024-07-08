@@ -145,10 +145,10 @@
 <!--          placeholder="请选择创建时间">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -277,7 +277,7 @@
           <span>{{ parseTime(scope.row.reexaminationThirdly, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否预警到期" align="center" prop="Warn" />
+<!--      <el-table-column label="是否预警到期" align="center" prop="warn" />-->
       <el-table-column label="创建人" align="center" prop="createdBy" />
       <el-table-column label="创建时间" align="center" prop="createdTime" width="180">
         <template slot-scope="scope">
@@ -315,9 +315,9 @@
     <!-- 添加或修改特种作业台账导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="序号" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入序号" />
-        </el-form-item>
+<!--        <el-form-item label="序号" prop="Number">-->
+<!--          <el-input v-model="form.Number" placeholder="请输入序号" />-->
+<!--        </el-form-item>-->
         <el-form-item label="部门" prop="Department">
           <el-input v-model="form.Department" placeholder="请输入部门" />
         </el-form-item>
@@ -347,57 +347,57 @@
             placeholder="请选择发证时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="firstExpiration">
+        <el-form-item label="第一次到期" prop="firstExpiration">
           <el-date-picker clearable
             v-model="form.firstExpiration"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择${comment}">
+            placeholder="请选择第一次到期时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="reexaminationFirstly">
+        <el-form-item label="第一次复审" prop="reexaminationFirstly">
           <el-date-picker clearable
             v-model="form.reexaminationFirstly"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择${comment}">
+            placeholder="请选择第一次复审时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="secondExpiration">
+        <el-form-item label="第二次到期" prop="secondExpiration">
           <el-date-picker clearable
             v-model="form.secondExpiration"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择${comment}">
+            placeholder="请选择第二次到期时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="reexaminationSecondly">
+        <el-form-item label="第二次复审" prop="reexaminationSecondly">
           <el-date-picker clearable
             v-model="form.reexaminationSecondly"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择${comment}">
+            placeholder="请选择第二次复审时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="thirdExpiration">
+        <el-form-item label="第三次到期" prop="thirdExpiration">
           <el-date-picker clearable
             v-model="form.thirdExpiration"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择${comment}">
+            placeholder="请选择第三次到期时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="reexaminationThirdly">
+        <el-form-item label="第三次复审" prop="reexaminationThirdly">
           <el-date-picker clearable
             v-model="form.reexaminationThirdly"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择${comment}">
+            placeholder="请选择第三次复审时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="${comment}" prop="Warn">
-          <el-input v-model="form.Warn" placeholder="请输入${comment}" />
-        </el-form-item>
+<!--        <el-form-item label="${comment}" prop="Warn">-->
+<!--          <el-input v-model="form.Warn" placeholder="请输入${comment}" />-->
+<!--        </el-form-item>-->
         <el-form-item label="创建人" prop="createdBy">
           <el-input v-model="form.createdBy" placeholder="请输入创建人" />
         </el-form-item>
@@ -419,8 +419,9 @@
 </template>
 
 <script>
-import { listLedger, getLedger, delLedger, addLedger, updateLedger } from "@/api/Enterprisemanagement/Ledger";
+import { listLedger, getLedger, delLedger, addLedger, updateLedger,uploadFile } from "@/api/Enterprisemanagement/Ledger";
 import axios from "axios";
+
 
 export default {
   name: "Ledger",
@@ -591,41 +592,62 @@ export default {
       }, `Ledger_${new Date().getTime()}.xlsx`)
     },
 
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/Enterprisemanagement/Ledger/SOimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+    //   console.log(file);
+    //   formData.append("file", file);
+    //   console.log("file====>",formData)
+    //   axios({
+    //     method: "post",
+    //     // this $axios.post,
+    //     url: "http://localhost:8080/Enterprisemanagement/Ledger/SOimport",
+    //     // params:{
+    //     //   userName: this.$store.state.user.name,
+    //     // },
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     withCredentials: true,
+    //     data: formData,
+    //     onUploadProgress: (progressEvent) => {
+    //       this.progress = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //     },
+    //   });
+    //   // this.$message.success("上传成功");
+    //
+    //
+    //   setTimeout(() => {
+    //     this.showDialog = false; // 关闭上传面板
+    //
+    //     // location.reload(); // 调用此方法刷新页面数据
+    //   }, 2000); // 2000毫秒后关闭
+    //   this.getList();
+    // },
 
+    async fileSend() {
+      try {
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        console.log(file);
+        formData.append("file", file);
+        console.log("file====>", formData);
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
+        await uploadFile(formData); // 调用 uploadFile API
 
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
-      this.getList();
+        // 上传成功后的处理
+        this.$message.success("上传成功"); // 提示上传成功
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 1000); // 2000毫秒后关闭
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
-
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {

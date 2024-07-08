@@ -42,3 +42,17 @@ export function delLbaorLedger(emlcId) {
     method: 'delete'
   })
 }
+
+
+//上传
+export function uploadFile(formData) {
+  return request({
+    url: '/Enterprisemanagement/LbaorLedger/LRimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

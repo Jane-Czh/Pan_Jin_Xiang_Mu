@@ -17,6 +17,8 @@ import com.ruoyi.market.utils.ExcelUtils;
 import com.ruoyi.market.utils.GenerateId;
 import com.ruoyi.market.utils.SplitDate;
 import com.ruoyi.market.utils.getTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.MarketCommercialVehicleTableMapper;
@@ -26,122 +28,165 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品车台账Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-04-12
  */
 @Service
-public class MarketCommercialVehicleTableServiceImpl implements IMarketCommercialVehicleTableService 
-{
+public class MarketCommercialVehicleTableServiceImpl implements IMarketCommercialVehicleTableService {
     @Autowired
     private MarketCommercialVehicleTableMapper marketCommercialVehicleTableMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(MarketCommercialVehicleTableServiceImpl.class);
+
+
+
     @Override
+//    public int CVimportInterests(MultipartFile excelFile) throws IOException {
+//
+//        MarketCommercialVehicleTable marketCommercialVehicleTable = new MarketCommercialVehicleTable();
+//
+//        try {
+//
+//
+//            InputStream is = null;
+//            List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
+//
+//            log.info(marketCommercialVehicleTables.toString());
+//
+//            marketCommercialVehicleTableMapper.batchInsertProductionTable(marketCommercialVehicleTables);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new ServiceException("excel解析失败");
+//        } finally {
+//
+//        }
+//
+//        return 0;
+//    }
     public int CVimportInterests(MultipartFile excelFile) throws IOException {
-        MarketCommercialVehicleTable marketCommercialVehicleTable;
-        InputStream is = null;
+
+        MarketCommercialVehicleTable marketCommercialVehicleTable = new MarketCommercialVehicleTable();
+
         try {
+
+
+
+            InputStream is = null;
             List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
-            int i = 0;
-            while (i < marketCommercialVehicleTables.size()){
-                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
+
+            for (MarketCommercialVehicleTable commercialVehicleTable : marketCommercialVehicleTables) {
+                if(commercialVehicleTable != null){
+
+                    Long lastid = selectLastId();
+                    if(lastid == null){
+                        lastid = 0L;
+                    }
+                    Long MCV_id = GenerateId.getNextId(lastid);
+                    marketCommercialVehicleTable.setMcvId(MCV_id);
+                    marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+                    if (marketCommercialVehicleTable.getVehicleModel() == null){
+                        continue;
+                    }
+                    marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
                 }
-                Long MCV_id = GenerateId.getNextId(lastid);
-                marketCommercialVehicleTable.setMcvId(MCV_id);
-                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
-                if (marketCommercialVehicleTable.getVehicleModel() == null){
-                    continue;
-                }
-                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
-                i++;
             }
+//            int i = 0;
+//            while (i < marketCommercialVehicleTables.size()){
+//                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
+//                Long lastid = selectLastId();
+//                if(lastid == null){
+//                    lastid = 0L;
+//                }
+//                Long MCV_id = GenerateId.getNextId(lastid);
+//                marketCommercialVehicleTable.setMcvId(MCV_id);
+//                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+//                if (marketCommercialVehicleTable.getVehicleModel() == null){
+//                    continue;
+//                }
+//                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
+//                i++;
+//            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel解析失败");
         } finally {
-            if (is != null) {
-                is.close();
-            }
+//            if (is != null) {
+//                is.close();
+//            }
         }
 
         return 0;
     }
 
-     private Long selectLastId() {
+    private Long selectLastId() {
         return marketCommercialVehicleTableMapper.selectLastId();
     }
 
     /**
      * 查询商品车台账
-     * 
+     *
      * @param mcvId 商品车台账主键
      * @return 商品车台账
      */
     @Override
-    public MarketCommercialVehicleTable selectMarketCommercialVehicleTableByMcvId(Long mcvId)
-    {
+    public MarketCommercialVehicleTable selectMarketCommercialVehicleTableByMcvId(Long mcvId) {
         return marketCommercialVehicleTableMapper.selectMarketCommercialVehicleTableByMcvId(mcvId);
     }
 
     /**
      * 查询商品车台账列表
-     * 
+     *
      * @param marketCommercialVehicleTable 商品车台账
      * @return 商品车台账
      */
     @Override
-    public List<MarketCommercialVehicleTable> selectMarketCommercialVehicleTableList(MarketCommercialVehicleTable marketCommercialVehicleTable)
-    {
+    public List<MarketCommercialVehicleTable> selectMarketCommercialVehicleTableList(MarketCommercialVehicleTable marketCommercialVehicleTable) {
         return marketCommercialVehicleTableMapper.selectMarketCommercialVehicleTableList(marketCommercialVehicleTable);
     }
+
     /**
      * 新增商品车台账
-     * 
+     *
      * @param marketCommercialVehicleTable 商品车台账
      * @return 结果
      */
     @Override
-    public int insertMarketCommercialVehicleTable(MarketCommercialVehicleTable marketCommercialVehicleTable)
-    {
+    public int insertMarketCommercialVehicleTable(MarketCommercialVehicleTable marketCommercialVehicleTable) {
         return marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
     }
 
     /**
      * 修改商品车台账
-     * 
+     *
      * @param marketCommercialVehicleTable 商品车台账
      * @return 结果
      */
     @Override
-    public int updateMarketCommercialVehicleTable(MarketCommercialVehicleTable marketCommercialVehicleTable)
-    {
+    public int updateMarketCommercialVehicleTable(MarketCommercialVehicleTable marketCommercialVehicleTable) {
         return marketCommercialVehicleTableMapper.updateMarketCommercialVehicleTable(marketCommercialVehicleTable);
     }
 
     /**
      * 批量删除商品车台账
-     * 
+     *
      * @param mcvIds 需要删除的商品车台账主键
      * @return 结果
      */
     @Override
-    public int deleteMarketCommercialVehicleTableByMcvIds(Long[] mcvIds)
-    {
+    public int deleteMarketCommercialVehicleTableByMcvIds(Long[] mcvIds) {
         return marketCommercialVehicleTableMapper.deleteMarketCommercialVehicleTableByMcvIds(mcvIds);
     }
 
     /**
      * 删除商品车台账信息
-     * 
+     *
      * @param mcvId 商品车台账主键
      * @return 结果
      */
     @Override
-    public int deleteMarketCommercialVehicleTableByMcvId(Long mcvId)
-    {
+    public int deleteMarketCommercialVehicleTableByMcvId(Long mcvId) {
         return marketCommercialVehicleTableMapper.deleteMarketCommercialVehicleTableByMcvId(mcvId);
     }
 

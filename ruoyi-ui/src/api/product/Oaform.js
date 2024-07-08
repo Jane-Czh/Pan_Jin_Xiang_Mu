@@ -42,3 +42,15 @@ export function delOaform(poafId) {
     method: 'delete'
   })
 }
+
+export function uploadFile(formData) {
+  return request({
+    url: '/product/Oaform/Oaimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

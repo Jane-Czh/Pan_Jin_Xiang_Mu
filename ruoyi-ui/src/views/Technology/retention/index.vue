@@ -729,26 +729,41 @@ export default {
     this.getList();
   },
   methods: {
-    /** 文件下载 */
-    downloadFile(url) {
-      fetch(url)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.setAttribute(
-            "download",
-            decodeURIComponent(url.split("/").pop())
-          ); // 解码文件名
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(downloadUrl);
-        })
-        .catch((error) => console.error("Download error:", error));
-    },
-
+    // /** 文件下载 */
+    // downloadFile(url) {
+    //   fetch(url)
+    //     .then((response) => response.blob())
+    //     .then((blob) => {
+    //       const downloadUrl = window.URL.createObjectURL(blob);
+    //       const link = document.createElement("a");
+    //       link.href = downloadUrl;
+    //       link.setAttribute(
+    //         "download",
+    //         decodeURIComponent(url.split("/").pop())
+    //       ); // 解码文件名
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       document.body.removeChild(link);
+    //       window.URL.revokeObjectURL(downloadUrl);
+    //     })
+    //     .catch((error) => console.error("Download error:", error));
+    // },
+      /** 文件下载 */
+      downloadFile(url) {
+        fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', decodeURIComponent(url.split('/').pop())); // 解码文件名
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(downloadUrl);
+          })
+          .catch(error => console.error('Download error:', error));
+      },
     /** 查询申报材料统计列表 */
     getList() {
       this.loading = true;

@@ -12,378 +12,432 @@ import java.util.Date;
 
 /**
  * 商品车台账对象 Market_Commercial_Vehicle_table
- * 
+ *
  * @author ruoyi
  * @date 2024-04-12
  */
 @Data
-public class MarketCommercialVehicleTable extends BaseEntity
-{
+
+public class MarketCommercialVehicleTable {
     private static final long serialVersionUID = 1L;
     /*
-    * 不需要持久化的数据，用于接收前端入参
-    * */
+     * 不需要持久化的数据，用于接收前端入参
+     * */
     @Transient
     private Date startTime;
     @Transient
     private Date endTime;
     @Transient
     private Integer numberInput;
-    /** MCV_ID */
+    /**
+     * MCV_ID
+     */
     private Long mcvId;
 
-    /** 创建人 */
+    /**
+     * 创建人
+     */
     @Excel(name = "创建人")
     private String createdBy;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createdTime;
 
-    /** 接单日期 */
+    /**
+     * 接单日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "接单日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date acceptanceDate;
 
-    /** 上线日期 */
+    /**
+     * 上线日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "上线日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date launchDate;
 
-    /** 订单号 */
+    /**
+     * 订单号
+     */
     @Excel(name = "订单号")
     private String orderNumber;
 
-    /** 合同号 */
+    /**
+     * 合同号
+     */
     @Excel(name = "合同号")
     private String contractNumber;
 
-    /** 车号 */
+    /**
+     * 车号
+     */
     @Excel(name = "车号")
     private String carNumber;
 
-    /** 车型 */
+    /**
+     * 车型
+     */
     @Excel(name = "车型")
     private String vehicleModel;
 
-    /** 门架高度 */
+    /**
+     * 门架高度
+     */
     @Excel(name = "门架高度")
     private String doorFrameHeight;
 
-    /** 数量 */
+    /**
+     * 数量
+     */
     @Excel(name = "数量")
     private Integer Number;
 
-    /** 属具 */
+    /**
+     * 属具
+     */
     @Excel(name = "属具")
     private String Accessory;
 
-    /** 阀片（数量） */
+    /**
+     * 阀片（数量）
+     */
     @Excel(name = "阀片", readConverterExp = "数=量")
     private String valveBlock;
 
-    /** 配置 */
+    /**
+     * 配置
+     */
     @Excel(name = "配置")
     private String Configuration;
 
-    /** 计划完工期 */
+    /**
+     * 计划完工期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "计划完工期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date plannedCompletionPeriod;
 
-    /** 客户 */
+    /**
+     * 客户
+     */
     @Excel(name = "客户")
     private String Customer;
 
-    /** 车体上线日期 */
+    /**
+     * 车体上线日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "车体上线日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date vehicleLaunchDate;
 
-    /** 门架合装完工期 */
+    /**
+     * 门架合装完工期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "门架合装完工期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date completionPeriodOfDoorFrameAssembly;
 
-    /** 试车完工期 */
+    /**
+     * 试车完工期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "试车完工期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date trialCompletionPeriod;
 
-    /** 特种作业 */
+    /**
+     * 特种作业
+     */
     @Excel(name = "特种作业")
     private String specialOperations;
 
-    /** 精整完工期 */
+    /**
+     * 精整完工期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "精整完工期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date precisionCompletionPeriod;
 
-    /** 生产现场问题 */
+    /**
+     * 生产现场问题
+     */
     @Excel(name = "生产现场问题")
     private String productionSiteissues;
 
-    /** 现场异常问题采购 */
+    /**
+     * 现场异常问题采购
+     */
     @Excel(name = "现场异常问题采购")
     private String procurementOfOnSiteAbnormalIssues;
 
-    /** 现场异常问题质量 */
+    /**
+     * 现场异常问题质量
+     */
     @Excel(name = "现场异常问题质量")
     private String qualityOfOnSiteAbnormalIssues;
 
-    /** 上线 */
+    /**
+     * 上线
+     */
     @Excel(name = "上线")
     private String goLive;
 
-    /** 入库 */
+    /**
+     * 入库
+     */
     @Excel(name = "入库")
     private String Warehousing;
 
-    /** 生产周期 */
+    /**
+     * 生产周期
+     */
     @Excel(name = "生产周期")
     private String productionCycle;
 
-    public void setMcvId(Long mcvId) 
+    public void setMcvId(Long mcvId)
     {
         this.mcvId = mcvId;
     }
 
-    public Long getMcvId() 
+    public Long getMcvId()
     {
         return mcvId;
     }
-    public void setCreatedBy(String createdBy) 
+    public void setCreatedBy(String createdBy)
     {
         this.createdBy = createdBy;
     }
 
-    public String getCreatedBy() 
+    public String getCreatedBy()
     {
         return createdBy;
     }
-    public void setCreatedTime(Date createdTime) 
+    public void setCreatedTime(Date createdTime)
     {
         this.createdTime = createdTime;
     }
 
-    public Date getCreatedTime() 
+    public Date getCreatedTime()
     {
         return createdTime;
     }
-    public void setAcceptanceDate(Date acceptanceDate) 
+    public void setAcceptanceDate(Date acceptanceDate)
     {
         this.acceptanceDate = acceptanceDate;
     }
 
-    public Date getAcceptanceDate() 
+    public Date getAcceptanceDate()
     {
         return acceptanceDate;
     }
-    public void setLaunchDate(Date launchDate) 
+    public void setLaunchDate(Date launchDate)
     {
         this.launchDate = launchDate;
     }
 
-    public Date getLaunchDate() 
+    public Date getLaunchDate()
     {
         return launchDate;
     }
-    public void setOrderNumber(String orderNumber) 
+    public void setOrderNumber(String orderNumber)
     {
         this.orderNumber = orderNumber;
     }
 
-    public String getOrderNumber() 
+    public String getOrderNumber()
     {
         return orderNumber;
     }
-    public void setContractNumber(String contractNumber) 
+    public void setContractNumber(String contractNumber)
     {
         this.contractNumber = contractNumber;
     }
 
-    public String getContractNumber() 
+    public String getContractNumber()
     {
         return contractNumber;
     }
-    public void setCarNumber(String carNumber) 
+    public void setCarNumber(String carNumber)
     {
         this.carNumber = carNumber;
     }
 
-    public String getCarNumber() 
+    public String getCarNumber()
     {
         return carNumber;
     }
-    public void setVehicleModel(String vehicleModel) 
+    public void setVehicleModel(String vehicleModel)
     {
         this.vehicleModel = vehicleModel;
     }
 
-    public String getVehicleModel() 
+    public String getVehicleModel()
     {
         return vehicleModel;
     }
-    public void setDoorFrameHeight(String doorFrameHeight) 
+    public void setDoorFrameHeight(String doorFrameHeight)
     {
         this.doorFrameHeight = doorFrameHeight;
     }
 
-    public String getDoorFrameHeight() 
+    public String getDoorFrameHeight()
     {
         return doorFrameHeight;
     }
-    public void setNumber(Integer Number) 
+    public void setNumber(Integer Number)
     {
         this.Number = Number;
     }
 
-    public Integer getNumber() 
+    public Integer getNumber()
     {
         return Number;
     }
-    public void setAccessory(String Accessory) 
+    public void setAccessory(String Accessory)
     {
         this.Accessory = Accessory;
     }
 
-    public String getAccessory() 
+    public String getAccessory()
     {
         return Accessory;
     }
-    public void setValveBlock(String valveBlock) 
+    public void setValveBlock(String valveBlock)
     {
         this.valveBlock = valveBlock;
     }
 
-    public String getValveBlock() 
+    public String getValveBlock()
     {
         return valveBlock;
     }
-    public void setConfiguration(String Configuration) 
+    public void setConfiguration(String Configuration)
     {
         this.Configuration = Configuration;
     }
 
-    public String getConfiguration() 
+    public String getConfiguration()
     {
         return Configuration;
     }
-    public void setPlannedCompletionPeriod(Date plannedCompletionPeriod) 
+    public void setPlannedCompletionPeriod(Date plannedCompletionPeriod)
     {
         this.plannedCompletionPeriod = plannedCompletionPeriod;
     }
 
-    public Date getPlannedCompletionPeriod() 
+    public Date getPlannedCompletionPeriod()
     {
         return plannedCompletionPeriod;
     }
-    public void setCustomer(String Customer) 
+    public void setCustomer(String Customer)
     {
         this.Customer = Customer;
     }
 
-    public String getCustomer() 
+    public String getCustomer()
     {
         return Customer;
     }
-    public void setVehicleLaunchDate(Date vehicleLaunchDate) 
+    public void setVehicleLaunchDate(Date vehicleLaunchDate)
     {
         this.vehicleLaunchDate = vehicleLaunchDate;
     }
 
-    public Date getVehicleLaunchDate() 
+    public Date getVehicleLaunchDate()
     {
         return vehicleLaunchDate;
     }
-    public void setCompletionPeriodOfDoorFrameAssembly(Date completionPeriodOfDoorFrameAssembly) 
+    public void setCompletionPeriodOfDoorFrameAssembly(Date completionPeriodOfDoorFrameAssembly)
     {
         this.completionPeriodOfDoorFrameAssembly = completionPeriodOfDoorFrameAssembly;
     }
 
-    public Date getCompletionPeriodOfDoorFrameAssembly() 
+    public Date getCompletionPeriodOfDoorFrameAssembly()
     {
         return completionPeriodOfDoorFrameAssembly;
     }
-    public void setTrialCompletionPeriod(Date trialCompletionPeriod) 
+    public void setTrialCompletionPeriod(Date trialCompletionPeriod)
     {
         this.trialCompletionPeriod = trialCompletionPeriod;
     }
 
-    public Date getTrialCompletionPeriod() 
+    public Date getTrialCompletionPeriod()
     {
         return trialCompletionPeriod;
     }
-    public void setSpecialOperations(String specialOperations) 
+    public void setSpecialOperations(String specialOperations)
     {
         this.specialOperations = specialOperations;
     }
 
-    public String getSpecialOperations() 
+    public String getSpecialOperations()
     {
         return specialOperations;
     }
-    public void setPrecisionCompletionPeriod(Date precisionCompletionPeriod) 
+    public void setPrecisionCompletionPeriod(Date precisionCompletionPeriod)
     {
         this.precisionCompletionPeriod = precisionCompletionPeriod;
     }
 
-    public Date getPrecisionCompletionPeriod() 
+    public Date getPrecisionCompletionPeriod()
     {
         return precisionCompletionPeriod;
     }
-    public void setProductionSiteissues(String productionSiteissues) 
+    public void setProductionSiteissues(String productionSiteissues)
     {
         this.productionSiteissues = productionSiteissues;
     }
 
-    public String getProductionSiteissues() 
+    public String getProductionSiteissues()
     {
         return productionSiteissues;
     }
-    public void setProcurementOfOnSiteAbnormalIssues(String procurementOfOnSiteAbnormalIssues) 
+    public void setProcurementOfOnSiteAbnormalIssues(String procurementOfOnSiteAbnormalIssues)
     {
         this.procurementOfOnSiteAbnormalIssues = procurementOfOnSiteAbnormalIssues;
     }
 
-    public String getProcurementOfOnSiteAbnormalIssues() 
+    public String getProcurementOfOnSiteAbnormalIssues()
     {
         return procurementOfOnSiteAbnormalIssues;
     }
-    public void setQualityOfOnSiteAbnormalIssues(String qualityOfOnSiteAbnormalIssues) 
+    public void setQualityOfOnSiteAbnormalIssues(String qualityOfOnSiteAbnormalIssues)
     {
         this.qualityOfOnSiteAbnormalIssues = qualityOfOnSiteAbnormalIssues;
     }
 
-    public String getQualityOfOnSiteAbnormalIssues() 
+    public String getQualityOfOnSiteAbnormalIssues()
     {
         return qualityOfOnSiteAbnormalIssues;
     }
-    public void setGoLive(String goLive) 
+    public void setGoLive(String goLive)
     {
         this.goLive = goLive;
     }
 
-    public String getGoLive() 
+    public String getGoLive()
     {
         return goLive;
     }
-    public void setWarehousing(String Warehousing) 
+    public void setWarehousing(String Warehousing)
     {
         this.Warehousing = Warehousing;
     }
 
-    public String getWarehousing() 
+    public String getWarehousing()
     {
         return Warehousing;
     }
-    public void setProductionCycle(String productionCycle) 
+    public void setProductionCycle(String productionCycle)
     {
         this.productionCycle = productionCycle;
     }
 
-    public String getProductionCycle() 
+    public String getProductionCycle()
     {
         return productionCycle;
     }

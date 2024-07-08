@@ -49,10 +49,10 @@
 <!--          placeholder="请选择申请加班结束时间">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -224,7 +224,7 @@
 </template>
 
 <script>
-import { listOaform, getOaform, delOaform, addOaform, updateOaform } from "@/api/product/Oaform";
+import { listOaform, getOaform, delOaform, addOaform, updateOaform ,uploadFile} from "@/api/product/Oaform";
 import axios from "axios";
 
 export default {
@@ -372,41 +372,62 @@ export default {
 
 
 
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/product/Oaform/Oaimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+    //   console.log(file);
+    //   formData.append("file", file);
+    //   console.log("file====>",formData)
+    //   axios({
+    //     method: "post",
+    //     // this $axios.post,
+    //     url: "http://localhost:8080/product/Oaform/Oaimport",
+    //     // params:{
+    //     //   userName: this.$store.state.user.name,
+    //     // },
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     withCredentials: true,
+    //     data: formData,
+    //     onUploadProgress: (progressEvent) => {
+    //       this.progress = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //     },
+    //   });
+    //   // this.$message.success("上传成功");
+    //
+    //
+    //   setTimeout(() => {
+    //     this.showDialog = false; // 关闭上传面板
+    //
+    //     // location.reload(); // 调用此方法刷新页面数据
+    //   }, 2000); // 2000毫秒后关闭
+    //   this.getList();
+    // },
 
+    async fileSend() {
+      try {
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        console.log(file);
+        formData.append("file", file);
+        console.log("file====>", formData);
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
+        await uploadFile(formData); // 调用 uploadFile API
 
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
-      this.getList();
+        // 上传成功后的处理
+        this.$message.success("上传成功"); // 提示上传成功
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 1000); // 2000毫秒后关闭
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
-
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {

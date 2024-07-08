@@ -196,13 +196,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['product:form:edit']"-->
-<!--          >修改</el-button>-->
+          <el-button
+            icon="el-icon-edit"
+            size="mini"
+            type="text"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['product:form:edit']"
+          >修改</el-button>
           <el-button
             size="mini"
             type="text"
@@ -235,82 +235,83 @@
       <el-button @click="closeWorkTimeDialog">取消</el-button>
     </el-dialog>
 
-    <!-- 添加或修改员工打卡表对话框 -->
-<!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
-<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
-<!--&lt;!&ndash;        <el-form-item label="序号" prop="Number">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-input v-model="form.Number" placeholder="请输入序号" />&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="员工编号" prop="idNumber">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-input v-model="form.idNumber" placeholder="请输入员工编号" />&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="姓名" prop="Name">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-input v-model="form.Name" placeholder="请输入姓名" />&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="性别" prop="Gender">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-input v-model="form.Gender" placeholder="请输入性别" />&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="第一次上班打卡时间" prop="firstTimeClockingInAtWork">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-date-picker clearable&ndash;&gt;-->
-<!--&lt;!&ndash;            v-model="form.firstTimeClockingInAtWork"&ndash;&gt;-->
-<!--&lt;!&ndash;            type="date"&ndash;&gt;-->
-<!--&lt;!&ndash;            value-format="yyyy-MM-dd"&ndash;&gt;-->
-<!--&lt;!&ndash;            placeholder="请选择第一次上班打卡时间">&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-date-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="第一次下班打卡时间" prop="firstTimeClockingInAfterWork">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-date-picker clearable&ndash;&gt;-->
-<!--&lt;!&ndash;            v-model="form.firstTimeClockingInAfterWork"&ndash;&gt;-->
-<!--&lt;!&ndash;            type="date"&ndash;&gt;-->
-<!--&lt;!&ndash;            value-format="yyyy-MM-dd"&ndash;&gt;-->
-<!--&lt;!&ndash;            placeholder="请选择第一次下班打卡时间">&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-date-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="第二次上班打卡时间" prop="secondTimeClockingInAtWork">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-date-picker clearable&ndash;&gt;-->
-<!--&lt;!&ndash;            v-model="form.secondTimeClockingInAtWork"&ndash;&gt;-->
-<!--&lt;!&ndash;            type="date"&ndash;&gt;-->
-<!--&lt;!&ndash;            value-format="yyyy-MM-dd"&ndash;&gt;-->
-<!--&lt;!&ndash;            placeholder="请选择第二次上班打卡时间">&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-date-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="第二次下班打卡时间" prop="secondTimeClockingInAfterWork">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-date-picker clearable&ndash;&gt;-->
-<!--&lt;!&ndash;            v-model="form.secondTimeClockingInAfterWork"&ndash;&gt;-->
-<!--&lt;!&ndash;            type="date"&ndash;&gt;-->
-<!--&lt;!&ndash;            value-format="yyyy-MM-dd"&ndash;&gt;-->
-<!--&lt;!&ndash;            placeholder="请选择第二次下班打卡时间">&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-date-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="正常上班时间" prop="normalWorkingHours">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-time-picker clearable&ndash;&gt;-->
-<!--&lt;!&ndash;            v-model="form.normalWorkingHours"&ndash;&gt;-->
-<!--&lt;!&ndash;            value-format="HH:mm:ss"&ndash;&gt;-->
-<!--&lt;!&ndash;            placeholder="请选择正常上班时间">&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-time-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="正常下班时间" prop="normalClosingTime">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-time-picker clearable&ndash;&gt;-->
-<!--&lt;!&ndash;                          v-model="form.normalClosingTime"&ndash;&gt;-->
-<!--&lt;!&ndash;                          value-format="HH:mm:ss"&ndash;&gt;-->
-<!--&lt;!&ndash;                          placeholder="请选择正常下班时间">&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-time-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-form-item label="正常下班时间" prop="normalClosingTime">&ndash;&gt;-->
-<!--&lt;!&ndash;          <el-time-picker&ndash;&gt;-->
-<!--&lt;!&ndash;            clearable&ndash;&gt;-->
-<!--&lt;!&ndash;            v-model="form.normalClosingTime"&ndash;&gt;-->
-<!--&lt;!&ndash;            format="HH:mm:ss"&ndash;&gt;-->
-<!--&lt;!&ndash;            placeholder="请选择正常下班时间"&ndash;&gt;-->
-<!--&lt;!&ndash;          >&ndash;&gt;-->
-<!--&lt;!&ndash;          </el-time-picker>&ndash;&gt;-->
-<!--&lt;!&ndash;        </el-form-item>&ndash;&gt;-->
-<!--&lt;!&ndash;      </el-form>&ndash;&gt;-->
-<!--&lt;!&ndash;      <div slot="footer" class="dialog-footer">&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-button type="primary" @click="submitForm">确 定</el-button>&ndash;&gt;-->
-<!--&lt;!&ndash;        <el-button @click="cancel">取 消</el-button>&ndash;&gt;-->
-<!--&lt;!&ndash;      </div>&ndash;&gt;-->
-<!--    </el-dialog>-->
+    <!-- 添加或
+    员工打卡表对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="序号" prop="Number">
+          <el-input v-model="form.Number" placeholder="请输入序号" />
+        </el-form-item>
+        <el-form-item label="员工编号" prop="idNumber">
+          <el-input v-model="form.idNumber" placeholder="请输入员工编号" />
+        </el-form-item>
+        <el-form-item label="姓名" prop="Name">
+          <el-input v-model="form.Name" placeholder="请输入姓名" />
+        </el-form-item>
+        <el-form-item label="性别" prop="Gender">
+          <el-input v-model="form.Gender" placeholder="请输入性别" />
+        </el-form-item>
+        <el-form-item label="第一次上班打卡时间" prop="firstTimeClockingInAtWork">
+          <el-date-picker clearable
+            v-model="form.firstTimeClockingInAtWork"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="请选择第一次上班打卡时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="第一次下班打卡时间" prop="firstTimeClockingInAfterWork">
+          <el-date-picker clearable
+            v-model="form.firstTimeClockingInAfterWork"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="请选择第一次下班打卡时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="第二次上班打卡时间" prop="secondTimeClockingInAtWork">
+          <el-date-picker clearable
+            v-model="form.secondTimeClockingInAtWork"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="请选择第二次上班打卡时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="第二次下班打卡时间" prop="secondTimeClockingInAfterWork">
+          <el-date-picker clearable
+            v-model="form.secondTimeClockingInAfterWork"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="请选择第二次下班打卡时间">
+          </el-date-picker>
+        </el-form-item>
+<!--        <el-form-item label="正常上班时间" prop="normalWorkingHours">-->
+<!--          <el-time-picker clearable-->
+<!--            v-model="form.normalWorkingHours"-->
+<!--            value-format="HH:mm:ss"-->
+<!--            placeholder="请选择正常上班时间">-->
+<!--          </el-time-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="正常下班时间" prop="normalClosingTime">-->
+<!--          <el-time-picker clearable-->
+<!--                          v-model="form.normalClosingTime"-->
+<!--                          value-format="HH:mm:ss"-->
+<!--                          placeholder="请选择正常下班时间">-->
+<!--          </el-time-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="正常下班时间" prop="normalClosingTime">-->
+<!--          <el-time-picker-->
+<!--            clearable-->
+<!--            v-model="form.normalClosingTime"-->
+<!--            format="HH:mm:ss"-->
+<!--            placeholder="请选择正常下班时间"-->
+<!--          >-->
+<!--          </el-time-picker>-->
+<!--        </el-form-item>-->
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -320,6 +321,7 @@ import axios from "axios";
 import dayjs from 'dayjs';
 
 export default {
+
   name: "Form",
   data() {
     return {
@@ -468,6 +470,36 @@ export default {
       this.open = true;
       this.title = "添加员工打卡表";
 
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const pcifId = row.pcifId || this.ids
+      getForm(pcifId).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改员工打卡表";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.pcifId != null) {
+            updateForm(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addForm(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
     },
 
 //     /** 修改按钮操作 */

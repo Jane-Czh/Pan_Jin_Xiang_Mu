@@ -201,6 +201,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
+          v-hasPermi="['Enterprisemanagement:Ledger:import']"
         >导入Excel文件</el-button>
         <el-dialog
           title="导入Excel文件"

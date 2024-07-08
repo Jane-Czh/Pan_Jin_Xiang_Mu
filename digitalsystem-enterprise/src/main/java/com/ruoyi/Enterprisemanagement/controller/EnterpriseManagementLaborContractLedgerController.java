@@ -33,6 +33,7 @@ public class EnterpriseManagementLaborContractLedgerController extends BaseContr
 
     /*表单导入功能*/
     @Log(title = "[市场]劳动合同台账", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('Enterprisemanagement:LbaorLedger:import')")
     @PostMapping("/LRimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

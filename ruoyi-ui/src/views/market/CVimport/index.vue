@@ -25,14 +25,14 @@
           placeholder="请选择接单日期">
         </el-date-picker>
       </el-form-item>-->
-      <el-form-item label="上线日期" prop="launchDate">
-        <el-date-picker clearable
-          v-model="queryParams.launchDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择上线日期">
-        </el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="上线日期" prop="launchDate">-->
+<!--        <el-date-picker clearable-->
+<!--          v-model="queryParams.launchDate"-->
+<!--          type="date"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          placeholder="请选择上线日期">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
 <!--      <el-form-item label="订单号" prop="orderNumber">
         <el-input
           v-model="queryParams.orderNumber"
@@ -208,27 +208,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['market:CVimport:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['market:CVimport:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['market:CVimport:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['market:CVimport:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -240,16 +240,16 @@
           v-hasPermi="['market:CVimport:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['market:CVimport:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['market:CVimport:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
 
       <el-col :span="1.5">
         <el-button
@@ -258,6 +258,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
+          v-hasPermi="['market:CVimport:import']"
         >导入Excel文件</el-button>
         <el-dialog
           title="导入Excel文件"

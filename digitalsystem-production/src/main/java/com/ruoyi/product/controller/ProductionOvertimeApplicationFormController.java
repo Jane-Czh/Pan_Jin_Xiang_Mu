@@ -34,6 +34,7 @@ public class ProductionOvertimeApplicationFormController extends BaseController
      * 导入excel表格功能
      */
     @Log(title = "[生产]表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('product:Oaform:import')")
     @PostMapping("/Oaimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

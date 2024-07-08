@@ -46,6 +46,15 @@
 <!--          plain-->
 <!--          icon="el-icon-download"-->
 <!--          size="mini"-->
+<!--          @click="syncReport"-->
+<!--        >同步数据</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
 <!--          @click="handleExport"-->
 <!--          v-hasPermi="['product:rate:export']"-->
 <!--        >导出</el-button>-->
@@ -57,6 +66,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
+          v-hasPermi="['product:rate:import']"
         >导入Excel文件</el-button>
         <el-dialog
           title="导入Excel文件"
@@ -186,6 +196,26 @@ export default {
     this.getList();
   },
   methods: {
+    /*同步*/
+    syncReport() {
+      // 使用 Fetch API 发送 POST 请求到后端
+      fetch('http://localhost:8080/product/rate/synchronization', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // 如果请求成功，可以进行下一步操作
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
+      this.getList();
+    },
     /** 查询自制件合格率列表 */
     getList() {
       this.loading = true;

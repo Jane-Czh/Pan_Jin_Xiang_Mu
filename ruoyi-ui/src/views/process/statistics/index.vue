@@ -42,6 +42,7 @@
           plain
           icon="el-icon-download"
           size="mini"
+          v-hasPermi="['process:ef:export']"
           @click="exportAll"
           >总台账导出</el-button
         >
@@ -94,8 +95,8 @@
 
 <script>
 import {
-  listProject,
-  getProject,
+  listProject2,
+  getProject0,
   delProject,
   addProject,
   updateProject,
@@ -366,7 +367,7 @@ export default {
       this.rowList = [];
 
       this.loading = true;
-      listProject(this.queryParams).then((response) => {
+      listProject2(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
         for (var i = 0; i < response.length; i++) {
           this.projectList.push(response[i]);
@@ -467,7 +468,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getProject(id).then((response) => {
+      getProject0(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改流程名称";

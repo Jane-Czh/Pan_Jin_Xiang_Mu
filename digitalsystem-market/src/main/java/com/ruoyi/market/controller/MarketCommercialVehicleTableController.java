@@ -33,6 +33,7 @@ public class MarketCommercialVehicleTableController extends BaseController
 
     /*表单导入功能*/
     @Log(title = "[市场]商品车台账表表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('market:CVimport:import')")
     @PostMapping("/CVimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

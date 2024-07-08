@@ -2,6 +2,7 @@ package com.ruoyi.product.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.common.exception.ServiceException;
@@ -9,6 +10,7 @@ import com.ruoyi.market.domain.MarketSalesTable;
 import com.ruoyi.market.utils.ExcelUtils;
 import com.ruoyi.market.utils.GenerateId;
 import com.ruoyi.market.utils.getTime;
+import com.ruoyi.product.domain.ProductionFunctionStatisticsOfPlanCompletionStatus;
 import com.ruoyi.product.utils.ExcelUtilsPro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -138,6 +140,42 @@ public class ProuctionFunctionQualifiedRateServiceImpl implements IProuctionFunc
         }
         return 0;
     }
+
+    @Override
+    public List<ProuctionFunctionQualifiedRate> selectProuctionFunctionQualifiedRateList1() {
+        return prouctionFunctionQualifiedRateMapper.selectProuctionFunctionQualifiedRateList1();
+    }
+
+    @Override
+    public void Synchronization(List<ProuctionFunctionQualifiedRate> list, ProuctionFunctionQualifiedRate prouctionFunctionQualifiedRate1) {
+        int count1 = 0;
+        HashMap<String, ProuctionFunctionQualifiedRate> result = new HashMap<String, ProuctionFunctionQualifiedRate>();
+        while (count1<list.size()){
+            ProuctionFunctionQualifiedRate prouctionFunctionQualifiedRate = list.get(count1);
+            String model = prouctionFunctionQualifiedRate.getModel();
+            //生产数量
+           double productionNumber = prouctionFunctionQualifiedRate.getProductionNumber();
+           //合格数量
+            double qualifiedNumber =prouctionFunctionQualifiedRate.getQualifiedNumber();
+            //合格率数字版
+            double qualificationrate = qualifiedNumber/productionNumber;
+            //设置合格率
+            String qualificationRate = qualificationrate*100+"%";
+            prouctionFunctionQualifiedRate.setQualificationRate(qualificationRate);
+            System.out.println("+++++++");
+            System.out.println(qualificationRate);
+            System.out.println("+++++++");
+            if (result.get(model) == null){
+                ProuctionFunctionQualifiedRate prouctionFunctionQualifiedRate2 = new ProuctionFunctionQualifiedRate();
+                prouctionFunctionQualifiedRate2.setModel(model);
+                prouctionFunctionQualifiedRate2.setProductionNumber((int) productionNumber);
+                prouctionFunctionQualifiedRate2.setQualifiedNumber((int) qualifiedNumber);
+                
+            }
+            count1++;
+        }
+    }
+
     //查询数据库最后一条数据id
     public Long selectLastId(){
         return prouctionFunctionQualifiedRateMapper.selectLastId();

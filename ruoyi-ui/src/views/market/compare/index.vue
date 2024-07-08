@@ -119,27 +119,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['market:compare:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['market:compare:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['market:compare:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['market:compare:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -151,16 +151,16 @@
           v-hasPermi="['market:compare:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['market:compare:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['market:compare:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -173,35 +173,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="compareList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="compareList" @selection-change="handleSelectionChange" @sort-change="handleSortChanged">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="ID" align="center" prop="mfcdId" />-->
       <el-table-column label="车型（前缀吨位）" align="center" prop="vehicleModel" />
       <el-table-column label="每天平均交货天数" align="center" prop="numberOfDayDelivery" />
       <el-table-column label="每周平均交货天数" align="center" prop="numberOfWeekDelivery" />
-
-<!--      <el-table-column label="车数" align="center" prop="carNumberDay" />-->
-
-<!--      <el-table-column label="精整完工期" align="center" prop="precisionCompletionPeriod" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.precisionCompletionPeriod, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="接单日期" align="center" prop="acceptanceDate" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.acceptanceDate, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="上线日期" align="center" prop="launchDate" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.launchDate, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="吨位" align="center" prop="tonnage" />-->
-<!--      <el-table-column label="车数" align="center" prop="carNumberWeek" />-->
-<!--      <el-table-column label="累计天数" align="center" prop="cumulativeNumberOfDays" />-->
-<!--      <el-table-column label="累计天数" align="center" prop="cumulativeNumberOfWeek" />-->
-      <el-table-column label="操作时间" align="center" prop="createTime" width="180">
+      <el-table-column label="操作时间" align="center" prop="createTime" width="180" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -311,6 +289,7 @@ import * as echarts from "echarts";
 
 export default {
   name: "Compare",
+  inject: ["reload"],
   data() {
     return {
       //饼状图数据
@@ -423,6 +402,10 @@ export default {
   },
   methods: {
 
+    handleSortChanged(){
+
+    },
+
     syncReport() {
       // 使用 Fetch API 发送 POST 请求到后端
       fetch('http://localhost:8080/market/compare/synchronization', {
@@ -440,6 +423,7 @@ export default {
         .catch(error => {
           console.error('There was an error!', error);
         });
+      this.reload();
     },
     /** 查询同配置车型交货天数对比功能列表 */
     getList() {

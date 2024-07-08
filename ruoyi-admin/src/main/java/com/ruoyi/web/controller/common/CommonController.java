@@ -80,11 +80,11 @@ public class CommonController {
 
 
             // 本即测试原方法
-//            String url = serverConfig.getUrl() + fileName;
+            String url = serverConfig.getUrl() + fileName;
 
             //docker 手动替换ip为当前机方法
 //            String url = "http://172.19.4.28:8085" + fileName;
-            String url = "http://172.19.0.138:8080" + fileName;
+//            String url = "http://172.19.0.138:8080" + fileName;
 
 
             AjaxResult ajax = AjaxResult.success();

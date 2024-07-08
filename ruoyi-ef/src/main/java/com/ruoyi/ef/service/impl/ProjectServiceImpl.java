@@ -34,7 +34,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     private ProjectDao projectDao;
 
 
-
     @Override
     public ProjectVo queryPreData(String projectId) {
         //当前project
@@ -123,7 +122,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
             }
 
 
-
             //正式 统计历史流程数据, 按照year-month进行统计更改次数counts
             for (ProjectEntity project : historyProjects) {
                 System.out.println("project==>" + project);
@@ -145,7 +143,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
                     // 检查updateDate是否在时间区间内、equals
                     if ((convertedUpdateDate.toInstant().isAfter(startTime.toInstant()) && convertedUpdateDate.toInstant().isBefore(endTime.toInstant()))
-                    || convertedUpdateDate.toInstant().equals(startTime.toInstant()) || convertedUpdateDate.toInstant().equals(endTime.toInstant())
+                            || convertedUpdateDate.toInstant().equals(startTime.toInstant()) || convertedUpdateDate.toInstant().equals(endTime.toInstant())
                     ) {
 
                         // 提取年份和月份
@@ -181,7 +179,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
             });
 
             for (IndicatorRespondEntity re : res) {
-                System.out.println("res ==>  "+ re);
+                System.out.println("res ==>  " + re);
             }
 
             //做封装处理返回respond
@@ -324,6 +322,56 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     public List<ProjectEntity> queryNewestEqualsOneDatas() {
         List<ProjectEntity> projectEntities = projectDao.queryDatas();
         return projectEntities;
+    }
+
+    @Override
+    public List<ProjectEntity> filterProjectEntities(Long[] fileIds, List<ProjectEntity> projectEntitys) {
+        // 判断fileIds和projectEntitys是否为空
+        if (fileIds == null || fileIds.length == 0 || projectEntitys == null || projectEntitys.isEmpty()) {
+            return null;
+        }
+
+        List<ProjectEntity> res = new ArrayList<>();
+
+        // 遍历projectEntitys
+        for (ProjectEntity entity : projectEntitys) {
+            String state = entity.getState();
+
+            // 判断state是否为null
+            if (state == null) {
+                continue;
+            }
+
+            // 去掉state中的方括号，并将state转换为与fileIds一致的Long数组
+            state = state.replaceAll("[\\[\\]]", "");
+            String[] stateArray = state.split(",");
+            Long[] stateArrayLong = new Long[stateArray.length];
+            try {
+                for (int i = 0; i < stateArray.length; i++) {
+                    stateArrayLong[i] = Long.parseLong(stateArray[i].trim());
+                }
+            } catch (NumberFormatException e) {
+                // 如果转换过程中出现异常，跳过此entity
+                continue;
+            }
+
+            // 将stateArrayLong与fileIds进行对比
+            for (Long fileId : fileIds) {
+                for (Long stateId : stateArrayLong) {
+                    if (stateId.equals(fileId)) {
+                        res.add(entity);
+                        break;
+                    }
+                }
+                // 如果已经找到匹配的fileId，跳出外层循环
+                if (res.contains(entity)) {
+                    break;
+                }
+            }
+        }
+
+        return res;
+
     }
 
 }

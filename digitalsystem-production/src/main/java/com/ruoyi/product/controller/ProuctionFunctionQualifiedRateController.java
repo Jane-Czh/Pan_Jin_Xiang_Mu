@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.market.domain.MarketCommercialVehicleTable;
+import com.ruoyi.product.domain.ProductionFunctionStatisticsOfPlanCompletionStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ public class ProuctionFunctionQualifiedRateController extends BaseController
     /**
      * 导入excel表格功能
      */
+    @PreAuthorize("@ss.hasPermi('product:rate:import')")
     @Log(title = "[生产]表上传", businessType = BusinessType.INSERT)
     @PostMapping("/Dimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
@@ -45,6 +48,15 @@ public class ProuctionFunctionQualifiedRateController extends BaseController
             throw new ServiceException("excel上传失败");
         }
         return success();
+    }
+    @PostMapping("/synchronization")
+    public void Database_Synchronization(ProuctionFunctionQualifiedRate prouctionFunctionQualifiedRate1){
+        System.out.println("-----------同步-------同步------------");
+        List<ProuctionFunctionQualifiedRate> list = prouctionFunctionQualifiedRateService.selectProuctionFunctionQualifiedRateList1();
+        prouctionFunctionQualifiedRateService.Synchronization(list, prouctionFunctionQualifiedRate1);
+
+        System.out.println("-----------同步-------同步------------");
+
     }
 
     /**

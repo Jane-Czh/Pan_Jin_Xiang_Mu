@@ -226,7 +226,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['file:filemanagement:remove']"
+          v-hasPermi="['Technology:Changeorder:remove']"
           >删除
         </el-button>
       </el-col>
@@ -417,7 +417,7 @@
             type="text"
             icon="el-icon-upload"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['file:filemanagement:edit']"
+            v-hasPermi="['Technology:Changeorder:edit']"
             >更新
           </el-button>
           <!--          <el-button-->
@@ -433,7 +433,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['file:filemanagement:remove']"
+            v-hasPermi="['Technology:Changeorder:remove']"
             >删除
           </el-button>
         </template>

@@ -14,13 +14,14 @@
             :disabled="!this.activeElement.type"
           ></el-button>
 
+          <!-- 流程json下载 -->
           <!-- <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
             icon="el-icon-download"
             size="large"
             @click="downloadData"
-          ></el-button> -->
+          ></el-button>  -->
 
           <el-divider direction="vertical"></el-divider>
           <el-button
@@ -44,28 +45,112 @@
             size="mini"
             >帮助</el-button
           >
+          <!-- <el-divider direction="vertical"></el-divider> -->
+
+          <!-- <el-button
+            type="info"
+            plain
+            round
+            icon="el-icon-document"
+            @click="dataInfo"
+            size="mini"
+            >流程信息</el-button
+          > -->
+
+          <!-- <el-button
+            type="primary"
+            plain
+            round
+            @click="dataReloadA"
+            icon="el-icon-refresh"
+            size="mini"
+            >流程模板A</el-button
+          >
+          <el-button
+            type="primary"
+            plain
+            round
+            @click="dataReloadB"
+            icon="el-icon-refresh"
+            size="mini"
+            >流程模板B</el-button
+          > -->
+          <el-divider direction="vertical"></el-divider>
+
+          <el-button type="primary" plain size="mini" @click="toggleDialog"
+            >自定义模板库</el-button
+          >
+          <!-- 弹出的面板 -->
+          <el-dialog
+            :visible.sync="dialogSBDSVisible"
+            title="用户自定义模板库"
+            style="height: 50%"
+          >
+            <el-table :data="modelProjectList" height="250">
+              <el-table-column
+                type="index"
+                label="序号"
+                style="width: 25%"
+                align="center"
+              ></el-table-column>
+
+              <el-table-column
+                label="流程模板名称"
+                prop="name"
+                style="width: 25%"
+                align="center"
+              >
+              </el-table-column>
+
+              <el-table-column label="操作" align="center" style="width: 25%">
+                <template slot-scope="scope">
+                  <el-button
+                    @click="dataReloadSB(JSON.parse(scope.row.data))"
+                    type="primary"
+                    size="small"
+                    plain
+                    icon="el-icon-refresh"
+                  >
+                    应用
+                  </el-button>
+
+                  <el-button
+                    type="danger"
+                    size="small"
+                    plain
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.row)"
+                     v-hasPermi="['process:ef:deleteModel']"
+                    >删除</el-button
+                  >
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                label="备注"
+                prop="zz"
+                style="width: 25%"
+                align="center"
+              >
+              </el-table-column>
+            </el-table>
+          </el-dialog>
+
+          <el-divider direction="vertical"></el-divider>
+
+          <el-button
+            type="success"
+            plain
+            icon="el-icon-document-add"
+            @click="openSBDialog()"
+            v-hasPermi="['process:ef:addModel']"
+            size="mini"
+            >保存为模板</el-button
+          >
           <el-divider direction="vertical"></el-divider>
 
           <!-- 右侧button -->
           <div style="float: right; margin-right: 5px">
-            <el-button
-              type="primary"
-              plain
-              round
-              @click="dataReloadA"
-              icon="el-icon-refresh"
-              size="mini"
-              >流程模板A</el-button
-            >
-            <el-button
-              type="primary"
-              plain
-              round
-              @click="dataReloadB"
-              icon="el-icon-refresh"
-              size="mini"
-              >流程模板B</el-button
-            >
             <!-- <el-button type="primary" plain round @click="dataReloadC" icon="el-icon-refresh" size="mini">切换流程C</el-button> -->
             <el-button
               type="primary"
@@ -88,7 +173,6 @@
               round
               icon="el-icon-folder-add"
               @click="bandFiles()"
-                
               size="mini"
               >绑定文件</el-button
             >
@@ -108,8 +192,8 @@
               round
               icon="el-icon-check"
               @click="openDialog()"
-              
               size="mini"
+              v-hasPermi="['process:ef:add']"
               >保存流程</el-button
             >
           </div>
@@ -123,13 +207,51 @@
           >
             <el-form ref="form" :model="formData" label-width="80px">
               <el-form-item label="流程名称" required>
-                <el-input v-model="formData.project_Name"></el-input>
+                <el-input
+                  v-model="formData.project_Name"
+                  @input="validateSB1"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
             </el-form>
 
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible = false">取消</el-button>
               <el-button type="primary" @click="save">保存</el-button>
+            </div>
+          </el-dialog>
+          <!--  -------------------------------------------  -->
+          <!-- 弹出对话框提示填写项目流程模板sbsbsb-->
+          <el-dialog
+            title="填写自定义流程模板名称"
+            :visible.sync="dialogSBVisible"
+            width="30%"
+            append-to-body
+          >
+            <el-form ref="form" :model="formData" label-width="80px">
+              <el-form-item label="名称" required>
+                <el-input
+                  v-model="formData.project_Name"
+                  @input="validateSB1"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input
+                  v-model="formData.marks"
+                  @input="validateSB2"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+            </el-form>
+            
+
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogSBVisible = false">取消</el-button>
+              <el-button type="primary" @click="saveModel">保存</el-button>
             </div>
           </el-dialog>
           <!--  -------------------------------------------  -->
@@ -230,6 +352,7 @@
     </div>
     <!-- 流程数据详情 转到info.vue页面-->
     <flow-info v-if="flowInfoVisible" ref="flowInfo" :data="data"></flow-info>
+    <flow-info-model ref="flowInfoModel" :data="data"></flow-info-model>
     <flow-help v-if="flowHelpVisible" ref="flowHelp"></flow-help>
   </div>
 </template>
@@ -243,6 +366,7 @@ import { easyFlowMixin } from "@/views/process/ef/mixins";
 import flowNode from "@/views/process/ef/node";
 import nodeMenu from "@/views/process/ef/node_menu";
 import FlowInfo from "@/views/process/ef/info";
+import FlowInfoModel from "@/views/process/ef/infoModel";
 import FlowHelp from "@/views/process/ef/help";
 import FlowNodeForm from "./node_form";
 import lodash from "lodash";
@@ -259,16 +383,22 @@ import CustomFiles from "./CustomFiles.vue";
 //获取用户信息-用户名
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
-import { getDept } from "@/api/system/dept";
+// import { getDept } from "@/api/system/dept";
+import { getDept } from "@/api/system/project";
 //流程名称重名检测, 保存project数据, 保存节点数据, 保存连线数据
 import {
-  listProject,
+  listProject2,
   saveProject,
+  saveSBModelProject,
+  listSBModelProject,
+  delSBProject,
   saveNode,
   saveLine,
 } from "@/api/system/project";
 
 export default {
+  name: "Project",
+  inject: ["reload"],
   data() {
     return {
       //用户名
@@ -295,13 +425,21 @@ export default {
 
       //填写 流程项目名称的提示框
       dialogVisible: false,
+      //填写 流程模板SB名称的提示框
+      dialogSBVisible: false,
+      //流程模板SBDS el-table
+      dialogSBDSVisible: false,
       //保存输入的流程名称
       formData: {
         project_Name: "",
+        //备注
+        formData: "",
       },
 
       // 流程表格数据
       projectList: [],
+      // 流程模板数据
+      modelProjectList: [],
 
       //项目名称参数
       project_Id: null,
@@ -336,6 +474,7 @@ export default {
     flowNode,
     nodeMenu,
     FlowInfo,
+    FlowInfoModel,
     FlowNodeForm,
     FlowHelp,
     //绑定文件
@@ -382,7 +521,7 @@ export default {
     this.jsPlumb = jsPlumb.getInstance();
     this.$nextTick(() => {
       // 默认加载流程A的数据(模板)、在这里可以根据具体的业务返回符合流程数据格式的数据即可
-      this.dataReload(getDataA());
+      this.dataReload(getDataB());
     });
     //获取当前用户信息
     this.getUserInfo();
@@ -391,6 +530,23 @@ export default {
   },
 
   methods: {
+    validateSB1() {
+      const regex = /^[\u4e00-\u9fa5\dA-Za-z.]*$/;
+      this.formData.project_Name = this.formData.project_Name
+        .split("")
+        .filter((char) => regex.test(char))
+        .join("");
+    },
+    validateSB2() {
+      const regex = /^[\u4e00-\u9fa5\dA-Za-z.]*$/;
+      this.formData.marks = this.formData.marks
+        .split("")
+        .filter((char) => regex.test(char))
+        .join("");
+    },
+    toggleDialog() {
+      this.dialogSBDSVisible = !this.dialogSBDSVisible;
+    },
     // 调用接口获取用户信息
     getUserInfo() {
       getUserProfile()
@@ -889,6 +1045,12 @@ export default {
       });
     },
 
+    // 模拟载入自定义模板数据
+    dataReloadSB(data) {
+      this.dialogSBDSVisible = false;
+      this.dataReload(data);
+    },
+
     // 模拟载入数据dataA
     dataReloadA() {
       this.dataReload(getDataA());
@@ -968,14 +1130,21 @@ export default {
       this.dialogVisible = true;
     },
 
+    //保存sb流程模板
+    openSBDialog() {
+      this.dialogSBVisible = true;
+    },
+
     /** 查询流程列表--> 获取流程的名称进行比较是否 用户输入的流程名称有重名的 */
     getList() {
-      listProject(this.queryParams).then((response) => {
+      this.projectList = [];
+      this.modelProjectList = [];
+
+      listProject2(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
         for (var i = 0; i < response.length; i++) {
           this.projectList.push(response[i]);
         }
-
         // console.log("panel init  projectList===>", this.projectList);
 
         // 按照updateDate字段进行排序
@@ -984,8 +1153,112 @@ export default {
         //   return new Date(a.createDate) - new Date(b.createDate);
         // });
       });
+
+      listSBModelProject().then((response) => {
+        // console.log("manage/index从后端获取的response===>", response);
+        for (var i = 0; i < response.length; i++) {
+          this.modelProjectList.push(response[i]);
+        }
+      });
     },
 
+    //---------------------------------------------------------------------------------
+    //sb 填写 流程模板名称
+    //then sb 自定义流程模板, 保存 sb
+    saveModel() {
+      //从 dataInfoModel() 获取 当前panel中的数据 sbsbssbsbbbsssb
+      const flowJsonData = this.dataInfoModel();
+      console.log("panel flowJsonData=========>" + flowJsonData);
+
+      //++++前置的一些判断+++++
+      //填写 项目流程名称
+      // 项目流程为空，则提示需要填入名称 --  this.formData.project_Name
+      if (
+        this.formData.project_Name === "" ||
+        this.formData.project_Name === null
+      ) {
+        this.$message({
+          type: "warning",
+          message: `请填入名称再保存!!!`,
+        });
+        return;
+      }
+
+      // 如果存在同名的项目流程，则提示已存在 --  this.formData.project_Name
+      const projectExists = this.modelProjectList.find(
+        (project) => project.name === this.formData.project_Name
+      );
+      if (projectExists) {
+        this.$message({
+          type: "warning",
+          message: `名称为 ${this.formData.project_Name} 的流程模板已存在!!!`,
+        });
+        return;
+      }
+      //++++++++
+
+      const allJsonData = {
+        id: nanoid(),
+        name: this.formData.project_Name, // 使用  用户填入的流程名称 作为项目名称
+        data: flowJsonData,
+        zz: this.formData.marks,
+        sb: "",
+        ds: "",
+      };
+
+      // 后端api, 将数据存储
+      // 发送项目数据到后端
+      saveSBModelProject(allJsonData)
+        .then((response) => {
+          console.log("Project saved successfully:", response);
+        })
+        .catch((error) => {
+          console.error("Error saving project:", error);
+        });
+
+      //填写项目流程名称面板关闭
+      this.dialogSBVisible = false;
+
+      // 保存成功后显示提示消息
+      this.$message({
+        type: "success",
+        message: "流程模板保存成功！",
+      });
+
+      //最后清空数据
+      this.formData.project_Name = null;
+      this.formData.marks = null;
+
+      this.getList();
+      this.reload();
+    },
+
+    dataInfoModel() {
+      return this.$refs.flowInfoModel.init();
+    },
+
+    //---------------------------------------------------------------------------------
+
+    /** 单个删除操作 */
+    handleDelete(row) {
+      const ids = row.id;
+      this.$modal
+        .confirm(`是否确认删除该流程模板？`)
+        .then(() => {
+          // 只有当用户确认删除时才执行删除操作
+          return delSBProject(ids);
+        })
+        .then(() => {
+          // 处理成功的删除操作
+          // this.getList();
+          this.reload();
+          this.$modal.msgSuccess("删除成功");
+        })
+        .catch(() => {
+          // 处理用户取消操作或者任何删除过程中出现的错误
+        });
+    },
+    //---------------------------------------------------------------------------------
     //保存流程
     save() {
       // console.log("this.uploadUsername =========>", this.uploadUsername);
@@ -995,7 +1268,19 @@ export default {
       // );
       console.log("this.data ===>", this.data);
       //填写 项目流程名称
-      this.openDialog();
+      // this.openDialog();
+
+      // 项目流程为空，则提示需要填入名称 --  this.formData.project_Name
+      if (
+        this.formData.project_Name === "" ||
+        this.formData.project_Name === null
+      ) {
+        this.$message({
+          type: "warning",
+          message: `请填入流程名称再保存!!!`,
+        });
+        return;
+      }
 
       // 如果存在同名的项目流程，则提示已存在 --  this.formData.project_Name
       const projectExists = this.projectList.find(
@@ -1007,7 +1292,6 @@ export default {
           message: `名称为 ${this.formData.project_Name} 的流程已存在!!!`,
         });
         return;
-      } else {
       }
 
       this.project_Id = nanoid();
@@ -1019,15 +1303,6 @@ export default {
       console.log("projectData =======", projectData);
 
       // 发送项目数据到后端
-      // axios
-      //   .post("http://localhost:8080/project/saveProject", projectData)
-      //   .then((response) => {
-      //     console.log("Project saved successfully:", response.data);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error saving project:", error);
-      //   });
-      // 发送项目数据到后端
       saveProject(projectData)
         .then((response) => {
           console.log("Project saved successfully:", response);
@@ -1035,33 +1310,6 @@ export default {
         .catch((error) => {
           console.error("Error saving project:", error);
         });
-
-      // // 发送节点数据到后端
-      // for (var i = 0; i < nodeData.length; i++) {
-      //   // console.log("this.data.node ===>", nodeData[i]);
-      //   console.log("this.data.node.state ===>", nodeData[i].state);
-      //   // console.log("type data state===>",typeof(nodeData[i].state))
-      //   axios
-      //     .post("http://localhost:8080/node/saveNode", nodeData[i])
-      //     .then((response) => {
-      //       console.log("Nodes saved successfully:", response.data);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error saving nodes:", error);
-      //     });
-      // }
-
-      // // 发送连线数据到后端
-      // for (var i = 0; i < lineData.length; i++) {
-      //   axios
-      //     .post("http://localhost:8080/line/saveLine", lineData[i])
-      //     .then((response) => {
-      //       console.log("Lines saved successfully:", response.data);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error saving lines:", error);
-      //     });
-      // }
 
       // 发送节点数据到后端
       nodeData.forEach((node) => {
@@ -1095,6 +1343,8 @@ export default {
         message: "流程保存成功！",
       });
       this.formData.project_Name = null;
+
+      this.reload();
     },
 
     //将this.data数据进行拆分
@@ -1142,3 +1392,17 @@ export default {
   },
 };
 </script>
+
+<style>
+.button-group {
+  margin-top: 10px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+</style>

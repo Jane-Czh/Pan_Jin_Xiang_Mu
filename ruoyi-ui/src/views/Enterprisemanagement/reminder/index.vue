@@ -257,6 +257,7 @@ import axios from "axios";
 
 export default {
   name: "Reminder",
+  inject: ["reload"],
   data() {
     return {
       // 遮罩层
@@ -453,6 +454,7 @@ export default {
 
         // location.reload(); // 调用此方法刷新页面数据
       }, 2000); // 2000毫秒后关闭
+      this.reload();
     },
 
     handleClose(done) {

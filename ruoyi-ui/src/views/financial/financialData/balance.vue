@@ -144,24 +144,24 @@
         <el-form-item label="产品成本差异-产成品" prop="pcvFinished">
           <el-input v-model="form.pcvFinished" placeholder="请输入产品成本差异-产成品" />
         </el-form-item>
-        <el-form-item label="当月库存商品存货额" prop="monthAmountInStock">
+        <!-- <el-form-item label="当月库存商品存货额" prop="monthAmountInStock">
           <el-input v-model="form.monthAmountInStock" placeholder="请输入当月库存商品存货额" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="月度存货总金额" prop="monthlyInventoryTotalAmount">
           <el-input v-model="form.monthlyInventoryTotalAmount" placeholder="请输入月度存货总金额" />
         </el-form-item>
-        <el-form-item label="存货增长率" prop="growthRateInventory">
+        <!-- <el-form-item label="存货增长率" prop="growthRateInventory">
           <el-input v-model="form.growthRateInventory" placeholder="请输入存货增长率/销售增长率" />
-        </el-form-item>
-        <el-form-item label="销售增长率" prop="growthRateSales">
+        </el-form-item> -->
+        <!-- <el-form-item label="销售增长率" prop="growthRateSales">
           <el-input v-model="form.growthRateSales" placeholder="请输入存货增长率/销售增长率" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="应收账款" prop="receivables">
           <el-input v-model="form.receivables" placeholder="请输入应收账款" />
         </el-form-item>
-        <el-form-item label="应收帐款周转率" prop="turnoverRateReceivable">
+        <!-- <el-form-item label="应收帐款周转率" prop="turnoverRateReceivable">
           <el-input v-model="form.turnoverRateReceivable" placeholder="请输入应收帐款周转率" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -268,9 +268,9 @@ export default {
         pcvFinished: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-        monthAmountInStock: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
+        // monthAmountInStock: [
+        //   { required: true, message: "数据不能为空", trigger: "blur" }
+        // ],
         monthlyInventoryTotalAmount: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
@@ -292,7 +292,7 @@ export default {
         workInProgressEndOfMonth: [
           { required: true, message: "数据不能为空", trigger: "blur" }
         ],
-      }//TODO 填报优化
+      }
     };
   },
   created() {

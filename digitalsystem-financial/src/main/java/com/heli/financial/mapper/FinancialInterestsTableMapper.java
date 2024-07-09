@@ -28,6 +28,7 @@ public interface FinancialInterestsTableMapper {
 
     boolean checkDataExists();
 
+    Date selectMaxYearAndMonth();
 
     FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
 

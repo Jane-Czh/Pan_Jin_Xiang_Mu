@@ -74,4 +74,10 @@ public class SupplyIndicatorsPurchaseOrderTable {
     @ExcelProperty(value = "订单净值")
     private BigDecimal orderNetValue;
 
+    /**
+     * 供应商/供应工厂
+     */
+    @ExcelProperty(value = "供应商/供应工厂")
+    private String supplier;
+
 }

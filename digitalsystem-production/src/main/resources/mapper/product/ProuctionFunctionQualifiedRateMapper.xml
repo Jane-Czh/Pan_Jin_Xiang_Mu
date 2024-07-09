@@ -23,6 +23,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
         </where>
     </select>
+    <select id="selectProuctionFunctionQualifiedRateList1" parameterType="ProuctionFunctionQualifiedRate" resultMap="ProuctionFunctionQualifiedRateResult">
+        <include refid="selectProuctionFunctionQualifiedRateVo"/>
+        <where>
+        </where>
+    </select>
     <select id="selectLastId" resultType="java.lang.Long">
         SELECT PQR_ID
         FROM Prouction_function_Qualified_rate

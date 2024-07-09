@@ -16,6 +16,7 @@
   </div>
 </template>
 
+
 <script>
 import moment from 'moment'
 import chartAPI from '@/api/financial/chartAPI.js'
@@ -63,13 +64,17 @@ export default {
       this.timeData.endTime = this.selectedDate[1]
 
       try {
-        this.loading = true
-        const res = await chartAPI[this.option.apiName](this.timeData);
-        this.data = res.rows
-        this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'))
-        this.yAxisData = res.rows.map(item => item[this.option.yDataName])
-        this.loading = false
+        this.loading = true;
+        if (this.$auth.hasPermi("financial:display")) {
+          const res = await chartAPI[this.option.apiName](this.timeData);
+          this.data = res.rows;
+          this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
+          this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
+
+        }
+        this.loading = false;
       } catch (error) {
+        this.$modal.msgError("数据加载失败")
         this.loading = false
       }
     },

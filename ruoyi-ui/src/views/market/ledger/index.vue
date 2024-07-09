@@ -362,10 +362,10 @@
     <el-table v-loading="loading" :data="ledgerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="maslId" />
-      <el-table-column label="编号" align="center" prop="Number" />
+      <el-table-column label="编号" align="center" prop="number" />
       <el-table-column label="用户单位" align="center" prop="userUnit" />
-      <el-table-column label="联系人" align="center" prop="Contacts" />
-      <el-table-column label="联系电话" align="center" prop="Phone" />
+      <el-table-column label="联系人" align="center" prop="contacts" />
+      <el-table-column label="联系电话" align="center" prop="phone" />
       <el-table-column label="反馈日期" align="center" prop="feedbackDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.feedbackDate, '{y}-{m}-{d}') }}</span>
@@ -373,8 +373,8 @@
       </el-table-column>
       <el-table-column label="整车生产单位" align="center" prop="vehicleProductionUnit" />
       <el-table-column label="车" align="center" prop="vehicle" />
-      <el-table-column label="吨" align="center" prop="Ton" />
-      <el-table-column label="发" align="center" prop="Launch" />
+      <el-table-column label="吨" align="center" prop="ton" />
+      <el-table-column label="发" align="center" prop="launch" />
       <el-table-column label="车型" align="center" prop="vehicleModel" />
       <el-table-column label="车号" align="center" prop="wagonNumber" />
       <el-table-column label="销售时间" align="center" prop="sellingTime" width="180">
@@ -388,13 +388,13 @@
       <el-table-column label="一级分类" align="center" prop="primaryClassification" />
       <el-table-column label="二级分类" align="center" prop="secondaryClassification" />
       <el-table-column label="最终处理方法" align="center" prop="finalTreatmentMethod" />
-      <el-table-column label="赔偿件" align="center" prop="Indemnity" />
+      <el-table-column label="赔偿件" align="center" prop="indemnity" />
       <el-table-column label="零件编号" align="center" prop="partNumber" />
-      <el-table-column label="供应商" align="center" prop="Supplier" />
-      <el-table-column label="数量" align="center" prop="Quantity" />
+      <el-table-column label="供应商" align="center" prop="supplier" />
+      <el-table-column label="数量" align="center" prop="quantity" />
       <el-table-column label="责任单位" align="center" prop="accountabilityUnit" />
       <el-table-column label="故障级别" align="center" prop="faultLevel" />
-      <el-table-column label="评分" align="center" prop="Score" />
+      <el-table-column label="评分" align="center" prop="score" />
       <el-table-column label="发件方式" align="center" prop="sendingMethod" />
       <el-table-column label="一级网点" align="center" prop="primaryBranch" />
       <el-table-column label="二级网点" align="center" prop="secondaryBranch" />
@@ -434,17 +434,17 @@
     <!-- 添加或修改售后台账导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="编号" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入编号" />
+        <el-form-item label="编号" prop="number">
+          <el-input v-model="form.number" placeholder="请输入编号" />
         </el-form-item>
         <el-form-item label="用户单位" prop="userUnit">
           <el-input v-model="form.userUnit" placeholder="请输入用户单位" />
         </el-form-item>
-        <el-form-item label="联系人" prop="Contacts">
-          <el-input v-model="form.Contacts" placeholder="请输入联系人" />
+        <el-form-item label="联系人" prop="contacts">
+          <el-input v-model="form.contacts" placeholder="请输入联系人" />
         </el-form-item>
-        <el-form-item label="联系电话" prop="Phone">
-          <el-input v-model="form.Phone" placeholder="请输入联系电话" />
+        <el-form-item label="联系电话" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入联系电话" />
         </el-form-item>
         <el-form-item label="反馈日期" prop="feedbackDate">
           <el-date-picker clearable
@@ -457,14 +457,14 @@
         <el-form-item label="整车生产单位" prop="vehicleProductionUnit">
           <el-input v-model="form.vehicleProductionUnit" placeholder="请输入整车生产单位" />
         </el-form-item>
-        <el-form-item label="车" prop="Vehicle">
-          <el-input v-model="form.Vehicle" placeholder="请输入车" />
+        <el-form-item label="车" prop="vehicle">
+          <el-input v-model="form.vehicle" placeholder="请输入车" />
         </el-form-item>
-        <el-form-item label="吨" prop="Ton">
-          <el-input v-model="form.Ton" placeholder="请输入吨" />
+        <el-form-item label="吨" prop="ton">
+          <el-input v-model="form.ton" placeholder="请输入吨" />
         </el-form-item>
-        <el-form-item label="发" prop="Launch">
-          <el-input v-model="form.Launch" placeholder="请输入发" />
+        <el-form-item label="发" prop="launch">
+          <el-input v-model="form.launch" placeholder="请输入发" />
         </el-form-item>
         <el-form-item label="车型" prop="vehicleModel">
           <el-input v-model="form.vehicleModel" placeholder="请输入车型" />
@@ -498,17 +498,17 @@
         <el-form-item label="最终处理方法" prop="finalTreatmentMethod">
           <el-input v-model="form.finalTreatmentMethod" placeholder="请输入最终处理方法" />
         </el-form-item>
-        <el-form-item label="赔偿件" prop="Indemnity">
-          <el-input v-model="form.Indemnity" placeholder="请输入赔偿件" />
+        <el-form-item label="赔偿件" prop="indemnity">
+          <el-input v-model="form.indemnity" placeholder="请输入赔偿件" />
         </el-form-item>
         <el-form-item label="零件编号" prop="partNumber">
           <el-input v-model="form.partNumber" placeholder="请输入零件编号" />
         </el-form-item>
-        <el-form-item label="供应商" prop="Supplier">
-          <el-input v-model="form.Supplier" placeholder="请输入供应商" />
+        <el-form-item label="供应商" prop="supplier">
+          <el-input v-model="form.supplier" placeholder="请输入供应商" />
         </el-form-item>
-        <el-form-item label="数量" prop="Quantity">
-          <el-input v-model="form.Quantity" placeholder="请输入数量" />
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model="form.quantity" placeholder="请输入数量" />
         </el-form-item>
         <el-form-item label="责任单位" prop="accountabilityUnit">
           <el-input v-model="form.accountabilityUnit" placeholder="请输入责任单位" />
@@ -516,8 +516,8 @@
         <el-form-item label="故障级别" prop="faultLevel">
           <el-input v-model="form.faultLevel" placeholder="请输入故障级别" />
         </el-form-item>
-        <el-form-item label="评分" prop="Score">
-          <el-input v-model="form.Score" placeholder="请输入评分" />
+        <el-form-item label="评分" prop="score">
+          <el-input v-model="form.score" placeholder="请输入评分" />
         </el-form-item>
         <el-form-item label="发件方式" prop="sendingMethod">
           <el-input v-model="form.sendingMethod" placeholder="请输入发件方式" />
@@ -582,15 +582,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
+        number: null,
         userUnit: null,
-        Contacts: null,
-        Phone: null,
+        contacts: null,
+        phone: null,
         feedbackDate: null,
         vehicleProductionUnit: null,
-        Vehicle: null,
-        Ton: null,
-        Launch: null,
+        vehicle: null,
+        ton: null,
+        launch: null,
         vehicleModel: null,
         wagonNumber: null,
         sellingTime: null,
@@ -600,13 +600,13 @@ export default {
         primaryClassification: null,
         secondaryClassification: null,
         finalTreatmentMethod: null,
-        Indemnity: null,
+        indemnity: null,
         partNumber: null,
-        Supplier: null,
-        Quantity: null,
+        supplier: null,
+        quantity: null,
         accountabilityUnit: null,
         faultLevel: null,
-        Score: null,
+        score: null,
         sendingMethod: null,
         primaryBranch: null,
         secondaryBranch: null,
@@ -620,6 +620,12 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        feedbackDate: [
+          { required: true, message: "网点不能为空", trigger: "blur" }
+        ],
+        vehicleModel: [
+          { required: true, message: "网点不能为空", trigger: "blur" }
+        ],
       },
 
       //新增参数
@@ -650,15 +656,15 @@ export default {
     reset() {
       this.form = {
         maslId: null,
-        Number: null,
+        number: null,
         userUnit: null,
-        Contacts: null,
-        Phone: null,
+        contacts: null,
+        phone: null,
         feedbackDate: null,
         vehicleProductionUnit: null,
-        Vehicle: null,
-        Ton: null,
-        Launch: null,
+        vehicle: null,
+        ton: null,
+        launch: null,
         vehicleModel: null,
         wagonNumber: null,
         sellingTime: null,
@@ -668,13 +674,13 @@ export default {
         primaryClassification: null,
         secondaryClassification: null,
         finalTreatmentMethod: null,
-        Indemnity: null,
+        indemnity: null,
         partNumber: null,
-        Supplier: null,
-        Quantity: null,
+        supplier: null,
+        quantity: null,
         accountabilityUnit: null,
         faultLevel: null,
-        Score: null,
+        score: null,
         sendingMethod: null,
         primaryBranch: null,
         secondaryBranch: null,

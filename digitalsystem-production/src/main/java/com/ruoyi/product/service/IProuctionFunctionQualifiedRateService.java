@@ -2,6 +2,8 @@ package com.ruoyi.product.service;
 
 import java.io.IOException;
 import java.util.List;
+
+import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.product.domain.ProuctionFunctionQualifiedRate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,4 +64,8 @@ public interface IProuctionFunctionQualifiedRateService
     public int deleteProuctionFunctionQualifiedRateByPqrId(Long pqrId);
 
     public int importInterests(MultipartFile excelFile) throws IOException;
+
+    public List<ProuctionFunctionQualifiedRate> selectProuctionFunctionQualifiedRateList1();
+
+    public void Synchronization(List<ProuctionFunctionQualifiedRate> list, ProuctionFunctionQualifiedRate prouctionFunctionQualifiedRate1);
 }

@@ -93,39 +93,7 @@ export const constantRoutes = [
   },
 
 
-  {
-    path: '/financial',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'indicators30',
-        component: () => import('@/views/financial/financialDisplay/indexChart/indicators30'),
-        name: 'Indicators30',
-        meta: { title: '指标30：存货增长率/销售增长率' }
-      },
 
-      {
-        path: 'indicators70',
-        component: () => import('@/views/financial/financialDisplay/indexChart/indicators70'),
-        name: 'Indicators70',
-        meta: { title: '指标70：当日在制品金额' }
-      },
-
-      {
-        path: 'index-detail-financial',
-        component: () => import('@/views/financial/financialDisplay/indexDetailFinancial'),
-        name: 'IndexDetailFinancial',
-        props: true,
-
-        meta: {
-          title: '指标详情',
-
-        }
-      }
-    ]
-  },
 
   {
     path: '/safety',
@@ -672,6 +640,43 @@ export const dynamicRoutes = [
     ]
   },
 
+  //财务指标
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    permissions: ['financial:display'],
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'indicators30',
+        component: () => import('@/views/financial/financialDisplay/indexChart/indicators30'),
+        name: 'Indicators30',
+        meta: { title: '指标30：存货增长率/销售增长率' }
+      },
+
+      {
+        path: 'indicators70',
+        component: () => import('@/views/financial/financialDisplay/indexChart/indicators70'),
+        name: 'Indicators70',
+        meta: { title: '指标70：当日在制品金额' }
+      },
+
+      {
+        path: 'index-detail-financial',
+        component: () => import('@/views/financial/financialDisplay/indexDetailFinancial'),
+        name: 'IndexDetailFinancial',
+        props: true,
+
+        meta: {
+          title: '指标详情',
+
+        }
+      }
+    ]
+  },
+
+
   //流程模块-流程新建
   {
     path: '/ef',
@@ -708,7 +713,7 @@ export const dynamicRoutes = [
     path: '/process/statistics/index', //ori from 路径
     component: Layout,
     hidden: true,
-    permissions: ['system:user:edit'],
+    permissions: ['process:ef:statistics'],
     children: [
       {
         path: '/process/statistics/indicators/:id',// to 路径

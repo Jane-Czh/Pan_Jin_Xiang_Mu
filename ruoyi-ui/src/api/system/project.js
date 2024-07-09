@@ -5,6 +5,32 @@ import request from '@/utils/request'
 // 同时还有：pane.vue--save()、 edit_panel.vue--updateProject() 
 
 
+
+//保存sb 流程模板数据
+export function saveSBModelProject(data) {
+  return request({
+    url: '/ef/model/save',
+    method: 'post',
+    data: data
+  })
+}
+//查询sb 流程模板数据
+export function listSBModelProject() {
+  return request({
+    url: '/ef/model/list',
+    method: 'get',
+  })
+}
+
+export function delSBProject(id) {
+  return request({
+    url: '/ef/model/delete/' + id,
+    method: 'delete'
+  })
+}
+
+//--------
+
 //pane.vue--save()的接口改造 saveProject()、saveNode() 、saveLine()
 export function saveProject(data) {
   return request({
@@ -84,6 +110,18 @@ export function getProjectByName(query) {
   })
 }
 
+// 按照制度流程 file name查询流程
+export function getProjectFileName(query) {
+  return request({
+    url: '/project/searchListByFileName',
+    method: 'post',
+    data: {
+      filename: query.filename
+    }
+
+  })
+}
+
 
 // 根据id获取流程名称name
 export function getProjectName(id) {
@@ -116,6 +154,14 @@ export function listProject(query) {
   })
 }
 
+// 查询流程列表--panel
+export function listProject2(query) {
+  return request({
+    url: '/project/list/list',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询指定id的流程详细
 //edit编辑
@@ -136,6 +182,14 @@ export function getProject1(id) {
 export function getProject2(id) {
   return request({
     url: '/project/data2/' + id,
+    method: 'get'
+  })
+}
+
+//指标
+export function getProject0(id) {
+  return request({
+    url: '/project/data0/' + id,
     method: 'get'
   })
 }
@@ -191,5 +245,15 @@ export function listFormfilemanagement(query) {
     url: '/file/formfilemanagement/list2',
     method: 'get',
     params: query
+  })
+}
+
+
+
+// 查询部门详细
+export function getDept(deptId) {
+  return request({
+    url: '/system/dept/dept/' + deptId,
+    method: 'get'
   })
 }

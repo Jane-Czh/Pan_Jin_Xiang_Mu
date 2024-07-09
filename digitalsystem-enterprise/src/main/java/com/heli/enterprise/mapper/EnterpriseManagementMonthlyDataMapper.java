@@ -28,6 +28,7 @@ public interface EnterpriseManagementMonthlyDataMapper {
     Date selectMaxMonths(@Param("year") Date year);
 
     Date selectMaxMonthByYear(@Param("yearAndMonth") Date yearAndMonth);
+    Date selectMinMonthByYear(@Param("yearAndMonth") Date yearAndMonth);
 
     int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
     int updateCalculateMonthlyDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);

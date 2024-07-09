@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heli.quality.mapper.QualityIndicatorsHandfillTableMapper">
-    
+
     <resultMap type="QualityIndicatorsHandfillTable" id="QualityIndicatorsHandfillTableResult">
         <result property="qihfId"    column="QIHF_id"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <!-- 根据月份，检查当月数据是否上传 -->
-    <select id="checkQualityFillingDataIsExisted" parameterType="Date" >
+    <select id="checkQualityFillingDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Quality_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectQualityIndicatorsHandfillTableList" parameterType="QualityIndicatorsHandfillTable" resultMap="QualityIndicatorsHandfillTableResult">
         <include refid="selectQualityIndicatorsHandfillTableVo"/>
-        <where>  
+        <where>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
             <if test="moleculeExternalMassLossRate != null "> and Molecule_External_Mass_Loss_Rate = #{moleculeExternalMassLossRate}</if>
             <if test="externalMassLossRate != null "> and External_Mass_Loss_Rate = #{externalMassLossRate}</if>
@@ -46,12 +46,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nextprocessFeedbackPassrate != null "> and NextProcess_Feedback_PassRate = #{nextprocessFeedbackPassrate}</if>
         </where>
     </select>
-    
+
     <select id="selectQualityIndicatorsHandfillTableByQihfId" parameterType="Long" resultMap="QualityIndicatorsHandfillTableResult">
         <include refid="selectQualityIndicatorsHandfillTableVo"/>
         where QIHF_id = #{qihfId}
     </select>
-        
+
     <insert id="insertQualityIndicatorsHandfillTable" parameterType="QualityIndicatorsHandfillTable">
         insert into Quality_Indicators_HandFill_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -110,7 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteQualityIndicatorsHandfillTableByQihfIds" parameterType="String">
-        delete from Quality_Indicators_HandFill_table where QIHF_id in 
+        delete from Quality_Indicators_HandFill_table where QIHF_id in
         <foreach item="qihfId" collection="array" open="(" separator="," close=")">
             #{qihfId}
         </foreach>

@@ -4,14 +4,15 @@ import java.text.ParseException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.market.domain.MarketCommercialVehicleTable;
+import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementPersonnelRoster;
+import com.ruoyi.Enterprisemanagement.service.IEnterpriseManagementPersonnelRosterService;
+
 import com.ruoyi.product.domain.ProductionClockInForm;
-import com.ruoyi.product.domain.ProductionFunctionStatisticsOfPlanCompletionStatus;
+
 import com.ruoyi.product.domain.ProductionOvertimeApplicationForm;
 import com.ruoyi.product.service.IProductionClockInFormService;
 import com.ruoyi.product.service.IProductionOvertimeApplicationFormService;
-import com.ruoyi.product.service.impl.ProductionClockInFormServiceImpl;
-import com.ruoyi.product.service.impl.ProductionOvertimeApplicationFormServiceImpl;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 加班统计Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-05-13
  */
@@ -47,13 +48,16 @@ public class ProductionOvertimeStatisticsTableController extends BaseController
     private IProductionClockInFormService productionClockInFormService;
     @Autowired
     private IProductionOvertimeApplicationFormService productionOvertimeApplicationFormService;
+    @Autowired
+    private IEnterpriseManagementPersonnelRosterService enterpriseManagementPersonnelRosterService;
 
     @PostMapping("/synchronization")
     public void Database_Synchronization(ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1) throws ParseException {
         System.out.println("-----------同步-------同步------------");
         List<ProductionClockInForm> list1 = productionClockInFormService.selectProductionClockInFormList1();
         List<ProductionOvertimeApplicationForm> list2 =productionOvertimeApplicationFormService.selectProductionOvertimeApplicationFormList1();
-        productionOvertimeStatisticsTableService.Synchronization(list1, list2,productionOvertimeStatisticsTable1);
+        List<EnterpriseManagementPersonnelRoster> list3 = enterpriseManagementPersonnelRosterService.selectEnterpriseManagementPersonnelRosterList1();
+        productionOvertimeStatisticsTableService.Synchronization(list1, list2,list3,productionOvertimeStatisticsTable1);
         System.out.println("-----------同步-------同步------------");
 
     }

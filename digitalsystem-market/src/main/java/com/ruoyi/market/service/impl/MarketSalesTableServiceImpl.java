@@ -188,6 +188,12 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
     @Override
     public int insertMarketSalesTable(MarketSalesTable marketSalesTable)
     {
+        Long lastid = selectLastId();
+        if(lastid == null){
+            lastid = 0L;
+        }
+        Long MS_id = GenerateId.getNextId(lastid);
+        marketSalesTable.setMsId(MS_id);
         return marketSalesTableMapper.insertMarketSalesTable(marketSalesTable);
     }
 

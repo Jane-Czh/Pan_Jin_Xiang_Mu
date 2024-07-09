@@ -339,20 +339,20 @@
         </template>
       </el-table-column>
       <el-table-column label="车型" align="center" prop="vehicleModel" />
-      <el-table-column label="数量" align="center" prop="Number" />
+      <el-table-column label="数量" align="center" prop="number" />
       <el-table-column label="阀片" align="center" prop="valveBlock" />
-      <el-table-column label="货叉" align="center" prop="Fork" />
+      <el-table-column label="货叉" align="center" prop="fork" />
       <el-table-column label="门架" align="center" prop="doorFrame" />
       <el-table-column label="空滤" align="center" prop="airFilter" />
-      <el-table-column label="属具" align="center" prop="Accessory" />
-      <el-table-column label="轮胎" align="center" prop="Tyre" />
-      <el-table-column label="配置" align="center" prop="Configuration" />
+      <el-table-column label="属具" align="center" prop="accessory" />
+      <el-table-column label="轮胎" align="center" prop="tyre" />
+      <el-table-column label="配置" align="center" prop="configuration" />
       <el-table-column label="车号" align="center" prop="carNumber" />
-      <el-table-column label="备注" align="center" prop="Remarks" />
+      <el-table-column label="备注" align="center" prop="remarks" />
       <el-table-column label="交货形式" align="center" prop="deliveryForm" />
       <el-table-column label="交货地点" align="center" prop="deliveryLocation" />
-      <el-table-column label="联系人" align="center" prop="Contacts" />
-      <el-table-column label="电话" align="center" prop="Telephone" />
+      <el-table-column label="联系人" align="center" prop="contacts" />
+      <el-table-column label="电话" align="center" prop="elephone" />
       <el-table-column label="订单系统交货期" align="center" prop="orderSystemDeliveryTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.orderSystemDeliveryTime, '{y}-{m}-{d}') }}</span>
@@ -422,8 +422,8 @@
             placeholder="请选择创建时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="网点" prop="Branch">
-          <el-input v-model="form.Branch" placeholder="请输入网点" />
+        <el-form-item label="网点" prop="branch">
+          <el-input v-model="form.branch" placeholder="请输入网点" />
         </el-form-item>
         <el-form-item label="合同号" prop="contractNumber">
           <el-input v-model="form.contractNumber" placeholder="请输入合同号" />
@@ -442,14 +442,14 @@
         <el-form-item label="车型" prop="vehicleModel">
           <el-input v-model="form.vehicleModel" placeholder="请输入车型" />
         </el-form-item>
-        <el-form-item label="数量" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入数量" />
+        <el-form-item label="数量" prop="number">
+          <el-input v-model="form.number" placeholder="请输入数量" />
         </el-form-item>
         <el-form-item label="阀片" prop="valveBlock">
           <el-input v-model="form.valveBlock" placeholder="请输入阀片" />
         </el-form-item>
-        <el-form-item label="货叉" prop="Fork">
-          <el-input v-model="form.Fork" placeholder="请输入货叉" />
+        <el-form-item label="货叉" prop="fork">
+          <el-input v-model="form.fork" placeholder="请输入货叉" />
         </el-form-item>
         <el-form-item label="门架" prop="doorFrame">
           <el-input v-model="form.doorFrame" placeholder="请输入门架" />
@@ -457,20 +457,20 @@
         <el-form-item label="空滤" prop="airFilter">
           <el-input v-model="form.airFilter" placeholder="请输入空滤" />
         </el-form-item>
-        <el-form-item label="属具" prop="Accessory">
-          <el-input v-model="form.Accessory" placeholder="请输入属具" />
+        <el-form-item label="属具" prop="accessory">
+          <el-input v-model="form.accessory" placeholder="请输入属具" />
         </el-form-item>
-        <el-form-item label="轮胎" prop="Tyre">
-          <el-input v-model="form.Tyre" placeholder="请输入轮胎" />
+        <el-form-item label="轮胎" prop="tyre">
+          <el-input v-model="form.tyre" placeholder="请输入轮胎" />
         </el-form-item>
-        <el-form-item label="配置" prop="Configuration">
-          <el-input v-model="form.Configuration" placeholder="请输入配置" />
+        <el-form-item label="配置" prop="configuration">
+          <el-input v-model="form.configuration" placeholder="请输入配置" />
         </el-form-item>
         <el-form-item label="车号" prop="carNumber">
           <el-input v-model="form.carNumber" placeholder="请输入车号" />
         </el-form-item>
-        <el-form-item label="备注" prop="Remarks">
-          <el-input v-model="form.Remarks" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remarks">
+          <el-input v-model="form.remarks" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="交货形式" prop="deliveryForm">
           <el-input v-model="form.deliveryForm" placeholder="请输入交货形式" />
@@ -478,11 +478,11 @@
         <el-form-item label="交货地点" prop="deliveryLocation">
           <el-input v-model="form.deliveryLocation" placeholder="请输入交货地点" />
         </el-form-item>
-        <el-form-item label="联系人" prop="Contacts">
-          <el-input v-model="form.Contacts" placeholder="请输入联系人" />
+        <el-form-item label="联系人" prop="contacts">
+          <el-input v-model="form.contacts" placeholder="请输入联系人" />
         </el-form-item>
-        <el-form-item label="电话" prop="Telephone">
-          <el-input v-model="form.Telephone" placeholder="请输入电话" />
+        <el-form-item label="电话" prop="telephone">
+          <el-input v-model="form.telephone" placeholder="请输入电话" />
         </el-form-item>
         <el-form-item label="订单系统交货期" prop="orderSystemDeliveryTime">
           <el-date-picker clearable
@@ -571,25 +571,25 @@ export default {
         pageSize: 10,
         createdBy: null,
         createdTime: null,
-        Branch: null,
+        branch: null,
         contractNumber: null,
         orderNumber: null,
         orderAcceptanceTime: null,
         vehicleModel: null,
-        Number: null,
+        number: null,
         valveBlock: null,
-        Fork: null,
+        fork: null,
         doorFrame: null,
         airFilter: null,
-        Accessory: null,
-        Tyre: null,
-        Configuration: null,
+        accessory: null,
+        tyre: null,
+        configuration: null,
         carNumber: null,
         Remarks: null,
         deliveryForm: null,
         deliveryLocation: null,
-        Contacts: null,
-        Telephone: null,
+        contacts: null,
+        telephone: null,
         orderSystemDeliveryTime: null,
         orderOverdueWarning: null,
         plannedDepartureDate: null,
@@ -602,7 +602,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        Branch: [
+        branch: [
           { required: true, message: "网点不能为空", trigger: "blur" }
         ],
         contractNumber: [
@@ -617,22 +617,22 @@ export default {
         vehicleModel: [
           { required: true, message: "车型不能为空", trigger: "blur" }
         ],
-        Number: [
+        number: [
           { required: true, message: "数量不能为空", trigger: "blur" }
         ],
         valveBlock: [
           { required: true, message: "阀片不能为空", trigger: "blur" }
         ],
-        Fork: [
+        fork: [
           { required: true, message: "货叉不能为空", trigger: "blur" }
         ],
         doorFrame: [
           { required: true, message: "门架不能为空", trigger: "blur" }
         ],
-        Tyre: [
+        tyre: [
           { required: true, message: "轮胎不能为空", trigger: "blur" }
         ],
-        Configuration: [
+        configuration: [
           { required: true, message: "配置不能为空", trigger: "blur" }
         ],
         deliveryForm: [
@@ -641,7 +641,7 @@ export default {
         deliveryLocation: [
           { required: true, message: "交货地点不能为空", trigger: "blur" }
         ],
-        Contacts: [
+        contacts: [
           { required: true, message: "联系人不能为空", trigger: "blur" }
         ],
         orderSystemDeliveryTime: [
@@ -682,25 +682,25 @@ export default {
         msId: null,
         createdBy: null,
         createdTime: null,
-        Branch: null,
+        branch: null,
         contractNumber: null,
         orderNumber: null,
         orderAcceptanceTime: null,
         vehicleModel: null,
-        Number: null,
+        number: null,
         valveBlock: null,
-        Fork: null,
+        fork: null,
         doorFrame: null,
         airFilter: null,
-        Accessory: null,
-        Tyre: null,
-        Configuration: null,
+        accessory: null,
+        tyre: null,
+        configuration: null,
         carNumber: null,
-        Remarks: null,
+        remarks: null,
         deliveryForm: null,
         deliveryLocation: null,
-        Contacts: null,
-        Telephone: null,
+        contacts: null,
+        telephone: null,
         orderSystemDeliveryTime: null,
         orderOverdueWarning: null,
         plannedDepartureDate: null,

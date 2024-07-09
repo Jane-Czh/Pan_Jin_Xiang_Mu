@@ -112,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <!-- 根据月份，检查当月数据是否上传 -->
-    <select id="checkProductionFillingDataIsExisted" parameterType="Date" >
+    <select id="checkProductionFillingDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Production WHERE Year_And_Month=#{date})
     </select>
 

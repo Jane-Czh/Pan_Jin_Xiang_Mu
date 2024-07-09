@@ -21,10 +21,7 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @BelongsProject: ruoyi
@@ -51,9 +48,23 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 
 
     public int batchUpdateFinancialData(Date yearAndMonth){
-        Date maxMonth = financialIndicatorsHandfillTableService.selectMaxYearAndMonth();
-        int i = 0;
-        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(maxMonth)) ; date = DateUtils.getNextMonth(date)) {
+        Date fillingMaxMonth = financialIndicatorsHandfillTableService.selectMaxYearAndMonth();
+        Date interestsMaxMonth = financialInterestsTableService.selectMaxYearAndMonth();
+        Date balanceMaxMonth = financialBalanceTableService.selectMaxYearAndMonth();
+
+
+        List<Date> dates = new ArrayList<>();
+        dates.add(fillingMaxMonth);
+        // 假设这里添加了更多的日期
+        dates.add(interestsMaxMonth);
+        dates.add(balanceMaxMonth);
+
+        Date minDate = Collections.min(dates);
+        System.out.println("最小的时间是：" + minDate);
+
+
+        int i = 1;
+        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(minDate)) ; date = DateUtils.getNextMonth(date)) {
             if (checkDataUploadedForCurrentMonth(date)){
                 calculateCurrentMonthFinancialData(date);
                 i++;

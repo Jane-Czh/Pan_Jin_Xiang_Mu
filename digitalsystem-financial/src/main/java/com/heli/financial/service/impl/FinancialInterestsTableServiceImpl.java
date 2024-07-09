@@ -34,6 +34,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         return financialInterestsTableMapper.checkDataExists();
     }
 
+    @Override
+    public Date selectMaxYearAndMonth() {
+        return financialInterestsTableMapper.selectMaxYearAndMonth();
+    }
+
     /**
      * @description: 利润表导入
      * @author: hong

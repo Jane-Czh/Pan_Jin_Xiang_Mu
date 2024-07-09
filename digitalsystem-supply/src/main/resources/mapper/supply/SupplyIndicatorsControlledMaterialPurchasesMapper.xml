@@ -49,7 +49,7 @@
     </select>
 
     <!-- 根据月份，检查当月数据是否上传 -->
-    <select id="checkControlledPurchaseAmountRatioIsExisted" parameterType="Date" >
+    <select id="checkControlledPurchaseAmountRatioIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Supply_Indicators_Controlled_Material_Purchases WHERE Year_And_Month=#{date})
     </select>
 

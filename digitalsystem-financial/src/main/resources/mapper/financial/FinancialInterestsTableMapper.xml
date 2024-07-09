@@ -27,7 +27,7 @@
     </sql>
 
     <select id="checkDataExists" resultType="boolean">
-        select count(*) from Financial_Interests_table
+        SELECT EXISTS(SELECT 1 FROM Financial_Interests_table)
     </select>
 
 
@@ -103,6 +103,11 @@
         select Operating_Revenue from Financial_Interests_table
         where date_format(Year_And_Month,'%y-%m') = date_format(#{yearAndMonth},'%y-%m')
 
+    </select>
+
+    <!--  查询已上传数据的最大月份  -->
+    <select id="selectMaxYearAndMonth" resultType="Date">
+        select max(Year_And_Month) from Financial_Interests_table
     </select>
 
     <insert id="insertFinancialInterestsTable" parameterType="FinancialInterestsTable">

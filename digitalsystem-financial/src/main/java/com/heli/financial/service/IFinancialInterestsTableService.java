@@ -18,6 +18,9 @@ public interface IFinancialInterestsTableService {
 
     boolean checkDataExists();
 
+    Date selectMaxYearAndMonth();
+
+
 
     /**
      * @description: 利润表导入

@@ -256,20 +256,20 @@
         <el-form-item label="是否为集采(0/1)" prop="collectiveProcurement">
           <el-input v-model="form.collectiveProcurement" placeholder="请输入是否为集采(0/1)" />
         </el-form-item>
-        <el-form-item label="短文本" prop="ShortText">
-          <el-input v-model="form.ShortText" placeholder="请输入短文本" />
+        <el-form-item label="短文本" prop="shortText">
+          <el-input v-model="form.shortText" placeholder="请输入短文本" />
         </el-form-item>
-        <el-form-item label="单位" prop="Unit">
-          <el-input v-model="form.Unit" placeholder="请输入单位" />
+        <el-form-item label="单位" prop="unit">
+          <el-input v-model="form.unit" placeholder="请输入单位" />
         </el-form-item>
-        <el-form-item label="数量" prop="Quantity">
-          <el-input v-model="form.Quantity" placeholder="请输入数量" />
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model="form.quantity" placeholder="请输入数量" />
         </el-form-item>
         <el-form-item label="订单净值" prop="orderNetvalue">
           <el-input v-model="form.orderNetvalue" placeholder="请输入订单净值" />
         </el-form-item>
-        <el-form-item label="供应商" prop="Supplier">
-          <el-input v-model="form.Supplier" placeholder="请输入供应商" />
+        <el-form-item label="供应商" prop="supplier">
+          <el-input v-model="form.supplier" placeholder="请输入供应商" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -317,10 +317,10 @@ export default {
         materialNumber: null,
         collectiveProcurement: null,
         ShortText: null,
-        Unit: null,
-        Quantity: null,
+        unit: null,
+        quantity: null,
         orderNetvalue: null,
-        Supplier: null
+        supplier: null
       },
       // 表单参数
       form: {},
@@ -329,10 +329,10 @@ export default {
         materialNumber: [
           { required: true, message: "物料号不能为空", trigger: "blur" }
         ],
-        Quantity: [
+        quantity: [
           { required: true, message: "数量不能为空", trigger: "blur" }
         ],
-        Supplier: [
+        supplier: [
           { required: true, message: "供应商不能为空", trigger: "blur" }
         ]
       },
@@ -370,11 +370,11 @@ export default {
         purchasingDocuments: null,
         materialNumber: null,
         collectiveProcurement: null,
-        ShortText: null,
-        Unit: null,
-        Quantity: null,
+        shortText: null,
+        unit: null,
+        quantity: null,
         orderNetvalue: null,
-        Supplier: null
+        supplier: null
       };
       this.resetForm("form");
     },

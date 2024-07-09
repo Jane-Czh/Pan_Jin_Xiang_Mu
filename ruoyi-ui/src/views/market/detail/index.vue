@@ -173,9 +173,9 @@
       <el-table-column label="车号" align="center" prop="wagonNumber" />
       <el-table-column label="车型" align="center" prop="vehicleModel" />
       <el-table-column label="门架" align="center" prop="doorFrame" />
-      <el-table-column label="属具" align="center" prop="Accessory" />
+      <el-table-column label="属具" align="center" prop="accessory" />
       <el-table-column label="阀片数" align="center" prop="valveBlockNumber" />
-      <el-table-column label="配置" align="center" prop="Configuration" />
+      <el-table-column label="配置" align="center" prop="configuration" />
       <el-table-column label="计划完工期" align="center" prop="planndeCompletionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.planndeCompletionTime, '{y}-{m}-{d}') }}</span>
@@ -229,14 +229,14 @@
         <el-form-item label="门架" prop="doorFrame">
           <el-input v-model="form.doorFrame" placeholder="请输入门架" />
         </el-form-item>
-        <el-form-item label="属具" prop="Accessory">
-          <el-input v-model="form.Accessory" placeholder="请输入属具" />
+        <el-form-item label="属具" prop="accessory">
+          <el-input v-model="form.accessory" placeholder="请输入属具" />
         </el-form-item>
         <el-form-item label="阀片数" prop="valveBlockNumber">
           <el-input v-model="form.valveBlockNumber" placeholder="请输入阀片数" />
         </el-form-item>
-        <el-form-item label="配置" prop="Configuration">
-          <el-input v-model="form.Configuration" placeholder="请输入配置" />
+        <el-form-item label="配置" prop="configuration">
+          <el-input v-model="form.configuration" placeholder="请输入配置" />
         </el-form-item>
         <el-form-item label="计划完工期" prop="planndeCompletionTime">
           <el-date-picker clearable
@@ -289,9 +289,9 @@ export default {
         wagonNumber: null,
         vehicleModel: null,
         doorFrame: null,
-        Accessory: null,
+        accessory: null,
         valveBlockNumber: null,
-        Configuration: null,
+        configuration: null,
         planndeCompletionTime: null
       },
       // 表单参数

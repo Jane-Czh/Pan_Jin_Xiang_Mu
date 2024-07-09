@@ -785,6 +785,7 @@ export default {
     updateCancel() {
       this.fileUpdateDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 表单重置
     reset() {
@@ -974,6 +975,7 @@ export default {
           }
         }
       });
+      this.fileList = [];
     },
     /** 删除按钮操作 */
     handleDelete(row) {

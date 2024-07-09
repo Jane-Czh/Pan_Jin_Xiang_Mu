@@ -704,16 +704,16 @@
       </el-collapse>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['Enterprisemanagement:roster:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['Enterprisemanagement:roster:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -897,7 +897,7 @@
         </template>
       </el-table-column>
       <el-table-column label="婚姻状况" align="center" prop="maritalStatus" />
-      <el-table-column label="籍贯" align="center" prop="Hometown" />
+      <el-table-column label="籍贯" align="center" prop="hometown" />
       <el-table-column label="户口性质" align="center" prop="householdRegistrationNature" />
       <el-table-column label="常驻地址" align="center" prop="residentAddress" />
       <el-table-column label="联系方式" align="center" prop="contactInformation" />
@@ -938,28 +938,28 @@
     <!-- 添加或修改员工花名单导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="序号" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入序号" />
+        <el-form-item label="序号" prop="number">
+          <el-input v-model="form.number" placeholder="请输入序号" />
         </el-form-item>
         <el-form-item label="员工编号" prop="employeeId">
           <el-input v-model="form.employeeId" placeholder="请输入员工编号" />
         </el-form-item>
-        <el-form-item label="姓名" prop="Name">
-          <el-input v-model="form.Name" placeholder="请输入姓名" />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别" prop="Gender">
-          <el-input v-model="form.Gender" placeholder="请输入性别" />
+        <el-form-item label="性别" prop="gender">
+          <el-input v-model="form.gender" placeholder="请输入性别" />
         </el-form-item>
-        <el-form-item label="出生日期" prop="Birthday">
+        <el-form-item label="出生日期" prop="birthday">
           <el-date-picker clearable
-            v-model="form.Birthday"
+            v-model="form.birthday"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择出生日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="年龄" prop="Age">
-          <el-input v-model="form.Age" placeholder="请输入年龄" />
+        <el-form-item label="年龄" prop="age">
+          <el-input v-model="form.age" placeholder="请输入年龄" />
         </el-form-item>
         <el-form-item label="档案出生日期" prop="recordBirth">
           <el-date-picker clearable
@@ -1053,8 +1053,8 @@
         <el-form-item label="职务类别" prop="jobCategory">
           <el-input v-model="form.jobCategory" placeholder="请输入职务类别" />
         </el-form-item>
-        <el-form-item label="职务" prop="Job">
-          <el-input v-model="form.Job" placeholder="请输入职务" />
+        <el-form-item label="职务" prop="job">
+          <el-input v-model="form.job" placeholder="请输入职务" />
         </el-form-item>
         <el-form-item label="职务名称" prop="jobTitle">
           <el-input v-model="form.jobTitle" placeholder="请输入职务名称" />
@@ -1071,14 +1071,14 @@
         <el-form-item label="最高技术等级" prop="theHighestTechnicalLevel">
           <el-input v-model="form.theHighestTechnicalLevel" placeholder="请输入最高技术等级" />
         </el-form-item>
-        <el-form-item label="职级" prop="Rank">
-          <el-input v-model="form.Rank" placeholder="请输入职级" />
+        <el-form-item label="职级" prop="rank">
+          <el-input v-model="form.rank" placeholder="请输入职级" />
         </el-form-item>
         <el-form-item label="职位ID" prop="positionId">
           <el-input v-model="form.positionId" placeholder="请输入职位ID" />
         </el-form-item>
         <el-form-item label="职位" prop="position">
-          <el-input v-model="form.Position" placeholder="请输入职位" />
+          <el-input v-model="form.position" placeholder="请输入职位" />
         </el-form-item>
         <el-form-item label="岗位名称" prop="jobbTitle">
           <el-input v-model="form.jobbTitle" placeholder="请输入岗位名称" />
@@ -1194,8 +1194,8 @@
         <el-form-item label="司龄" prop="siLing">
           <el-input v-model="form.siLing" placeholder="请输入司龄" />
         </el-form-item>
-        <el-form-item label="民族" prop="Nation">
-          <el-input v-model="form.Nation" placeholder="请输入民族" />
+        <el-form-item label="民族" prop="nation">
+          <el-input v-model="form.nation" placeholder="请输入民族" />
         </el-form-item>
         <el-form-item label="政治面貌" prop="politicalLandscape">
           <el-input v-model="form.politicalLandscape" placeholder="请输入政治面貌" />
@@ -1208,8 +1208,8 @@
             placeholder="请选择入党时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="籍贯" prop="Hometown">
-          <el-input v-model="form.Hometown" placeholder="请输入籍贯" />
+        <el-form-item label="籍贯" prop="hometown">
+          <el-input v-model="form.hometown" placeholder="请输入籍贯" />
         </el-form-item>
         <el-form-item label="户口性质" prop="householdRegistrationNature">
           <el-input v-model="form.householdRegistrationNature" placeholder="请输入户口性质" />
@@ -1279,12 +1279,12 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
+        number: null,
         employeeId: null,
-        Name: null,
-        Gender: null,
-        Birthday: null,
-        Age: null,
+        name: null,
+        gender: null,
+        birthday: null,
+        age: null,
         recordBirth: null,
         idCard: null,
         socialSecurityNumber: null,
@@ -1314,15 +1314,15 @@ export default {
         positionEthnicGroup: null,
         jobCategoryId: null,
         jobCategory: null,
-        Job: null,
+        job: null,
         jobTitle: null,
         technicalTitle: null,
         theHighestTechnicalTitl: null,
         technicalLevel: null,
         theHighestTechnicalLevel: null,
-        Rank: null,
+        rank: null,
         positionId: null,
-        Position: null,
+        position: null,
         jobbTitle: null,
         salaryGrade: null,
         salaryyGrade: null,
@@ -1351,11 +1351,11 @@ export default {
         startingTimeOfServiceLife: null,
         retirementDate: null,
         siLing: null,
-        Nation: null,
+        nation: null,
         politicalLandscape: null,
         partyMembershipTime: null,
         maritalStatus: null,
-        Hometown: null,
+        hometown: null,
         householdRegistrationNature: null,
         residentAddress: null,
         contactInformation: null,
@@ -1370,6 +1370,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        employeeId: [
+          { required: true, message: "数量不能为空", trigger: "blur" }
+        ],
       },
       //新增参数
       showDialog: false,

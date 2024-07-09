@@ -56,16 +56,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['product:Oaform:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['product:Oaform:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -177,17 +177,17 @@
     <!-- 添加或修改加班申请对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="序号" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入序号" />
+        <el-form-item label="序号" prop="number">
+          <el-input v-model="form.number" placeholder="请输入序号" />
         </el-form-item>
         <el-form-item label="员工编号" prop="idNumber">
           <el-input v-model="form.idNumber" placeholder="请输入员工编号" />
         </el-form-item>
-        <el-form-item label="姓名" prop="Name">
-          <el-input v-model="form.Name" placeholder="请输入姓名" />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别" prop="Gender">
-          <el-input v-model="form.Gender" placeholder="请输入性别" />
+        <el-form-item label="性别" prop="gender">
+          <el-input v-model="form.gender" placeholder="请输入性别" />
         </el-form-item>
 <!--        <el-form-item label="申请加班开始时间" prop="applicationForOvertimeStartTime">-->
 <!--          <el-date-picker clearable-->
@@ -253,10 +253,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
+        number: null,
         idNumber: null,
-        Name: null,
-        Gender: null,
+        name: null,
+        gender: null,
         applicationForOvertimeStartTime: null,
         applicationForOvertimeEndTime: null
       },
@@ -264,6 +264,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        idNumber: [
+          { required: true, message: "数量不能为空", trigger: "blur" }
+        ],
       },
       //新增参数
       showDialog: false,

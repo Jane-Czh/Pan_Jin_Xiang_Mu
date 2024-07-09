@@ -152,16 +152,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['Enterprisemanagement:Ledger:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['Enterprisemanagement:Ledger:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -318,14 +318,14 @@
 <!--        <el-form-item label="序号" prop="Number">-->
 <!--          <el-input v-model="form.Number" placeholder="请输入序号" />-->
 <!--        </el-form-item>-->
-        <el-form-item label="部门" prop="Department">
-          <el-input v-model="form.Department" placeholder="请输入部门" />
+        <el-form-item label="部门" prop="department">
+          <el-input v-model="form.department" placeholder="请输入部门" />
         </el-form-item>
-        <el-form-item label="姓名" prop="Name">
-          <el-input v-model="form.Name" placeholder="请输入姓名" />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别" prop="Gender">
-          <el-input v-model="form.Gender" placeholder="请输入性别" />
+        <el-form-item label="性别" prop="gender">
+          <el-input v-model="form.gender" placeholder="请输入性别" />
         </el-form-item>
         <el-form-item label="发证机关" prop="issuingAuthority">
           <el-input v-model="form.issuingAuthority" placeholder="请输入发证机关" />
@@ -449,10 +449,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
-        Department: null,
-        Name: null,
-        Gender: null,
+        number: null,
+        department: null,
+        name: null,
+        gender: null,
         issuingAuthority: null,
         documentType: null,
         assignmentCategory: null,
@@ -465,7 +465,7 @@ export default {
         reexaminationSecondly: null,
         thirdExpiration: null,
         reexaminationThirdly: null,
-        Warn: null,
+        warn: null,
         createdBy: null,
         createdTime: null
       },
@@ -473,6 +473,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        idNumber: [
+          { required: true, message: "数量不能为空", trigger: "blur" }
+        ],
       },
       //新增参数
       showDialog: false,

@@ -8,16 +8,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['product:rate:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['product:rate:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -141,6 +141,29 @@
     <!-- 添加或修改自制件合格率对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="型号" prop="model">
+            <el-input v-model="form.model" placeholder="请输入型号" />
+          </el-form-item>
+          <el-form-item label="合格数量" prop="qualifiedNumber">
+            <el-input v-model="form.qualifiedNumber" placeholder="请输入合格数量" />
+          </el-form-item>
+          <el-form-item label="不合格数量" prop="disqualifiedNumber">
+            <el-input v-model="form.disqualifiedNumber" placeholder="请输入不合格数量" />
+          </el-form-item>
+          <el-form-item label="生产数量" prop="productionNumber">
+            <el-input v-model="form.productionNumber" placeholder="请输入生产数量" />
+          </el-form-item>
+          <el-form-item label="合格率" prop="qualificationRate">
+            <el-input v-model="form.qualificationRate" placeholder="请输入合格率" />
+          </el-form-item>
+          <el-form-item label="日期" prop="date">
+            <el-date-picker clearable
+                            v-model="form.date"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="请选择日期">
+            </el-date-picker>
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -186,6 +209,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        model: [
+          { required: true, message: "数量不能为空", trigger: "blur" }
+        ],
       },
 
       //新增参数

@@ -208,16 +208,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['market:CVimport:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['market:CVimport:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -421,17 +421,17 @@
         <el-form-item label="门架高度" prop="doorFrameHeight">
           <el-input v-model="form.doorFrameHeight" placeholder="请输入门架高度" />
         </el-form-item>
-        <el-form-item label="数量" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入数量" />
+        <el-form-item label="数量" prop="number">
+          <el-input v-model="form.number" placeholder="请输入数量" />
         </el-form-item>
-        <el-form-item label="属具" prop="Accessory">
-          <el-input v-model="form.Accessory" placeholder="请输入属具" />
+        <el-form-item label="属具" prop="accessory">
+          <el-input v-model="form.accessory" placeholder="请输入属具" />
         </el-form-item>
         <el-form-item label="阀片" prop="valveBlock">
           <el-input v-model="form.valveBlock" placeholder="请输入阀片" />
         </el-form-item>
-        <el-form-item label="配置" prop="Configuration">
-          <el-input v-model="form.Configuration" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="配置" prop="configuration">
+          <el-input v-model="form.configuration" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="计划完工期" prop="plannedCompletionPeriod">
           <el-date-picker clearable
@@ -441,8 +441,8 @@
             placeholder="请选择计划完工期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="客户" prop="Customer">
-          <el-input v-model="form.Customer" placeholder="请输入客户" />
+        <el-form-item label="客户" prop="customer">
+          <el-input v-model="form.customer" placeholder="请输入客户" />
         </el-form-item>
         <el-form-item label="车体上线日期" prop="vehicleLaunchDate">
           <el-date-picker clearable
@@ -491,8 +491,8 @@
         <el-form-item label="上线" prop="goLive">
           <el-input v-model="form.goLive" placeholder="请输入上线" />
         </el-form-item>
-        <el-form-item label="入库" prop="Warehousing">
-          <el-input v-model="form.Warehousing" placeholder="请输入入库" />
+        <el-form-item label="入库" prop="warehousing">
+          <el-input v-model="form.warehousing" placeholder="请输入入库" />
         </el-form-item>
         <el-form-item label="生产周期" prop="productionCycle">
           <el-input v-model="form.productionCycle" placeholder="请输入生产周期" />
@@ -546,12 +546,12 @@ export default {
         carNumber: null,
         vehicleModel: null,
         doorFrameHeight: null,
-        Number: null,
-        Accessory: null,
+        number: null,
+        accessory: null,
         valveBlock: null,
-        Configuration: null,
+        configuration: null,
         plannedCompletionPeriod: null,
-        Customer: null,
+        customer: null,
         vehicleLaunchDate: null,
         completionPeriodOfDoorFrameAssembly: null,
         trialCompletionPeriod: null,
@@ -561,52 +561,52 @@ export default {
         procurementOfOnSiteAbnormalIssues: null,
         qualityOfOnSiteAbnormalIssues: null,
         goLive: null,
-        Warehousing: null,
+        warehousing: null,
         productionCycle: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        acceptanceDate: [
-          { required: true, message: "接单日期不能为空", trigger: "blur" }
-        ],
-        launchDate: [
-          { required: true, message: "上线日期不能为空", trigger: "blur" }
-        ],
-        orderNumber: [
-          { required: true, message: "订单号不能为空", trigger: "blur" }
-        ],
-        contractNumber: [
-          { required: true, message: "合同号不能为空", trigger: "blur" }
-        ],
+        // acceptanceDate: [
+        //   { required: true, message: "接单日期不能为空", trigger: "blur" }
+        // ],
+        // launchDate: [
+        //   { required: true, message: "上线日期不能为空", trigger: "blur" }
+        // ],
+        // orderNumber: [
+        //   { required: true, message: "订单号不能为空", trigger: "blur" }
+        // ],
+        // contractNumber: [
+        //   { required: true, message: "合同号不能为空", trigger: "blur" }
+        // ],
         carNumber: [
           { required: true, message: "车号不能为空", trigger: "blur" }
         ],
-        vehicleModel: [
-          { required: true, message: "车型不能为空", trigger: "blur" }
-        ],
-        doorFrameHeight: [
-          { required: true, message: "门架高度不能为空", trigger: "blur" }
-        ],
-        Number: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
-        ],
-        Accessory: [
-          { required: true, message: "属具不能为空", trigger: "blur" }
-        ],
-        valveBlock: [
-          { required: true, message: "阀片不能为空", trigger: "blur" }
-        ],
-        Configuration: [
-          { required: true, message: "配置不能为空", trigger: "blur" }
-        ],
-        plannedCompletionPeriod: [
-          { required: true, message: "计划完工期不能为空", trigger: "blur" }
-        ],
-        Customer: [
-          { required: true, message: "客户不能为空", trigger: "blur" }
-        ],
+        // vehicleModel: [
+        //   { required: true, message: "车型不能为空", trigger: "blur" }
+        // ],
+        // doorFrameHeight: [
+        //   { required: true, message: "门架高度不能为空", trigger: "blur" }
+        // ],
+        // Number: [
+        //   { required: true, message: "数量不能为空", trigger: "blur" }
+        // ],
+        // Accessory: [
+        //   { required: true, message: "属具不能为空", trigger: "blur" }
+        // ],
+        // valveBlock: [
+        //   { required: true, message: "阀片不能为空", trigger: "blur" }
+        // ],
+        // Configuration: [
+        //   { required: true, message: "配置不能为空", trigger: "blur" }
+        // ],
+        // plannedCompletionPeriod: [
+        //   { required: true, message: "计划完工期不能为空", trigger: "blur" }
+        // ],
+        // Customer: [
+        //   { required: true, message: "客户不能为空", trigger: "blur" }
+        // ],
       },
       //新增参数
       showDialog: false,
@@ -779,17 +779,15 @@ export default {
 
         // 上传成功后的处理
         this.$message.success("上传成功"); // 提示上传成功
-        setTimeout(() => { 
+        setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
-          // location.reload(); // 调用此方法刷新页面数据 
+          // location.reload(); // 调用此方法刷新页面数据
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
         console.error('There was an error!', error);
       }
     },
-
-    
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {

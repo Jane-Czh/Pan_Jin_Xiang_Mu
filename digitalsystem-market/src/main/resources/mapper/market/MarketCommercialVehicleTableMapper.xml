@@ -38,46 +38,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select MCV_ID, CREATED_BY, CREATED_TIME, Acceptance_Date, Launch_Date, Order_Number, Contract_Number, Car_Number, Vehicle_Model, Door_Frame_Height, Number, Accessory, Valve_Block, Configuration, Planned_Completion_Period, Customer, Vehicle_Launch_Date, Completion_Period_Of_Door_Frame_Assembly, Trial_Completion_Period, Special_Operations, Precision_Completion_Period, Production_SiteIssues, Procurement_Of_On_site_Abnormal_Issues, Quality_Of_On_site_Abnormal_Issues, Go_Live, Warehousing, Production_Cycle from Market_Commercial_Vehicle_table
     </sql>
 
-
-
-    <!--  批量插入数据库  -->
-    <insert id="batchInsertProductionTable" parameterType="java.util.List">
-        insert into Market_Commercial_Vehicle_table(CREATED_BY,CREATED_TIME,Acceptance_Date,Launch_Date,
-        Order_Number,Contract_Number,Car_Number,Vehicle_Model,
-        Door_Frame_Height,Number,Accessory,Valve_Block,
-        Configuration,Planned_Completion_Period,Customer,
-        Vehicle_Launch_Date,Completion_Period_Of_Door_Frame_Assembly,
-        Trial_Completion_Period,Special_Operations,Precision_Completion_Period,
-        Procurement_Of_On_site_Abnormal_Issues,
-        Quality_Of_On_site_Abnormal_Issues,Go_Live,Warehousing,Production_Cycle)
-        values
-        <foreach collection="productionTableList" item="e" separator=",">
-            (#{e.createdBy},#{e.createdTime},#{e.acceptanceDate},
-            #{e.launchDate},#{e.orderNumber},#{e.contractNumber},
-            #{e.carNumber},#{e.vehicleModel},#{e.doorFrameHeight},
-            #{e.Number},#{e.Accessory},#{e.valveBlock},#{e.Configuration},
-            #{e.plannedCompletionPeriod},#{e.Customer},#{e.vehicleLaunchDate},
-            #{e.completionPeriodOfDoorFrameAssembly},#{e.trialCompletionPeriod},
-            #{e.specialOperations},#{e.precisionCompletionPeriod},
-            #{e.procurementOfOnSiteAbnormalIssues},#{e.qualityOfOnSiteAbnormalIssues},
-            #{e.goLive},#{e.Warehousing},#{e.productionCycle})
-        </foreach>
-        ON DUPLICATE KEY UPDATE
-        CREATED_BY = values(CREATED_BY),CREATED_TIME =values(CREATED_TIME),Acceptance_Date = values(Acceptance_Date),Launch_Date =values(Launch_Date),
-        Order_Number =values(Order_Number),Contract_Number =values(Contract_Number),Vehicle_Model =values(Vehicle_Model),
-        Door_Frame_Height =values(Door_Frame_Height),Number =values(Number),Accessory =values(Accessory),Valve_Block =values(Valve_Block),
-        Configuration =values(Configuration),Planned_Completion_Period =values(Planned_Completion_Period),Customer =values(Customer),
-        Vehicle_Launch_Date =values(Vehicle_Launch_Date),Completion_Period_Of_Door_Frame_Assembly =values(Completion_Period_Of_Door_Frame_Assembly),
-        Trial_Completion_Period =values(Trial_Completion_Period),Special_Operations =values(Special_Operations),Precision_Completion_Period =values(Precision_Completion_Period),
-        Procurement_Of_On_site_Abnormal_Issues =values(Procurement_Of_On_site_Abnormal_Issues),
-        Quality_Of_On_site_Abnormal_Issues =values(Quality_Of_On_site_Abnormal_Issues),Go_Live =values(Go_Live),Warehousing =values(Warehousing),Production_Cycle =values(Production_Cycle)
-    </insert>
-
-
-
-
-
-
     <select id="selectMarketCommercialVehicleTableList" parameterType="MarketCommercialVehicleTable" resultMap="MarketCommercialVehicleTableResult">
         <include refid="selectMarketCommercialVehicleTableVo"/>
         <where>  
@@ -141,9 +101,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productionCycle != null  and productionCycle != ''"> and Production_Cycle = #{productionCycle}</if>
         </where>
     </select>
-
     <select id="selectLastId" resultType="java.lang.Long">
-        SELECT COUNT(*)
+        SELECT MCV_ID
         FROM Market_Commercial_Vehicle_table
         WHERE MCV_ID = (SELECT MAX(MCV_ID) FROM Market_Commercial_Vehicle_table);
     </select>

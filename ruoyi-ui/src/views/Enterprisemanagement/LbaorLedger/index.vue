@@ -128,16 +128,16 @@
 <!--    </el-form>-->
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['Enterprisemanagement:LbaorLedger:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['Enterprisemanagement:LbaorLedger:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -284,10 +284,13 @@
 <!--          <el-input v-model="form.Number" placeholder="请输入编号" />-->
 <!--        </el-form-item>-->
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.Name" placeholder="请输入姓名" />
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="科室" prop="document">
-          <el-input v-model="form.Document" placeholder="请输入科室" />
+          <el-input v-model="form.document" placeholder="请输入科室" />
+        </el-form-item>
+        <el-form-item label="就职状态" prop="employmentStatus">
+          <el-input v-model="form.employmentStatus" placeholder="请输入就职状态" />
         </el-form-item>
         <el-form-item label="身份证号" prop="idNumber">
           <el-input v-model="form.idNumber" placeholder="请输入身份证号" />
@@ -393,9 +396,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
-        Name: null,
-        Document: null,
+        number: null,
+        name: null,
+        document: null,
         employmentStatus: null,
         idNumber: null,
         phoneNumber: null,
@@ -408,12 +411,15 @@ export default {
         thirdContractPeriodStart: null,
         thirdContractPeriodEnd: null,
         contractStatusThirdly: null,
-        Warn: null
+        warn: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        idNumber: [
+          { required: true, message: "数量不能为空", trigger: "blur" }
+        ],
       },
       //新增参数
       showDialog: false,

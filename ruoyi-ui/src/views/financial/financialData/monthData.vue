@@ -49,10 +49,10 @@
       <el-table-column label="整机销售成本" align="center" prop="totalSalesCost" width="100" />
       <el-table-column label="当月制造费用" align="center" prop="manufacturingExpensesMonth" width="100" />
       <el-table-column label="储备车金额" align="center" prop="reserveCarAmount" width="90" />
-      <el-table-column label="资金周转率" align="center" prop="capitalTurnoverRate" width="90" />
-      <el-table-column label="库存商品周转率" align="center" prop="inventoryTurnoverRate" width="120" />
-      <el-table-column label="原材料周转率" align="center" prop="rawMaterialTurnoverRate" width="100" />
-      <el-table-column label="在制品周转率" align="center" prop="inprogressTurnoverRate" width="100" />
+      <el-table-column label="资金周转率(%)" align="center" prop="capitalTurnoverRate" width="120" />
+      <el-table-column label="库存商品周转率(%)" align="center" prop="inventoryTurnoverRate" width="140" />
+      <el-table-column label="原材料周转率(%)" align="center" prop="rawMaterialTurnoverRate" width="120" />
+      <el-table-column label="在制品周转率(%)" align="center" prop="inprogressTurnoverRate" width="120" />
       <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" width="140" />
       <!-- <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" /> -->
       <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" width="120" />
@@ -105,17 +105,17 @@
         <el-form-item label="储备车金额" prop="reserveCarAmount">
           <el-input v-model="form.reserveCarAmount" placeholder="请输入储备车金额" />
         </el-form-item>
-        <el-form-item label="资金周转率" prop="capitalTurnoverRate">
-          <el-input v-model="form.capitalTurnoverRate" placeholder="请输入资金周转率" />
+        <el-form-item label="资金周转率(%)" prop="capitalTurnoverRate">
+          <el-input v-model="form.capitalTurnoverRate" placeholder="请输入资金周转率(%)" />
         </el-form-item>
-        <el-form-item label="库存商品周转率" prop="inventoryTurnoverRate">
-          <el-input v-model="form.inventoryTurnoverRate" placeholder="请输入库存商品周转率" />
+        <el-form-item label="库存商品周转率(%)" prop="inventoryTurnoverRate">
+          <el-input v-model="form.inventoryTurnoverRate" placeholder="请输入库存商品周转率(%)" />
         </el-form-item>
-        <el-form-item label="原材料周转率" prop="rawMaterialTurnoverRate">
-          <el-input v-model="form.rawMaterialTurnoverRate" placeholder="请输入原材料周转率" />
+        <el-form-item label="原材料周转率(%)" prop="rawMaterialTurnoverRate">
+          <el-input v-model="form.rawMaterialTurnoverRate" placeholder="请输入原材料周转率(%)" />
         </el-form-item>
-        <el-form-item label="在制品周转率" prop="inprogressTurnoverRate">
-          <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入在制品周转率" />
+        <el-form-item label="在制品周转率(%)" prop="inprogressTurnoverRate">
+          <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入在制品周转率(%)" />
         </el-form-item>
         <el-form-item label="一年以上暂估行项目" prop="longEstimatedItems">
           <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目" />
@@ -134,6 +134,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/financial/data";
+import { numValidator, numValidatorPercentageNegative, numValidatorOnlyNature } from '@/api/financial/numValidator.js';
 // import * as XLSX from "xlsx";
 // import "font-awesome/css/font-awesome.css";
 //引入font-awesome
@@ -206,49 +207,111 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         totalSalesRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         externalGroupSalesRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         totalVehicleProduction: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyNature,
+            trigger: "blur",
+          }
         ],
         totalVehicleSales: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyNature,
+            trigger: "blur",
+          }
         ],
         newProductSalesRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         specialtyProductRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         totalSalesCost: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         manufacturingExpensesMonth: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         reserveCarAmount: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
+        // 周转率(%)
         capitalTurnoverRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentageNegative,
+            trigger: "blur",
+          }
         ],
         inventoryTurnoverRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentageNegative,
+            trigger: "blur",
+          }
         ],
         rawMaterialTurnoverRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentageNegative,
+            trigger: "blur",
+          }
         ],
         inprogressTurnoverRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentageNegative,
+            trigger: "blur",
+          }
         ],
+        //
         addedValueMonthly: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         longEstimatedItems: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
 
       }

@@ -13,10 +13,10 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
           v-hasPermi="['supply:dictionary:add']">新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
           v-hasPermi="['supply:dictionary:edit']">修改</el-button>
@@ -42,9 +42,9 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -103,6 +103,7 @@
 <script>
 import { listDictionary, getDictionary, delDictionary, addDictionary, updateDictionary } from "@/api/supply/dictionaryData";
 import { uploadFile } from '@/api/financial/excelImport';
+import { numValidatorOnlyNature } from '@/api/financial/numValidator.js';
 export default {
   name: "Index",
   data() {
@@ -113,7 +114,7 @@ export default {
       ids: [],
       names: [],
       // 非单个禁用
-
+      fileName: '',
       showDialog: false,
       progress: 0,
       selectedType: '',
@@ -147,7 +148,11 @@ export default {
       // 表单校验
       rules: {
         materialSerialNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyNature,
+            trigger: "blur"
+          }
         ],
         materialNumber: [
           { required: true, message: "数据不能为空", trigger: "blur" }
@@ -259,8 +264,8 @@ export default {
     /** 导入按钮 */
     checkFile() {
       const file = this.$refs.fileInput.files[0];
-      const fileName = file.name;
-      const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
+      this.fileName = file.name;
+      const fileExt = this.fileName.split(".").pop(); // 获取文件的扩展名
 
       if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
         this.$message.error("只能上传 Excel 文件！");
@@ -279,24 +284,43 @@ export default {
         this.$message.error("请选择文件!");
         return;
       } else {
-
+        const aimUrl = `/supply/data/readCollectibleMaterialsTable`;
         formData.append("multipartFile", file);
-        const aimUrl = `/supply/data/readCollectibleMaterialsTable`
-        uploadFile(formData, aimUrl)
-          .then(data => {
-            // 处理上传成功的情况
-            this.$message.success("上传成功");
-            this.getList();
-          })
-          .catch(error => {
-            // 处理上传失败的情况
-            console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+        const purchaseOrder = /采购/.test(this.fileName);
+        const materialDictionary = /字典/.test(this.fileName);
+        if (purchaseOrder || materialDictionary) {
+          uploadFile(formData, aimUrl)
+            .then(data => {
+              // 处理上传成功的情况
+              this.$message.success("上传成功");
+              this.getList();
+            })
+            .catch(error => {
+              // 处理上传失败的情况
+              this.$message.error("上传失败，请重试");
+            })
+            .finally(() => {
+              // 无论成功或失败，都关闭上传面板
+              this.showDialog = false;
+            });
+        } else {
+          this.$modal.confirm('确认上传该表吗').then(() => {
+            return uploadFile(formData, aimUrl)
+              .then(data => {
+                // 处理上传成功的情况
+                this.$message.success("上传成功");
+                this.getList();
+              })
+              .catch(error => {
+                // 处理上传失败的情况
+                this.$message.error("上传失败，请重试");
+              })
+              .finally(() => {
+                // 无论成功或失败，都关闭上传面板
+                this.showDialog = false;
+              });
           });
+        }
       }
     },
   }

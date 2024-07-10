@@ -48,9 +48,9 @@
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
 
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -143,6 +143,7 @@
 <script>
 import { listInterests, getInterests, delInterests, addInterests, updateInterests } from "@/api/financial/interestsData";
 import { uploadFile } from '@/api/financial/excelImport';
+import { numValidator } from '@/api/financial/numValidator.js';
 
 export default {
   name: "Interests",
@@ -205,34 +206,74 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         internalMainRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         externalMainRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         mainRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         cogsProductSalesSd: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         cogsFreight: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         cogsVariation: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         cogs: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         netProfit: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         managementExpense: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         rdExpense: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
       }
     };

@@ -47,9 +47,9 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -79,7 +79,7 @@
       <el-table-column label="电车的问题车数量" align="center" prop="electricCarProblemVehicles" width="180" />
       <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="200" />
       <el-table-column label="K2型号中大吨位的问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
-      <el-table-column label="电车、大吨位一次交检合格率" align="center" prop="singleInspectionPassRate" width="200" />
+      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" />
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -119,8 +119,8 @@
         <el-form-item label="K2型号中大吨位的问题车数量" prop="k2largetonnageProblemVehicles">
           <el-input v-model="form.k2largetonnageProblemVehicles" placeholder="请输入K2型号中大吨位的问题车数量" />
         </el-form-item>
-        <el-form-item label="电车、大吨位一次交检合格率" prop="singleInspectionPassRate">
-          <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率" />
+        <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
+          <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,7 +134,7 @@
 <script>
 import { listInspection, getInspection, delInspection, addInspection, updateInspection } from "@/api/quality/inspection";
 import { uploadFile } from '@/api/financial/excelImport';
-
+import { numValidatorPercentage, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
 export default {
 
   name: "Inspection",
@@ -193,25 +193,53 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         electricCarProductionQuantity: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         k2lessthan5tonProductionQuantity: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         k2largetonnageProductionQuantity: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         electricCarProblemVehicles: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         k2lessthan5tonProblemVehicles: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         k2largetonnageProblemVehicles: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         singleInspectionPassRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
       }
     };

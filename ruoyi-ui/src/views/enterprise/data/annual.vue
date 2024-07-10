@@ -75,7 +75,7 @@
 
 <script>
 import { listYearData, getYearData, delYearData, addYearData, updateYearData } from "@/api/enterprise/data";
-
+import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
   data() {
@@ -116,13 +116,25 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         annualTotalSalary: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur",
+          }
         ],
         stockTargetValue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur",
+          }
         ],
         panjinTargetValue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur",
+          }
         ],
 
       }

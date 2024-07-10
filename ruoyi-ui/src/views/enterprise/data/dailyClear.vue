@@ -66,23 +66,23 @@
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="销售订单录入不及时比例" prop="orderEntryDelayRatio">
-          <el-input v-model="form.orderEntryDelayRatio" placeholder="请输入销售订单录入不及时比例" />
+        <el-form-item label="销售订单录入不及时比例(%)" prop="orderEntryDelayRatio">
+          <el-input v-model="form.orderEntryDelayRatio" placeholder="请输入销售订单录入不及时比例(%)" />
         </el-form-item>
-        <el-form-item label="销售订单不及时发货比例" prop="shipmentDelayRatio">
-          <el-input v-model="form.shipmentDelayRatio" placeholder="请输入销售订单不及时发货比例" />
+        <el-form-item label="销售订单不及时发货比例(%)" prop="shipmentDelayRatio">
+          <el-input v-model="form.shipmentDelayRatio" placeholder="请输入销售订单不及时发货比例(%)" />
         </el-form-item>
-        <el-form-item label="生产订单不及时报工比例" prop="productionReportDelayRatio">
-          <el-input v-model="form.productionReportDelayRatio" placeholder="请输入生产订单不及时报工比例" />
+        <el-form-item label="生产订单不及时报工比例(%)" prop="productionReportDelayRatio">
+          <el-input v-model="form.productionReportDelayRatio" placeholder="请输入生产订单不及时报工比例(%)" />
         </el-form-item>
-        <el-form-item label="成品检验业务不及时率" prop="inspectionDelayRate">
-          <el-input v-model="form.inspectionDelayRate" placeholder="请输入成品检验业务不及时率" />
+        <el-form-item label="成品检验业务不及时率(%)" prop="inspectionDelayRate">
+          <el-input v-model="form.inspectionDelayRate" placeholder="请输入成品检验业务不及时率(%)" />
         </el-form-item>
-        <el-form-item label="销售发票过账不及时率" prop="invoicePostingDelayRate">
-          <el-input v-model="form.invoicePostingDelayRate" placeholder="请输入销售发票过账不及时率" />
+        <el-form-item label="销售发票过账不及时率(%)" prop="invoicePostingDelayRate">
+          <el-input v-model="form.invoicePostingDelayRate" placeholder="请输入销售发票过账不及时率(%)" />
         </el-form-item>
-        <el-form-item label="客户未清账比例" prop="unsettledAccountsRatio">
-          <el-input v-model="form.unsettledAccountsRatio" placeholder="请输入客户未清账比例" />
+        <el-form-item label="客户未清账比例(%)" prop="unsettledAccountsRatio">
+          <el-input v-model="form.unsettledAccountsRatio" placeholder="请输入客户未清账比例(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,7 +95,7 @@
 
 <script>
 import { listDailyClearData, getDailyClearData, addDailyClearData, updateDailyClearData, delDailyClearData } from "@/api/enterprise/dailyClearData";
-
+import { numValidatorPercentage } from '@/api/financial/numValidator.js';
 export default {
   name: "Settlement",
   data() {
@@ -139,22 +139,46 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         orderEntryDelayRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         shipmentDelayRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         productionReportDelayRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         inspectionDelayRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         invoicePostingDelayRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         unsettledAccountsRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
       }
     };

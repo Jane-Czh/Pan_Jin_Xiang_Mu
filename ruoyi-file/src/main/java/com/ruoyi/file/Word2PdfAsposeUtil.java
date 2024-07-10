@@ -87,6 +87,11 @@ public class Word2PdfAsposeUtil {
             os = new FileOutputStream(outputFile);
             System.out.println("os==>" + os);
 
+//            OsInfo osInfo = SystemUtil.getOsInfo();
+//            if(osInfo.isLinux()){
+//                FontSettings.setFontsFolder("/usr/share/fonts/chinese", true);
+//            }
+
             //使用 Aspose.Words库 来实现从Word到PDF的文件转换
             Document doc = new Document(inputFile.getAbsolutePath()); // 使用绝对路径
             System.out.println("doc==>" + doc);

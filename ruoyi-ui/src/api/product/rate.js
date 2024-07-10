@@ -42,3 +42,15 @@ export function delRate(pqrId) {
     method: 'delete'
   })
 }
+
+export function uploadFile(formData) {
+  return request({
+    url: '/product/rate/Dimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

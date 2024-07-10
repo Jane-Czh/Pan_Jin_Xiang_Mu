@@ -132,10 +132,10 @@
         />
       </el-form-item>-->
 
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -380,7 +380,8 @@
 </template>
 
 <script>
-import { listStatus, getStatus, delStatus, addStatus, updateStatus } from "@/api/product/status";
+import {listStatus, getStatus, delStatus, addStatus, updateStatus, syncReport} from "@/api/product/status";
+
 
 export default {
   name: "Status",
@@ -444,37 +445,47 @@ export default {
 
 
     /*同步*/
-    syncReport() {
-      // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/product/status/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // 如果请求成功，可以进行下一步操作
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-        });
-      this.getList();
+    // syncReport() {
+    //   // 使用 Fetch API 发送 POST 请求到后端
+    //   fetch('http://localhost:8080/product/status/synchronization', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       // 如果请求成功，可以进行下一步操作
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    //   this.getList();
+    // },
+    async syncReport() {
+      try {
+        await syncReport();
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
-    /** 查询计划完成情况列表 */
+    // /** 查询计划完成情况列表 */
     getList() {
       this.loading = true;
       listStatus(this.queryParams).then(response => {
         this.statusList = response.rows;
-        this.totalNumberWaitingTimeForProduction1 = this.statusList[0].totalNumberWaitingTimeForProduction;
-        this.totalNumberCompletionPeriodOfDoorFrameAssembly1 = this.statusList[0].totalNumberCompletionPeriodOfDoorFrameAssembly;
-        this.totalNumberTrialCompletionPeriod1 = this.statusList[0].totalNumberTrialCompletionPeriod;
-        this.totalNumberSpecialOperations1 = this.statusList[0].totalNumberSpecialOperations;
-        this.totalNumberPrecisionCompletionPeriod1 = this.statusList[0].totalNumberPrecisionCompletionPeriod;
-        this.total = response.total;
-        this.loading = false;
+        if (this.statusList.length>0) {
+          this.totalNumberWaitingTimeForProduction1 = this.statusList[0].totalNumberWaitingTimeForProduction;
+          this.totalNumberCompletionPeriodOfDoorFrameAssembly1 = this.statusList[0].totalNumberCompletionPeriodOfDoorFrameAssembly;
+          this.totalNumberTrialCompletionPeriod1 = this.statusList[0].totalNumberTrialCompletionPeriod;
+          this.totalNumberSpecialOperations1 = this.statusList[0].totalNumberSpecialOperations;
+          this.totalNumberPrecisionCompletionPeriod1 = this.statusList[0].totalNumberPrecisionCompletionPeriod;
+        }
+          this.total = response.total;
+          this.loading = false;
       });
     },
     // 取消按钮

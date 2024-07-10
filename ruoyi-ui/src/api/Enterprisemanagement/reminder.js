@@ -42,3 +42,13 @@ export function delReminder(emlwId) {
     method: 'delete'
   })
 }
+//同步操作
+export function syncReport() {
+  return request({
+    url: '/Enterprisemanagement/reminder/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}

@@ -42,3 +42,13 @@ export function delCompare(mfcdId) {
     method: 'delete'
   })
 }
+
+export function syncReport() {
+  return request({
+    url: '/market/compare/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}

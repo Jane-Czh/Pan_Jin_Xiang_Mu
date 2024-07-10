@@ -729,26 +729,41 @@ export default {
     this.getList();
   },
   methods: {
-    /** 文件下载 */
-    downloadFile(url) {
-      fetch(url)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.setAttribute(
-            "download",
-            decodeURIComponent(url.split("/").pop())
-          ); // 解码文件名
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(downloadUrl);
-        })
-        .catch((error) => console.error("Download error:", error));
-    },
-
+    // /** 文件下载 */
+    // downloadFile(url) {
+    //   fetch(url)
+    //     .then((response) => response.blob())
+    //     .then((blob) => {
+    //       const downloadUrl = window.URL.createObjectURL(blob);
+    //       const link = document.createElement("a");
+    //       link.href = downloadUrl;
+    //       link.setAttribute(
+    //         "download",
+    //         decodeURIComponent(url.split("/").pop())
+    //       ); // 解码文件名
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       document.body.removeChild(link);
+    //       window.URL.revokeObjectURL(downloadUrl);
+    //     })
+    //     .catch((error) => console.error("Download error:", error));
+    // },
+      /** 文件下载 */
+      downloadFile(url) {
+        fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', decodeURIComponent(url.split('/').pop())); // 解码文件名
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(downloadUrl);
+          })
+          .catch(error => console.error('Download error:', error));
+      },
     /** 查询申报材料统计列表 */
     getList() {
       this.loading = true;
@@ -762,6 +777,7 @@ export default {
     uploadCancel() {
       this.fileUploadDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 文件修改取消按钮
     modifyCancel() {
@@ -772,6 +788,7 @@ export default {
     updateCancel() {
       this.fileUpdateDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 取消按钮
     // cancel() {
@@ -870,6 +887,7 @@ export default {
           });
         }
       });
+      this.fileList = [];
     },
     /** 修改文件提交按钮 */
     modifySubmitForm() {
@@ -916,6 +934,7 @@ export default {
           }
         }
       });
+      this.fileList = [];
     },
     /** 提交按钮 */
     // submitForm() {

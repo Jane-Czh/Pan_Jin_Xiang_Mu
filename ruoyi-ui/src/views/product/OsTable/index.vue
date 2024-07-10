@@ -65,10 +65,10 @@
                         placeholder="请选择创建时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -203,7 +203,8 @@
 </template>
 
 <script>
-import { listOsTable, getOsTable, delOsTable, addOsTable, updateOsTable } from "@/api/product/OsTable";
+import {listOsTable, getOsTable, delOsTable, addOsTable, updateOsTable, syncReport} from "@/api/product/OsTable";
+
 
 export default {
   name: "OsTable",
@@ -255,25 +256,33 @@ export default {
   methods: {
 
   /*同步*/
-  syncReport() {
-    // 使用 Fetch API 发送 POST 请求到后端
-    fetch('http://localhost:8080/product/OsTable/synchronization', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        // 如果请求成功，可以进行下一步操作
-      })
-      .catch(error => {
+  // syncReport() {
+  //   // 使用 Fetch API 发送 POST 请求到后端
+  //   fetch('http://localhost:8080/product/OsTable/synchronization', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       // 如果请求成功，可以进行下一步操作
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error!', error);
+  //     });
+  //   this.reload();
+  // },
+    async syncReport() {
+      try {
+        await syncReport();
+        this.getList();
+      } catch (error) {
         console.error('There was an error!', error);
-      });
-    this.reload();
-  },
+      }
+    },
   /** 查
     /** 查询加班统计列表 */
     getList() {

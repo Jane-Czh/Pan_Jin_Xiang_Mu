@@ -198,8 +198,16 @@
 </template>
 
 <script>
-import { listStatistics, getStatistics, delStatistics, addStatistics, updateStatistics } from "@/api/Enterprisemanagement/statistics";
+import {
+  listStatistics,
+  getStatistics,
+  delStatistics,
+  addStatistics,
+  updateStatistics,
+  syncReport
+} from "@/api/Enterprisemanagement/statistics";
 import axios from "axios";
+
 export default {
   name: "Statistics",
   data() {
@@ -245,8 +253,11 @@ export default {
       ttotalNumberOfLaborDispatch1:null,//添加变量用于存储劳动派遣总人数
     };
   },
-  created() {
+  mounted(){
     this.getList();
+  },
+  created() {
+
     // console.log('123',this.statisticsList);
     // console.log('000',this.statisticsList.totalNumberOfContracted);
     //
@@ -263,24 +274,32 @@ export default {
   },
   methods: {
 
-    syncReport() {
-      // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/Enterprisemanagement/statistics/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // 如果请求成功，可以进行下一步操作
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-        });
-      this.getList();
+    // syncReport() {
+    //   // 使用 Fetch API 发送 POST 请求到后端
+    //   fetch('http://localhost:8080/Enterprisemanagement/statistics/synchronization', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       // 如果请求成功，可以进行下一步操作
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    //   this.getList();
+    // },
+    async syncReport() {
+      try {
+        await syncReport();
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
 
     /** 查询员工统计列表 */
@@ -288,9 +307,11 @@ export default {
       this.loading = true;
       listStatistics(this.queryParams).then(response => {
         this.statisticsList = response.rows;
-        this.totalNumberOfContractedInFirstRow = this.statisticsList[0].totalNumberOfContracted;
-        this.totalNumberOfInterns1 = this.statisticsList[0].totalNumberOfInterns;
-        this.ttotalNumberOfLaborDispatch1 = this.statisticsList[0].ttotalNumberOfLaborDispatch;
+        if (this.statisticsList.length > 0) {
+          this.totalNumberOfContractedInFirstRow = this.statisticsList[0].totalNumberOfContracted;
+          this.totalNumberOfInterns1 = this.statisticsList[0].totalNumberOfInterns;
+          this.ttotalNumberOfLaborDispatch1 = this.statisticsList[0].ttotalNumberOfLaborDispatch;
+        }
         // console.log('123',this.statisticsList);
         // console.log('000',this.statisticsList[0].totalNumberOfContracted);
         this.total = response.total;

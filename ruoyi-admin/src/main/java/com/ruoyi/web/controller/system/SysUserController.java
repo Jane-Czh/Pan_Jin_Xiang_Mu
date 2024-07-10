@@ -117,6 +117,27 @@ public class SysUserController extends BaseController
     }
 
     /**
+     * 根据用户编号获取详细信息(无需权限)
+     */
+    @GetMapping(value = { "/user2", "/user2/{userId}" })
+    public AjaxResult getInfo02(@PathVariable(value = "userId", required = false) Long userId)
+    {
+        userService.checkUserDataScope(userId);
+        AjaxResult ajax = AjaxResult.success();
+        List<SysRole> roles = roleService.selectRoleAll();
+        ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        ajax.put("posts", postService.selectPostAll());
+        if (StringUtils.isNotNull(userId))
+        {
+            SysUser sysUser = userService.selectUserById(userId);
+            ajax.put(AjaxResult.DATA_TAG, sysUser);
+            ajax.put("postIds", postService.selectPostListByUserId(userId));
+            ajax.put("roleIds", sysUser.getRoles().stream().map(SysRole::getRoleId).collect(Collectors.toList()));
+        }
+        return ajax;
+    }
+
+    /**
      * 新增用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:add')")

@@ -42,3 +42,15 @@ export function delRoster(emprId) {
     method: 'delete'
   })
 }
+
+export function uploadFile(formData) {
+  return request({
+    url: '/Enterprisemanagement/roster/PRimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

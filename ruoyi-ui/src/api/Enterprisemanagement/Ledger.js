@@ -42,3 +42,15 @@ export function delLedger(emsiId) {
     method: 'delete'
   })
 }
+
+export function uploadFile(formData) {
+  return request({
+    url: '/Enterprisemanagement/Ledger/SOimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

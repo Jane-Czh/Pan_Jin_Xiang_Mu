@@ -36,13 +36,13 @@ export default {
         { id: '49', icon: 'el-icon-s-data', title: '一线从业人数', apiName: 'getEmployeesNumberData', yDataName: 'employeesNumber', dataName: '人数', content: '一线从业人数', },
         { id: '51', icon: 'el-icon-s-data', title: '公司平均从业人数（月度）', apiName: 'getEmployeesAVGMonthlyNumberData', yDataName: 'employeesAVGMonthlyNumber', dataName: '人数', content: '公司平均从业人数（月度）', },
         { id: '52', icon: 'el-icon-s-data', title: '工资总额年度占比', apiName: 'getAnnualSalaryRatioData', yDataName: 'annualSalaryRatio', dataName: '占比', content: '工资总额年度占比', },
-        // { id: '53', icon: 'el-icon-s-data', title: '日清日结考核得分', apiName: 'getMainRevenueData',yDataName: 'Total_Sales_Revenue',dataName: '金额',content: '企业主要营业产品财务收入', },
+        { id: '53', icon: 'el-icon-s-data', title: '日清日结考核得分', apiName: 'getFunctionalDeptOvertimeCostData', yDataName: 'Total_Sales_Revenue', dataName: '得分', content: '日清日结考核得分', },
         { id: '54', icon: 'el-icon-s-data', title: '累计人均收入', apiName: 'getCumulativeAverageIncomeData', yDataName: 'cumulativeAverageIncome', dataName: '金额', content: '累计人均收入', },
         { id: '55', icon: 'el-icon-s-data', title: '月度累计生产人均收入', apiName: 'getMonthlyProductionAVGIncomeData', yDataName: 'monthlyProductionAVGIncome', dataName: '金额', content: '月度累计生产人均收入', },
         { id: '56', icon: 'el-icon-s-data', title: '月度累计职能人均收入', apiName: 'getMonthlyFunctionalAVGIncomeData', yDataName: 'monthlyFunctionalAVGIncome', dataName: '金额', content: '月度累计职能人均收入', },
         { id: '76', icon: 'el-icon-s-data', title: '职能部门人均加班费用', apiName: 'getFunctionalDeptOvertimeCostData', yDataName: 'functionalDeptOvertimeCost', dataName: '金额', content: '职能部门人均加班费用', },
         { id: '100', icon: 'el-icon-s-data', title: '公司平均从业人数（年度）', apiName: 'getEmployeesAVGAnnualNumberData', yDataName: 'employeesAVGAnnualNumber', dataName: '人数', content: '公司平均从业人数（年度）', },
-        //   { id: '101', icon: 'el-icon-s-data', title: '11项管理指标-单个指标得分', apiName: 'getMainRevenueData',yDataName: 'Total_Sales_Revenue',dataName: '得分',content: '企业主要营业产品财务收入', },
+        { id: '101', icon: 'el-icon-s-data', title: '11项管理指标-单个指标得分', apiName: 'getManagementData', yDataName: 'Total_Sales_Revenue', dataName: '得分', content: '11项管理指标-单个指标得分', },
       ],
 
       formData: {},
@@ -56,20 +56,19 @@ export default {
   mounted() { },
   methods: {
     toDetail(item) {
-      // if (item.id === '30') {
-      //   this.$router.push('/financial/indicators30')
-      // }
-      // else if (item.id === '70') {
-      //   this.$router.push('/financial/indicators70')
-      // }
-      this.$router.push({
-        path: '/enterprise/index-detail-enterprise',
-        query: {
-          data: JSON.stringify(item)
-        }
-      })
-
-
+      if (item.id === '53') {
+        this.$router.push('/enterprise/indicators53')
+      }
+      else if (item.id === '101') {
+        this.$router.push('/enterprise/indicators101')
+      } else {
+        this.$router.push({
+          path: '/enterprise/index-detail-enterprise',
+          query: {
+            data: JSON.stringify(item)
+          }
+        })
+      }
     }
   }
 }

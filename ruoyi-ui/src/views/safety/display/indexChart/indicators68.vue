@@ -12,6 +12,7 @@
 
 <script>
 import * as echarts from 'echarts';
+import moment from 'moment';
 import { getOutputPercapitavalueData } from '@/api/safety/chartAPI'
 
 export default {
@@ -184,7 +185,7 @@ export default {
           {
             // type: 'category',
             axisTick: { show: false },
-            data: this.chartData.map(data => data.month)
+            data: this.chartData.map(data => moment(data.month).format('YY-MM'))
           }
         ],
         yAxis: [

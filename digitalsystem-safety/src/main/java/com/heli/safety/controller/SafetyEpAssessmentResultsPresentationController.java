@@ -42,6 +42,7 @@ public class SafetyEpAssessmentResultsPresentationController extends BaseControl
     /**
      * 同步录入数据库中的考核成绩
      */
+    @PreAuthorize("@ss.hasPermi('safety:presentation:syncReport')")
     @PostMapping("/synchronization")
     public void Database_Synchronization(){
         System.out.println("------同步------");

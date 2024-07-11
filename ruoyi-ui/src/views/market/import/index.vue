@@ -290,7 +290,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
-          v-hasPermi="['market:import:export']"
+          v-hasPermi="['market:import:import']"
         >导入Excel文件</el-button>
 
         <el-dialog

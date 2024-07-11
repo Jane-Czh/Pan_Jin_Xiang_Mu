@@ -104,7 +104,6 @@ public class ExcelUtils {
             //4、供应商名称
             supplyRatioFormulaTable.setSupplierName(getStringCellValue(row.getCell(3)));
             //5、供货比例
-            System.out.println(row.getCell(4));
             supplyRatioFormulaTable.setSupplyProportion(getStringCellValue(row.getCell(4)));
             //6、付款方式
             supplyRatioFormulaTable.setPaymentMethod(getStringCellValue(row.getCell(5)));

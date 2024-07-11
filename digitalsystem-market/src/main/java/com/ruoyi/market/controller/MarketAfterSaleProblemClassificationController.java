@@ -43,6 +43,7 @@ public class MarketAfterSaleProblemClassificationController extends BaseControll
     /**
      * 同步售后台账数据库信息功能
      */
+    @PreAuthorize("@ss.hasPermi('market:classification:syncReport')")
     @PostMapping("/synchronization")
     public void Database_Synchronization(MarketAfterSaleProblemClassification marketAfterSaleProblemClassification){
         System.out.println("-------同步------同步------");

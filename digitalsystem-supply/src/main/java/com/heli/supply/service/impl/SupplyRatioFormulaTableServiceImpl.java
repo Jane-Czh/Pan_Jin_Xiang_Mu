@@ -40,7 +40,9 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
         try {
             List<SupplyRatioFormulaTable> supplyRatioFormulaTables = ExcelUtils.parseExcel2SupplyRatioFormulaTable(excelFile);
 
+            System.out.println(supplyRatioFormulaTables);
             int i = 0;
+            System.out.println("删除全部记录");
             supplyRatioFormulaTableMapper.deleteAll();
             while (i < supplyRatioFormulaTables.size()){
                 supplyRatioFormulaTable = supplyRatioFormulaTables.get(i);
@@ -67,8 +69,8 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
         int currentYear = now.get(Calendar.YEAR);
         int currentMonth = now.get(Calendar.MONTH) + 1; // 注意：Calendar 中月份是从 0 开始的，所以要加 1
 
-//        int year = 2024;
-//        int month = 1;
+        int year = 2024;
+        int month = 1;
 
         Map<String, Map<String, List<SupplyPurchaseorderTable>>> collect = list.stream().filter(a -> {
             //获取当前数据的凭证日期
@@ -77,10 +79,11 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
             int documentYear = documentCalendar.get(Calendar.YEAR);
             int documentMonth = documentCalendar.get(Calendar.MONTH) + 1;
             //过滤出凭证日期年月和当前日期年月相同的数据
-            return documentYear == currentYear && documentMonth == currentMonth;
+            return documentYear == year && documentMonth == month;
         }).collect(Collectors.groupingBy(SupplyPurchaseorderTable::getMaterialNumber, Collectors.groupingBy(SupplyPurchaseorderTable::getSupplier)));
 
-//        supplyRatioFormulaTableMapper.deleteAll();
+        System.out.println("删除全部记录");
+        supplyRatioFormulaTableMapper.deleteAll();
         for (Map.Entry<String, Map<String, List<SupplyPurchaseorderTable>>> entry : collect.entrySet()){
 //            System.out.println("物料号======"+entry.getKey());
             //相同物料号（前缀）计算
@@ -106,6 +109,7 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
 //                System.out.println("    供应商代码======="+Supplier_Code + "供应商名称======="+Supplier_Name);
 //                System.out.println("           内容========"+entry1.getValue().size());
             }
+
             for (Map.Entry<String, Long> entry2 : Material_Amount.entrySet()){
                 String Supplier = entry2.getKey();
                 String Supplier_Code = SplitSupplierCode(Supplier);
@@ -117,7 +121,6 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
                 supplyRatioFormulaTable.setSupplierName(Supplier_Name);
                 supplyRatioFormulaTable.setSupplyProportion(formattedPercentage);
                 insertSupplyRatioFormulaTable(supplyRatioFormulaTable);
-
             }
         }
 

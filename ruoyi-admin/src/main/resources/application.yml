@@ -21,7 +21,7 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8080
+  port: 8085
   servlet:
     # 应用的访问路径
     context-path: /
@@ -74,9 +74,9 @@ spring:
   # redis 配置
   redis:
     # docker
-#    host: 124.222.36.192
+#    host: 172.19.11.41
 #    port: 6379
-#    password: zCeocPnDT%tzOY26
+#    password:
 
     # 实验室 地址、端口，默认为6379
     host: 172.17.101.85

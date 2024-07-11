@@ -770,6 +770,7 @@ export default {
     uploadCancel() {
       this.fileUploadDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 文件修改取消按钮
     modifyCancel() {
@@ -780,6 +781,7 @@ export default {
     updateCancel() {
       this.fileUpdateDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 表单重置
     reset() {
@@ -923,6 +925,7 @@ export default {
           });
         }
       });
+      this.fileList = [];
     },
 
     /** 修改文件提交按钮 */
@@ -970,6 +973,7 @@ export default {
           }
         }
       });
+      this.fileList = [];
     },
     /** 删除按钮操作 */
     handleDelete(row) {

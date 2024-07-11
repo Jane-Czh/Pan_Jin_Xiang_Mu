@@ -69,8 +69,10 @@ public class MarketIndexController extends BaseController {
         {         LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+           //判段是否超出长度
+            String model = a.getVehicleModel();
 
-            return a.getVehicleModel().substring(0, 3).equals("CPD") &&
+            return  model != null && model.length() >= 3 && model.substring(0, 3).equals("CPD") &&
                     !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
                     || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
         }).collect(Collectors.groupingBy(
@@ -123,8 +125,12 @@ public class MarketIndexController extends BaseController {
         {         LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            //判段是否超出长度
+            String model = a.getVehicleModel();
 
-            return a.getVehicleModel().substring(0, 3).equals("CPC") &&
+
+
+            return  model != null && model.length() >= 3 && model.substring(0, 3).equals("CPC") &&
                     !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
                     || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
         }).collect(Collectors.groupingBy(
@@ -736,28 +742,44 @@ public class MarketIndexController extends BaseController {
 //        Map<String, Map<String, Long>> collect =
         Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter(a ->
         {
-            LocalDate ActualDepartureDate = Optional.ofNullable(a.getActualDepartureDate())
+            LocalDate actualDepartureDate = Optional.ofNullable(a.getActualDepartureDate())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                     .orElse(null);
-//            LocalDate ActualDepartureDate=    a.getActualDepartureDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate   SystemDeliveryTime = a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+           //防止空指针异常
 
-            LocalDate OrderSystemDeliveryTime = a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            LocalDate systemDeliveryTime = Optional.ofNullable(a.getSystemDeliveryTime())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+
+            LocalDate orderSystemDeliveryTime = Optional.ofNullable(a.getOrderSystemDeliveryTime())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                    .orElse(null);
+
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
             //实际发车日期W，系统交货日期X任一列有日期且小于等于订单系统交货期T的数量
             return
-                    (!OrderSystemDeliveryTime.isBefore(startTime) && !OrderSystemDeliveryTime.isAfter(endTime)
-                            || OrderSystemDeliveryTime.isEqual(startTime) || OrderSystemDeliveryTime.isEqual(endTime))
-                            && OrderSystemDeliveryTime != null&&
-                            //实际发车日期W，系统交货日期X任一列有日期且小于等于订单系统交货期T的数量
-                            (ActualDepartureDate.isBefore(OrderSystemDeliveryTime)||SystemDeliveryTime.isBefore(OrderSystemDeliveryTime)
-                                    || ActualDepartureDate.isEqual(OrderSystemDeliveryTime) || SystemDeliveryTime.isEqual(OrderSystemDeliveryTime)
-                            );
-
-
-        }).collect(Collectors.groupingBy(
+//                    (!OrderSystemDeliveryTime.isBefore(startTime) && !OrderSystemDeliveryTime.isAfter(endTime)
+//                            || OrderSystemDeliveryTime.isEqual(startTime) || OrderSystemDeliveryTime.isEqual(endTime))
+//                            && OrderSystemDeliveryTime != null&&
+//                            //实际发车日期W，系统交货日期X任一列有日期且小于等于订单系统交货期T的数量
+//                            (ActualDepartureDate.isBefore(OrderSystemDeliveryTime)||SystemDeliveryTime.isBefore(OrderSystemDeliveryTime)
+//                                    || ActualDepartureDate.isEqual(OrderSystemDeliveryTime) || SystemDeliveryTime.isEqual(OrderSystemDeliveryTime)
+//                            );
+//
+//
+//        })
+                    orderSystemDeliveryTime != null &&
+                            (!orderSystemDeliveryTime.isBefore(startTime) && !orderSystemDeliveryTime.isAfter(endTime)
+                                    || orderSystemDeliveryTime.isEqual(startTime) || orderSystemDeliveryTime.isEqual(endTime)) &&
+                            (actualDepartureDate != null && actualDepartureDate.isBefore(orderSystemDeliveryTime)
+                                    || systemDeliveryTime != null && systemDeliveryTime.isBefore(orderSystemDeliveryTime)
+                                    || actualDepartureDate != null && actualDepartureDate.isEqual(orderSystemDeliveryTime)
+                                    || systemDeliveryTime != null && systemDeliveryTime.isEqual(orderSystemDeliveryTime));
+        })
+        .collect(Collectors.groupingBy(
                 a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                 Collectors.groupingBy(a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1)
                         , Collectors.summingLong(MarketSalesTable::getNumber))));
@@ -1172,6 +1194,8 @@ public class MarketIndexController extends BaseController {
 
 
         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                //过滤掉为空的日期
+                .filter(a -> a.getSystemDeliveryTime() != null)
                 .collect(Collectors.groupingBy(
                         a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                         Collectors.groupingBy(

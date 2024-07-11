@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+<!--    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">-->
 <!--      <el-form-item label="编号" prop="Number">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.Number"-->
@@ -43,18 +43,18 @@
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第一次合同起始" prop="firstContractPeriodStart">-->
 <!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.firstContractPeriodStart"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择第一次合同起始">-->
+<!--                        v-model="queryParams.firstContractPeriodStart"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择第一次合同起始">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第一次合同结束" prop="firstContractPeriodEnd">-->
 <!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.firstContractPeriodEnd"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择第一次合同结束">-->
+<!--                        v-model="queryParams.firstContractPeriodEnd"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择第一次合同结束">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第一次合同状况" prop="contractStatusFirstly">-->
@@ -67,18 +67,18 @@
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第二次合同起始" prop="secondContractPeriodStart">-->
 <!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.secondContractPeriodStart"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择第二次合同起始">-->
+<!--                        v-model="queryParams.secondContractPeriodStart"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择第二次合同起始">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第二次合同结束" prop="secondContractPeriodEnd">-->
 <!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.secondContractPeriodEnd"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择第二次合同结束">-->
+<!--                        v-model="queryParams.secondContractPeriodEnd"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择第二次合同结束">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第二次合同状况" prop="contractStatusSecondly">-->
@@ -91,18 +91,18 @@
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第三次合同起始" prop="thirdContractPeriodStart">-->
 <!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.thirdContractPeriodStart"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择第三次合同起始">-->
+<!--                        v-model="queryParams.thirdContractPeriodStart"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择第三次合同起始">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第三次合同结束" prop="thirdContractPeriodEnd">-->
 <!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.thirdContractPeriodEnd"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择第三次合同结束">-->
+<!--                        v-model="queryParams.thirdContractPeriodEnd"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择第三次合同结束">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
 <!--      <el-form-item label="第三次合同状况" prop="contractStatusThirdly">-->
@@ -121,54 +121,45 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['Enterprisemanagement:LbaorLedger:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['Enterprisemanagement:LbaorLedger:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
 <!--          plain-->
 <!--          icon="el-icon-edit"-->
 <!--          size="mini"-->
+<!--          :disabled="single"-->
 <!--          @click="handleUpdate"-->
 <!--          v-hasPermi="['Enterprisemanagement:LbaorLedger:edit']"-->
 <!--        >修改</el-button>-->
 <!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['Enterprisemanagement:LbaorLedger:remove']"-->
-<!--        >删除</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['Enterprisemanagement:LbaorLedger:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['Enterprisemanagement:LbaorLedger:remove']"
+        >删除</el-button>
+      </el-col>
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -202,13 +193,23 @@
         </span>
         </el-dialog>
       </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['Enterprisemanagement:LbaorLedger:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="LbaorLedgerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="主键" align="center" prop="emlcId" />-->
-<!--      <el-table-column label="编号" align="center" prop="number" />-->
+<!--      <el-table-column label="编号" align="center" prop="Number" />-->
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="科室" align="center" prop="document" />
       <el-table-column label="就职状态" align="center" prop="employmentStatus" />
@@ -247,7 +248,7 @@
         </template>
       </el-table-column>
       <el-table-column label="第三次合同状况" align="center" prop="contractStatusThirdly" />
-      <el-table-column label="是否预警" align="center" prop="warn" />
+<!--      <el-table-column label="是否预警" align="center" prop="warn" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -279,14 +280,17 @@
     <!-- 添加或修改劳动合同台账导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="编号" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入编号" />
+<!--        <el-form-item label="编号" prop="number">-->
+<!--          <el-input v-model="form.Number" placeholder="请输入编号" />-->
+<!--        </el-form-item>-->
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="姓名" prop="Name">
-          <el-input v-model="form.Name" placeholder="请输入姓名" />
+        <el-form-item label="科室" prop="document">
+          <el-input v-model="form.document" placeholder="请输入科室" />
         </el-form-item>
-        <el-form-item label="科室" prop="Document">
-          <el-input v-model="form.Document" placeholder="请输入科室" />
+        <el-form-item label="就职状态" prop="employmentStatus">
+          <el-input v-model="form.employmentStatus" placeholder="请输入就职状态" />
         </el-form-item>
         <el-form-item label="身份证号" prop="idNumber">
           <el-input v-model="form.idNumber" placeholder="请输入身份证号" />
@@ -296,18 +300,18 @@
         </el-form-item>
         <el-form-item label="第一次合同起始" prop="firstContractPeriodStart">
           <el-date-picker clearable
-            v-model="form.firstContractPeriodStart"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择第一次合同起始">
+                          v-model="form.firstContractPeriodStart"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择第一次合同起始">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第一次合同结束" prop="firstContractPeriodEnd">
           <el-date-picker clearable
-            v-model="form.firstContractPeriodEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择第一次合同结束">
+                          v-model="form.firstContractPeriodEnd"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择第一次合同结束">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第一次合同状况" prop="contractStatusFirstly">
@@ -315,18 +319,18 @@
         </el-form-item>
         <el-form-item label="第二次合同起始" prop="secondContractPeriodStart">
           <el-date-picker clearable
-            v-model="form.secondContractPeriodStart"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择第二次合同起始">
+                          v-model="form.secondContractPeriodStart"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择第二次合同起始">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第二次合同结束" prop="secondContractPeriodEnd">
           <el-date-picker clearable
-            v-model="form.secondContractPeriodEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择第二次合同结束">
+                          v-model="form.secondContractPeriodEnd"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择第二次合同结束">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第二次合同状况" prop="contractStatusSecondly">
@@ -334,26 +338,26 @@
         </el-form-item>
         <el-form-item label="第三次合同起始" prop="thirdContractPeriodStart">
           <el-date-picker clearable
-            v-model="form.thirdContractPeriodStart"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择第三次合同起始">
+                          v-model="form.thirdContractPeriodStart"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择第三次合同起始">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第三次合同结束" prop="thirdContractPeriodEnd">
           <el-date-picker clearable
-            v-model="form.thirdContractPeriodEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择第三次合同结束">
+                          v-model="form.thirdContractPeriodEnd"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择第三次合同结束">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第三次合同状况" prop="contractStatusThirdly">
           <el-input v-model="form.contractStatusThirdly" placeholder="请输入第三次合同状况" />
         </el-form-item>
-        <el-form-item label="是否预警" prop="Warn">
-          <el-input v-model="form.Warn" placeholder="请输入是否预警" />
-        </el-form-item>
+<!--        <el-form-item label="是否预警" prop="warn">-->
+<!--          <el-input v-model="form.Warn" placeholder="请输入是否预警" />-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -364,9 +368,8 @@
 </template>
 
 <script>
-import { listLbaorLedger, getLbaorLedger, delLbaorLedger, addLbaorLedger, updateLbaorLedger } from "@/api/Enterprisemanagement/LbaorLedger";
+import { listLbaorLedger, getLbaorLedger, delLbaorLedger, addLbaorLedger, updateLbaorLedger,uploadFile } from "@/api/Enterprisemanagement/LbaorLedger";
 import axios from "axios";
-
 export default {
   name: "LbaorLedger",
   data() {
@@ -393,9 +396,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
-        Name: null,
-        Document: null,
+        number: null,
+        name: null,
+        document: null,
         employmentStatus: null,
         idNumber: null,
         phoneNumber: null,
@@ -408,12 +411,15 @@ export default {
         thirdContractPeriodStart: null,
         thirdContractPeriodEnd: null,
         contractStatusThirdly: null,
-        Warn: null
+        warn: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        idNumber: [
+          { required: true, message: "数量不能为空", trigger: "blur" }
+        ],
       },
       //新增参数
       showDialog: false,
@@ -487,7 +493,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const emlcId = row.emlcId || this.ids
-      updateLbaorLedger(emlcId).then(response => {
+      getLbaorLedger(emlcId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改劳动合同台账导入";
@@ -528,42 +534,27 @@ export default {
       this.download('Enterprisemanagement/LbaorLedger/export', {
         ...this.queryParams
       }, `LbaorLedger_${new Date().getTime()}.xlsx`)
-    }
-    ,
+    },
+    async fileSend() {
+      try {
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        console.log(file);
+        formData.append("file", file);
+        console.log("file====>", formData);
 
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/Enterprisemanagement/LbaorLedger/LRimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+        await uploadFile(formData); // 调用 uploadFile API
 
-
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
-      this.getList();
+        // 上传成功后的处理
+        this.$message.success("上传成功"); // 提示上传成功
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 1000); // 2000毫秒后关闭
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
 
     handleClose(done) {

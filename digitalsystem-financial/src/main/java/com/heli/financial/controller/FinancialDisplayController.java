@@ -30,7 +30,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 主营业务收入 指标1
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:mainRevenue')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/mainRevenue")
     public TableDataInfo mainRevenue(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectMainRevenue(time.getStartTime(),time.getEndTime());
@@ -41,7 +41,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 整机销售收入 指标2
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:totalSalesRevenue')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/totalSalesRevenue")
     public TableDataInfo totalSalesRevenue(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectTotalSalesRevenue(time.getStartTime(),time.getEndTime());
@@ -51,7 +51,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 集团外部销售收入 指标3
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:externalGroupSalesRevenue')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/externalGroupSalesRevenue")
     @JsonFormat(pattern = "yyyy-MM-dd")
     public TableDataInfo externalGroupSalesRevenue(@RequestBody DisplayRequestParam time) {
@@ -62,7 +62,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 整车产量 指标4
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:totalVehicleProduction')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/totalVehicleProduction")
     public TableDataInfo totalVehicleProduction(@RequestBody DisplayRequestParam time) {
 
@@ -73,7 +73,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 整车销量 指标5
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:totalVehicleSales')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/totalVehicleSales")
     public TableDataInfo totalVehicleSales(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectTotalVehicleSales(time.getStartTime(),time.getEndTime());
@@ -83,7 +83,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 新产品销售收入 指标6
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:newProductSalesRevenue')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/newProductSalesRevenue")
     public TableDataInfo newProductSalesRevenue(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectNewProductSalesRevenue(time.getStartTime(),time.getEndTime());
@@ -93,7 +93,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 特色产品收入 指标7
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:specialtyProductRevenue')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/specialtyProductRevenue")
     public TableDataInfo specialtyProductRevenue(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectSpecialtyProductRevenue(time.getStartTime(),time.getEndTime());
@@ -104,7 +104,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 主营业务成本 指标8
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:COGS')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/COGS")
     public TableDataInfo COGS(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.COGS(time.getStartTime(),time.getEndTime());
@@ -115,7 +115,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 整机销售成本 指标9
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:totalSalesCost')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/totalSalesCost")
     public TableDataInfo totalSalesCost(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectTotalSalesCost(time.getStartTime(),time.getEndTime());
@@ -125,7 +125,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 净利润 指标10
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:netProfit')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/netProfit")
     public TableDataInfo netProfit(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectNetProfit(time.getStartTime(),time.getEndTime());
@@ -135,7 +135,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月管理费用 指标20
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:managementExpense')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/managementExpense")
     public TableDataInfo managementExpense(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectManagementExpense(time.getStartTime(),time.getEndTime());
@@ -145,7 +145,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月研发费用 指标21
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:rdExpense')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/rdExpense")
     public TableDataInfo rdExpense(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectRdExpense(time.getStartTime(),time.getEndTime());
@@ -155,7 +155,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月制造费用 指标22
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:manufacturingExpensesMonth')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/manufacturingExpensesMonth")
     public TableDataInfo manufacturingExpensesMonth(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectManufacturingExpensesMonth(time.getStartTime(),time.getEndTime());
@@ -165,7 +165,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月原材料存货额 指标26
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:monthlyRawMaterialInventory')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/monthlyRawMaterialInventory")
     public TableDataInfo monthlyRawMaterialInventory(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyRawMaterialInventory(time.getStartTime(),time.getEndTime());
@@ -175,7 +175,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月在制品存货额 指标27
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:monthlyWorkInProgressInventory')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/monthlyWorkInProgressInventory")
     public TableDataInfo monthlyWorkInProgressInventory(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyWorkInProgressInventory(time.getStartTime(),time.getEndTime());
@@ -185,7 +185,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月库存商品存货额 指标28
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:monthAmountInStock')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/monthAmountInStock")
     public TableDataInfo monthAmountInStock(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectMonthAmountInStock(time.getStartTime(),time.getEndTime());
@@ -195,7 +195,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 存货增长率/销售增长率 指标30
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:growthRateInventoryAndSales')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/growthRateInventoryAndSales")
     public TableDataInfo growthRateInventoryAndSales(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectGrowthRateInventoryAndSales(time.getStartTime(),time.getEndTime());
@@ -205,7 +205,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 应收帐款周转率 指标32
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:turnoverRateReceivable')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/turnoverRateReceivable")
     public TableDataInfo turnoverRateReceivable(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectTurnoverRateReceivable(time.getStartTime(),time.getEndTime());
@@ -215,7 +215,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 资金周转率 指标33
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:capitalTurnoverRate')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/capitalTurnoverRate")
     public TableDataInfo capitalTurnoverRate(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectCapitalTurnoverRate(time.getStartTime(),time.getEndTime());
@@ -225,7 +225,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 库存商品周转率 指标34
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:inventoryTurnoverRate')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/inventoryTurnoverRate")
     public TableDataInfo inventoryTurnoverRate(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectInventoryTurnoverRate(time.getStartTime(),time.getEndTime());
@@ -235,7 +235,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 原材料周转率 指标35
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:rawMaterialTurnoverRate')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/rawMaterialTurnoverRate")
     public TableDataInfo rawMaterialTurnoverRate(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectRawMaterialTurnoverRate(time.getStartTime(),time.getEndTime());
@@ -245,7 +245,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 在制品周转率 指标36
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:inprogressTurnoverRate')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/inprogressTurnoverRate")
     public TableDataInfo inprogressTurnoverRate(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectInprogressTurnoverRate(time.getStartTime(),time.getEndTime());
@@ -255,7 +255,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 一年以上暂估行项目 指标66
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:longEstimatedItems')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/longEstimatedItems")
     public TableDataInfo longEstimatedItems(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectLongEstimatedItems(time.getStartTime(),time.getEndTime());
@@ -265,7 +265,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当日在制品金额 指标70
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:inprogressDayrevenue')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/inprogressDayrevenue")
     public TableDataInfo inprogressDayrevenue(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectInprogressDayrevenue(time.getStartTime(),time.getEndTime());
@@ -275,7 +275,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 月度存货总金额 指标77
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:monthlyInventoryTotalAmount')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/monthlyInventoryTotalAmount")
     public TableDataInfo monthlyInventoryTotalAmount(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectMonthlyInventoryTotalAmount(time.getStartTime(),time.getEndTime());
@@ -285,7 +285,7 @@ public class FinancialDisplayController extends BaseController {
     /**
      * 当月经济增加值 指标78
      */
-    @PreAuthorize("@ss.hasPermi('financial:display:addedValueMonthly')")
+    @PreAuthorize("@ss.hasPermi('financial:display')")
     @PostMapping("/addedValueMonthly")
     public TableDataInfo addedValueMonthly(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = IFinancialDisplayService.selectAddedValueMonthly(time.getStartTime(),time.getEndTime());

@@ -339,7 +339,12 @@ public class ExcelUtils {
                 count++;
             }
             //3、订单号
-            MarketCommercialVehicleTable.setOrderNumber(getStringCellValue(row.getCell(count++)));
+            String value = getStringCellValue(row.getCell(count++));
+            if (value == null){
+                continue;
+            }else {
+                MarketCommercialVehicleTable.setOrderNumber(value);
+            }
             //4、合同号
             MarketCommercialVehicleTable.setContractNumber(getStringCellValue(row.getCell(count++)));
             //5、车号

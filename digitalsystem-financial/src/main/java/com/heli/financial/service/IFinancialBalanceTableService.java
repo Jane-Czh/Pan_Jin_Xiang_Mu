@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IFinancialBalanceTableService {
 
+    Date selectMaxYearAndMonth();
+
+
     List<Date> selectAllBalanceYearAndMonth();
     boolean checkDataExists();
 

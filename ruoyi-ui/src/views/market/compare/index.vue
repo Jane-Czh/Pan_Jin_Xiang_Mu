@@ -112,10 +112,10 @@
           :style="{ width: '40%', height: '400px', display: 'inline-block' }"
         ></div>
       </div>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -284,8 +284,9 @@
 </template>
 
 <script>
-import { listCompare, getCompare, delCompare, addCompare, updateCompare } from "@/api/market/compare";
+import {listCompare, getCompare, delCompare, addCompare, updateCompare, syncReport} from "@/api/market/compare";
 import * as echarts from "echarts";
+
 
 export default {
   name: "Compare",
@@ -405,25 +406,34 @@ export default {
     handleSortChanged(){
 
     },
+    //
+    // syncReport() {
+    //   // 使用 Fetch API 发送 POST 请求到后端
+    //   fetch('http://localhost:8080/market/compare/synchronization', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       // 如果请求成功，可以进行下一步操作
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    //   this.reload();
+    // },
 
-    syncReport() {
-      // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/market/compare/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // 如果请求成功，可以进行下一步操作
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-        });
-      this.reload();
+    async syncReport() {
+      try {
+        await syncReport();
+        this.getList();
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
     },
     /** 查询同配置车型交货天数对比功能列表 */
     getList() {

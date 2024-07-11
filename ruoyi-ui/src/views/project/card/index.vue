@@ -496,6 +496,7 @@ import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} fro
 import { listHistory } from "@/api/project/history";
 
 export default {
+  inject: ["reload"],
   name: "Info",
   data() {
     return {
@@ -761,6 +762,7 @@ export default {
       });
 
       location.reload();
+      this.reload();
     },
 
 
@@ -777,6 +779,8 @@ export default {
     /** 查询项目基本信息列表 */
     getList() {
       this.loading = true;
+      this.InfoList = [],
+      this.rowList = [],
       listInfo(this.queryParams).then(response => {
         this.InfoList = response.rows;
         this.total = response.total;

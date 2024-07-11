@@ -3,7 +3,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
@@ -47,9 +47,9 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -69,12 +69,12 @@
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="当月采购总金额" align="center" prop="totalPurchaseAmount" />
       <el-table-column label="当月管控物资采购金额" align="center" prop="controlledMaterialPurchases" />
-      <el-table-column label="比例" align="center" prop="controlledPurchaseAmountRatio" />
+      <el-table-column label="比例(%)" align="center" prop="controlledPurchaseAmountRatio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -92,7 +92,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="170px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
@@ -102,7 +102,7 @@
         <el-form-item label="当月管控物资采购金额" prop="controlledMaterialPurchases">
           <el-input v-model="form.controlledMaterialPurchases" placeholder="请输入当月管控物资采购金额" />
         </el-form-item>
-        <el-form-item label="比例" prop="controlledPurchaseAmountRatio">
+        <el-form-item label="比例(%)" prop="controlledPurchaseAmountRatio">
           <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例" />
         </el-form-item>
       </el-form>
@@ -117,6 +117,7 @@
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/supply/data";
 import { uploadFile } from '@/api/financial/excelImport';
+import { numValidator, numValidatorOnlyNature, numValidatorPercentage } from '@/api/financial/numValidator.js';
 
 export default {
 
@@ -167,13 +168,26 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         totalPurchaseAmount: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
         ],
         controlledMaterialPurchases: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
         ],
+        //比例
         controlledPurchaseAmountRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
 
       }

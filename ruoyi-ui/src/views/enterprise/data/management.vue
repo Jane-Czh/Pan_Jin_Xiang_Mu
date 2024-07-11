@@ -39,17 +39,17 @@
         </template>
       </el-table-column>
       <el-table-column label="SD 销售订单有效性考核" align="center" prop="sdSalesordervalidity" width="170" />
-      <el-table-column label="PP 手工创建生产订单比例" align="center" prop="ppManualpocreationratio" width="180" />
-      <el-table-column label="PP 生产订单已收货未报工的比例" align="center" prop="ppDeliveredunreportedratio" width="210" />
-      <el-table-column label="MES 报工不及时率比率" align="center" prop="mesLateworkreportingrate" width="170" />
-      <el-table-column label="QM 外检业务不及时率" align="center" prop="qmExternalinspectiondelay" width="160" />
-      <el-table-column label="MM 采购订单交货不及时的比例" align="center" prop="mmPurchaseorderlatedelivery" width="210" />
-      <el-table-column label="MM 手工创建采购订单比例" align="center" prop="mmManualpocreation" width="180" />
+      <el-table-column label="PP 手工创建生产订单比例(%)" align="center" prop="ppManualpocreationratio" width="200" />
+      <el-table-column label="PP 生产订单已收货未报工的比例(%)" align="center" prop="ppDeliveredunreportedratio" width="230" />
+      <el-table-column label="MES 报工不及时率比率(%)" align="center" prop="mesLateworkreportingrate" width="190" />
+      <el-table-column label="QM 外检业务不及时率(%)" align="center" prop="qmExternalinspectiondelay" width="180" />
+      <el-table-column label="MM 采购订单交货不及时的比例(%)" align="center" prop="mmPurchaseorderlatedelivery" width="230" />
+      <el-table-column label="MM 手工创建采购订单比例(%)" align="center" prop="mmManualpocreation" width="200" />
       <el-table-column label="MM 未清采购申请" align="center" prop="mmUnsettledpurchaserequests" width="140" />
-      <el-table-column label="FICO 月度标准价格与周期单位价格综合差异率" align="center" prop="ficoMonthlystandardpricevariation"
-        width="290" />
-      <el-table-column label="跨月生产订单比例" align="center" prop="CrossMonthProductionOrders" width="140" />
-      <el-table-column label="PM 维修订单完工不及时率" align="center" prop="pmLatemaintenanceordercompletion" width="180" />
+      <el-table-column label="FICO 月度标准价格与周期单位价格综合差异率(%)" align="center" prop="ficoMonthlystandardpricevariation"
+        width="310" />
+      <el-table-column label="跨月生产订单比例(%)" align="center" prop="crossMonthProductionOrders" width="160" />
+      <el-table-column label="PM 维修订单完工不及时率(%)" align="center" prop="pmLatemaintenanceordercompletion" width="200" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -65,7 +65,7 @@
 
     <!-- 添加或修改十一项管理指标对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="230px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="250px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择年月">
@@ -74,35 +74,35 @@
         <el-form-item label="SD 销售订单有效性考核" prop="sdSalesordervalidity">
           <el-input v-model="form.sdSalesordervalidity" placeholder="请输入SD 销售订单有效性考核" />
         </el-form-item>
-        <el-form-item label="PP 手工创建生产订单比例" prop="ppManualpocreationratio">
-          <el-input v-model="form.ppManualpocreationratio" placeholder="请输入PP 手工创建生产订单比例" />
+        <el-form-item label="PP 手工创建生产订单比例(%)" prop="ppManualpocreationratio">
+          <el-input v-model="form.ppManualpocreationratio" placeholder="请输入PP 手工创建生产订单比例(%)" />
         </el-form-item>
-        <el-form-item label="PP 生产订单已收货未报工的比例" prop="ppDeliveredunreportedratio">
-          <el-input v-model="form.ppDeliveredunreportedratio" placeholder="请输入PP 生产订单已收货未报工的比例" />
+        <el-form-item label="PP 生产订单已收货未报工的比例(%)" prop="ppDeliveredunreportedratio">
+          <el-input v-model="form.ppDeliveredunreportedratio" placeholder="请输入PP 生产订单已收货未报工的比例(%)" />
         </el-form-item>
-        <el-form-item label="MES 报工不及时率比率" prop="mesLateworkreportingrate">
-          <el-input v-model="form.mesLateworkreportingrate" placeholder="请输入MES 报工不及时率比率" />
+        <el-form-item label="MES 报工不及时率比率(%)" prop="mesLateworkreportingrate">
+          <el-input v-model="form.mesLateworkreportingrate" placeholder="请输入MES 报工不及时率比率(%)" />
         </el-form-item>
-        <el-form-item label="QM 外检业务不及时率" prop="qmExternalinspectiondelay">
-          <el-input v-model="form.qmExternalinspectiondelay" placeholder="请输入QM 外检业务不及时率" />
+        <el-form-item label="QM 外检业务不及时率(%)" prop="qmExternalinspectiondelay">
+          <el-input v-model="form.qmExternalinspectiondelay" placeholder="请输入QM 外检业务不及时率(%)" />
         </el-form-item>
-        <el-form-item label="MM 采购订单交货不及时的比例" prop="mmPurchaseorderlatedelivery">
-          <el-input v-model="form.mmPurchaseorderlatedelivery" placeholder="请输入MM 采购订单交货不及时的比例" />
+        <el-form-item label="MM 采购订单交货不及时的比例(%)" prop="mmPurchaseorderlatedelivery">
+          <el-input v-model="form.mmPurchaseorderlatedelivery" placeholder="请输入MM 采购订单交货不及时的比例(%)" />
         </el-form-item>
-        <el-form-item label="MM 手工创建采购订单比例" prop="mmManualpocreation">
-          <el-input v-model="form.mmManualpocreation" placeholder="请输入MM 手工创建采购订单比例" />
+        <el-form-item label="MM 手工创建采购订单比例(%)" prop="mmManualpocreation">
+          <el-input v-model="form.mmManualpocreation" placeholder="请输入MM 手工创建采购订单比例(%)" />
         </el-form-item>
         <el-form-item label="MM 未清采购申请" prop="mmUnsettledpurchaserequests">
           <el-input v-model="form.mmUnsettledpurchaserequests" placeholder="请输入MM 未清采购申请" />
         </el-form-item>
-        <el-form-item label="FICO 月度标准价格与周期单位价格综合差异率" prop="ficoMonthlystandardpricevariation">
-          <el-input v-model="form.ficoMonthlystandardpricevariation" placeholder="请输入FICO 月度标准价格与周期单位价格综合差异率" />
+        <el-form-item label="FICO 月度标准价格与周期单位价格综合差异率(%)" prop="ficoMonthlystandardpricevariation">
+          <el-input v-model="form.ficoMonthlystandardpricevariation" placeholder="请输入FICO 月度标准价格与周期单位价格综合差异率(%)" />
         </el-form-item>
-        <el-form-item label="跨月生产订单比例" prop="CrossMonthProductionOrders">
-          <el-input v-model="form.CrossMonthProductionOrders" placeholder="请输入跨月生产订单比例" />
+        <el-form-item label="跨月生产订单比例(%)" prop="crossMonthProductionOrders">
+          <el-input v-model="form.crossMonthProductionOrders" placeholder="请输入跨月生产订单比例(%)" />
         </el-form-item>
-        <el-form-item label="PM 维修订单完工不及时率" prop="pmLatemaintenanceordercompletion">
-          <el-input v-model="form.pmLatemaintenanceordercompletion" placeholder="请输入PM 维修订单完工不及时率" />
+        <el-form-item label="PM 维修订单完工不及时率(%)" prop="pmLatemaintenanceordercompletion">
+          <el-input v-model="form.pmLatemaintenanceordercompletion" placeholder="请输入PM 维修订单完工不及时率(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,7 +115,7 @@
 
 <script>
 import { listManagement, getManagement, delManagement, addManagement, updateManagement } from "@/api/enterprise/managementIndex";
-
+import { numValidator, numValidatorPercentage } from '@/api/financial/numValidator.js';
 export default {
   name: "Management",
   data() {
@@ -153,7 +153,7 @@ export default {
         mmManualpocreation: null,
         mmUnsettledpurchaserequests: null,
         ficoMonthlystandardpricevariation: null,
-        CrossMonthProductionOrders: null,
+        crossMonthProductionOrders: null,
         pmLatemaintenanceordercompletion: null,
       },
       // 表单参数
@@ -164,36 +164,80 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         sdSalesordervalidity: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         ppManualpocreationratio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         ppDeliveredunreportedratio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         mesLateworkreportingrate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         qmExternalinspectiondelay: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         mmPurchaseorderlatedelivery: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ], mmManualpocreation: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         mmUnsettledpurchaserequests: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         ficoMonthlystandardpricevariation: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
-        CrossMonthProductionOrders: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+        crossMonthProductionOrders: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         pmLatemaintenanceordercompletion: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
       }
     };
@@ -245,7 +289,7 @@ export default {
         mmManualpocreation: null,
         mmUnsettledpurchaserequests: null,
         ficoMonthlystandardpricevariation: null,
-        CrossMonthProductionOrders: null,
+        crossMonthProductionOrders: null,
         pmLatemaintenanceordercompletion: null,
         createBy: null,
         createTime: null,

@@ -63,7 +63,13 @@
     <!--  查询当年已上传数据的最大月份  -->
     <select id="selectMaxMonthByYear" resultType="date">
         select max(Year_And_Month) from Enterprise_Management_Indicators_Monthly_Data
-        where date_format(Year_And_Month,'%Y') = date_format(#{yearAndMonth},'%Y')
+        where date_format(Year_And_Month,'%Y') = date_format(#{yearAndMonth},'%Y') and Employees_Number is not null
+    </select>
+
+    <!--  查询当年已上传数据的最小月份  -->
+    <select id="selectMinMonthByYear" resultType="date">
+        select min(Year_And_Month) from Enterprise_Management_Indicators_Monthly_Data
+        where date_format(Year_And_Month,'%Y') = date_format(#{yearAndMonth},'%Y') and Employees_Number is not null
     </select>
 
     <!--  查询工资月度值  -->

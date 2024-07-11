@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.financial.service.IFinancialDataService;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FinancialInterestsTableController extends BaseController {
     @Autowired
     private IFinancialInterestsTableService financialInterestsTableService;
+    @Autowired
+    private IFinancialDataService financialDataService;
 
 
     /**
@@ -89,12 +93,44 @@ public class FinancialInterestsTableController extends BaseController {
     /**
      * 新增财务-利润
      */
-//    @PreAuthorize("@ss.hasPermi('financial:interests:add')")
-//    @Log(title = "财务-利润", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestBody FinancialInterestsTable financialInterestsTable) {
+    @PreAuthorize("@ss.hasPermi('financial:interests:add')")
+    @Log(title = "财务-利润", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody FinancialInterestsTable financialInterestsTable) {
 //        return toAjax(financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable));
-//    }
+
+
+
+
+        Date lastMonth = DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth());
+
+
+        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth) && financialInterestsTableService.checkDataExists()) {
+            return AjaxResult.error("上月利润表数据未填报");
+        }
+
+        if (financialInterestsTableService.checkInterestsDataIsExisted(financialInterestsTable.getYearAndMonth())) {
+            return AjaxResult.error("当月利润表已上传");
+        }
+        int status = 0;
+
+        status = financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable);
+
+        if (status == 0) {
+            return AjaxResult.error("利润表填报数据有误");
+        }
+
+        // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+        if (financialDataService.checkDataUploadedForCurrentMonth(financialInterestsTable.getYearAndMonth())
+                && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth()))) {
+            // 开始计算
+            financialDataService.calculateCurrentMonthFinancialData(financialInterestsTable.getYearAndMonth());
+        }
+
+        return AjaxResult.success();
+
+
+    }
 
 
 

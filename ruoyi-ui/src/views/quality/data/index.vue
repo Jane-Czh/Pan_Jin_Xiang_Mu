@@ -44,13 +44,13 @@
         </template>
       </el-table-column>
       <el-table-column label="外部质量损失金额" align="center" prop="moleculeExternalMassLossRate" />
-      <el-table-column label="外部质量损失率" align="center" prop="externalMassLossRate" />
+      <el-table-column label="外部质量损失率(%)" align="center" prop="externalMassLossRate" width="150" />
       <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
-      <el-table-column label="平均无故障时间" align="center" prop="meantimeWithoutFailure" width="180">
+      <el-table-column label="平均无故障时间(小时)" align="center" prop="meantimeWithoutFailure" width="200">
       </el-table-column>
-      <el-table-column label="供应商不合格件返厂及时率" align="center" prop="intimeReturnrate" />
-      <el-table-column label="班组自查合格率" align="center" prop="selfcheckPassrate" />
-      <el-table-column label="下道工序反馈合格率" align="center" prop="nextprocessFeedbackPassrate" />
+      <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220" />
+      <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate" />
+      <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -75,23 +75,23 @@
         <el-form-item label="外部质量损失金额" prop="moleculeExternalMassLossRate">
           <el-input v-model="form.moleculeExternalMassLossRate" placeholder="请输入外部质量损失金额" />
         </el-form-item>
-        <el-form-item label="外部质量损失率" prop="externalMassLossRate">
-          <el-input v-model="form.externalMassLossRate" placeholder="请输入外部质量损失率" />
+        <el-form-item label="外部质量损失率(%)" prop="externalMassLossRate">
+          <el-input v-model="form.externalMassLossRate" placeholder="请输入外部质量损失率(%)" />
         </el-form-item>
         <el-form-item label="质量考核季度排名" prop="quarterlyRank">
           <el-input v-model="form.quarterlyRank" placeholder="请输入质量考核季度排名" />
         </el-form-item>
-        <el-form-item label="平均无故障时间" prop="meantimeWithoutFailure">
-          <el-input v-model="form.meantimeWithoutFailure" placeholder="请选择平均无故障时间" />
+        <el-form-item label="平均无故障时间(小时)" prop="meantimeWithoutFailure">
+          <el-input v-model="form.meantimeWithoutFailure" placeholder="请选择平均无故障时间(小时)" />
         </el-form-item>
-        <el-form-item label="供应商不合格件返厂及时率" prop="intimeReturnrate">
-          <el-input v-model="form.intimeReturnrate" placeholder="请输入供应商不合格件返厂及时率" />
+        <el-form-item label="供应商不合格件返厂及时率(%)" prop="intimeReturnrate">
+          <el-input v-model="form.intimeReturnrate" placeholder="请输入供应商不合格件返厂及时率(%)" />
         </el-form-item>
-        <el-form-item label="班组自查合格率" prop="selfcheckPassrate">
-          <el-input v-model="form.selfcheckPassrate" placeholder="请输入班组自查合格率" />
+        <el-form-item label="班组自查合格率(%)" prop="selfcheckPassrate">
+          <el-input v-model="form.selfcheckPassrate" placeholder="请输入班组自查合格率(%)" />
         </el-form-item>
-        <el-form-item label="下道工序反馈合格率" prop="nextprocessFeedbackPassrate">
-          <el-input v-model="form.nextprocessFeedbackPassrate" placeholder="请输入下道工序反馈合格率" />
+        <el-form-item label="下道工序反馈合格率(%)" prop="nextprocessFeedbackPassrate">
+          <el-input v-model="form.nextprocessFeedbackPassrate" placeholder="请输入下道工序反馈合格率(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -103,8 +103,8 @@
 </template>
 
 <script>
-import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill, updateList } from "@/api/quality/data";
-
+import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";
+import { numValidatorNonZeroNature, numValidatorOnlyPositive, numValidatorPercentage } from '@/api/financial/numValidator.js';
 export default {
   name: "HandFill",
   data() {
@@ -149,25 +149,53 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         moleculeExternalMassLossRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur"
+          }
         ],
         externalMassLossRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
         quarterlyRank: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         meantimeWithoutFailure: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur"
+          }
         ],
         intimeReturnrate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
         selfcheckPassrate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
         nextprocessFeedbackPassrate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
       }
     };

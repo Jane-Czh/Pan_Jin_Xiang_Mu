@@ -42,9 +42,9 @@
             <i class="el-icon-upload"></i>
             <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
             <!-- 进度动画条 -->
-            <div v-if="progress > 0">
+            <!-- <div v-if="progress > 0">
               <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-            </div>
+            </div> -->
 
             <span slot="footer" class="dialog-footer">
               <el-button @click="showDialog = false">取 消</el-button>
@@ -71,7 +71,7 @@
       <el-table-column label="在制物资年化周转天数" align="center" prop="inventoryTurnoverdays" width="160" />
       <el-table-column label="人均生产台数" align="center" prop="outputPercapitacounts" />
       <el-table-column label="人均产值" align="center" prop="outputPercapitavalue" />
-      <el-table-column label="上线及时率" align="center" prop="onlineOntimerate" />
+      <el-table-column label="上线及时率(%)" align="center" prop="onlineOntimerate" />
       <el-table-column label="一线当月加班时长" align="center" prop="overtimeFrontlinemonth" />
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -110,7 +110,7 @@
         <el-form-item label="人均产值" prop="outputPercapitavalue">
           <el-input v-model="form.outputPercapitavalue" placeholder="请输入人均产值" />
         </el-form-item>
-        <el-form-item label="上线及时率" prop="onlineOntimerate">
+        <el-form-item label="上线及时率(%)" prop="onlineOntimerate">
           <el-input v-model="form.onlineOntimerate" placeholder="请输入上线及时率" />
         </el-form-item>
         <el-form-item label="一线当月加班时长" prop="overtimeFrontlinemonth">
@@ -132,6 +132,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/productio
 // import "font-awesome/css/font-awesome.css";
 //引入font-awesome
 // import "font-awesome/css/font-awesome.css";
+import { numValidator, numValidatorOnlyNature, numValidatorPercentage } from '@/api/financial/numValidator.js';
 import { uploadFile } from '@/api/financial/excelImport';
 
 
@@ -187,25 +188,54 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         curNonBomMaterialCost: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         curLowValueConsumables: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
+        //只允许自然数
         inventoryTurnoverdays: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyNature,
+            trigger: "blur",
+          }
         ],
         outputPercapitacounts: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         outputPercapitavalue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         onlineOntimerate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur",
+          }
         ],
         overtimeFrontlinemonth: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
       }
     };

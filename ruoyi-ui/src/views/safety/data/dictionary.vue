@@ -91,7 +91,7 @@
 
 <script>
 import { listDictionary, getDictionary, delDictionary, addDictionary, updateDictionary } from "@/api/safety/dictionary";
-
+import { numValidator, numValidatorOnlyNature } from '@/api/financial/numValidator.js';
 export default {
   name: "KEIndex",
   data() {
@@ -129,7 +129,11 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         seKeyEquipmentId: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyNature,
+            trigger: "blur",
+          }
         ],
       }
     };

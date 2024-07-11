@@ -414,12 +414,51 @@ export default {
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
+    extractMiddleMonth(dateStr) {
+      // 使用正则表达式匹配月份部分
+      const match = dateStr.match(/-(\d{2})-/);
+      if (match) {
+        // 提取匹配到的月份，并移除前导0
+        const month = parseInt(match[1], 10);
+        return month.toString();
+      } else {
+        return null; // 或者返回一个默认值
+      }
+    },
+    convertMonthToChinese(month) {
+      const monthMap = {
+        '1': '一',
+        '2': '二',
+        '3': '三',
+        '4': '四',
+        '5': '五',
+        '6': '六',
+        '7': '七',
+        '8': '八',
+        '9': '九',
+        '10': '十',
+        '11': '十一',
+        '12': '十二'
+      };
+
+      // 返回中文全称加上“月”
+      return `${monthMap[month]}月`;
+    },
     /** 导入按钮 */
     fileSend() {
 
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
       const yearAndMonth = this.form3.yearAndMonth;
+      formData.append("yearAndMonth", yearAndMonth);
+      formData.append("multipartFile", file);
+      const aimUrl = `/enterprise/data/salary`;
+      const Str = this.extractMiddleMonth(yearAndMonth);
+      const charMonth = this.convertMonthToChinese(Str);
+      const regex1 = new RegExp(Str + '月');
+      const regex2 = new RegExp(charMonth);
+      const check1 = regex1.test(file.name);//检查上传文件是否与所选日期匹配
+      const check2 = regex2.test(file.name);
       if (file === undefined || yearAndMonth == null) {
         if (file === undefined) {
           this.$message.error("请选择文件!");
@@ -429,24 +468,42 @@ export default {
           return;
         }
       } else {
-        formData.append("yearAndMonth", yearAndMonth);
-        formData.append("multipartFile", file);
-        const aimUrl = `/enterprise/data/salary`
-        uploadFile(formData, aimUrl)
-          .then(data => {
-            // 处理上传成功的情况
-            this.$message.success("上传成功");
-            this.getList();
-          })
-          .catch(error => {
-            // 处理上传失败的情况
-            console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+        if (check1 || check2) {
+          uploadFile(formData, aimUrl)
+            .then(data => {
+              // 处理上传成功的情况0.
+              this.$message.success("上传成功");
+              this.getList();
+            })
+            .catch(error => {
+              // 处理上传失败的情况
+              console.error('上传失败：', error);
+              this.$message.error("上传失败，请重试");
+            })
+            .finally(() => {
+              // 无论成功或失败，都关闭上传面板
+              this.showDialog = false;
+            });
+        } else {
+          this.$modal.confirm('检测到文件日期与所选日期可能不匹配，确定继续上传该表吗？').then(() => {
+            return uploadFile(formData, aimUrl)
+              .then(data => {
+                // 处理上传成功的情况0.
+                this.$message.success("上传成功");
+                this.getList();
+              })
+              .catch(error => {
+                // 处理上传失败的情况
+                console.error('上传失败：', error);
+                this.$message.error("上传失败，请重试");
+              })
+              .finally(() => {
+                // 无论成功或失败，都关闭上传面板
+                this.showDialog = false;
+              });
           });
+        }
+
       }
     },
   }

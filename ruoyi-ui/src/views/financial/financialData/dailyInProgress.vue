@@ -78,6 +78,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/financial/dayData";
+import { numValidator } from '@/api/financial/numValidator.js';
 
 export default {
   name: "Data",
@@ -117,7 +118,11 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         inProgressDayRevenue: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
       }
     };

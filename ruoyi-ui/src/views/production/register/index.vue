@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="关键字" prop="Keyword">
+      <el-form-item label="关键字" prop="keyword">
         <el-input
-          v-model="queryParams.Keyword"
+          v-model="queryParams.keyword"
           placeholder="请输入关键字"
           clearable
           @keyup.enter.native="handleQuery"
@@ -127,8 +127,8 @@
     <!-- 添加或修改记录标准作业信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="关键字" prop="Keyword">
-          <el-input v-model="form.Keyword" placeholder="请输入关键字" />
+        <el-form-item label="关键字" prop="keyword">
+          <el-input v-model="form.keyword" placeholder="请输入关键字" />
         </el-form-item>
         <el-form-item label="下发对象" prop="deliverObject">
           <el-input v-model="form.deliverObject" placeholder="请输入下发对象" />
@@ -206,7 +206,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Keyword: null,
+        keyword: null,
         deliverObject: null,
         deliveryTime: null,
         fileName: null
@@ -215,6 +215,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        
       },
 
       //新增
@@ -278,7 +279,7 @@ export default {
     reset() {
       this.form = {
         psjrfId: null,
-        Keyword: null,
+        keyword: null,
         deliverObject: null,
         deliveryTime: null,
         fileName: null

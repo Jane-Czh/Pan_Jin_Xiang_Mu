@@ -91,6 +91,10 @@ public class MarketAfterSalesRecurrenceRateServiceImpl implements IMarketAfterSa
             //遍历同一车型的数据
             while (j < problem.size()){
                 MarketAfterSaleLedger marketAfterSaleLedger = problem.get(j);
+                if (marketAfterSaleLedger.getPrimaryClassification() == null){
+                    j++;
+                    continue;
+                }
                 //一级分类不为空
                 if (!marketAfterSaleLedger.getPrimaryClassification().equals("")){
                     if (!hashmap.containsKey(marketAfterSaleLedger.getPrimaryClassification()+marketAfterSaleLedger.getSecondaryClassification())){
@@ -186,6 +190,12 @@ public class MarketAfterSalesRecurrenceRateServiceImpl implements IMarketAfterSa
     @Override
     public int insertMarketAfterSalesRecurrenceRate(MarketAfterSalesRecurrenceRate marketAfterSalesRecurrenceRate)
     {
+        Long lastid = selectLastId();
+        if(lastid == null){
+            lastid = 0L;
+        }
+        Long MasrrId = GenerateId.getNextId(lastid);
+        marketAfterSalesRecurrenceRate.setMasrrId(MasrrId);
         return marketAfterSalesRecurrenceRateMapper.insertMarketAfterSalesRecurrenceRate(marketAfterSalesRecurrenceRate);
     }
 

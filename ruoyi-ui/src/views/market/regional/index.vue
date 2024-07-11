@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="区域" prop="Area">
+      <el-form-item label="区域" prop="area">
         <el-input
           v-model="queryParams.Area"
           placeholder="请输入区域"
@@ -25,7 +25,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="周数" prop="Week">
+      <el-form-item label="周数" prop="week">
         <el-input
           v-model="queryParams.Week"
           placeholder="请输入周数"
@@ -89,6 +89,7 @@
         icon="el-icon-download"
         size="mini"
         @click="syncReport"
+        v-hasPermi="['market:regional:syncReport']"
       >同步数据</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -132,8 +133,8 @@
     <!-- 添加或修改售后区域分类对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="区域" prop="Area">
-          <el-input v-model="form.Area" placeholder="请输入区域" />
+        <el-form-item label="区域" prop="area">
+          <el-input v-model="form.area" placeholder="请输入区域" />
         </el-form-item>
         <el-form-item label="区域问题占比" prop="regionalProblemsProportion">
           <el-input v-model="form.regionalProblemsProportion" placeholder="请输入区域问题占比" />
@@ -141,8 +142,8 @@
         <el-form-item label="未处理数目" prop="unprocessedNmber">
           <el-input v-model="form.unprocessedNmber" placeholder="请输入未处理数目" />
         </el-form-item>
-        <el-form-item label="周数" prop="Week">
-          <el-input v-model="form.Week" placeholder="请输入周数" />
+        <el-form-item label="周数" prop="week">
+          <el-input v-model="form.week" placeholder="请输入周数" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -191,7 +192,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        Area: [
+        area: [
           { required: true, message: "区域不能为空", trigger: "blur" }
         ],
         regionalProblemsProportion: [
@@ -200,7 +201,7 @@ export default {
         unprocessedNmber: [
           { required: true, message: "未处理数目不能为空", trigger: "blur" }
         ],
-        Week: [
+        week: [
           { required: true, message: "周数不能为空", trigger: "blur" }
         ]
       }
@@ -228,10 +229,10 @@ export default {
     reset() {
       this.form = {
         masrcId: null,
-        Area: null,
+        area: null,
         regionalProblemsProportion: null,
         unprocessedNmber: null,
-        Week: null
+        week: null
       };
       this.resetForm("form");
     },

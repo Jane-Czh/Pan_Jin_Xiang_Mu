@@ -25,9 +25,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="月份" prop="Month">
+      <el-form-item label="月份" prop="month">
         <el-input
-          v-model="queryParams.Month"
+          v-model="queryParams.month"
           placeholder="请输入月份"
           clearable
           @keyup.enter.native="handleQuery"
@@ -89,6 +89,7 @@
         icon="el-icon-download"
         size="mini"
         @click="syncReport"
+        v-hasPermi="['market:recurrence:syncReport']"
       >同步数据</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -141,8 +142,8 @@
         <el-form-item label="不同问题出现率" prop="differentProblemOccurrenceRate">
           <el-input v-model="form.differentProblemOccurrenceRate" placeholder="请输入不同问题出现率" />
         </el-form-item>
-        <el-form-item label="月份" prop="Month">
-          <el-input v-model="form.Month" placeholder="请输入月份" />
+        <el-form-item label="月份" prop="month">
+          <el-input v-model="form.month" placeholder="请输入月份" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -185,7 +186,7 @@ export default {
         vehicleModel: null,
         problemRecurrenceRate: null,
         differentProblemOccurrenceRate: null,
-        Month: null
+        month: null
       },
       // 表单参数
       form: {},

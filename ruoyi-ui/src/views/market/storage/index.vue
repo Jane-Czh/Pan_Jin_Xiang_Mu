@@ -230,8 +230,8 @@
     <!-- 添加或修改销售台账存储对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="网点" prop="Branch">
-          <el-input v-model="form.Branch" placeholder="请输入网点" />
+        <el-form-item label="网点" prop="branch">
+          <el-input v-model="form.branch" placeholder="请输入网点" />
         </el-form-item>
         <el-form-item label="合同号" prop="contractNumber">
           <el-input v-model="form.contractNumber" placeholder="请输入合同号" />
@@ -250,14 +250,14 @@
         <el-form-item label="车型" prop="vehicleModel">
           <el-input v-model="form.vehicleModel" placeholder="请输入车型" />
         </el-form-item>
-        <el-form-item label="数量" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入数量" />
+        <el-form-item label="数量" prop="number">
+          <el-input v-model="form.number" placeholder="请输入数量" />
         </el-form-item>
         <el-form-item label="阀片" prop="valveBlock">
           <el-input v-model="form.valveBlock" placeholder="请输入阀片" />
         </el-form-item>
-        <el-form-item label="货叉" prop="Fork">
-          <el-input v-model="form.Fork" placeholder="请输入货叉" />
+        <el-form-item label="货叉" prop="fork">
+          <el-input v-model="form.fork" placeholder="请输入货叉" />
         </el-form-item>
         <el-form-item label="门架" prop="doorFrame">
           <el-input v-model="form.doorFrame" placeholder="请输入门架" />
@@ -265,14 +265,14 @@
         <el-form-item label="空滤" prop="airFilter">
           <el-input v-model="form.airFilter" placeholder="请输入空滤" />
         </el-form-item>
-        <el-form-item label="属具" prop="Accessory">
-          <el-input v-model="form.Accessory" placeholder="请输入属具" />
+        <el-form-item label="属具" prop="accessory">
+          <el-input v-model="form.accessory" placeholder="请输入属具" />
         </el-form-item>
-        <el-form-item label="轮胎" prop="Tyre">
-          <el-input v-model="form.Tyre" placeholder="请输入轮胎" />
+        <el-form-item label="轮胎" prop="tyre">
+          <el-input v-model="form.tyre" placeholder="请输入轮胎" />
         </el-form-item>
-        <el-form-item label="配置" prop="Configuration">
-          <el-input v-model="form.Configuration" placeholder="请输入配置" />
+        <el-form-item label="配置" prop="configuration">
+          <el-input v-model="form.configuration" placeholder="请输入配置" />
         </el-form-item>
         <el-form-item label="车号" prop="carNumber">
           <el-input v-model="form.carNumber" placeholder="请输入车号" />
@@ -323,19 +323,19 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Branch: null,
+        branch: null,
         contractNumber: null,
         orderNumber: null,
         orderAcceptanceTime: null,
         vehicleModel: null,
-        Number: null,
+        number: null,
         valveBlock: null,
-        Fork: null,
+        fork: null,
         doorFrame: null,
         airFilter: null,
-        Accessory: null,
-        Tyre: null,
-        Configuration: null,
+        accessory: null,
+        tyre: null,
+        configuration: null,
         carNumber: null,
         orderSystemDeliveryTime: null
       },
@@ -343,7 +343,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        Branch: [
+        branch: [
           { required: true, message: "网点不能为空", trigger: "blur" }
         ],
         contractNumber: [
@@ -358,7 +358,7 @@ export default {
         vehicleModel: [
           { required: true, message: "车型不能为空", trigger: "blur" }
         ],
-        Number: [
+        number: [
           { required: true, message: "数量不能为空", trigger: "blur" }
         ],
         orderSystemDeliveryTime: [

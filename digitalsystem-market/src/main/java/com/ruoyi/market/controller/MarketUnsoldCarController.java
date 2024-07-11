@@ -37,6 +37,7 @@ public class MarketUnsoldCarController extends BaseController
     @Autowired
     private IMarketUnsoldCarService marketUnsoldCarService;
 
+    @PreAuthorize("@ss.hasPermi('market:unsoldcar:syncReport')")
     @PostMapping("/synchronization")
     public void Database_Synchronization(MarketAfterSaleRegionalClassification marketAfterSaleRegionalClassification){
         System.out.println("------同步------");

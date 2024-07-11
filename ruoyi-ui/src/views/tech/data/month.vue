@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays" />
       <el-table-column label="当月完成的计划" align="center" prop="completedmonthlyPlancounts" />
-      <el-table-column label="研发项目计划进度完成率" align="center" prop="prdscheduleCompletionrate" />
+      <el-table-column label="研发项目计划进度完成率(%)" align="center" prop="prdscheduleCompletionrate" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -82,7 +82,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/tech/data";
-
+import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
   data() {
@@ -124,10 +124,18 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         nonStandardAvgPreparationDays: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur"
+          }
         ],
         completedmonthlyPlancounts: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
         ],
       }
     };

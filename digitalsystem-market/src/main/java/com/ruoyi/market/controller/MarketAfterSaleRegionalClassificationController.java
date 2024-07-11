@@ -43,6 +43,7 @@ public class MarketAfterSaleRegionalClassificationController extends BaseControl
     /**
      * 同步售后台账数据库信息功能
      */
+    @PreAuthorize("@ss.hasPermi('market:regional:syncReport')")
     @PostMapping("/synchronization")
     public void Database_Synchronization(MarketAfterSaleRegionalClassification marketAfterSaleRegionalClassification){
         System.out.println("------同步------");

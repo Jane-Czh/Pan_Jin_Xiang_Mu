@@ -44,9 +44,9 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -69,11 +69,11 @@
         </template>
       </el-table-column>
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" />
-      <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" />
+      <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" width="150" />
       <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
       <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" />
-      <el-table-column label="工资总额月度占比" align="center" prop="monthlySalaryRatio" />
-      <el-table-column label="工资总额年度占比" align="center" prop="annualSalaryRatio" />
+      <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
+      <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
       <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" />
       <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
       <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
@@ -142,7 +142,7 @@
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
 import { uploadFile } from '@/api/financial/excelImport';
-
+import { numValidator, numValidatorEnableEmpty, numValidatorPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
 
@@ -199,38 +199,78 @@ export default {
       // 表单校验
       rules: {
         yearAndMonth: [
-          { required: true, message: "日期不能为空", trigger: "blur" }
+          {
+            required: true, message: "日期不能为空", trigger: "blur"
+          }
         ],
         employeesNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPositive,
+            trigger: "blur",
+          }
         ],
-        employeesAvgMonthlyNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
-        employeesAvgAnnualNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
+        // employeesAvgMonthlyNumber: [
+        //   {
+        //     required: true,
+        //     validator: numValidatorPositive,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // employeesAvgAnnualNumber: [
+        //   {
+        //     required: true,
+        //     validator: numValidatorPositive,
+        //     trigger: "blur",
+        //   }
+        // ],
         totalMonthlySalary: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPositive,
+            trigger: "blur",
+          }
         ],
-        monthlySalaryRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+        // monthlySalaryRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // annualSalaryRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+
+        //允许空值
+        cumulativeAverageIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
         ],
-        annualSalaryRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+        monthlyProductionAvgIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
         ],
-        // cumulativeAverageIncome: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        // monthlyProductionAvgIncome: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        // monthlyFunctionalAvgIncome: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        // functionalDeptOvertimeCost: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
+        monthlyFunctionalAvgIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
+        functionalDeptOvertimeCost: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
       }
     };
   },

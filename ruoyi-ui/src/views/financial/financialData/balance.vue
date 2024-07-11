@@ -50,9 +50,9 @@
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
 
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -86,10 +86,10 @@
       <el-table-column label="产品成本差异-产成品" align="center" prop="pcvFinished" width="160" />
       <el-table-column label="当月库存商品存货额" align="center" prop="monthAmountInStock" width="160" />
       <el-table-column label="月度存货总金额" align="center" prop="monthlyInventoryTotalAmount" width="120" />
-      <el-table-column label="存货增长率" align="center" prop="growthRateInventory" width="160" />
-      <el-table-column label="销售增长率" align="center" prop="growthRateSales" width="160" />
+      <el-table-column label="存货增长率(%)" align="center" prop="growthRateInventory" width="160" />
+      <el-table-column label="销售增长率(%)" align="center" prop="growthRateSales" width="160" />
       <el-table-column label="应收账款" align="center" prop="receivables" width="120" />
-      <el-table-column label="应收帐款周转率" align="center" prop="turnoverRateReceivable" width="120" />
+      <el-table-column label="应收帐款周转率(%)" align="center" prop="turnoverRateReceivable" width="140" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -173,7 +173,7 @@
 
 <script>
 import { listBalance, getBalance, delBalance, addBalance, updateBalance } from "@/api/financial/balance";
-
+import { numValidator } from '@/api/financial/numValidator.js';
 import { uploadFile } from '@/api/financial/excelImport';
 
 export default {
@@ -211,7 +211,6 @@ export default {
         pageSize: 10,
         createdBy: null,
         createdTime: null,
-
         yearAndMonth: null,
         inTransitInventory: null,
         materials: null,
@@ -242,56 +241,112 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         inTransitInventory: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         materials: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         materialCostVariance: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         materialCostVarianceUnallocated: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         monthlyRawMaterialInventory: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         workInProgressSemiFinishedGoods: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         monthlyWorkInProgressInventory: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         inventoryVehicles: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         pcvFinished: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
+
+        monthlyInventoryTotalAmount: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+
+        receivables: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+
+        productCostVarianceSemiFinishedGoods: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        workInProgressEndOfMonth: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        //不用输入
+        // turnoverRateReceivable: [
+        //   { required: true, message: "数据不能为空", trigger: "blur" }
+        // ],
         // monthAmountInStock: [
         //   { required: true, message: "数据不能为空", trigger: "blur" }
         // ],
-        monthlyInventoryTotalAmount: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
         // growthRateInventory: [
         //   { required: true, message: "数据不能为空", trigger: "blur" }
         // ],
         // growthRateSales: [
         //   { required: true, message: "数据不能为空", trigger: "blur" }
         // ],
-        receivables: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
-        // turnoverRateReceivable: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        productCostVarianceSemiFinishedGoods: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
-        workInProgressEndOfMonth: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -418,6 +473,8 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    //检查输入的数据
+
 
     checkFile() {
       const file = this.$refs.fileInput.files[0];

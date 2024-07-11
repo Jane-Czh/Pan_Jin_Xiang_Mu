@@ -70,9 +70,9 @@
         </template>
       </el-table-column>
       <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
-      <el-table-column label="当月设备故障累计停产时间" align="center" prop="curEquipmentFailuresTotaltime" />
-      <el-table-column label="当月设备维修替换件成本" align="center" prop="curEquipmentReplacementCost" />
-      <el-table-column label="重点设备故障率" align="center" prop="keyEquipmentFailureRate" />
+      <el-table-column label="当月设备故障累计停产时间(小时)" align="center" prop="curEquipmentFailuresTotaltime" />
+      <el-table-column label="当月设备维修替换件成本(小时)" align="center" prop="curEquipmentReplacementCost" />
+      <el-table-column label="重点设备故障率(%)" align="center" prop="keyEquipmentFailureRate" />
       <el-table-column label="主要设备故障总次数" align="center" prop="keyEquipmentTotalFailureCount" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -121,6 +121,7 @@
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
 import { uploadFile } from '@/api/financial/excelImport';
+import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
   data() {
@@ -173,13 +174,25 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         curEquipmentMaintenanceCost: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         curEquipmentFailuresTotaltime: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur",
+          }
         ],
         curEquipmentReplacementCost: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur",
+          }
         ],
         // keyEquipmentTotalFailureCount: [
         //   { required: true, message: "数据不能为空", trigger: "blur" }

@@ -1,6 +1,8 @@
 package com.ruoyi.market.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.market.utils.GenerateId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.MarketSalesTableStorageMapper;
@@ -52,9 +54,19 @@ public class MarketSalesTableStorageServiceImpl implements IMarketSalesTableStor
     @Override
     public int insertMarketSalesTableStorage(MarketSalesTableStorage marketSalesTableStorage)
     {
+        Long lastid = selectLastId();
+        if(lastid == null){
+            lastid = 0L;
+        }
+        Long MstsId = GenerateId.getNextId(lastid);
+        marketSalesTableStorage.setMstsId(MstsId);
         return marketSalesTableStorageMapper.insertMarketSalesTableStorage(marketSalesTableStorage);
     }
 
+    //查询数据库最后一条数据id
+    public Long selectLastId(){
+        return marketSalesTableStorageMapper.selectLastId();
+    }
     /**
      * 修改销售台账存储
      * 

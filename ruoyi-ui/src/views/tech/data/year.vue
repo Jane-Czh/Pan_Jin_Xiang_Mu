@@ -67,7 +67,7 @@
 
 <script>
 import { listData2, getData2, delData2, addData2, updateData2 } from "@/api/tech/data";
-
+import { numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
   data() {
@@ -106,7 +106,11 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         annualPlancounts: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorOnlyPositive,
+            trigger: "blur"
+          }
         ],
       }
     };

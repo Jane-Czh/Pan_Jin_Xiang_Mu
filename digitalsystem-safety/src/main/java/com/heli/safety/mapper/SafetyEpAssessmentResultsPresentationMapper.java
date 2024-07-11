@@ -61,5 +61,7 @@ public interface SafetyEpAssessmentResultsPresentationMapper
 
     public void deleteAllData();
 
+    //查询数据库最后一条数据id
+    public Long selectLastId();
 
 }

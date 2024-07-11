@@ -34,6 +34,7 @@ public class MarketInventoryCarDetailController extends BaseController
     /**
      * 导入excel库存车明细列表
      */
+    @PreAuthorize("@ss.hasPermi('market:detail:import')")
     @PostMapping("/import")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile){
         System.out.println("------------import-------import------------");

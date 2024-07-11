@@ -36,6 +36,7 @@ public class MarketAfterSaleLedgerController extends BaseController
      * 导入excel
      */
     @Log(title = "[市场]售后台账表表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('market:ledger:import')")
     @PostMapping("/import")
     public AjaxResult importExcel(@RequestParam("file") MultipartFile excelFile)
     {

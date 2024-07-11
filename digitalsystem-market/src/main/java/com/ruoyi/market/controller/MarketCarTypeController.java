@@ -31,6 +31,7 @@ public class MarketCarTypeController extends BaseController
     @Autowired
     private IMarketCarTypeService marketCarTypeService;
 
+    @PreAuthorize("@ss.hasPermi('market:cartype:import')")
     @PostMapping("/import")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

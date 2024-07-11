@@ -141,5 +141,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="selectLastId" resultType="java.lang.Long">
+    SELECT SEARP_ID
+    FROM Safety_EP_Assessment_Results_Presentation
+    WHERE SEARP_ID = (SELECT MAX(SEARP_ID) FROM Safety_EP_Assessment_Results_Presentation);
+    </select>
+
     <delete id="deleteAllData"> delete from Safety_EP_Assessment_Results_Presentation </delete>
 </mapper>

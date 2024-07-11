@@ -35,6 +35,7 @@ public class MarketSalesTableController extends BaseController
      * 导入excel表格功能
      */
     @Log(title = "[市场]销售台账表表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('market:import:import')")
     @PostMapping("/import")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

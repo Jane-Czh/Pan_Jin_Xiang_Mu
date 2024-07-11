@@ -424,9 +424,19 @@ public class SafetyEpAssessmentResultsPresentationServiceImpl implements ISafety
     @Override
     public int insertSafetyEpAssessmentResultsPresentation(SafetyEpAssessmentResultsPresentation safetyEpAssessmentResultsPresentation)
     {
+        Long lastid = selectLastId();
+        if(lastid == null){
+            lastid = 0L;
+        }
+        Long SearpId = GenerateId.getNextId(lastid);
+        safetyEpAssessmentResultsPresentation.setSearpId(SearpId);
         return safetyEpAssessmentResultsPresentationMapper.insertSafetyEpAssessmentResultsPresentation(safetyEpAssessmentResultsPresentation);
     }
 
+    //查询数据库最后一条数据id
+    public Long selectLastId(){
+        return safetyEpAssessmentResultsPresentationMapper.selectLastId();
+    }
     /**
      * 修改成绩考核展示
      * 

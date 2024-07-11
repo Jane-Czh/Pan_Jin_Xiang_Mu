@@ -81,9 +81,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="差异" prop="Difference">
+      <el-form-item label="差异" prop="difference">
         <el-input
-          v-model="queryParams.Difference"
+          v-model="queryParams.difference"
           placeholder="请输入差异"
           clearable
           @keyup.enter.native="handleQuery"
@@ -145,6 +145,7 @@
         icon="el-icon-download"
         size="mini"
         @click="syncReport"
+        v-hasPermi="['supply:ratio:syncReport']"
       >同步数据</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -162,7 +163,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
-          v-hasPermi="['market:import:export']"
+          v-hasPermi="['supply:ratio:import']"
         >导入Excel文件</el-button>
 
         <el-dialog
@@ -205,7 +206,7 @@
       <el-table-column label="是否入驻第三方" align="center" prop="thirdParty" />
       <el-table-column label="备注" align="center" prop="Remarks" />
       <el-table-column label="实际比例" align="center" prop="actualProportion" />
-      <el-table-column label="差异" align="center" prop="Difference" />
+      <el-table-column label="差异" align="center" prop="difference" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -267,8 +268,8 @@
         <el-form-item label="实际比例" prop="actualProportion">
           <el-input v-model="form.actualProportion" placeholder="请输入实际比例" />
         </el-form-item>
-        <el-form-item label="差异" prop="Difference">
-          <el-input v-model="form.Difference" placeholder="请输入差异" />
+        <el-form-item label="差异" prop="difference">
+          <el-input v-model="form.difference" placeholder="请输入差异" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -319,15 +320,15 @@ export default {
         thirdParty: null,
         Remarks: null,
         actualProportion: null,
-        Difference: null
+        difference: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        materialNumber: [
-          { required: true, message: "物料号不能为空", trigger: "blur" }
-        ],
+        // materialNumber: [
+        //   { required: true, message: "物料号不能为空", trigger: "blur" }
+        // ],
         supplierCode: [
           { required: true, message: "供应商代码不能为空", trigger: "blur" }
         ],
@@ -377,7 +378,7 @@ export default {
         thirdParty: null,
         Remarks: null,
         actualProportion: null,
-        Difference: null
+        difference: null
       };
       this.resetForm("form");
     },
@@ -518,6 +519,7 @@ export default {
             this.showDialog = false; // 关闭上传面板
             location.reload(); // 刷新页面数据
           }, 2000); // 2000毫秒后执行
+          this.$message.success("上传成功");
         })
         .catch(error => {
           // 处理错误

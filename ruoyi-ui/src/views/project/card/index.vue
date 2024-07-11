@@ -790,6 +790,7 @@ export default {
     },
 
     split(data, total){
+      this.rowList = [];
       for (let i = 0; i < total; i += 4) {
           // 4表示每行4条
           this.rowList.push(data.slice(i, i + 4));

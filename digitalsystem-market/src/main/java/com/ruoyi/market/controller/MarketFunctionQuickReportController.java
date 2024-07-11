@@ -48,6 +48,7 @@ public class MarketFunctionQuickReportController extends BaseController
     /**
       * 同步销售台账数据库信息功能
       */
+    @PreAuthorize("@ss.hasPermi('market:report:syncReport')")
     @PostMapping("/synchronization")
     public void Database_Synchronization(MarketFunctionQuickReport marketFunctionQuickReport1){
         System.out.println("-----------同步-------同步------------");

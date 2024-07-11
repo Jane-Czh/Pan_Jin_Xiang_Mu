@@ -36,6 +36,7 @@ public class ProjectHistoryInfoTableController extends BaseController
      * 导入excel表格功能
      */
     @Log(title = "[项目]历史项目导入", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('project:history:import')")
     @PostMapping("/import")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

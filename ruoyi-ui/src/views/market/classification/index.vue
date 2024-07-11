@@ -97,6 +97,7 @@
         icon="el-icon-download"
         size="mini"
         @click="syncReport"
+        v-hasPermi="['market:classification:syncReport']"
       >同步数据</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>

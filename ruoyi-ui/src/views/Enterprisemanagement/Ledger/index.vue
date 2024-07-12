@@ -330,6 +330,9 @@
         <el-form-item label="发证机关" prop="issuingAuthority">
           <el-input v-model="form.issuingAuthority" placeholder="请输入发证机关" />
         </el-form-item>
+        <el-form-item label="证件类型" prop="documentType">
+          <el-input v-model="form.documentType" placeholder="请输入证件类型" />
+        </el-form-item>
         <el-form-item label="作业类别" prop="assignmentCategory">
           <el-input v-model="form.assignmentCategory" placeholder="请输入作业类别" />
         </el-form-item>
@@ -426,6 +429,28 @@ import axios from "axios";
 export default {
   name: "Ledger",
   data() {
+    const validateEnglish = (rule, value, callback) => {
+      if (value && !/^[a-zA-Z]+$/.test(value)) {
+        callback(new Error('只能输入英文字符'));
+      } else {
+        callback();
+      }
+    };
+    const validateChinese = (rule, value, callback) => {
+      if (value && !/^[\u4e00-\u9fa5]+$/.test(value)) {
+        callback(new Error('只能输入中文字符'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateAlphanumeric = (rule, value, callback) => {
+      if (value && !/^[a-zA-Z0-9]+$/.test(value)) {
+        callback(new Error('只能输入英文字符或数字'));
+      } else {
+        callback();
+      }
+    };
     return {
       // 遮罩层
       loading: true,
@@ -473,9 +498,38 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        idNumber: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
+        department: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
         ],
+        name: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
+        ],
+        issuingAuthority: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
+        ],
+        assignmentCategory: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
+        ],
+        createdBy: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
+        ],
+        idNumber: [
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        documentType: [
+          { required: false },
+          { validator: validateEnglish, trigger: 'blur' }
+        ],
+        idCard: [
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ]
       },
       //新增参数
       showDialog: false,
@@ -576,6 +630,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
     /** 删除按钮操作 */
@@ -632,6 +690,11 @@ export default {
 
     async fileSend() {
       try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
         console.log(file);
@@ -648,7 +711,7 @@ export default {
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('上传失败!', error);
       }
     },
     handleClose(done) {

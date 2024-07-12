@@ -348,24 +348,24 @@
       <el-table-column label="上线" align="center" prop="goLive" />
       <el-table-column label="入库" align="center" prop="warehousing" />
       <el-table-column label="生产周期" align="center" prop="productionCycle" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['market:CVimport:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['market:CVimport:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['market:CVimport:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['market:CVimport:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -514,6 +514,29 @@ import axios from "axios";
 export default {
   name: "CVimport",
   data() {
+    const validateAlphanumeric = (rule, value, callback) => {
+      if (value && !/^[a-zA-Z0-9]+$/.test(value)) {
+        callback(new Error('只能输入英文字符或数字'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateChineseOrEnglish = (rule, value, callback) => {
+      if (value && !/^[\u4e00-\u9fa5a-zA-Z]+$/.test(value)) {
+        callback(new Error('只能输入中文字符或英文字符'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateNumber = (rule, value, callback) => {
+      if (value && !/^\d+$/.test(value)) {
+        callback(new Error('只能输入数字'));
+      } else {
+        callback();
+      }
+    };
     return {
       // 遮罩层
       loading: true,
@@ -568,45 +591,39 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        // acceptanceDate: [
-        //   { required: true, message: "接单日期不能为空", trigger: "blur" }
-        // ],
-        // launchDate: [
-        //   { required: true, message: "上线日期不能为空", trigger: "blur" }
-        // ],
-        // orderNumber: [
-        //   { required: true, message: "订单号不能为空", trigger: "blur" }
-        // ],
-        // contractNumber: [
-        //   { required: true, message: "合同号不能为空", trigger: "blur" }
-        // ],
-        carNumber: [
-          { required: true, message: "车号不能为空", trigger: "blur" }
+        createdBy: [
+          { required: false },
+          { validator: validateChineseOrEnglish, trigger: 'blur' }
         ],
-        // vehicleModel: [
-        //   { required: true, message: "车型不能为空", trigger: "blur" }
-        // ],
-        // doorFrameHeight: [
-        //   { required: true, message: "门架高度不能为空", trigger: "blur" }
-        // ],
-        // Number: [
-        //   { required: true, message: "数量不能为空", trigger: "blur" }
-        // ],
-        // Accessory: [
-        //   { required: true, message: "属具不能为空", trigger: "blur" }
-        // ],
-        // valveBlock: [
-        //   { required: true, message: "阀片不能为空", trigger: "blur" }
-        // ],
-        // Configuration: [
-        //   { required: true, message: "配置不能为空", trigger: "blur" }
-        // ],
-        // plannedCompletionPeriod: [
-        //   { required: true, message: "计划完工期不能为空", trigger: "blur" }
-        // ],
-        // Customer: [
-        //   { required: true, message: "客户不能为空", trigger: "blur" }
-        // ],
+        orderNumber: [
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        contractNumber: [
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        carNumber: [
+          { required: true, message: '请输入车号', trigger: 'blur' },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        vehicleModel: [
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        doorFrameHeight: [
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        number: [
+          { required: false },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        valveBlock: [
+          { required: false },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+
       },
       //新增参数
       showDialog: false,
@@ -714,6 +731,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
     /** 删除按钮操作 */
@@ -769,6 +790,11 @@ export default {
     // },
     async fileSend() {
       try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
         console.log(file);
@@ -785,7 +811,7 @@ export default {
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('上传失败!', error);
       }
     },
     handleClose(done) {

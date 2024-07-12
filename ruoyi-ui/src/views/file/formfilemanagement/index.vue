@@ -4,10 +4,10 @@
       <el-collapse-item title="表单检索" name="search">
         <div>
           <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-            <el-form-item label="表单名称" prop="formTitle">
+            <el-form-item label="表单标题" prop="formTitle">
               <el-input
                 v-model="queryParams.formTitle"
-                placeholder="请输入表单名称"
+                placeholder="请输入表单标题"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
@@ -27,6 +27,14 @@
                               value-format="yyyy-MM-dd"
                               placeholder="请选择表单上传时间">
               </el-date-picker>
+            </el-form-item>
+            <el-form-item label="表单名称" prop="formName">
+              <el-input
+                v-model="queryParams.formName"
+                placeholder="请输入表单名称"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
             </el-form-item>
 <!--            <el-form-item label="表单大小" prop="formSize">-->
 <!--              <el-input-->
@@ -122,9 +130,9 @@
       </el-table-column>
       <el-table-column label="表单名称" align="center" prop="formName" />
       <el-table-column label="表单类型" align="center" prop="formType" />
-      <el-table-column label="表单路径" align="center" prop="formPath">
+      <el-table-column label="表单下载" align="center" prop="formPath">
         <template slot-scope="scope">
-          <a :href="baseUrl + scope.row.formPath" download>点击下载</a>
+          <a :href="baseUrl + scope.row.formPath" download style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="表单大小" align="center" prop="formSize" />
@@ -134,13 +142,13 @@
 <!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
 <!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
-      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修订内容" align="center" prop="revisionContent" />
-      <el-table-column label="修订人" align="center" prop="reviser" />
+<!--      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="修订内容" align="center" prop="revisionContent" />-->
+<!--      <el-table-column label="修订人" align="center" prop="reviser" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -643,6 +651,11 @@ export default {
     },
     /** 更新表单文件提交按钮 */
     updateSubmitForm() {
+      // 检查 formList 是否为空
+      if (this.formList.length === 0) {
+        this.$message.error("请上传文件");
+        return;
+      }
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.formId != null) {
@@ -743,6 +756,7 @@ export default {
     },
     /** 上传文件时的动作*/
     handleFileChange(file, formList) {
+      this.formList = formList;
       console.log('上传文件时的form1',this.form);
       const uploadedFile = file.raw; // 获取上传的文件对象
       // 将文件名填充到对应的输入框

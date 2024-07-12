@@ -181,6 +181,43 @@ import axios from "axios";
 export default {
   name: "Rate",
   data() {
+    const validateModel = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入型号'));
+      } else {
+        const regex = /^[A-Za-z0-9]+$/;
+        if (!regex.test(value)) {
+          callback(new Error('型号只能包含英文字符或数字'));
+        } else {
+          callback();
+        }
+      }
+    };
+    const validateNumber = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入数字'));
+      } else {
+        const regex = /^\d+$/;
+        if (!regex.test(value)) {
+          callback(new Error('只能输入数字'));
+        } else {
+          callback();
+        }
+      }
+    };
+
+    const validateQualificationRate = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入合格率'));
+      } else {
+        const regex = /^\d+(\.\d+)?%?$/;
+        if (!regex.test(value)) {
+          callback(new Error('合格率只能输入数字和%'));
+        } else {
+          callback();
+        }
+      }
+    };
     return {
       // 遮罩层
       loading: true,
@@ -210,7 +247,24 @@ export default {
       // 表单校验
       rules: {
         model: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
+          { required: true, message: '请输入型号', trigger: 'blur' },
+          { validator: validateModel, trigger: 'blur' }
+        ],
+        qualifiedNumber: [
+          { required: true, message: '请输入合格数量', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        disqualifiedNumber: [
+          { required: true, message: '请输入不合格数量', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        productionNumber: [
+          { required: true, message: '请输入生产数量', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        qualificationRate: [
+          { required: true, message: '请输入合格率', trigger: 'blur' },
+          { validator: validateQualificationRate, trigger: 'blur' }
         ],
       },
 
@@ -321,6 +375,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
     /** 删除按钮操作 */
@@ -379,6 +437,11 @@ export default {
 
     async fileSend() {
       try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
         console.log(file);
@@ -395,7 +458,7 @@ export default {
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('上传失败!', error);
       }
     },
     handleClose(done) {

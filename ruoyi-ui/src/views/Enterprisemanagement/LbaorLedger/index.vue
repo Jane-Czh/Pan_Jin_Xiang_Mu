@@ -373,6 +373,37 @@ import axios from "axios";
 export default {
   name: "LbaorLedger",
   data() {
+    const validateChinese = (rule, value, callback) => {
+      if (value && !/^[\u4e00-\u9fa5]+$/.test(value)) {
+        callback(new Error('只能输入中文字符'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateAlphanumeric = (rule, value, callback) => {
+      if (value && !/^[a-zA-Z0-9]+$/.test(value)) {
+        callback(new Error('只能输入英文字符或数字'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateNumber = (rule, value, callback) => {
+      if (value && !/^\d+$/.test(value)) {
+        callback(new Error('只能输入数字'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateChineseOrPunctuation = (rule, value, callback) => {
+      if (value && !/^[\u4e00-\u9fa5\p{P}]+$/u.test(value)) {
+        callback(new Error('只能输入中文字符或标点符号'));
+      } else {
+        callback();
+      }
+    };
     return {
       // 遮罩层
       loading: true,
@@ -417,9 +448,38 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        idNumber: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
+        name: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
         ],
+        document: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
+        ],
+        employmentStatus: [
+          { required: false },
+          { validator: validateChinese, trigger: 'blur' }
+        ],
+        idNumber: [
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          { validator: validateAlphanumeric, trigger: 'blur' }
+        ],
+        phoneNumber: [
+          { required: false },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        contractStatusFirstly: [
+          { required: false },
+          { validator: validateChineseOrPunctuation, trigger: 'blur' }
+        ],
+        contractStatusSecondly: [
+          { required: false },
+          { validator: validateChineseOrPunctuation, trigger: 'blur' }
+        ],
+        contractStatusThirdly: [
+          { required: false },
+          { validator: validateChineseOrPunctuation, trigger: 'blur' }
+        ]
       },
       //新增参数
       showDialog: false,
@@ -517,6 +577,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
     /** 删除按钮操作 */
@@ -536,6 +600,11 @@ export default {
       }, `LbaorLedger_${new Date().getTime()}.xlsx`)
     },
     async fileSend() {
+      const fileInput = document.getElementById("inputFile");
+      if (!fileInput.files.length) {
+        this.$message.error("请选择上传文件");
+        return;
+      }
       try {
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
@@ -553,7 +622,7 @@ export default {
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('上传失败!', error);
       }
     },
 

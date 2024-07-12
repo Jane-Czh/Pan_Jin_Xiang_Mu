@@ -187,9 +187,9 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名称" align="center" prop="fileName"/>
-      <el-table-column label="文件路径" align="center" prop="filePath">
+      <el-table-column label="文件下载" align="center" prop="filePath">
         <template slot-scope="scope">
-          <a @click.prevent="downloadFile(scope.row.filePath)">点击下载</a>
+          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="文件类型" align="center" prop="fileType"/>
@@ -202,17 +202,17 @@
       <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>
       <el-table-column label="制度使用状态" align="center" prop="useState"/>
       <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
-      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>
+<!--      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>-->
 <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
 <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
-      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修订内容" align="center" prop="revisionContent"/>
-      <el-table-column label="修订人" align="center" prop="reviser"/>
+<!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="修订内容" align="center" prop="revisionContent"/>-->
+<!--      <el-table-column label="修订人" align="center" prop="reviser"/>-->
 
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -396,7 +396,7 @@
           :on-remove="handleRemove"
           :on-exceed="handleExceed"
           :on-success="handleUploadSuccess"
-          :limit=limit
+          :limit="limit"
           :file-list="fileList"
         >
           <el-button size="small" type="primary">点击上传</el-button>
@@ -857,11 +857,23 @@
       },
       /** 更新文件提交按钮 */
       updateSubmitForm() {
+        console.log("Before validate - fileList:", this.fileList);
+        console.log("form12345===>",this.form);
+        // 检查 fileList 是否为空
+        if (this.fileList.length === 0) {
+          this.$message.error("请上传文件");
+          return;
+        }
         this.$refs["form"].validate(valid => {
           if (valid) {
             if (this.form.regulationsId != null) {
+              const thisId = this.form.regulationsId;
+              console.log("thisId=>",thisId);
               console.log("newform=>",this.form);
               this.form.oldRegulationsId = this.form.regulationsId;
+              console.log("this.form.newRegulationsId=>",this.form.newRegulationsId);
+              console.log("(this.form.newRegulationsId == null)",(this.form.newRegulationsId == null));
+              console.log("(thisId == this.form.newRegulationsId)",(thisId == this.form.newRegulationsId));
               addFilemanagement(this.form).then(response => {
                 const newId = response.data;
                 this.$modal.msgSuccess("更新成功");
@@ -978,8 +990,10 @@
       },
       /** 上传文件时的动作*/
       handleFileChange(file, fileList) {
+        this.fileList = fileList;
         console.log("file====>",file);
         console.log("fileList====>",fileList);
+        console.log("fileList11111111111====>",this.fileList);
         console.log(this.filemanagementList);
 
 

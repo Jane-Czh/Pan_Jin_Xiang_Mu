@@ -24,7 +24,7 @@
           ></el-button>  -->
 
           <el-divider direction="vertical"></el-divider>
-          <el-button
+          <!-- <el-button
             type="text"
             icon="el-icon-plus"
             size="large"
@@ -37,7 +37,7 @@
             size="large"
             @click="zoomSub"
           ></el-button>
-          <el-divider direction="vertical"></el-divider>
+          <el-divider direction="vertical"></el-divider> -->
           <el-button
             type="text"
             icon="el-icon-document"
@@ -120,7 +120,7 @@
                     plain
                     icon="el-icon-delete"
                     @click="handleDelete(scope.row)"
-                     v-hasPermi="['process:ef:deleteModel']"
+                    v-hasPermi="['process:ef:deleteModel']"
                     >删除</el-button
                   >
                 </template>
@@ -247,7 +247,6 @@
                 ></el-input>
               </el-form-item>
             </el-form>
-            
 
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogSBVisible = false">取消</el-button>
@@ -531,15 +530,15 @@ export default {
 
   methods: {
     validateSB1() {
-      const regex = /^[\u4e00-\u9fa5\dA-Za-z.]*$/;
+      const regex = /^[\u4e00-\u9fa5\dA-Za-z.\(\)\-（）]*$/;
       this.formData.project_Name = this.formData.project_Name
         .split("")
         .filter((char) => regex.test(char))
         .join("");
     },
     validateSB2() {
-      const regex = /^[\u4e00-\u9fa5\dA-Za-z.]*$/;
-      this.formData.marks = this.formData.marks
+      const regex = /^[\u4e00-\u9fa5\dA-Za-z.\(\)\-（）]*$/;
+      this.formData.project_Name = this.formData.project_Name
         .split("")
         .filter((char) => regex.test(char))
         .join("");
@@ -604,6 +603,12 @@ export default {
 
       this.selectedRegulationTemp = this.emptyFile;
       this.selectedFormsTemp = this.emptyFile;
+
+      // 取消绑定后显示提示消息
+      this.$message({
+        type: "success",
+        message: "取消绑定成功！",
+      });
     },
 
     temp() {
@@ -656,6 +661,11 @@ export default {
 
             this.dialogFilesVisible = false;
             this.dialogMoreFilesVisible = false;
+            // 绑定后显示提示消息
+            this.$message({
+              type: "success",
+              message: "绑定成功！",
+            });
           }
         })
         .catch(() => {
@@ -668,6 +678,7 @@ export default {
           this.dialogFilesVisible = true;
           this.dialogFilesVisible = false;
           this.dialogMoreFilesVisible = false;
+
           // 清除选择的文件名
           // this.selectedFileNames = this.selectedFileName;
         });
@@ -958,7 +969,7 @@ export default {
      * @param nodeId 被删除节点的ID
      */
     deleteNode(nodeId) {
-      this.$confirm("确定要删除节点" + nodeId + "?", "提示", {
+      this.$confirm("确定要删除选中的节点" + "?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -978,6 +989,12 @@ export default {
           });
           this.$nextTick(function () {
             this.jsPlumb.removeAllEndpoints(nodeId);
+          });
+
+          // 删除后显示提示消息
+          this.$message({
+            type: "success",
+            message: "删除成功！",
           });
         })
         .catch(() => {});

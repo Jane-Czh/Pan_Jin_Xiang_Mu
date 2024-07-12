@@ -239,9 +239,9 @@
     员工打卡表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="序号" prop="number">
-          <el-input v-model="form.number" placeholder="请输入序号" />
-        </el-form-item>
+<!--        <el-form-item label="序号" prop="number">-->
+<!--          <el-input v-model="form.number" placeholder="请输入序号" />-->
+<!--        </el-form-item>-->
         <el-form-item label="员工编号" prop="idNumber">
           <el-input v-model="form.idNumber" placeholder="请输入员工编号" />
         </el-form-item>
@@ -325,6 +325,43 @@ export default {
 
   name: "Form",
   data() {
+    const validateIdNumber = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入员工编号'));
+      } else {
+        const regex = /^\d+$/;
+        if (!regex.test(value)) {
+          callback(new Error('员工编号只能包含数字'));
+        } else {
+          callback();
+        }
+      }
+    };
+    const validateName = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入姓名'));
+      } else {
+        const regex = /^[\u4e00-\u9fa5a-zA-Z]+$/;
+        if (!regex.test(value)) {
+          callback(new Error('姓名只能包含中文字符或英文字符'));
+        } else {
+          callback();
+        }
+      }
+    };
+    const validateGender = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入性别'));
+      } else {
+        const regex = /^(男|女)$/;
+        if (!regex.test(value)) {
+          callback(new Error('性别只能为男或女'));
+        } else {
+          callback();
+        }
+      }
+    };
+
     return {
       // 遮罩层
       loading: true,
@@ -364,7 +401,16 @@ export default {
       // 表单校验
       rules: {
         idNumber: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
+          { required: true, message: '请输入员工编号', trigger: 'blur' },
+          { validator: validateIdNumber, trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { validator: validateName, trigger: 'blur' }
+        ],
+        gender: [
+          { required: true, message: '请输入性别', trigger: 'blur' },
+          { validator: validateGender, trigger: 'blur' }
         ],
       },
       //新增参数
@@ -531,6 +577,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
 
@@ -655,6 +705,11 @@ export default {
     // },
     async fileSend() {
       try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
         console.log(file);
@@ -671,7 +726,7 @@ export default {
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('上传失败!', error);
       }
     },
 

@@ -24,14 +24,14 @@
       <!--          placeholder="请选择上传日期">-->
       <!--        </el-date-picker>-->
       <!--      </el-form-item>-->
-      <!--      <el-form-item label="文件名称" prop="fileName">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.fileName"-->
-      <!--          placeholder="请输入文件名称"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
+            <el-form-item label="文件名称" prop="fileName">
+              <el-input
+                v-model="queryParams.fileName"
+                placeholder="请输入文件名称"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
       <!--      <el-form-item label="文件路径" prop="filePath">-->
       <!--        <el-input-->
       <!--          v-model="queryParams.filePath"-->
@@ -221,9 +221,16 @@
           <a :href="scope.row.filePath" download>点击下载</a>
         </template>
       </el-table-column> -->
-      <el-table-column label="文件路径" align="center" prop="filePath">
+      <el-table-column label="文件下载" align="center" prop="filePath">
         <template slot-scope="scope">
-          <a @click.prevent="downloadFile(scope.row.filePath)">点击下载</a>
+          <el-button
+            type="primary"
+            icon="el-icon-download"
+            size="mini"
+            @click="downloadFile(scope.row.filePath)"
+          >
+            下载
+          </el-button>
         </template>
       </el-table-column>
 
@@ -263,14 +270,14 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['Technology:retention:edit']"
-            >更新</el-button
-          >
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['Technology:retention:edit']"-->
+<!--            >更新</el-button-->
+<!--          >-->
           <el-button
             size="mini"
             type="text"
@@ -361,7 +368,7 @@
             <el-form-item label="文件标题" prop="regulationsTitle">
               <el-input
                 v-model="form.regulationsTitle"
-                placeholder="请输入制度标题"
+                placeholder="请输入标题"
               />
             </el-form-item>
           </el-col>
@@ -372,7 +379,7 @@
                 v-model="form.createDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择制度创建日期"
+                placeholder="请选择创建日期"
               >
               </el-date-picker>
             </el-form-item>
@@ -455,6 +462,7 @@
     </el-dialog>
 
     <!-- 修改文件对话框 -->
+    <!-- 修改文件对话框 -->
     <el-dialog
       :title="title"
       :visible.sync="fileModifyDialogVisible"
@@ -468,7 +476,15 @@
             <el-form-item label="文件标题" prop="regulationsTitle">
               <el-input
                 v-model="form.regulationsTitle"
-                placeholder="请输入制度标题"
+                placeholder="请输入文件标题"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="文件名" prop="fileName">
+              <el-input
+                v-model="form.fileName"
+                placeholder="请输入文件名"
               />
             </el-form-item>
           </el-col>
@@ -496,7 +512,7 @@
                 v-model="form.createDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择制度创建日期"
+                placeholder="请选择创建日期"
               >
               </el-date-picker>
             </el-form-item>
@@ -518,81 +534,81 @@
         <el-button @click="modifyCancel">取 消</el-button>
       </div>
     </el-dialog>
-  </div>
+<!--  </div>-->
 
-  <!--    &lt;!&ndash; 添加或修改申报材料统计对话框 &ndash;&gt;-->
-  <!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
-  <!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
-  <!--        <el-form-item label="制度标题" prop="regulationsTitle">-->
-  <!--          <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="上传日期" prop="uploadDate">-->
-  <!--          <el-date-picker clearable-->
-  <!--            v-model="form.uploadDate"-->
-  <!--            type="date"-->
-  <!--            value-format="yyyy-MM-dd"-->
-  <!--            placeholder="请选择上传日期">-->
-  <!--          </el-date-picker>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="文件名称" prop="fileName">-->
-  <!--          <el-input v-model="form.fileName" placeholder="请输入文件名称" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="文件路径" prop="filePath">-->
-  <!--          <el-input v-model="form.filePath" placeholder="请输入文件路径" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="文件大小" prop="fileSize">-->
-  <!--          <el-input v-model="form.fileSize" placeholder="请输入文件大小" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="制度创建日期" prop="createDate">-->
-  <!--          <el-date-picker clearable-->
-  <!--            v-model="form.createDate"-->
-  <!--            type="date"-->
-  <!--            value-format="yyyy-MM-dd"-->
-  <!--            placeholder="请选择制度创建日期">-->
-  <!--          </el-date-picker>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="制度上传人" prop="uploadUsername">-->
-  <!--          <el-input v-model="form.uploadUsername" placeholder="请输入制度上传人" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="制度使用状态" prop="useState">-->
-  <!--          <el-input v-model="form.useState" placeholder="请输入制度使用状态" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="制度所属科室" prop="departmentCategory">-->
-  <!--          <el-input v-model="form.departmentCategory" placeholder="请输入制度所属科室" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="制度标签名称" prop="fileTag">-->
-  <!--          <el-input v-model="form.fileTag" placeholder="请输入制度标签名称" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
-  <!--          <el-input v-model="form.oldRegulationsId" placeholder="请输入历史版本制度" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="修订时间" prop="revisionDate">-->
-  <!--          <el-date-picker clearable-->
-  <!--            v-model="form.revisionDate"-->
-  <!--            type="date"-->
-  <!--            value-format="yyyy-MM-dd"-->
-  <!--            placeholder="请选择修订时间">-->
-  <!--          </el-date-picker>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="修订内容">-->
-  <!--          <editor v-model="form.revisionContent" :min-height="192"/>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="修订人" prop="reviser">-->
-  <!--          <el-input v-model="form.reviser" placeholder="请输入修订人" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="标志位(是否为最新文件)" prop="newFlag">-->
-  <!--          <el-input v-model="form.newFlag" placeholder="请输入标志位(是否为最新文件)" />-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="该制度下一制度id" prop="newRegulationsId">-->
-  <!--          <el-input v-model="form.newRegulationsId" placeholder="请输入该制度下一制度id" />-->
-  <!--        </el-form-item>-->
-  <!--      </el-form>-->
-  <!--      <div slot="footer" class="dialog-footer">-->
-  <!--        <el-button type="primary" @click="submitForm">确 定</el-button>-->
-  <!--        <el-button @click="cancel">取 消</el-button>-->
-  <!--      </div>-->
-  <!--    </el-dialog>-->
-  <!--  </div>-->
+      <!-- 添加或修改申报材料统计对话框 -->
+<!--      <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
+<!--        <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
+<!--          <el-form-item label="制度标题" prop="regulationsTitle">-->
+<!--            <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="上传日期" prop="uploadDate">-->
+<!--            <el-date-picker clearable-->
+<!--              v-model="form.uploadDate"-->
+<!--              type="date"-->
+<!--              value-format="yyyy-MM-dd"-->
+<!--              placeholder="请选择上传日期">-->
+<!--            </el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="文件名称" prop="fileName">-->
+<!--            <el-input v-model="form.fileName" placeholder="请输入文件名称" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="文件路径" prop="filePath">-->
+<!--            <el-input v-model="form.filePath" placeholder="请输入文件路径" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="文件大小" prop="fileSize">-->
+<!--            <el-input v-model="form.fileSize" placeholder="请输入文件大小" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="制度创建日期" prop="createDate">-->
+<!--            <el-date-picker clearable-->
+<!--              v-model="form.createDate"-->
+<!--              type="date"-->
+<!--              value-format="yyyy-MM-dd"-->
+<!--              placeholder="请选择制度创建日期">-->
+<!--            </el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="制度上传人" prop="uploadUsername">-->
+<!--            <el-input v-model="form.uploadUsername" placeholder="请输入制度上传人" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="制度使用状态" prop="useState">-->
+<!--            <el-input v-model="form.useState" placeholder="请输入制度使用状态" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="制度所属科室" prop="departmentCategory">-->
+<!--            <el-input v-model="form.departmentCategory" placeholder="请输入制度所属科室" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="制度标签名称" prop="fileTag">-->
+<!--            <el-input v-model="form.fileTag" placeholder="请输入制度标签名称" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
+<!--            <el-input v-model="form.oldRegulationsId" placeholder="请输入历史版本制度" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="修订时间" prop="revisionDate">-->
+<!--            <el-date-picker clearable-->
+<!--              v-model="form.revisionDate"-->
+<!--              type="date"-->
+<!--              value-format="yyyy-MM-dd"-->
+<!--              placeholder="请选择修订时间">-->
+<!--            </el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="修订内容">-->
+<!--            <editor v-model="form.revisionContent" :min-height="192"/>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="修订人" prop="reviser">-->
+<!--            <el-input v-model="form.reviser" placeholder="请输入修订人" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="标志位(是否为最新文件)" prop="newFlag">-->
+<!--            <el-input v-model="form.newFlag" placeholder="请输入标志位(是否为最新文件)" />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="该制度下一制度id" prop="newRegulationsId">-->
+<!--            <el-input v-model="form.newRegulationsId" placeholder="请输入该制度下一制度id" />-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          <el-button type="primary" @click="submitForm">确 定</el-button>-->
+<!--          <el-button @click="cancel">取 消</el-button>-->
+<!--        </div>-->
+<!--      </el-dialog>-->
+    </div>
 </template>
 
 <script>
@@ -673,20 +689,20 @@ export default {
       // 表单校验
       rules: {
         regulationsTitle: [
-          { required: true, message: "制度标题不能为空", trigger: "blur" },
+          { required: true, message: "文件标题不能为空", trigger: "blur" },
         ],
         createDate: [
-          { required: true, message: "制度创建日期不能为空", trigger: "blur" },
+          { required: true, message: "文件创建日期不能为空", trigger: "blur" },
         ],
         uploadUsername: [
-          { required: true, message: "制度上传人不能为空", trigger: "blur" },
+          { required: true, message: "上传人不能为空", trigger: "blur" },
         ],
         // useState: [
         //   { required: true, message: "制度使用状态不能为空", trigger: "blur" }
         // ],
-        departmentCategory: [
-          { required: true, message: "制度所属科室不能为空", trigger: "blur" },
-        ],
+        // departmentCategory: [
+        //   { required: true, message: "制度所属科室不能为空", trigger: "blur" },
+        // ],
       },
       uploadVisible: false,
 
@@ -739,7 +755,7 @@ export default {
           link.href = downloadUrl;
           link.setAttribute(
             "download",
-            decodeURIComponent(url.split("/").pop()) 
+            decodeURIComponent(url.split("/").pop())
           ); // 解码文件名
           document.body.appendChild(link);
           link.click();
@@ -777,6 +793,7 @@ export default {
     uploadCancel() {
       this.fileUploadDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 文件修改取消按钮
     modifyCancel() {
@@ -787,6 +804,7 @@ export default {
     updateCancel() {
       this.fileUpdateDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 取消按钮
     // cancel() {
@@ -854,17 +872,27 @@ export default {
         // this.form.newFlag = 0;
         console.log("更新文件=>", this.form);
         this.fileUpdateDialogVisible = true;
-        this.title = "更新制度文件";
+        this.title = "更新文件";
       });
     },
     /** 修改按钮操作 */
+    // handleModify(row) {
+    //   this.reset();
+    //   const tfemId = row.tfemId || this.ids;
+    //   getRetention(tfemId).then((response) => {
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.title = "修改申报材料统计";
+    //   });
+    // },
     handleModify(row) {
+    console.log("修改文件this.fileModifyDialogVisible====>", this.fileModifyDialogVisible);
       this.reset();
-      const tfemId = row.tfemId || this.ids;
-      getRetention(tfemId).then((response) => {
+      const regulationsId = row.tfemId || this.ids;
+      getRetention(regulationsId).then((response) => {
         this.form = response.data;
-        this.open = true;
-        this.title = "修改申报材料统计";
+        this.fileModifyDialogVisible = true;
+        this.title = "修改文件";
       });
     },
     /** 历史版本管理 */
@@ -874,6 +902,11 @@ export default {
     },
     /** 上传文件提交按钮 */
     uploadSubmitForm() {
+
+      if (this.form.fileName === null) {
+        this.$modal.msgWarning("请上传文件");
+        return;
+      }
       this.$refs["form"].validate((valid) => {
         if (valid) {
           this.form.newFlag = 1;
@@ -884,7 +917,10 @@ export default {
             console.log("上传文件提交按钮=>", this.form);
           });
         }
-      });
+      }).then(() => {
+        this.fileList = [];
+        })
+      
     },
     /** 修改文件提交按钮 */
     modifySubmitForm() {
@@ -903,6 +939,7 @@ export default {
     },
     /** 更新文件提交按钮 */
     updateSubmitForm() {
+
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.tfemId != null) {
@@ -931,6 +968,7 @@ export default {
           }
         }
       });
+      this.fileList = [];
     },
     /** 提交按钮 */
     // submitForm() {
@@ -1044,9 +1082,9 @@ export default {
       if (isFileNameDuplicate) {
         // 如果文件名重复，弹出警告框
         this.$modal.msgError(
-          "同名文件已存在，如需上传该制度新版本，请到“更新”处上传！"
+          "同名文件已存在，请删除同名文件！"
         );
-        console.log("同名文件已存在，如需上传该制度新版本，请到“更新”处上传！");
+        console.log("同名文件已存在，请删除同名文件！");
         return false; // 中断上传流程
       }
       if (res.code === 200) {

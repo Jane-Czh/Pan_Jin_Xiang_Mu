@@ -189,7 +189,18 @@ export const constantRoutes = [
     hidden: true,
     redirect: 'noredirect',
     children: [
-
+      {
+        path: 'indicators53',
+        component: () => import('@/views/enterprise/display/indexChart/indicators53'),
+        name: 'Indicators53',
+        meta: { title: '指标53：日清日洁考核得分' }
+      },
+      {
+        path: 'indicators101',
+        component: () => import('@/views/enterprise/display/indexChart/indicators101'),
+        name: 'Indicators101',
+        meta: { title: '指标101：11项管理指标' }
+      },
       {
         path: 'index-detail-enterprise',
         component: () => import('@/views/enterprise/display/indexDetailEnterprise'),

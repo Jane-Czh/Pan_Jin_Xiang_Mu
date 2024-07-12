@@ -478,8 +478,8 @@ export default {
 
   methods: {
     validateSB() {
-      const regex = /^[\u4e00-\u9fa5\dA-Za-z.]*$/;
-      this.form.name = this.form.name
+      const regex = /^[\u4e00-\u9fa5\dA-Za-z.\(\)\-（）]*$/;
+      this.formData.project_Name = this.formData.project_Name
         .split("")
         .filter((char) => regex.test(char))
         .join("");

@@ -42,3 +42,13 @@ export function delStatus(mpcId) {
     method: 'delete'
   })
 }
+
+export function syncReport() {
+  return request({
+    url: '/product/status/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}

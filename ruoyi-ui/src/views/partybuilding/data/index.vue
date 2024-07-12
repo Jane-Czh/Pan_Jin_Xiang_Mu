@@ -85,6 +85,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/partybuilding/data";
+import { numValidator, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
 
 export default {
   name: "Data",
@@ -129,10 +130,18 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         score: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
         ],
         ranking: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur",
+          }
         ],
       }
     };

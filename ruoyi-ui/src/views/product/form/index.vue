@@ -82,23 +82,23 @@
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
         <el-button type="primary" @click="showSetWorkTimeDialog">设置上下班时间</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['product:form:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['product:form:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -148,13 +148,13 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
 
-          <!-- 进度动画条 -->
-          <div v-if="progress > 0">
-            <el-progress
-              :percentage="progress"
-              color="rgb(19, 194, 194)"
-            ></el-progress>
-          </div>
+<!--          &lt;!&ndash; 进度动画条 &ndash;&gt;-->
+<!--          <div v-if="progress > 0">-->
+<!--            <el-progress-->
+<!--              :percentage="progress"-->
+<!--              color="rgb(19, 194, 194)"-->
+<!--            ></el-progress>-->
+<!--          </div>-->
 
           <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
@@ -239,17 +239,17 @@
     员工打卡表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="序号" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入序号" />
-        </el-form-item>
+<!--        <el-form-item label="序号" prop="number">-->
+<!--          <el-input v-model="form.number" placeholder="请输入序号" />-->
+<!--        </el-form-item>-->
         <el-form-item label="员工编号" prop="idNumber">
           <el-input v-model="form.idNumber" placeholder="请输入员工编号" />
         </el-form-item>
-        <el-form-item label="姓名" prop="Name">
-          <el-input v-model="form.Name" placeholder="请输入姓名" />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别" prop="Gender">
-          <el-input v-model="form.Gender" placeholder="请输入性别" />
+        <el-form-item label="性别" prop="gender">
+          <el-input v-model="form.gender" placeholder="请输入性别" />
         </el-form-item>
         <el-form-item label="第一次上班打卡时间" prop="firstTimeClockingInAtWork">
           <el-date-picker clearable
@@ -316,14 +316,52 @@
 </template>
 
 <script>
-import { listForm, getForm, delForm, addForm, updateForm } from "@/api/product/form";
+import {listForm, getForm, delForm, addForm, updateForm,  updateWorkTime,uploadFile} from "@/api/product/form";
 import axios from "axios";
 import dayjs from 'dayjs';
+
 
 export default {
 
   name: "Form",
   data() {
+    const validateIdNumber = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入员工编号'));
+      } else {
+        const regex = /^\d+$/;
+        if (!regex.test(value)) {
+          callback(new Error('员工编号只能包含数字'));
+        } else {
+          callback();
+        }
+      }
+    };
+    const validateName = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入姓名'));
+      } else {
+        const regex = /^[\u4e00-\u9fa5a-zA-Z]+$/;
+        if (!regex.test(value)) {
+          callback(new Error('姓名只能包含中文字符或英文字符'));
+        } else {
+          callback();
+        }
+      }
+    };
+    const validateGender = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入性别'));
+      } else {
+        const regex = /^(男|女)$/;
+        if (!regex.test(value)) {
+          callback(new Error('性别只能为男或女'));
+        } else {
+          callback();
+        }
+      }
+    };
+
     return {
       // 遮罩层
       loading: true,
@@ -347,10 +385,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        Number: null,
+        number: null,
         idNumber: null,
-        Name: null,
-        Gender: null,
+        name: null,
+        gender: null,
         firstTimeClockingInAtWork: null,
         firstTimeClockingInAfterWork: null,
         secondTimeClockingInAtWork: null,
@@ -362,6 +400,18 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        idNumber: [
+          { required: true, message: '请输入员工编号', trigger: 'blur' },
+          { validator: validateIdNumber, trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { validator: validateName, trigger: 'blur' }
+        ],
+        gender: [
+          { required: true, message: '请输入性别', trigger: 'blur' },
+          { validator: validateGender, trigger: 'blur' }
+        ],
       },
       //新增参数
       showDialog: false,
@@ -388,33 +438,61 @@ export default {
       return dayjs(time).format('HH:mm:ss');
     },
 
-
-
-      submitWorkTime() {
-        // 将workTimeForm中的数据传递给后端进行保存
-        // 调用后端接口，例如 updateWorkTime 方法
-        this.updateWorkTime({
+// 修改后的 submitWorkTime 方法
+    async submitWorkTime() {
+      try {
+        // 将 workTimeForm 中的数据传递给后端进行保存
+        await updateWorkTime({
           startTime: this.workTimeForm.startTime,
           endTime: this.workTimeForm.endTime,
-        }).then(() => {
-          this.$message.success('成功设置上下班时间');
-          this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
-          console.log('设置的正常上班时间为：', this.workTimeForm.startTime);
-        }).catch(() => {
-          this.$message.error('设置上下班时间失败');
         });
-        this.getList();
 
-      },
-      closeWorkTimeDialog() {
+        this.$message.success('成功设置上下班时间');
         this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
-      },
-
-    updateWorkTime(workTimeData) {
-      this.getList();
-      return axios.post('http://localhost:8080/product/form/updatetime', workTimeData);
+        console.log('设置的正常上班时间为：', this.workTimeForm.startTime);
+        this.getList();
+      } catch (error) {
+        this.$message.error('设置上下班时间失败');
+      }
     },
 
+// 关闭设置工作时间的对话框
+    closeWorkTimeDialog() {
+      this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
+    },
+
+    //   submitWorkTime() {
+    //     // 将workTimeForm中的数据传递给后端进行保存
+    //     // 调用后端接口，例如 updateWorkTime 方法
+    //     this.updateWorkTime({
+    //       startTime: this.workTimeForm.startTime,
+    //       endTime: this.workTimeForm.endTime,
+    //     }).then(() => {
+    //       this.$message.success('成功设置上下班时间');
+    //       this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
+    //       console.log('设置的正常上班时间为：', this.workTimeForm.startTime);
+    //     }).catch(() => {
+    //       this.$message.error('设置上下班时间失败');
+    //     });
+    //     this.getList();
+    //
+    //   },
+    //   closeWorkTimeDialog() {
+    //     this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
+    //   },
+    //
+    // updateWorkTime(workTimeData) {
+    //   this.getList();
+    //   return axios.post('http://localhost:8080/product/form/updatetime', workTimeData);
+    // },
+    // async syncReport() {
+    //   try {
+    //     await syncReport(); // 调用 syncReport API
+    //     this.getList(); // 调用 getList 方法
+    //   } catch (error) {
+    //     console.error('There was an error!', error);
+    //   }
+    // },
 
     /** 查询员工打卡表列表 */
     getList() {
@@ -498,6 +576,10 @@ export default {
               this.getList();
             });
           }
+        }
+        else {
+          console.log('表单验证失败!');
+          return false;
         }
       });
     },
@@ -588,38 +670,64 @@ export default {
 
 
 
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/product/form/FOimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+    //   console.log(file);
+    //   formData.append("file", file);
+    //   console.log("file====>",formData)
+    //   axios({
+    //     method: "post",
+    //     // this $axios.post,
+    //     url: "http://localhost:8080/product/form/FOimport",
+    //     // params:{
+    //     //   userName: this.$store.state.user.name,
+    //     // },
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     withCredentials: true,
+    //     data: formData,
+    //     onUploadProgress: (progressEvent) => {
+    //       this.progress = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //     },
+    //   });
+    //   // this.$message.success("上传成功");
+    //
+    //
+    //   setTimeout(() => {
+    //     this.showDialog = false; // 关闭上传面板
+    //
+    //     // location.reload(); // 调用此方法刷新页面数据
+    //   }, 2000); // 2000毫秒后关闭
+    // },
+    async fileSend() {
+      try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        console.log(file);
+        formData.append("file", file);
+        console.log("file====>", formData);
 
+        await uploadFile(formData); // 调用 uploadFile API
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
+        // 上传成功后的处理
+        this.$message.success("上传成功"); // 提示上传成功
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 1000); // 2000毫秒后关闭
+        this.getList();
+      } catch (error) {
+        console.error('上传失败!', error);
+      }
     },
 
     handleClose(done) {

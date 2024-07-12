@@ -42,3 +42,14 @@ export function delSpecialwarning(emsoId) {
     method: 'delete'
   })
 }
+
+//同步操作
+export function syncReport() {
+  return request({
+    url: '/Enterprisemanagement/specialwarning/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}

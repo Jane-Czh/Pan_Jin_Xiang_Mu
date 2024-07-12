@@ -49,9 +49,9 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -75,10 +75,10 @@
         </template>
       </el-table-column>
       <el-table-column label="当月反馈新车病车数" align="center" prop="newCarDefects" />
-      <el-table-column label="三包期内新车返修率" align="center" prop="warrantyRepairRate" />
+      <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" />
       <el-table-column label="月度售后质量问题总数" align="center" prop="monthlyAfterSalesIssues" />
-      <el-table-column label="三包期内整车月度返修率" align="center" prop="warrantyVehicleRepairRate" />
-      <el-table-column label="外部质量损失率" align="center" prop="externalLossRate" />
+      <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate" />
+      <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" />
       <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -131,6 +131,7 @@
 <script>
 import { listMetrics, getMetrics, delMetrics, addMetrics, updateMetrics } from "@/api/quality/afterSales";
 import { uploadFile } from '@/api/financial/excelImport';
+import { numValidatorPercentage, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
 export default {
   name: "Metrics",
 
@@ -184,22 +185,46 @@ export default {
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
         newCarDefects: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         warrantyRepairRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
         monthlyAfterSalesIssues: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
         warrantyVehicleRepairRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
         externalLossRate: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPercentage,
+            trigger: "blur"
+          }
         ],
         productionLiabilityIssues: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorNonZeroNature,
+            trigger: "blur"
+          }
         ],
       }
     };

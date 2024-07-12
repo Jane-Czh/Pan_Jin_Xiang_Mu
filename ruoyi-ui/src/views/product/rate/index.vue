@@ -1,23 +1,23 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['product:rate:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['product:rate:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -141,6 +141,29 @@
     <!-- 添加或修改自制件合格率对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="型号" prop="model">
+            <el-input v-model="form.model" placeholder="请输入型号" />
+          </el-form-item>
+          <el-form-item label="合格数量" prop="qualifiedNumber">
+            <el-input v-model="form.qualifiedNumber" placeholder="请输入合格数量" />
+          </el-form-item>
+          <el-form-item label="不合格数量" prop="disqualifiedNumber">
+            <el-input v-model="form.disqualifiedNumber" placeholder="请输入不合格数量" />
+          </el-form-item>
+          <el-form-item label="生产数量" prop="productionNumber">
+            <el-input v-model="form.productionNumber" placeholder="请输入生产数量" />
+          </el-form-item>
+          <el-form-item label="合格率" prop="qualificationRate">
+            <el-input v-model="form.qualificationRate" placeholder="请输入合格率" />
+          </el-form-item>
+          <el-form-item label="日期" prop="date">
+            <el-date-picker clearable
+                            v-model="form.date"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="请选择日期">
+            </el-date-picker>
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -151,12 +174,50 @@
 </template>
 
 <script>
-import { listRate, getRate, delRate, addRate, updateRate } from "@/api/product/rate";
+import { listRate, getRate, delRate, addRate, updateRate,uploadFile } from "@/api/product/rate";
 import axios from "axios";
+
 
 export default {
   name: "Rate",
   data() {
+    const validateModel = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入型号'));
+      } else {
+        const regex = /^[A-Za-z0-9]+$/;
+        if (!regex.test(value)) {
+          callback(new Error('型号只能包含英文字符或数字'));
+        } else {
+          callback();
+        }
+      }
+    };
+    const validateNumber = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入数字'));
+      } else {
+        const regex = /^\d+$/;
+        if (!regex.test(value)) {
+          callback(new Error('只能输入数字'));
+        } else {
+          callback();
+        }
+      }
+    };
+
+    const validateQualificationRate = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入合格率'));
+      } else {
+        const regex = /^\d+(\.\d+)?%?$/;
+        if (!regex.test(value)) {
+          callback(new Error('合格率只能输入数字和%'));
+        } else {
+          callback();
+        }
+      }
+    };
     return {
       // 遮罩层
       loading: true,
@@ -185,6 +246,26 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        model: [
+          { required: true, message: '请输入型号', trigger: 'blur' },
+          { validator: validateModel, trigger: 'blur' }
+        ],
+        qualifiedNumber: [
+          { required: true, message: '请输入合格数量', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        disqualifiedNumber: [
+          { required: true, message: '请输入不合格数量', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        productionNumber: [
+          { required: true, message: '请输入生产数量', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        qualificationRate: [
+          { required: true, message: '请输入合格率', trigger: 'blur' },
+          { validator: validateQualificationRate, trigger: 'blur' }
+        ],
       },
 
       //新增参数
@@ -197,25 +278,25 @@ export default {
   },
   methods: {
     /*同步*/
-    syncReport() {
-      // 使用 Fetch API 发送 POST 请求到后端
-      fetch('http://localhost:8080/product/rate/synchronization', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // 如果请求成功，可以进行下一步操作
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-        });
-      this.getList();
-    },
+    // syncReport() {
+    //   // 使用 Fetch API 发送 POST 请求到后端
+    //   fetch('http://localhost:8080/product/rate/synchronization', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       // 如果请求成功，可以进行下一步操作
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    //   this.getList();
+    // },
     /** 查询自制件合格率列表 */
     getList() {
       this.loading = true;
@@ -294,6 +375,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
     /** 删除按钮操作 */
@@ -315,41 +400,67 @@ export default {
 
 
 
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/product/rate/Dimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+    //   console.log(file);
+    //   formData.append("file", file);
+    //   console.log("file====>",formData)
+    //   axios({
+    //     method: "post",
+    //     // this $axios.post,
+    //     url: "http://localhost:8080/product/rate/Dimport",
+    //     // params:{
+    //     //   userName: this.$store.state.user.name,
+    //     // },
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     withCredentials: true,
+    //     data: formData,
+    //     onUploadProgress: (progressEvent) => {
+    //       this.progress = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //     },
+    //   });
+    //   // this.$message.success("上传成功");
+    //
+    //
+    //   setTimeout(() => {
+    //     this.showDialog = false; // 关闭上传面板
+    //
+    //     // location.reload(); // 调用此方法刷新页面数据
+    //   }, 2000); // 2000毫秒后关闭
+    //   this.getList();
+    // },
 
+    async fileSend() {
+      try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        console.log(file);
+        formData.append("file", file);
+        console.log("file====>", formData);
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
+        await uploadFile(formData); // 调用 uploadFile API
 
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
-      this.getList();
+        // 上传成功后的处理
+        this.$message.success("上传成功"); // 提示上传成功
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 1000); // 2000毫秒后关闭
+        this.getList();
+      } catch (error) {
+        console.error('上传失败!', error);
+      }
     },
-
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {

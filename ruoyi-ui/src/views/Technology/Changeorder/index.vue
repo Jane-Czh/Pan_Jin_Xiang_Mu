@@ -377,9 +377,16 @@
           <a :href="baseUrl + scope.row.filePath" download>点击下载</a>
         </template>
       </el-table-column> -->
-      <el-table-column label="文件路径" align="center" prop="filePath">
+      <el-table-column label="文件下载" align="center" prop="filePath">
         <template slot-scope="scope">
-          <a @click.prevent="downloadFile(scope.row.filePath)">点击下载</a>
+          <el-button
+            type="primary"
+            icon="el-icon-download"
+            size="mini"
+            @click="downloadFile(scope.row.filePath)"
+          >
+            下载
+          </el-button>
         </template>
       </el-table-column>
       <!--      <el-table-column label="文件类型" align="center" prop="fileType" />-->
@@ -414,6 +421,7 @@
             icon="el-icon-upload"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['Technology:Changeorder:edit']"
+            v-if="scope.row.newFlag !== 0"
             >更新
           </el-button>
           <!--          <el-button-->
@@ -508,7 +516,7 @@
                 v-model="form.createDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择制度创建日期"
+                placeholder="请选择创建日期"
               >
               </el-date-picker>
             </el-form-item>
@@ -770,6 +778,7 @@ export default {
     uploadCancel() {
       this.fileUploadDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 文件修改取消按钮
     modifyCancel() {
@@ -780,6 +789,7 @@ export default {
     updateCancel() {
       this.fileUpdateDialogVisible = false;
       this.reset();
+      this.fileList = [];
     },
     // 表单重置
     reset() {
@@ -856,18 +866,10 @@ export default {
       const tfcoId = row.tfcoId || this.ids;
       getChangeorder(tfcoId).then((response) => {
         this.form = response.data;
-        // this.form.newFlag = 0;
+        this.form.newFlag = 0;
         console.log("更新文件=>", this.form);
         // 加入判断条件
-        if (this.form.fileState === "审查通过,请更新协商文件") {
-          this.form.fileState = "等待协商";
-          this.form.negotiationLayer = this.form.reviewLayer;
-          this.form.reviewLayer = 0;
-        }
-        if (this.form.fileState === "审查不通过,等待更新文件并重新审查") {
-          this.form.fileState = "等待审查";
-          this.form.examineState = "未审查";
-        }
+
         if (this.form.fileState === "协商通过,请更新用户审核文件") {
           this.form.fileState = "等待审核";
         }
@@ -903,6 +905,10 @@ export default {
     // },
     /** 上传文件提交按钮 */
     uploadSubmitForm() {
+      if (this.form.fileName === null) {
+        this.$modal.msgError("请上传文件");
+        return;
+      }
       this.$refs["form"].validate((valid) => {
         if (valid) {
           this.form.newFlag = 1;
@@ -923,6 +929,7 @@ export default {
           });
         }
       });
+      this.fileList = [];
     },
 
     /** 修改文件提交按钮 */
@@ -942,11 +949,25 @@ export default {
     },
     /** 更新文件提交按钮 */
     updateSubmitForm() {
+      if (this.form.fileName === null) {
+        this.$modal.msgError("请上传文件");
+        return;
+      }
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.tfcoId != null) {
-            console.log("newform=>", this.form);
+            updateChangeorder(this.form);
+            this.form.newFlag = 1;
             this.form.oldRegulationsId = this.form.tfcoId;
+            if (this.form.fileState === "审查通过,请更新协商文件") {
+              this.form.fileState = "等待协商";
+              this.form.negotiationLayer = this.form.reviewLayer;
+              this.form.reviewLayer = 0;
+            }
+            if (this.form.fileState === "审查不通过,等待更新文件并重新审查") {
+              this.form.fileState = "等待审查";
+              this.form.examineState = "未审查";
+            }
             addChangeorder(this.form).then((response) => {
               const newId = response.data;
               this.$modal.msgSuccess("更新成功");
@@ -970,13 +991,14 @@ export default {
           }
         }
       });
+      this.fileList = [];
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       console.log("当前表单1=>", row);
       const tfcoIds = row.tfcoId || this.ids;
       this.$modal
-        .confirm('是否确认删除制度文件编号为"' + tfcoIds + '"的数据项？')
+        .confirm('是否确认删除文件编号为"' + tfcoIds + '"的数据项？')
         .then(function () {
           return delChangeorder(tfcoIds);
         })
@@ -1212,9 +1234,9 @@ export default {
       if (isFileNameDuplicate) {
         // 如果文件名重复，弹出警告框
         this.$modal.msgError(
-          "同名文件已存在，如需上传该制度新版本，请到“更新”处上传！"
+          "同名文件已存在，请先删除同名文件！"
         );
-        console.log("同名文件已存在，如需上传该制度新版本，请到“更新”处上传！");
+        console.log("同名文件已存在，请先删除同名文件！");
         return false; // 中断上传流程
       }
       if (res.code === 200) {

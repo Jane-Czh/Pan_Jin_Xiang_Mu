@@ -42,3 +42,13 @@ export function delStatistics(emesId) {
     method: 'delete'
   })
 }
+
+export function syncReport() {
+  return request({
+    url: '/Enterprisemanagement/statistics/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}

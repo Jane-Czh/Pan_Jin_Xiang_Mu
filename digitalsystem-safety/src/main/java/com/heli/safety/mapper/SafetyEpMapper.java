@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Param;
 public interface SafetyEpMapper {
 
 
-
+    Integer keyEquipmentNumber();
     Long countMajorEquipmentFailuresInCurrentMonth();
 
     Boolean checkSafetyFillingDataIsExisted(@Param("date") Date date);

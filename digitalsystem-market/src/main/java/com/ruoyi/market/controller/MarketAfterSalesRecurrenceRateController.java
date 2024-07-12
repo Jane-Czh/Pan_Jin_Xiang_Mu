@@ -43,6 +43,7 @@ public class MarketAfterSalesRecurrenceRateController extends BaseController
     /**
      * 同步售后台账数据库信息功能
      */
+    @PreAuthorize("@ss.hasPermi('market:recurrence:syncReport')")
     @PostMapping("/synchronization")
     public void Database_Synchronization(MarketAfterSalesRecurrenceRate marketAfterSalesRecurrenceRate){
         System.out.println("同步-------同步");

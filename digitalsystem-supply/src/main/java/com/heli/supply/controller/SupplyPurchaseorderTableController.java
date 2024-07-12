@@ -33,6 +33,7 @@ public class SupplyPurchaseorderTableController extends BaseController
      * 导入excel
      */
     @Log(title = "[供应]采购订单表表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('supply:purchase:import')")
     @PostMapping("/import")
     public AjaxResult importExcel(@RequestParam("file") MultipartFile excelFile)
     {

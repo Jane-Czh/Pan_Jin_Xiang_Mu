@@ -141,24 +141,24 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['product:OsTable:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['product:OsTable:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['product:OsTable:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['product:OsTable:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -203,7 +203,8 @@
 </template>
 
 <script>
-import { listOsTable, getOsTable, delOsTable, addOsTable, updateOsTable } from "@/api/product/OsTable";
+import {listOsTable, getOsTable, delOsTable, addOsTable, updateOsTable, syncReport} from "@/api/product/OsTable";
+
 
 export default {
   name: "OsTable",
@@ -220,7 +221,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
       // 加班统计表格数据
@@ -255,25 +256,35 @@ export default {
   methods: {
 
   /*同步*/
-  syncReport() {
-    // 使用 Fetch API 发送 POST 请求到后端
-    fetch('http://localhost:8080/product/OsTable/synchronization', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+  // syncReport() {
+  //   // 使用 Fetch API 发送 POST 请求到后端
+  //   fetch('http://localhost:8080/product/OsTable/synchronization', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       // 如果请求成功，可以进行下一步操作
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error!', error);
+  //     });
+  //   this.reload();
+  // },
+    async syncReport() {
+      try {
+        await syncReport();
+        this.getList();
+        this.$modal.msgSuccess("同步成功"); // 新增的提示
+      } catch (error) {
+        console.error('同步失败', error);
       }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        // 如果请求成功，可以进行下一步操作
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-    this.reload();
-  },
+      this.reload();
+    },
   /** 查
     /** 查询加班统计列表 */
     getList() {

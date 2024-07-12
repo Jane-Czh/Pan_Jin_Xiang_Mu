@@ -62,7 +62,8 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
             safetyEp.setCreateTime(DateUtils.getNowDate());
 
             //统计当月主要设备故障率-目前是写死的状态，看是否需要修改
-            safetyEp.setKeyEquipmentFailureRate(safetyEpMapper.countMajorEquipmentFailuresInCurrentMonth().floatValue() / 360000 * 100);
+            safetyEp.setKeyEquipmentFailureRate(safetyEpMapper.countMajorEquipmentFailuresInCurrentMonth().floatValue()
+                    / (safetyEpMapper.keyEquipmentNumber() * 22 * 8) * 100);
 
             safetyEpMapper.InsertOrUpdateSafetyEp(safetyEp);
 

@@ -46,6 +46,16 @@ public class SysDeptController extends BaseController
     }
 
     /**
+     * 获取部门列表（无权限）
+     */
+    @GetMapping("/dept/list")
+    public AjaxResult list02(SysDept dept)
+    {
+        List<SysDept> depts = deptService.selectDeptList(dept);
+        return success(depts);
+    }
+
+    /**
      * 查询部门列表（排除节点）
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
@@ -67,6 +77,8 @@ public class SysDeptController extends BaseController
         deptService.checkDeptDataScope(deptId);
         return success(deptService.selectDeptById(deptId));
     }
+
+
 
     @GetMapping(value = "/dept/{deptId}")
     public AjaxResult getInfo2(@PathVariable Long deptId)

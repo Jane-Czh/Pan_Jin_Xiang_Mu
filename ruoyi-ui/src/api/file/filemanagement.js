@@ -82,3 +82,28 @@ export function getRevisionCounts(data) {
     }
   })
 }
+
+// 查询部门详细（无权限）
+export function getDept02(deptId) {
+  return request({
+    url: '/system/dept/dept/' + deptId,
+    method: 'get'
+  })
+}
+
+// 查询用户个人信息（无权限）
+export function getUserProfile02() {
+  return request({
+    url: '/system/user/profile',
+    method: 'get'
+  })
+}
+
+// 查询部门列表(无权限)
+export function listDept02(query) {
+  return request({
+    url: '/system/dept/dept/list',
+    method: 'get',
+    params: query
+  })
+}

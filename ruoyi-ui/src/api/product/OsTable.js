@@ -42,3 +42,14 @@ export function delOsTable(postId) {
     method: 'delete'
   })
 }
+
+
+export function syncReport() {
+  return request({
+    url: '/product/OsTable/synchronization',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}

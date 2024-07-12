@@ -44,9 +44,9 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
           <!-- 进度动画条 -->
-          <div v-if="progress > 0">
+          <!-- <div v-if="progress > 0">
             <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+          </div> -->
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -69,12 +69,12 @@
         </template>
       </el-table-column>
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" />
-      <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" />
+      <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" width="150" />
       <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
-      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" />
-      <el-table-column label="工资总额月度占比" align="center" prop="monthlySalaryRatio" />
-      <el-table-column label="工资总额年度占比" align="center" prop="annualSalaryRatio" />
-      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" />
+      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
+      <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
+      <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
+      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140" />
       <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
       <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
       <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
@@ -142,7 +142,7 @@
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
 import { uploadFile } from '@/api/financial/excelImport';
-
+import { numValidator, numValidatorEnableEmpty, numValidatorPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
 
@@ -199,38 +199,78 @@ export default {
       // 表单校验
       rules: {
         yearAndMonth: [
-          { required: true, message: "日期不能为空", trigger: "blur" }
+          {
+            required: true, message: "日期不能为空", trigger: "blur"
+          }
         ],
         employeesNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPositive,
+            trigger: "blur",
+          }
         ],
-        employeesAvgMonthlyNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
-        employeesAvgAnnualNumber: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
-        ],
+        // employeesAvgMonthlyNumber: [
+        //   {
+        //     required: true,
+        //     validator: numValidatorPositive,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // employeesAvgAnnualNumber: [
+        //   {
+        //     required: true,
+        //     validator: numValidatorPositive,
+        //     trigger: "blur",
+        //   }
+        // ],
         totalMonthlySalary: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+          {
+            required: true,
+            validator: numValidatorPositive,
+            trigger: "blur",
+          }
         ],
-        monthlySalaryRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+        // monthlySalaryRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // annualSalaryRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+
+        //允许空值
+        cumulativeAverageIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
         ],
-        annualSalaryRatio: [
-          { required: true, message: "数据不能为空", trigger: "blur" }
+        monthlyProductionAvgIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
         ],
-        // cumulativeAverageIncome: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        // monthlyProductionAvgIncome: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        // monthlyFunctionalAvgIncome: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
-        // functionalDeptOvertimeCost: [
-        //   { required: true, message: "数据不能为空", trigger: "blur" }
-        // ],
+        monthlyFunctionalAvgIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
+        functionalDeptOvertimeCost: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
       }
     };
   },
@@ -374,12 +414,50 @@ export default {
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
+    extractMiddleMonth(dateStr) {
+      // 使用正则表达式匹配月份部分
+      const match = dateStr.match(/-(\d{2})-/);
+      if (match) {
+        // 提取匹配到的月份，并移除前导0
+        const month = parseInt(match[1], 10);
+        return month.toString();
+      } else {
+        return null; // 或者返回一个默认值
+      }
+    },
+    convertMonthToChinese(month) {
+      const monthMap = {
+        '1': '一',
+        '2': '二',
+        '3': '三',
+        '4': '四',
+        '5': '五',
+        '6': '六',
+        '7': '七',
+        '8': '八',
+        '9': '九',
+        '10': '十',
+        '11': '十一',
+        '12': '十二'
+      };
+
+      // 返回中文全称加上“月”
+      return `${monthMap[month]}月`;
+    },
     /** 导入按钮 */
     fileSend() {
-
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
       const yearAndMonth = this.form3.yearAndMonth;
+      formData.append("yearAndMonth", yearAndMonth);
+      formData.append("multipartFile", file);
+      const aimUrl = `/enterprise/data/salary`;
+      const Str = this.extractMiddleMonth(yearAndMonth);
+      const charMonth = this.convertMonthToChinese(Str);
+      const regex1 = new RegExp(Str + '月');
+      const regex2 = new RegExp(charMonth);
+      const check1 = regex1.test(file.name);//检查上传文件是否与所选日期匹配
+      const check2 = regex2.test(file.name);
       if (file === undefined || yearAndMonth == null) {
         if (file === undefined) {
           this.$message.error("请选择文件!");
@@ -389,24 +467,42 @@ export default {
           return;
         }
       } else {
-        formData.append("yearAndMonth", yearAndMonth);
-        formData.append("multipartFile", file);
-        const aimUrl = `/enterprise/data/salary`
-        uploadFile(formData, aimUrl)
-          .then(data => {
-            // 处理上传成功的情况
-            this.$message.success("上传成功");
-            this.getList();
-          })
-          .catch(error => {
-            // 处理上传失败的情况
-            console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+        if (check1 || check2) {
+          uploadFile(formData, aimUrl)
+            .then(data => {
+              // 处理上传成功的情况0.
+              this.$message.success("上传成功");
+              this.getList();
+            })
+            .catch(error => {
+              // 处理上传失败的情况
+              console.error('上传失败：', error);
+              this.$message.error("上传失败，请重试");
+            })
+            .finally(() => {
+              // 无论成功或失败，都关闭上传面板
+              this.showDialog = false;
+            });
+        } else {
+          this.$modal.confirm('检测到文件日期与所选日期可能不匹配，确定继续上传该表吗？').then(() => {
+            return uploadFile(formData, aimUrl)
+              .then(data => {
+                // 处理上传成功的情况0.
+                this.$message.success("上传成功");
+                this.getList();
+              })
+              .catch(error => {
+                // 处理上传失败的情况
+                console.error('上传失败：', error);
+                this.$message.error("上传失败，请重试");
+              })
+              .finally(() => {
+                // 无论成功或失败，都关闭上传面板
+                this.showDialog = false;
+              });
           });
+        }
+
       }
     },
   }

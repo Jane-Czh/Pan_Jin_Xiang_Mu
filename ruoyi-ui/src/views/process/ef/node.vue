@@ -283,11 +283,18 @@ export default {
     },
     //取消绑定-对应节点已经绑定了文件想要取绑
     cancleBand(node) {
+      // 取消绑定后显示提示消息
+      this.$message({
+        type: "success",
+        message: "取消绑定成功！",
+      });
+
       this.dialogMoreVisible = false;
       this.selectedFileNames = this.selectedFileName;
       this.selectedTemp = this.selectedFileName;
       node.state = "no";
       this.$refs.nodeForm.save(this.data, node.id);
+
       // 进行画布节点信息的更新
       this.$emit("repaintEverything");
     },
@@ -336,6 +343,12 @@ export default {
           this.dialogMoreVisible = false;
           // 清除选择的文件名
           // this.selectedFileNames = this.selectedFileName;
+
+          // 绑定后显示提示消息
+          this.$message({
+            type: "success",
+            message: "绑定成功！",
+          });
         });
     },
 
@@ -383,6 +396,12 @@ export default {
           this.formsMoreVisible = false;
           // 清除选择的文件名
           // this.selectedFormsNames = this.selectedFileName;
+
+          // 绑定后显示提示消息
+          this.$message({
+            type: "success",
+            message: "绑定成功！",
+          });
         });
     },
 
@@ -394,6 +413,11 @@ export default {
     },
     //取消绑定-对应节点已经绑定了文件想要取绑
     cancleFormsBand(node) {
+      // 取消绑定后显示提示消息
+      this.$message({
+        type: "success",
+        message: "取消绑定成功！",
+      });
       this.formsMoreVisible = false;
       this.selectedFormsNames = this.selectedFileName;
       this.selectedFormsTemp = this.selectedFileName;

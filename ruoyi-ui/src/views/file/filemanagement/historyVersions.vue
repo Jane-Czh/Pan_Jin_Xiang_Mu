@@ -45,14 +45,14 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件路径" prop="filePath">
-              <el-input
-                v-model="queryParams.filePath"
-                placeholder="请输入文件路径"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+            <!--            <el-form-item label="文件路径" prop="filePath">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.filePath"-->
+            <!--                placeholder="请输入文件路径"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
             <el-form-item label="文件类型" prop="fileType">
               <el-input
                 v-model="queryParams.fileType"
@@ -61,14 +61,14 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="文件大小" prop="fileSize">
-              <el-input
-                v-model="queryParams.fileSize"
-                placeholder="请输入文件大小"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+            <!--            <el-form-item label="文件大小" prop="fileSize">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.fileSize"-->
+            <!--                placeholder="请输入文件大小"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
             <el-form-item label="制度创建日期" prop="createDate">
               <el-date-picker clearable
                               v-model="queryParams.createDate"
@@ -101,38 +101,38 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="制度标签名称" prop="fileTag">
-              <el-input
-                v-model="queryParams.fileTag"
-                placeholder="请输入制度标签名称"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="历史版本制度" prop="oldRegulationsId">
-              <el-input
-                v-model="queryParams.oldRegulationsId"
-                placeholder="请输入历史版本制度"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="修订时间" prop="revisionDate">
-              <el-date-picker clearable
-                              v-model="queryParams.revisionDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择修订时间">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="修订人" prop="reviser">
-              <el-input
-                v-model="queryParams.reviser"
-                placeholder="请输入修订人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+            <!--            <el-form-item label="制度标签名称" prop="fileTag">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.fileTag"-->
+            <!--                placeholder="请输入制度标签名称"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.oldRegulationsId"-->
+            <!--                placeholder="请输入历史版本制度"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item label="修订时间" prop="revisionDate">-->
+            <!--              <el-date-picker clearable-->
+            <!--                              v-model="queryParams.revisionDate"-->
+            <!--                              type="date"-->
+            <!--                              value-format="yyyy-MM-dd"-->
+            <!--                              placeholder="请选择修订时间">-->
+            <!--              </el-date-picker>-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item label="修订人" prop="reviser">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.reviser"-->
+            <!--                placeholder="请输入修订人"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -159,9 +159,9 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名称" align="center" prop="fileName"/>
-      <el-table-column label="文件路径" align="center" prop="filePath">
+      <el-table-column label="文件下载" align="center" prop="filePath">
         <template slot-scope="scope">
-          <a :href="baseUrl+scope.row.filePath" download>点击下载</a>
+          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="文件类型" align="center" prop="fileType"/>
@@ -174,16 +174,16 @@
       <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>
       <el-table-column label="制度使用状态" align="center" prop="useState"/>
       <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
-      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>
+<!--      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>-->
 <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
 <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
-      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修订内容" align="center" prop="revisionContent"/>
-      <el-table-column label="修订人" align="center" prop="reviser"/>
+<!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="修订内容" align="center" prop="revisionContent"/>-->
+<!--      <el-table-column label="修订人" align="center" prop="reviser"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -192,6 +192,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:filemanagement:edit']"
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >修改
           </el-button>
           <el-button
@@ -200,6 +201,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >删除
           </el-button>
         </template>
@@ -270,6 +272,14 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span='12'>
+            <el-form-item label="所属科室" prop="departmentCategory">
+              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">
+                <!-- 循环遍历this.deptList中的部门数据 -->
+                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -289,15 +299,21 @@
     updateFilemanagement,
     getRegulationsHistory
   } from "@/api/file/filemanagement";
-  import {getUserProfile} from '@/api/system/user'
-  import {getDept} from '@/api/system/dept'
+  import {getUserProfile02} from '@/api/file/filemanagement'
+  import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
-  import {word2Pdf} from "../../../api/file/filemanagement";
+  import {listDept02, word2Pdf} from "../../../api/file/filemanagement";
 
   export default {
     name: "HistoryVersions",
     data() {
       return {
+        //部门列表
+        deptList: [],
+        //当前账号的dept
+        thisDept: null,
+        //文件上传绑定的部门
+        fileDept: null,
         number: 0,
         uploadList: [],
         fileList: [],
@@ -461,6 +477,28 @@
     },
     created() {
       this.getList();
+      getUserProfile02().then(response => {
+        // 处理成功的情况
+        console.log('成功获取用户信息response.data====>', response.data.dept.deptName
+        );
+        // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        this.thisDept =  response.data.dept.deptName;
+        //根据部门id获取部门名称
+        // getDept02(userInfo.deptId).then(response => {
+        //   const deptInfo = response.data;
+        //   console.log("deptInfo======>",deptInfo);
+        //   this.thisDept = deptInfo.deptName;
+        //   console.log("thisDept======>",this.thisDept);
+        // })
+      }).catch(error => {
+        // 处理失败的情况
+        console.error('获取用户信息失败:', error);
+      });
+      //获取部门列表
+      listDept02().then(response => {
+        this.deptList = response.data;
+      });
+
     },
     methods: {
       /** 查询文件管理列表 */
@@ -511,12 +549,67 @@
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
-        this.getList();
+       // this.getList();
+        this.loading = true;
+        const newRegulationId = this.$route.params.regulationsId;
+        console.log("newRegulationId=>：",newRegulationId);
+
+        getRegulationsHistory(newRegulationId).then(response =>{
+          this.filemanagementList = response;
+          this.filemanagementList = this.filemanagementList.filter(file => {
+            // 处理每个筛选条件
+            const matchesRegulationsTitle = !this.queryParams.regulationsTitle || file.regulationsTitle.includes(this.queryParams.regulationsTitle);
+            const matchesUseScope = !this.queryParams.useScope || file.useScope.includes(this.queryParams.useScope);
+            const matchesUploadDate = !this.queryParams.uploadDate || file.uploadDate === this.queryParams.uploadDate;
+            const matchesEffectiveDate = !this.queryParams.effectiveDate || file.effectiveDate === this.queryParams.effectiveDate;
+            const matchesRegulationsAddress = !this.queryParams.regulationsAddress || file.regulationsAddress.includes(this.queryParams.regulationsAddress);
+            const matchesFileName = !this.queryParams.fileName || file.fileName.includes(this.queryParams.fileName);
+            const matchesFilePath = !this.queryParams.filePath || file.filePath.includes(this.queryParams.filePath);
+            const matchesFileType = !this.queryParams.fileType || file.fileType === this.queryParams.fileType;
+            const matchesFileSize = !this.queryParams.fileSize || file.fileSize === this.queryParams.fileSize;
+            const matchesCreateDate = !this.queryParams.createDate || file.createDate === this.queryParams.createDate;
+            const matchesUploadUsername = !this.queryParams.uploadUsername || file.uploadUsername.includes(this.queryParams.uploadUsername);
+            const matchesUseState = !this.queryParams.useState || file.useState === this.queryParams.useState;
+            const matchesDepartmentCategory = !this.queryParams.departmentCategory || file.departmentCategory.includes(this.queryParams.departmentCategory);
+            const matchesFileTag = !this.queryParams.fileTag || file.fileTag.includes(this.queryParams.fileTag);
+            const matchesOldRegulationsId = !this.queryParams.oldRegulationsId || file.oldRegulationsId === this.queryParams.oldRegulationsId;
+            const matchesRevisionDate = !this.queryParams.revisionDate || file.revisionDate === this.queryParams.revisionDate;
+            const matchesRevisionContent = !this.queryParams.revisionContent || file.revisionContent.includes(this.queryParams.revisionContent);
+            const matchesReviser = !this.queryParams.reviser || file.reviser.includes(this.queryParams.reviser);
+            const matchesNewFlag = this.queryParams.newFlag === null || file.newFlag === this.queryParams.newFlag;
+            const matchesNewRegulationsId = !this.queryParams.newRegulationsId || file.newRegulationsId === this.queryParams.newRegulationsId;
+
+            // 返回满足所有条件的文件
+            return matchesRegulationsTitle &&
+              matchesUseScope &&
+              matchesUploadDate &&
+              matchesEffectiveDate &&
+              matchesRegulationsAddress &&
+              matchesFileName &&
+              matchesFilePath &&
+              matchesFileType &&
+              matchesFileSize &&
+              matchesCreateDate &&
+              matchesUploadUsername &&
+              matchesUseState &&
+              matchesDepartmentCategory &&
+              matchesFileTag &&
+              matchesOldRegulationsId &&
+              matchesRevisionDate &&
+              matchesRevisionContent &&
+              matchesReviser &&
+              matchesNewFlag &&
+              matchesNewRegulationsId;
+          });
+          this.loading = false;
+        })
+
       },
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
-        this.handleQuery();
+        this.queryParams.pageNum = 1;
+        this.getList();
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
@@ -622,14 +715,14 @@
       },
       // 调用接口获取用户信息
       getUserInfo() {
-        getUserProfile().then(response => {
+        getUserProfile02().then(response => {
           // 处理成功的情况
           console.log('成功获取用户信息:', response.data)
           const userInfo = response.data // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
           // 填充到对应的输入框中
           this.form.uploadUsername = userInfo.userName
           //根据部门id获取部门名称
-          getDept(userInfo.deptId).then(response => {
+          getDept02(userInfo.deptId).then(response => {
             const deptInfo = response.data
             this.form.departmentCategory = deptInfo.deptName
           })

@@ -96,6 +96,7 @@ public class ProjectInfoTableController extends BaseController
     /**
      * 关联历史项目
      */
+    @PreAuthorize("@ss.hasPermi('project:Info:relevance')")
     @PutMapping("/updataHistory")
     public AjaxResult updataHistory(@RequestBody ProjectInfoTable projectInfoTable)
     {

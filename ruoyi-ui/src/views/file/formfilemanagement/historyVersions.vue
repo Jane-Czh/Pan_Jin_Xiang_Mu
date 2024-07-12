@@ -4,10 +4,10 @@
       <el-collapse-item title="制度检索" name="1">
         <div>
           <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-            <el-form-item label="表单名称" prop="formTitle">
+            <el-form-item label="表单标题" prop="formTitle">
               <el-input
                 v-model="queryParams.formTitle"
-                placeholder="请输入表单名称"
+                placeholder="请输入表单标题"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
@@ -28,14 +28,22 @@
                               placeholder="请选择表单上传时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="表单大小" prop="formSize">
+            <el-form-item label="表单名称" prop="formName">
               <el-input
-                v-model="queryParams.formSize"
-                placeholder="请输入表单大小"
+                v-model="queryParams.formName"
+                placeholder="请输入表单名称"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
+            <!--            <el-form-item label="表单大小" prop="formSize">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.formSize"-->
+            <!--                placeholder="请输入表单大小"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
             <el-form-item label="上传人" prop="createUsername">
               <el-input
                 v-model="queryParams.createUsername"
@@ -52,30 +60,30 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <el-form-item label="历史表单" prop="oldFormId">
-              <el-input
-                v-model="queryParams.oldFormId"
-                placeholder="请输入历史表单"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="修订时间" prop="revisionTime">
-              <el-date-picker clearable
-                              v-model="queryParams.revisionTime"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择修订时间">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="修订人" prop="reviser">
-              <el-input
-                v-model="queryParams.reviser"
-                placeholder="请输入修订人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+            <!--            <el-form-item label="历史表单" prop="oldFormId">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.oldFormId"-->
+            <!--                placeholder="请输入历史表单"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item label="修订时间" prop="revisionTime">-->
+            <!--              <el-date-picker clearable-->
+            <!--                              v-model="queryParams.revisionTime"-->
+            <!--                              type="date"-->
+            <!--                              value-format="yyyy-MM-dd"-->
+            <!--                              placeholder="请选择修订时间">-->
+            <!--              </el-date-picker>-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item label="修订人" prop="reviser">-->
+            <!--              <el-input-->
+            <!--                v-model="queryParams.reviser"-->
+            <!--                placeholder="请输入修订人"-->
+            <!--                clearable-->
+            <!--                @keyup.enter.native="handleQuery"-->
+            <!--              />-->
+            <!--            </el-form-item>-->
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -98,9 +106,9 @@
       </el-table-column>
       <el-table-column label="表单名称" align="center" prop="formName" />
       <el-table-column label="表单类型" align="center" prop="formType" />
-      <el-table-column label="表单路径" align="center" prop="formPath">
+      <el-table-column label="表单下载" align="center" prop="formPath">
         <template slot-scope="scope">
-          <a :href="baseUrl + scope.row.formPath" download>点击下载</a>
+          <a :href="baseUrl + scope.row.formPath" download style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="表单大小" align="center" prop="formSize" />
@@ -110,13 +118,13 @@
 <!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
 <!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
-      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修订内容" align="center" prop="revisionContent" />
-      <el-table-column label="修订人" align="center" prop="reviser" />
+<!--      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="修订内容" align="center" prop="revisionContent" />-->
+<!--      <el-table-column label="修订人" align="center" prop="reviser" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -125,6 +133,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >修改
           </el-button>
           <el-button
@@ -133,6 +142,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:formfilemanagement:remove']"
+            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >删除
           </el-button>
         </template>
@@ -166,6 +176,26 @@
               <el-input v-model="form.formTitle" placeholder="请输入表单标题"/>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="表单存储内容" prop="scope">
+              <el-input v-model="form.scope" placeholder="请输入表单存储内容"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注信息"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="所属科室" prop="departmentCategory">
+              <el-select v-model="form.departmentCategory" placeholder="请输入表单所属科室">
+                <!-- 循环遍历this.deptList中的部门数据 -->
+                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -185,15 +215,21 @@
     updateFormfilemanagement,
     getFormHistory
   } from "@/api/file/formfilemanagement";
-  import {getUserProfile} from '@/api/system/user'
-  import {getDept} from '@/api/system/dept'
+  import {getUserProfile02} from '@/api/file/filemanagement'
+  import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
-  import {word2Pdf} from "../../../api/file/filemanagement";
+  import {listDept02, word2Pdf} from "../../../api/file/filemanagement";
 
   export default {
     name: "HistoryVersions",
     data() {
       return {
+        //部门列表
+        deptList: [],
+        //当前账号的dept
+        thisDept: null,
+        //文件上传绑定的部门
+        fileDept: null,
         number: 0,
         uploadList: [],
         formList: [],
@@ -313,6 +349,27 @@
     },
     created() {
       this.getList();
+      getUserProfile02().then(response => {
+        // 处理成功的情况
+        console.log('成功获取用户信息response.data====>', response.data.dept.deptName
+        );
+        // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        this.thisDept =  response.data.dept.deptName;
+        //根据部门id获取部门名称
+        // getDept02(userInfo.deptId).then(response => {
+        //   const deptInfo = response.data;
+        //   console.log("deptInfo======>",deptInfo);
+        //   this.thisDept = deptInfo.deptName;
+        //   console.log("thisDept======>",this.thisDept);
+        // })
+      }).catch(error => {
+        // 处理失败的情况
+        console.error('获取用户信息失败:', error);
+      });
+      //获取部门列表
+      listDept02().then(response => {
+        this.deptList = response.data;
+      });
     },
     methods: {
       /** 查询文件管理列表 */
@@ -327,41 +384,7 @@
           console.log("response.rows:：",response.rows);
           console.log("formmanagementList:：",this.formmanagementList);
           this.loading = false;
-        })
-        // getFilemanagement(newRegulationId).then(response => {
-        //   console.log("response=>：",response);
-        //   this.filemanagementList[0] = response.data;
-        //   console.log("filemanagementList=>",this.filemanagementList);
-        //   this.loading = false;
-        // });
-        // getFilemanagement(newRegulationId).then(response => {
-        //   console.log("response:：",response);
-        //   const newForm = response.data;
-        //   let flag = 0;
-        //   while (newForm.oldRegulationsId){
-        //     getFilemanagement(newForm.oldRegulationsId).then(response => {
-        //       this.filemanagementList[flag] = response.data;
-        //       flag++;
-        //     });
-        //   }
-        //   console.log("filemanagementList:：",this.filemanagementList);
-        //   this.loading = false;
-        // });
-
-
-        // listFilemanagement(this.queryParams).then(response => {
-        //   console.log("response:：",response);
-        //   const responseList = response.rows;
-        //   let i = 0;
-        //   while (responseList[i].oldRegulationsId){
-        //     getFilemanagement(responseList[i].oldRegulationsId).then(response => {
-        //       this.filemanagementList[i] = responseList[i];
-        //       i++;
-        //     });
-        //   }
-        //   this.total = response.total;
-        //   this.loading = false;
-        // });
+        });
       },
       // 文件修改取消按钮
       modifyCancel() {
@@ -394,12 +417,53 @@
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
-        this.getList();
+        this.loading = true;
+        const newFormId = this.$route.params.formId;
+        getFormHistory(newFormId).then(response =>{
+          this.formmanagementList = response;
+          this.formmanagementList = this.formmanagementList.filter(file => {
+            // 处理每个筛选条件
+            const matchesFormTitle = !this.queryParams.formTitle || file.formTitle.includes(this.queryParams.formTitle);
+            const matchesScope = !this.queryParams.scope || file.scope.includes(this.queryParams.scope);
+            const matchesEffectiveDate = !this.queryParams.effectiveDate || file.effectiveDate === this.queryParams.effectiveDate;
+            const matchesFormName = !this.queryParams.formName || file.formName.includes(this.queryParams.formName);
+            const matchesFormType = !this.queryParams.formType || file.formType === this.queryParams.formType;
+            const matchesFormPath = !this.queryParams.formPath || file.formPath.includes(this.queryParams.formPath);
+            const matchesFormSize = !this.queryParams.formSize || file.formSize === this.queryParams.formSize;
+            const matchesCreateUsername = !this.queryParams.createUsername || file.createUsername.includes(this.queryParams.createUsername);
+            const matchesDepartmentCategory = !this.queryParams.departmentCategory || file.departmentCategory.includes(this.queryParams.departmentCategory);
+            const matchesOldFormId = !this.queryParams.oldFormId || file.oldFormId === this.queryParams.oldFormId;
+            const matchesRevisionTime = !this.queryParams.revisionTime || file.revisionTime === this.queryParams.revisionTime;
+            const matchesRevisionContent = !this.queryParams.revisionContent || file.revisionContent.includes(this.queryParams.revisionContent);
+            const matchesReviser = !this.queryParams.reviser || file.reviser.includes(this.queryParams.reviser);
+            const matchesNewFlag = this.queryParams.newFlag === null || file.newFlag === this.queryParams.newFlag;
+            const matchesNewFormId = !this.queryParams.newFormId || file.newFormId === this.queryParams.newFormId;
+
+            // 返回满足所有条件的文件
+            return matchesFormTitle &&
+              matchesScope &&
+              matchesEffectiveDate &&
+              matchesFormName &&
+              matchesFormType &&
+              matchesFormPath &&
+              matchesFormSize &&
+              matchesCreateUsername &&
+              matchesDepartmentCategory &&
+              matchesOldFormId &&
+              matchesRevisionTime &&
+              matchesRevisionContent &&
+              matchesReviser &&
+              matchesNewFlag &&
+              matchesNewFormId;
+          });
+          this.loading = false;
+        });
       },
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
-        this.handleQuery();
+        this.queryParams.pageNum = 1;
+        this.getList();
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
@@ -507,14 +571,14 @@
       },
       // 调用接口获取用户信息
       getUserInfo() {
-        getUserProfile().then(response => {
+        getUserProfile02().then(response => {
           // 处理成功的情况
           console.log('成功获取用户信息:', response.data)
           const userInfo = response.data // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
           // 填充到对应的输入框中
           this.form.createUsername = userInfo.userName
           //根据部门id获取部门名称
-          getDept(userInfo.deptId).then(response => {
+          getDept02(userInfo.deptId).then(response => {
             const deptInfo = response.data
             this.form.departmentCategory = deptInfo.deptName
           })

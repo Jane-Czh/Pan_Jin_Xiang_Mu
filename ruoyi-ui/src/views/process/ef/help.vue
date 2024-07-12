@@ -11,8 +11,11 @@
         <div>按住鼠标拖拽左侧组件到中间画布中松开鼠标即可</div>
       </el-tab-pane>
       <el-tab-pane label="如何删除">
-        <el-divider content-position="left">页面删除</el-divider>
-        <div>鼠标点中需要删除的节点，点击左上角的删除图标</div>
+        <el-divider content-position="left">删除节点/连线</el-divider>
+        <div>鼠标先点中需要删除的节点/连线，再点击左上角的删除图标。
+          <br>
+          判断是否已选中节点/连线：查看删除图标是否亮起。
+        </div>
         <!-- <el-divider content-position="left">通过代码删除</el-divider>
                 <pre>this.deleteNode(nodeId)</pre> -->
       </el-tab-pane>

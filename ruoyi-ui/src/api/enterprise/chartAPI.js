@@ -52,6 +52,7 @@ const api = {
     })
   },
 
+
   // 累计人均收入 指标54
   getCumulativeAverageIncomeData(data) {
     return request({
@@ -98,9 +99,35 @@ const api = {
         endTime: data.endTime
       }
     })
-  },
+  }
+
 
 
 }
 
 export default api
+
+
+// 日清日结 指标53
+export function getDailyClearingSettlementData(data) {
+  return request({
+    url: `/enterprise/display/dailyClearingSettlement`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 11项管理指标 指标101
+export function getManagementData(data) {
+  return request({
+    url: `/enterprise/display/management`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}

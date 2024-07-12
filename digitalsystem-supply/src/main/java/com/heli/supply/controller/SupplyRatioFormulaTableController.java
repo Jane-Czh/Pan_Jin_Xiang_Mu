@@ -39,6 +39,7 @@ public class SupplyRatioFormulaTableController extends BaseController
      * 同步录入数据库
      */
     @PostMapping("/synchronization")
+    @PreAuthorize("@ss.hasPermi('supply:ratio:syncReport')")
     public void Database_Synchronization(){
         System.out.println("------同步------");
         SupplyPurchaseorderTable supplyPurchaseorderTable = new SupplyPurchaseorderTable();
@@ -49,6 +50,7 @@ public class SupplyRatioFormulaTableController extends BaseController
     /**
      * 导入excel
      */
+    @PreAuthorize("@ss.hasPermi('supply:ratio:import')")
     @Log(title = "[供应]供货比例公式表上传", businessType = BusinessType.INSERT)
     @PostMapping("/import")
     public AjaxResult importExcel(@RequestParam("file") MultipartFile excelFile)

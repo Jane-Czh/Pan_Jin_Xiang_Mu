@@ -21,11 +21,11 @@
             <!--顶部工具菜单-->
             <el-col :span="24">
               <div class="ef-tooltar">
-                <el-link type="primary" :underline="false">{{
+                <el-link type="primary" :underline="false">当前最新版本流程{{
                   data.name
                 }}</el-link>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
+                <!-- <el-button
                   type="text"
                   icon="el-icon-plus"
                   size="large"
@@ -38,7 +38,8 @@
                   size="large"
                   @click="zoomSubMy"
                 ></el-button>
-                <el-divider direction="vertical"></el-divider>
+                <el-divider direction="vertical"></el-divider> -->
+
                 <!-- 流程信息的Json数据 -->
                 <!-- <el-button
                   type="info"
@@ -238,7 +239,7 @@
                 <el-link type="primary" :underline="false"
                   >历史版本{{ historyData.name }}</el-link
                 >
-                <el-divider direction="vertical"></el-divider>
+                <!-- <el-divider direction="vertical"></el-divider>
                 <el-button
                   type="text"
                   icon="el-icon-plus"
@@ -251,7 +252,8 @@
                   icon="el-icon-minus"
                   size="large"
                   @click="zoomSub"
-                ></el-button>
+                ></el-button> -->
+                
                 <el-divider direction="vertical"></el-divider>
                 <!-- 关闭查看历史 -->
                 <el-button

@@ -177,7 +177,7 @@
           v-hasPermi="['safety:presentation:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -187,7 +187,7 @@
           @click="handleUpdate"
           v-hasPermi="['safety:presentation:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -216,6 +216,7 @@
         icon="el-icon-download"
         size="mini"
         @click="syncReport"
+        v-hasPermi="['safety:presentation:syncReport']"
       >同步数据</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -244,13 +245,13 @@
       <el-table-column label="全年成绩" align="center" prop="annualResults" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['safety:presentation:edit']"
-          >修改</el-button>
+          >修改</el-button> -->
           <el-button
             size="mini"
             type="text"

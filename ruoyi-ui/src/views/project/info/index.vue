@@ -364,7 +364,7 @@
               v-hasPermi="['project:Info:remove']"
             >项目终止</el-button>
             <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
-              <el-button size="mini" type="text" slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
+              <el-button size="mini" type="text" slot="reference" @click="fetchHistoryList" v-hasPermi="['project:Info:relevance']">关联历史项目</el-button>
               <div v-if="loading">加载中...</div>
               <div v-else>
                 <h3>历史项目列表</h3>

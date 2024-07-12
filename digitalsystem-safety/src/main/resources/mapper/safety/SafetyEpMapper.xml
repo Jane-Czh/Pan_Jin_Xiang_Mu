@@ -30,6 +30,11 @@
             )
     </select>
 
+    <!--  查询当月重点设备数  -->
+    <select id="keyEquipmentNumber" resultType="int">
+        select count(1) from Safety_EP_Key_Equipment_index
+    </select>
+
     <select id="selectSafetyEpList" parameterType="SafetyEp" resultMap="SafetyEpResult">
         <include refid="selectSafetyEpVo"/>
         <where>

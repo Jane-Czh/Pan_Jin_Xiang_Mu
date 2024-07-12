@@ -201,23 +201,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['market:CVimport:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['market:CVimport:add']"
+        >新增</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -348,24 +348,24 @@
       <el-table-column label="上线" align="center" prop="goLive" />
       <el-table-column label="入库" align="center" prop="warehousing" />
       <el-table-column label="生产周期" align="center" prop="productionCycle" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['market:CVimport:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['market:CVimport:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['market:CVimport:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['market:CVimport:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -421,17 +421,17 @@
         <el-form-item label="门架高度" prop="doorFrameHeight">
           <el-input v-model="form.doorFrameHeight" placeholder="请输入门架高度" />
         </el-form-item>
-        <el-form-item label="数量" prop="Number">
-          <el-input v-model="form.Number" placeholder="请输入数量" />
+        <el-form-item label="数量" prop="number">
+          <el-input v-model="form.number" placeholder="请输入数量" />
         </el-form-item>
-        <el-form-item label="属具" prop="Accessory">
-          <el-input v-model="form.Accessory" placeholder="请输入属具" />
+        <el-form-item label="属具" prop="accessory">
+          <el-input v-model="form.accessory" placeholder="请输入属具" />
         </el-form-item>
         <el-form-item label="阀片" prop="valveBlock">
           <el-input v-model="form.valveBlock" placeholder="请输入阀片" />
         </el-form-item>
-        <el-form-item label="配置" prop="Configuration">
-          <el-input v-model="form.Configuration" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="配置" prop="configuration">
+          <el-input v-model="form.configuration" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="计划完工期" prop="plannedCompletionPeriod">
           <el-date-picker clearable
@@ -441,8 +441,8 @@
             placeholder="请选择计划完工期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="客户" prop="Customer">
-          <el-input v-model="form.Customer" placeholder="请输入客户" />
+        <el-form-item label="客户" prop="customer">
+          <el-input v-model="form.customer" placeholder="请输入客户" />
         </el-form-item>
         <el-form-item label="车体上线日期" prop="vehicleLaunchDate">
           <el-date-picker clearable
@@ -491,8 +491,8 @@
         <el-form-item label="上线" prop="goLive">
           <el-input v-model="form.goLive" placeholder="请输入上线" />
         </el-form-item>
-        <el-form-item label="入库" prop="Warehousing">
-          <el-input v-model="form.Warehousing" placeholder="请输入入库" />
+        <el-form-item label="入库" prop="warehousing">
+          <el-input v-model="form.warehousing" placeholder="请输入入库" />
         </el-form-item>
         <el-form-item label="生产周期" prop="productionCycle">
           <el-input v-model="form.productionCycle" placeholder="请输入生产周期" />
@@ -507,12 +507,36 @@
 </template>
 
 <script>
-import { listCVimport, getCVimport, delCVimport, addCVimport, updateCVimport } from "@/api/market/CVimport";
+import { listCVimport, getCVimport, delCVimport, addCVimport, updateCVimport,uploadFile } from "@/api/market/CVimport";
 import axios from "axios";
+//
 
 export default {
   name: "CVimport",
   data() {
+    const validateAlphanumeric = (rule, value, callback) => {
+      if (value && !/^[a-zA-Z0-9]+$/.test(value)) {
+        callback(new Error('只能输入英文字符或数字'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateChineseOrEnglish = (rule, value, callback) => {
+      if (value && !/^[\u4e00-\u9fa5a-zA-Z]+$/.test(value)) {
+        callback(new Error('只能输入中文字符或英文字符'));
+      } else {
+        callback();
+      }
+    };
+
+    const validateNumber = (rule, value, callback) => {
+      if (value && !/^\d+$/.test(value)) {
+        callback(new Error('只能输入数字'));
+      } else {
+        callback();
+      }
+    };
     return {
       // 遮罩层
       loading: true,
@@ -545,12 +569,12 @@ export default {
         carNumber: null,
         vehicleModel: null,
         doorFrameHeight: null,
-        Number: null,
-        Accessory: null,
+        number: null,
+        accessory: null,
         valveBlock: null,
-        Configuration: null,
+        configuration: null,
         plannedCompletionPeriod: null,
-        Customer: null,
+        customer: null,
         vehicleLaunchDate: null,
         completionPeriodOfDoorFrameAssembly: null,
         trialCompletionPeriod: null,
@@ -560,52 +584,46 @@ export default {
         procurementOfOnSiteAbnormalIssues: null,
         qualityOfOnSiteAbnormalIssues: null,
         goLive: null,
-        Warehousing: null,
+        warehousing: null,
         productionCycle: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        acceptanceDate: [
-          { required: true, message: "接单日期不能为空", trigger: "blur" }
-        ],
-        launchDate: [
-          { required: true, message: "上线日期不能为空", trigger: "blur" }
+        createdBy: [
+          { required: false },
+          { validator: validateChineseOrEnglish, trigger: 'blur' }
         ],
         orderNumber: [
-          { required: true, message: "订单号不能为空", trigger: "blur" }
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
         ],
         contractNumber: [
-          { required: true, message: "合同号不能为空", trigger: "blur" }
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
         ],
         carNumber: [
-          { required: true, message: "车号不能为空", trigger: "blur" }
+          { required: true, message: '请输入车号', trigger: 'blur' },
+          { validator: validateAlphanumeric, trigger: 'blur' }
         ],
         vehicleModel: [
-          { required: true, message: "车型不能为空", trigger: "blur" }
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
         ],
         doorFrameHeight: [
-          { required: true, message: "门架高度不能为空", trigger: "blur" }
+          { required: false },
+          { validator: validateAlphanumeric, trigger: 'blur' }
         ],
-        Number: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
-        ],
-        Accessory: [
-          { required: true, message: "属具不能为空", trigger: "blur" }
+        number: [
+          { required: false },
+          { validator: validateNumber, trigger: 'blur' }
         ],
         valveBlock: [
-          { required: true, message: "阀片不能为空", trigger: "blur" }
+          { required: false },
+          { validator: validateNumber, trigger: 'blur' }
         ],
-        Configuration: [
-          { required: true, message: "配置不能为空", trigger: "blur" }
-        ],
-        plannedCompletionPeriod: [
-          { required: true, message: "计划完工期不能为空", trigger: "blur" }
-        ],
-        Customer: [
-          { required: true, message: "客户不能为空", trigger: "blur" }
-        ],
+
       },
       //新增参数
       showDialog: false,
@@ -713,6 +731,10 @@ export default {
             });
           }
         }
+        else {
+          console.log('表单验证失败!');
+          return false;
+        }
       });
     },
     /** 删除按钮操作 */
@@ -733,40 +755,65 @@ export default {
     },
 
 
-    fileSend() {
-      const formData = new FormData();
-      const file = document.getElementById("inputFile").files[0]; // 获取文件对象
-      console.log(file);
-      formData.append("file", file);
-      console.log("file====>",formData)
-      axios({
-        method: "post",
-        // this $axios.post,
-        url: "http://localhost:8080/market/CVimport/CVimport",
-        // params:{
-        //   userName: this.$store.state.user.name,
-        // },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          this.progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-        },
-      });
-      // this.$message.success("上传成功");
+    // fileSend() {
+    //   const formData = new FormData();
+    //   const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+    //   console.log(file);
+    //   formData.append("file", file);
+    //   console.log("file====>",formData)
+    //   axios({
+    //     method: "post",
+    //     // this $axios.post,
+    //     url: "http://localhost:8080/market/CVimport/CVimport",
+    //     // params:{
+    //     //   userName: this.$store.state.user.name,
+    //     // },
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //     withCredentials: true,
+    //     data: formData,
+    //     onUploadProgress: (progressEvent) => {
+    //       this.progress = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //     },
+    //   });
+    //   // this.$message.success("上传成功");
+    //
+    //
+    //   setTimeout(() => {
+    //     this.showDialog = false; // 关闭上传面板
+    //
+    //     // location.reload(); // 调用此方法刷新页面数据
+    //   }, 2000); // 2000毫秒后关闭
+    // },
+    async fileSend() {
+      try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
+        const formData = new FormData();
+        const file = document.getElementById("inputFile").files[0]; // 获取文件对象
+        console.log(file);
+        formData.append("file", file);
+        console.log("file====>", formData);
 
+        await uploadFile(formData); // 调用 uploadFile API
 
-      setTimeout(() => {
-        this.showDialog = false; // 关闭上传面板
-
-        // location.reload(); // 调用此方法刷新页面数据
-      }, 2000); // 2000毫秒后关闭
+        // 上传成功后的处理
+        this.$message.success("上传成功"); // 提示上传成功
+        setTimeout(() => {
+          this.showDialog = false; // 关闭上传面板
+          // location.reload(); // 调用此方法刷新页面数据
+        }, 1000); // 2000毫秒后关闭
+        this.getList();
+      } catch (error) {
+        console.error('上传失败!', error);
+      }
     },
-
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {

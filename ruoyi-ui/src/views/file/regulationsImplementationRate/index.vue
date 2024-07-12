@@ -34,7 +34,7 @@
 
     <div id="main" ref="main"></div>
 
-    <!-- 添加或修改制度执行率对话框 -->
+    <!-- 新增制度执行率对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="年月" prop="yearAndMonth">
@@ -51,9 +51,6 @@
         <el-form-item label="应执行制度次数" prop="shouldImplementedTimes">
           <el-input v-model="form.shouldImplementedTimes" placeholder="请输入应执行制度次数" />
         </el-form-item>
-<!--        <el-form-item label="制度执行率" prop="regulationsImplementationRate">-->
-<!--          <el-input v-model="form.regulationsImplementationRate" placeholder="请输入制度执行率" />-->
-<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -107,6 +104,15 @@
         regulationImplementationRateRespondEntity: {},
         // 表单校验
         rules: {
+          yearAndMonth: [
+            {required: true, message: "时间不能为空", trigger: "blur"}
+          ],
+          actualImplementedTimes: [
+            {required: true, message: "实际执行制度次数不能为空", trigger: "blur"}
+          ],
+          shouldImplementedTimes: [
+            {required: true, message: "应执行制度次数不能为空", trigger: "blur"}
+          ],
         },
         loading: false,
         data: [],
@@ -159,12 +165,26 @@
       submitForm(file) {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.form.yearAndMonth = `${this.form.yearAndMonth}-01`;
-            addRegulationsImplementationRate(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.initData();
-            });
+            console.log("form===>",this.form);
+            console.log("实际执行次数:", this.form.actualImplementedTimes, typeof this.form.actualImplementedTimes);
+            console.log("应执行次数:", this.form.shouldImplementedTimes, typeof this.form.shouldImplementedTimes);
+            // this.form.yearAndMonth = `${this.form.yearAndMonth}-01`;
+            // 新增条件判断逻辑
+            if ((this.form.shouldImplementedTimes != 0) && (parseInt(this.form.actualImplementedTimes, 10) <= parseInt(this.form.shouldImplementedTimes, 10))) {
+              this.form.yearAndMonth = `${this.form.yearAndMonth}-01`;
+              addRegulationsImplementationRate(this.form).then(response => {
+                this.$message.success("上传成功");
+                this.open = false;
+                this.initData();
+              });
+            } else {
+              this.$message.error("输入数据有误");
+            }
+            // addRegulationsImplementationRate(this.form).then(response => {
+            //   this.$modal.msgSuccess("上传成功");
+            //   this.open = false;
+            //   this.initData();
+            // });
           }
         });
       },

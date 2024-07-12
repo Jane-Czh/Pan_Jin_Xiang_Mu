@@ -132,7 +132,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/productio
 // import "font-awesome/css/font-awesome.css";
 //引入font-awesome
 // import "font-awesome/css/font-awesome.css";
-import { numValidator, numValidatorOnlyNature, numValidatorPercentage } from '@/api/financial/numValidator.js';
+import { numValidator, numValidatorOnlyNature, numValidatorPercentage, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 import { uploadFile } from '@/api/financial/excelImport';
 
 
@@ -201,11 +201,11 @@ export default {
             trigger: "blur",
           }
         ],
-        //只允许自然数
+        //只允许正数
         inventoryTurnoverdays: [
           {
             required: true,
-            validator: numValidatorOnlyNature,
+            validator: numValidatorOnlyPositive,
             trigger: "blur",
           }
         ],

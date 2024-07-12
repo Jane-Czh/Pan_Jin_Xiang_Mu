@@ -71,10 +71,10 @@
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" />
       <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" width="150" />
       <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
-      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" />
+      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
       <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
       <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
-      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" />
+      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140" />
       <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
       <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
       <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
@@ -446,7 +446,6 @@ export default {
     },
     /** 导入按钮 */
     fileSend() {
-
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
       const yearAndMonth = this.form3.yearAndMonth;

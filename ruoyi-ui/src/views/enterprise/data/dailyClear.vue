@@ -38,12 +38,12 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="销售订单录入不及时比例" align="center" prop="orderEntryDelayRatio" />
-      <el-table-column label="销售订单不及时发货比例" align="center" prop="shipmentDelayRatio" />
-      <el-table-column label="生产订单不及时报工比例" align="center" prop="productionReportDelayRatio" />
-      <el-table-column label="成品检验业务不及时率" align="center" prop="inspectionDelayRate" />
-      <el-table-column label="销售发票过账不及时率" align="center" prop="invoicePostingDelayRate" />
-      <el-table-column label="客户未清账比例" align="center" prop="unsettledAccountsRatio" />
+      <el-table-column label="销售订单录入不及时比例(%)" align="center" prop="orderEntryDelayRatio" />
+      <el-table-column label="销售订单不及时发货比例(%)" align="center" prop="shipmentDelayRatio" />
+      <el-table-column label="生产订单不及时报工比例(%)" align="center" prop="productionReportDelayRatio" />
+      <el-table-column label="成品检验业务不及时率(%)" align="center" prop="inspectionDelayRate" />
+      <el-table-column label="销售发票过账不及时率(%)" align="center" prop="invoicePostingDelayRate" />
+      <el-table-column label="客户未清账比例(%)" align="center" prop="unsettledAccountsRatio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -57,10 +57,9 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 添加或修改日清日结
-对话框 -->
+    <!-- 添加或修改日清日结对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="210px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择日期">

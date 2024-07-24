@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220" />
       <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate" />
-      <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" />
+      <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -65,8 +65,8 @@
       @pagination="getList" />
 
     <!-- 添加或修改[质量]指标填报对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="220px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">

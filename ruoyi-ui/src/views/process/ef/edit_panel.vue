@@ -30,7 +30,7 @@
             @click="downloadData"
           ></el-button> -->
             <el-divider direction="vertical"></el-divider>
-            <el-button
+            <!-- <el-button
               type="text"
               icon="el-icon-plus"
               size="large"
@@ -42,7 +42,7 @@
               icon="el-icon-minus"
               size="large"
               @click="zoomSub"
-            ></el-button>
+            ></el-button> -->
             <!-- 右侧button -->
             <div style="float: right; margin-right: 5px">
               <!-- 弹出面板 设置流程绑定文件(制度&表单)  v-if="this.regulationFiles.length === 0 && this.formFiles.length === 0" -->

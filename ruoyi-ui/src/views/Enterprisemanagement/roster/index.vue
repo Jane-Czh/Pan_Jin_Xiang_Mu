@@ -1,8 +1,5 @@
 <template>
   <div class="app-container">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item title="人员检索" name="search">
-          <div>
 
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 <!--      <el-form-item label="序号" prop="Number">-->
@@ -699,9 +696,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-            </div>
-        </el-collapse-item>
-      </el-collapse>
+
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -1266,7 +1261,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
       // 员工花名单导入表格数据
@@ -1600,6 +1595,11 @@ export default {
 
     async fileSend() {
       try {
+        const fileInput = document.getElementById("inputFile");
+        if (!fileInput.files.length) {
+          this.$message.error("请选择上传文件");
+          return;
+        }
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
         console.log(file);
@@ -1616,7 +1616,7 @@ export default {
         }, 1000); // 2000毫秒后关闭
         this.getList();
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('上传失败!', error);
       }
     },
 

@@ -1,13 +1,40 @@
 <template>
   <div class="app-container">
-    <div>
-      <el-select v-model="selectedItem" placeholder="选择统计数据">
-        <el-option :label="'本日车体上线总数: ' + totalNumberWaitingTimeForProduction1" :value="1" />
-        <el-option :label="'本日门架合装完工总数: ' + totalNumberCompletionPeriodOfDoorFrameAssembly1" :value="2" />
-        <el-option :label="'本日试车完工总数: ' + totalNumberTrialCompletionPeriod1" :value="3" />
-        <el-option :label="'本日特种作业总数: ' + totalNumberSpecialOperations1" :value="4" />
-        <el-option :label="'本日精整完工总数: ' + totalNumberPrecisionCompletionPeriod1" :value="5" />
-      </el-select>
+<!--    <div>-->
+<!--      <el-select v-model="selectedItem" placeholder="选择统计数据">-->
+<!--        <el-option :label="'本日车体上线总数: ' + totalNumberWaitingTimeForProduction1" :value="1" />-->
+<!--        <el-option :label="'本日门架合装完工总数: ' + totalNumberCompletionPeriodOfDoorFrameAssembly1" :value="2" />-->
+<!--        <el-option :label="'本日试车完工总数: ' + totalNumberTrialCompletionPeriod1" :value="3" />-->
+<!--        <el-option :label="'本日特种作业总数: ' + totalNumberSpecialOperations1" :value="4" />-->
+<!--        <el-option :label="'本日精整完工总数: ' + totalNumberPrecisionCompletionPeriod1" :value="5" />-->
+<!--      </el-select>-->
+<!--    </div>-->
+    <div class="list-container">
+      <div class="list-item">
+        <i class="el-icon-data-line"></i>
+        <span class="list-title">本日车体上线总数</span>
+        <span class="list-value">{{ totalNumberWaitingTimeForProduction1 }}</span>
+      </div>
+      <div class="list-item">
+        <i class="el-icon-data-line"></i>
+        <span class="list-title">本日门架合装完工总数</span>
+        <span class="list-value">{{ totalNumberCompletionPeriodOfDoorFrameAssembly1 }}</span>
+      </div>
+      <div class="list-item">
+        <i class="el-icon-data-line"></i>
+        <span class="list-title">本日试车完工总数</span>
+        <span class="list-value">{{ totalNumberTrialCompletionPeriod1 }}</span>
+      </div>
+      <div class="list-item">
+        <i class="el-icon-data-line"></i>
+        <span class="list-title">本日特种作业总数</span>
+        <span class="list-value">{{ totalNumberSpecialOperations1 }}</span>
+      </div>
+      <div class="list-item">
+        <i class="el-icon-data-line"></i>
+        <span class="list-title">本日精整完工总数</span>
+        <span class="list-value">{{ totalNumberPrecisionCompletionPeriod1 }}</span>
+      </div>
     </div>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 
@@ -268,24 +295,24 @@
           {{ scope.row.planRate }}%
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['product:status:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['product:status:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['product:status:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['product:status:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -468,9 +495,11 @@ export default {
       try {
         await syncReport();
         this.getList();
+        this.$modal.msgSuccess("同步成功"); // 新增的提示
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('同步失败!', error);
       }
+      this.reload();
     },
     // /** 查询计划完成情况列表 */
     getList() {
@@ -586,24 +615,48 @@ export default {
   }
 };
 </script>
-<style>
-.contracted-total {
-  font-size: 20px;
-  font-weight: bold;
-  color: #007bff;
-  margin-bottom: 15px;
-}
-.intern-total {
-  font-size: 20px;
-  font-weight: bold;
-  color: #28a745;
-  margin-bottom: 15px;
+<style scoped>
+.list-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 10px;
 }
 
-.labor-total {
-  font-size: 20px;
+.list-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 18%;
+  height: 100px;
+}
+
+.list-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.list-item i {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.list-title {
+  font-size: 16px;
   font-weight: bold;
-  color: #dc3545;
-  margin-bottom: 15px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.list-value {
+  font-size: 18px;
+  color: #666;
 }
 </style>

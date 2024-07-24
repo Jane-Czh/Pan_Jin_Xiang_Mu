@@ -284,35 +284,31 @@
           <span>{{ parseTime(scope.row.reexaminationThirdly, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否预警到期" align="center" prop="warn" >
-      <template slot-scope="scope">
-        <span :style="{ color: scope.row.warn === '是' ? 'red' : 'inherit' }">{{ scope.row.warn }}</span>
-      </template>
-      </el-table-column>
+      <el-table-column label="是否预警到期" align="center" prop="warn" />
       <el-table-column label="创建人" align="center" prop="createdBy" />
       <el-table-column label="创建时间" align="center" prop="createdTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createdTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['Enterprisemanagement:specialwarning:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['Enterprisemanagement:specialwarning:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['Enterprisemanagement:specialwarning:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['Enterprisemanagement:specialwarning:remove']"-->
+<!--          >删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -526,9 +522,11 @@ export default {
       try {
         await syncReport();
         this.getList();
+        this.$modal.msgSuccess("同步成功"); // 新增的提示
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('同步失败!', error);
       }
+      this.reload();
     },
     /** 查询企管特种作业证到期预警列表 */
     getList() {

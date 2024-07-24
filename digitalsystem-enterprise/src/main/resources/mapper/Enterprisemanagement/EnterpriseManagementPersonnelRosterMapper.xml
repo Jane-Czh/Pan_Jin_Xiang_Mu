@@ -124,10 +124,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="firstTissue != null  and firstTissue != ''"> and First_tissue = #{firstTissue}</if>
             <if test="secondTissueId != null  and secondTissueId != ''"> and Second_tissue_ID = #{secondTissueId}</if>
             <if test="secondTissue != null  and secondTissue != ''"> and Second_tissue = #{secondTissue}</if>
-            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID = #{thirdTissueId}</if>
-            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue = #{thirdTissue}</if>
-            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID = #{fourthTissueId}</if>
-            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue = #{fourthTissue}</if>
+<!--            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID = #{thirdTissueId}</if>-->
+<!--            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue = #{thirdTissue}</if>-->
+<!--            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID = #{fourthTissueId}</if>-->
+<!--            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue = #{fourthTissue}</if>-->
+            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID like concat('%', #{thirdTissueId}, '%')</if>
+            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue like concat('%', #{thirdTissue}, '%')</if>
+            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID like concat('%', #{fourthTissueId}, '%')</if>
+            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue like concat('%', #{fourthTissue}, '%')</if>
+
             <if test="fifthTissueId != null  and fifthTissueId != ''"> and Fifth_tissue_ID = #{fifthTissueId}</if>
             <if test="fifthTissue != null  and fifthTissue != ''"> and Fifth_tissue = #{fifthTissue}</if>
             <if test="sixthTissueId != null  and sixthTissueId != ''"> and Sixth_tissue_ID = #{sixthTissueId}</if>
@@ -139,9 +144,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="Job != null  and Job != ''"> and Job = #{Job}</if>
             <if test="jobTitle != null  and jobTitle != ''"> and Job_title = #{jobTitle}</if>
             <if test="technicalTitle != null  and technicalTitle != ''"> and Technical_title = #{technicalTitle}</if>
-            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>
+<!--            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>-->
+            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl like concat('%', #{theHighestTechnicalTitl}, '%')</if>
+
             <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level = #{technicalLevel}</if>
-            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>
+<!--            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>-->
+<!--            <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level like concat('%', #{technicalLevel}, '%')</if>-->
+            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level like concat('%', #{theHighestTechnicalLevel}, '%')</if>
+
             <if test="Rank != null  and Rank != ''"> and Rank = #{Rank}</if>
             <if test="positionId != null  and positionId != ''"> and Position_ID = #{positionId}</if>
             <if test="Position != null  and Position != ''"> and Position = #{Position}</if>
@@ -149,24 +159,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="salaryGrade != null  and salaryGrade != ''"> and Salary_grade = #{salaryGrade}</if>
             <if test="salaryyGrade != null  and salaryyGrade != ''"> and Salaryy_grade = #{salaryyGrade}</if>
             <if test="positionSalary != null "> and Position_salary = #{positionSalary}</if>
-            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>
-            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group = #{employeeSubGroup}</if>
-            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level = #{backboneLevel}</if>
+<!--            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>-->
+<!--            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group = #{employeeSubGroup}</if>-->
+<!--            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level = #{backboneLevel}</if>-->
+            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group like concat('%', #{employeeGroup}, '%')</if>
+            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group like concat('%', #{employeeSubGroup}, '%')</if>
+            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level like concat('%', #{backboneLevel}, '%')</if>
+
             <if test="personnelManagementClassification != null  and personnelManagementClassification != ''"> and Personnel_Management_Classification = #{personnelManagementClassification}</if>
-            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level = #{theHighestEducationalLevel}</if>
+<!--            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level = #{theHighestEducationalLevel}</if>-->
+            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level like concat('%', #{theHighestEducationalLevel}, '%')</if>
+
             <if test="theHighestEducationalSchool != null  and theHighestEducationalSchool != ''"> and The_highest_educational_school = #{theHighestEducationalSchool}</if>
             <if test="theHighestEducationalMajor != null  and theHighestEducationalMajor != ''"> and The_highest_educational_major = #{theHighestEducationalMajor}</if>
             <if test="theHighestDegree != null  and theHighestDegree != ''"> and The_highest_degree = #{theHighestDegree}</if>
             <if test="theHighestDegreeSchool != null  and theHighestDegreeSchool != ''"> and The_highest_degree_school = #{theHighestDegreeSchool}</if>
             <if test="theHighestDegreeMajor != null  and theHighestDegreeMajor != ''"> and The_highest_degree_major = #{theHighestDegreeMajor}</if>
-            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level = #{firstEducationalLevel}</if>
+<!--            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level = #{firstEducationalLevel}</if>-->
+            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level like concat('%', #{firstEducationalLevel}, '%')</if>
+
             <if test="firstHighestDegree != null  and firstHighestDegree != ''"> and FIrst_highest_degree = #{firstHighestDegree}</if>
             <if test="firstHighestDegreeSchool != null  and firstHighestDegreeSchool != ''"> and First_highest_degree_school = #{firstHighestDegreeSchool}</if>
             <if test="firstHighestDegreeMajor != null  and firstHighestDegreeMajor != ''"> and First_highest_degree_major = #{firstHighestDegreeMajor}</if>
             <if test="contractStartTime != null "> and Contract_start_time = #{contractStartTime}</if>
             <if test="contractEndTime != null "> and Contract_end_time = #{contractEndTime}</if>
             <if test="contractTerm != null  and contractTerm != ''"> and Contract_term = #{contractTerm}</if>
-            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit = #{contractSigningUnit}</if>
+<!--            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit = #{contractSigningUnit}</if>-->
+            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit like concat('%', #{contractSigningUnit}, '%')</if>
+
             <if test="signingFrequency != null "> and Signing_frequency = #{signingFrequency}</if>
             <if test="workingHours != null "> and Working_hours = #{workingHours}</if>
             <if test="joinedTime != null "> and Joined_time = #{joinedTime}</if>

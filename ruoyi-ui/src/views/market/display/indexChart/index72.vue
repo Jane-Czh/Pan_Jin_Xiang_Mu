@@ -309,6 +309,18 @@ for (var i = 0; i < this.result.length; i++) {
 // 输出转置后的 seriesData，用于调试
 console.log("转置后的 seriesData：", this.transposedSeriesData);
 
+// 将月份按正确顺序排序
+const sortedLegendData = legendData.map((item, index) => {
+  return { month: item, data: this.transposedSeriesData[index] };
+}).sort((a, b) => new Date(`2024-${a.month}`) - new Date(`2024-${b.month}`));
+
+// 转换为新的 legendData 和 transposedSeriesData
+const newLegendData = sortedLegendData.map(item => item.month);
+const newTransposedSeriesData = sortedLegendData.map(item => item.data);
+
+// 输出转置后的 seriesData，用于调试
+console.log("转置后的 seriesData：", newTransposedSeriesData);
+
 option = {
   tooltip: {
     trigger: 'axis',
@@ -317,7 +329,7 @@ option = {
     }
   },
   legend: {
-    data: legendData
+    data: newLegendData
   },
   toolbox: {
     show: true,
@@ -344,10 +356,10 @@ option = {
       type: 'value'
     }
   ],
-series : this.transposedSeriesData.map( (item,index) => {
+series : newTransposedSeriesData.map( (item,index) => {
      return {
       // console:console.log(legendData[index]),
-      name :legendData[index],
+      name :newLegendData[index],
       type: 'bar',
       label: labelOption,
       emphasis: {

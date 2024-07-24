@@ -1,12 +1,31 @@
 <template>
   <div class="app-container">
-    <div>
-      <el-select v-model="selectedItem" placeholder="选择统计数据">
-        <el-option :label="'合同工总人数: ' + totalNumberOfContractedInFirstRow" :value="1" />
-        <el-option :label="'实习生总人数: ' + totalNumberOfInterns1" :value="2" />
-        <el-option :label="'劳动派遣总人数: ' + ttotalNumberOfLaborDispatch1" :value="3" />
-      </el-select>
-    </div>
+<!--    <div>-->
+<!--      <el-select v-model="selectedItem" placeholder="选择统计数据">-->
+<!--        <el-option :label="'合同工总人数: ' + totalNumberOfContractedInFirstRow" :value="1" />-->
+<!--        <el-option :label="'实习生总人数: ' + totalNumberOfInterns1" :value="2" />-->
+<!--        <el-option :label="'劳动派遣总人数: ' + ttotalNumberOfLaborDispatch1" :value="3" />-->
+<!--      </el-select>-->
+<!--    </div>-->
+    <ul class="list-container">
+      <li class="list-item">
+        <i class="el-icon-user"></i>
+        <span class="list-title">合同工总人数</span>
+        <span class="list-value">{{ totalNumberOfContractedInFirstRow }}</span>
+      </li>
+      <li class="list-item">
+        <i class="el-icon-s-custom"></i>
+        <span class="list-title">实习生总人数</span>
+        <span class="list-value">{{ totalNumberOfInterns1 }}</span>
+      </li>
+      <li class="list-item">
+        <i class="el-icon-s-check"></i>
+        <span class="list-title">劳动派遣总人数</span>
+        <span class="list-value">{{ ttotalNumberOfLaborDispatch1 }}</span>
+      </li>
+    </ul>
+
+
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 <!--      <el-form-item label="员工编号" prop="employeeId">-->
 <!--        <el-input-->
@@ -297,9 +316,11 @@ export default {
       try {
         await syncReport();
         this.getList();
+        this.$modal.msgSuccess("同步成功"); // 新增的提示
       } catch (error) {
-        console.error('There was an error!', error);
+        console.error('同步失败!', error);
       }
+      this.reload();
     },
 
     /** 查询员工统计列表 */
@@ -408,25 +429,47 @@ export default {
   }
 };
 </script>
-<style>
-.contracted-total {
-  font-size: 20px;
-  font-weight: bold;
-  color: #007bff;
-  margin-bottom: 15px;
-}
-.intern-total {
-  font-size: 20px;
-  font-weight: bold;
-  color: #28a745;
-  margin-bottom: 15px;
+<style scoped>
+.list-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
 }
 
-.labor-total {
-  font-size: 20px;
+.list-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 30%;
+}
+
+.list-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.list-item i {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.list-title {
+  font-size: 16px;
   font-weight: bold;
-  color: #dc3545;
-  margin-bottom: 15px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.list-value {
+  font-size: 18px;
+  color: #666;
 }
 </style>
 

@@ -65,7 +65,9 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         int finalNumberInput = numberInput;
-        Map<String, Map<String, Double>> cpd = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        Map<String, Map<String, Double>> cpd = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter((MarketSalesTable a) ->
         {         LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -121,7 +123,9 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         int finalNumberInput = numberInput;
-        Map<String, Map<String, Double>> cpc = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        Map<String, Map<String, Double>> cpc = marketSalesTables.stream()
+                  .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter((MarketSalesTable a) ->
         {         LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -187,6 +191,7 @@ public class MarketIndexController extends BaseController {
 //                ));
         //各个月份所有车型的总产量
         Map<String, Long> monthlyTotalProduction = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getLaunchDate() != null) // 过滤掉 launchDate 为空的元素
                 .filter(a -> {
                     LocalDate acceptanceTime = a.getLaunchDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -201,6 +206,7 @@ public class MarketIndexController extends BaseController {
                 ));
         //各个月份各个车型的月度产量比例
         Map<String, Map<String, Double>> collect = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getLaunchDate() != null) // 过滤掉 launchDate 为空的元素
                 .filter(a -> {
                     LocalDate acceptanceTime = a.getLaunchDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -257,6 +263,7 @@ public class MarketIndexController extends BaseController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         int currentYear = Year.now().getValue();
          Map<String, Map<String, Long>> curMonth = marketSalesTables.stream()
+                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
                  .filter(a -> {
                      LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                      LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -278,6 +285,7 @@ public class MarketIndexController extends BaseController {
         // 取出去年，各个主要车型的各个月的总数
             //取出去年的年份。
         Map<String, Map<String, Long>> before = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
                 .filter(a -> {
                     LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -342,7 +350,9 @@ public class MarketIndexController extends BaseController {
         //把开始时间做为查询条件
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-        marketSalesTables.stream().filter(a -> {
+        marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter(a -> {
             LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -351,7 +361,9 @@ public class MarketIndexController extends BaseController {
                     acceptanceTime.getMonthValue() == startTime.getMonthValue();// 添加当前年月的过滤条件
         });
         //获取到每个月的数据
-         List<MarketSalesTable> monthMarketSalesTables = marketSalesTables.stream().filter(a -> a.getOrderAcceptanceTime().getMonth()+1 == (currentMonth)).collect(Collectors.toList());
+         List<MarketSalesTable> monthMarketSalesTables = marketSalesTables.stream()
+                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                 .filter(a -> a.getOrderAcceptanceTime().getMonth()+1 == (currentMonth)).collect(Collectors.toList());
         System.out.println("按照月份筛选的数据"+monthMarketSalesTables);
 
 
@@ -390,7 +402,9 @@ public class MarketIndexController extends BaseController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter(a -> {
+         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                 .filter(a -> {
             LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -405,6 +419,15 @@ public class MarketIndexController extends BaseController {
                         , Collectors.summingLong(MarketSalesTable::getNumber))
         ));
 
+        // 对结果进行排序
+        Map<String, Map<String, Long>> sortedCollect = collect.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
 
 //        marketSalesTables.stream().filter((MarketSalesTable a) ->
 //        {
@@ -415,8 +438,10 @@ public class MarketIndexController extends BaseController {
 //        })
 
         System.out.println("选出实际发车日期为空的,再按照地区和月份统计为发车的数量"+collect);
+        System.out.println("选出实际发车日期为空的,再按照地区和月份统计为发车的数量"+sortedCollect);
 
-         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(sortedCollect);
         return voEntities;
     }
     /*
@@ -433,7 +458,9 @@ public class MarketIndexController extends BaseController {
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
 
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter((MarketSalesTable a) ->
+         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                 .filter((MarketSalesTable a) ->
         {          LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -458,6 +485,7 @@ public class MarketIndexController extends BaseController {
                         , Collectors.groupingBy(MarketSalesTable::getBranch
                                 , Collectors.summingLong(MarketSalesTable::getNumber))
                 ));
+
         System.out.println("选出车号为空或者为汉字的,再按照地区和月份统计数量"+collect);
 
 
@@ -489,7 +517,9 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
 
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter((MarketSalesTable a) ->
+         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                 .filter((MarketSalesTable a) ->
         {
             LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -539,7 +569,10 @@ public class MarketIndexController extends BaseController {
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
 
 
-        Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter((MarketSalesTable a) ->
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+
+                .filter((MarketSalesTable a) ->
         {          LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -572,6 +605,8 @@ public class MarketIndexController extends BaseController {
 //                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
 
         })
+                .filter(a -> a.getSystemDeliveryTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+
                 .collect(Collectors.groupingBy(
                         a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
                         , Collectors.groupingBy(MarketSalesTable::getBranch
@@ -585,7 +620,10 @@ public class MarketIndexController extends BaseController {
         DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -638,10 +676,14 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-         Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream().filter(a ->
+         Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream()
+                 .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                 .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                 .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -670,7 +712,11 @@ public class MarketIndexController extends BaseController {
 
         //筛选出计划完工日期在起止时间内的数据，
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -736,11 +782,14 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
 //        Map<String, Map<String, Long>> collect =
-        Map<String, Map<String, Long>> collect = marketSalesTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                .filter(a -> a.getActualDepartureDate() != null) // 过滤掉 getActualDepartureDate 为空的元素
+
+                .filter(a ->
         {
             LocalDate actualDepartureDate = Optional.ofNullable(a.getActualDepartureDate())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -790,7 +839,10 @@ public class MarketIndexController extends BaseController {
         //筛选出计划完工日期在起止时间内的数据，
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
 
-         Map<String, Map<String, Long>> collect1 = marketSalesTables.stream().filter(a ->
+         Map<String, Map<String, Long>> collect1 = marketSalesTables.stream()
+                 .filter(a -> a.getOrderSystemDeliveryTime() != null) // 过滤掉 getOrderSystemDeliveryTime 为空的元素
+
+                 .filter(a ->
         {
 //            LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
 //                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -861,10 +913,14 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -893,7 +949,11 @@ public class MarketIndexController extends BaseController {
 
         //筛选出计划完工日期在起止时间内的数据，
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -961,10 +1021,14 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -993,7 +1057,11 @@ public class MarketIndexController extends BaseController {
 
         //筛选出计划完工日期在起止时间内的数据，
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -1061,10 +1129,14 @@ public class MarketIndexController extends BaseController {
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -1093,7 +1165,11 @@ public class MarketIndexController extends BaseController {
 
         //筛选出计划完工日期在起止时间内的数据，
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
-        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream().filter(a ->
+        Map<String, Map<String, Long>> collect1 = marketCommercialVehicleTables.stream()
+                .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
+                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+
+                .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -1157,22 +1233,57 @@ public class MarketIndexController extends BaseController {
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM-dd");
+        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("YYYY");
 
 
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter(a -> {
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+                    return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                })
                 .collect(Collectors.groupingBy(
-                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
-                        Collectors.groupingBy(
-                                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
-                                Collectors.summingLong(MarketSalesTable::getNumber)
+                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(yearFormatter),
+                        Collectors.collectingAndThen(
+                                Collectors.groupingBy(
+                                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(monthFormatter),
+                                        Collectors.summingLong(MarketSalesTable::getNumber)
+                                ),
+                                map -> {
+                                    // 对内部的 Map 进行排序
+                                    return map.entrySet().stream()
+                                            .sorted(Map.Entry.comparingByKey())
+                                            .collect(Collectors.toMap(
+                                                    Map.Entry::getKey,
+                                                    Map.Entry::getValue,
+                                                    (e1, e2) -> e1,
+                                                    LinkedHashMap::new
+                                            ));
+                                }
                         )
                 ));
+
+// 对外层的 Map 进行排序
+        Map<String, Map<String, Long>> sortedCollect = collect.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
         System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+collect);
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+sortedCollect);
 
 
-         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(sortedCollect);
         return voEntities;
     }
 
@@ -1190,12 +1301,21 @@ public class MarketIndexController extends BaseController {
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YY");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
 
 
         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
                 //过滤掉为空的日期
                 .filter(a -> a.getSystemDeliveryTime() != null)
+                .filter(a -> {
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+                    return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                })
                 .collect(Collectors.groupingBy(
                         a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                         Collectors.groupingBy(

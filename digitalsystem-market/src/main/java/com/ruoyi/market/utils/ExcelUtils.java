@@ -338,12 +338,12 @@ public class ExcelUtils {
                 // 如果单元格数据为空，则跳过设置 Java 对象的属性值
                 count++;
             }
-            //3、订单号
-            String value = getStringCellValue(row.getCell(count++));
-            if (value == null){
+           //3、订单号
+            if(getStringCellValue(row.getCell(count))!=null){
+                MarketCommercialVehicleTable.setOrderNumber(getStringCellValue(row.getCell(count++)));
+            }
+            else {
                 continue;
-            }else {
-                MarketCommercialVehicleTable.setOrderNumber(value);
             }
             //4、合同号
             MarketCommercialVehicleTable.setContractNumber(getStringCellValue(row.getCell(count++)));

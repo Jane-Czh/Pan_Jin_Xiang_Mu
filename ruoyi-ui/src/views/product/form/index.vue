@@ -319,6 +319,7 @@
 import {listForm, getForm, delForm, addForm, updateForm,  updateWorkTime,uploadFile} from "@/api/product/form";
 import axios from "axios";
 import dayjs from 'dayjs';
+import {getrelTime, getTime} from "@/api/product/time";
 
 
 export default {
@@ -417,6 +418,11 @@ export default {
       showDialog: false,
       progress: 0,
       showWorkTimeDialog:false,
+      workrelTimeForm: {
+        startTime: '', // 用户设置的正常上班时间
+        endTime: ''     // 用户设置的正常下班时间
+      },
+      workingHours: '',
       workTimeForm: {
         startTime: '', // 用户设置的正常上班时间
         endTime: ''     // 用户设置的正常下班时间
@@ -425,6 +431,7 @@ export default {
   },
   created() {
     this.getList();
+    this.fetchtime();
   },
   methods: {
 
@@ -460,39 +467,13 @@ export default {
     closeWorkTimeDialog() {
       this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
     },
-
-    //   submitWorkTime() {
-    //     // 将workTimeForm中的数据传递给后端进行保存
-    //     // 调用后端接口，例如 updateWorkTime 方法
-    //     this.updateWorkTime({
-    //       startTime: this.workTimeForm.startTime,
-    //       endTime: this.workTimeForm.endTime,
-    //     }).then(() => {
-    //       this.$message.success('成功设置上下班时间');
-    //       this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
-    //       console.log('设置的正常上班时间为：', this.workTimeForm.startTime);
-    //     }).catch(() => {
-    //       this.$message.error('设置上下班时间失败');
-    //     });
-    //     this.getList();
-    //
-    //   },
-    //   closeWorkTimeDialog() {
-    //     this.showWorkTimeDialog = false; // 关闭设置工作时间的对话框
-    //   },
-    //
-    // updateWorkTime(workTimeData) {
-    //   this.getList();
-    //   return axios.post('http://localhost:8080/product/form/updatetime', workTimeData);
-    // },
-    // async syncReport() {
-    //   try {
-    //     await syncReport(); // 调用 syncReport API
-    //     this.getList(); // 调用 getList 方法
-    //   } catch (error) {
-    //     console.error('There was an error!', error);
-    //   }
-    // },
+//獲取上下班時間
+    fetchtime(){
+      getrelTime().then(response => {
+        this.workrelTimeForm.startTime = response.data.workingHours;
+        this.workrelTimeForm.endTime = response.data.offHours;
+      });
+    },
 
     /** 查询员工打卡表列表 */
     getList() {
@@ -570,6 +551,24 @@ export default {
               this.getList();
             });
           } else {
+            // 新增操作
+            const firstonTime = dayjs(this.form.firstTimeClockingInAtWork);
+            const firstoffTime = dayjs(this.form.firstTimeClockingInAfterWork);
+
+            // 提取日期部分
+            const dateParton = firstonTime.isValid() ? firstonTime.format('YYYY-MM-DD') : 'Invalid Date';
+            const datePartoff = firstoffTime.isValid() ? firstoffTime.format('YYYY-MM-DD') : 'Invalid Date';
+            // 检查 startTime 的格式
+            const startTime = dayjs(this.workrelTimeForm.startTime, 'HH:mm:ss');
+            const endTime = dayjs(this.workrelTimeForm.endTime, 'HH:mm:ss');
+            const timeParton = startTime.isValid() ? startTime.format('HH:mm:ss') : 'Invalid Date';
+            const timePartoff = endTime.isValid() ? endTime.format('HH:mm:ss') : 'Invalid Date';
+            // 拼接日期和时间
+            this.form.normalWorkingHours = `${dateParton} ${timeParton}`;
+            this.form.normalClosingTime = `${datePartoff} ${timePartoff}`;
+            // 调试输出
+            console.log("更新文件提交按钮1=>", this.form.normalWorkingHours);
+            console.log("更新文件提交按钮2=>", this.form.normalClosingTime);
             addForm(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -584,73 +583,6 @@ export default {
       });
     },
 
-//     /** 修改按钮操作 */
-//     /** 修改按钮操作 */
-//     handleUpdate(row) {
-//       // 创建一个副本以避免直接修改原始数据
-//       this.form = Object.assign({}, row);
-//       this.open = true;
-//       this.title = "修改员工打卡表";
-//
-//
-//     }
-// ,
-//
-//     /** 提交按钮 */
-//     submitForm() {
-//       this.$refs["form"].validate(valid => {
-//         if (valid) {
-//           // 获取当前日期
-//           const currentDate = new Date();
-//           const currentYear = currentDate.getFullYear();
-//           const currentMonth = currentDate.getMonth() + 1; // 月份从 0 开始，所以需要加 1
-//           const currentDay = currentDate.getDate();
-//
-//           // 设置当前日期和用户选择的时间进行拼接
-//           const combinetime1 = `${currentYear}-${currentMonth}-${currentDay} ${this.form.normalWorkingHours}`;
-//           const combinetime2 = `${currentYear}-${currentMonth}-${currentDay} ${this.form.normalClosingTime}`;
-//           // // 将时间参数传递给后端，执行修改操作
-//           // this.updateFormTime(combinetime1).then(response => {
-//           //   this.$message.success('时间参数传递成功');
-//           //   this.open = false; // 隐藏修改对话框
-//           //   this.getList(); // 重新获取数据刷新表格
-//           // }).catch(error => {
-//           //   this.$message.error('时间参数传递失败：' + error.message);
-//           // });
-//           // 更新表单中的时间
-//           this.form.normalWorkingHours = combinetime1;
-//           this.form.normalClosingTime = combinetime2;
-//
-//           // 这里可以打印一下拼接后的时间，以便确认正确性
-//           console.log("Combined Date1 & Time: ", combinetime1);
-//           console.log("Combined Date2 & Time: ", combinetime2);
-//
-//           if (this.form.pcifId != null) {
-//             updateForm(this.form).then(response => {
-//               this.$modal.msgSuccess("修改成功");
-//               this.open = false;
-//               this.getList();
-//             });
-//           } else {
-//             addForm(this.form).then(response => {
-//               this.$modal.msgSuccess("新增成功");
-//               this.open = false;
-//               this.getList();
-//             });
-//           }
-//         }
-//       });
-//     },
-    // updateFormTime(combinetime1) {
-    //   // 假设您使用 axios 发送请求到后端
-    //   return axios.post('http://localhost:8080/product/form/updateFormTime', { combinedDateTime })
-    //     .then(response => {
-    //       return response.data;
-    //     })
-    //     .catch(error => {
-    //       throw new Error(error.response.data.message || error.message);
-    //     });
-    // },
     /** 删除按钮操作 */
     handleDelete(row) {
       const pcifIds = row.pcifId || this.ids;

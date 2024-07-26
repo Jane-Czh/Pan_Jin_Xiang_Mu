@@ -56,8 +56,8 @@ public class EMExcelUtils {
                     enterpriseManagementSpecialOperationsManagementLedger.setDepartment(getStringCellValue(row.getCell(count++)));
 
                     //2、姓名
-                    if(getStringCellValue(row.getCell(count++))!=null) {
-                        enterpriseManagementSpecialOperationsManagementLedger.setName(getStringCellValue(row.getCell(count)));
+                    if(getStringCellValue(row.getCell(count))!=null) {
+                        enterpriseManagementSpecialOperationsManagementLedger.setName(getStringCellValue(row.getCell(count++)));
                     }
                     else {
                         continue;

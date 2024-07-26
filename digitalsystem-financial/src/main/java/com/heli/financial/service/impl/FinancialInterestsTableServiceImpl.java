@@ -28,7 +28,6 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     @Autowired
     private FinancialInterestsTableMapper financialInterestsTableMapper;
 
-
     @Override
     public boolean checkDataExists() {
         return financialInterestsTableMapper.checkDataExists();
@@ -37,6 +36,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     @Override
     public Date selectMaxYearAndMonth() {
         return financialInterestsTableMapper.selectMaxYearAndMonth();
+    }
+
+    @Override
+    public FinancialInterestsTable selectInterestsSumInfoByYear(Date yearAndMonth) {
+        return financialInterestsTableMapper.selectInterestsSumInfoByYear(yearAndMonth);
     }
 
     /**

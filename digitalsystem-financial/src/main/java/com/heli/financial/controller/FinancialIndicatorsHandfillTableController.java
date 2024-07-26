@@ -10,6 +10,8 @@ import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.service.IFinancialBalanceTableService;
 import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
 import com.heli.financial.service.IFinancialInterestsTableService;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -106,12 +108,18 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //
 //}
 
-
-
-
-
-
-
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:fill:sum')")
+    @PostMapping("/sum")
+    public AjaxResult selectHandfillSumInfoByYear(@RequestBody DisplayRequestParam time) {
+        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillSumInfoByYear(time.getStartTime());
+        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
 
 
     /**
@@ -146,7 +154,6 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //        System.out.println(financialIndicatorsHandfillTable);
 //        return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
 //    }
-
 
 
     /**

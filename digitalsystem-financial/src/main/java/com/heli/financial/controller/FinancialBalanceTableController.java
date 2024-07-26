@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.service.*;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,6 +69,19 @@ public class FinancialBalanceTableController extends BaseController {
 //        }
 //        return success();
 //    }
+
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:balance:sum')")
+    @PostMapping("/sum")
+    public AjaxResult mainRevenue(@RequestBody DisplayRequestParam time) {
+        FinancialBalanceTable sumInfoByYear = financialBalanceTableService.selectBalanceSumInfoByYear(time.getStartTime());
+        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
 
     /**
      * 查询财务-资产负债列表

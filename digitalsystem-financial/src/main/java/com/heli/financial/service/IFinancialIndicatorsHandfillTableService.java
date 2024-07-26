@@ -1,6 +1,7 @@
 package com.heli.financial.service;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,9 @@ public interface IFinancialIndicatorsHandfillTableService {
 
 
     FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(Date yearAndMonth);
+
+    FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(Date yearAndMonth);
+
 
     /**
      * 查询[财务]手动填报指标

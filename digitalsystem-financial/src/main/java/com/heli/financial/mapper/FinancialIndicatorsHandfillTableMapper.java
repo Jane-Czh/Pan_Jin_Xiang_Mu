@@ -25,6 +25,8 @@ public interface FinancialIndicatorsHandfillTableMapper {
     boolean checkDataExists();
 
 
+    FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(@Param("yearAndMonth") Date yearAndMonth);
+
     /**
      * @description: 按月查询手动填报数据
      * @author: hong

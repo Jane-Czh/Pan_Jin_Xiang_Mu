@@ -46,6 +46,11 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     private IFinancialInterestsTableService iFinancialInterestsTableService;
 
     @Override
+    public FinancialBalanceTable selectBalanceSumInfoByYear(Date yearAndMonth) {
+        return financialBalanceTableMapper.selectBalanceSumInfoByYear(yearAndMonth);
+    }
+
+    @Override
     public Date selectMaxYearAndMonth() {
         return financialBalanceTableMapper.selectMaxYearAndMonth();
     }

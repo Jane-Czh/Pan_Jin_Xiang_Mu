@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.financial.domain.FinancialInterestsTable;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -20,6 +21,7 @@ public interface IFinancialInterestsTableService {
 
     Date selectMaxYearAndMonth();
 
+    FinancialInterestsTable selectInterestsSumInfoByYear(Date yearAndMonth);
 
 
     /**

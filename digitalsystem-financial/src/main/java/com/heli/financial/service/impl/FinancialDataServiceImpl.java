@@ -46,8 +46,7 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
     private static final Logger log = LoggerFactory.getLogger(FinancialDataServiceImpl.class);
 
 
-
-    public int batchUpdateFinancialData(Date yearAndMonth){
+    public int batchUpdateFinancialData(Date yearAndMonth) {
         Date fillingMaxMonth = financialIndicatorsHandfillTableService.selectMaxYearAndMonth();
         Date interestsMaxMonth = financialInterestsTableService.selectMaxYearAndMonth();
         Date balanceMaxMonth = financialBalanceTableService.selectMaxYearAndMonth();
@@ -64,8 +63,8 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 
 
         int i = 1;
-        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(minDate)) ; date = DateUtils.getNextMonth(date)) {
-            if (checkDataUploadedForCurrentMonth(date)){
+        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(minDate)); date = DateUtils.getNextMonth(date)) {
+            if (checkDataUploadedForCurrentMonth(date)) {
                 calculateCurrentMonthFinancialData(date);
                 i++;
             }
@@ -170,7 +169,7 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
     public int calculateCurrentMonthFinancialData(Date yearAndMonth) {
 
 //        System.out.println(yearAndMonth);
-        log.info("当前计算的月份为："+ DateUtils.parseDateToStr("yyyy-MM",yearAndMonth));
+        log.info("当前计算的月份为：" + DateUtils.parseDateToStr("yyyy-MM", yearAndMonth));
 
         FinancialIndicatorsHandfillTable handFillDate = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
         FinancialInterestsTable interestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
@@ -186,11 +185,10 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
          * 当月库存商品存货额 = 库存商品-整车 + 产品成本差异-产成品 - 储备车金额（填报)
          * monthAmountInStock =（资产负债表） inventoryVehicles + pcvFinished - reserveCarAmount
          **/
-        balanceTable.setMonthAmountInStock(
-                balanceTable.getInventoryVehicles()
-                        .add(balanceTable.getPcvFinished()
-                                .subtract(handFillDate.getReserveCarAmount()))
-        );
+        BigDecimal monthAmountInStock = balanceTable.getInventoryVehicles().add(balanceTable.getPcvFinished()
+                .subtract(handFillDate.getReserveCarAmount()));
+        log.info("当月库存商品存货额为：" + monthAmountInStock);
+        balanceTable.setMonthAmountInStock(monthAmountInStock);
 
 
         /**
@@ -199,16 +197,19 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
          * turnoverRateReceivable =（利润表） operatingRevenue / (资产负债表) receivables
          * 由于计算比率，所以保留2位小数，并四舍五入
          **/
-        balanceTable.setTurnoverRateReceivable(
-                (interestsTable.getOperatingRevenue()
-                        .divide(balanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
-        );
+
+        double turnoverRateReceivable = interestsTable.getOperatingRevenue()
+                .divide(balanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue();
+        log.info("应收帐款周转率为：" + turnoverRateReceivable);
+        balanceTable.setTurnoverRateReceivable(turnoverRateReceivable);
 
         // 计算
 //        balanceTable.setGrowthRateInventorySales(countGrowthRateInventorySales(yearAndMonth));
 
+        FinancialBalanceTable financialBalanceTable = countGrowthRateInventoryAndSales(balanceTable);
+        log.info("计算结果为：" + financialBalanceTable);
 
-        return financialBalanceTableService.updateFinancialBalanceTable(countGrowthRateInventoryAndSales(balanceTable));
+        return financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
     }
 
 

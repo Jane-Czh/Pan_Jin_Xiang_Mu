@@ -56,6 +56,7 @@
             <if test="receivables != null "> and Receivables = #{receivables}</if>
             <if test="turnoverRateReceivable != null "> and TurnoverRate_Receivable = #{turnoverRateReceivable}</if>
         </where>
+        order by Year_And_Month DESC
     </select>
 
     <select id="checkDataExists" resultType="boolean">

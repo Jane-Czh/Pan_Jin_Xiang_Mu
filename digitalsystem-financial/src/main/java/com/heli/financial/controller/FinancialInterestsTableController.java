@@ -115,22 +115,17 @@ public class FinancialInterestsTableController extends BaseController {
 //        return toAjax(financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable));
 
 
-
-
-        Date lastMonth = DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth());
-
-
-        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth) && financialInterestsTableService.checkDataExists()) {
-            return AjaxResult.error("上月利润表数据未填报");
-        }
+//        Date lastMonth = DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth());
+//        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth) && financialInterestsTableService.checkDataExists()) {
+//            return AjaxResult.error("上月利润表数据未填报");
+//        }
 
         if (financialInterestsTableService.checkInterestsDataIsExisted(financialInterestsTable.getYearAndMonth())) {
             return AjaxResult.error("当月利润表已上传");
         }
+
         int status = 0;
-
         status = financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable);
-
         if (status == 0) {
             return AjaxResult.error("利润表填报数据有误");
         }
@@ -139,10 +134,10 @@ public class FinancialInterestsTableController extends BaseController {
         if (financialDataService.checkDataUploadedForCurrentMonth(financialInterestsTable.getYearAndMonth())
                 && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth()))) {
             // 开始计算
-            financialDataService.calculateCurrentMonthFinancialData(financialInterestsTable.getYearAndMonth());
+            status = financialDataService.calculateCurrentMonthFinancialData(financialInterestsTable.getYearAndMonth());
         }
 
-        return AjaxResult.success();
+        return toAjax(status);
 
 
     }

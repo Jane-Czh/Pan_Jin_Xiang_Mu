@@ -31,6 +31,7 @@ public interface FinancialInterestsTableMapper {
     Date selectMaxYearAndMonth();
 
     FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(@Param("yearAndMonth") Date yearAndMonth);
+    FinancialInterestsTable selectInterestsSumInfoByYear(@Param("yearAndMonth") Date yearAndMonth);
 
     /**
      *

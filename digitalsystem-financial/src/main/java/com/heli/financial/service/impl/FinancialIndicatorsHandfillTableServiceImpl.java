@@ -61,6 +61,11 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
         return financialIndicatorsHandfillTableMapper.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
     }
 
+    @Override
+    public FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(Date yearAndMonth) {
+        return financialIndicatorsHandfillTableMapper.selectHandfillSumInfoByYear(yearAndMonth);
+    }
+
     /**
      * 查询[财务]手动填报指标
      *

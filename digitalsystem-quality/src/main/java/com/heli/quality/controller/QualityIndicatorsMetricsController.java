@@ -76,12 +76,12 @@ public class QualityIndicatorsMetricsController extends BaseController {
     /**
      * 新增质量指标-统计
      */
-//    @PreAuthorize("@ss.hasPermi('quality:Metrics:add')")
-//    @Log(title = "质量指标-统计", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestBody QualityIndicatorsMetrics qualityIndicatorsMetrics) {
-//        return toAjax(qualityIndicatorsMetricsService.insertQualityIndicatorsMetrics(qualityIndicatorsMetrics));
-//    }
+    @PreAuthorize("@ss.hasPermi('quality:metrics:add')")
+    @Log(title = "质量指标-统计", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody QualityIndicatorsMetrics qualityIndicatorsMetrics) {
+        return toAjax(qualityIndicatorsMetricsService.insertQualityIndicatorsMetrics(qualityIndicatorsMetrics));
+    }
 
     /**
      * 修改质量指标-统计

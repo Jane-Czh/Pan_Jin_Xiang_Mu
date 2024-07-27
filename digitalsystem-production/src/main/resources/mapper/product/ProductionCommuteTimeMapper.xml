@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductionCommuteTimeMapper">
+    
+    <resultMap type="ProductionCommuteTime" id="ProductionCommuteTimeResult">
+        <result property="commuteTimeId"    column="Commute_time_id"    />
+        <result property="workingHours"    column="Working_hours"    />
+        <result property="offHours"    column="Off_hours"    />
+    </resultMap>
+
+    <sql id="selectProductionCommuteTimeVo">
+        select Commute_time_id, Working_hours, Off_hours from Production_commute_time
+    </sql>
+
+    <select id="selectProductionCommuteTimeList" parameterType="ProductionCommuteTime" resultMap="ProductionCommuteTimeResult">
+        <include refid="selectProductionCommuteTimeVo"/>
+        <where>  
+            <if test="workingHours != null "> and Working_hours = #{workingHours}</if>
+            <if test="offHours != null "> and Off_hours = #{offHours}</if>
+        </where>
+    </select>
+
+    <select id="selectProductionCommuteTimeList1" parameterType="ProductionCommuteTime" resultMap="ProductionCommuteTimeResult">
+        <include refid="selectProductionCommuteTimeVo"/>
+        <where>
+            <if test="workingHours != null "> and Working_hours = #{workingHours}</if>
+            <if test="offHours != null "> and Off_hours = #{offHours}</if>
+        </where>
+    </select>
+    
+    <select id="selectProductionCommuteTimeByCommuteTimeId" parameterType="Long" resultMap="ProductionCommuteTimeResult">
+        <include refid="selectProductionCommuteTimeVo"/>
+        where Commute_time_id = #{commuteTimeId}
+    </select>
+
+    <select id="selectProductionCommuteTimeByCommuteTimeMAXId" resultType="java.lang.Long">
+        SELECT Commute_time_id
+        FROM Production_commute_time
+        WHERE Commute_time_id = (SELECT MAX(Commute_time_id) FROM Production_commute_time);
+    </select>
+        
+    <insert id="insertProductionCommuteTime" parameterType="ProductionCommuteTime" useGeneratedKeys="true" keyProperty="commuteTimeId">
+        insert into Production_commute_time
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workingHours != null">Working_hours,</if>
+            <if test="offHours != null">Off_hours,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workingHours != null">#{workingHours},</if>
+            <if test="offHours != null">#{offHours},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductionCommuteTime" parameterType="ProductionCommuteTime">
+        update Production_commute_time
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workingHours != null">Working_hours = #{workingHours},</if>
+            <if test="offHours != null">Off_hours = #{offHours},</if>
+        </trim>
+        where Commute_time_id = #{commuteTimeId}
+    </update>
+
+    <delete id="deleteProductionCommuteTimeByCommuteTimeId" parameterType="Long">
+        delete from Production_commute_time where Commute_time_id = #{commuteTimeId}
+    </delete>
+
+    <delete id="deleteProductionCommuteTimeByCommuteTimeIds" parameterType="String">
+        delete from Production_commute_time where Commute_time_id in 
+        <foreach item="commuteTimeId" collection="array" open="(" separator="," close=")">
+            #{commuteTimeId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,75 +1,99 @@
-<template>
+template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <!--      <el-form-item label="序号" prop="Number">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.Number"-->
-      <!--          placeholder="请输入序号"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="员工编号" prop="idNumber">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.idNumber"-->
-      <!--          placeholder="请输入员工编号"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="姓名" prop="Name">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.Name"-->
-      <!--          placeholder="请输入姓名"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="性别" prop="Gender">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.Gender"-->
-      <!--          placeholder="请输入性别"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="出勤次数" prop="attendanceSituation">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.attendanceSituation"-->
-      <!--          placeholder="请输入出勤次数"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="加班时长(单位:小时)" prop="overtimeDuration">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.overtimeDuration"-->
-      <!--          placeholder="请输入加班时长(单位:小时)"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="异常情况" prop="abnormalSituation">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.abnormalSituation"-->
-      <!--          placeholder="请输入异常情况"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker clearable
-                        v-model="queryParams.createTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <!--    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">-->
+    <!--      <el-form-item label="序号" prop="Number">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.Number"-->
+    <!--          placeholder="请输入序号"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="员工编号" prop="idNumber">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.idNumber"-->
+    <!--          placeholder="请输入员工编号"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="姓名" prop="Name">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.Name"-->
+    <!--          placeholder="请输入姓名"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="性别" prop="Gender">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.Gender"-->
+    <!--          placeholder="请输入性别"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="出勤次数" prop="attendanceSituation">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.attendanceSituation"-->
+    <!--          placeholder="请输入出勤次数"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="工作日加班时长(单位:小时)" prop="overtimeDuration">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.overtimeDuration"-->
+    <!--          placeholder="请输入工作日加班时长(单位:小时)"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="周末加班时长(单位:小时)" prop="overtimeDurationWeek">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.overtimeDurationWeek"-->
+    <!--          placeholder="请输入周末加班时长(单位:小时)"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="节假日加班时长(单位:小时)" prop="overtimeDurationFes">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.overtimeDurationFes"-->
+    <!--          placeholder="请输入节假日加班时长(单位:小时)"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="异常情况" prop="abnormalSituation">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.abnormalSituation"-->
+    <!--          placeholder="请输入异常情况"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="标志是否存在" prop="isExist">-->
+    <!--        <el-input-->
+    <!--          v-model="queryParams.isExist"-->
+    <!--          placeholder="请输入标志是否存在"-->
+    <!--          clearable-->
+    <!--          @keyup.enter.native="handleQuery"-->
+    <!--        />-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item label="创建时间" prop="createTime">-->
+    <!--        <el-date-picker clearable-->
+    <!--                        v-model="queryParams.createTime"-->
+    <!--                        type="date"-->
+    <!--                        value-format="yyyy-MM-dd"-->
+    <!--                        placeholder="请选择创建时间">-->
+    <!--        </el-date-picker>-->
+    <!--      </el-form-item>-->
+    <!--      <el-form-item>-->
+    <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+    <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+    <!--      </el-form-item>-->
+    <!--    </el-form>-->
 
     <el-row :gutter="10" class="mb8">
       <!--      <el-col :span="1.5">-->
@@ -134,10 +158,11 @@
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender" />
       <el-table-column label="出勤次数" align="center" prop="attendanceSituation" />
-      <el-table-column label="加班时长(单位:分钟)" align="center" prop="overtimeDuration" />
-      <el-table-column label="周末加班时长(单位:分钟)" align="center" prop="overtimeDurationWeek" />
-      <el-table-column label="节假日加班时长(单位:分钟)" align="center" prop="overtimeDurationFes" />
+      <el-table-column label="工作日加班时长(单位:小时)" align="center" prop="overtimeDuration" />
+      <el-table-column label="周末加班时长(单位:小时)" align="center" prop="overtimeDurationWeek" />
+      <el-table-column label="节假日加班时长(单位:小时)" align="center" prop="overtimeDurationFes" />
       <el-table-column label="异常情况" align="center" prop="abnormalSituation" />
+      <!--      <el-table-column label="标志是否存在" align="center" prop="isExist" />-->
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
@@ -189,11 +214,20 @@
         <el-form-item label="出勤次数" prop="attendanceSituation">
           <el-input v-model="form.attendanceSituation" placeholder="请输入出勤次数" />
         </el-form-item>
-        <el-form-item label="加班时长(单位:小时)" prop="overtimeDuration">
-          <el-input v-model="form.overtimeDuration" placeholder="请输入加班时长(单位:小时)" />
+        <el-form-item label="工作日加班时长(单位:小时)" prop="overtimeDuration">
+          <el-input v-model="form.overtimeDuration" placeholder="请输入工作日加班时长(单位:小时)" />
+        </el-form-item>
+        <el-form-item label="周末加班时长(单位:小时)" prop="overtimeDurationWeek">
+          <el-input v-model="form.overtimeDurationWeek" placeholder="请输入周末加班时长(单位:小时)" />
+        </el-form-item>
+        <el-form-item label="节假日加班时长(单位:小时)" prop="overtimeDurationFes">
+          <el-input v-model="form.overtimeDurationFes" placeholder="请输入节假日加班时长(单位:小时)" />
         </el-form-item>
         <el-form-item label="异常情况" prop="abnormalSituation">
           <el-input v-model="form.abnormalSituation" placeholder="请输入异常情况" />
+        </el-form-item>
+        <el-form-item label="标志是否存在" prop="isExist">
+          <el-input v-model="form.isExist" placeholder="请输入标志是否存在" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -207,11 +241,8 @@
 <script>
 import {listOsTable, getOsTable, delOsTable, addOsTable, updateOsTable, syncReport} from "@/api/product/OsTable";
 
-
 export default {
   name: "OsTable",
-  // name: "Project",
-  inject: ["reload"],
   data() {
     return {
       // 遮罩层
@@ -223,7 +254,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: false,
+      showSearch: true,
       // 总条数
       total: 0,
       // 加班统计表格数据
@@ -245,6 +276,7 @@ export default {
         overtimeDurationWeek: null,
         overtimeDurationFes: null,
         abnormalSituation: null,
+        isExist: null,
         createTime: null
       },
       // 表单参数
@@ -258,27 +290,6 @@ export default {
     this.getList();
   },
   methods: {
-
-    /*同步*/
-    // syncReport() {
-    //   // 使用 Fetch API 发送 POST 请求到后端
-    //   fetch('http://localhost:8080/product/OsTable/synchronization', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   })
-    //     .then(response => {
-    //       if (!response.ok) {
-    //         throw new Error('Network response was not ok');
-    //       }
-    //       // 如果请求成功，可以进行下一步操作
-    //     })
-    //     .catch(error => {
-    //       console.error('There was an error!', error);
-    //     });
-    //   this.reload();
-    // },
     async syncReport() {
       try {
         await syncReport();
@@ -289,8 +300,7 @@ export default {
       }
       this.reload();
     },
-    /** 查
-     /** 查询加班统计列表 */
+    /** 查询加班统计列表 */
     getList() {
       this.loading = true;
       listOsTable(this.queryParams).then(response => {
@@ -313,10 +323,11 @@ export default {
         Name: null,
         Gender: null,
         attendanceSituation: null,
+        overtimeDuration: null,
         overtimeDurationWeek: null,
         overtimeDurationFes: null,
-        overtimeDuration: null,
         abnormalSituation: null,
+        isExist: null,
         createTime: null
       };
       this.resetForm("form");
@@ -392,4 +403,3 @@ export default {
   }
 };
 </script>
-

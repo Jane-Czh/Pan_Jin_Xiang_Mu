@@ -145,27 +145,27 @@
     </select>
 
     <!-- 当月人均收入 -->
-    <select id="selectMonthlyAverageIncome" resultType="java.math.BigDecimal">
+    <select id="selectMonthlyAverageIncome" resultType="decimal">
         SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
         where Salary_Calculation_Year_Month=#{yearAndMonth}
     </select>
 
     <!--  年度工资总和,自然年从一月加到当月  -->
-    <select id="selectAnnualAllIncome" resultType="java.math.BigDecimal">
+    <select id="selectAnnualAllIncome" resultType="decimal">
         select sum(Total_Salary)
         from Enterprise_Management_Salary_Table
         WHERE Salary_Calculation_Year_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Salary_Calculation_Year_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
     </select>
 
     <!-- 当月生产人均收入 指标55-->
-    <select id="selectMonthlyProductionAverageIncome" resultType="java.math.BigDecimal">
-        SELECT SUM(Total_Salary) FROM Enterprise_Management_Salary_Table
+    <select id="selectMonthlyProductionAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
         WHERE (Group_Code NOT IN("实习生") AND Department IN("生产管理科") AND Subgroup_Code IN("生产类")) and Salary_Calculation_Year_Month=#{yearAndMonth}
     </select>
 
     <!-- 当月职能人均收入 56-->
-    <select id="selectMonthlyFunctionalAverageIncome" resultType="java.math.BigDecimal">
-        SELECT SUM(Total_Salary) FROM Enterprise_Management_Salary_Table
+    <select id="selectMonthlyFunctionalAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
         WHERE Salary_Table_index NOT IN(
             SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
             WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%' OR Position LIKE '%经理%'
@@ -175,8 +175,8 @@
     </select>
 
     <!-- 当月职能人均加班费 76-->
-    <select id="selectMonthlyFunctionalAverageOvertimeCost" resultType="java.math.BigDecimal">
-        SELECT SUM(Overtime_Salary) FROM Enterprise_Management_Salary_Table
+    <select id="selectMonthlyFunctionalAverageOvertimeCost" resultType="decimal">
+        SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
         WHERE Salary_Table_index NOT IN(
             SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
             WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'

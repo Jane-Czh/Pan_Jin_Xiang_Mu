@@ -62,6 +62,31 @@
         SELECT EXISTS(SELECT 1 FROM Financial_Balance_table)
     </select>
 
+    <!--  首页数据展示  -->
+    <select id="selectBalanceSumInfoByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialBalanceTable">
+        SELECT MAX(FB_ID)                                 fbId,
+               MAX(Year_And_Month)                        yearAndMonth,
+               sum(InTransitInventory)                    inTransitInventory,
+               sum(Materials)                             materials,
+               sum(MaterialCostVariance)                  materialCostVariance,
+               sum(MaterialCostVariance_Unallocated)      materialCostVarianceUnallocated,
+               sum(MonthlyRawMaterialInventory)           monthlyRawMaterialInventory,
+               sum(WorkInProgress_SemiFinishedGoods)      workInProgressSemiFinishedGoods,
+               sum(ProductCostVariance_SemiFinishedGoods) productCostVarianceSemiFinishedGoods,
+               sum(WorkInProgress_EndOfMonth)             workInProgressEndOfMonth,
+               sum(MonthlyWorkInProgressInventory)        monthlyWorkInProgressInventory,
+               sum(Inventory_Vehicles)                    inventoryVehicles,
+               sum(PCV_Finished)                          pcvFinished,
+               sum(Month_Amount_InStock)                  monthAmountInStock,
+               sum(MonthlyInventoryTotalAmount)           monthlyInventoryTotalAmount,
+               sum(GrowthRate_Inventory)                  growthRateInventory,
+               sum(GrowthRate_Sales)                      growthRateSales,
+               sum(Receivables)                           receivables,
+               sum(TurnoverRate_Receivable)               turnoverRateReceivable
+        FROM Financial_Balance_table
+        WHERE date_format(Year_And_Month, '%Y') = date_format(#{yearAndMonth}, '%Y')
+    </select>
+
     <!--  按月查询MonthlyInventoryTotalAmount  -->
     <select id="selectMonthlyInventoryTotalAmountByYearAndMonth" resultType="java.math.BigDecimal">
         select MonthlyInventoryTotalAmount from Financial_Balance_table

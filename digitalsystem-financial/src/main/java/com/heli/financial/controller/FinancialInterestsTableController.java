@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.service.IFinancialDataService;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,19 @@ public class FinancialInterestsTableController extends BaseController {
 //        FinancialInterestsTable financialInterestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
 //        System.out.println(financialInterestsTable);
 //    }
+
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:interests:sum')")
+    @PostMapping("/sum")
+    public AjaxResult selectInterestsSumInfoByYear(@RequestBody DisplayRequestParam time) {
+        FinancialInterestsTable sumInfoByYear = financialInterestsTableService.selectInterestsSumInfoByYear(time.getStartTime());
+        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
 
 
     /**

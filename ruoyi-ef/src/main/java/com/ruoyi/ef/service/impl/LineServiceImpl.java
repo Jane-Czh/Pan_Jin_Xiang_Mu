@@ -56,4 +56,5 @@ public class LineServiceImpl extends ServiceImpl<LineDao, LineEntity> implements
         updateWrapper.set(LineEntity::getLabel, label).eq(LineEntity::getFrom, from).eq(LineEntity::getTo, to);
         update(updateWrapper);
     }
+
 }

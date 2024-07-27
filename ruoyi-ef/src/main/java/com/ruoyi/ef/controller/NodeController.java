@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
@@ -64,7 +67,9 @@ public class NodeController extends SuperController<NodeEntity> {
             node.setType(list2.toString());
         }
 
-        System.out.println("new node==>"+node);
+        System.out.println("node date==>"+node.getDate());
+
+//        System.out.println("new node==>"+node);
         nodeService.save(node);
         return success();
     }

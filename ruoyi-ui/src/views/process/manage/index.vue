@@ -374,12 +374,21 @@ import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import "@/views/process/ef/button.css";
 import { word2Pdf } from "@/api/file/filemanagement";
+//获取用户信息-用户名
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/project";
 
 export default {
   name: "Project",
   inject: ["reload"],
   data() {
     return {
+      //用户名
+      uploadUsername: null,
+      //所属部门
+      departmentCategory: null,
+
       baseUrl: process.env.VUE_APP_BASE_API,
 
       //popover可见
@@ -471,12 +480,80 @@ export default {
     EditPanel,
   },
 
-  created() {
-    //获取数据
+  mounted() {
+    //获取当前用户信息
     this.getList();
   },
+  created() {},
 
   methods: {
+    // 调用接口获取用户信息  uploadUsername、departmentCategory
+    async getUserInfo() {
+      try {
+        const response = await getUserProfile();
+        const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        console.log("成功获取用户信息=======", userInfo);
+        this.uploadUsername = userInfo.userName;
+
+        const deptResponse = await getDept(userInfo.deptId);
+        const deptInfo = deptResponse.data;
+        this.departmentCategory = deptInfo.deptName;
+        console.log("成功获取部门信息=======", deptInfo);
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+      }
+    },
+
+    /** 查询流程列表 */
+    async getList() {
+      this.projectList = [];
+      this.loading = true;
+
+      await this.getUserInfo();
+
+      console.log("this.departmentCategory===>", this.departmentCategory);
+      console.log("this.uploadUsername===>", this.uploadUsername);
+
+      listProject(this.queryParams).then((response) => {
+        console.log("manage/index从后端获取的response===>", response);
+        /**0727 对获取的数据进行初步过滤 只能由创建的部门才能才看到对应的数据 departmentCategory*/
+        //从projectList 获取 createBy 属性 , 与departmentCategory进行对比
+        //createBy : "admin/研发" 比对 departmentCategory: "研发"
+        for (var i = 0; i < response.length; i++) {
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory ==
+            response[i].createBy.split("/")[1]
+          ) {
+            this.projectList.push(response[i]);
+          }
+        }
+
+        // 不做过滤
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
+
+        // 按照updateDate字段进行排序
+        this.projectList.sort((a, b) => {
+          // 按照updateDate字段从小到大排序
+          return new Date(a.createDate) - new Date(b.createDate);
+        });
+
+        //分页功能
+        this.totalPage = response.length;
+
+        //数据分页
+        this.projectList = this.projectList.slice(
+          (this.pageIndex - 1) * this.pageSize,
+          this.pageIndex * this.pageSize
+        );
+
+        this.loading = false;
+      });
+    },
+
     validateSB() {
       const regex = /^[\u4e00-\u9fa5\dA-Za-z.\(\)\-（）]*$/;
       this.formData.project_Name = this.formData.project_Name
@@ -664,36 +741,6 @@ export default {
       getProject2(row.id).then((response) => {
         // 获取show_panel.vue组件的实例 this.$refs.ShowPanel, 调用方法dataReload()
         this.$refs.ShowPanel.dataReload(response.data);
-      });
-    },
-
-    /** 查询流程列表 */
-    getList() {
-      this.projectList = [];
-
-      this.loading = true;
-      listProject(this.queryParams).then((response) => {
-        // console.log("manage/index从后端获取的response===>", response);
-        for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
-        }
-
-        // 按照updateDate字段进行排序
-        this.projectList.sort((a, b) => {
-          // 按照updateDate字段从小到大排序
-          return new Date(a.createDate) - new Date(b.createDate);
-        });
-
-        //分页功能
-        this.totalPage = response.length;
-
-        //数据分页
-        this.projectList = this.projectList.slice(
-          (this.pageIndex - 1) * this.pageSize,
-          this.pageIndex * this.pageSize
-        );
-
-        this.loading = false;
       });
     },
 

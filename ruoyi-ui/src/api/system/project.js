@@ -186,7 +186,7 @@ export function getProject2(id) {
   })
 }
 
-//指标
+//指标 -- 无权限即可查
 export function getProject0(id) {
   return request({
     url: '/project/data0/' + id,

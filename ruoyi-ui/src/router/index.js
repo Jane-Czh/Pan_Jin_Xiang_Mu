@@ -719,6 +719,7 @@ export const dynamicRoutes = [
     ]
   },
 
+  
   //流程模块 -- 流程指标: 流程变更次数统计
   {
     path: '/process/statistics/index', //ori from 路径
@@ -735,6 +736,21 @@ export const dynamicRoutes = [
     ]
   },
 
+  //流程模块 -- 新窗口 流程展示
+  {
+    path: '/process/ef/show_panel', //ori from 路径
+    component: Layout,
+    hidden: true,
+    permissions: ['process:ef:winPanel'],
+    children: [
+      {
+        path: '/process/ef/winPanel/:id',// to 路径
+        component: () => import('@/views/process/ef/winPanel'), //组件vue路径
+        name: 'winPanel',
+        meta: { title: '流程全屏预览' }
+      }
+    ]
+  },
 
   //流程模块
   // {

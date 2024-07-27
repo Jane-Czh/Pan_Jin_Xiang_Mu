@@ -43,7 +43,7 @@
             icon="el-icon-document"
             @click="openHelp"
             size="mini"
-            >帮助</el-button
+            >使用说明</el-button
           >
           <!-- <el-divider direction="vertical"></el-divider> -->
 
@@ -1394,6 +1394,12 @@ export default {
         ico: node.ico,
         // state: node.state,
         state: node.state != "no" ? JSON.stringify(node.state) : node.state,
+
+        //0727新增字段
+        department: node.department,
+        description: node.description,
+        operationalStaff: node.operationalStaff,
+        date: node.date,
       }));
 
       const lineData = data.lineList.map((line) => ({

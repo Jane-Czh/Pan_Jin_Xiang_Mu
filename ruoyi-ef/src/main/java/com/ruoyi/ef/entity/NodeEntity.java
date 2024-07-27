@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,4 +29,16 @@ public class NodeEntity {
     private String ico;
     //绑定的制度文件ids[]
     private String state;
+
+    //0727新增部分字段
+    //部门department
+    private String department;
+    //描述
+    private String description;
+    //执行人员
+    private String operationalStaff;
+    //时间
+    private Date date;
+
+
 }

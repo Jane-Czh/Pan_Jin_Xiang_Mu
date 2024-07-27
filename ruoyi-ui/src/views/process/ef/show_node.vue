@@ -13,9 +13,20 @@
       <i :class="nodeIcoClass"></i>
     </div>
     <!-- 节点名称 -->
-    <div class="ef-node-text" :show-overflow-tooltip="true">
+    <!-- <div class="ef-node-text" :show-overflow-tooltip="true">
       {{ node.name }}
-    </div>
+    </div> -->
+
+    <el-tooltip
+      class="item"
+      effect="dark"
+      :content="nodeInfoContent"
+      placement="top"
+    >
+      <div class="ef-node-text" :show-overflow-tooltip="true">
+        {{ node.name }}
+      </div>
+    </el-tooltip>
 
     <!--功能开发: 节点状态state & 类型type -> 改为文件绑定(制度、表单)  -->
 
@@ -217,12 +228,34 @@ export default {
       nodeIcoClass["flow-node-drag"] = this.node.viewOnly ? false : true;
       return nodeIcoClass;
     },
+
+    // nodeInfoContent() {
+    //   return `节点名称: ${this.node.name}<br> 描述: ${this.node.description}<br> 执行人员: ${this.node.operationalStaff}<br> 部门: ${this.node.department}<br> 日期: ${this.node.date}`;
+    // },
+    nodeInfoContent() {
+      const formatValue = (value) => (value ? value : "无");
+
+      return `【部门: ${formatValue(this.node.department)}\n  】、
+      【描述: ${formatValue(this.node.description)}\n 】、
+            【执行人员: ${formatValue(this.node.operationalStaff)}\n 】、
+            
+            【日期: ${this.formatDate(this.node.date)}】`;
+    },
   },
   created() {
     this.getRegularFileData();
     this.getFormFileData();
   },
   methods: {
+    formatDate(date) {
+      if (!date) return "";
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0"); // 月份从 0 开始，所以要加 1
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    },
+
     /** 文件下载 */
     downloadFile(url) {
       fetch(url)

@@ -1093,6 +1093,13 @@ export default {
         top: node.top,
         ico: node.ico,
         state: node.state != "no" ? JSON.stringify(node.state) : node.state,
+
+        //0727新增字段
+        department: node.department,
+        description: node.description,
+        operationalStaff: node.operationalStaff,
+        date: node.date,
+
       }));
 
       const lineData = data.lineList.map((line) => ({

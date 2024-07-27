@@ -21,47 +21,22 @@
             <!--顶部工具菜单-->
             <el-col :span="24">
               <div class="ef-tooltar">
-                <el-link type="primary" :underline="false">当前最新版本流程{{
-                  data.name
-                }}</el-link>
+                <el-link type="primary" :underline="false"
+                  >当前最新版本流程：{{ data.name }}</el-link
+                >
                 <el-divider direction="vertical"></el-divider>
-                <!-- <el-button
-                  type="text"
-                  icon="el-icon-plus"
-                  size="large"
-                  @click="zoomAddMy"
-                ></el-button>
-                <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="text"
-                  icon="el-icon-minus"
-                  size="large"
-                  @click="zoomSubMy"
-                ></el-button>
-                <el-divider direction="vertical"></el-divider> -->
-
-                <!-- 流程信息的Json数据 -->
-                <!-- <el-button
-                  type="info"
-                  plain
-                  round
-                  icon="el-icon-document"
-                  @click="dataInfo"
-                  size="mini"
-                  >流程信息</el-button
-                > -->
-                <!-- 历史 -->
-                <!-- <el-button
-                type="primary"
-                icon="el-icon-folder-opened"
-                size="large"
-                @click="historyView()"
-              ></el-button> -->
+              
                 <el-button
                   size="mini"
                   type="text"
                   @click="updateDetails(data.id)"
                   >{{ buttonText }}</el-button
+                >
+
+                <el-divider direction="vertical"></el-divider>
+                <!-- 打开新窗口，页面展示最新流程 -->
+                <el-button size="mini" type="text" @click="openNewWin(data.id)"
+                  >全屏预览</el-button
                 >
 
                 <el-divider direction="vertical"></el-divider>
@@ -126,7 +101,6 @@
             v-loading="loading"
             :data="historyProjectList"
             height="calc(100% - 10px)"
-         
             stripe
             row-key="id"
             :expand-row-keys="expandArr"
@@ -194,6 +168,10 @@
                   >删除</el-button
                 >
 
+                <el-button size="mini" type="text" @click="openNewWin(scope.row.id)"
+                  >全屏预览</el-button
+                >
+
                 <!-- 更新详情button -->
                 <el-button
                   @click="toggleRow(scope.row)"
@@ -253,7 +231,7 @@
                   size="large"
                   @click="zoomSub"
                 ></el-button> -->
-                
+
                 <el-divider direction="vertical"></el-divider>
                 <!-- 关闭查看历史 -->
                 <el-button
@@ -466,6 +444,15 @@ export default {
   },
   created() {},
   methods: {
+    //open new windows -- 打开新窗口，转到数据展示部分
+    //路由跳转
+    openNewWin(id) {
+      //item 是当前的最新版本流程
+      // console.log("item========>",item)
+      //设置id为每个流程都单独展示一个展示数据的页面
+      this.$router.push("/process/ef/winPanel/" + id);
+    },
+
     // 其他方法
     async updateDetails(id) {
       if (this.showDetails) {
@@ -480,15 +467,15 @@ export default {
       }
     },
     async fetchData(id) {
-    try {
-      const response = await getProjectEntityById(id);
-      console.log(response);
-      return response;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return { title: 'Error', content: 'Failed to fetch data.' };
-    }
-  },
+      try {
+        const response = await getProjectEntityById(id);
+        console.log(response);
+        return response;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        return { title: "Error", content: "Failed to fetch data." };
+      }
+    },
 
     //更新详细数据
     toggleRow(row) {
@@ -504,7 +491,7 @@ export default {
     isExpanded(row) {
       return this.expandArr.includes(row.id);
     },
-    
+
     //格式化换行
     formattedContent(content) {
       if (content) {

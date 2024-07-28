@@ -31,8 +31,8 @@
     <select id="selectFormInfoTableList" parameterType="FormInfoTable" resultMap="FormInfoTableResult">
         <include refid="selectFormInfoTableVo"/>
         <where>
-            <if test="formTitle != null  and formTitle != ''"> and form_title = #{formTitle}</if>
-            <if test="scope != null  and scope != ''"> and scope = #{scope}</if>
+            <if test="formTitle != null  and formTitle != ''"> and form_title like concat('%', #{formTitle}, '%')</if>
+            <if test="scope != null  and scope != ''"> and scope like concat('%', #{scope}, '%')</if>
             <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
             <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
             <if test="formType != null  and formType != ''"> and form_type = #{formType}</if>
@@ -40,6 +40,7 @@
             <if test="formSize != null "> and form_size = #{formSize}</if>
             <if test="createUsername != null  and createUsername != ''"> and create_username like concat('%', #{createUsername}, '%')</if>
             <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
             <if test="oldFormId != null "> and old_form_id = #{oldFormId}</if>
             <if test="revisionTime != null "> and revision_time = #{revisionTime}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>

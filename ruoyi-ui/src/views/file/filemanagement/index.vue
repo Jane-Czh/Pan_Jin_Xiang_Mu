@@ -53,14 +53,14 @@
 <!--                @keyup.enter.native="handleQuery"-->
 <!--              />-->
 <!--            </el-form-item>-->
-            <el-form-item label="文件类型" prop="fileType">
-              <el-input
-                v-model="queryParams.fileType"
-                placeholder="请输入文件类型"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="文件类型" prop="fileType">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.fileType"-->
+<!--                placeholder="请输入文件类型"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
 <!--            <el-form-item label="文件大小" prop="fileSize">-->
 <!--              <el-input-->
 <!--                v-model="queryParams.fileSize"-->
@@ -688,15 +688,8 @@
   } from "@/api/file/filemanagement";
   import {
     listProject,
-    getProject,
-    getProject1,
-    getProject2,
-    delProject,
-    addProject,
-    updateProject,
-    getProjectByName,
-    getProjectFileName,
   } from "@/api/system/project";
+  import {listNode,getNode} from "@/api/file/flownode";
   import {getUserProfile02} from '@/api/file/filemanagement'
   import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
@@ -728,7 +721,7 @@
     },
     data() {
       return {
-        projectNames:[],
+        projectNames:[], //关联流程名称列表
         //部门列表
         deptList: [],
         //当前账号的dept
@@ -812,6 +805,15 @@
           name: null,
           state: null
         },
+        //流程节点查询参数
+        nodeQueryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          id: null,
+          projectId: null,
+          name: null,
+          state: null
+        },
 
         // 表单参数
         form: {
@@ -881,6 +883,20 @@
           departmentCategory: [
             {required: true, message: "制度所属科室不能为空", trigger: "blur"}
           ],
+          mainResponsibleDepartment: [
+            {required: true, message: "制度主责部门不能为空", trigger: "blur"}
+          ],
+
+          classificationOfSpecialties: [
+            {required: true, message: "分类专业不能为空", trigger: "blur"}
+          ],
+          regulationLeval: [
+            {required: true, message: "制度级别不能为空", trigger: "blur"}
+          ],
+          regulationNumber: [
+            {required: true, message: "制度编号不能为空", trigger: "blur"}
+          ],
+
         },
         uploadVisible: false,
 
@@ -967,19 +983,37 @@
         });
       },
       /** 查询绑定的流程信息 */
-      handleViewDetails(row) {
+      handleProjectDetails(row) {
         let projectList;
+        let nodeList;
+        this.projectNames = [];
         listProject(this.projecQueryParams).then(response => {
-          projectList = response.data;
+          console.log("response111:：",response);
+          projectList = response;
+          console.log("projectNames:",this.projectNames);
           projectList.forEach(process => {
             if (process.state && process.state.includes(row.regulationsId)) {
               this.projectNames.push(process.name);
+              console.log("projectNames=>",this.projectNames);
             }
           });
 
-        })
+        });
+        // listNode(this.nodeQueryParams).then(response => {
+        //   console.log("response222:：",response);
+        //   console.log("row:",row);
+        //   nodeList = response.rows;
+        //   nodeList.forEach(node => {
+        //     if (node.state && node.state.includes(row.regulationsId)) {
+        //       getNode(node.projectId).then(response1 => {
+        //         console.log("response333=>",response1);
+        //         this.projectNames.push(response.rows.name);
+        //       })
+        //       console.log("projectNames=>",this.projectNames);
+        //     }
+        //   });
+        // })
       },
-
       // 文件上传取消按钮
       uploadCancel() {
         this.fileUploadDialogVisible = false;
@@ -1051,7 +1085,7 @@
         getFilemanagement(regulationsId).then(response => {
           this.form = response.data;
           this.fileModifyDialogVisible = true;
-          this.title = "修改制度文件";
+          this.title = "更新制度文件";
         });
       },
       /** 更新文件 */

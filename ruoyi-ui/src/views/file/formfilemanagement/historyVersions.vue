@@ -36,6 +36,14 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
+            <el-form-item label="表单类型" prop="formType">
+              <el-input
+                v-model="queryParams.formType"
+                placeholder="请输入表单类型"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
             <!--            <el-form-item label="表单大小" prop="formSize">-->
             <!--              <el-input-->
             <!--                v-model="queryParams.formSize"-->
@@ -56,6 +64,14 @@
               <el-input
                 v-model="queryParams.departmentCategory"
                 placeholder="请输入表单所属科室"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="表单标签名称" prop="remark">
+              <el-input
+                v-model="queryParams.remark"
+                placeholder="请输入表单标签名称"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
@@ -140,7 +156,40 @@
       <el-table-column label="表单大小" align="center" prop="formSize" />
       <el-table-column label="上传人" align="center" prop="createUsername" />
       <el-table-column label="表单所属科室" align="center" prop="departmentCategory" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="表单标签名称" align="center" prop="remark" />
+      <el-table-column label="关联流程" align="center">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击查看详情！"
+            placement="top"
+          >
+            <!-- popover：1、制度文件显示 -->
+            <el-popover
+              placement="bottom"
+              title="绑定的流程"
+              trigger="click"
+            >
+              <template slot="reference">
+                <span class="file" @click="handleProjectDetails(scope.row)">
+                  <i class="el-icon-files"></i>
+                </span>
+              </template>
+              <!-- slot插槽展示自定义内容 -->
+              <div v-if="projectNames.length != 0">
+                <ul>
+                  <li v-for="(file, index) in projectNames" :key="index">
+                    {{ file }}
+                  </li>
+                </ul>
+              </div>
+              <div v-else>"无绑定"</div>
+              <!-- slot插槽over -->
+            </el-popover>
+          </el-tooltip>
+        </template>
+      </el-table-column>
 <!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
 <!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -210,8 +259,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注信息"/>
+            <el-form-item label="表单标签名称" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入表单标签名称"/>
             </el-form-item>
           </el-col>
           <el-col :span='12'>
@@ -245,11 +294,13 @@
   import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
   import {listDept02, word2Pdf} from "../../../api/file/filemanagement";
+  import {listProject} from "@/api/system/project";
 
   export default {
     name: "HistoryVersions",
     data() {
       return {
+        projectNames:[], //关联流程名称列表
         //部门列表
         deptList: [],
         //当前账号的dept
@@ -304,12 +355,21 @@
           formSize: null,
           createUsername: null,
           departmentCategory: null,
+          remark: null,
           oldFormId: null,
           revisionTime: null,
           revisionContent: null,
           reviser: null,
           newFlag: null,
           newFormId: null
+        },
+        //流程查询参数
+        projecQueryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          id: null,
+          name: null,
+          type: null
         },
 
         // 表单参数
@@ -412,6 +472,38 @@
           console.log("formmanagementList:：",this.formmanagementList);
           this.loading = false;
         });
+      },
+      /** 查询绑定的流程信息 */
+      handleProjectDetails(row) {
+        let projectList;
+        let nodeList;
+        this.projectNames = [];
+        listProject(this.projecQueryParams).then(response => {
+          console.log("response111:：",response);
+          projectList = response;
+          console.log("projectNames:",this.projectNames);
+          projectList.forEach(process => {
+            if (process.type && process.type.includes(row.formId)) {
+              this.projectNames.push(process.name);
+              console.log("projectNames=>",this.projectNames);
+            }
+          });
+
+        });
+        // listNode(this.nodeQueryParams).then(response => {
+        //   console.log("response222:：",response);
+        //   console.log("row:",row);
+        //   nodeList = response.rows;
+        //   nodeList.forEach(node => {
+        //     if (node.state && node.state.includes(row.regulationsId)) {
+        //       getNode(node.projectId).then(response1 => {
+        //         console.log("response333=>",response1);
+        //         this.projectNames.push(response.rows.name);
+        //       })
+        //       console.log("projectNames=>",this.projectNames);
+        //     }
+        //   });
+        // })
       },
       // 文件修改取消按钮
       modifyCancel() {

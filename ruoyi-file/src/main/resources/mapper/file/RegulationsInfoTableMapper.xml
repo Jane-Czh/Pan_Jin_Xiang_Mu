@@ -44,8 +44,8 @@
     <select id="selectRegulationsInfoTableList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
         <include refid="selectRegulationsInfoTableVo"/>
         <where>
-            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title = #{regulationsTitle}</if>
-            <if test="useScope != null  and useScope != ''"> and use_scope = #{useScope}</if>
+            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title like concat('%', #{regulationsTitle}, '%')</if>
+            <if test="useScope != null  and useScope != ''"> and use_scope like concat('%', #{useScope}, '%')</if>
             <if test="uploadDate != null "> and upload_date = #{uploadDate}</if>
             <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
@@ -60,11 +60,11 @@
             <if test="uploadUsername != null  and uploadUsername != ''"> and upload_username like concat('%', #{uploadUsername}, '%')</if>
             <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
             <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
-            <if test="mainResponsibleDepartment != null  and mainResponsibleDepartment != ''"> and main_responsible_department = #{mainResponsibleDepartment}</if>
-            <if test="classificationOfSpecialties != null  and classificationOfSpecialties != ''"> and classification_of_specialties = #{classificationOfSpecialties}</if>
+            <if test="mainResponsibleDepartment != null  and mainResponsibleDepartment != ''"> and main_responsible_department like concat('%', #{mainResponsibleDepartment}, '%')</if>
+            <if test="classificationOfSpecialties != null  and classificationOfSpecialties != ''"> and classification_of_specialties like concat('%', #{classificationOfSpecialties}, '%')</if>
             <if test="regulationLeval != null  and regulationLeval != ''"> and regulation_leval = #{regulationLeval}</if>
-            <if test="regulationNumber != null "> and regulation_number = #{regulationNumber}</if>
-            <if test="fileTag != null  and fileTag != ''"> and file_tag = #{fileTag}</if>
+            <if test="regulationNumber != null "> and regulation_number like concat('%', #{regulationNumber}, '%')</if>
+            <if test="fileTag != null  and fileTag != ''"> and file_tag like concat('%', #{fileTag}, '%')</if>
             <if test="oldRegulationsId != null "> and old_regulations_id = #{oldRegulationsId}</if>
             <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>

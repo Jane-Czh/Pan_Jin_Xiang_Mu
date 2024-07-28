@@ -53,14 +53,14 @@
             <!--                @keyup.enter.native="handleQuery"-->
             <!--              />-->
             <!--            </el-form-item>-->
-            <el-form-item label="文件类型" prop="fileType">
-              <el-input
-                v-model="queryParams.fileType"
-                placeholder="请输入文件类型"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="文件类型" prop="fileType">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.fileType"-->
+<!--                placeholder="请输入文件类型"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <!--            <el-form-item label="文件大小" prop="fileSize">-->
             <!--              <el-input-->
             <!--                v-model="queryParams.fileSize"-->
@@ -262,7 +262,7 @@
               trigger="click"
             >
               <template slot="reference">
-                <span class="file">
+                <span class="file" @click="handleProjectDetails(scope.row)">
                   <i class="el-icon-files"></i>
                 </span>
               </template>
@@ -551,6 +551,23 @@
           newFlag: null,
           newRegulationsId: null
         },
+        //流程查询参数
+        projecQueryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          id: null,
+          name: null,
+          state: null
+        },
+        //流程节点查询参数
+        nodeQueryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          id: null,
+          projectId: null,
+          name: null,
+          state: null
+        },
 
         // 表单参数
         form: {
@@ -703,6 +720,38 @@
           this.loading = false;
         })
       },
+      /** 查询绑定的流程信息 */
+      handleProjectDetails(row) {
+        let projectList;
+        let nodeList;
+        this.projectNames = [];
+        listProject(this.projecQueryParams).then(response => {
+          console.log("response111:：",response);
+          projectList = response;
+          console.log("projectNames:",this.projectNames);
+          projectList.forEach(process => {
+            if (process.state && process.state.includes(row.regulationsId)) {
+              this.projectNames.push(process.name);
+              console.log("projectNames=>",this.projectNames);
+            }
+          });
+
+        });
+        // listNode(this.nodeQueryParams).then(response => {
+        //   console.log("response222:：",response);
+        //   console.log("row:",row);
+        //   nodeList = response.rows;
+        //   nodeList.forEach(node => {
+        //     if (node.state && node.state.includes(row.regulationsId)) {
+        //       getNode(node.projectId).then(response1 => {
+        //         console.log("response333=>",response1);
+        //         this.projectNames.push(response.rows.name);
+        //       })
+        //       console.log("projectNames=>",this.projectNames);
+        //     }
+        //   });
+        // })
+      },
       // 文件修改取消按钮
       modifyCancel() {
         this.fileModifyDialogVisible = false;
@@ -766,7 +815,10 @@
             const matchesReviser = !this.queryParams.reviser || file.reviser.includes(this.queryParams.reviser);
             const matchesNewFlag = this.queryParams.newFlag === null || file.newFlag === this.queryParams.newFlag;
             const matchesNewRegulationsId = !this.queryParams.newRegulationsId || file.newRegulationsId === this.queryParams.newRegulationsId;
-
+            const matchesMainResponsibleDepartment = !this.queryParams.mainResponsibleDepartment || file.mainResponsibleDepartment.includes(this.queryParams.mainResponsibleDepartment);
+            const matchesClassificationOfSpecialties = !this.queryParams.classificationOfSpecialties || file.classificationOfSpecialties.includes(this.queryParams.classificationOfSpecialties);
+            const matchesRegulationLeval = !this.queryParams.regulationLeval || file.regulationLeval.includes(this.queryParams.regulationLeval);
+            const matchesRegulationNumber = !this.queryParams.regulationNumber || file.regulationNumber.includes(this.queryParams.regulationNumber);
             // 返回满足所有条件的文件
             return matchesRegulationsTitle &&
               matchesUseScope &&
@@ -787,7 +839,11 @@
               matchesRevisionContent &&
               matchesReviser &&
               matchesNewFlag &&
-              matchesNewRegulationsId;
+              matchesNewRegulationsId &&
+              matchesMainResponsibleDepartment &&
+              matchesClassificationOfSpecialties &&
+              matchesRegulationLeval &&
+              matchesRegulationNumber;
           });
           this.loading = false;
         })

@@ -2,6 +2,7 @@ package com.heli.project.mapper;
 
 import java.util.List;
 import com.heli.project.domain.ProjectHistoryInfoTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 历史项目信息管理Mapper接口
@@ -64,5 +65,5 @@ public interface ProjectHistoryInfoTableMapper
      *
      * @return 结果
      */
-    public void batchInsert(List<ProjectHistoryInfoTable> projectHistoryInfos);
+    public void batchInsert(@Param("list") List<ProjectHistoryInfoTable> projectHistoryInfos);
 }

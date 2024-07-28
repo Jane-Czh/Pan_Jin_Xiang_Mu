@@ -32,11 +32,11 @@ public class ProjectHistoryInfoTableServiceImpl implements IProjectHistoryInfoTa
             List<ProjectHistoryInfoTable> data = ExcelUtils.parseExcel(excelFile);
             System.out.println(data);
             int size = data.size(), i = 0;
-
-            while(i < size){
-                projectHistoryInfoTableMapper.insertProjectHistoryInfoTable(data.get(i));
-                i++;
-            }
+            projectHistoryInfoTableMapper.batchInsert(data);
+//            while(i < size){
+//                projectHistoryInfoTableMapper.insertProjectHistoryInfoTable(data.get(i));
+//                i++;
+//            }
 //            projectHistoryInfoTableMapper.batchInsert(data);
 
 //            EasyExcel.read(excelFile.getInputStream(), ProjectHistoryInfoTable.class, new ProjectHistoryInfoDataListener()).sheet().doRead();

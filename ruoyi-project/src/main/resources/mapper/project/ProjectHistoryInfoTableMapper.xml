@@ -146,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 批量插入的 SQL 语句 -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO project_history_info (project_name, category, level, department, attribute, description, start_date, progress_allover_progress, import_date, remake, manager, team_members, status, progress, current_status, goal, scope, planned_completion_time, completion_summary)
+        INSERT INTO Project_history_Info_table (project_name, category, level, department, attribute, description, start_date, progress_allover_progress, import_date, remake, manager, team_members, status, progress, current_status, goal, scope, planned_completion_time, completion_summary)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.projectName},
@@ -167,7 +167,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              #{item.goal},
              #{item.scope},
              #{item.plannedCompletionTime},
-             #{item.completionSummary},
+             #{item.completionSummary}
             )
         </foreach>
     </insert>

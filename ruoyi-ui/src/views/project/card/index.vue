@@ -237,6 +237,8 @@
             <p>项目名称: {{ info.projectName }}</p>
             <p>项目类别: {{ info.category }}</p>
             <p>项目等级: {{ info.level }}</p>
+            <p>项目总进度:</p>
+            <el-progress :percentage="getPercentageValue(info.progressAlloverProgress)"></el-progress>
 
             <!-- 详情查看 -->
             <el-popover placement="right" trigger="click" width="750">
@@ -249,7 +251,7 @@
                     <pre>项目类别: {{ info.category }}</pre>
                     <pre>项目等级: {{ info.level }}</pre>
                     <pre>主责部门: {{ info.department }}</pre>
-                    <pre>承接属性: {{ info.attribute }}</pre>
+                    <!-- <pre>承接属性: {{ info.attribute }}</pre> -->
                     <pre>项目描述: {{ info.description }}</pre>
                     <pre>立项时间: {{ info.startDate }}</pre>
                     <pre>项目总进度: {{ info.progressAlloverProgress }}</pre>
@@ -264,7 +266,7 @@
                     <pre>负责人: {{ info.manager }}</pre>
                     <pre>组成员: {{ info.teamMembers }}</pre>
                     <pre>项目状态: {{ info.status }}</pre>
-                    <pre>项目进度: {{ info.progress }}</pre>
+                    <!-- <pre>项目进度: {{ info.progress }}</pre> -->
                     <pre>项目现状: {{ info.currentStatus }}</pre>
                     <pre>目标: {{ info.goal }}</pre>
                     <pre>范围: {{ info.scope }}</pre>
@@ -637,9 +639,9 @@ export default {
         department: [
           { required: true, message: "主责部门不能为空", trigger: "blur" }
         ],
-        attribute: [
-          { required: true, message: "承接属性不能为空", trigger: "blur" }
-        ],
+        // attribute: [
+        //   { required: true, message: "承接属性不能为空", trigger: "blur" }
+        // ],
         description: [
           { required: true, message: "项目描述不能为空", trigger: "blur" }
         ],
@@ -670,6 +672,15 @@ export default {
 
   methods: {
 
+    getPercentageValue(progressString) {
+      console.log(progressString);
+      // 移除字符串末尾的 '%'
+      const progressValue = progressString.replace('%', '');
+      console.log(parseInt(progressValue, 10));
+      // 将字符串转换为整数
+      return parseInt(progressValue, 10);
+    },
+    
     formattedDaysPassed(startDate) {
       // 获取当前日期
       const currentDate = new Date();

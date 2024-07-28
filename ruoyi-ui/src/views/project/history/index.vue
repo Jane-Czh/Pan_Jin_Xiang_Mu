@@ -33,6 +33,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="负责人" prop="manager">
+        <el-input
+          v-model="queryParams.manager"
+          placeholder="请输入负责人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="项目状态" prop="status">
+        <el-input
+          v-model="queryParams.status"
+          placeholder="请输入项目状态"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <!-- <el-form-item label="承接属性" prop="attribute">
         <el-input
           v-model="queryParams.attribute"
@@ -232,7 +248,7 @@
       <el-table-column label="项目类别" align="center" prop="category" />
       <el-table-column label="项目等级" align="center" prop="level" />
       <el-table-column label="主责部门" align="center" prop="department" />
-      <el-table-column label="承接属性" align="center" prop="attribute" />
+      <!-- <el-table-column label="承接属性" align="center" prop="attribute" /> -->
       <el-table-column label="项目描述" align="center" prop="description" />
       <el-table-column label="立项时间" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
@@ -249,7 +265,7 @@
       <el-table-column label="负责人" align="center" prop="manager" />
       <el-table-column label="组成员" align="center" prop="teamMembers" />
       <el-table-column label="项目状态" align="center" prop="status" />
-      <el-table-column label="项目进度" align="center" prop="progress" />
+      <!-- <el-table-column label="项目进度" align="center" prop="progress" /> -->
       <el-table-column label="项目现状" align="center" prop="currentStatus" />
       <el-table-column label="目标" align="center" prop="goal" />
       <el-table-column label="范围" align="center" prop="scope" />
@@ -317,9 +333,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="承接属性" prop="attribute">
+        <!-- <el-form-item label="承接属性" prop="attribute">
           <el-input v-model="form.attribute" placeholder="请输入承接属性" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="项目描述" prop="description">
           <el-input v-model="form.description" placeholder="请输入项目描述" />
         </el-form-item>
@@ -361,9 +377,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="项目进度" prop="progress">
+        <!-- <el-form-item label="项目进度" prop="progress">
           <el-input v-model="form.progress" placeholder="请输入项目进度" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="目标" prop="goal">
           <el-input v-model="form.goal" placeholder="请输入目标" />
         </el-form-item>
@@ -396,6 +412,19 @@ import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadI
 export default {
   name: "History",
   data() {
+    const validateProgressFormat = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("项目总进度不能为空"));
+      }
+      // 检查是否为"20%"格式的字符串
+      const regex = /^(\d{1,2}|\d{1,2}\.\d+)%$/;
+      if (!regex.test(value)) {
+        callback(new Error("项目总进度格式不正确，应输入一个百分数，例如10%"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       // 遮罩层
       loading: true,
@@ -523,9 +552,9 @@ export default {
         department: [
           { required: true, message: "主责部门不能为空", trigger: "blur" }
         ],
-        attribute: [
-          { required: true, message: "承接属性不能为空", trigger: "blur" }
-        ],
+        // attribute: [
+        //   { required: true, message: "承接属性不能为空", trigger: "blur" }
+        // ],
         description: [
           { required: true, message: "项目描述不能为空", trigger: "blur" }
         ],
@@ -533,7 +562,8 @@ export default {
           { required: true, message: "立项时间不能为空", trigger: "blur" }
         ],
         progressAlloverProgress: [
-          { required: true, message: "项目总进度不能为空", trigger: "blur" }
+          { required: true, message: "项目总进度不能为空", trigger: "blur" },
+          { validator: validateProgressFormat, trigger: 'blur' }
         ],
         importDate: [
           { required: true, message: "导入时间不能为空", trigger: "blur" }
@@ -541,9 +571,9 @@ export default {
         status: [
           { required: true, message: "项目状态不能为空", trigger: "change" }
         ],
-        progress: [
-          { required: true, message: "项目进度不能为空", trigger: "blur" }
-        ],
+        // progress: [
+        //   { required: true, message: "项目进度不能为空", trigger: "blur" }
+        // ],
         plannedCompletionTime: [
           { required: true, message: "计划结项时间不能为空", trigger: "blur" }
         ],

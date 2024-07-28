@@ -98,6 +98,7 @@ public class ProjectInfoTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('project:Info:relevance')")
     @PutMapping("/updataHistory")
+    @Log(title = "项目基本信息", businessType = BusinessType.UPDATE)
     public AjaxResult updataHistory(@RequestBody ProjectInfoTable projectInfoTable)
     {
         System.out.println("-----test------"+projectInfoTable);

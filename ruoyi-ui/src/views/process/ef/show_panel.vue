@@ -25,7 +25,7 @@
                   >当前最新版本流程：{{ data.name }}</el-link
                 >
                 <el-divider direction="vertical"></el-divider>
-              
+
                 <el-button
                   size="mini"
                   type="text"
@@ -158,17 +158,19 @@
                 >
                   查看</el-button
                 >
-
+                <!-- v-hasPermi="['system:project:remove']" -->
                 <el-button
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
-                  v-hasPermi="['system:project:remove']"
                   >删除</el-button
                 >
 
-                <el-button size="mini" type="text" @click="openNewWin(scope.row.id)"
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="openNewWin(scope.row.id)"
                   >全屏预览</el-button
                 >
 
@@ -556,20 +558,43 @@ export default {
     },
 
     /** 单个删除操作 */
+
+    // handleDelete(row) {
+    //   const ids = row.id || this.ids;
+    //   this.$modal
+    //     .confirm(`是否确认删除流程[ ${row.name} ]？`)
+    //     .then(
+    //       delHistoryProject(ids).then((response) => {})
+    //       // function () { return delProject(ids);}
+    //     )
+    //     .then(() => {
+    //       // this.getList();
+    //       this.reload();
+    //       this.$modal.msgSuccess("删除成功");
+    //     })
+    //     .catch(() => {});
+    // },
+
+    /** 单个删除操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal
-        .confirm(`是否确认删除流程[ ${row.name} ]？`)
-        .then(
-          delHistoryProject(ids).then((response) => {})
-          // function () { return delProject(ids);}
+        .confirm(
+          `是否确认删除该历史版本流程[ ${row.name} ]？`
         )
         .then(() => {
+          // 只有当用户确认删除时才执行删除操作
+          return delHistoryProject(ids);
+        })
+        .then(() => {
+          // 处理成功的删除操作
           // this.getList();
           this.reload();
           this.$modal.msgSuccess("删除成功");
         })
-        .catch(() => {});
+        .catch(() => {
+          // 处理用户取消操作或者任何删除过程中出现的错误
+        });
     },
 
     //当前流程创建

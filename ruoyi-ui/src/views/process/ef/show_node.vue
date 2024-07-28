@@ -59,13 +59,17 @@
               <!-- {{ this.fileHyperLinks[index] }} -->
               <el-divider direction="vertical"></el-divider>
               <!-- 下载文件  -->
-              <!-- <i class="el-icon-download download-icon">
-                <a :href="baseUrl + fileHyperLinks[index]" download>点击下载</a>
-              </i> -->
               <a @click.prevent="downloadFile(fileHyperLinks[index])"
-                >点击下载</a
+                >点击下载pdf</a
               >
               <el-divider direction="vertical"></el-divider>
+              <!-- 2、word  -->
+
+              <a @click.prevent="downloadFile(wordHyperLinks[index])"
+                >点击下载word</a
+              >
+              <el-divider direction="vertical"></el-divider>
+
               <!-- 预览文件 -->
               <i
                 class="el-icon-view preview-icon"
@@ -163,6 +167,8 @@ export default {
       nodeFileNames: [],
       // 制度文件下载链接
       fileHyperLinks: [],
+      //word
+      wordHyperLinks: [],
 
       // <!-- ---------------------------------------------- -->
       //表单文件悬浮面板
@@ -342,6 +348,8 @@ export default {
       this.nodeFileNames = [];
       //存储相应的下载地址
       this.fileHyperLinks = [];
+      // -- word
+      this.wordHyperLinks = [];
 
       listFilemanagement(this.queryParams)
         .then((response) => {
@@ -358,7 +366,9 @@ export default {
               if (row != null) {
                 //将匹配的记录的文件名、链接保存 (nodeFileNames、fileHyperLinks)
                 this.nodeFileNames.push(row.fileName);
-                this.fileHyperLinks.push(row.filePath);
+                // this.fileHyperLinks.push(row.filePath);
+                this.fileHyperLinks.push(row.pdfPath);
+                this.wordHyperLinks.push(row.wordPath);
               }
             });
           }

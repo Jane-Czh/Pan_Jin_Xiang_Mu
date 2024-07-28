@@ -101,22 +101,46 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-<!--            <el-form-item label="制度标签名称" prop="fileTag">-->
-<!--              <el-input-->
-<!--                v-model="queryParams.fileTag"-->
-<!--                placeholder="请输入制度标签名称"-->
-<!--                clearable-->
-<!--                @keyup.enter.native="handleQuery"-->
-<!--              />-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
-<!--              <el-input-->
-<!--                v-model="queryParams.oldRegulationsId"-->
-<!--                placeholder="请输入历史版本制度"-->
-<!--                clearable-->
-<!--                @keyup.enter.native="handleQuery"-->
-<!--              />-->
-<!--            </el-form-item>-->
+            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
+              <el-input
+                v-model="queryParams.mainResponsibleDepartment"
+                placeholder="请输入制度主责部门"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-input
+                v-model="queryParams.classificationOfSpecialties"
+                placeholder="请输入制度专业分类"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-input
+                v-model="queryParams.regulationLeval"
+                placeholder="请输入制度等级"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度编号" prop="regulationNumber">
+              <el-input
+                v-model="queryParams.regulationNumber"
+                placeholder="请输入制度编号"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度标签名称" prop="fileTag">
+              <el-input
+                v-model="queryParams.fileTag"
+                placeholder="请输入制度标签名称"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
 <!--            <el-form-item label="修订时间" prop="revisionDate">-->
 <!--              <el-date-picker clearable-->
 <!--                              v-model="queryParams.revisionDate"-->
@@ -167,6 +191,16 @@
         >删除
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['file:filemanagement:export']"
+        >导出</el-button>
+      </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -174,7 +208,11 @@
     <el-table v-loading="loading" :data="filemanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
 <!--      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>-->
-      <el-table-column label="制度标题" align="center" prop="regulationsTitle"/>
+      <el-table-column label="制度标题" align="center" prop="regulationsTitle">S
+        <template slot-scope="scope">
+        <a  @click.prevent="previewFile(scope.row.pdfPath)" style="color: #6495ED;">{{scope.row.regulationsTitle}}</a>
+        </template>
+      </el-table-column>
       <el-table-column label="适用范围" align="center" prop="useScope"/>
       <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
@@ -187,13 +225,25 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名称" align="center" prop="fileName"/>
-      <el-table-column label="文件下载" align="center" prop="filePath">
-        <template slot-scope="scope">
-          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>
+<!--      <el-table-column label="文件下载" align="center" prop="filePath">-->
+<!--        <template slot-scope="scope">-->
+<!--          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="PDF下载" align="center" prop="pdfPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.pdfPath" @click.prevent="downloadFile(scope.row.pdfPath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
-      <el-table-column label="文件类型" align="center" prop="fileType"/>
-      <el-table-column label="文件大小" align="center" prop="fileSize"/>
+      <el-table-column label="Word下载" align="center" prop="wordPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
+<!--      <el-table-column label="文件大小" align="center" prop="fileSize"/>-->
+      <el-table-column label="pdf文件大小" align="center" prop="pdfSize"/>
+      <el-table-column label="word文件大小" align="center" prop="wordSize"/>
       <el-table-column label="制度创建日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
@@ -202,7 +252,45 @@
       <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>
       <el-table-column label="制度使用状态" align="center" prop="useState"/>
       <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
-<!--      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>-->
+      <el-table-column label="制度主责部门" align="center" prop="mainResponsibleDepartment" />
+      <el-table-column label="制度专业分类" align="center" prop="classificationOfSpecialties" />
+      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
+      <el-table-column label="制度编号" align="center" prop="regulationNumber" />
+      <el-table-column label="制度标签名称" align="center" prop="fileTag" />
+      <el-table-column label="关联流程" align="center">
+        <template slot-scope="scope">
+          <!-- 111111111111制度文件 -->
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击查看详情！"
+            placement="top"
+          >
+            <!-- popover：1、制度文件显示 -->
+            <el-popover
+              placement="bottom"
+              title="绑定的流程"
+              trigger="click"
+            >
+              <template slot="reference">
+                <span class="file" @click="handleProjectDetails(scope.row)">
+                  <i class="el-icon-files"></i>
+                </span>
+              </template>
+              <!-- slot插槽展示自定义内容 -->
+              <div v-if="projectNames.length != 0">
+                <ul>
+                  <li v-for="(file, index) in projectNames" :key="index">
+                    {{ file }}
+                  </li>
+                </ul>
+              </div>
+              <div v-else>"无绑定"</div>
+              <!-- slot插槽over -->
+            </el-popover>
+          </el-tooltip>
+        </template>
+      </el-table-column>
 <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
 <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -220,16 +308,16 @@
 
 <!--          <template v-if="this.thisDept == '研发' || this.thisDept == this.form.departmentCategory">-->
 <!--          :disabled="this.thisDept !== scope.row.departmentCategory"-->
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-upload"
-              @click="handleUpdate(scope.row)"
-              v-hasPermi="['file:filemanagement:edit']"
-              :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
-            >
-              更新
-            </el-button>
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-upload"-->
+<!--              @click="handleUpdate(scope.row)"-->
+<!--              v-hasPermi="['file:filemanagement:edit']"-->
+<!--              :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"-->
+<!--            >-->
+<!--              更新-->
+<!--            </el-button>-->
             <el-button
               size="mini"
               type="text"
@@ -238,7 +326,7 @@
               v-hasPermi="['file:filemanagement:edit']"
               :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
             >
-              修改
+             更新
             </el-button>
             <el-button
               size="mini"
@@ -298,7 +386,6 @@
               <div style="display: flex; justify-content: center;height: 100px;">
                 <!--文件上传-->
                 <el-upload
-                  v-model="form.filePath"
                   class="upload-file-uploader"
                   :action="uploadFileUrl"
                   :headers="headers"
@@ -308,6 +395,7 @@
                   :on-remove="handleRemove"
                   :on-exceed="handleExceed"
                   :on-success="handleUploadSuccess"
+                  multiple
                   :limit=limit
                   :file-list="fileList"
                 >
@@ -351,13 +439,19 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span='12'>
-            <el-form-item label="文件大小" prop="fileSize">
-              <el-input v-model="form.fileSize" placeholder="请输入文件大小" :disabled="true"/>
+            <el-form-item label="pdf文件大小" prop="pdfSize">
+              <el-input v-model="form.pdfSize" placeholder="请输入pdf文件大小" :disabled="true"/>
             </el-form-item>
           </el-col>
+          <el-col :span='12'>
+            <el-form-item label="word文件大小" prop="wordSize">
+              <el-input v-model="form.wordSize" placeholder="请输入word文件大小" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度使用状态" prop="useState">
               <el-select v-model="form.useState" placeholder="请选择制度使用状态">
@@ -366,14 +460,43 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="所属科室" prop="departmentCategory">
               <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">
                 <!-- 循环遍历this.deptList中的部门数据 -->
                 <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
+              <el-input v-model="form.mainResponsibleDepartment" placeholder="请输入制度主责部门" />
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-input v-model="form.classificationOfSpecialties" placeholder="请输入制度专业分类" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-input v-model="form.regulationLeval" placeholder="请输入制度等级" />
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度编号" prop="regulationNumber">
+              <el-input v-model="form.regulationNumber" placeholder="请输入制度编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="制度标签名称" prop="fileTag">
+              <el-input  autosize v-model="form.fileTag" placeholder="请输入制度标签名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -386,21 +509,46 @@
     <!-- 更新文件对话框 -->
     <el-dialog :title="title" :visible.sync="fileUpdateDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-        <el-upload
-          class="update-file-uploader"
-          :action="uploadFileUrl"
-          :headers="headers"
-          :before-upload="handleBeforeUpload"
-          :on-change="handleFileChange"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-exceed="handleExceed"
-          :on-success="handleUploadSuccess"
-          :limit="limit"
-          :file-list="fileList"
-        >
-          <el-button size="small" type="primary">点击上传</el-button>
-        </el-upload>
+        <el-row>
+          <el-col :span="24">
+            <!-- 使用Flex布局将上传文件按钮水平居中 -->
+            <div style="display: flex; justify-content: center;height: 100px;">
+              <!--文件上传-->
+              <el-upload
+                v-model="form.filePath"
+                class="upload-file-uploader"
+                :action="uploadFileUrl"
+                :headers="headers"
+                :before-upload="handleBeforeUpload"
+                :on-change="handleFileChange"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-exceed="handleExceed"
+                :on-success="handleUploadSuccess"
+                :limit=limit
+                :file-list="fileList"
+              >
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+            </div>
+          </el-col>
+        </el-row>
+<!--        <el-upload-->
+<!--          class="update-file-uploader"-->
+<!--          :action="uploadFileUrl"-->
+<!--          :headers="headers"-->
+<!--          :before-upload="handleBeforeUpload"-->
+<!--          :on-change="handleFileChange"-->
+<!--          :on-preview="handlePreview"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :on-exceed="handleExceed"-->
+<!--          :on-success="handleUploadSuccess"-->
+<!--          :limit="limit"-->
+<!--          :file-list="fileList"-->
+<!--        >-->
+<!--          <el-button size="small" type="primary">点击上传</el-button>-->
+<!--        </el-upload>-->
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="updateSubmitForm">确 定</el-button>
@@ -411,6 +559,30 @@
     <!-- 修改文件对话框 -->
     <el-dialog :title="title" :visible.sync="fileModifyDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-row>
+          <el-col :span="24">
+            <!-- 使用Flex布局将上传文件按钮水平居中 -->
+            <div style="display: flex; justify-content: center;height: 100px;">
+              <!--文件上传-->
+              <el-upload
+                class="upload-file-uploader"
+                :action="uploadFileUrl"
+                :headers="headers"
+                :before-upload="handleBeforeUpload"
+                :on-change="handleFileChange"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-exceed="handleExceed"
+                :on-success="handleUploadSuccess"
+                multiple
+                :limit=limit
+                :file-list="fileList"
+              >
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+            </div>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="制度标题" prop="regulationsTitle">
@@ -463,6 +635,37 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
+              <el-input v-model="form.mainResponsibleDepartment" placeholder="请输入制度主责部门" />
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-input v-model="form.classificationOfSpecialties" placeholder="请输入制度专业分类" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-input v-model="form.regulationLeval" placeholder="请输入制度等级" />
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度编号" prop="regulationNumber">
+              <el-input v-model="form.regulationNumber" placeholder="请输入制度编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="制度标签名称" prop="fileTag">
+              <el-input v-model="form.fileTag" placeholder="请输入制度标签名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="modifySubmitForm">确 定</el-button>
@@ -483,6 +686,17 @@
     addFilemanagement,
     updateFilemanagement
   } from "@/api/file/filemanagement";
+  import {
+    listProject,
+    getProject,
+    getProject1,
+    getProject2,
+    delProject,
+    addProject,
+    updateProject,
+    getProjectByName,
+    getProjectFileName,
+  } from "@/api/system/project";
   import {getUserProfile02} from '@/api/file/filemanagement'
   import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
@@ -497,7 +711,7 @@
       value: [String, Object, Array],
       limit: {
         type: Number,
-        default: 1,
+        default: 2,
       },
       fileSize: {
         type: Number,
@@ -514,6 +728,7 @@
     },
     data() {
       return {
+        projectNames:[],
         //部门列表
         deptList: [],
         //当前账号的dept
@@ -565,20 +780,37 @@
           effectiveDate: null,
           fileName: null,
           filePath: null,
+          pdfPath: null,
+          wordPath: null,
           fileType: null,
           fileSize: null,
+          pdfSize: null,
+          wordSize: null,
           fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
           departmentCategory: null,
+          mainResponsibleDepartment: null,
+          classificationOfSpecialties: null,
+          regulationLeval: null,
+          regulationNumber: null,
           fileTag: null,
           oldRegulationsId: null,
           revisionDate: null,
           revisionContent: null,
           reviser: null,
+          projectIds: null,
           newFlag: null,
           newRegulationsId: null
+        },
+        //流程查询参数
+        projecQueryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          id: null,
+          name: null,
+          state: null
         },
 
         // 表单参数
@@ -586,21 +818,31 @@
           regulationsId: null,
           regulationsTitle: null,
           useScope: null,
+          uploadDate: null,
           effectiveDate: null,
           fileName: null,
           filePath: null,
+          pdfPath: null,
+          wordPath: null,
           fileType: null,
           fileSize: null,
+          pdfSize: null,
+          wordSize: null,
           fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
           departmentCategory: null,
+          mainResponsibleDepartment: null,
+          classificationOfSpecialties: null,
+          regulationLeval: null,
+          regulationNumber: null,
           fileTag: null,
           oldRegulationsId: null,
           revisionDate: null,
           revisionContent: null,
           reviser: null,
+          projectIds: null,
           newFlag: null,
           newRegulationsId: null
         },
@@ -724,6 +966,20 @@
           this.loading = false;
         });
       },
+      /** 查询绑定的流程信息 */
+      handleViewDetails(row) {
+        let projectList;
+        listProject(this.projecQueryParams).then(response => {
+          projectList = response.data;
+          projectList.forEach(process => {
+            if (process.state && process.state.includes(row.regulationsId)) {
+              this.projectNames.push(process.name);
+            }
+          });
+
+        })
+      },
+
       // 文件上传取消按钮
       uploadCancel() {
         this.fileUploadDialogVisible = false;
@@ -823,8 +1079,8 @@
       /** 上传文件提交按钮 */
       uploadSubmitForm() {
         // 首先检查 fileList 是否为空
-        if (!this.form.filePath) {
-          this.$message.error("请上传文件");
+        if (!this.form.wordPath && !this.form.pdfPath) {
+          this.$message.error("请上传文件！");
           return;
         }
         this.$refs["form"].validate(valid => {
@@ -841,19 +1097,77 @@
         this.fileList = [];
       },
       /** 修改文件提交按钮 */
-      modifySubmitForm() {
+      modifySubmitForm(file,fileList) {
+        console.log("Before validate - fileList:", this.fileList);
+        console.log("file=======>:", file);
         this.$refs["form"].validate(valid => {
           if (valid) {
             if (this.form.regulationsId != null) {
-              updateFilemanagement(this.form).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.fileModifyDialogVisible = false;
-                this.getList();
-                console.log("修改文件提交按钮=>",this.form);
+              const thisId = this.form.regulationsId;
+              console.log("thisId=>",thisId);
+              console.log("newform=>",this.form);
+              // 初始化文件路径为 null 或空字符串
+              let pdfFilePath = '';
+              let wordFilePath = '';
+
+              // 遍历文件列表，检查文件名是否包含 .pdf 或 .word 后缀
+              this.fileList.forEach(item => {
+                if (item.name.toLowerCase().endsWith('.pdf')) {
+                  pdfFilePath = item.response ? item.response.url : '';
+                } else if (item.name.toLowerCase().endsWith('.doc') || item.name.toLowerCase().endsWith('.docx')) {
+                  wordFilePath = item.response ? item.response.url : '';
+                }
               });
+
+              // 如果没有 .pdf 文件或 .word 文件，将对应的路径设置为空
+              if (!pdfFilePath) {
+                this.form.pdfPath = '';
+                this.form.pdfSize = '';
+              } else {
+                this.form.pdfPath = pdfFilePath;
+              }
+
+              if (!wordFilePath) {
+                this.form.wordPath = '';
+                this.form.wordSize = '';
+              } else {
+                this.form.wordPath = wordFilePath;
+              }
+
+              this.form.oldRegulationsId = this.form.regulationsId;
+              console.log("this.form.newRegulationsId=>",this.form.newRegulationsId);
+              console.log("(this.form.newRegulationsId == null)",(this.form.newRegulationsId == null));
+              console.log("(thisId == this.form.newRegulationsId)",(thisId === this.form.newRegulationsId));
+              addFilemanagement(this.form).then(response => {
+                const newId = response.data;
+                this.$modal.msgSuccess("更新成功");
+                this.fileModifyDialogVisible = false;
+                this.form.newRegulationsId = null;
+                //更新历史版本制度
+                getFilemanagement(this.form.oldRegulationsId).then(response => {
+                  const lastForm = response.data;
+                  lastForm.newFlag = 0;
+                  lastForm.newRegulationsId = newId;
+                  console.log("上一表单=>",lastForm);
+                  updateFilemanagement(lastForm).then(response => {
+                    this.getList();
+                  });
+                });
+                // this.getList();
+                console.log("更新文件提交按钮1=>",this.form);
+                console.log("response=>",response);
+              });
+
+              // updateFilemanagement(this.form).then(response => {
+              //   this.$modal.msgSuccess("修改成功");
+              //   this.fileModifyDialogVisible = false;
+              //   this.getList();
+              //   console.log("修改文件提交按钮=>",this.form);
+              // });
             }
           }
         });
+        this.fileList = [];
       },
       /** 更新文件提交按钮 */
       updateSubmitForm() {
@@ -873,7 +1187,7 @@
               this.form.oldRegulationsId = this.form.regulationsId;
               console.log("this.form.newRegulationsId=>",this.form.newRegulationsId);
               console.log("(this.form.newRegulationsId == null)",(this.form.newRegulationsId == null));
-              console.log("(thisId == this.form.newRegulationsId)",(thisId == this.form.newRegulationsId));
+              console.log("(thisId == this.form.newRegulationsId)",(thisId === this.form.newRegulationsId));
               addFilemanagement(this.form).then(response => {
                 const newId = response.data;
                 this.$modal.msgSuccess("更新成功");
@@ -933,20 +1247,6 @@
           console.log("删除文件刷新2");
         }).catch(() => {
         });
-
-
-        // if(row.oldRegulationsId != null) {
-        //   getFilemanagement(row.oldRegulationsId).then(response => {
-        //     console.log("当前表单3=>",this.form);
-        //     const lastForm = response.data;
-        //     console.log("上一表单=>",lastForm);
-        //     lastForm.newFlag = 1;
-        //     console.log("上一表单=>",lastForm);
-        //     updateFilemanagement(lastForm).then(response => {
-        //     });
-        //   });
-        //   this.getList();
-        // }
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -978,7 +1278,7 @@
         callback();
       },
       // 上传前校检格式和大小
-      handleBeforeUpload(file) {
+      handleBeforeUpload(file,fileList) {
         console.log("handleBeforeUpload:file=====>",file);
         // 上传前校检文件格式
         const allowedTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
@@ -988,48 +1288,44 @@
         }
         return isAllowedType;
       },
-      /** 上传文件时的动作*/
       handleFileChange(file, fileList) {
         this.fileList = fileList;
-        console.log("file====>",file);
-        console.log("fileList====>",fileList);
-        console.log("fileList11111111111====>",this.fileList);
-        console.log(this.filemanagementList);
-
-
-        const uploadedFile = file.raw; // 获取上传的文件对象
-
-        // // 使用 FileReader 读取文件内容
-        // const reader = new FileReader();
-        // reader.onload = (e) => {
-        //   this.form.fileContent = e.target.result; // 将文件内容赋值给 fileContent
-        //   console.log("fileContent=======>", this.form.fileContent);
-        //   // 在这里你可以调用 getUserInfo 或者其他需要在读取文件后执行的操作
-        //   // this.getUserInfo();
-        // };
-        // reader.readAsText(uploadedFile, 'UTF-8'); // 读取文件内容为字符串，指定UTF-8编码
-
-
-        // 将文件名填充到对应的输入框
-        this.form.fileName = uploadedFile.name;
-        //将文件路径填充到对应的输入框
-        this.form.filePath = this.path;
-        console.log("filePath=======>", this.form.filePath);
-        // 将文件类型填充到对应的输入框
-        this.form.fileType = this.getFileType(this.form.filePath);
-        console.log("fileType=======>", this.form.fileType);
-        // 将文件大小填充到对应的输入框
-        // this.form.fileSize = this.formatFileSize(uploadedFile.size);
-        this.form.fileSize = uploadedFile.size;
-        // 获取当前时间作为上传日期，并填充到对应的输入框
+        console.log("file====>", file);
+        console.log("fileList====>", fileList);
+        // 检查文件类型
+        if (file.name.endsWith('.pdf')) {
+          this.form.pdfPath = this.path;
+          this.form.pdfSize = file.size;
+        } else if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+          this.form.wordPath = this.path;
+          this.form.wordSize = file.size;
+        }
+        this.form.fileName = file.name.substring(0, file.name.lastIndexOf('.'));
         const currentDate = new Date();
         this.form.uploadDate = currentDate.toISOString().split('T')[0];
-        if (this.form.fileType === 'word') {
-          this.readWordFile(uploadedFile);
-        } else if (this.form.fileType === 'pdf') {
-          this.readPdfFile(uploadedFile);
-        }
         this.getUserInfo();
+        // if (fileList.length === 2) {
+        //   const uploadedWordFile = fileList.find(f => f.name.endsWith('.doc') || f.name.endsWith('.docx'));
+        //   const uploadedPdfFile = fileList.find(f => f.name.endsWith('.pdf'));
+        //
+        //   if (uploadedWordFile && uploadedPdfFile) {
+        //     this.form.fileName = uploadedPdfFile.name.substring(0, uploadedPdfFile.name.lastIndexOf('.'));
+        //     this.form.wordSize = uploadedWordFile.size;
+        //     this.form.pdfSize = uploadedPdfFile.size;
+        //
+        //     if (uploadedWordFile.response && uploadedPdfFile.response) {
+        //       this.form.wordPath = uploadedWordFile.response.url;
+        //       this.form.pdfPath = uploadedPdfFile.response.url;
+        //     }
+        //
+        //     const currentDate = new Date();
+        //     this.form.uploadDate = currentDate.toISOString().split('T')[0];
+        //
+        //     this.getUserInfo();
+        //   } else {
+        //     this.$message.warning('请上传一个Word文件和一个PDF文件');
+        //   }
+        // }
       },
       readWordFile(file) {
         console.log("readWordFile=======>");
@@ -1082,7 +1378,10 @@
       // 上传成功回调
       handleUploadSuccess(res, file) {
         const uploadedFile = file.raw; // 获取上传的文件对象
-        const uploadedFileName = uploadedFile.name; // 获取上传文件的文件名
+        console.log("上传成功回调file=====>",file);
+        console.log("上传成功回调uploadedFile=====>",uploadedFile);
+        this.path = res.url;
+        const uploadedFileName = uploadedFile.name.substring(0, uploadedFile.name.lastIndexOf('.')); // 获取上传文件的文件名
         // 发起请求检查文件名是否存在于数据库中
         const isFileNameDuplicate = this.filemanagementList.some(item => item.fileName === uploadedFileName);
         console.log("发起请求检查文件名是否存在于数据库中",isFileNameDuplicate);
@@ -1134,13 +1433,23 @@
         }
       },
       handleRemove(file, fileList) {
+        // 清除对应字段
+        if (file.name.endsWith('.pdf')) {
+          this.form.pdfPath = '';
+          this.form.pdfSize = '';
+        } else if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+          this.form.wordPath = '';
+          this.form.wordSize = '';
+        }
+        this.form.departmentCategory = '';
+        this.fileList = fileList;
         console.log(file, fileList);
       },
       handlePreview(file) {
         console.log(file);
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 1 个文件`);
+        this.$message.warning(`当前限制选择 2 个文件`);
       },
       // beforeRemove(file, fileList) {
       //   return this.$confirm(`确定移除 ${file.name}？`);
@@ -1214,27 +1523,30 @@
         })
       },
       //文件预览
-      previewFile(filePath) {
-        const fileType = this.getFileType(filePath);
-        console.log("filePath:",filePath);
-        console.log("fileType:",fileType);
-        switch (fileType) {
-          case 'pdf':
-            console.log("fileType1111:",fileType);
-            window.open(filePath, '_blank');
-            break;
-          case 'word':
-            const pdfFilePath = this.convertToPdfPath(filePath);
-            console.log("filePath:",filePath);
-            console.log("pdfFilePath:",pdfFilePath);
-            word2Pdf(filePath,pdfFilePath).then(response => {
-              window.open(pdfFilePath, '_blank');
-            })
-//http://172.19.4.28:81/file/172.19.4.28:8080/profile/upload/2024/06/27/%E6%96%87%E4%BB%B64_20240627173517A010.pdf
-            //http://172.19.4.28:8080/profile/upload/2024/06/27/%E6%96%87%E4%BB%B64_20240627173517A010.pdf
-            break;
+      previewFile(pdfPath) {
+        if(pdfPath) {
+          window.open(pdfPath, '_blank');
+        } else {
+          this.$modal.msgError('没有上传pdf文件，无法预览！');
         }
-        // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
+        // const fileType = this.getFileType(filePath);
+        // console.log("filePath:",filePath);
+        // console.log("fileType:",fileType);
+        // switch (fileType) {
+        //   case 'pdf':
+        //     console.log("fileType1111:",fileType);
+        //     window.open(filePath, '_blank');
+        //     break;
+        //   case 'word':
+        //     const pdfFilePath = this.convertToPdfPath(filePath);
+        //     console.log("filePath:",filePath);
+        //     console.log("pdfFilePath:",pdfFilePath);
+        //     word2Pdf(filePath,pdfFilePath).then(response => {
+        //       window.open(pdfFilePath, '_blank');
+        //     })
+        //     break;
+        // }
+        // // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
 
       },
 

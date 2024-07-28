@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item title="制度检索" name="1">
+    <el-collapse v-model="activeNames" >
+      <el-collapse-item title="制度检索" name="search">
         <div>
           <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
                    label-width="68px">
@@ -101,22 +101,46 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
-            <!--            <el-form-item label="制度标签名称" prop="fileTag">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.fileTag"-->
-            <!--                placeholder="请输入制度标签名称"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
-            <!--            <el-form-item label="历史版本制度" prop="oldRegulationsId">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.oldRegulationsId"-->
-            <!--                placeholder="请输入历史版本制度"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
+            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
+              <el-input
+                v-model="queryParams.mainResponsibleDepartment"
+                placeholder="请输入制度主责部门"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-input
+                v-model="queryParams.classificationOfSpecialties"
+                placeholder="请输入制度专业分类"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-input
+                v-model="queryParams.regulationLeval"
+                placeholder="请输入制度等级"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度编号" prop="regulationNumber">
+              <el-input
+                v-model="queryParams.regulationNumber"
+                placeholder="请输入制度编号"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="制度标签名称" prop="fileTag">
+              <el-input
+                v-model="queryParams.fileTag"
+                placeholder="请输入制度标签名称"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
             <!--            <el-form-item label="修订时间" prop="revisionDate">-->
             <!--              <el-date-picker clearable-->
             <!--                              v-model="queryParams.revisionDate"-->
@@ -142,11 +166,42 @@
       </el-collapse-item>
     </el-collapse>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['file:filemanagement:remove']"-->
+<!--        >删除-->
+<!--        </el-button>-->
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['file:filemanagement:export']"
+        >导出</el-button>
+      </el-col>
+
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
 
     <el-table v-loading="loading" :data="filemanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-<!--      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>-->
-      <el-table-column label="制度标题" align="center" prop="regulationsTitle"/>
+      <!--      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>-->
+      <el-table-column label="制度标题" align="center" prop="regulationsTitle">S
+        <template slot-scope="scope">
+          <a  @click.prevent="previewFile(scope.row.filePath)" style="color: #6495ED;">{{scope.row.regulationsTitle}}</a>
+        </template>
+      </el-table-column>
       <el-table-column label="适用范围" align="center" prop="useScope"/>
       <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
@@ -159,13 +214,25 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名称" align="center" prop="fileName"/>
-      <el-table-column label="文件下载" align="center" prop="filePath">
-        <template slot-scope="scope">
-          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>
+      <!--      <el-table-column label="文件下载" align="center" prop="filePath">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <el-table-column label="PDF下载" align="center" prop="pdfPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.pdfPath" @click.prevent="downloadFile(scope.row.pdfPath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
-      <el-table-column label="文件类型" align="center" prop="fileType"/>
-      <el-table-column label="文件大小" align="center" prop="fileSize"/>
+      <el-table-column label="Word下载" align="center" prop="wordPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
+      <!--      <el-table-column label="文件大小" align="center" prop="fileSize"/>-->
+      <el-table-column label="pdf文件大小" align="center" prop="pdfSize"/>
+      <el-table-column label="word文件大小" align="center" prop="wordSize"/>
       <el-table-column label="制度创建日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
@@ -174,18 +241,72 @@
       <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>
       <el-table-column label="制度使用状态" align="center" prop="useState"/>
       <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
-<!--      <el-table-column label="制度标签名称" align="center" prop="fileTag"/>-->
-<!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
-<!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
-<!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="修订内容" align="center" prop="revisionContent"/>-->
-<!--      <el-table-column label="修订人" align="center" prop="reviser"/>-->
+      <el-table-column label="制度主责部门" align="center" prop="mainResponsibleDepartment" />
+      <el-table-column label="制度专业分类" align="center" prop="classificationOfSpecialties" />
+      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
+      <el-table-column label="制度编号" align="center" prop="regulationNumber" />
+      <el-table-column label="制度标签名称" align="center" prop="fileTag" />
+      <el-table-column label="关联流程" align="center">
+        <template slot-scope="scope">
+          <!-- 111111111111制度文件 -->
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击查看详情！"
+            placement="top"
+          >
+            <!-- popover：1、制度文件显示 -->
+            <el-popover
+              placement="bottom"
+              title="绑定的流程"
+              trigger="click"
+            >
+              <template slot="reference">
+                <span class="file">
+                  <i class="el-icon-files"></i>
+                </span>
+              </template>
+              <!-- slot插槽展示自定义内容 -->
+              <div v-if="projectNames.length != 0">
+                <ul>
+                  <li v-for="(file, index) in projectNames" :key="index">
+                    {{ file }}
+                  </li>
+                </ul>
+              </div>
+              <div v-else>"无绑定"</div>
+              <!-- slot插槽over -->
+            </el-popover>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
+      <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
+      <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
+      <!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ parseTime(scope.row.revisionDate, '{y}-{m}-{d}') }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <!--      <el-table-column label="修订内容" align="center" prop="revisionContent"/>-->
+      <!--      <el-table-column label="修订人" align="center" prop="reviser"/>-->
+
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+
+          <!--          <template v-if="this.thisDept == '研发' || this.thisDept == this.form.departmentCategory">-->
+          <!--          :disabled="this.thisDept !== scope.row.departmentCategory"-->
+          <!--            <el-button-->
+          <!--              size="mini"-->
+          <!--              type="text"-->
+          <!--              icon="el-icon-upload"-->
+          <!--              @click="handleUpdate(scope.row)"-->
+          <!--              v-hasPermi="['file:filemanagement:edit']"-->
+          <!--              :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"-->
+          <!--            >-->
+          <!--              更新-->
+          <!--            </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -193,7 +314,8 @@
             @click="handleModify(scope.row)"
             v-hasPermi="['file:filemanagement:edit']"
             :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
-          >修改
+          >
+            更新
           </el-button>
           <el-button
             size="mini"
@@ -202,17 +324,20 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
             :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
-          >删除
+          >
+            删除
           </el-button>
+          <!--          </template>-->
         </template>
       </el-table-column>
+
       <el-table-column label="查看" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="previewFile(scope.row.filePath)"
+            @click="previewFile(scope.row.pdfPath)"
           >预览
           </el-button>
         </template>
@@ -281,6 +406,37 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
+              <el-input v-model="form.mainResponsibleDepartment" placeholder="请输入制度主责部门" />
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-input v-model="form.classificationOfSpecialties" placeholder="请输入制度专业分类" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-input v-model="form.regulationLeval" placeholder="请输入制度等级" />
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度编号" prop="regulationNumber">
+              <el-input v-model="form.regulationNumber" placeholder="请输入制度编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="制度标签名称" prop="fileTag">
+              <el-input v-model="form.fileTag" placeholder="请输入制度标签名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="modifySubmitForm">确 定</el-button>
@@ -299,6 +455,17 @@
     updateFilemanagement,
     getRegulationsHistory
   } from "@/api/file/filemanagement";
+  import {
+    listProject,
+    getProject,
+    getProject1,
+    getProject2,
+    delProject,
+    addProject,
+    updateProject,
+    getProjectByName,
+    getProjectFileName,
+  } from "@/api/system/project";
   import {getUserProfile02} from '@/api/file/filemanagement'
   import {getDept02} from '@/api/file/filemanagement'
   import {getToken} from "@/utils/auth"
@@ -308,12 +475,14 @@
     name: "HistoryVersions",
     data() {
       return {
+        projectNames:[],
         //部门列表
         deptList: [],
         //当前账号的dept
         thisDept: null,
         //文件上传绑定的部门
         fileDept: null,
+        activeNames: [], // 默认展开的折叠项的名字
         number: 0,
         uploadList: [],
         fileList: [],
@@ -356,22 +525,31 @@
           useScope: null,
           uploadDate: null,
           effectiveDate: null,
-          regulationsAddress: null,
           fileName: null,
           filePath: null,
+          pdfPath: null,
+          wordPath: null,
           fileType: null,
           fileSize: null,
+          pdfSize: null,
+          wordSize: null,
+          fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
           departmentCategory: null,
+          mainResponsibleDepartment: null,
+          classificationOfSpecialties: null,
+          regulationLeval: null,
+          regulationNumber: null,
           fileTag: null,
           oldRegulationsId: null,
           revisionDate: null,
           revisionContent: null,
           reviser: null,
+          projectIds: null,
           newFlag: null,
-          newRegulationsId: null,
+          newRegulationsId: null
         },
 
         // 表单参数
@@ -379,23 +557,33 @@
           regulationsId: null,
           regulationsTitle: null,
           useScope: null,
+          uploadDate: null,
           effectiveDate: null,
-          regulationsAddress: null,
           fileName: null,
           filePath: null,
+          pdfPath: null,
+          wordPath: null,
           fileType: null,
           fileSize: null,
+          pdfSize: null,
+          wordSize: null,
+          fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
           departmentCategory: null,
+          mainResponsibleDepartment: null,
+          classificationOfSpecialties: null,
+          regulationLeval: null,
+          regulationNumber: null,
           fileTag: null,
           oldRegulationsId: null,
           revisionDate: null,
           revisionContent: null,
           reviser: null,
+          projectIds: null,
           newFlag: null,
-          newRegulationsId: null,
+          newRegulationsId: null
         },
         // 表单校验
         rules: {
@@ -674,6 +862,12 @@
           this.getList();
         }
       },
+      /** 导出按钮操作 */
+      handleExport() {
+        this.download('file/filemanagement/export', {
+          ...this.queryParams
+        }, `filemanagement_${new Date().getTime()}.xlsx`)
+      },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {
         const KB = 1024;
@@ -732,27 +926,12 @@
         })
       },
       //文件预览
-      previewFile(filePath) {
-        const fileType = this.getFileType(filePath);
-        console.log("filePath:",filePath);
-        console.log("fileType:",fileType);
-        switch (fileType) {
-          case 'pdf':
-            console.log("fileType1111:",fileType);
-            window.open(filePath, '_blank');
-            break;
-          case 'word':
-            const pdfFilePath = this.convertToPdfPath(filePath);
-            console.log("filePath:",filePath);
-            console.log("pdfFilePath:",pdfFilePath);
-            word2Pdf(filePath,pdfFilePath).then(response => {
-              window.open(pdfFilePath, '_blank');
-            })
-
-            break;
+      previewFile(pdfPath) {
+        if(pdfPath) {
+          window.open(pdfPath, '_blank');
+        } else {
+          this.$modal.msgError('没有上传pdf文件，无法预览！');
         }
-        // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
-
       },
 
       convertToPdfPath(wordFilePath) {

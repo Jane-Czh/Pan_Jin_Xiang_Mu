@@ -184,14 +184,21 @@
                   <li v-for="(file, index) in nodeFileNames" :key="index">
                     {{ file }}
                     <el-divider direction="vertical"></el-divider>
-                    <!-- 下载文件  -->
+                    <!-- 1、下载文件 pdf -->
                     <i class="el-icon-download download-icon">
                       <!-- <a :href="baseUrl + fileHyperLinks[index]" download
                         >点击下载</a
                       > -->
 
                       <a @click.prevent="downloadFile(fileHyperLinks[index])"
-                        >点击下载</a
+                        >点击下载pdf</a
+                      >
+                    </i>
+                    <el-divider direction="vertical"></el-divider>
+                    <!-- 2、word  -->
+                    <i class="el-icon-download download-icon">
+                      <a @click.prevent="downloadFile(wordHyperLinks[index])"
+                        >点击下载word</a
                       >
                     </i>
                     <el-divider direction="vertical"></el-divider>
@@ -402,6 +409,8 @@ export default {
       nodeFileNames: [],
       // 制度文件下载链接
       fileHyperLinks: [],
+      //word
+      wordHyperLinks: [],
 
       //  ----------------------------------------------
 
@@ -522,10 +531,7 @@ export default {
         for (var i = 0; i < response.length; i++) {
           console.log("response[i].createBy===>", response[i].createBy);
 
-          if (
-            this.departmentCategory ==
-            response[i].createBy.split("/")[1]
-          ) {
+          if (this.departmentCategory == response[i].createBy.split("/")[1]) {
             this.projectList.push(response[i]);
           }
         }
@@ -588,8 +594,10 @@ export default {
     getRegularFileData(row) {
       //存储制度文件名称
       this.nodeFileNames = [];
-      //存储相应的下载地址
+      //存储相应的下载地址--pdf
       this.fileHyperLinks = [];
+      // -- word
+      this.wordHyperLinks = [];
 
       console.log("1.1 查询制度文件列表 row=====>", row);
       listFilemanagement(this.queryParams).then((response) => {
@@ -604,7 +612,9 @@ export default {
         if (row != null) {
           //将匹配的记录的文件名、链接保存 (nodeFileNames )
           this.nodeFileNames.push(row.fileName);
-          this.fileHyperLinks.push(row.filePath);
+          // this.fileHyperLinks.push(row.filePath); 原来是word和pdf分开管理的
+          this.fileHyperLinks.push(row.pdfPath);
+          this.wordHyperLinks.push(row.wordPath);
         }
       });
       // console.log("this.nodeFileNames===>", this.nodeFileNames);

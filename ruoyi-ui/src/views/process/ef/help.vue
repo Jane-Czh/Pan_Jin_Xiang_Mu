@@ -49,6 +49,13 @@
           <i class="el-icon-link"></i> 为绑定制度文件.
         </div>
       </el-tab-pane>
+      <!--  -->
+      <el-tab-pane label="如何编辑节点属性">
+        <el-divider content-position="left">如何编辑节点属性</el-divider>
+        <div>
+          点击选中节点，在页面右侧的【编辑】侧边栏中进行编辑相关属性.
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </el-dialog>
 </template>

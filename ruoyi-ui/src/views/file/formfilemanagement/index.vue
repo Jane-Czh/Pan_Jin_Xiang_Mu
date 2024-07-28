@@ -115,6 +115,16 @@
           v-hasPermi="['file:formfilemanagement:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['file:formfilemanagement:list']"
+        >导出</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -154,20 +164,11 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-upload"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['file:formfilemanagement:edit']"
-            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
-          >更新
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
             :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
-          >修改
+          >更新
           </el-button>
           <el-button
             size="mini"
@@ -221,7 +222,6 @@
                 class="upload-form-uploader"
                 :action="uploadFileUrl"
                 :headers="headers"
-                :before-upload="handleBeforeUpload"
                 :on-change="handleFileChange"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
@@ -285,7 +285,6 @@
           class="upload-form-uploader"
           :action="uploadFileUrl"
           :headers="headers"
-          :before-upload="handleBeforeUpload"
           :on-change="handleFileChange"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
@@ -306,6 +305,29 @@
     <!-- 修改文件对话框 -->
     <el-dialog :title="title" :visible.sync="formModifyDialogVisible" width="1000px" :center="true" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-row>
+          <el-col :span="24">
+            <!-- 使用Flex布局将上传文件按钮水平居中 -->
+            <div style="display: flex; justify-content: center;height: 100px;">
+              <!--文件上传-->
+              <el-upload
+                class="upload-file-uploader"
+                :action="uploadFileUrl"
+                :headers="headers"
+                :on-change="handleFileChange"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-exceed="handleExceed"
+                :on-success="handleUploadSuccess"
+                multiple
+                :limit=limit
+                :file-list="formList"
+              >
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
+            </div>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="表单标题" prop="formTitle">
@@ -639,15 +661,36 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.formId != null) {
-            updateFormfilemanagement(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+            console.log("newform=>",this.form);
+            this.form.oldFormId = this.form.formId;
+            addFormfilemanagement(this.form).then(response => {
+              const newId = response.data;
+              this.$modal.msgSuccess("更新成功");
               this.formModifyDialogVisible = false;
-              this.getList();
-              console.log("修改表单文件提交按钮=>",this.form);
+              this.form.newformId = null;
+              //更新历史版本制度
+              getFormfilemanagement(this.form.oldFormId).then(response => {
+                const lastForm = response.data;
+                lastForm.newFlag = 0;
+                lastForm.newFormId = newId;
+                console.log("上一表单=>",lastForm);
+                updateFormfilemanagement(lastForm).then(response => {
+                  this.getList();
+                });
+              });
+              console.log("更新文件提交按钮1=>",this.form);
+              console.log("response=>",response);
             });
+            // updateFormfilemanagement(this.form).then(response => {
+            //   this.$modal.msgSuccess("修改成功");
+            //   this.formModifyDialogVisible = false;
+            //   this.getList();
+            //   console.log("修改表单文件提交按钮=>",this.form);
+            // });
           }
         }
       });
+      this.formList = [];
     },
     /** 更新表单文件提交按钮 */
     updateSubmitForm() {
@@ -743,6 +786,12 @@ export default {
     //     this.getList();
     //   }
     // },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('file/formfilemanagement/export', {
+        ...this.queryParams
+      }, `formmanagement_${new Date().getTime()}.xlsx`)
+    },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
       console.log("handleBeforeUpload:file=====>",file);
@@ -758,9 +807,11 @@ export default {
     handleFileChange(file, formList) {
       this.formList = formList;
       console.log('上传文件时的form1',this.form);
+      console.log('上传文件时的formList=====>',this.formList);
+      console.log("上传文件时的file====>", file);
       const uploadedFile = file.raw; // 获取上传的文件对象
       // 将文件名填充到对应的输入框
-      this.form.formName = uploadedFile.name;
+      this.form.formName = uploadedFile.name.substring(0, uploadedFile.name.lastIndexOf('.'));
       //将文件路径填充到对应的输入框
       this.form.formPath = this.path;
       // 将文件类型填充到对应的输入框
@@ -853,37 +904,29 @@ export default {
         return (sizeInBytes / GB).toFixed(2) + "GB";
       }
     },
-    // getFileType(fullType) {  //获取详细的文件类型
-    //   // 根据完整的文件类型(fullType)获取简短的文件类型
-    //   if (fullType.includes('pdf')) {
-    //     return 'pdf';
-    //   } else if (fullType.includes('word')) {
-    //     return 'word';
-    //   } else {
-    //     // 其他类型的文件处理方式
-    //     return 'other';
-    //   }
-    // },
     getFileType(formPath) {
+      const FILE_TYPE_MAP = {
+        'pdf': 'pdf',
+        'doc': 'word',
+        'docx': 'word',
+        'xls': 'xls',
+        'xlsx': 'xlsx',
+        'ppt': 'ppt',
+        'pptx': 'pptx',
+        'txt': 'txt',
+        'jpg': 'jpg',
+        'jpeg': 'jpeg',
+        'png': 'png',
+        'gif': 'gif',
+        'bmp': 'bmp',
+      }
       // 获取文件名的后缀名
       const formExtension = formPath.split('.').pop();
-      // 根据文件后缀名判断文件类型
-      switch (formExtension.toLowerCase()) {
-        case 'pdf':
-          return 'pdf';
-        case 'doc':
-        case 'docx':
-          return 'word';
-        case 'xls':
-        case 'xlsx':
-          return 'Excel 文档';
-        case 'ppt':
-        case 'pptx':
-          return 'PowerPoint 文档';
-        // 可以根据需要添加更多的文件类型判断
-        default:
-          return '未知类型';
-      }
+      // 转换为小写并查找映射
+      const type = FILE_TYPE_MAP[formExtension.toLowerCase()];
+
+      // 返回文件类型，如果找不到则返回 'unknown'
+      return type || '未知类型';
     },
     // 调用接口获取用户信息
     getUserInfo() {
@@ -905,26 +948,32 @@ export default {
     },
     //文件预览
     previewFile(filePath) {
+      // 获取文件类型
       const fileType = this.getFileType(filePath);
-      console.log("filePath:",filePath);
-      console.log("fileType:",fileType);
-      switch (fileType) {
-        case 'pdf':
-          console.log("fileType1111:",fileType);
-          window.open(filePath, '_blank');
-          break;
-        case 'word':
-          const pdfFilePath = this.convertToPdfPath(filePath);
-          console.log("filePath:",filePath);
-          console.log("pdfFilePath:",pdfFilePath);
-          word2Pdf(filePath,pdfFilePath).then(response => {
-            window.open(pdfFilePath, '_blank');
-          })
 
-          break;
+      // 检查文件类型是否为 'pdf' 或 'word'
+      if (fileType === 'pdf' || fileType === 'word') {
+        switch (fileType) {
+          case 'pdf':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
+          case 'word':
+            const pdfFilePath = this.convertToPdfPath(filePath);
+            console.log("filePath:",filePath);
+            console.log("pdfFilePath:",pdfFilePath);
+            word2Pdf(filePath, pdfFilePath).then(response => {
+              window.open(pdfFilePath, '_blank');
+            });
+            break;
+        }
+      } else {
+        // 如果文件类型既不是 'pdf' 也不是 'word'，给出提示信息
+        this.$message({
+          message: '无法预览此文件类型',
+          type: 'warning'
+        });
       }
-      // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
-
     },
 
     convertToPdfPath(wordFilePath) {

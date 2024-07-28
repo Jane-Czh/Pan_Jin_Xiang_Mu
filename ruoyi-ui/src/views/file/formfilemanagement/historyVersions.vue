@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-collapse v-model="activeNames" @change="handleChange">
+    <el-collapse v-model="activeNames">
       <el-collapse-item title="制度检索" name="1">
         <div>
           <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
@@ -93,6 +93,32 @@
       </el-collapse-item>
     </el-collapse>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <!--        <el-button-->
+        <!--          type="danger"-->
+        <!--          plain-->
+        <!--          icon="el-icon-delete"-->
+        <!--          size="mini"-->
+        <!--          :disabled="multiple"-->
+        <!--          @click="handleDelete"-->
+        <!--          v-hasPermi="['file:formfilemanagement:remove']"-->
+        <!--        >删除-->
+        <!--        </el-button>-->
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['file:formfilemanagement:export']"
+        >导出</el-button>
+      </el-col>
+
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
 
     <el-table v-loading="loading" :data="formmanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
@@ -230,6 +256,7 @@
         thisDept: null,
         //文件上传绑定的部门
         fileDept: null,
+        activeNames: [], // 默认展开的折叠项的名字
         number: 0,
         uploadList: [],
         formList: [],
@@ -529,6 +556,12 @@
           this.getList();
         }
         this.getList();
+      },
+      /** 导出按钮操作 */
+      handleExport() {
+        this.download('file/formfilemanagement/export', {
+          ...this.queryParams
+        }, `formmanagement_${new Date().getTime()}.xlsx`)
       },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {

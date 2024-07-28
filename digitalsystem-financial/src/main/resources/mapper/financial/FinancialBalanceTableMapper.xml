@@ -80,12 +80,26 @@
                sum(PCV_Finished)                          pcvFinished,
                sum(Month_Amount_InStock)                  monthAmountInStock,
                sum(MonthlyInventoryTotalAmount)           monthlyInventoryTotalAmount,
-               sum(GrowthRate_Inventory)                  growthRateInventory,
-               sum(GrowthRate_Sales)                      growthRateSales,
+               min(GrowthRate_Inventory)                  growthRateInventory,
+               max(GrowthRate_Sales)                      growthRateSales,
                sum(Receivables)                           receivables,
                sum(TurnoverRate_Receivable)               turnoverRateReceivable
         FROM Financial_Balance_table
         WHERE date_format(Year_And_Month, '%Y') = date_format(#{yearAndMonth}, '%Y')
+    </select>
+    <!--  首页数据展示  -->
+    <select id="selectBalanceSumRateByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialBalanceTable">
+        SELECT FB_ID                               fbId,
+               Year_And_Month                      yearAndMonth,
+               GrowthRate_Inventory                  growthRateInventory,
+               GrowthRate_Sales                      growthRateSales,
+               TurnoverRate_Receivable               turnoverRateReceivable
+        FROM Financial_Balance_table
+        WHERE Year_And_Month IN (
+            SELECT MAX(Year_And_Month)
+            FROM Financial_Balance_table
+            WHERE YEAR(Year_And_Month) = YEAR(#{yearAndMonth}) and GrowthRate_Sales is not null
+        )
     </select>
 
     <!--  按月查询MonthlyInventoryTotalAmount  -->

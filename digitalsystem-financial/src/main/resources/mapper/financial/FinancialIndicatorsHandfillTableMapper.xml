@@ -107,6 +107,22 @@
         FROM Financial_Indicators_HandFill_table
         WHERE date_format(Year_And_Month,'%Y') = date_format(#{yearAndMonth},'%Y')
     </select>
+    <!--  首页数据展示  -->
+    <select id="selectHandfillRateByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialIndicatorsHandfillTable">
+        SELECT FIHF_id                      fihfId,
+               Year_And_Month               yearAndMonth,
+               Capital_Turnover_Rate        capitalTurnoverRate,
+               Inventory_Turnover_Rate      inventoryTurnoverRate,
+               Raw_Material_Turnover_Rate   rawMaterialTurnoverRate,
+               InProgress_Turnover_Rate     inprogressTurnoverRate
+        FROM Financial_Indicators_HandFill_table
+        WHERE Year_And_Month IN (
+            SELECT MAX(Year_And_Month)
+            FROM Financial_Indicators_HandFill_table
+            WHERE YEAR(Year_And_Month) = YEAR(#{yearAndMonth}) and Inventory_Turnover_Rate is not null
+        )
+    </select>
+
 
 
     <select id="selectFinancialIndicatorsHandfillTableList" parameterType="FinancialIndicatorsHandfillTable"

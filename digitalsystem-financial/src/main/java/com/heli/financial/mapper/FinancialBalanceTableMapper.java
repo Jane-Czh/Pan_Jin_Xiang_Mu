@@ -20,6 +20,7 @@ public interface FinancialBalanceTableMapper {
 
 
     FinancialBalanceTable selectBalanceSumInfoByYear(@Param("yearAndMonth") Date yearAndMonth);
+    FinancialBalanceTable selectBalanceSumRateByYear(@Param("yearAndMonth") Date yearAndMonth);
 
     Date selectMaxYearAndMonth();
 

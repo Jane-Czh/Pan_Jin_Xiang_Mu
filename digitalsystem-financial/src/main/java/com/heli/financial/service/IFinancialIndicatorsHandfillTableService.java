@@ -29,6 +29,7 @@ public interface IFinancialIndicatorsHandfillTableService {
     FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(Date yearAndMonth);
 
     FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(Date yearAndMonth);
+    FinancialIndicatorsHandfillTable selectHandfillRateByYear(Date yearAndMonth);
 
 
     /**

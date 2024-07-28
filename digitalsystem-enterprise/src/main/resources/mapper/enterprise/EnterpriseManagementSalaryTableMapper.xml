@@ -102,6 +102,12 @@
     </insert>
 
 
+    <!--  清空数据库  -->
+    <delete id="clearSalaryTableAllInfo">
+        truncate table Enterprise_Management_Salary_Table
+    </delete>
+
+
     <!--  批量插入数据库  -->
 <!--    <insert id="batchInsertProductionTable" parameterType="java.util.List">-->
 <!--        insert into Production_Table(CREATED_BY,CREATED_TIME,Acceptance_Date,Launch_Date,-->

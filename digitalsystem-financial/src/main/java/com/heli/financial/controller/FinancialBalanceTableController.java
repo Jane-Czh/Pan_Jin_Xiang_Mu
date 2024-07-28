@@ -77,9 +77,21 @@ public class FinancialBalanceTableController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('financial:balance:sum')")
     @PostMapping("/sum")
-    public AjaxResult mainRevenue(@RequestBody DisplayRequestParam time) {
+    public AjaxResult selectBalanceSumInfoByYear(@RequestBody DisplayRequestParam time) {
         FinancialBalanceTable sumInfoByYear = financialBalanceTableService.selectBalanceSumInfoByYear(time.getStartTime());
-        logger.info("sumInfoByYear: " + sumInfoByYear);
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:balance:sum')")
+    @PostMapping("/rate")
+    public AjaxResult selectBalanceSumRateByYear(@RequestBody DisplayRequestParam time) {
+        FinancialBalanceTable sumInfoByYear = financialBalanceTableService.selectBalanceSumRateByYear(time.getStartTime());
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
         return AjaxResult.success(sumInfoByYear);
     }
 

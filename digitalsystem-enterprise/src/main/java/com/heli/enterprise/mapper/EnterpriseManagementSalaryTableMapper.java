@@ -67,4 +67,5 @@ public interface EnterpriseManagementSalaryTableMapper {
     public int deleteEnterpriseManagementSalaryTableByEsIds(Long[] esIds);
 
 
+    void clearSalaryTableAllInfo();
 }

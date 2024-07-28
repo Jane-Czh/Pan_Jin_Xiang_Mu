@@ -22,6 +22,12 @@ public class FinancialDailyInProgressTableServiceImpl implements IFinancialDaily
     private FinancialDailyInProgressTableMapper financialDailyInProgressTableMapper;
 
     @Override
+    public FinancialDailyInProgressTable selectDailyInProgressSumInfoByMonth(Date yearAndMonth) {
+        System.out.println("111"+financialDailyInProgressTableMapper.selectDailyInProgressSumInfoByMonth(yearAndMonth));
+        return financialDailyInProgressTableMapper.selectDailyInProgressSumInfoByMonth(yearAndMonth);
+    }
+
+    @Override
     public boolean checkDailyInProgressTableIsExist(Date yearAndMonth) {
 
         return financialDailyInProgressTableMapper.checkDailyInProgressTableIsExist(yearAndMonth);

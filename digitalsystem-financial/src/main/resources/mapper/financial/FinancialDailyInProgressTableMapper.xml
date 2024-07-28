@@ -18,6 +18,15 @@
         select id, InProgress_DayRevenue, Data_Time, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Financial_Daily_InProgress_table
     </sql>
 
+    <!--  首页数据展示  -->
+    <select id="selectDailyInProgressSumInfoByMonth" parameterType="Date" resultType="com.heli.financial.domain.FinancialDailyInProgressTable">
+        SELECT max(id)                         id,
+               MAX(Data_Time)             dataTime,
+               sum(InProgress_DayRevenue) inProgressDayRevenue
+        FROM Financial_Daily_InProgress_table
+        WHERE date_format(Data_Time, '%Y-%M') = date_format(#{yearAndMonth}, '%Y-%M')
+    </select>
+
     <!-- 查询指定年月的Financial_Daily_InProgress_table是否存在-->
     <select id="checkDailyInProgressTableIsExist" resultType="java.lang.Boolean">
         select count(1) from Financial_Daily_InProgress_table where Data_Time = #{yearAndMonth}

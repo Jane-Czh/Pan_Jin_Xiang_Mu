@@ -59,12 +59,12 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         dates.add(balanceMaxMonth);
 
         Date minDate = Collections.min(dates);
-        System.out.println("最小的时间是：" + minDate);
+        System.out.println("三个数据中最小的时间是：" + minDate);
 
 
         int i = 1;
         for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(minDate)); date = DateUtils.getNextMonth(date)) {
-            if (checkDataUploadedForCurrentMonth(date)) {
+            if (checkDataUploadedForCurrentMonth(date) && checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(date))) {
                 calculateCurrentMonthFinancialData(date);
                 i++;
             }

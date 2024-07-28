@@ -5,6 +5,7 @@ import com.heli.financial.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
@@ -289,6 +290,16 @@ public class FinancialDataController extends BaseController {
         }
         financialDailyInProgressTable.setCreateBy(getUsername());
         return toAjax(financialDailyInProgressTableService.insertFinancialDailyInProgressTable(financialDailyInProgressTable));
+    }
+
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:sum')")
+    @PostMapping("/dailyInProgress/sum")
+    public AjaxResult selectHandfillRateByYear(@RequestBody DisplayRequestParam time) {
+//        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillSumInfoByYear(time.getStartTime());
+//        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillRateByYear(time.getStartTime());
+        FinancialDailyInProgressTable sumInfoByYear = financialDailyInProgressTableService.selectDailyInProgressSumInfoByMonth(time.getStartTime());
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
     }
 
     /**

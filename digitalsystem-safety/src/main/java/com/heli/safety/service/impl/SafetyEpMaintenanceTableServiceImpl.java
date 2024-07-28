@@ -32,12 +32,12 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
     @Autowired
     private SafetyEpMaintenanceTableMapper safetyEpMaintenanceTableMapper;
     @Autowired
-    private SafetyEpMapper  safetyEpMapper;
+    private SafetyEpMapper safetyEpMapper;
     private static final Logger log = LoggerFactory.getLogger(SafetyEpMaintenanceTableServiceImpl.class);
 
 
     @Override
-    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date,String username) {
+    public R<String> readSafetyEpMaintenanceTableToDB(String fileName, InputStream inputStream, Date date, String username) {
 
         //清空维修数据表
         safetyEpMaintenanceTableMapper.truncateTable();
@@ -70,7 +70,7 @@ public class SafetyEpMaintenanceTableServiceImpl implements ISafetyEpMaintenance
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
             log.error("读取 " + fileName + " 文件失败, 原因: {}", e.getMessage());
-            return R.fail("读取文件失败,您需要上传商品车台账,当前上传的文件为：" + fileName);
+            return R.fail("读取" + fileName + "文件失败");
         }
     }
 

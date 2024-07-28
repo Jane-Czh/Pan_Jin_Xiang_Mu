@@ -51,7 +51,7 @@ const api = {
     })
   },
 
-  // 当月设备维修成本-替换件成本 指标69
+  // 当月设备维修易损件成本 指标69
   getCurEquipmentReplacementCostData(data) {
     return request({
       url: `/safetyEp/display/curEquipmentReplacementCost`,

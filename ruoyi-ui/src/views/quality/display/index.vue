@@ -43,6 +43,7 @@ export default {
         { id: '102', apiName: 'getSingleInspectionPassRateData', yDataName: 'singleInspectionPassRate', dataName: '合格率', con: 'el-icon-s-data', title: '电车、大吨位一次交检合格率', content: '电车、大吨位一次交检合格率' },
         { id: '103', apiName: 'getInTimeReturnRateData', yDataName: 'inTimeReturnRate', dataName: '及时率', icon: 'el-icon-s-data', title: '供应商不合格件返厂及时率', content: '供应商不合格件返厂及时率' },
         { id: '104', apiName: 'getPartQualificationRateData', yDataName: 'partQualificationRate', dataName: '合格率', icon: 'el-icon-s-data', title: '班组自查合格率与下道工序反馈合格率', content: '班组自查合格率与下道工序反馈合格率' },
+        // 与上个指标合并
         // { id: '105', apiName: 'getcurNonBomMaterialCostData', yDataName: 'curNonBomMaterialCost', dataName: '合格率', icon: 'el-icon-s-data', title: '下道工序反馈合格率', content: '企业主要营业产品财务收入' },
       ],
 

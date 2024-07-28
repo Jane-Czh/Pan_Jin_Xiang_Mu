@@ -72,8 +72,8 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="当月采购总金额" align="center" prop="totalPurchaseAmount" />
-      <el-table-column label="当月管控物资采购金额" align="center" prop="controlledMaterialPurchases" />
+      <el-table-column label="当月采购总金额(万元)" align="center" prop="totalPurchaseAmount" />
+      <el-table-column label="当月管控物资采购金额(万元)" align="center" prop="controlledMaterialPurchases" />
       <el-table-column label="比例(%)" align="center" prop="controlledPurchaseAmountRatio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -89,21 +89,21 @@
       @pagination="getList" />
 
     <!-- 添加或修改供应-指标-集团管控物资占比对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="170px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="210px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="当月采购总金额" prop="totalPurchaseAmount">
-          <el-input v-model="form.totalPurchaseAmount" placeholder="请输入当月采购总金额" />
+        <el-form-item label="当月采购总金额(万元)" prop="totalPurchaseAmount">
+          <el-input v-model="form.totalPurchaseAmount" placeholder="请输入当月采购总金额(万元)" />
         </el-form-item>
-        <el-form-item label="当月管控物资采购金额" prop="controlledMaterialPurchases">
-          <el-input v-model="form.controlledMaterialPurchases" placeholder="请输入当月管控物资采购金额" />
+        <el-form-item label="当月管控物资采购金额(万元)" prop="controlledMaterialPurchases">
+          <el-input v-model="form.controlledMaterialPurchases" placeholder="请输入当月管控物资采购金额(万元)" />
         </el-form-item>
         <el-form-item label="比例(%)" prop="controlledPurchaseAmountRatio">
-          <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例" />
+          <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -146,6 +146,7 @@ export default {
       total: 0,
       // 供应-指标-集团管控物资占比表格数据
       controlledAmountList: [],
+      afterList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -195,6 +196,7 @@ export default {
   },
   created() {
     this.getList();
+
   },
   methods: {
     handleSortChange(column) {
@@ -209,7 +211,6 @@ export default {
         this.controlledAmountList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮

@@ -109,6 +109,7 @@
             <if test="managementExpense != null "> and ManagementExpense = #{managementExpense}</if>
             <if test="rdExpense != null "> and RD_Expense = #{rdExpense}</if>
         </where>
+        order by Year_And_Month DESC
     </select>
 
     <select id="selectFinancialInterestsTableByFiId" parameterType="Long" resultMap="FinancialInterestsTableResult">

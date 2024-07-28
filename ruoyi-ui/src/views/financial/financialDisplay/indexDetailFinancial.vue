@@ -7,7 +7,10 @@
       </el-date-picker>
     </div>
     <div>
-
+      <br>
+      <div class="centered-value">
+        当前累计值：{{ yAxisData.reduce((a, b) => a + b, 0) }} (万元)
+      </div>
     </div>
     <div v-if="loading"
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
@@ -65,13 +68,10 @@ export default {
 
       try {
         this.loading = true;
-        if (this.$auth.hasPermi("financial:display")) {
-          const res = await chartAPI[this.option.apiName](this.timeData);
-          this.data = res.rows;
-          this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
-          this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
-
-        }
+        const res = await chartAPI[this.option.apiName](this.timeData);
+        this.data = res.rows;
+        this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
+        this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
         this.loading = false;
       } catch (error) {
         this.$modal.msgError("数据加载失败")
@@ -119,5 +119,15 @@ export default {
 .block {
   margin-top: 50px;
   text-align: center;
+}
+
+.centered-value {
+  display: flex;
+  justify-content: center;
+
+  align-items: center;
+
+  margin-top: 10px;
+
 }
 </style>

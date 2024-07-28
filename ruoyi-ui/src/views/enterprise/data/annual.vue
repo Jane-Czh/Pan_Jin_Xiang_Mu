@@ -50,10 +50,12 @@
       @pagination="getList" />
 
     <!-- 添加或修改[企业管理]指标年度数据对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="170px">
         <el-form-item label="年份" prop="naturalYear">
-          <el-input v-model="form.naturalYear" placeholder="请输入年" />
+          <el-date-picker clearable v-model="form.naturalYear" type="year" value-format="yyyy-MM-dd"
+            placeholder="请选择年份">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="工资总额年度值" prop="annualTotalSalary">
           <el-input v-model="form.annualTotalSalary" placeholder="请输入工资总额年度值" />
@@ -144,6 +146,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(sort) {
       // sort.order: 排序的顺序，'ascending' 或 'descending'
       if (sort.column && sort.prop === 'naturalYear') {

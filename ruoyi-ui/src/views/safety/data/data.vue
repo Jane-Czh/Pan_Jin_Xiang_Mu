@@ -71,7 +71,7 @@
       </el-table-column>
       <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
       <el-table-column label="当月设备故障累计停产时间(小时)" align="center" prop="curEquipmentFailuresTotaltime" />
-      <el-table-column label="当月设备维修替换件成本(小时)" align="center" prop="curEquipmentReplacementCost" />
+      <el-table-column label="当月设备维修易损件成本" align="center" prop="curEquipmentReplacementCost" />
       <el-table-column label="重点设备故障率(%)" align="center" prop="keyEquipmentFailureRate" />
       <el-table-column label="主要设备故障总次数" align="center" prop="keyEquipmentTotalFailureCount" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -88,7 +88,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改[安全环保]指标填报对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -102,13 +102,15 @@
         <el-form-item label="当月设备故障累计停产时间" prop="curEquipmentFailuresTotaltime">
           <el-input v-model="form.curEquipmentFailuresTotaltime" placeholder="请输入当月设备故障累计停产时间" />
         </el-form-item>
-        <el-form-item label="当月设备维修替换件成本" prop="curEquipmentReplacementCost">
-          <el-input v-model="form.curEquipmentReplacementCost" placeholder="请输入当月设备维修替换件成本" />
+        <el-form-item label="当月设备维修易损件成本" prop="curEquipmentReplacementCost">
+          <el-input v-model="form.curEquipmentReplacementCost" placeholder="请输入当月设备维修易损件成本" />
         </el-form-item>
-
-        <!-- <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
+        <el-form-item label="重点设备故障率(%)" prop="keyEquipmentFailureRate">
+          <el-input v-model="form.keyEquipmentFailureRate" placeholder="请输入重点设备故障率(%)" />
+        </el-form-item>
+        <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
           <el-input v-model="form.keyEquipmentTotalFailureCount" placeholder="请输入主要设备故障总次数" />
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -204,6 +206,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序

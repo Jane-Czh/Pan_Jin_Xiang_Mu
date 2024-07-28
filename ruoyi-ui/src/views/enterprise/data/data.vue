@@ -68,7 +68,7 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="一线从业人数" align="center" prop="employeesNumber" />
+      <el-table-column label="一线从业人数" align="center" prop="employeesNumber" width="120" />
       <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" width="150" />
       <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
       <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
@@ -92,7 +92,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改[企业管理]指标月度数据对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -142,7 +142,7 @@
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
 import { uploadFile } from '@/api/financial/excelImport';
-import { numValidator, numValidatorEnableEmpty, numValidatorPositive } from '@/api/financial/numValidator.js';
+import { numValidatorEnableEmpty, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
 
@@ -206,7 +206,7 @@ export default {
         employeesNumber: [
           {
             required: true,
-            validator: numValidatorPositive,
+            validator: numValidatorOnlyPositive,
             trigger: "blur",
           }
         ],
@@ -227,7 +227,7 @@ export default {
         totalMonthlySalary: [
           {
             required: true,
-            validator: numValidatorPositive,
+            validator: numValidatorOnlyPositive,
             trigger: "blur",
           }
         ],
@@ -278,6 +278,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(sort) {
       // sort.order: 排序的顺序，'ascending' 或 'descending'
       if (sort.column && sort.prop === 'yearAndMonth') {

@@ -95,8 +95,9 @@ public class EnterpriseManagementDataController extends BaseController {
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
             enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, getUsername());
-
             enterpriseManagementMonthlyDataService.calculateSalaryTableIndicators(yearAndMonth);
+            log.info("计算完毕，清空数据库");
+            enterpriseManagementSalaryTableService.clearSalaryTableAllInfo();
             return R.ok("上传成功");
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());

@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.financial.domain.FinancialDailyInProgressTable;
+import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * [财务]每日填报指标[当日再制品金额]Mapper接口
@@ -12,6 +14,9 @@ import com.heli.financial.domain.FinancialDailyInProgressTable;
  * @date 2024-05-06
  */
 public interface FinancialDailyInProgressTableMapper {
+
+    FinancialDailyInProgressTable selectDailyInProgressSumInfoByMonth(@Param("yearAndMonth") Date yearAndMonth);
+
 
     //检查指定时间当日在制造品金额是否存在
     boolean checkDailyInProgressTableIsExist(Date yearAndMonth);

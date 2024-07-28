@@ -5,6 +5,7 @@ import com.heli.financial.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
@@ -47,16 +48,15 @@ public class FinancialDataController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(FinancialDataController.class);
 
 
-
     @Log(title = "[财务]数据填报", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:fill:add')")
     @PostMapping("/fill")
     public AjaxResult handFillData(@RequestBody FinancialIndicatorsHandfillTable FITable) {
-        System.out.println(FITable);
-        Date lastMonth = DateUtils.getLastMonth(FITable.getYearAndMonth());
+//        System.out.println(FITable);
+//        Date lastMonth = DateUtils.getLastMonth(FITable.getYearAndMonth());
 
-        boolean b = financialIndicatorsHandfillTableService.checkDataExists();
-        log.info(String.valueOf(b));
+//        boolean b = financialIndicatorsHandfillTableService.checkDataExists();
+//        log.info(String.valueOf(b));
 
 
 //        if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)
@@ -76,16 +76,20 @@ public class FinancialDataController extends BaseController {
         FITable.setCreateBy(getUsername());
         FITable.setCreateTime(DateUtils.getNowDate());
 
-        financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(FITable);
+        int status = 0;
+        status = financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(FITable);
+        if (status == 0) {
+            return AjaxResult.error("数据填报失败");
+        }
 
         // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
         if (financialDataService.checkDataUploadedForCurrentMonth(FITable.getYearAndMonth())
-            && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(FITable.getYearAndMonth()))) {
+                && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(FITable.getYearAndMonth()))) {
             // 开始计算
-            financialDataService.calculateCurrentMonthFinancialData(FITable.getYearAndMonth());
+            status = financialDataService.calculateCurrentMonthFinancialData(FITable.getYearAndMonth());
         }
 
-        return AjaxResult.success();
+        return toAjax(status);
 
     }
 
@@ -140,17 +144,18 @@ public class FinancialDataController extends BaseController {
 //        return AjaxResult.success();
 //    }
 
+    @Log(title = "[财务]利润表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('financial:interests:import')")
     @PostMapping("/interests/import")
     public AjaxResult importIndicatorsTable(Date yearAndMonth, MultipartFile excelFile) {
 
-        log.info("yearAndMonth: " + yearAndMonth);
-        log.info("InterestsFile: " + excelFile);
-        log.info("InterestsFile: " + excelFile.getOriginalFilename());
+//        log.info("yearAndMonth: " + yearAndMonth);
+//        log.info("InterestsFile: " + excelFile);
+//        log.info("InterestsFile: " + excelFile.getOriginalFilename());
 
 //        将yearAndMonth时间转化为中国标准时间
 //        Date test = DateUtils.parseDate(yearAndMonth);
 //        log.info("中国时间" + test);
-
 
 //        Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
 
@@ -172,6 +177,7 @@ public class FinancialDataController extends BaseController {
         if (financialInterestsTableService.checkInterestsDataIsExisted(yearAndMonth)) {
             return AjaxResult.error("当月利润表已上传");
         }
+
         int status = 0;
 
         try {
@@ -188,18 +194,18 @@ public class FinancialDataController extends BaseController {
         if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
                 && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
             // 开始计算
-            financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
+            status = financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
         }
 
-        return AjaxResult.success();
+        return toAjax(status);
     }
 
-//    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
-//    @PreAuthorize("@ss.hasPermi('financial:balance:import')")
+    @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('financial:balance:import')")
     @PostMapping("/balance/import")
     public AjaxResult importBalanceTable(Date yearAndMonth, MultipartFile BalanceFile) {
 
-        Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
+//        Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
 //        if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)
 //                && financialBalanceTableService.checkDataExists()) {
 //            return AjaxResult.error("上月资产负债表未上传");
@@ -215,30 +221,25 @@ public class FinancialDataController extends BaseController {
         }
 
         int status = 0;
-
         try {
             status = financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
         } catch (Exception e) {
             logger.info(String.valueOf(e));
         }
-
         if (status == 0) {
             return AjaxResult.error("excel格式错误");
         }
-
-
 
 
         // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
         if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
                 && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
             // 开始计算
-            financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
+            status =  financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
         }
 
 
-
-        return AjaxResult.success();
+        return toAjax(status);
     }
 
 
@@ -289,6 +290,16 @@ public class FinancialDataController extends BaseController {
         }
         financialDailyInProgressTable.setCreateBy(getUsername());
         return toAjax(financialDailyInProgressTableService.insertFinancialDailyInProgressTable(financialDailyInProgressTable));
+    }
+
+    @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:sum')")
+    @PostMapping("/dailyInProgress/sum")
+    public AjaxResult selectHandfillRateByYear(@RequestBody DisplayRequestParam time) {
+//        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillSumInfoByYear(time.getStartTime());
+//        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillRateByYear(time.getStartTime());
+        FinancialDailyInProgressTable sumInfoByYear = financialDailyInProgressTableService.selectDailyInProgressSumInfoByMonth(time.getStartTime());
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
     }
 
     /**

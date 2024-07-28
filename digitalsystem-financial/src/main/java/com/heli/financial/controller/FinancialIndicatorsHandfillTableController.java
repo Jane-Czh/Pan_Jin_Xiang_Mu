@@ -117,7 +117,14 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     @PostMapping("/sum")
     public AjaxResult selectHandfillSumInfoByYear(@RequestBody DisplayRequestParam time) {
         FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillSumInfoByYear(time.getStartTime());
-        logger.info("sumInfoByYear: " + sumInfoByYear);
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+    @PreAuthorize("@ss.hasPermi('financial:fill:sum')")
+    @PostMapping("/rate")
+    public AjaxResult selectHandfillRateByYear(@RequestBody DisplayRequestParam time) {
+        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillRateByYear(time.getStartTime());
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
         return AjaxResult.success(sumInfoByYear);
     }
 

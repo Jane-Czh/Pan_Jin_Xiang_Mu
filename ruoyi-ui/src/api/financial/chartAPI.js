@@ -337,3 +337,66 @@ export function getGrowthRateInventorySalesData(data) {
     }
   })
 }
+
+
+// 财务指标资产负债总计
+export function getBalanceSumData(data) {
+  return request({
+    url: `/financial/data/balance/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 月度数据求和展示
+export function getMonthSumData(data) {
+  return request({
+    url: `/financial/data/fill/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 利润表求和展示
+export function getInterestSumData(data) {
+  return request({
+    url: `/financial/data/interests/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 月度数据比率展示展示
+export function getMonthRateData(data) {
+  return request({
+    url: `/financial/data/fill/rate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+
+// 资产负债表比率展示
+export function getBalanceData(data) {
+  return request({
+    url: `/financial/data/balance/rate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+

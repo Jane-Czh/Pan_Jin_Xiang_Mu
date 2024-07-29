@@ -37,9 +37,9 @@
             <el-form-item label="上传表类：">
               <span style="color: rgb(68, 140, 39);">售后表</span>
               <br>
-              <div>
+              <!-- <div>
                 注：售后表时间格式请保持一致（例：2023/1/3）
-              </div>
+              </div> -->
               <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
                 placeholder="请选择日期">
               </el-date-picker>
@@ -58,6 +58,10 @@
             <el-button type="primary" @click="fileSend()">确 定</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
 
 
@@ -233,6 +237,9 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/售后台账样表_20240729123738A005.xlsx';
+    },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
         confirmButtonText: '确定',

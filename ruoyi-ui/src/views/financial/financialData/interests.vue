@@ -58,6 +58,10 @@
           </span>
         </el-dialog>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -283,6 +287,9 @@ export default {
 
   },
   methods: {
+    handleDownload() {
+      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/利润表样表_20240729123716A003.xlsx';
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序

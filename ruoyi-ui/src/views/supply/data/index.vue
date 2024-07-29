@@ -29,8 +29,8 @@
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
-        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['supply:data:read']">导入Excel文件
+        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain
+          v-if="true">导入Excel文件
         </el-button>
 
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">

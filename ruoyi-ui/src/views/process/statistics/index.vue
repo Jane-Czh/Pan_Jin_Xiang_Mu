@@ -36,13 +36,14 @@
         >
       </el-form-item>
 
+      <!-- v-hasPermi="['process:ef:export']" -->
       <el-form-item class="export-button">
         <el-button
           type="primary"
           plain
           icon="el-icon-download"
           size="mini"
-          v-hasPermi="['process:ef:export']"
+          
           @click="exportAll"
           >总台账导出</el-button
         >
@@ -117,6 +118,11 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 //加载效果
 import { Loading } from "element-ui";
+
+//获取用户信息-用户名
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/project";
 
 export default {
   name: "Project",
@@ -228,6 +234,24 @@ export default {
   },
 
   methods: {
+
+    //用户信息
+    async getUserInfo() {
+      try {
+        const response = await getUserProfile();
+        const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        console.log("成功获取用户信息=======", userInfo);
+        this.uploadUsername = userInfo.userName;
+
+        const deptResponse = await getDept(userInfo.deptId);
+        const deptInfo = deptResponse.data;
+        this.departmentCategory = deptInfo.deptName;
+        console.log("成功获取部门信息=======", deptInfo);
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+      }
+    },
+
     getFileNamesByIds(project) {
       return new Promise((resolve, reject) => {
         // 初始化
@@ -362,16 +386,30 @@ export default {
  //-----------------------------------------------------------------------
   
     /** 查询流程列表 */
-    getList() {
+    async getList() {
       this.projectList = [];
       this.rowList = [];
+
+      await this.getUserInfo();
 
       this.loading = true;
       listProject2(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+
+        //从projectList 获取 createBy 属性 , 与departmentCategory进行对比
+        //createBy : "admin/研发" 比对 departmentCategory: "研发"
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (this.departmentCategory == response[i].createBy.split("/")[1]) {
+            this.projectList.push(response[i]);
+          }
         }
+
+        // 不做过滤
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
 
         // 按照updateDate字段进行排序
         this.projectList.sort((a, b) => {

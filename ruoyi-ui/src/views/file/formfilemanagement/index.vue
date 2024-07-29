@@ -157,8 +157,8 @@
       <el-table-column label="表单名称" align="center" prop="formName" />
       <el-table-column label="表单类型" align="center" prop="formType" />
       <el-table-column label="表单下载" align="center" prop="formPath">
-        <template slot-scope="scope">
-          <a :href="baseUrl + scope.row.formPath" download style="color: #6495ED;">点击下载</a>
+        <template v-slot:default="scope">
+          <a v-if="scope.row.formPath" @click.prevent="downloadFile(scope.row.formPath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="表单大小" align="center" prop="formSize" />
@@ -882,6 +882,29 @@ export default {
       this.download('file/formfilemanagement/export', {
         ...this.queryParams
       }, `formmanagement_${new Date().getTime()}.xlsx`)
+    },
+    /** 文件下载 */
+    downloadFile(url) {
+      fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.setAttribute('download', decodeURIComponent(url.split('/').pop())); // 解码文件名
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(downloadUrl);
+        })
+        .catch(error => console.error('Download error:', error));
+    },
+    validateFile(rule, value, callback) {
+      if (this.form.formList.length === 0) {
+        return callback(new Error('文件路径不能为空'));
+      }
+      // 可以添加其他校验逻辑，例如文件类型等
+      callback();
     },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {

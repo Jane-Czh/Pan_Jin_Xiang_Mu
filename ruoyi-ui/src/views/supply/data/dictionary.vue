@@ -13,10 +13,10 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
           v-hasPermi="['supply:dictionary:add']">新增</el-button>
-      </el-col> -->
+      </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
           v-hasPermi="['supply:dictionary:edit']">修改</el-button>
@@ -48,9 +48,14 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -119,7 +124,7 @@ export default {
       progress: 0,
       selectedType: '',
       selectedFile: null,
-
+      isLoading: false,
       single: true,
       // 非多个禁用
       multiple: true,
@@ -170,6 +175,9 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/采购订单汇总表样表_20240729124954A009.xlsx';
+    },
     /** 查询供应科-指标-集采物料字典列表 */
     getList() {
       this.loading = true;
@@ -284,6 +292,7 @@ export default {
         this.$message.error("请选择文件!");
         return;
       } else {
+        this.isLoading = true;
         const aimUrl = `/supply/data/readCollectibleMaterialsTable`;
         formData.append("multipartFile", file);
         const purchaseOrder = /采购/.test(this.fileName);
@@ -302,6 +311,7 @@ export default {
             .finally(() => {
               // 无论成功或失败，都关闭上传面板
               this.showDialog = false;
+              this.isLoading = false;
             });
         } else {
           this.$modal.confirm('确认上传该表吗').then(() => {
@@ -318,6 +328,7 @@ export default {
               .finally(() => {
                 // 无论成功或失败，都关闭上传面板
                 this.showDialog = false;
+                this.isLoading = false;
               });
           });
         }

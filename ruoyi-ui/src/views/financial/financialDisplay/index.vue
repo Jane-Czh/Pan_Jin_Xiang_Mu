@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { getBalanceSumData, getInterestSumData, getMonthSumData, getMonthRateData, getBalanceData } from '@/api/financial/chartAPI'
+import { getBalanceSumData, getInterestSumData, getMonthSumData, getMonthRateData, getBalanceData, getDaySumData } from '@/api/financial/chartAPI'
 import moment from 'moment'
 export default {
   name: 'Index',
@@ -129,7 +129,7 @@ export default {
         { id: '35', kind: 'month', apiName: 'getRawMaterialTurnoverRateData', date: '', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '原材料周转率', dataName: '周转率', content: '', sun: 'rawMaterialTurnoverRate' },
         { id: '36', kind: 'month', apiName: 'getInprogressTurnoverRateData', date: '', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '在制品周转率', dataName: '周转率', content: '', sun: 'inprogressTurnoverRate' },
         { id: '66', kind: 'month', apiName: 'getLongEstimatedItemsData', date: '', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '', sun: 'longEstimatedItems' },
-        { id: '70', kind: 'month', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sun: 'inprogressDayrevenue' },
+        { id: '70', kind: 'day', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sun: 'inProgressDayRevenue' },
         { id: '77', kind: 'balance', apiName: 'getMonthlyInventoryTotalAmountData', date: '', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '月度存货金额', dataName: '金额', content: '', sun: 'monthlyInventoryTotalAmount' },
         { id: '78', kind: 'month', apiName: 'getAddedValueMonthlyData', date: '', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '', sun: 'addedValueMonthly' },
       ]
@@ -148,13 +148,15 @@ export default {
         // 定义一个空对象来存储所有数据
         let allData = {};
         // 发起并行请求
-        const [res1, res2, res3, res4, res5] = await Promise.all([
+        const [res1, res2, res3, res4, res5, res6] = await Promise.all([
           getBalanceSumData(this.date),
           getInterestSumData(this.date),
           getMonthSumData(this.date),
           getMonthRateData(this.date),
-          getBalanceData(this.date)
+          getBalanceData(this.date),
+          getDaySumData(this.date)
         ]);
+        console.log(res6)
         delete res1.data.growthRateSales;
         delete res1.data.growthRateInventory;
         delete res1.data.turnoverRateReceivable;
@@ -175,12 +177,19 @@ export default {
           growthRateSales: res5.data.growthRateSales,
           turnoverRateReceivable: res5.data.turnoverRateReceivable
         };
+        const res6DataNeededFields = {
+          dataTime: res6.data.dataTime,
+          inProgressDayRevenue: res6.data.inProgressDayRevenue
+
+        };
 
         this.allIndex.forEach(item => {
           if (item.kind === 'balance') {
             item.date = moment(res1.data.yearAndMonth).format('YYYY-MM');
           } else if (item.kind === 'interests') {
             item.date = moment(res2.data.yearAndMonth).format('YYYY-MM');
+          } else if (item.kind === 'day') {
+            item.date = res6.data.dataTime;
           } else {
             item.date = moment(res3.data.yearAndMonth).format('YYYY-MM');
           }
@@ -190,7 +199,8 @@ export default {
           ...res2.data,
           ...res3.data,
           ...res4DataNeededFields,
-          ...res5DataNeededFields
+          ...res5DataNeededFields,
+          ...res6DataNeededFields,
         };
         this.balanceData = res1.data;
         this.interestsData = res2.data;
@@ -202,7 +212,7 @@ export default {
           if (item.id === '30') {
             item.content = `销售增长率：${allData[item.sun]}%\t\t存货增长率：${allData[item.sun2]}%`;
           } else if (item.id === '70') {
-            item.content = `总计：${allData[item.sun]}\t(万元)`;
+            item.content = `当月总计：${allData[item.sun]}\t(万元)`;
           } else {
             const key = item.sun;
             if (allData[key] !== undefined) {

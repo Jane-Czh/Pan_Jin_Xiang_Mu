@@ -53,9 +53,14 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
 
 
@@ -137,7 +142,7 @@ export default {
       progress: 0,
       selectedType: '',
 
-
+      isLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -199,6 +204,9 @@ export default {
 
   },
   methods: {
+    handleDownload() {
+      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/采购订单汇总表样表_20240729124954A009.xlsx';
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -326,6 +334,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         const aimUrl = `/supply/data/readPurchaseOrderTable`
@@ -343,7 +352,9 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
+            this.isLoading = false;
           });
+
         // .then(response => {
         //   // 处理请求成功的情况
         //   this.$message.success("上传成功");

@@ -938,20 +938,13 @@
       },
     },
     created() {
-      this.getList();
       getUserProfile02().then(response => {
         // 处理成功的情况
         console.log('成功获取用户信息response.data====>', response.data);
         console.log('成功获取用户信息response.data.dept.deptName====>', response.data.dept.deptName);
         // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
         this.thisDept =  response.data.dept.deptName;
-        //根据部门id获取部门名称
-        // getDept02(userInfo.deptId).then(response => {
-        //   const deptInfo = response.data;
-        //   console.log("deptInfo======>",deptInfo);
-        //   this.thisDept = deptInfo.deptName;
-        //   console.log("thisDept======>",this.thisDept);
-        // })
+        this.getList();
       }).catch(error => {
         // 处理失败的情况
         console.error('获取用户信息失败:', error);
@@ -961,6 +954,7 @@
       listDept02().then(response => {
         this.deptList = response.data;
       });
+
 
     },
     // 路由钩子，每次进入该路由时都会调用getList方法
@@ -974,6 +968,10 @@
       getList() {
         this.loading = true;
         console.log("刷新页面");
+        // 如果部门是研发或企管，则不添加departmentCategory到queryParams
+        if (!['研发', '企管'].includes(this.thisDept)) {
+          this.queryParams.departmentCategory = this.thisDept;
+        }
         listFilemanagement(this.queryParams).then(response => {
           console.log("response:：",response);
           this.filemanagementList = response.rows;

@@ -348,7 +348,7 @@
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="previewFile(scope.row.filePath)"
+            @click="previewFile(scope.row.pdfPath)"
           >预览
           </el-button>
           <el-button

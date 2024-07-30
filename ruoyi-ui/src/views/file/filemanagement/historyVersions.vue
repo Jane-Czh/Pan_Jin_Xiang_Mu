@@ -924,6 +924,29 @@
           ...this.queryParams
         }, `filemanagement_${new Date().getTime()}.xlsx`)
       },
+      /** 文件下载 */
+      downloadFile(url) {
+        fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', decodeURIComponent(url.split('/').pop())); // 解码文件名
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(downloadUrl);
+          })
+          .catch(error => console.error('Download error:', error));
+      },
+      validateFile(rule, value, callback) {
+        if (this.form.fileList.length === 0) {
+          return callback(new Error('文件路径不能为空'));
+        }
+        // 可以添加其他校验逻辑，例如文件类型等
+        callback();
+      },
       // 文件大小自动转换单位
       formatFileSize(sizeInBytes) {
         const KB = 1024;

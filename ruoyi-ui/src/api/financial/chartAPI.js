@@ -400,3 +400,17 @@ export function getBalanceData(data) {
   })
 }
 
+
+// 当日在制品展示
+export function getDaySumData(data) {
+  return request({
+    url: `/financial/data/dailyInProgress/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+

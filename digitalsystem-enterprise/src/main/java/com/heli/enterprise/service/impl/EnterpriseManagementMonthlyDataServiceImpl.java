@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.heli.enterprise.service.IEnterpriseManagementAnnualDataService;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
 public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseManagementMonthlyDataService {
     @Autowired
     private EnterpriseManagementMonthlyDataMapper enterpriseManagementMonthlyDataMapper;
+    @Autowired
+    private IEnterpriseManagementAnnualDataService enterpriseManagementAnnualDataService;
 
     private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementMonthlyDataServiceImpl.class);
 
@@ -54,6 +57,16 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      * 计算填报相关月度指标
      */
     public int calculateHandFillIndicators(Date yearAndMonth) {
+
+        if (!enterpriseManagementAnnualDataService.checkEMAnnualDataIsExisted(DateUtils.getYear(yearAndMonth))) {
+            return 0;
+        }
+
+
+
+        if (!enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(yearAndMonth) || !enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(yearAndMonth))) {
+            return 0;
+        }
 
         EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
 

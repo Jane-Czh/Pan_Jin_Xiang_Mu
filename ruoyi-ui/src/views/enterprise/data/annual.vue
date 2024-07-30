@@ -53,10 +53,13 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="170px">
         <el-form-item label="年份" prop="naturalYear">
+          <el-input v-model="form.naturalYear" placeholder="请选择年份" />
+        </el-form-item>
+        <!-- <el-form-item label="年份" prop="naturalYear">
           <el-date-picker clearable v-model="form.naturalYear" type="year" value-format="yyyy-MM-dd"
             placeholder="请选择年份">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="工资总额年度值" prop="annualTotalSalary">
           <el-input v-model="form.annualTotalSalary" placeholder="请输入工资总额年度值" />
         </el-form-item>

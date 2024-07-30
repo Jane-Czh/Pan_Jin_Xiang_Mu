@@ -50,10 +50,13 @@
     <!-- 添加或修改【技术】总计划年初填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="年份" prop="naturalYear">
+        <!-- <el-form-item label="年份" prop="naturalYear">
           <el-date-picker clearable v-model="form.naturalYear" type="year" value-format="yyyy-MM-dd"
             placeholder="请选择年份">
           </el-date-picker>
+        </el-form-item> -->
+        <el-form-item label="年份" prop="naturalYear">
+          <el-input v-model="form.naturalYear" placeholder="请输入年份" />
         </el-form-item>
         <el-form-item label="年度计划总数" prop="annualPlancounts">
           <el-input v-model="form.annualPlancounts" placeholder="请输入年度计划总数" />

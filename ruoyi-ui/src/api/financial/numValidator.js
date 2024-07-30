@@ -44,6 +44,8 @@ export function numValidatorEnableEmpty(rule, value, callback) {
         callback();
       }
     }
+  } else {
+    callback();
   }
   // }
 }

@@ -57,6 +57,10 @@
           </span>
         </el-dialog>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
+      </el-col>
 
 
 
@@ -248,6 +252,9 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/整机质检记录样表_20240729125737A010.xlsx';
+    },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
         confirmButtonText: '确定',

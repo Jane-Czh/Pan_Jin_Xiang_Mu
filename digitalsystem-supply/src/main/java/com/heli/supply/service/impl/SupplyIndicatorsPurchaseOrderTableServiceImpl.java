@@ -70,7 +70,9 @@ public class SupplyIndicatorsPurchaseOrderTableServiceImpl implements ISupplyInd
         try {
 
             // 清空表格
-//            supplyIndicatorsPurchaseOrderTableMapper.truncatePurchaseOrderTable();
+            //此行代码不允许、不允许屏蔽！！！
+            //屏蔽会导致统计错误！！！！！
+            supplyIndicatorsPurchaseOrderTableMapper.truncatePurchaseOrderTable();
             // 读取文件内容
             EasyExcel.read(inputStream, SupplyIndicatorsPurchaseOrderTable.class, new SupplyOrderTableListener(supplyIndicatorsPurchaseOrderTableMapper)).sheet().doRead();
 

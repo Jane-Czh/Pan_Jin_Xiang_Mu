@@ -157,8 +157,8 @@
       <el-table-column label="表单名称" align="center" prop="formName" />
       <el-table-column label="表单类型" align="center" prop="formType" />
       <el-table-column label="表单下载" align="center" prop="formPath">
-        <template slot-scope="scope">
-          <a :href="baseUrl + scope.row.formPath" download style="color: #6495ED;">点击下载</a>
+        <template v-slot:default="scope">
+          <a v-if="scope.row.formPath" @click.prevent="downloadFile(scope.row.formPath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
       <el-table-column label="表单大小" align="center" prop="formSize" />
@@ -565,20 +565,13 @@ export default {
     },
   },
   created() {
-    this.getList();
+
     getUserProfile02().then(response => {
       // 处理成功的情况
       console.log('成功获取用户信息response.data====>', response.data.dept.deptName
       );
-      // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
       this.thisDept =  response.data.dept.deptName;
-      //根据部门id获取部门名称
-      // getDept02(userInfo.deptId).then(response => {
-      //   const deptInfo = response.data;
-      //   console.log("deptInfo======>",deptInfo);
-      //   this.thisDept = deptInfo.deptName;
-      //   console.log("thisDept======>",this.thisDept);
-      // })
+      this.getList();
     }).catch(error => {
       // 处理失败的情况
       console.error('获取用户信息失败:', error);
@@ -599,6 +592,12 @@ export default {
     /** 查询文件管理列表 */
     getList() {
       this.loading = true;
+      // 如果部门是研发或企管，则不添加departmentCategory到queryParams
+      if (!['研发', '企管'].includes(this.thisDept)) {
+        this.queryParams.departmentCategory = this.thisDept;
+      }
+      console.log("thisDept=>",this.thisDept);
+      console.log("queryParams=>",this.queryParams);
       listFormfilemanagement(this.queryParams).then(response => {
         console.log("response:：",response);
         this.formmanagementList = response.rows;
@@ -883,6 +882,29 @@ export default {
       this.download('file/formfilemanagement/export', {
         ...this.queryParams
       }, `formmanagement_${new Date().getTime()}.xlsx`)
+    },
+    /** 文件下载 */
+    downloadFile(url) {
+      fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.setAttribute('download', decodeURIComponent(url.split('/').pop())); // 解码文件名
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(downloadUrl);
+        })
+        .catch(error => console.error('Download error:', error));
+    },
+    validateFile(rule, value, callback) {
+      if (this.form.formList.length === 0) {
+        return callback(new Error('文件路径不能为空'));
+      }
+      // 可以添加其他校验逻辑，例如文件类型等
+      callback();
     },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {

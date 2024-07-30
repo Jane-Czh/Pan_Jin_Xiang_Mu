@@ -1,39 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="导入人" prop="createdBy">
-        <el-input
-          v-model="queryParams.createdBy"
-          placeholder="请输入导入人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="导入时间" prop="createdTime">
-        <el-date-picker clearable
-          v-model="queryParams.createdTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择导入时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="凭证日期" prop="documentDate">
-        <el-date-picker clearable
-          v-model="queryParams.documentDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择凭证日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="采购凭证" prop="purchasingDocuments">
-        <el-input
-          v-model="queryParams.purchasingDocuments"
-          placeholder="请输入采购凭证"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!-- <el-form-item label="物料号" prop="materialNumber">
+      <el-form-item label="物料号" prop="materialNumber">
         <el-input
           v-model="queryParams.materialNumber"
           placeholder="请输入物料号"
@@ -41,54 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否为集采(0/1)" prop="collectiveProcurement">
+      <el-form-item label="物料类别" prop="materialClass">
         <el-input
-          v-model="queryParams.collectiveProcurement"
-          placeholder="请输入是否为集采(0/1)"
+          v-model="queryParams.materialClass"
+          placeholder="请输入物料类别"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="短文本" prop="ShortText">
-        <el-input
-          v-model="queryParams.ShortText"
-          placeholder="请输入短文本"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="单位" prop="Unit">
-        <el-input
-          v-model="queryParams.Unit"
-          placeholder="请输入单位"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="数量" prop="Quantity">
-        <el-input
-          v-model="queryParams.Quantity"
-          placeholder="请输入数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单净值" prop="orderNetvalue">
-        <el-input
-          v-model="queryParams.orderNetvalue"
-          placeholder="请输入订单净值"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="供应商" prop="Supplier">
-        <el-input
-          v-model="queryParams.Supplier"
-          placeholder="请输入供应商"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -103,7 +31,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['supply:purchase:add']"
+          v-hasPermi="['supply:categorydicTable:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -114,7 +42,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['supply:purchase:edit']"
+          v-hasPermi="['supply:categorydicTable:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -125,7 +53,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['supply:purchase:remove']"
+          v-hasPermi="['supply:categorydicTable:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -135,9 +63,10 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['supply:purchase:export']"
+          v-hasPermi="['supply:categorydicTable:export']"
         >导出</el-button>
       </el-col>
+
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -145,7 +74,7 @@
           icon="el-icon-download"
           size="mini"
           @click="showDialog = true"
-          v-hasPermi="['supply:purchase:import']"
+          v-hasPermi="['supply:categorydicTable:import']"
         >导入Excel文件</el-button>
 
         <el-dialog
@@ -172,31 +101,15 @@
         </span>
         </el-dialog>
       </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="purchaseList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="categorydicTableList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="spId" />
-      <el-table-column label="导入人" align="center" prop="createdBy" />
-      <el-table-column label="导入时间" align="center" prop="createdTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createdTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="凭证日期" align="center" prop="documentDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.documentDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="采购凭证" align="center" prop="purchasingDocuments" />
+      <el-table-column label="主键" align="center" prop="smcdId" />
       <el-table-column label="物料号" align="center" prop="materialNumber" />
-      <el-table-column label="是否为集采(0/1)" align="center" prop="collectiveProcurement" />
-      <el-table-column label="短文本" align="center" prop="shortText" />
-      <el-table-column label="单位" align="center" prop="unit" />
-      <el-table-column label="数量" align="center" prop="quantity" />
-      <el-table-column label="订单净值" align="center" prop="orderNetvalue" />
-      <el-table-column label="供应商" align="center" prop="supplier" />
+      <el-table-column label="物料类别" align="center" prop="materialClass" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -204,14 +117,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['supply:purchase:edit']"
+            v-hasPermi="['supply:categorydicTable:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['supply:purchase:remove']"
+            v-hasPermi="['supply:categorydicTable:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -225,51 +138,14 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改采购订单导入对话框 -->
+    <!-- 添加或修改物料类别字典存储对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="导入人" prop="createdBy">
-          <el-input v-model="form.createdBy" placeholder="请输入导入人" />
-        </el-form-item>
-        <el-form-item label="导入时间" prop="createdTime">
-          <el-date-picker clearable
-            v-model="form.createdTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择导入时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="凭证日期" prop="documentDate">
-          <el-date-picker clearable
-            v-model="form.documentDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择凭证日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="采购凭证" prop="purchasingDocuments">
-          <el-input v-model="form.purchasingDocuments" placeholder="请输入采购凭证" />
-        </el-form-item>
         <el-form-item label="物料号" prop="materialNumber">
           <el-input v-model="form.materialNumber" placeholder="请输入物料号" />
         </el-form-item>
-        <el-form-item label="是否为集采(0/1)" prop="collectiveProcurement">
-          <el-input v-model="form.collectiveProcurement" placeholder="请输入是否为集采(0/1)" />
-        </el-form-item>
-        <el-form-item label="短文本" prop="shortText">
-          <el-input v-model="form.shortText" placeholder="请输入短文本" />
-        </el-form-item>
-        <el-form-item label="单位" prop="unit">
-          <el-input v-model="form.unit" placeholder="请输入单位" />
-        </el-form-item>
-        <el-form-item label="数量" prop="quantity">
-          <el-input v-model="form.quantity" placeholder="请输入数量" />
-        </el-form-item>
-        <el-form-item label="订单净值" prop="orderNetvalue">
-          <el-input v-model="form.orderNetvalue" placeholder="请输入订单净值" />
-        </el-form-item>
-        <el-form-item label="供应商" prop="supplier">
-          <el-input v-model="form.supplier" placeholder="请输入供应商" />
+        <el-form-item label="物料类别" prop="materialClass">
+          <el-input v-model="form.materialClass" placeholder="请输入物料类别" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -281,11 +157,10 @@
 </template>
 
 <script>
-import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase, uploadImport } from "@/api/supply/purchase";
-import axios from 'axios'
+import { listCategorydicTable, getCategorydicTable, delCategorydicTable, addCategorydicTable, updateCategorydicTable, uploadImport } from "@/api/supply/categorydicTable";
 
 export default {
-  name: "Purchase",
+  name: "CategorydicTable",
   data() {
     return {
       // 遮罩层
@@ -300,8 +175,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 采购订单导入表格数据
-      purchaseList: [],
+      // 物料类别字典存储表格数据
+      categorydicTableList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -310,17 +185,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        createdBy: null,
-        createdTime: null,
-        documentDate: null,
-        purchasingDocuments: null,
         materialNumber: null,
-        collectiveProcurement: null,
-        ShortText: null,
-        unit: null,
-        quantity: null,
-        orderNetvalue: null,
-        supplier: null
+        materialClass: null
       },
       // 表单参数
       form: {},
@@ -329,28 +195,26 @@ export default {
         materialNumber: [
           { required: true, message: "物料号不能为空", trigger: "blur" }
         ],
-        quantity: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
-        ],
-        supplier: [
-          { required: true, message: "供应商不能为空", trigger: "blur" }
+        materialClass: [
+          { required: true, message: "物料类别不能为空", trigger: "blur" }
         ]
       },
 
       //新增参数
       showDialog: false,
       progress: 0
+
     };
   },
   created() {
     this.getList();
   },
   methods: {
-    /** 查询采购订单导入列表 */
+    /** 查询物料类别字典存储列表 */
     getList() {
       this.loading = true;
-      listPurchase(this.queryParams).then(response => {
-        this.purchaseList = response.rows;
+      listCategorydicTable(this.queryParams).then(response => {
+        this.categorydicTableList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -363,18 +227,9 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        spId: null,
-        createdBy: null,
-        createdTime: null,
-        documentDate: null,
-        purchasingDocuments: null,
+        smcdId: null,
         materialNumber: null,
-        collectiveProcurement: null,
-        shortText: null,
-        unit: null,
-        quantity: null,
-        orderNetvalue: null,
-        supplier: null
+        materialClass: null
       };
       this.resetForm("form");
     },
@@ -390,7 +245,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.spId)
+      this.ids = selection.map(item => item.smcdId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -398,30 +253,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加采购订单导入";
+      this.title = "添加物料类别字典存储";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const spId = row.spId || this.ids
-      getPurchase(spId).then(response => {
+      const smcdId = row.smcdId || this.ids
+      getCategorydicTable(smcdId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改采购订单导入";
+        this.title = "修改物料类别字典存储";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.spId != null) {
-            updatePurchase(this.form).then(response => {
+          if (this.form.smcdId != null) {
+            updateCategorydicTable(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addPurchase(this.form).then(response => {
+            addCategorydicTable(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -432,9 +287,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const spIds = row.spId || this.ids;
-      this.$modal.confirm('是否确认删除采购订单导入编号为"' + spIds + '"的数据项？').then(function() {
-        return delPurchase(spIds);
+      const smcdIds = row.smcdId || this.ids;
+      this.$modal.confirm('是否确认删除物料类别字典存储编号为"' + smcdIds + '"的数据项？').then(function() {
+        return delCategorydicTable(smcdIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -442,9 +297,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('supply/purchase/export', {
+      this.download('supply/categorydicTable/export', {
         ...this.queryParams
-      }, `purchase_${new Date().getTime()}.xlsx`)
+      }, `categorydicTable_${new Date().getTime()}.xlsx`)
     },
 
     /*  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */

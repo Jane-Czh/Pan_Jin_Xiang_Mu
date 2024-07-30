@@ -1,5 +1,6 @@
 package com.heli.supply.utils;
 
+import com.heli.supply.domain.SupplyMaterialCategoryDictionaryTable;
 import com.heli.supply.domain.SupplyPurchaseorderTable;
 import com.heli.supply.domain.SupplyRatioFormulaTable;
 import org.apache.poi.ss.usermodel.*;
@@ -118,6 +119,45 @@ public class ExcelUtils {
         return dataList;
     }
 
+    public static List<SupplyMaterialCategoryDictionaryTable> parseExcel2SupplyMaterialCategoryDictionaryTable(MultipartFile file)throws IOException{
+        List<SupplyMaterialCategoryDictionaryTable> dataList = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            SupplyMaterialCategoryDictionaryTable supplyMaterialCategoryDictionaryTable = new SupplyMaterialCategoryDictionaryTable();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+            //1、物料号
+            if (row.getCell(0) == null){
+                continue;
+            }
+            supplyMaterialCategoryDictionaryTable.setMaterialNumber(getStringCellValue(row.getCell(0)));
+            //2、物料类别
+            if (row.getCell(1) == null){
+                continue;
+            }
+            supplyMaterialCategoryDictionaryTable.setMaterialClass(getStringCellValue(row.getCell(1)));
+
+            System.out.println("========>"+supplyMaterialCategoryDictionaryTable);
+            dataList.add(supplyMaterialCategoryDictionaryTable);
+        }
+
+        workbook.close();
+
+        return dataList;
+    }
+
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {
             return null;
@@ -140,7 +180,6 @@ public class ExcelUtils {
         cell.setCellType(CellType.NUMERIC);
         return cell.getNumericCellValue();
     }
-
     private static Date getDateCellValue(String dateString) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         try {

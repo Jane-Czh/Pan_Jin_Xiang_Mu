@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.common.indicator.mapper.IndicatorsIndexMapper">
+
+
+    <resultMap type="IndicatorsIndex" id="IndicatorsIndexResult">
+        <result property="indicatorId"    column="indicator_id"    />
+        <result property="indicatorNameCn"    column="indicator_name_cn"    />
+        <result property="indicatorNameEn"    column="Indicator_name_en"    />
+        <result property="indicatorDeptCn"    column="indicator_dept_cn"    />
+        <result property="indicatorDeptEn"    column="indicator_dept_en"    />
+    </resultMap>
+
+    <sql id="selectIndicatorsIndexVo">
+        select indicator_id, indicator_name_cn, Indicator_name_en, indicator_dept_cn, indicator_dept_en from indicators_index
+    </sql>
+
+    <select id="selectIndicatorsIndexList" parameterType="IndicatorsIndex" resultMap="IndicatorsIndexResult">
+        <include refid="selectIndicatorsIndexVo"/>
+        <where>
+            <if test="indicatorNameCn != null  and indicatorNameCn != ''"> and indicator_name_cn = #{indicatorNameCn}</if>
+            <if test="indicatorNameEn != null  and indicatorNameEn != ''"> and Indicator_name_en = #{indicatorNameEn}</if>
+            <if test="indicatorDeptCn != null  and indicatorDeptCn != ''"> and indicator_dept_cn = #{indicatorDeptCn}</if>
+            <if test="indicatorDeptEn != null  and indicatorDeptEn != ''"> and indicator_dept_en = #{indicatorDeptEn}</if>
+        </where>
+    </select>
+
+    <select id="selectIndicatorsIndexAllList" parameterType="IndicatorsIndex" resultMap="IndicatorsIndexResult">
+        <include refid="selectIndicatorsIndexVo"/>
+    </select>
+
+    <select id="selectIndicatorsIndexByIndicatorId" parameterType="Integer" resultMap="IndicatorsIndexResult">
+        <include refid="selectIndicatorsIndexVo"/>
+        where indicator_id = #{indicatorId}
+    </select>
+
+    <insert id="insertIndicatorsIndex" parameterType="IndicatorsIndex" useGeneratedKeys="true" keyProperty="indicatorId">
+        insert into indicators_index
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="indicatorNameCn != null and indicatorNameCn != ''">indicator_name_cn,</if>
+            <if test="indicatorNameEn != null and indicatorNameEn != ''">Indicator_name_en,</if>
+            <if test="indicatorDeptCn != null and indicatorDeptCn != ''">indicator_dept_cn,</if>
+            <if test="indicatorDeptEn != null and indicatorDeptEn != ''">indicator_dept_en,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="indicatorNameCn != null and indicatorNameCn != ''">#{indicatorNameCn},</if>
+            <if test="indicatorNameEn != null and indicatorNameEn != ''">#{indicatorNameEn},</if>
+            <if test="indicatorDeptCn != null and indicatorDeptCn != ''">#{indicatorDeptCn},</if>
+            <if test="indicatorDeptEn != null and indicatorDeptEn != ''">#{indicatorDeptEn},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIndicatorsIndex" parameterType="IndicatorsIndex">
+        update indicators_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="indicatorNameCn != null and indicatorNameCn != ''">indicator_name_cn = #{indicatorNameCn},</if>
+            <if test="indicatorNameEn != null and indicatorNameEn != ''">Indicator_name_en = #{indicatorNameEn},</if>
+            <if test="indicatorDeptCn != null and indicatorDeptCn != ''">indicator_dept_cn = #{indicatorDeptCn},</if>
+            <if test="indicatorDeptEn != null and indicatorDeptEn != ''">indicator_dept_en = #{indicatorDeptEn},</if>
+        </trim>
+        where indicator_id = #{indicatorId}
+    </update>
+
+    <delete id="deleteIndicatorsIndexByIndicatorId" parameterType="Integer">
+        delete from indicators_index where indicator_id = #{indicatorId}
+    </delete>
+
+    <delete id="deleteIndicatorsIndexByIndicatorIds" parameterType="String">
+        delete from indicators_index where indicator_id in
+        <foreach item="indicatorId" collection="array" open="(" separator="," close=")">
+            #{indicatorId}
+        </foreach>
+    </delete>
+</mapper>

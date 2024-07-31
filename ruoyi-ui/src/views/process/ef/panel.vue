@@ -174,7 +174,7 @@
               icon="el-icon-folder-add"
               @click="bandFiles()"
               size="mini"
-              >绑定文件</el-button
+              >支撑文件绑定</el-button
             >
             <el-button
               v-else
@@ -198,7 +198,7 @@
             >
           </div>
           <!-- 弹出对话框提示填写项目流程名称 绑定文件 -->
-          <el-dialog
+          <!-- <el-dialog
             title="填写流程名称"
             :visible.sync="dialogVisible"
             width="30%"
@@ -220,7 +220,80 @@
               <el-button @click="dialogVisible = false">取消</el-button>
               <el-button type="primary" @click="save">保存</el-button>
             </div>
+          </el-dialog> -->
+
+          <el-dialog
+            title="填写流程名称"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :close-on-click-modal="false"
+            destroy-on-close="true"
+          >
+            <el-form ref="form" :model="formData" label-width="80px">
+              <el-form-item label="流程名称" required>
+                <el-input
+                  v-model="formData.project_Name"
+                  @input="validateSB1"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="流程编号" required>
+                <el-input
+                  v-model="formData.number"
+                  @input="validateNumber"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="主责部门" required>
+                <el-select
+                  v-model="formData.department"
+                  placeholder="请选择主责部门"
+                >
+                  <el-option
+                    v-for="item in departments"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="流程等级" required>
+                <el-select
+                  v-model="formData.level"
+                  placeholder="请选择流程等级"
+                >
+                  <el-option
+                    v-for="level in levels"
+                    :key="level"
+                    :label="level"
+                    :value="level"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="流程目的" required>
+                <el-input
+                  v-model="formData.purpose"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="适用范围" required>
+                <el-input
+                  v-model="formData.applicationScope"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+            </el-form>
+
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="save">保存</el-button>
+            </div>
           </el-dialog>
+
           <!--  -------------------------------------------  -->
           <!-- 弹出对话框提示填写项目流程模板sbsbsb-->
           <el-dialog
@@ -400,6 +473,19 @@ export default {
   inject: ["reload"],
   data() {
     return {
+      departments: [
+        "安环设备科",
+        "财务科",
+        "党群办公室",
+        "供应科",
+        "技术科",
+        "企业管理科",
+        "生产管理科",
+        "市场科",
+        "执纪监督室",
+        "质量科",
+      ],
+      levels: ["A级", "B级", "C级"],
       //用户名
       uploadUsername: null,
       //所属部门
@@ -433,6 +519,16 @@ export default {
         project_Name: "",
         //备注
         formData: "",
+        //流程编号
+        number: "",
+        //主责部门
+        department: "",
+        //流程等级
+        level: "",
+        //流程目的
+        purpose: "",
+        //适用范围
+        applicationScope: "",
       },
 
       // 流程表格数据
@@ -1382,6 +1478,12 @@ export default {
             ? JSON.stringify(this.idsRegulation)
             : null, //制度文件ids
         type: this.idsForm != null ? JSON.stringify(this.idsForm) : null, //表单文件ids
+        //0731新增
+        number: this.formData.number,
+        department: this.formData.department,
+        level: this.formData.level,
+        purpose: this.formData.purpose,
+        applicationScope: this.formData.applicationScope,
       };
 
       const nodeData = data.nodeList.map((node) => ({

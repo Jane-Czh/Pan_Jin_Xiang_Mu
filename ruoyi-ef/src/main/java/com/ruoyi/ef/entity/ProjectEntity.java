@@ -29,7 +29,7 @@ public class ProjectEntity {
     //流程名称
     private String name;
 
-    //更新的流程内容描述
+    //xx
     private String file;
 
     //创建日期
@@ -49,4 +49,15 @@ public class ProjectEntity {
     private String state;
     /** 绑定的表单文件ids */
     private String type;
+
+    //流程编号
+    private String number;
+    //主责部门
+    private String department;
+    //流程等级
+    private String level;
+    //流程目的
+    private String purpose;
+    //适用范围
+    private String applicationScope;
 }

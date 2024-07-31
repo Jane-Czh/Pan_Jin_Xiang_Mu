@@ -226,6 +226,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         ProjectVo projectVo = new ProjectVo();
         projectVo.setId(projectId);
         projectVo.setName(projectEntity.getName());
+        //流程编号 number;
+        //主责部门 department;
+        //流程等级 level;
+        //流程目的 purpose;
+        //适用范围 applicationScope;
+        projectVo.setNumber(projectEntity.getNumber());
+        projectVo.setDepartment(projectEntity.getDepartment());
+        projectVo.setLevel(projectEntity.getLevel());
+        projectVo.setPurpose(projectEntity.getPurpose());
+        projectVo.setApplicationScope(projectEntity.getApplicationScope());
+
 
         projectVo.setNodeList(nodeList);
         projectVo.setLineList(lineList);

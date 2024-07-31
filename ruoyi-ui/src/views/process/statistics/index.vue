@@ -37,7 +37,7 @@
       </el-form-item>
 
       <!-- v-hasPermi="['process:ef:export']" -->
-      <el-form-item class="export-button">
+      <el-form-item class="export-button" >
         <el-button
           type="primary"
           plain
@@ -45,7 +45,7 @@
           size="mini"
           
           @click="exportAll"
-          >总台账导出</el-button
+          >流程台账导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -401,7 +401,9 @@ export default {
         for (var i = 0; i < response.length; i++) {
           console.log("response[i].createBy===>", response[i].createBy);
 
-          if (this.departmentCategory == response[i].createBy.split("/")[1]) {
+          if (this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" || 
+              this.departmentCategory == "总部") {
             this.projectList.push(response[i]);
           }
         }

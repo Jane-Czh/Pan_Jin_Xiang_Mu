@@ -12,14 +12,15 @@ export default {
     xAxisData: { type: Array, default: () => [] },
     yAxisData: { type: Array, default: () => [] },
     legendData: { type: String, default: null },
-    targetValueArray: { type: Array, default: () => [] },
+    targetValue: { type: Number, default: 0 },
   },
   data() {
     return {
       loading: false,
       data: [],
       option: {},
-      myChart: {}
+      myChart: {},
+      targetValueArray: [],
     }
   },
   watch: {
@@ -37,6 +38,8 @@ export default {
     },
   },
   mounted() {
+    const yAxisDataLength = this.yAxisData.length;
+    this.targetValueArray = Array(yAxisDataLength).fill(this.targetValue);
     this.myChart = echarts.init(document.getElementById('main'))
     this.updateChart()
   },
@@ -143,9 +146,9 @@ export default {
             type: 'shadow'
           }
         },
-        // legend: {
-        //   data: [this.legendData]
-        // },
+        legend: {
+          data: [this.dataName, '目标值'],
+        },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -187,7 +190,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          data: this.targetValue,
+          data: this.targetValueArray,
         }
         ]
       };

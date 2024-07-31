@@ -15,7 +15,7 @@
     <div v-if="loading"
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
-      :yAxisData="yAxisData" :targetValueArray="targetValueArray"></indicator-chart>
+      :yAxisData="yAxisData" :targetValue="option.targetValue"></indicator-chart>
   </div>
 </template>
 

@@ -53,7 +53,8 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
@@ -61,8 +62,6 @@
         <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
         </el-button>
       </el-col>
-
-
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -83,7 +82,12 @@
       <el-table-column label="电车的问题车数量" align="center" prop="electricCarProblemVehicles" width="180" />
       <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="200" />
       <el-table-column label="K2型号中大吨位的问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
-      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" />
+      <!-- <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" /> -->
+      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210">
+        <template slot-scope="scope">
+          <span>{{ scope.row.singleInspectionPassRate }}%</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -138,7 +142,7 @@
 <script>
 import { listInspection, getInspection, delInspection, addInspection, updateInspection } from "@/api/quality/inspection";
 import { uploadFile } from '@/api/financial/excelImport';
-import { numValidatorPercentage, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { numValidatorPercentage, numValidatorNonZeroNature, numValidator } from '@/api/financial/numValidator.js';
 export default {
 
   name: "Inspection",
@@ -155,7 +159,7 @@ export default {
       progress: 0,
       selectedType: '',
 
-
+      isLoading: false,
 
       // 非多个禁用
       multiple: true,
@@ -199,49 +203,49 @@ export default {
         electricCarProductionQuantity: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2lessthan5tonProductionQuantity: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2largetonnageProductionQuantity: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         electricCarProblemVehicles: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2lessthan5tonProblemVehicles: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2largetonnageProblemVehicles: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         singleInspectionPassRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -253,7 +257,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/整机质检记录样表_20240729125737A010.xlsx';
+      const url = "/profile/modelFile/整机质检记录样表.xlsx";
+      handleTrueDownload(url);
     },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
@@ -404,6 +409,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
         const aimUrl = `/quality/data/inspection/read`;
@@ -421,6 +427,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
+            this.isLoading = false;
           });
       }
     },

@@ -139,7 +139,7 @@ export default {
         ranking: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

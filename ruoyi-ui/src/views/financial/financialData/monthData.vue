@@ -40,22 +40,22 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="整机销售收入" align="center" prop="totalSalesRevenue" width="100" />
-      <el-table-column label="集团外部销售收入" align="center" prop="externalGroupSalesRevenue" width="130" />
-      <el-table-column label="整车产量" align="center" prop="totalVehicleProduction" />
-      <el-table-column label="整车销量" align="center" prop="totalVehicleSales" />
-      <el-table-column label="新产品销售收入" align="center" prop="newProductSalesRevenue" width="120" />
-      <el-table-column label="特色产品收入" align="center" prop="specialtyProductRevenue" width="100" />
-      <el-table-column label="整机销售成本" align="center" prop="totalSalesCost" width="100" />
-      <el-table-column label="当月制造费用" align="center" prop="manufacturingExpensesMonth" width="100" />
-      <el-table-column label="储备车金额" align="center" prop="reserveCarAmount" width="90" />
-      <el-table-column label="资金周转率(次)" align="center" prop="capitalTurnoverRate" width="120" />
-      <el-table-column label="库存商品周转率(次)" align="center" prop="inventoryTurnoverRate" width="140" />
-      <el-table-column label="原材料周转率(次)" align="center" prop="rawMaterialTurnoverRate" width="120" />
-      <el-table-column label="在制品周转率(次)" align="center" prop="inprogressTurnoverRate" width="120" />
-      <el-table-column label="一年以上暂估行项目" align="center" prop="longEstimatedItems" width="140" />
+      <el-table-column label="整机销售收入(万元)" align="center" prop="totalSalesRevenue" width="140" />
+      <el-table-column label="集团外部销售收入(万元)" align="center" prop="externalGroupSalesRevenue" width="170" />
+      <el-table-column label="整车产量(台)" align="center" prop="totalVehicleProduction" width="100" />
+      <el-table-column label="整车销量(台)" align="center" prop="totalVehicleSales" width="100" />
+      <el-table-column label="新产品销售收入(万元)" align="center" prop="newProductSalesRevenue" width="160" />
+      <el-table-column label="特色产品收入(万元)" align="center" prop="specialtyProductRevenue" width="140" />
+      <el-table-column label="整机销售成本(万元)" align="center" prop="totalSalesCost" width="140" />
+      <el-table-column label="当月制造费用(万元)" align="center" prop="manufacturingExpensesMonth" width="140" />
+      <el-table-column label="储备车金额(万元)" align="center" prop="reserveCarAmount" width="130" />
+      <el-table-column label="资金周转率(次)" align="center" prop="capitalTurnoverRate" width="160" />
+      <el-table-column label="库存商品周转率(次)" align="center" prop="inventoryTurnoverRate" width="180" />
+      <el-table-column label="原材料周转率(次)" align="center" prop="rawMaterialTurnoverRate" width="160" />
+      <el-table-column label="在制品周转率(次)" align="center" prop="inprogressTurnoverRate" width="160" />
+      <el-table-column label="一年以上暂估行项目(项)" align="center" prop="longEstimatedItems" width="180" />
       <!-- <el-table-column label="当日在制品金额" align="center" prop="inprogressDayrevenue" width="120" /> -->
-      <el-table-column label="当月经济增加值" align="center" prop="addedValueMonthly" width="120" />
+      <el-table-column label="当月经济增加值(万元)" align="center" prop="addedValueMonthly" width="160" />
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -84,11 +84,11 @@
         <el-form-item label="集团外部销售收入(万元)" prop="externalGroupSalesRevenue">
           <el-input v-model="form.externalGroupSalesRevenue" placeholder="请输入集团外部销售收入(万元)" />
         </el-form-item>
-        <el-form-item label="整车产量" prop="totalVehicleProduction">
-          <el-input v-model="form.totalVehicleProduction" placeholder="请输入整车产量" />
+        <el-form-item label="整车产量(台)" prop="totalVehicleProduction">
+          <el-input v-model="form.totalVehicleProduction" placeholder="请输入整车产量(台)" />
         </el-form-item>
-        <el-form-item label="整车销量" prop="totalVehicleSales">
-          <el-input v-model="form.totalVehicleSales" placeholder="请输入整车销量" />
+        <el-form-item label="整车销量(台)" prop="totalVehicleSales">
+          <el-input v-model="form.totalVehicleSales" placeholder="请输入整车销量(台)" />
         </el-form-item>
         <el-form-item label="新产品销售收入(万元)" prop="newProductSalesRevenue">
           <el-input v-model="form.newProductSalesRevenue" placeholder="请输入新产品销售收入(万元)" />
@@ -105,8 +105,8 @@
         <el-form-item label="储备车金额(万元)" prop="reserveCarAmount">
           <el-input v-model="form.reserveCarAmount" placeholder="请输入储备车金额(万元)" />
         </el-form-item>
-        <el-form-item label="资金周转率(次)" prop="capitalTurnoverRate">
-          <el-input v-model="form.capitalTurnoverRate" placeholder="请输入资金周转率(次)" />
+        <el-form-item label="当月资金周转率(次)" prop="capitalTurnoverRate">
+          <el-input v-model="form.capitalTurnoverRate" placeholder="请输入当月资金周转率(次)" />
         </el-form-item>
         <el-form-item label="库存商品周转率(次)" prop="inventoryTurnoverRate">
           <el-input v-model="form.inventoryTurnoverRate" placeholder="请输入库存商品周转率(次)" />
@@ -114,11 +114,11 @@
         <el-form-item label="原材料周转率(次)" prop="rawMaterialTurnoverRate">
           <el-input v-model="form.rawMaterialTurnoverRate" placeholder="请输入原材料周转率(次)" />
         </el-form-item>
-        <el-form-item label="在制品周转率(次)" prop="inprogressTurnoverRate">
-          <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入在制品周转率(次)" />
+        <el-form-item label="当月在制品周转率(次)" prop="inprogressTurnoverRate">
+          <el-input v-model="form.inprogressTurnoverRate" placeholder="请输入当月在制品周转率(次)" />
         </el-form-item>
-        <el-form-item label="一年以上暂估行项目" prop="longEstimatedItems">
-          <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目" />
+        <el-form-item label="一年以上暂估行项目(项)" prop="longEstimatedItems">
+          <el-input v-model="form.longEstimatedItems" placeholder="请输入一年以上暂估行项目(项)" />
         </el-form-item>
         <el-form-item label="当月经济增加值(万元)" prop="addedValueMonthly">
           <el-input v-model="form.addedValueMonthly" placeholder="请输入当月经济增加值(万元)" />
@@ -223,14 +223,14 @@ export default {
         totalVehicleProduction: [
           {
             required: true,
-            validator: numValidatorOnlyNature,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         totalVehicleSales: [
           {
             required: true,
-            validator: numValidatorOnlyNature,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -273,28 +273,28 @@ export default {
         capitalTurnoverRate: [
           {
             required: true,
-            validator: numValidatorPercentageNegative,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         inventoryTurnoverRate: [
           {
             required: true,
-            validator: numValidatorPercentageNegative,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         rawMaterialTurnoverRate: [
           {
             required: true,
-            validator: numValidatorPercentageNegative,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         inprogressTurnoverRate: [
           {
             required: true,
-            validator: numValidatorPercentageNegative,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

@@ -50,7 +50,8 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
@@ -145,7 +146,7 @@
 
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidatorEnableEmpty, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
@@ -161,7 +162,7 @@ export default {
       showDialog: false,
       progress: 0,
       selectedType: '',
-
+      isLoading: false,
       // 选中数组
       ids: [],
       dates: [],
@@ -210,7 +211,7 @@ export default {
         employeesNumber: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -231,7 +232,7 @@ export default {
         totalMonthlySalary: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -282,9 +283,12 @@ export default {
     this.getList();
   },
   methods: {
+
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/工资表样表_20240729123705A002.xlsx';
+      const url = "/profile/modelFile/工资表样表.xlsx";
+      handleTrueDownload(url);
     },
+
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
         confirmButtonText: '确定',
@@ -487,6 +491,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         if (check1 || check2) {
           uploadFile(formData, aimUrl)
             .then(data => {
@@ -502,6 +507,7 @@ export default {
             .finally(() => {
               // 无论成功或失败，都关闭上传面板
               this.showDialog = false;
+              this.isLoading = false;
             });
         } else {
           this.$modal.confirm('检测到文件日期与所选日期可能不匹配，确定继续上传该表吗？').then(() => {
@@ -519,6 +525,7 @@ export default {
               .finally(() => {
                 // 无论成功或失败，都关闭上传面板
                 this.showDialog = false;
+                this.isLoading = false;
               });
           });
         }

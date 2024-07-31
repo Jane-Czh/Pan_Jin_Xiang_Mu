@@ -191,7 +191,7 @@ export default {
         controlledPurchaseAmountRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],

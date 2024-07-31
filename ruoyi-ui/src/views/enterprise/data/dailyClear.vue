@@ -140,42 +140,42 @@ export default {
         orderEntryDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         shipmentDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         productionReportDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         inspectionDelayRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         invoicePostingDelayRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         unsettledAccountsRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

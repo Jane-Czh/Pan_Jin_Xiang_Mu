@@ -43,7 +43,8 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
@@ -177,7 +178,7 @@ export default {
         seKeyEquipmentId: [
           {
             required: true,
-            validator: numValidatorOnlyNature,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -189,7 +190,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://localhost:8080/profile/upload/2024/07/29/重点设备字典样表_20240729123812A007.xlsx';
+      const url = "/profile/modelFile/重点设备字典样表.xlsx";
+      handleTrueDownload(url);
     },
     /** 查询重点设备字典列表 */
     getList() {

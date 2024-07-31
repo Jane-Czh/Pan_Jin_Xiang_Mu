@@ -173,41 +173,41 @@ export default {
         ppManualpocreationratio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         ppDeliveredunreportedratio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         mesLateworkreportingrate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         qmExternalinspectiondelay: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         mmPurchaseorderlatedelivery: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ], mmManualpocreation: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -221,7 +221,7 @@ export default {
         ficoMonthlystandardpricevariation: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -235,7 +235,7 @@ export default {
         pmLatemaintenanceordercompletion: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

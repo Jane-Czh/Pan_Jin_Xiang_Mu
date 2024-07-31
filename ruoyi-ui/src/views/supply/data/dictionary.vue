@@ -107,7 +107,7 @@
 
 <script>
 import { listDictionary, getDictionary, delDictionary, addDictionary, updateDictionary } from "@/api/supply/dictionaryData";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidatorOnlyNature } from '@/api/financial/numValidator.js';
 export default {
   name: "Index",
@@ -124,7 +124,9 @@ export default {
       progress: 0,
       selectedType: '',
       selectedFile: null,
+
       isLoading: false,
+
       single: true,
       // 非多个禁用
       multiple: true,
@@ -155,7 +157,7 @@ export default {
         materialSerialNumber: [
           {
             required: true,
-            validator: numValidatorOnlyNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -176,7 +178,9 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/采购订单汇总表样表_20240729124954A009.xlsx';
+      const url = "/profile/upload/采购订单汇总表样表.xlsx"
+      handleTrueDownload(url);
+
     },
     /** 查询供应科-指标-集采物料字典列表 */
     getList() {

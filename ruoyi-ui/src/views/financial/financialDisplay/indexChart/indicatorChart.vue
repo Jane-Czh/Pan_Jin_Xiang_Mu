@@ -11,7 +11,8 @@ export default {
     dataName: { type: String, default: '金额' },
     xAxisData: { type: Array, default: () => [] },
     yAxisData: { type: Array, default: () => [] },
-    legendData: { type: String, default: null }
+    legendData: { type: String, default: null },
+    targetValueArray: { type: Array, default: () => [] },
   },
   data() {
     return {
@@ -172,13 +173,23 @@ export default {
         ],
         series: [{
           name: this.dataName,
-          type: 'line',
+          type: 'bar',
           label: labelOption,
           emphasis: {
             focus: 'series'
           },
           data: this.yAxisData,
-        }]
+        },
+        {
+          name: '目标值',
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.targetValue,
+        }
+        ]
       };
 
       this.option && this.myChart.setOption(this.option);

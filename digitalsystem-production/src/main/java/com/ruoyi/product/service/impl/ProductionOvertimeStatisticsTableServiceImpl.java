@@ -171,6 +171,31 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
             Date Secondend = productionClockInForm.getSecondTimeClockingInAfterWork();
             Date Normalstart = productionClockInForm.getNormalWorkingHours();
             Date Normalend = productionClockInForm.getNormalClosingTime();
+            // 检查第一次打卡时间是否在正常上班时间的前后十分钟之内
+            long tenMinutesInMillis = 10 * 60 * 1000;
+            if (Math.abs(Firststart.getTime() - Normalstart.getTime()) > tenMinutesInMillis) {
+                String abnormalSituation = String.format("%02d月%02d日第一次打卡时间异常", Firststartmonth, Firststartday);
+                if (result.get(idnumber) == null) {
+                    ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = new ProductionOvertimeStatisticsTable();
+                    productionOvertimeStatisticsTable1.setCreateTime(currentDateold);
+                    productionOvertimeStatisticsTable1.setName(name);
+                    productionOvertimeStatisticsTable1.setGender(gender);
+                    productionOvertimeStatisticsTable1.setIdNumber(idnumber);
+                    productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation);
+                    result.put(idnumber, productionOvertimeStatisticsTable1);
+                } else {
+                    ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = result.get(idnumber);
+                    String existingAbnormalSituation = productionOvertimeStatisticsTable1.getAbnormalSituation();
+                    if (existingAbnormalSituation != null && !existingAbnormalSituation.isEmpty()) {
+                        productionOvertimeStatisticsTable1.setAbnormalSituation(existingAbnormalSituation + ";" + abnormalSituation);
+                    } else {
+                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation);
+                    }
+                    result.replace(idnumber, productionOvertimeStatisticsTable1);
+                }
+                count1++;
+                continue;
+            }
             while (count2<list2.size()){
                 ProductionOvertimeApplicationForm productionOvertimeApplicationForm =list2.get(count2);
                 String idnumberapp = productionOvertimeApplicationForm.getIdNumber();

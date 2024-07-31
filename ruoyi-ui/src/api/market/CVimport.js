@@ -43,7 +43,19 @@ export function delCVimport(mcvId) {
   })
 }
 
-export function uploadFile(formData) {
+// export function uploadFile(formData) {
+//   return request({
+//     url: '/market/CVimport/CVimport',
+//     method: 'post',
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//     withCredentials: true,
+//     data: formData,
+//   });
+// }
+
+export function uploadFile(formData, options = {}) {
   return request({
     url: '/market/CVimport/CVimport',
     method: 'post',
@@ -52,5 +64,6 @@ export function uploadFile(formData) {
     },
     withCredentials: true,
     data: formData,
+    timeout: options.timeout || 60000, // 设置默认超时时间为60秒
   });
 }

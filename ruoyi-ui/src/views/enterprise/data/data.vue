@@ -147,7 +147,7 @@
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorEnableEmpty, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
+import { numValidatorEnableEmpty, numValidatorOnlyPositive, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
 

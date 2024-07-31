@@ -121,7 +121,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/supply/data";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator, numValidatorOnlyNature, numValidatorPercentage } from '@/api/financial/numValidator.js';
 
 export default {
@@ -205,7 +205,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/采购订单汇总表样表_20240729124954A009.xlsx';
+      const url = "/profile/upload/采购订单汇总表样表.xlsx"
+      handleTrueDownload(url);
     },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字

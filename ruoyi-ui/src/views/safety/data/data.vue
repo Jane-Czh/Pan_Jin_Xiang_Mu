@@ -124,7 +124,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",

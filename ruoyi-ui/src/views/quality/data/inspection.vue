@@ -141,7 +141,7 @@
 
 <script>
 import { listInspection, getInspection, delInspection, addInspection, updateInspection } from "@/api/quality/inspection";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidatorPercentage, numValidatorNonZeroNature, numValidator } from '@/api/financial/numValidator.js';
 export default {
 

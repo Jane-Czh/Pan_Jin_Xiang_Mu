@@ -94,7 +94,7 @@
 
 <script>
 import { listDailyClearData, getDailyClearData, addDailyClearData, updateDailyClearData, delDailyClearData } from "@/api/enterprise/dailyClearData";
-import { numValidatorPercentage } from '@/api/financial/numValidator.js';
+import { numValidatorPercentage, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Settlement",
   data() {

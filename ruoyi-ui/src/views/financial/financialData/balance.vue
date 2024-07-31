@@ -253,10 +253,6 @@ import { listBalance, getBalance, delBalance, addBalance, updateBalance } from "
 import { numValidator } from '@/api/financial/numValidator.js';
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 
-
-
-
-
 export default {
   name: "Balance",
   data() {

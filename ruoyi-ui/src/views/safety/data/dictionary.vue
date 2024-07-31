@@ -132,7 +132,7 @@
 <script>
 import { listDictionary, getDictionary, delDictionary, addDictionary, updateDictionary } from "@/api/safety/dictionary";
 import { numValidator, numValidatorOnlyNature } from '@/api/financial/numValidator.js';
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 export default {
   name: "KEIndex",
   data() {

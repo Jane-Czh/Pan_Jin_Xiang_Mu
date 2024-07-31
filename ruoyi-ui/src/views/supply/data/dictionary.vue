@@ -108,7 +108,7 @@
 <script>
 import { listDictionary, getDictionary, delDictionary, addDictionary, updateDictionary } from "@/api/supply/dictionaryData";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorOnlyNature } from '@/api/financial/numValidator.js';
+import { numValidatorOnlyNature, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Index",
   data() {

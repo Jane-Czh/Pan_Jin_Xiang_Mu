@@ -241,14 +241,27 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 //        );
 
         //分别计算比率
-        BigDecimal monthlyInventoryTotalAmountRate = monthlyInventoryTotalAmount.divide(monthlyInventoryTotalAmountLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
-        BigDecimal operatingRevenueRate = operatingRevenue.divide(operatingRevenueLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
+//        BigDecimal monthlyInventoryTotalAmountRate = monthlyInventoryTotalAmount.divide(monthlyInventoryTotalAmountLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
+//        BigDecimal operatingRevenueRate = operatingRevenue.divide(operatingRevenueLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
+
+        //新计算方式
+        BigDecimal totalAmountSubtract = monthlyInventoryTotalAmount.subtract(monthlyInventoryTotalAmountLastMonth);
+        BigDecimal operatingRevenueSubtract = operatingRevenue.subtract(operatingRevenueLastMonth);
+        log.info("totalAmountSubtract" + totalAmountSubtract + "----operatingRevenueSubtract" + operatingRevenueSubtract);
+        log.info(totalAmountSubtract.equals(BigDecimal.ZERO) + "---"+operatingRevenueSubtract.equals(BigDecimal.ZERO));
+        //如果上面两个值一个为0，则直接返回0
+        if (!totalAmountSubtract.equals(BigDecimal.ZERO) || !operatingRevenueSubtract.equals(BigDecimal.ZERO)) {
+            balanceTable.setGrowthRateInventory(0.0);
+        } else {
+            log.info("jinru");
+            balanceTable.setGrowthRateInventory(totalAmountSubtract.divide(operatingRevenueSubtract, 2, RoundingMode.HALF_UP).doubleValue());
+        }
 
 //        System.out.println("monthlyInventoryTotalAmountRate" + monthlyInventoryTotalAmountRate);
 //        System.out.println("operatingRevenueRate" + operatingRevenueRate);
 
-        balanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
-        balanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
+//        balanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
+//        balanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
 
 
         //计算总比率

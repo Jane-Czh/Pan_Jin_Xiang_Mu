@@ -51,16 +51,16 @@ public class ProductionClockInFormController extends BaseController
         return success();
     }
 
-    @Log(title = "设置上下班时间", businessType = BusinessType.INSERT)
-    @PostMapping("/updatetime")
-    public AjaxResult updateWorkTime(@RequestBody WorkTimeData workTimeData) throws ParseException {
-        System.out.println("------------update------------");
-        System.out.println("正常上班时间" + workTimeData.getStartTime());
-        System.out.println("正常下班时间" + workTimeData.getEndTime());
-        List<ProductionClockInForm> list1 = productionClockInFormService.selectProductionClockInFormList1();
-        productionClockInFormService.updateTime(list1,workTimeData);
-        return AjaxResult.success("Work time updated");
-    }
+//    @Log(title = "设置上下班时间", businessType = BusinessType.INSERT)
+//    @PostMapping("/updatetime")
+//    public AjaxResult updateWorkTime(@RequestBody WorkTimeData workTimeData) throws ParseException {
+//        System.out.println("------------update------------");
+//        System.out.println("正常上班时间" + workTimeData.getStartTime());
+//        System.out.println("正常下班时间" + workTimeData.getEndTime());
+//        List<ProductionClockInForm> list1 = productionClockInFormService.selectProductionClockInFormList1();
+//        productionClockInFormService.updateTime(list1,workTimeData);
+//        return AjaxResult.success("Work time updated");
+//    }
 
     /**
 //     * 导入excel表格功能

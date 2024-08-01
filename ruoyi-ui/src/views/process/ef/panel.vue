@@ -246,19 +246,25 @@
                   show-word-limit
                 ></el-input>
               </el-form-item>
-              <el-form-item label="主责部门" required>
+
+              <!-- 1\部门 -->
+              <el-form-item label="主责部门" required="true">
                 <el-select
                   v-model="formData.department"
-                  placeholder="请选择主责部门"
+                  placeholder="请选择部门"
+                  clearable
+                  @change="handleDepartmentChange"
                 >
                   <el-option
                     v-for="item in departments"
                     :key="item"
                     :label="item"
                     :value="item"
-                  ></el-option>
+                  />
+                
                 </el-select>
               </el-form-item>
+
               <el-form-item label="流程等级" required>
                 <el-select
                   v-model="formData.level"
@@ -270,16 +276,54 @@
                     :label="level"
                     :value="level"
                   ></el-option>
+                  
                 </el-select>
               </el-form-item>
-              <el-form-item label="流程目的" required>
+              <!-- -------------------------------------------------- -->
+              <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+              <el-form-item label="业务模块">
+                <el-select
+                  v-model="formData.businessesModules"
+                  placeholder="请选择业务模块"
+                  clearable
+                  :disabled="!formData.department"
+                  @change="handleModuleChange"
+                >
+                  <el-option
+                    v-for="item in modules"
+                    :key="item.bm_id"
+                    :label="item.moduleName"
+                    :value="item.moduleName"
+                  />
+                </el-select>
+              </el-form-item>
+
+              <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+              <el-form-item label="细分业务">
+                <el-select
+                  v-model="formData.subBusinesses"
+                  placeholder="请选择细分业务"
+                  clearable
+                  :disabled="!formData.businessesModules"
+                >
+                  <el-option
+                    v-for="item in subBusinesses"
+                    :key="item.subb_id"
+                    :label="item.subBusinessesName"
+                    :value="item.subBusinessesName"
+                  />
+                </el-select>
+              </el-form-item>
+              <!-- -------------------------------------------------- -->
+
+              <el-form-item label="流程目的">
                 <el-input
                   v-model="formData.purpose"
                   maxlength="20"
                   show-word-limit
                 ></el-input>
               </el-form-item>
-              <el-form-item label="适用范围" required>
+              <el-form-item label="适用范围">
                 <el-input
                   v-model="formData.applicationScope"
                   maxlength="20"
@@ -467,12 +511,48 @@ import {
   saveNode,
   saveLine,
 } from "@/api/system/project";
+//业务模块api，
+import { listModuless } from "@/api/function/modules";
+//细分业务api
+import { listBusinessess } from "@/api/function/businesses";
+
 
 export default {
   name: "Project",
   inject: ["reload"],
   data() {
     return {
+      subBusinessesList: [],
+      subBusinesses: [], //过滤后的细分业务列表
+
+      // 业务模块 module 查询参数
+      moduleQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        moduleName: null,
+        parentDepartment: null,
+        isDeleted: null,
+        description: null,
+      },
+      // 细分业务 查询参数
+      xifenQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        subBusinessesName: null,
+        parentDepartment: null,
+        parentModule: null,
+        isDeleted: null,
+        description: null,
+      },
+
+      // 表单参数
+      // form: {
+      //   parentDepartment: "", //上级部门
+      //   parentModule: "", //上级业务模块
+      // },
+      modules: [], //过滤后的上级 业务模块
+      modulesList: [],
+      //部门
       departments: [
         "安环设备科",
         "财务科",
@@ -529,6 +609,11 @@ export default {
         purpose: "",
         //适用范围
         applicationScope: "",
+
+        //业务模块
+        businessesModules: "",
+        //细分业务
+        subBusinesses: "",
       },
 
       // 流程表格数据
@@ -625,6 +710,57 @@ export default {
   },
 
   methods: {
+    // 通过 department部门 限制选择:  业务模块内容 this.modules
+    async handleDepartmentChange(department) {
+      this.formData.businessesModules = ""; // 重置上级业务模块选择
+      this.modules = []; // 清空之前的模块
+      if (department) {
+        try {
+          await listModuless(this.moduleQueryParams).then((response) => {
+            this.modulesList = response.rows;
+          });
+
+          for (let i = 0; i < this.modulesList.length; i++) {
+            console.log("123===" + this.modulesList[i].parentDepartment);
+            // 根据部门字段进行筛选
+            if (this.modulesList[i].parentDepartment === department) {
+              this.modules.push(this.modulesList[i]);
+            }
+          }
+
+          console.log("this.modules===", this.modules);
+        } catch (error) {
+          console.error("Failed to fetch modules:", error);
+        }
+      }
+    },
+    //通过 业务模块内容 限制选择: 细分业务内容
+    async handleModuleChange(module) {
+      this.formData.subBusinesses = ""; // 重置细分业务选择
+      this.subBusinesses = []; // 清空之前的细分业务
+      if (module) {
+        try {
+          // 获取所有细分业务
+          await listBusinessess(this.xifenQueryParams).then((response) => {
+            this.subBusinessesList = response.rows;
+          });
+
+          for (let i = 0; i < this.subBusinessesList.length; i++) {
+            console.log("12321===" + this.subBusinessesList[i]);
+            // 根据业务模块字段进行筛选
+            if (this.subBusinessesList[i].parentModule === module) {
+              this.subBusinesses.push(this.subBusinessesList[i]);
+            }
+          }
+
+          console.log("this.subBusinesses===", this.subBusinesses);
+        } catch (error) {
+          console.error("Failed to fetch sub-businesses:", error);
+        }
+      }
+    },
+
+    // ---------------------------------------
     validateSB1() {
       const regex = /^[\u4e00-\u9fa5\dA-Za-z.\(\)\-（）]*$/;
       this.formData.project_Name = this.formData.project_Name
@@ -1413,7 +1549,7 @@ export default {
         this.data,
         this.project_Id
       );
-      console.log("projectData =======", projectData);
+      console.log("projectData ======= 08010801 ====", projectData);
 
       // 发送项目数据到后端
       saveProject(projectData)
@@ -1484,6 +1620,11 @@ export default {
         level: this.formData.level,
         purpose: this.formData.purpose,
         applicationScope: this.formData.applicationScope,
+
+        //业务模块
+        businessesModules: this.formData.businessesModules,
+        //细分业务
+        subBusinesses: this.formData.subBusinesses,
       };
 
       const nodeData = data.nodeList.map((node) => ({

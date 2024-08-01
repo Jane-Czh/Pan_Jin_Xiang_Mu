@@ -27,6 +27,13 @@ public class ProjectVo {
     //适用范围
     private String applicationScope;
 
+    //+业务模块+名称
+    private String businessesModules;
+
+    //+细分业务+名称
+    private String subBusinesses;
+
+
     private List<NodeEntity> nodeList;
     private List<LineEntity> lineList;
 }

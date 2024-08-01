@@ -338,17 +338,19 @@ export default {
       const promises = this.projectList.map((project) => {
         return this.getFileNamesByIds(project).then((fileNames) => {
           return {
+            
             流程名称: project.name,
-           
+            流程等级: project.level,
+            主责部门: project.department,
+            流程编号: project.number,
+
             创建日期: project.createDate,
             创建人: project.createBy,
-            更新日期: project.updateDate,
-            更新人: project.updateBy,
             // 流程绑定的制度文件: fileNames.selectedFileNames,
             // 流程绑定的表单文件: fileNames.selectedFormsNames,
             // 节点绑定的文件s???
 
-            最近一次更新内容描述: this.formattedContent(project.file),
+            // 最近一次更新内容描述: this.formattedContent(project.file),
           };
         });
       });

@@ -23,7 +23,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
+      <!-- 部门 进行搜索  -->
       <el-form-item label="主责部门" prop="department">
         <el-select
           v-model="queryParams.department"
@@ -38,7 +38,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-
+      <!-- 等级 进行搜索 -->
       <el-form-item label="流程等级" prop="level">
         <el-select
           v-model="queryParams.level"
@@ -86,15 +86,14 @@
         >
       </el-form-item>
 
-      <el-form-item class="export-button" style="float: right;">
+      <el-form-item class="export-button" style="float: right">
         <el-button
           type="primary"
           plain
           icon="el-icon-download"
           size="small"
-          
           @click="exportAll"
-          >流程导出</el-button
+          >总台账导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -148,7 +147,6 @@
           >导出</el-button
         >
       </el-col> -->
-   
 
       <right-toolbar
         :showSearch.sync="showSearch"
@@ -174,6 +172,13 @@
       <el-table-column label="主责部门" align="center" prop="department" />
 
       <el-table-column label="流程名称" align="center" prop="name" />
+
+      <el-table-column
+        label="业务模块"
+        align="center"
+        prop="businessesModules"
+      />
+      <el-table-column label="细分业务" align="center" prop="subBusinesses" />
 
       <el-table-column label="流程等级" align="center" prop="level" />
 
@@ -438,8 +443,13 @@
             show-word-limit
           />
         </el-form-item>
+
         <el-form-item label="主责部门" prop="department">
-          <el-select v-model="form.department" placeholder="请选择主责部门">
+          <el-select
+            v-model="form.department"
+            placeholder="请选择主责部门"
+            @change="handleDepartmentChange"
+          >
             <el-option
               v-for="item in departments"
               :key="item"
@@ -448,6 +458,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item label="流程等级" prop="level">
           <el-select v-model="form.level" placeholder="请选择流程等级">
             <el-option
@@ -458,6 +469,44 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
+        <!-- 0801 0810 -->
+        <el-form-item label="业务模块" prop="businessesModules">
+          <el-select
+            v-model="form.businessesModules"
+            placeholder="请选择业务模块"
+            clearable
+            @change="handleModuleChange"
+            :disabled="!form.department"
+          >
+            <el-option
+              v-for="item in modules"
+              :key="item.bm_id"
+              :label="item.moduleName"
+              :value="item.moduleName"
+            />
+          </el-select>
+        </el-form-item>
+
+        <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+        <el-form-item label="细分业务" prop="subBusinesses">
+          <el-select
+            v-model="form.subBusinesses"
+            placeholder="请选择细分业务"
+            clearable
+            :disabled="!form.businessesModules"
+          >
+            <el-option
+              v-for="item in subBusinesses"
+              :key="item.subb_id"
+              :label="item.subBusinessesName"
+              :value="item.subBusinessesName"
+            />
+          </el-select>
+        </el-form-item>
+
+        <!-- ---------------------------------------------------------------------------------- -->
+
         <el-form-item label="流程目的" prop="purpose">
           <el-input
             v-model="form.purpose"
@@ -487,6 +536,11 @@
 </template>
 
 <script>
+//业务模块api，
+import { listModuless } from "@/api/function/modules";
+//细分业务api
+import { listBusinessess } from "@/api/function/businesses";
+
 import {
   listProject,
   getProject,
@@ -521,6 +575,33 @@ export default {
   inject: ["reload"],
   data() {
     return {
+      modules: [], //过滤后 业务模块 数据
+      modulesList: [], //全部的 业务模块 数据
+      subBusinessesList: [], //获取的全部的业务列表
+      subBusinesses: [], //过滤后的细分业务列表
+
+      // 业务模块 查询参数
+      moduleQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        moduleName: null,
+        parentDepartment: null,
+        isDeleted: null,
+        description: null,
+      },
+
+      // 细分业务 查询参数
+      xifenQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        subBusinessesName: null,
+        parentDepartment: null,
+        parentModule: null,
+        isDeleted: null,
+        description: null,
+      },
+
+      // -------------------------------------
       //用户名
       uploadUsername: null,
       //所属部门
@@ -595,6 +676,8 @@ export default {
         filename: null,
         department: null,
         level: null,
+        businessesModules: null,
+        subBusinesses: null,
       },
 
       dataList: [],
@@ -613,6 +696,11 @@ export default {
         level: "",
         purpose: "",
         applicationScope: "",
+
+        //业务模块
+        businessesModules: "",
+        //细分业务
+        subBusinesses: "",
       },
       departments: [
         "安环设备科",
@@ -666,7 +754,6 @@ export default {
   created() {},
 
   methods: {
-
     //流程信息导出
     exportAll() {
       const loadingInstance = Loading.service({
@@ -676,23 +763,21 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
 
+      let index = 1; // 初始化序号
+
       const promises = this.projectList.map((project) => {
         return this.getFileNamesByIds(project).then((fileNames) => {
+          console.log("fileNames:", fileNames); // 调试输出
           return {
-            主责部门: project.department,
-            流程名称: project.name,
+            部门: project.department,
+            序号: index++, // 自增序号
+            业务模块: project.businessesModules,
+            细分业务: project.subBusinesses,
+            制度名称: "《" + fileNames.selectedFileNames + "》",
+            制度等级: fileNames.selectedFileLeval,
+            流程名称:  "《" + project.name + "》",
             流程等级: project.level,
-            流程编号: project.number,
-
-            创建日期: project.createDate,
-            创建人: project.createBy,
-            // 更新日期: project.updateDate,
-            // 更新人: project.updateBy,
-            // 流程绑定的制度文件: fileNames.selectedFileNames,
-            // 流程绑定的表单文件: fileNames.selectedFormsNames,
-            // 节点绑定的文件s???
-
-            // 最近一次更新内容描述: this.formattedContent(project.file),
+            表单名称: "《" + fileNames.selectedFormsNames + "》",
           };
         });
       });
@@ -702,6 +787,20 @@ export default {
           const ws = XLSX.utils.json_to_sheet(data);
           const wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+          // 设置列宽
+          const wscols = [
+            { wch: 15 }, // 部门
+            { wch: 5 }, // 序号
+            { wch: 15 }, // 业务模块
+            { wch: 15 }, // 细分业务
+            { wch: 15 }, // 制度名称
+            { wch: 15 }, // 制度等级
+            { wch: 15 }, // 流程名称
+            { wch: 15 }, // 流程等级
+            { wch: 15 }, // 表单名称
+          ];
+          ws["!cols"] = wscols;
 
           const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
           saveAs(
@@ -717,17 +816,71 @@ export default {
           loadingInstance.close();
         });
     },
+    // 通过 department部门 限制选择:  业务模块内容 this.modules
+    async handleDepartmentChange(department) {
+      this.form.businessesModules = ""; // 重置上级业务模块选择
+      this.modules = []; // 清空之前的模块
+      if (department) {
+        try {
+          await listModuless(this.moduleQueryParams).then((response) => {
+            this.modulesList = response.rows;
+          });
 
+          for (let i = 0; i < this.modulesList.length; i++) {
+            console.log("123===" + this.modulesList[i].parentDepartment);
+            // 根据部门字段进行筛选
+            if (this.modulesList[i].parentDepartment === department) {
+              this.modules.push(this.modulesList[i]);
+            }
+          }
+
+          console.log("this.modules===", this.modules);
+        } catch (error) {
+          console.error("Failed to fetch modules:", error);
+        }
+      }
+    },
+
+    //通过 业务模块内容 限制选择: 细分业务内容
+    async handleModuleChange(module) {
+      this.form.subBusinesses = ""; // 重置细分业务选择
+      this.subBusinesses = []; // 清空之前的细分业务
+      if (module) {
+        try {
+          // 获取所有细分业务
+          await listBusinessess(this.xifenQueryParams).then((response) => {
+            this.subBusinessesList = response.rows;
+          });
+
+          for (let i = 0; i < this.subBusinessesList.length; i++) {
+            console.log("12321===" + this.subBusinessesList[i]);
+            // 根据业务模块字段进行筛选
+            if (this.subBusinessesList[i].parentModule === module) {
+              this.subBusinesses.push(this.subBusinessesList[i]);
+            }
+          }
+
+          console.log("this.subBusinesses===", this.subBusinesses);
+        } catch (error) {
+          console.error("Failed to fetch sub-businesses:", error);
+        }
+      }
+    },
     getFileNamesByIds(project) {
       return new Promise((resolve, reject) => {
         // 初始化
         this.selectedFileNames = [];
         this.selectedFormsNames = [];
+        let selectedFileLeval = [];
 
         // 制度文件
         listFilemanagement(this.queryParams)
           .then((response) => {
             this.filemanagementList = response.rows;
+            console.log(
+              "今天是0801，filemanagementList:",
+              this.filemanagementList
+            ); // 调试输出
           })
           .then(() => {
             if (project.state && project.state !== "no") {
@@ -742,9 +895,12 @@ export default {
                 );
                 if (row != null) {
                   this.selectedFileNames.push(row.fileName);
+                  selectedFileLeval.push(row.regulationLeval); // 获取 regulationLeval 属性
                 }
               });
             }
+            console.log("0801 selectedFileNames:", this.selectedFileNames); // 调试输出
+            console.log("0801 selectedFileLeval:", selectedFileLeval); // 调试输出
           })
           .then(() => {
             // 表单文件
@@ -752,6 +908,10 @@ export default {
           })
           .then((response) => {
             this.formmanagementList = response.rows;
+            console.log(
+              "表单也是0801 formmanagementList:",
+              this.formmanagementList
+            ); // 调试输出
           })
           .then(() => {
             if (project.type && project.type !== "no") {
@@ -768,11 +928,16 @@ export default {
                 }
               });
             }
+            console.log(
+              "是啊0801111selectedFormsNames:",
+              this.selectedFormsNames
+            ); // 调试输出
           })
           .then(() => {
             resolve({
               selectedFileNames: this.selectedFileNames.join(", "),
               selectedFormsNames: this.selectedFormsNames.join(", "),
+              selectedFileLeval: selectedFileLeval.join(", "), // 返回 selectedFileLeval 字段
             });
           })
           .catch((error) => {
@@ -780,7 +945,6 @@ export default {
           });
       });
     },
-
 
     // 调用接口获取用户信息  uploadUsername、departmentCategory
     async getUserInfo() {

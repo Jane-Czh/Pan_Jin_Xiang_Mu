@@ -60,4 +60,10 @@ public class ProjectEntity {
     private String purpose;
     //适用范围
     private String applicationScope;
+
+    //业务模块名称
+    private String businessesModules;
+
+    //细分业务名称
+    private String subBusinesses;
 }

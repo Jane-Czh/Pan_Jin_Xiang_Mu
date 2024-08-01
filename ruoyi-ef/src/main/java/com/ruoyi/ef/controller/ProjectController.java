@@ -315,7 +315,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
      */
     @PostMapping("/searchList")
     public List<ProjectEntity> searchList(@RequestBody ProjectEntity projectEntity) {
-//        System.out.println("searchList projectEntity ==>" + projectEntity);
+        System.out.println("searchList projectEntity ==>" + projectEntity);
         //精准查询
 //        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().eq("name", projectEntity.getName()).eq("newest", 1));
         //模糊查询
@@ -581,6 +581,11 @@ public class ProjectController extends SuperController<ProjectEntity> {
         getByIdEntity.setLevel(projectEntity.getLevel());
         getByIdEntity.setPurpose(projectEntity.getPurpose());
         getByIdEntity.setApplicationScope(projectEntity.getApplicationScope());
+
+        //业务模块名称 businessesModules;
+        //细分业务名称 subBusinesses;
+        getByIdEntity.setBusinessesModules(projectEntity.getBusinessesModules());
+        getByIdEntity.setSubBusinesses(projectEntity.getSubBusinesses());
 
 
 

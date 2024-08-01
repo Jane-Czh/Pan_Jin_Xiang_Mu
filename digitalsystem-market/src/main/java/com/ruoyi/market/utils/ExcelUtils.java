@@ -416,12 +416,12 @@ public class ExcelUtils {
             MarketCommercialVehicleTable.setProcurementOfOnSiteAbnormalIssues(getStringCellValue(row.getCell(count++)));
             //21、现场异常问题质量
             MarketCommercialVehicleTable.setQualityOfOnSiteAbnormalIssues(getStringCellValue(row.getCell(count++)));
-            //22、上线
-            MarketCommercialVehicleTable.setGoLive(getStringCellValue(row.getCell(count++)));
             //23、入库
             MarketCommercialVehicleTable.setWarehousing(getStringCellValue(row.getCell(count++)));
             //24、生产周期
             MarketCommercialVehicleTable.setProductionCycle(getStringCellValue(row.getCell(count++)));
+            //25、未报工原因
+            MarketCommercialVehicleTable.setGoLive(getStringCellValue(row.getCell(count++)));
 
 
             CVdataList.add(MarketCommercialVehicleTable);

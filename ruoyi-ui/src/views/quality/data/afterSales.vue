@@ -55,7 +55,8 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
@@ -79,10 +80,25 @@
         </template>
       </el-table-column>
       <el-table-column label="当月反馈新车病车数" align="center" prop="newCarDefects" />
-      <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" />
+      <!-- <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" /> -->
+      <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate">
+        <template slot-scope="scope">
+          <span>{{ scope.row.warrantyRepairRate }}%</span>
+        </template>
+      </el-table-column>
       <el-table-column label="月度售后质量问题总数" align="center" prop="monthlyAfterSalesIssues" />
-      <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate" />
-      <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" />
+      <!-- <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate" /> -->
+      <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate">
+        <template slot-scope="scope">
+          <span>{{ scope.row.warrantyVehicleRepairRate }}%</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" /> -->
+      <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate">
+        <template slot-scope="scope">
+          <span>{{ scope.row.externalLossRate }}%</span>
+        </template>
+      </el-table-column>
       <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -99,7 +115,7 @@
 
     <!-- 添加或修改质量指标-统计对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="200px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -108,17 +124,17 @@
         <el-form-item label="当月反馈新车病车数" prop="newCarDefects">
           <el-input v-model="form.newCarDefects" placeholder="请输入当月反馈新车病车数" />
         </el-form-item>
-        <el-form-item label="三包期内新车返修率" prop="warrantyRepairRate">
-          <el-input v-model="form.warrantyRepairRate" placeholder="请输入三包期内新车返修率" />
+        <el-form-item label="三包期内新车返修率(%)" prop="warrantyRepairRate">
+          <el-input v-model="form.warrantyRepairRate" placeholder="请输入三包期内新车返修率(%)" />
         </el-form-item>
         <el-form-item label="月度售后质量问题总数" prop="monthlyAfterSalesIssues">
           <el-input v-model="form.monthlyAfterSalesIssues" placeholder="请输入月度售后质量问题总数" />
         </el-form-item>
-        <el-form-item label="三包期内整车月度返修率" prop="warrantyVehicleRepairRate">
-          <el-input v-model="form.warrantyVehicleRepairRate" placeholder="请输入三包期内整车月度返修率" />
+        <el-form-item label="三包期内整车月度返修率(%)" prop="warrantyVehicleRepairRate">
+          <el-input v-model="form.warrantyVehicleRepairRate" placeholder="请输入三包期内整车月度返修率(%)" />
         </el-form-item>
-        <el-form-item label="外部质量损失率" prop="externalLossRate">
-          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率" />
+        <el-form-item label="外部质量损失率(%)" prop="externalLossRate">
+          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率(%)" />
         </el-form-item>
         <el-form-item label="售后问题生产责任次数" prop="productionLiabilityIssues">
           <el-input v-model="form.productionLiabilityIssues" placeholder="请输入售后问题生产责任次数" />
@@ -134,8 +150,8 @@
 
 <script>
 import { listMetrics, getMetrics, delMetrics, addMetrics, updateMetrics } from "@/api/quality/afterSales";
-import { uploadFile } from '@/api/financial/excelImport';
-import { numValidatorPercentage, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
+import { numValidatorPercentage, numValidatorNonZeroNature, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Metrics",
 
@@ -152,7 +168,7 @@ export default {
       progress: 0,
       selectedType: '',
 
-
+      isLoading: false,
 
       // 非单个禁用
       single: true,
@@ -191,42 +207,42 @@ export default {
         newCarDefects: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         warrantyRepairRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         monthlyAfterSalesIssues: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         warrantyVehicleRepairRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         externalLossRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         productionLiabilityIssues: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -238,7 +254,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/售后台账样表_20240729123738A005.xlsx';
+      const url = "/profile/modelFile/售后台账样表.xlsx";
+      handleTrueDownload(url);
     },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
@@ -383,6 +400,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         const aimUrl = `/quality/data/after-sales/read`
@@ -400,6 +418,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
+            this.isLoading = true;
           });
       }
     },

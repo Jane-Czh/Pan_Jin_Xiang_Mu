@@ -11,14 +11,16 @@ export default {
     dataName: { type: String, default: '金额' },
     xAxisData: { type: Array, default: () => [] },
     yAxisData: { type: Array, default: () => [] },
-    legendData: { type: String, default: null }
+    legendData: { type: String, default: null },
+    targetValue: { type: Number, default: 0 },
   },
   data() {
     return {
       loading: false,
       data: [],
       option: {},
-      myChart: {}
+      myChart: {},
+      targetValueArray: [],
     }
   },
   watch: {
@@ -36,6 +38,8 @@ export default {
     },
   },
   mounted() {
+    const yAxisDataLength = this.yAxisData.length;
+    this.targetValueArray = Array(yAxisDataLength).fill(this.targetValue);
     this.myChart = echarts.init(document.getElementById('main'))
     this.updateChart()
   },
@@ -142,9 +146,9 @@ export default {
             type: 'shadow'
           }
         },
-        // legend: {
-        //   data: [this.legendData]
-        // },
+        legend: {
+          data: [this.dataName, '目标值'],
+        },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -172,13 +176,23 @@ export default {
         ],
         series: [{
           name: this.dataName,
-          type: 'line',
+          type: 'bar',
           label: labelOption,
           emphasis: {
             focus: 'series'
           },
           data: this.yAxisData,
-        }]
+        },
+        {
+          name: '目标值',
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.targetValueArray,
+        }
+        ]
       };
 
       this.option && this.myChart.setOption(this.option);

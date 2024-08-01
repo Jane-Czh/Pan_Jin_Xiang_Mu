@@ -44,13 +44,27 @@
         </template>
       </el-table-column>
       <el-table-column label="外部质量损失金额" align="center" prop="moleculeExternalMassLossRate" />
-      <el-table-column label="外部质量损失率(%)" align="center" prop="externalMassLossRate" width="150" />
+      <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalMassLossRate" width="150" /> -->
       <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
       <el-table-column label="平均无故障时间(小时)" align="center" prop="meantimeWithoutFailure" width="200">
       </el-table-column>
-      <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220" />
-      <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate" />
-      <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220" />
+      <!-- <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220" /> -->
+      <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220">
+        <template slot-scope="scope">
+          <span>{{ scope.row.intimeReturnrate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate">
+        <template slot-scope="scope">
+          <span>{{ scope.row.selfcheckPassrate }}%</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220" /> -->
+      <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220">
+        <template slot-scope="scope">
+          <span>{{ scope.row.nextprocessFeedbackPassrate }}%</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -75,9 +89,9 @@
         <el-form-item label="外部质量损失金额" prop="moleculeExternalMassLossRate">
           <el-input v-model="form.moleculeExternalMassLossRate" placeholder="请输入外部质量损失金额" />
         </el-form-item>
-        <el-form-item label="外部质量损失率(%)" prop="externalMassLossRate">
+        <!-- <el-form-item label="外部质量损失率(%)" prop="externalMassLossRate">
           <el-input v-model="form.externalMassLossRate" placeholder="请输入外部质量损失率(%)" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="质量考核季度排名" prop="quarterlyRank">
           <el-input v-model="form.quarterlyRank" placeholder="请输入质量考核季度排名" />
         </el-form-item>
@@ -103,7 +117,7 @@
 </template>
 
 <script>
-import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill } from "@/api/quality/data";
+import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill, updateList } from "@/api/quality/data";
 import { numValidator, numValidatorOnlyPositive, numValidatorPercentage } from '@/api/financial/numValidator.js';
 export default {
   name: "HandFill",
@@ -172,28 +186,28 @@ export default {
         meantimeWithoutFailure: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         intimeReturnrate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         selfcheckPassrate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         nextprocessFeedbackPassrate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -326,8 +340,10 @@ export default {
     },
     /** 更新按钮操作 */
     handleUpdateList() {
-      this.getList()
-      this.$modal.msgSuccess("更新成功");
+      updateList().then(() => {
+        this.getList();
+        this.$modal.msgSuccess("更新成功");
+      });
     }
   }
 };

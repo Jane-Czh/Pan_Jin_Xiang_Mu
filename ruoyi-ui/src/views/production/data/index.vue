@@ -48,7 +48,8 @@
 
             <span slot="footer" class="dialog-footer">
               <el-button @click="showDialog = false">取 消</el-button>
-              <el-button type="primary" @click="fileSend()">确 定</el-button>
+              <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+              <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
             </span>
           </el-dialog>
         </el-col>
@@ -137,7 +138,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/productio
 //引入font-awesome
 // import "font-awesome/css/font-awesome.css";
 import { numValidator, numValidatorOnlyNature, numValidatorPercentage, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 
 
 export default {
@@ -153,7 +154,7 @@ export default {
       showDialog: false,
       progress: 0,
       selectedType: '',
-
+      isLoading: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -209,7 +210,7 @@ export default {
         inventoryTurnoverdays: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -230,7 +231,7 @@ export default {
         onlineOntimerate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -249,7 +250,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/商品车台账样表_20240729123728A004.xlsx';
+      const url = "/profile/modelFile/商品车台账样表.xlsx";
+      handleTrueDownload(url);
     },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
@@ -401,6 +403,7 @@ export default {
         this.$message.error("请选择文件!");
         return;
       } else {
+        this.isLoading = true;
         // const yearAndMonth = this.form3.yearAndMonth;
         // formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
@@ -419,6 +422,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
+            this.isLoading = false;
           });
       }
     },

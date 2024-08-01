@@ -72,7 +72,7 @@
 
 <script>
 import { listData2, getData2, delData2, addData2, updateData2 } from "@/api/tech/data";
-import { numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
+import { numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
   data() {
@@ -113,7 +113,7 @@ export default {
         annualPlancounts: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur"
           }
         ],

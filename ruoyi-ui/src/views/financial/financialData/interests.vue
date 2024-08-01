@@ -54,7 +54,8 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
@@ -74,16 +75,57 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="集团内主营业务收入(万元)" align="center" prop="internalMainRevenue" width="180" />
-      <el-table-column label="集团外主营业务收入(万元)" align="center" prop="externalMainRevenue" width="180" />
-      <el-table-column label="主营业务收入(万元)" align="center" prop="mainRevenue" width="140" />
-      <el-table-column label="主营业务成本-产品销售SD(万元)" align="center" prop="cogsProductSalesSd" width="210" />
-      <el-table-column label="主营业务成本-运费(万元)" align="center" prop="cogsFreight" width="170" />
-      <el-table-column label="主营业务成本-运费变化(万元)" align="center" prop="cogsVariation" width="190" />
-      <el-table-column label="主营业务成本(万元)" align="center" prop="cogs" width="140" />
-      <el-table-column label="净利润(万元)" align="center" prop="netProfit" width="120" />
-      <el-table-column label="管理费用(万元)" align="center" prop="managementExpense" width="130" />
-      <el-table-column label="研发费用(万元)" align="center" prop="rdExpense" width="130" />
+      <!-- <el-table-column label="集团内主营业务收入(万元)" align="center" prop="internalMainRevenue" width="180" /> -->
+      <el-table-column label="集团内主营业务收入(万元)" align="center" prop="internalMainRevenue" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.internalMainRevenue) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="集团外主营业务收入(万元)" align="center" prop="externalMainRevenue" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.externalMainRevenue) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务收入(万元)" align="center" prop="mainRevenue" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.mainRevenue) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本-产品销售SD(万元)" align="center" prop="cogsProductSalesSd" width="210">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogsProductSalesSd) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本-运费(万元)" align="center" prop="cogsFreight" width="170">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogsFreight) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本-运费变化(万元)" align="center" prop="cogsVariation" width="190">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogsVariation) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本(万元)" align="center" prop="cogs" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogs) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="净利润(万元)" align="center" prop="netProfit" width="120">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.netProfit) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="管理费用(万元)" align="center" prop="managementExpense" width="130">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.managementExpense) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="研发费用(万元)" align="center" prop="rdExpense" width="130">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.rdExpense) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -146,7 +188,7 @@
 
 <script>
 import { listInterests, getInterests, delInterests, addInterests, updateInterests } from "@/api/financial/interestsData";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator } from '@/api/financial/numValidator.js';
 
 export default {
@@ -165,8 +207,7 @@ export default {
       // 导入Excel弹出层
       selectedType: '',
       progress: 0,
-
-
+      isLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -175,6 +216,7 @@ export default {
       total: 0,
       // 财务-利润表格数据
       interestsList: [],
+      threeList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -287,9 +329,15 @@ export default {
 
   },
   methods: {
-    handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/利润表样表_20240729123716A003.xlsx';
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     },
+    handleDownload() {
+      const url = "/profile/modelFile/利润表样表.xlsx";
+      handleTrueDownload(url);
+    },
+
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -302,7 +350,6 @@ export default {
         this.interestsList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮
@@ -440,6 +487,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
         const aimUrl = `/financial/data/interests/import`
@@ -457,6 +505,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
+            this.isLoading = false;
           });
       }
     },
@@ -493,7 +542,7 @@ export default {
     //     // 将日期数据添加到一个对象中
     //     // const dataToSend = {
     //     //   InterestsFile: file,
-    //     //   yearAndMonth: this.form.yearAndMonth 
+    //     //   yearAndMonth: this.form.yearAndMonth
     //     // };
 
     //     axios({

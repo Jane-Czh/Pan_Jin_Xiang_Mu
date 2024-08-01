@@ -264,7 +264,11 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                         productionOvertimeStatisticsTable1.setOvertimeDurationFes(productionOvertimeStatisticsTable1.getOvertimeDurationFes()+totaloverfes+1);
                     }
                     if ((Secondend!=null||ifovertime.equals("1")||ifovertime.equals("2"))&&key==0){
-                        productionOvertimeStatisticsTable1.setAbnormalSituation("未申请加班而有加班打卡记录");
+                        if(productionOvertimeStatisticsTable1.getAbnormalSituation()!=null) {
+                            String ab = productionOvertimeStatisticsTable1.getAbnormalSituation();
+                            productionOvertimeStatisticsTable1.setAbnormalSituation(ab+","+Firststartmonth+"月"+Firststartday+"日"+"未申请加班而有加班打卡记录");
+                        }
+                        else productionOvertimeStatisticsTable1.setAbnormalSituation(Firststartmonth+"月"+Firststartday+"日"+"未申请加班而有加班打卡记录");
                     }
                 }
                 //插入Table
@@ -274,10 +278,22 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = result.get(idnumber);
                 String existingAbnormalSituation = productionOvertimeStatisticsTable1.getAbnormalSituation();
                 if (existingAbnormalSituation != null && !existingAbnormalSituation.isEmpty()) {
-                    productionOvertimeStatisticsTable1.setAbnormalSituation(Firststartmonth+"月"+Firststartday+"日"+"、"+existingAbnormalSituation);
+                    String abnormalSituation1 = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
+                    productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1+existingAbnormalSituation);
                 } else {
                     String abnormalSituation = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
                     productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation);
+                }
+                if (Math.abs(Firstend.getTime() - Normalend.getTime()) > tenMinutesInMillis) {
+                    String abnormalSituation2 = String.format("%02d月%02d日第一次打卡下班时间异常", Firststartmonth, Firststartday);
+                    if (productionOvertimeStatisticsTable1.getAbnormalSituation()!=null) {
+                        if (key == 0){
+                            productionOvertimeStatisticsTable1.setAbnormalSituation(productionOvertimeStatisticsTable1.getAbnormalSituation()+","+abnormalSituation2);
+                        }
+                    }
+                    else if(key == 0){
+                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation2);
+                    }
                 }
                 //判断是否出勤
                 if(Firstend!=null){
@@ -310,7 +326,11 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                         productionOvertimeStatisticsTable1.setOvertimeDurationFes(productionOvertimeStatisticsTable1.getOvertimeDurationFes()+totaloverfes+1);
                     }
                     if ((Secondend!=null||ifovertime.equals("1")||ifovertime.equals("2"))&&key==0){
-                        productionOvertimeStatisticsTable1.setAbnormalSituation("未申请加班而有加班打卡记录");
+                        if(productionOvertimeStatisticsTable1.getAbnormalSituation()!=null) {
+                            String ab = productionOvertimeStatisticsTable1.getAbnormalSituation();
+                            productionOvertimeStatisticsTable1.setAbnormalSituation(ab+","+Firststartmonth+"月"+Firststartday+"日"+"未申请加班而有加班打卡记录");
+                        }
+                        else productionOvertimeStatisticsTable1.setAbnormalSituation(Firststartmonth+"月"+Firststartday+"日"+"未申请加班而有加班打卡记录");
                     }
                 }
                 //替换

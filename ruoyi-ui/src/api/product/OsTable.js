@@ -50,6 +50,7 @@ export function syncReport() {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
-    }
+    },
+    timeout: 100000, // 设置超时时间为10秒
   });
 }

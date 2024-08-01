@@ -124,6 +124,7 @@ public class IndicatorsTargetController extends BaseController {
         IndicatorsIndex indicatorsIndex = indicatorsIndexService.selectIndicatorsIndexByIndicatorId(indicatorIdInt);
         indicatorsTarget.setIndicatorName(indicatorsIndex.getIndicatorNameEn());
         indicatorsTarget.setIndicatorDept(indicatorsIndex.getIndicatorDeptEn());
+        indicatorsTarget.setIndicatorNameCn(indicatorsIndex.getIndicatorNameCn());
         // 根据目标值年份和指标en名判断是否已存在
         if (indicatorsTargetService.selectIndicatorsTargetList(indicatorsTarget).size() > 0) {
             return AjaxResult.error(indicatorsIndex.getIndicatorNameCn()+"当年目标值已设置");

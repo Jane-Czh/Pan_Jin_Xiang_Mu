@@ -64,43 +64,54 @@
     </select>
 
     <!--  首页数据展示  -->
-    <select id="selectBalanceSumInfoByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialBalanceTable">
-        SELECT MAX(FB_ID)                                 fbId,
-               MAX(Year_And_Month)                        yearAndMonth,
-               sum(InTransitInventory)                    inTransitInventory,
-               sum(Materials)                             materials,
-               sum(MaterialCostVariance)                  materialCostVariance,
-               sum(MaterialCostVariance_Unallocated)      materialCostVarianceUnallocated,
-               sum(MonthlyRawMaterialInventory)           monthlyRawMaterialInventory,
-               sum(WorkInProgress_SemiFinishedGoods)      workInProgressSemiFinishedGoods,
-               sum(ProductCostVariance_SemiFinishedGoods) productCostVarianceSemiFinishedGoods,
-               sum(WorkInProgress_EndOfMonth)             workInProgressEndOfMonth,
-               sum(MonthlyWorkInProgressInventory)        monthlyWorkInProgressInventory,
-               sum(Inventory_Vehicles)                    inventoryVehicles,
-               sum(PCV_Finished)                          pcvFinished,
-               sum(Month_Amount_InStock)                  monthAmountInStock,
-               sum(MonthlyInventoryTotalAmount)           monthlyInventoryTotalAmount,
-               min(GrowthRate_Inventory)                  growthRateInventory,
-               max(GrowthRate_Sales)                      growthRateSales,
-               sum(Receivables)                           receivables,
-               sum(TurnoverRate_Receivable)               turnoverRateReceivable
-        FROM Financial_Balance_table
-        WHERE date_format(Year_And_Month, '%Y') = date_format(#{yearAndMonth}, '%Y')
-    </select>
-    <!--  首页数据展示  -->
-    <select id="selectBalanceSumRateByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialBalanceTable">
+<!--    <select id="selectBalanceSumInfoByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialBalanceTable">-->
+<!--        SELECT MAX(FB_ID)                                 fbId,-->
+<!--               MAX(Year_And_Month)                        yearAndMonth,-->
+<!--               sum(InTransitInventory)                    inTransitInventory,-->
+<!--               sum(Materials)                             materials,-->
+<!--               sum(MaterialCostVariance)                  materialCostVariance,-->
+<!--               sum(MaterialCostVariance_Unallocated)      materialCostVarianceUnallocated,-->
+<!--               sum(MonthlyRawMaterialInventory)           monthlyRawMaterialInventory,-->
+<!--               sum(WorkInProgress_SemiFinishedGoods)      workInProgressSemiFinishedGoods,-->
+<!--               sum(ProductCostVariance_SemiFinishedGoods) productCostVarianceSemiFinishedGoods,-->
+<!--               sum(WorkInProgress_EndOfMonth)             workInProgressEndOfMonth,-->
+<!--               sum(MonthlyWorkInProgressInventory)        monthlyWorkInProgressInventory,-->
+<!--               sum(Inventory_Vehicles)                    inventoryVehicles,-->
+<!--               sum(PCV_Finished)                          pcvFinished,-->
+<!--               sum(Month_Amount_InStock)                  monthAmountInStock,-->
+<!--               sum(MonthlyInventoryTotalAmount)           monthlyInventoryTotalAmount,-->
+<!--               min(GrowthRate_Inventory)                  growthRateInventory,-->
+<!--               max(GrowthRate_Sales)                      growthRateSales,-->
+<!--               sum(Receivables)                           receivables,-->
+<!--               sum(TurnoverRate_Receivable)               turnoverRateReceivable-->
+<!--        FROM Financial_Balance_table-->
+<!--        WHERE date_format(Year_And_Month, '%Y') = date_format(#{yearAndMonth}, '%Y')-->
+<!--    </select>-->
+
+
+    <!--  首页数据展示、计算  -->
+    <select id="selectBalanceSumRateByYear" resultType="com.heli.financial.domain.FinancialBalanceTable">
         SELECT FB_ID                               fbId,
                Year_And_Month                      yearAndMonth,
                GrowthRate_Inventory                  growthRateInventory,
-               GrowthRate_Sales                      growthRateSales,
                TurnoverRate_Receivable               turnoverRateReceivable
         FROM Financial_Balance_table
-        WHERE Year_And_Month IN (
+        where Year_And_Month IN (
             SELECT MAX(Year_And_Month)
             FROM Financial_Balance_table
-            WHERE YEAR(Year_And_Month) = YEAR(#{yearAndMonth}) and GrowthRate_Sales is not null
+            where GrowthRate_Sales is not null
         )
     </select>
+    <!--  获取年月最大的其他数据  -->
+    <select id="selectMaxMonthBalance" resultMap="FinancialBalanceTableResult">
+        <include refid="selectFinancialBalanceTableVo"/>
+        where Year_And_Month IN (
+            SELECT MAX(Year_And_Month)
+            FROM Financial_Balance_table
+        )
+    </select>
+
+
 
     <!--  按月查询MonthlyInventoryTotalAmount  -->
     <select id="selectMonthlyInventoryTotalAmountByYearAndMonth" resultType="java.math.BigDecimal">
@@ -124,7 +135,7 @@
     </select>
 
     <!--  查询资产负债表已上传的全部月份  -->
-    <select id="selectAllBalanceYearAndMonth" parameterType="Date" resultType="map">
+    <select id="selectAllBalanceYearAndMonth" parameterType="Date" resultType="FinancialBalanceTable">
         select * from (
             select Year_And_Month from Financial_Balance_table
             order by Year_And_Month DESC

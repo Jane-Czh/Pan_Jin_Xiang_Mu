@@ -49,6 +49,15 @@
         WHERE date_format(Year_And_Month, '%Y') = date_format(#{yearAndMonth}, '%Y')
     </select>
 
+    <!--  获取年月最大的其他数据  -->
+    <select id="selectMaxMonthInterests" resultMap="FinancialInterestsTableResult">
+        <include refid="selectFinancialInterestsTableVo"/>
+        where Year_And_Month IN (
+        SELECT MAX(Year_And_Month)
+        FROM Financial_Interests_table
+        )
+    </select>
+
 
     <!-- 按年查询利润指标的全部数据 -->
     <select id="selectFinancialInterestsTableByYear" resultMap="FinancialInterestsTableResult">

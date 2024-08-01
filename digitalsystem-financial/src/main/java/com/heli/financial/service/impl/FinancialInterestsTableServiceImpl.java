@@ -44,6 +44,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         return financialInterestsTableMapper.selectInterestsSumInfoByYear(yearAndMonth);
     }
 
+    @Override
+    public FinancialInterestsTable selectMaxMonthInterests() {
+        return financialInterestsTableMapper.selectMaxMonthInterests();
+    }
+
     /**
      * @description: 利润表导入
      * @author: hong

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.product.domain.ProductionClockInForm;
+import com.ruoyi.product.domain.ProductionCommuteTime;
 import com.ruoyi.product.domain.WorkTimeData;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,7 +68,7 @@ public interface IProductionClockInFormService
      */
     public int deleteProductionClockInFormByPcifId(Long pcifId);
 
-    public int importInterests(MultipartFile excelFile) throws IOException;
+    public int importInterests(MultipartFile excelFile, ProductionCommuteTime productionCommuteTime) throws IOException;
 
     public void updateTime(List<ProductionClockInForm> list1, WorkTimeData workTimeData) throws ParseException;
 

@@ -2,9 +2,13 @@ package com.ruoyi.product.utils;
 
 import com.ruoyi.market.utils.ExcelDateUtils;
 import com.ruoyi.product.domain.ProductionClockInForm;
+import com.ruoyi.product.domain.ProductionCommuteTime;
 import com.ruoyi.product.domain.ProductionOvertimeApplicationForm;
 import com.ruoyi.product.domain.ProuctionFunctionQualifiedRate;
+import com.ruoyi.product.mapper.ProductionCommuteTimeMapper;
+import com.ruoyi.product.service.IProductionCommuteTimeService;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ExcelUtilsPro {
+
+    private IProductionCommuteTimeService productionCommuteTimeMapper;
 
     public static List<ProuctionFunctionQualifiedRate> parseExcel(MultipartFile file) throws IOException {
         List<ProuctionFunctionQualifiedRate> dataList = new ArrayList<>();
@@ -256,7 +262,6 @@ public class ExcelUtilsPro {
     }
     public static List<ProductionOvertimeApplicationForm> OaparseExcel(MultipartFile file) throws IOException {
         List<ProductionOvertimeApplicationForm> dataList = new ArrayList<>();
-
         Workbook workbook = WorkbookFactory.create(file.getInputStream());
         LocalDate myDate = LocalDate.of(2000, 1, 1);
         // 转换为Date类型
@@ -290,68 +295,15 @@ public class ExcelUtilsPro {
             //4.性别
             productionOvertimeApplicationForm.setGender(getStringCellValue(row.getCell(count++)));
             //5.申请加班开始时间
-            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
+//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
 
                 productionOvertimeApplicationForm.setApplicationForOvertimeStartTime(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
-            }
-            else {
-                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
-                count++;
-            }
-            //6.申请加班结束时间
-//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
                 System.out.println("---------0"+getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count)))));;
 
                 productionOvertimeApplicationForm.setApplicationForOvertimeEndTime(getDateTimeCellValue(ExcelDateUtils.convertExcelDateTimeToString(getNumericCellValue(row.getCell(count++)))));
 
-//            }
-//            else {
-//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
-//                count++;
-//            }
 
-//            //1、合格率
-//            prouctionFunctionQualifiedRate.setDisqualifiedNumber(getIntegerCellValue(row.getCell(count++)));
-//            //2、合格数量
-//            prouctionFunctionQualifiedRate.setQualifiedNumber(getIntegerCellValue(row.getCell(count++)));
-//            //3、不合格数量
-//            prouctionFunctionQualifiedRate.setDisqualifiedNumber(getIntegerCellValue(row.getCell(count++)));
-//            System.out.println(date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count))))));
-//            System.out.println(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))));
-//            System.out.println(row.getCell(count).getCellType());
-//            System.out.println(row.getCell(count).getDateCellValue());
-//            String dateString;
-//            if (row.getCell(count).getCellType() == CellType.NUMERIC) {
-//                if (DateUtil.isCellDateFormatted(row.getCell(count))) {
-//                    Date date1 = row.getCell(count).getDateCellValue();
-//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-//                    dateString = sdf.format(date1);
-//                    System.out.println(dateString);
-//                } else {
-//                    // 处理其他数值类型
-//                }
-//            } else {
-//                // 处理其他类型
-//            }
-//
-//
-//
-//
-//            //4、日期
-//            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
-//
-//                prouctionFunctionQualifiedRate.setDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
-//
-//            }
-//            else {
-//                // 如果单元格数据为空，则跳过设置 Java 对象的属性值
-//                count++;
-//            }
-//            //5、产品型号
-//            prouctionFunctionQualifiedRate.setModel(getStringCellValue(row.getCell(count++)));
-//            //生产数量
-//            prouctionFunctionQualifiedRate.setProductionNumber(getIntegerCellValue(row.getCell(count++)));
 
 
             dataList.add(productionOvertimeApplicationForm);

@@ -1,8 +1,7 @@
 package com.ruoyi.product.mapper;
 
-import com.ruoyi.product.domain.ProductionCommuteTime;
-
 import java.util.List;
+import com.ruoyi.product.domain.ProductionCommuteTime;
 
 /**
  * 设置上下班时间Mapper接口

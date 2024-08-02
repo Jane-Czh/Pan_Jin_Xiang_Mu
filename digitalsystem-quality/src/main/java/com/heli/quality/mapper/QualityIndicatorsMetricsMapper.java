@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface QualityIndicatorsMetricsMapper {
 
+    QualityIndicatorsMetrics selectMaxMonthMetrics();
+
 
     int batchInsertMetrics(@Param("metricsList") List<QualityIndicatorsMetrics> metricsList);
     int insertOrUpdateMetrics(QualityIndicatorsMetrics qualityIndicatorsMetrics);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @BelongsProject: ruoyi
@@ -83,7 +84,8 @@ public class QualityDisplayServiceImpl implements IQualityDisplayService {
      * 电车、大吨位一次交检合格率
      */
     @Override
-    public List<DisplayEntity> selectSingleInspectionPassRate(Date startTime, Date endTime) {
+//    public List<DisplayEntity> selectSingleInspectionPassRate(Date startTime, Date endTime) {
+    public List<Map<String, Object>> selectSingleInspectionPassRate(Date startTime, Date endTime) {
         return qualityDisplayMapper.selectSingleInspectionPassRate(startTime, endTime);
     }
 

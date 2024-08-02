@@ -21,6 +21,7 @@ import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.excel.ReadExcelCellUtils;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.STSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ruoyi
  * @date 2024-04-03
  */
+@Slf4j
 @Service
 public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableService {
     @Autowired
@@ -47,12 +49,17 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     private IFinancialInterestsTableService iFinancialInterestsTableService;
 
     @Override
-    public FinancialBalanceTable selectBalanceSumInfoByYear(Date yearAndMonth) {
-        return financialBalanceTableMapper.selectBalanceSumInfoByYear(yearAndMonth);
+    public FinancialBalanceTable selectBalanceSumInfoByYear() {
+
+        FinancialBalanceTable financialBalanceTable = financialBalanceTableMapper.selectMaxMonthBalance();
+        log.info("资产负债表最新数据："+financialBalanceTable);
+
+        return financialBalanceTable;
+//        return financialBalanceTableMapper.selectBalanceSumInfoByYear(yearAndMonth);
     }
     @Override
-    public FinancialBalanceTable selectBalanceSumRateByYear(Date yearAndMonth) {
-        return financialBalanceTableMapper.selectBalanceSumRateByYear(yearAndMonth);
+    public FinancialBalanceTable selectBalanceSumRateByYear() {
+        return financialBalanceTableMapper.selectBalanceSumRateByYear();
     }
 
     @Override

@@ -315,11 +315,28 @@ public class ProjectController extends SuperController<ProjectEntity> {
      */
     @PostMapping("/searchList")
     public List<ProjectEntity> searchList(@RequestBody ProjectEntity projectEntity) {
-//        System.out.println("searchList projectEntity ==>" + projectEntity);
+        System.out.println("searchList projectEntity ==>" + projectEntity);
         //精准查询
 //        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().eq("name", projectEntity.getName()).eq("newest", 1));
         //模糊查询
-        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().like("name", projectEntity.getName()).eq("newest", 1));
+
+
+//对name 进行模糊查询
+//        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().like("name", projectEntity.getName()).eq("newest", 1));
+
+        //对name、department、level三个字段 进行模糊查询
+        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(
+                new QueryWrapper<ProjectEntity>()
+                        .eq("newest", 1)
+                        .and(wrapper ->
+                                wrapper.like("name", projectEntity.getName())
+                                        .or()
+                                        .like("department", projectEntity.getDepartment())
+                                        .or()
+                                        .like("level", projectEntity.getLevel())
+                        )
+        );
+
 
         System.out.println("projectEntitys ==>" + projectEntitys);
         return projectEntitys;
@@ -554,6 +571,23 @@ public class ProjectController extends SuperController<ProjectEntity> {
         //根据id字段将名称更改为name字段
         ProjectEntity getByIdEntity = projectService.getById(projectEntity.getId());
         getByIdEntity.setName(projectEntity.getName());
+        //流程编号 number;
+        //主责部门 department;
+        //流程等级 level;
+        //流程目的 purpose;
+        //适用范围 applicationScope;
+        getByIdEntity.setNumber(projectEntity.getNumber());
+        getByIdEntity.setDepartment(projectEntity.getDepartment());
+        getByIdEntity.setLevel(projectEntity.getLevel());
+        getByIdEntity.setPurpose(projectEntity.getPurpose());
+        getByIdEntity.setApplicationScope(projectEntity.getApplicationScope());
+
+        //业务模块名称 businessesModules;
+        //细分业务名称 subBusinesses;
+        getByIdEntity.setBusinessesModules(projectEntity.getBusinessesModules());
+        getByIdEntity.setSubBusinesses(projectEntity.getSubBusinesses());
+
+
 
         projectService.updateById(getByIdEntity);
 

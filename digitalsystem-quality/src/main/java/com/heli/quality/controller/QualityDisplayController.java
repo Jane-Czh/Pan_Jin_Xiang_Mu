@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @BelongsProject: ruoyi
@@ -104,8 +105,8 @@ public class QualityDisplayController extends BaseController {
     @PreAuthorize("@ss.hasPermi('quality:display:singleInspectionPassRate')")
     @PostMapping("/singleInspectionPassRate")
     public TableDataInfo singleInspectionPassRate(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = qualityDisplayService.selectSingleInspectionPassRate(time.getStartTime(), time.getEndTime());
-        return getDataTable(list);
+        List<Map<String, Object>> maps = qualityDisplayService.selectSingleInspectionPassRate(time.getStartTime(), time.getEndTime());
+        return getDataTable(maps);
     }
 
     /**

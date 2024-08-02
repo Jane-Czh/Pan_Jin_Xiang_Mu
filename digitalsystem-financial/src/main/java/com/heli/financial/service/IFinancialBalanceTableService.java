@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IFinancialBalanceTableService {
 
-    FinancialBalanceTable selectBalanceSumInfoByYear(Date yearAndMonth);
-    FinancialBalanceTable selectBalanceSumRateByYear(Date yearAndMonth);
+    FinancialBalanceTable selectBalanceSumInfoByYear();
+    FinancialBalanceTable selectBalanceSumRateByYear();
 
     Date selectMaxYearAndMonth();
 

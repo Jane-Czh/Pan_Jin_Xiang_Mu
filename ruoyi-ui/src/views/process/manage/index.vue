@@ -15,7 +15,7 @@
       label-width="40px"
     >
       <!-- 搜索 流程名称进行搜索 -->
-      <el-form-item label="搜索" prop="name">
+      <el-form-item label="流程标题" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入流程名称"
@@ -23,6 +23,37 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <!-- 部门 进行搜索  -->
+      <el-form-item label="主责部门" prop="department">
+        <el-select
+          v-model="queryParams.department"
+          placeholder="请选择主责部门"
+          clearable
+        >
+          <el-option
+            v-for="item in departments"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- 等级 进行搜索 -->
+      <el-form-item label="流程等级" prop="level">
+        <el-select
+          v-model="queryParams.level"
+          placeholder="请选择流程等级"
+          clearable
+        >
+          <el-option
+            v-for="level in levels"
+            :key="level"
+            :label="level"
+            :value="level"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -31,9 +62,6 @@
           @click="handleQuery"
           >搜索</el-button
         >
-        <!-- <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-        >重置</el-button
-      > -->
       </el-form-item>
 
       <!-- 搜索 制度文件名称进行搜索 -->
@@ -55,6 +83,17 @@
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
           >重置</el-button
+        >
+      </el-form-item>
+
+      <el-form-item class="export-button" style="float: right">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-download"
+          size="small"
+          @click="exportAll"
+          >总台账导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -96,6 +135,7 @@
         >
       </el-col> -->
 
+      <!--  v-hasPermi="['system:project:export']" -->
       <!-- <el-col :span="1.5">
         <el-button
           type="warning"
@@ -103,10 +143,11 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:project:export']"
+         
           >导出</el-button
         >
       </el-col> -->
+
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -119,7 +160,7 @@
       stripe
       @cell-mouse-enter="enter"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="序号" align="center" prop="id">
         <template slot-scope="scope">
@@ -127,38 +168,23 @@
           <span>{{ (pageIndex - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
+
+      <el-table-column label="主责部门" align="center" prop="department" />
+
       <el-table-column label="流程名称" align="center" prop="name" />
-      <!-- <el-table-column label="${comment}" align="center" prop="json" /> -->
-      <el-table-column label="创建人" align="center" prop="createBy" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createDate"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{
-            parseTime(scope.row.createDate, "{y}-{m}-{d}  {h}:{i}:{s}")
-          }}</span>
-        </template>
-      </el-table-column>
 
-      <el-table-column label="更新人" align="center" prop="updateBy" />
       <el-table-column
-        label="更新时间"
+        label="业务模块"
         align="center"
-        prop="updateDate"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{
-            parseTime(scope.row.updateDate, "{y}-{m}-{d}  {h}:{i}:{s}")
-          }}</span>
-        </template>
-      </el-table-column>
+        prop="businessesModules"
+      />
+      <el-table-column label="细分业务" align="center" prop="subBusinesses" />
 
-      <el-table-column label="绑定文件" align="center">
+      <el-table-column label="流程等级" align="center" prop="level" />
+
+      <el-table-column label="流程编号" align="center" prop="number" />
+
+      <el-table-column label="支撑文件" align="center">
         <template slot-scope="scope">
           <!-- 111111111111制度文件 -->
           <el-tooltip
@@ -270,6 +296,46 @@
         </template>
       </el-table-column>
 
+      <!-- <el-table-column label="${comment}" align="center" prop="json" /> -->
+      <el-table-column label="创建人" align="center" prop="createBy" />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createDate"
+        width="180"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{
+            parseTime(scope.row.createDate, "{y}-{m}-{d}  {h}:{i}:{s}")
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="更新人" align="center" prop="updateBy" />
+      <el-table-column
+        label="更新时间"
+        align="center"
+        prop="updateDate"
+        width="180"
+      >
+        <template slot-scope="scope">
+          <span>{{
+            parseTime(scope.row.updateDate, "{y}-{m}-{d}  {h}:{i}:{s}")
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <!-- 0731新增字段 -->
+
+      <el-table-column label="流程目的" align="center" prop="purpose" />
+
+      <el-table-column
+        label="适用范围"
+        align="center"
+        prop="applicationScope"
+      />
+
       <el-table-column
         label="操作"
         align="center"
@@ -340,9 +406,9 @@
     >
     </el-pagination>
 
-    <!-- 添加或修改流程对话框 -->
+    <!-- 修改流程基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <!-- <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="流程名称" prop="name">
           <el-input
             v-model="form.name"
@@ -356,12 +422,125 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </div> -->
+
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="流程名称" prop="name">
+          <el-input
+            v-model="form.name"
+            placeholder="输入流程名称"
+            @input="validateSB1"
+            maxlength="20"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="流程编号" prop="number">
+          <el-input
+            v-model="form.number"
+            placeholder="输入流程编号"
+            @input="validateNumber"
+            maxlength="20"
+            show-word-limit
+          />
+        </el-form-item>
+
+        <el-form-item label="主责部门" prop="department">
+          <el-select
+            v-model="form.department"
+            placeholder="请选择主责部门"
+            @change="handleDepartmentChange"
+          >
+            <el-option
+              v-for="item in departments"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="流程等级" prop="level">
+          <el-select v-model="form.level" placeholder="请选择流程等级">
+            <el-option
+              v-for="level in levels"
+              :key="level"
+              :label="level"
+              :value="level"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <!-- 0801 0810 -->
+        <el-form-item label="业务模块" prop="businessesModules">
+          <el-select
+            v-model="form.businessesModules"
+            placeholder="请选择业务模块"
+            clearable
+            @change="handleModuleChange"
+            :disabled="!form.department"
+          >
+            <el-option
+              v-for="item in modules"
+              :key="item.bm_id"
+              :label="item.moduleName"
+              :value="item.moduleName"
+            />
+          </el-select>
+        </el-form-item>
+
+        <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+        <el-form-item label="细分业务" prop="subBusinesses">
+          <el-select
+            v-model="form.subBusinesses"
+            placeholder="请选择细分业务"
+            clearable
+            :disabled="!form.businessesModules"
+          >
+            <el-option
+              v-for="item in subBusinesses"
+              :key="item.subb_id"
+              :label="item.subBusinessesName"
+              :value="item.subBusinessesName"
+            />
+          </el-select>
+        </el-form-item>
+
+        <!-- ---------------------------------------------------------------------------------- -->
+
+        <el-form-item label="流程目的" prop="purpose">
+          <el-input
+            v-model="form.purpose"
+            placeholder="输入流程目的"
+            @input="validatePurpose"
+            maxlength="20"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="适用范围" prop="applicationScope">
+          <el-input
+            v-model="form.applicationScope"
+            placeholder="输入适用范围"
+            @input="validateApplicationScope"
+            maxlength="20"
+            show-word-limit
+          />
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+//业务模块api，
+import { listModuless } from "@/api/function/modules";
+//细分业务api
+import { listBusinessess } from "@/api/function/businesses";
+
 import {
   listProject,
   getProject,
@@ -385,12 +564,44 @@ import { word2Pdf } from "@/api/file/filemanagement";
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
 import { getDept } from "@/api/system/project";
+//导出总台账excel功能
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+//加载效果
+import { Loading } from "element-ui";
 
 export default {
   name: "Project",
   inject: ["reload"],
   data() {
     return {
+      modules: [], //过滤后 业务模块 数据
+      modulesList: [], //全部的 业务模块 数据
+      subBusinessesList: [], //获取的全部的业务列表
+      subBusinesses: [], //过滤后的细分业务列表
+
+      // 业务模块 查询参数
+      moduleQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        moduleName: null,
+        parentDepartment: null,
+        isDeleted: null,
+        description: null,
+      },
+
+      // 细分业务 查询参数
+      xifenQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        subBusinessesName: null,
+        parentDepartment: null,
+        parentModule: null,
+        isDeleted: null,
+        description: null,
+      },
+
+      // -------------------------------------
       //用户名
       uploadUsername: null,
       //所属部门
@@ -463,6 +674,10 @@ export default {
         pageSize: 10,
         name: null,
         filename: null,
+        department: null,
+        level: null,
+        businessesModules: null,
+        subBusinesses: null,
       },
 
       dataList: [],
@@ -474,7 +689,50 @@ export default {
       dataListSelections: [],
 
       // 表单参数
-      form: {},
+      form: {
+        project_Name: "",
+        number: "",
+        department: "",
+        level: "",
+        purpose: "",
+        applicationScope: "",
+
+        //业务模块
+        businessesModules: "",
+        //细分业务
+        subBusinesses: "",
+      },
+      departments: [
+        "安环设备科",
+        "财务科",
+        "党群办公室",
+        "供应科",
+        "技术科",
+        "企业管理科",
+        "生产管理科",
+        "市场科",
+        "执纪监督室",
+        "质量科",
+      ],
+      levels: ["A级", "B级", "C级"],
+      rules: {
+        name: [{ required: true, message: "请输入流程名称", trigger: "blur" }],
+        number: [
+          { required: true, message: "请输入流程编号", trigger: "blur" },
+        ],
+        department: [
+          { required: true, message: "请选择主责部门", trigger: "change" },
+        ],
+        level: [
+          { required: true, message: "请选择流程等级", trigger: "change" },
+        ],
+        purpose: [
+          { required: true, message: "请输入流程目的", trigger: "blur" },
+        ],
+        applicationScope: [
+          { required: true, message: "请输入适用范围", trigger: "blur" },
+        ],
+      },
       // 表单校验
       rules: {
         name: [
@@ -496,6 +754,198 @@ export default {
   created() {},
 
   methods: {
+    //流程信息导出
+    exportAll() {
+      const loadingInstance = Loading.service({
+        lock: true,
+        text: "正在导出，请稍后...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
+      let index = 1; // 初始化序号
+
+      const promises = this.projectList.map((project) => {
+        return this.getFileNamesByIds(project).then((fileNames) => {
+          console.log("fileNames:", fileNames); // 调试输出
+          return {
+            部门: project.department,
+            序号: index++, // 自增序号
+            业务模块: project.businessesModules,
+            细分业务: project.subBusinesses,
+            制度名称: "《" + fileNames.selectedFileNames + "》",
+            制度等级: fileNames.selectedFileLeval,
+            流程名称: "《" + project.name + "》",
+            流程等级: project.level,
+            表单名称: "《" + fileNames.selectedFormsNames + "》",
+          };
+        });
+      });
+
+      Promise.all(promises)
+        .then((data) => {
+          const ws = XLSX.utils.json_to_sheet(data);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+          // 设置列宽
+          const wscols = [
+            { wch: 15 }, // 部门
+            { wch: 5 }, // 序号
+            { wch: 15 }, // 业务模块
+            { wch: 15 }, // 细分业务
+            { wch: 15 }, // 制度名称
+            { wch: 15 }, // 制度等级
+            { wch: 15 }, // 流程名称
+            { wch: 15 }, // 流程等级
+            { wch: 15 }, // 表单名称
+          ];
+          ws["!cols"] = wscols;
+
+          const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+          saveAs(
+            new Blob([wbout], { type: "application/octet-stream" }),
+            "流程总台账.xlsx"
+          );
+        })
+        .finally(() => {
+          loadingInstance.close();
+        })
+        .catch((error) => {
+          console.error("导出失败:", error);
+          loadingInstance.close();
+        });
+    },
+    // 通过 department部门 限制选择:  业务模块内容 this.modules
+    async handleDepartmentChange(department) {
+      this.form.businessesModules = ""; // 重置上级业务模块选择
+      this.modules = []; // 清空之前的模块
+      if (department) {
+        try {
+          await listModuless(this.moduleQueryParams).then((response) => {
+            this.modulesList = response.rows;
+          });
+
+          for (let i = 0; i < this.modulesList.length; i++) {
+            console.log("123===" + this.modulesList[i].parentDepartment);
+            // 根据部门字段进行筛选
+            if (this.modulesList[i].parentDepartment === department) {
+              this.modules.push(this.modulesList[i]);
+            }
+          }
+
+          console.log("this.modules===", this.modules);
+        } catch (error) {
+          console.error("Failed to fetch modules:", error);
+        }
+      }
+    },
+
+    //通过 业务模块内容 限制选择: 细分业务内容
+    async handleModuleChange(module) {
+      this.form.subBusinesses = ""; // 重置细分业务选择
+      this.subBusinesses = []; // 清空之前的细分业务
+      if (module) {
+        try {
+          // 获取所有细分业务
+          await listBusinessess(this.xifenQueryParams).then((response) => {
+            this.subBusinessesList = response.rows;
+          });
+
+          for (let i = 0; i < this.subBusinessesList.length; i++) {
+            console.log("12321===" + this.subBusinessesList[i]);
+            // 根据业务模块字段进行筛选
+            if (this.subBusinessesList[i].parentModule === module) {
+              this.subBusinesses.push(this.subBusinessesList[i]);
+            }
+          }
+
+          console.log("this.subBusinesses===", this.subBusinesses);
+        } catch (error) {
+          console.error("Failed to fetch sub-businesses:", error);
+        }
+      }
+    },
+    getFileNamesByIds(project) {
+      return new Promise((resolve, reject) => {
+        // 初始化
+        this.selectedFileNames = [];
+        this.selectedFormsNames = [];
+        let selectedFileLeval = [];
+
+        // 制度文件
+        listFilemanagement(this.queryParams)
+          .then((response) => {
+            this.filemanagementList = response.rows;
+            console.log(
+              "今天是0801，filemanagementList:",
+              this.filemanagementList
+            ); // 调试输出
+          })
+          .then(() => {
+            if (project.state && project.state !== "no") {
+              const stateIds = Array.isArray(JSON.parse(project.state))
+                ? JSON.parse(project.state)
+                : [project.state];
+              stateIds.forEach((stateId) => {
+                let row = this.filemanagementList.find(
+                  (item) =>
+                    JSON.stringify(item.regulationsId) ===
+                    JSON.stringify(stateId)
+                );
+                if (row != null) {
+                  this.selectedFileNames.push(row.fileName);
+                  selectedFileLeval.push(row.regulationLeval); // 获取 regulationLeval 属性
+                }
+              });
+            }
+            console.log("0801 selectedFileNames:", this.selectedFileNames); // 调试输出
+            console.log("0801 selectedFileLeval:", selectedFileLeval); // 调试输出
+          })
+          .then(() => {
+            // 表单文件
+            return listFormfilemanagement(this.queryParams);
+          })
+          .then((response) => {
+            this.formmanagementList = response.rows;
+            console.log(
+              "表单也是0801 formmanagementList:",
+              this.formmanagementList
+            ); // 调试输出
+          })
+          .then(() => {
+            if (project.type && project.type !== "no") {
+              const typeIds = Array.isArray(JSON.parse(project.type))
+                ? JSON.parse(project.type)
+                : [project.type];
+              typeIds.forEach((typeId) => {
+                let row = this.formmanagementList.find(
+                  (item) =>
+                    JSON.stringify(item.formId) === JSON.stringify(typeId)
+                );
+                if (row != null) {
+                  this.selectedFormsNames.push(row.formName);
+                }
+              });
+            }
+            console.log(
+              "是啊0801111selectedFormsNames:",
+              this.selectedFormsNames
+            ); // 调试输出
+          })
+          .then(() => {
+            resolve({
+              selectedFileNames: this.selectedFileNames.join(", "),
+              selectedFormsNames: this.selectedFormsNames.join(", "),
+              selectedFileLeval: selectedFileLeval.join(", "), // 返回 selectedFileLeval 字段
+            });
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
     // 调用接口获取用户信息  uploadUsername、departmentCategory
     async getUserInfo() {
       try {
@@ -531,7 +981,11 @@ export default {
         for (var i = 0; i < response.length; i++) {
           console.log("response[i].createBy===>", response[i].createBy);
 
-          if (this.departmentCategory == response[i].createBy.split("/")[1]) {
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
             this.projectList.push(response[i]);
           }
         }
@@ -761,8 +1215,19 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
 
         // // 按照updateDate字段进行排序
@@ -790,8 +1255,20 @@ export default {
       this.loading = true;
       getProjectFileName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
+
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
 
         // // 按照updateDate字段进行排序
@@ -866,6 +1343,7 @@ export default {
       //先获取流程原始的名称进行显示
       getProject(id).then((response) => {
         this.form = response.data;
+        console.log("response.data;===+++" + response.data);
         this.open = true;
         this.title = "修改流程名称";
       });
@@ -882,20 +1360,20 @@ export default {
             const projectExists = this.projectList.find(
               (project) => project.name === this.form.name
             );
-            if (projectExists) {
-              this.$message({
-                type: "warning",
-                message: `名称为 ${this.form.name} 的流程已存在!!!`,
-              });
-              return;
-            } else {
-              //进行流程名称修改的else
-              updateProject(this.form).then((response) => {
-                this.$modal.msgSuccess("修改成功");
-                this.open = false;
-                this.reload();
-              });
-            } //else--over
+            // if (projectExists) {
+            // this.$message({
+            //   type: "warning",
+            //   message: `名称为 ${this.form.name} 的流程已存在!!!`,
+            // });
+            // return;
+            // } else {
+            //进行流程名称修改的else
+            updateProject(this.form).then((response) => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.reload();
+            });
+            // } //else--over
           } else {
             addProject(this.form).then((response) => {
               this.$modal.msgSuccess("新增成功");

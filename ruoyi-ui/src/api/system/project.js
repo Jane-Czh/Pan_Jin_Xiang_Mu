@@ -103,9 +103,7 @@ export function getProjectByName(query) {
   return request({
     url: '/project/searchList',
     method: 'post',
-    data: {
-      name: query.name
-    }
+    data: query,
 
   })
 }

@@ -150,6 +150,9 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
             boolean hasOvertimeApplication = false;
             int count2 = 0;
             ProductionClockInForm productionClockInForm = list1.get(count1);
+            if (productionClockInForm.getFirstTimeClockingInAtWork() == null){
+                continue;
+            }
             //记录是否有加班申请
             int key = 0;
             String idnumber = productionClockInForm.getIdNumber();
@@ -213,27 +216,36 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                 productionOvertimeStatisticsTable1.setName(name);
                 productionOvertimeStatisticsTable1.setGender(gender);
                 productionOvertimeStatisticsTable1.setIdNumber(idnumber);
-                if (Math.abs(Firststart.getTime() - Normalstart.getTime()) > tenMinutesInMillis) {
-                    String abnormalSituation1 = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
-                    productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1);
-                }
-                if (Math.abs(Firstend.getTime() - Normalend.getTime()) > tenMinutesInMillis) {
-                    String abnormalSituation2 = String.format("%02d月%02d日第一次打卡下班时间异常", Firststartmonth, Firststartday);
+                if (ifovertime.equals("0")) {
                     if (Math.abs(Firststart.getTime() - Normalstart.getTime()) > tenMinutesInMillis) {
                         String abnormalSituation1 = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
-                        if (key == 0){
-                            productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1+","+abnormalSituation2);
-                        }
+                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1);
                     }
-                    else if(key == 0){
-                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation2);
+                    if (Math.abs(Firstend.getTime() - Normalend.getTime()) > tenMinutesInMillis) {
+                        String abnormalSituation2 = String.format("%02d月%02d日第一次打卡下班时间异常", Firststartmonth, Firststartday);
+                        if (Math.abs(Firststart.getTime() - Normalstart.getTime()) > tenMinutesInMillis) {
+                            String abnormalSituation1 = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
+                            if (key == 0) {
+                                productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1 + "," + abnormalSituation2);
+                            }
+                        } else if (key == 0) {
+                            productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation2);
+                        }
                     }
                 }
                 //判断是否出勤
                 if(Firstend!=null){
                     productionOvertimeStatisticsTable1.setAttendanceSituation(Long.valueOf(1));
                     //计算加班时长
-                    //计算工作日加班
+                    //计算工作日加班(非正常二次打卡)
+                    if (key == 1 && Firstend.getTime() - Normalend.getTime() > tenMinutesInMillis && ifovertime.equals("0")){
+                        totalover = (Firstend.getTime()-Normalend.getTime())/(1000 * 60 );
+                        if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
+                            productionOvertimeStatisticsTable1.setOvertimeDuration(0L);
+                        }
+                        productionOvertimeStatisticsTable1.setOvertimeDuration(productionOvertimeStatisticsTable1.getOvertimeDuration()+totalover);
+                    }
+                    //正常二次加班打卡
                     if (Secondend!=null&&key==1&&ifovertime.equals("0")){
                         totalover = (Secondend.getTime()-Normalend.getTime())/(1000 * 60 );
 //                        System.out.println("+++++++"+(Secondend.getTime()-Normalend.getTime())+"加班时长");
@@ -263,7 +275,7 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                         }
                         productionOvertimeStatisticsTable1.setOvertimeDurationFes(productionOvertimeStatisticsTable1.getOvertimeDurationFes()+totaloverfes+1);
                     }
-                    if ((Secondend!=null||ifovertime.equals("1")||ifovertime.equals("2"))&&key==0){
+                    if ((Secondend!=null||(ifovertime.equals("0")&&Firstend.getTime()-Normalend.getTime()>tenMinutesInMillis)||ifovertime.equals("1")||ifovertime.equals("2"))&&key==0){
                         if(productionOvertimeStatisticsTable1.getAbnormalSituation()!=null) {
                             String ab = productionOvertimeStatisticsTable1.getAbnormalSituation();
                             productionOvertimeStatisticsTable1.setAbnormalSituation(ab+","+Firststartmonth+"月"+Firststartday+"日"+"未申请加班而有加班打卡记录");
@@ -276,23 +288,24 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
             }
             else {
                 ProductionOvertimeStatisticsTable productionOvertimeStatisticsTable1 = result.get(idnumber);
-                String existingAbnormalSituation = productionOvertimeStatisticsTable1.getAbnormalSituation();
-                if (existingAbnormalSituation != null && !existingAbnormalSituation.isEmpty()) {
-                    String abnormalSituation1 = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
-                    productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1+existingAbnormalSituation);
-                } else {
-                    String abnormalSituation = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
-                    productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation);
-                }
-                if (Math.abs(Firstend.getTime() - Normalend.getTime()) > tenMinutesInMillis) {
-                    String abnormalSituation2 = String.format("%02d月%02d日第一次打卡下班时间异常", Firststartmonth, Firststartday);
-                    if (productionOvertimeStatisticsTable1.getAbnormalSituation()!=null) {
-                        if (key == 0){
-                            productionOvertimeStatisticsTable1.setAbnormalSituation(productionOvertimeStatisticsTable1.getAbnormalSituation()+","+abnormalSituation2);
-                        }
+                if (ifovertime.equals("0")) {
+                    String existingAbnormalSituation = productionOvertimeStatisticsTable1.getAbnormalSituation();
+                    if (existingAbnormalSituation != null && Math.abs(Firststart.getTime() - Normalstart.getTime()) > tenMinutesInMillis) {
+                        String abnormalSituation1 = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
+                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation1 + existingAbnormalSituation);
+                    } else {
+                        String abnormalSituation = String.format("%02d月%02d日第一次打卡上班时间异常", Firststartmonth, Firststartday);
+                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation);
                     }
-                    else if(key == 0){
-                        productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation2);
+                    if (Math.abs(Firstend.getTime() - Normalend.getTime()) > tenMinutesInMillis) {
+                        String abnormalSituation2 = String.format("%02d月%02d日第一次打卡下班时间异常", Firststartmonth, Firststartday);
+                        if (productionOvertimeStatisticsTable1.getAbnormalSituation() != null) {
+                            if (key == 0) {
+                                productionOvertimeStatisticsTable1.setAbnormalSituation(productionOvertimeStatisticsTable1.getAbnormalSituation() + "," + abnormalSituation2);
+                            }
+                        } else if (key == 0) {
+                            productionOvertimeStatisticsTable1.setAbnormalSituation(abnormalSituation2);
+                        }
                     }
                 }
                 //判断是否出勤
@@ -301,6 +314,15 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                         productionOvertimeStatisticsTable1.setAttendanceSituation(productionOvertimeStatisticsTable1.getAttendanceSituation()+1);
                     }
                     //计算加班时长
+                    //计算工作日加班(非正常二次打卡)
+                    if (key == 1 && Firstend.getTime() - Normalend.getTime() > tenMinutesInMillis && ifovertime.equals("0")){
+                        totalover = (Firstend.getTime()-Normalend.getTime())/(1000 * 60 );
+                        if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
+                            productionOvertimeStatisticsTable1.setOvertimeDuration(0L);
+                        }
+                        productionOvertimeStatisticsTable1.setOvertimeDuration(productionOvertimeStatisticsTable1.getOvertimeDuration()+totalover);
+                    }
+                    //正常二次加班打卡
                     if (Secondend!=null&&key==1&&ifovertime.equals("0")){
                         totalover = (Secondend.getTime()-Normalend.getTime())/(1000 * 60 );
                         if (productionOvertimeStatisticsTable1.getOvertimeDuration()==null){
@@ -325,7 +347,7 @@ public class ProductionOvertimeStatisticsTableServiceImpl implements IProduction
                         }
                         productionOvertimeStatisticsTable1.setOvertimeDurationFes(productionOvertimeStatisticsTable1.getOvertimeDurationFes()+totaloverfes+1);
                     }
-                    if ((Secondend!=null||ifovertime.equals("1")||ifovertime.equals("2"))&&key==0){
+                    if ((Secondend!=null||(ifovertime.equals("0")&&Firstend.getTime()-Normalend.getTime()>tenMinutesInMillis)||ifovertime.equals("1")||ifovertime.equals("2"))&&key==0){
                         if(productionOvertimeStatisticsTable1.getAbnormalSituation()!=null) {
                             String ab = productionOvertimeStatisticsTable1.getAbnormalSituation();
                             productionOvertimeStatisticsTable1.setAbnormalSituation(ab+","+Firststartmonth+"月"+Firststartday+"日"+"未申请加班而有加班打卡记录");

@@ -34,6 +34,11 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
 
 
     @Override
+    public QualityInspectionRecord selectMaxMonthInspection() {
+        return qualityInspectionRecordMapper.selectMaxMonthInspection();
+    }
+
+    @Override
     public void importQualityInspectionTable(MultipartFile excelFile, Date yearAndMonth, String username) throws IOException {
         QualityInspectionRecord qualityInspectionRecord;
         InputStream is = null;

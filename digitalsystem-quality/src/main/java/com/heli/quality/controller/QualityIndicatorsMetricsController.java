@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.quality.domain.QualityIndicatorsHandfillTable;
 import com.heli.quality.service.IQualityAfterSalesRecordService;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.domain.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author hong
  * @date 2024-05-21
  */
+@Slf4j
 @RestController
 @RequestMapping("/quality/data/metrics")
 public class QualityIndicatorsMetricsController extends BaseController {
@@ -40,6 +43,19 @@ public class QualityIndicatorsMetricsController extends BaseController {
     @Autowired
     private IQualityAfterSalesRecordService qualityAfterSalesRecordService;
 
+
+    /**
+     * @description: 获取最大年月的数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('quality:data:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectMaxMonthMetrics() {
+        QualityIndicatorsMetrics infoMaxMonth = qualityIndicatorsMetricsService.selectMaxMonthMetrics();
+        log.info("获取售后的数据：" + infoMaxMonth);
+        return AjaxResult.success(infoMaxMonth);
+    }
 
     /**
      * 更新列表操作。

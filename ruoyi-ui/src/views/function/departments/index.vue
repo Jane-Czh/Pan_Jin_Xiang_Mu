@@ -47,7 +47,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -57,8 +57,9 @@
           v-hasPermi="['system:departments:add']"
           >新增</el-button
         >
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -69,8 +70,9 @@
           v-hasPermi="['system:departments:edit']"
           >修改</el-button
         >
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+
+      <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -81,8 +83,9 @@
           v-hasPermi="['system:departments:remove']"
           >删除</el-button
         >
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+
+      <el-col :span="1.5" style="float: right;">
         <el-button
           type="warning"
           plain
@@ -129,6 +132,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:departments:edit']"
+            disabled
             >修改</el-button
           >
           <el-button
@@ -137,6 +141,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:departments:remove']"
+            disabled
             >删除</el-button
           >
         </template>
@@ -160,9 +165,9 @@
             placeholder="请输入部门名称"
           />
         </el-form-item>
-        <el-form-item label="逻辑删除flag" prop="isDeleted">
+        <!-- <el-form-item label="逻辑删除flag" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入逻辑删除flag" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" placeholder="请输入描述" />
         </el-form-item>

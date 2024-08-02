@@ -83,12 +83,13 @@
       <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="200" />
       <el-table-column label="K2型号中大吨位的问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
       <!-- <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" /> -->
+      <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="200" />
+      <el-table-column label="大吨位一次交检合格率(%)" align="center" prop="largeTonPassRate" width="200" />
       <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210">
         <template slot-scope="scope">
           <span>{{ scope.row.singleInspectionPassRate }}%</span>
         </template>
       </el-table-column>
-
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -127,9 +128,9 @@
         <el-form-item label="K2型号中大吨位的问题车数量" prop="k2largetonnageProblemVehicles">
           <el-input v-model="form.k2largetonnageProblemVehicles" placeholder="请输入K2型号中大吨位的问题车数量" />
         </el-form-item>
-        <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
+        <!-- <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
           <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -185,6 +186,8 @@ export default {
         k2lessthan5tonProblemVehicles: null,
         k2largetonnageProblemVehicles: null,
         singleInspectionPassRate: null,
+        electricCarPassRate: null,
+        largeTonPassRate: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -302,6 +305,8 @@ export default {
         k2lessthan5tonProblemVehicles: null,
         k2largetonnageProblemVehicles: null,
         singleInspectionPassRate: null,
+        electricCarPassRate: null,
+        largeTonPassRate: null,
         createBy: null,
         createTime: null,
         updateBy: null,

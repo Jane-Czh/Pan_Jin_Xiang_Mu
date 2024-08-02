@@ -1,11 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="指标名" prop="indicatorDept">
+      <!-- <el-form-item label="指标名" prop="indicatorDept">
         <el-select v-model="queryParams.indicatorDept" placeholder="请选择指标名" clearable>
           <el-option v-for="dict in dict.type.indicators_financial" :key="dict.value" :label="dict.label"
             :value="dict.value" />
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="指标名" prop="indicatorNameCn">
+        <el-input v-model="queryParams.indicatorNameCn" placeholder="请输入指标名" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="年" prop="natureYear">
         <el-date-picker clearable v-model="queryParams.natureYear" type="year" value-format="yyyy-MM-dd"
@@ -23,22 +27,7 @@
         <el-input v-model="queryParams.targetUpperLimit" placeholder="请输入目标上限" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <!-- <el-form-item label="创建人" prop="createBy">
-        <el-input v-model="queryParams.createBy" placeholder="请输入创建人" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker clearable v-model="queryParams.createTime" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="更新人" prop="updateBy">
-        <el-input v-model="queryParams.updateBy" placeholder="请输入更新人" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
-        <el-date-picker clearable v-model="queryParams.updateTime" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择更新时间">
-        </el-date-picker>
-      </el-form-item> -->
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -67,35 +56,18 @@
 
     <el-table v-loading="loading" :data="targetList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="指标名" align="center" prop="dictLabel">
-        <template slot-scope="scope">
-          <span v-if="scope.row.topicReviewStatus === 0" style="color: #f43628;">未通过</span>
-          <span v-else-if="scope.row.topicReviewStatus === 1" style="color: gray;">未开始</span>
-          <span v-else-if="scope.row.topicReviewStatus === 2" style="color: #3f9ccb;">审核中</span>
-          <span v-else-if="scope.row.topicReviewStatus === 3" style="color: #8dc146;">已通过</span>
-          <span v-else>-</span> <!-- 处理未知状态 -->
-        </template>
-      </el-table-column>
+      <!-- <el-table-column label="指标名" align="center" prop="dictLabel"/> -->
+      <el-table-column label="指标名" align="center" prop="indicatorNameCn" />
       <el-table-column label="年" align="center" prop="natureYear" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.natureYear, '{y}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="目标值" align="center" prop="targetValue" />
+
       <el-table-column label="目标下限" align="center" prop="targetLowerLimit" />
       <el-table-column label="目标上限" align="center" prop="targetUpperLimit" />
-      <!-- <el-table-column label="创建人" align="center" prop="createBy" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新人" align="center" prop="updateBy" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column> -->
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -148,6 +120,10 @@ export default {
   dicts: ['indicators_financial'],
   data() {
     return {
+      targetData: {
+        date: '',
+        deptName: 'financial'
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -171,6 +147,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         indicatorDept: null,
+        indicatorNameCn: null,
         natureYear: null,
         targetValue: null,
         targetLowerLimit: null,
@@ -196,7 +173,7 @@ export default {
     getList() {
       this.loading = true;
       listTarget(this.queryParams).then(response => {
-        this.targetList = response.rows;
+        this.targetList = response.rows.filter(row => row.indicatorDept === 'financial');
         this.total = response.total;
         this.loading = false;
       });
@@ -213,6 +190,7 @@ export default {
         indicatorName: null,
         indicatorDept: null,
         natureYear: null,
+        indicatorNameCn: null,
         targetValue: null,
         targetLowerLimit: null,
         targetUpperLimit: null,

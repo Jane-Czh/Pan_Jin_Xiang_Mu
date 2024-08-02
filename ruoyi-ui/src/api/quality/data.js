@@ -44,10 +44,14 @@ export function delHandFill(qihfId) {
 }
 
 // 更新[质量]指标填报状态
-export function updateList() {
+export function updateList(data) {
   return request({
     url: '/quality/data/metrics/updateList',
     method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
   })
 }
 

@@ -236,4 +236,74 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{msId}
         </foreach>
     </delete>
+
+    <!--  批量插入的 SQL 语句  -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO Market_Sales_table (
+        MS_ID,
+        CREATED_BY,
+        CREATED_TIME,
+        Branch,
+        Contract_Number,
+        Order_Number,
+        Order_Acceptance_Time,
+        Vehicle_Model,
+        Number,
+        Valve_Block,
+        Fork,
+        Door_Frame,
+        Air_Filter,
+        Accessory,
+        Tyre,
+        Configuration,
+        Car_Number,
+        Remarks,
+        Delivery_Form,
+        Delivery_Location,
+        Contacts,
+        Telephone,
+        Order_System_Delivery_Time,
+        Order_Overdue_Warning,
+        Planned_Departure_Date,
+        Actual_Departure_Date,
+        System_Delivery_Time,
+        Delivery_Note_Number,
+        Technical_Preparation_Completion_Time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.msId},
+            #{item.createdBy},
+            #{item.createdTime},
+            #{item.branch},
+            #{item.contractNumber},
+            #{item.orderNumber},
+            #{item.orderAcceptanceTime},
+            #{item.vehicleModel},
+            #{item.number},
+            #{item.valveBlock},
+            #{item.fork},
+            #{item.doorFrame},
+            #{item.airFilter},
+            #{item.accessory},
+            #{item.tyre},
+            #{item.configuration},
+            #{item.carNumber},
+            #{item.remarks},
+            #{item.deliveryForm},
+            #{item.deliveryLocation},
+            #{item.contacts},
+            #{item.telephone},
+            #{item.orderSystemDeliveryTime},
+            #{item.orderOverdueWarning},
+            #{item.plannedDepartureDate},
+            #{item.actualDepartureDate},
+            #{item.systemDeliveryTime},
+            #{item.deliveryNoteNumber},
+            #{item.technicalPreparationCompletionTime}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

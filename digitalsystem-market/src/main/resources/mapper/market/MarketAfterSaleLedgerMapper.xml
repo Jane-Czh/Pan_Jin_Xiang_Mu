@@ -260,4 +260,84 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{maslId}
         </foreach>
     </delete>
+
+    <!--  批量插入的 SQL 语句  -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO Market_After_Sale_Ledger (
+        MASL_ID,
+        Number,
+        User_Unit,
+        Contacts,
+        Phone,
+        Feedback_Date,
+        Vehicle_Production_Unit,
+        Vehicle,
+        Ton,
+        Launch,
+        Vehicle_Model,
+        Wagon_Number,
+        Selling_Time,
+        Use_Hours,
+        New_Or_Not,
+        Existing_Problem,
+        Primary_Classification,
+        Secondary_Classification,
+        Final_Treatment_Method,
+        Indemnity,
+        Part_Number,
+        Supplier,
+        Quantity,
+        Accountability_Unit,
+        Fault_Level,
+        Score,
+        Sending_Method,
+        Primary_Branch,
+        Secondary_Branch,
+        Despatch_Mode,
+        Payments_Mode,
+        Feedback_Mode,
+        Reservation_Number,
+        Assessment_Situation
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.maslId},
+            #{item.number},
+            #{item.userUnit},
+            #{item.contacts},
+            #{item.phone},
+            #{item.feedbackDate},
+            #{item.vehicleProductionUnit},
+            #{item.vehicle},
+            #{item.ton},
+            #{item.launch},
+            #{item.vehicleModel},
+            #{item.wagonNumber},
+            #{item.sellingTime},
+            #{item.useHours},
+            #{item.newOrNot},
+            #{item.existingProblem},
+            #{item.primaryClassification},
+            #{item.secondaryClassification},
+            #{item.finalTreatmentMethod},
+            #{item.indemnity},
+            #{item.partNumber},
+            #{item.supplier},
+            #{item.quantity},
+            #{item.accountabilityUnit},
+            #{item.faultLevel},
+            #{item.score},
+            #{item.sendingMethod},
+            #{item.primaryBranch},
+            #{item.secondaryBranch},
+            #{item.despatchMode},
+            #{item.paymentsMode},
+            #{item.feedbackMode},
+            #{item.reservationNumber},
+            #{item.assessmentSituation}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

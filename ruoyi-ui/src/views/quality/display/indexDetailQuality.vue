@@ -12,7 +12,7 @@
     <div v-if="loading"
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
-      :yAxisData="yAxisData"></indicator-chart>
+      :yAxisData="yAxisData" :targetValue="option.targetValue"></indicator-chart>
   </div>
 </template>
 
@@ -36,12 +36,12 @@ export default {
       pickerOptions: [],
       xAxisData: [],
       yAxisData: [],
-      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: '' }
     }
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: '' }
     this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
     this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()

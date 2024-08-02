@@ -55,7 +55,6 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
     @Override
     public void Synchronization(){
         //删除数据库中已有数据
-        MarketInventoryCarDetail marketInventoryCarDetail = new MarketInventoryCarDetail();
 
         marketUnsoldCarMapper.deleteAllMarketUnsoldCar();
         System.out.println("删除成功");
@@ -67,7 +66,10 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
             int insert_order = 0;
             HashMap<String, MarketUnsoldCar> insert = new HashMap<>();
             while (insert_order < marketInventoryCarDetails.size()){
-                String Vehicle_Model = StringUtils.getPrefix(marketInventoryCarDetails.get(insert_order).getVehicleModel());
+                //此处获取车型前缀
+//                String Vehicle_Model = StringUtils.getPrefix(marketInventoryCarDetails.get(insert_order).getVehicleModel());
+                //此处不获取前缀，直接使用车型
+                String Vehicle_Model = marketInventoryCarDetails.get(insert_order).getVehicleModel();
                 //hash中不存在对应车型
                 if (insert.get(Vehicle_Model) == null){
                     MarketUnsoldCar marketUnsoldCar1 = new MarketUnsoldCar();

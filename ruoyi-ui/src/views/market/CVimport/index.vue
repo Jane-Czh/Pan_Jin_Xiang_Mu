@@ -809,6 +809,15 @@ export default {
         console.log(file);
         formData.append("file", file);
         console.log("file====>", formData);
+
+        // 显示进度条
+        // this.progress = 10; // 设置初始进度
+
+        // 模拟上传过程
+        for (let i = 0; i <= 100; i += 10) {
+          await new Promise(resolve => setTimeout(resolve, 500)); // 模拟上传进度
+          this.progress = i;
+        }
         await uploadFile(formData); // 调用 uploadFile API
 
         // 上传成功后的处理

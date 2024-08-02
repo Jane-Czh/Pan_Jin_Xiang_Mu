@@ -2,102 +2,57 @@
   <div class="app-container">
     <!-- 查询 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="项目名称" prop="projectName">
-        <el-input
-          v-model="queryParams.projectName"
-          placeholder="请输入项目名称"
+      <el-form-item label="主责部门" prop="department">
+        <el-select
+          v-model="queryParams.department"
+          placeholder="请选择主责部门"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in departmentOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="项目类别" prop="category">
-        <el-input
-          v-model="queryParams.category"
-          placeholder="请输入项目类别"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="项目等级" prop="level">
-        <el-input
+        <el-select
           v-model="queryParams.level"
           placeholder="请输入项目等级"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in levelOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="主责部门" prop="department">
-        <el-input
-          v-model="queryParams.department"
-          placeholder="请输入主责部门"
+
+      <el-form-item label="项目类别" prop="category">
+        <el-select
+          v-model="queryParams.category"
+          placeholder="请输入项目类别"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in categoryOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <!-- <el-form-item label="承接属性" prop="attribute">
-        <el-input
-          v-model="queryParams.attribute"
-          placeholder="请输入承接属性"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item label="项目描述" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入项目描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item label="立项时间" prop="startDate">
-        <el-date-picker clearable
-          v-model="queryParams.startDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择立项时间">
-        </el-date-picker>
-      </el-form-item> -->
-      <!-- <el-form-item label="项目总进度" prop="progressAlloverProgress">
-        <el-input
-          v-model="queryParams.progressAlloverProgress"
-          placeholder="请输入项目总进度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="导入时间" prop="importDate">
-        <el-date-picker clearable
-          v-model="queryParams.importDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择导入时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="描述" prop="remake">
-        <el-input
-          v-model="queryParams.remake"
-          placeholder="请输入描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="历史项目" prop="oldProjectId">
-        <el-input
-          v-model="queryParams.oldProjectId"
-          placeholder="请输入历史项目"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联时间" prop="associationDate">
-        <el-date-picker clearable
-          v-model="queryParams.associationDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择关联时间">
-        </el-date-picker>
-      </el-form-item>
+      
       <el-form-item label="负责人" prop="manager">
         <el-input
           v-model="queryParams.manager"
@@ -106,122 +61,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="组成员" prop="teamMembers">
-        <el-input
-          v-model="queryParams.teamMembers"
-          placeholder="请输入组成员"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="项目进度" prop="progress">
-        <el-input
-          v-model="queryParams.progress"
-          placeholder="请输入项目进度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="目标" prop="goal">
-        <el-input
-          v-model="queryParams.goal"
-          placeholder="请输入目标"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="范围" prop="scope">
-        <el-input
-          v-model="queryParams.scope"
-          placeholder="请输入范围"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="计划结项时间" prop="plannedCompletionTime">
-        <el-date-picker clearable
-          v-model="queryParams.plannedCompletionTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择计划结项时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="已过天数(自动计算)" prop="daysPassed">
-        <el-input
-          v-model="queryParams.daysPassed"
-          placeholder="请输入已过天数(自动计算)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="剩余天数(自动计算)" prop="daysRemaining">
-        <el-input
-          v-model="queryParams.daysRemaining"
-          placeholder="请输入剩余天数(自动计算)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="完成内容概述" prop="completionSummary">
-        <el-input
-          v-model="queryParams.completionSummary"
-          placeholder="请输入完成内容概述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['project:Info:add']">新增</el-button>
       </el-form-item>
     </el-form>
-
-    <!-- 操作栏 -->
-    <!-- <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['project:Info:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['project:Info:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['project:Info:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['project:Info:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row> -->
 
     <el-row v-for="(infodata, index) in rowList" :key="index"  :gutter="20">
     <el-col v-for="(info, index1) in infodata" :key="index1" :span="6">
@@ -233,12 +79,17 @@
         
         <div class="card-container">
           <el-card class="user-card">
+
+            <el-progress v-if="!isNaN(getPercentageValue(info.progressAlloverProgress))" :percentage="getPercentageValue(info.progressAlloverProgress)" type = "circle" >
+            </el-progress>
+
+            <p>已过天数: {{ formattedDaysPassed(info.startDate) }}</p>
+            <p>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</p>
             <p>项目id: {{ info.projectId }}</p>
             <p>项目名称: {{ info.projectName }}</p>
             <p>项目类别: {{ info.category }}</p>
             <p>项目等级: {{ info.level }}</p>
-            <p>项目总进度:</p>
-            <el-progress :percentage="getPercentageValue(info.progressAlloverProgress)"></el-progress>
+
 
             <!-- 详情查看 -->
             <el-popover placement="right" trigger="click" width="750">
@@ -266,7 +117,7 @@
                     <pre>负责人: {{ info.manager }}</pre>
                     <pre>组成员: {{ info.teamMembers }}</pre>
                     <pre>项目状态: {{ info.status }}</pre>
-                    <!-- <pre>项目进度: {{ info.progress }}</pre> -->
+                    <pre>项目进度: {{ info.progress }}</pre>
                     <pre>项目现状: {{ info.currentStatus }}</pre>
                     <pre>目标: {{ info.goal }}</pre>
                     <pre>范围: {{ info.scope }}</pre>
@@ -276,10 +127,11 @@
                     <pre>完成内容概述: {{ info.completionSummary }}</pre>
                   </pre>
                 </div>
-            </div>
+              </div>
 
               <el-button slot="reference">查看详情</el-button>
-            </el-popover>
+              </el-popover>
+
 
             <!-- <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
               <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
@@ -377,14 +229,22 @@
     />
 
     <!-- 添加或修改项目基本信息对话框 -->
-    <!-- <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="项目名称" prop="projectName">
           <el-input v-model="form.projectName" placeholder="请输入项目名称" />
         </el-form-item>
         <el-form-item label="项目类别" prop="category">
-          <el-input v-model="form.category" placeholder="请输入项目类别" />
+          <el-select v-model="form.category" placeholder="请选择项目类别">
+            <el-option
+              v-for="item in categoryOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
+
         <el-form-item label="项目等级" prop="level">
           <el-select v-model="form.level" placeholder="请选择项目等级">
             <el-option
@@ -489,7 +349,7 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -501,7 +361,22 @@ export default {
   inject: ["reload"],
   name: "Info",
   data() {
+
+    const validateProgressFormat = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("项目总进度不能为空"));
+      }
+      // 检查是否为"20%"格式的字符串
+      const regex = /^(\d{1,2}|\d{1,2}\.\d+)%$/;
+      if (!regex.test(value)) {
+        callback(new Error("项目总进度格式不正确，应输入一个百分数，例如10%"));
+      } else {
+        callback();
+      }
+    };
+
     return {
+
 
       historyList: [],
       selectedHistoryList: [],
@@ -556,6 +431,19 @@ export default {
         daysRemaining: null,
         completionSummary: null
       },
+      //项目进度选项
+      progressOptions: [
+        { value: '10%', label: '10%' },
+        { value: '20%', label: '20%' },
+        { value: '30%', label: '30%' },
+        { value: '40%', label: '40%' },
+        { value: '50%', label: '50%' },
+        { value: '60%', label: '60%' },
+        { value: '70%', label: '70%' },
+        { value: '80%', label: '80%' },
+        { value: '90%', label: '90%' },
+        { value: '100%', label: '100%' }
+      ],
       //项目等级选项
       levelOptions:[
         { 
@@ -572,33 +460,35 @@ export default {
       ],
       //项目主责部门
       departmentOptions:[
-        { 
-          value: '财务科',
-          label: '财务科'},
-          { 
-          value: '市场科',
-          label: '市场科'},
-          { 
-          value: '安环科',
-          label: '安环科'},
-          { 
-          value: '生产科',
-          label: '生产科'},
-          { 
-          value: '供应科',
-          label: '供应科'},
-          { 
-          value: '技术科',
-          label: '技术科'},
-          { 
-          value: '企管科',
-          label: '企管科'},
-          { 
-          value: '党群科',
-          label: '党群科'},
-          { 
-          value: '质量科',
-          label: '质量科'}
+        { value: '财务科', label: '财务科' },
+        { value: '市场科', label: '市场科' },
+        { value: '安环设备科', label: '安环设备科' },
+        { value: '生产管理科', label: '生产管理科' },
+        { value: '供应科', label: '供应科' },
+        { value: '技术科', label: '技术科' },
+        { value: '企业管理科', label: '企业管理科' },
+        { value: '党群办公室', label: '党群办公室科' },
+        { value: '质量科', label: '质量科' },
+        { value: '执纪监督室', label: '执纪监督室' },
+        { value: '团委', label: '团委' }
+      ],
+      //项目等级
+      levelOptions:[
+        { value: 'A级', label: 'A级' },
+        { value: 'B级', label: 'B级' },
+        { value: 'C级', label: 'C级' },
+      ],
+      //项目类别
+      categoryOptions: [
+        { value: '党工群团类', label: '党工群团类' },
+        { value: '质量攻关类', label: '质量攻关类' },
+        { value: '工艺技改类', label: '工艺技改类' },
+        { value: '生产改善类', label: '生产改善类' },
+        { value: '设备改善类', label: '设备改善类' },
+        { value: '安全环保类', label: '安全环保类' },
+        { value: '采购供应类', label: '采购供应类' },
+        { value: '财务管理类', label: '财务管理类' },
+        { value: '企业运行类', label: '企业运行类' },
       ],
       //项目状态选项
       statusOptions:[
@@ -612,14 +502,6 @@ export default {
         {
           value: '滞后',
           label: '滞后'
-        },
-        {
-          value: '已完成',
-          label: '已完成'
-        },
-        {
-          value: '已取消',
-          label: '已取消'
         }
       ],
 
@@ -639,9 +521,9 @@ export default {
         department: [
           { required: true, message: "主责部门不能为空", trigger: "blur" }
         ],
-        // attribute: [
-        //   { required: true, message: "承接属性不能为空", trigger: "blur" }
-        // ],
+        /*attribute: [
+          { required: true, message: "承接属性不能为空", trigger: "blur" }
+        ],*/
         description: [
           { required: true, message: "项目描述不能为空", trigger: "blur" }
         ],
@@ -649,7 +531,8 @@ export default {
           { required: true, message: "立项时间不能为空", trigger: "blur" }
         ],
         progressAlloverProgress: [
-          { required: true, message: "项目总进度不能为空", trigger: "blur" }
+          { required: true, message: "项目总进度不能为空", trigger: "blur" },
+          { validator: validateProgressFormat, trigger: 'blur' }
         ],
         importDate: [
           { required: true, message: "导入时间不能为空", trigger: "blur" }
@@ -657,9 +540,9 @@ export default {
         status: [
           { required: true, message: "项目状态不能为空", trigger: "blur" }
         ],
-        progress: [
-          { required: true, message: "项目进度不能为空", trigger: "blur" }
-        ],
+        // progress: [
+        //   { required: true, message: "项目进度不能为空", trigger: "blur" }
+        // ],
         plannedCompletionTime: [
           { required: true, message: "计划结项时间不能为空", trigger: "blur" }
         ],
@@ -672,9 +555,11 @@ export default {
 
   methods: {
 
+
+
     getPercentageValue(progressString) {
-      console.log(progressString);
       // 移除字符串末尾的 '%'
+      console.log(progressString);
       const progressValue = progressString.replace('%', '');
       console.log(parseInt(progressValue, 10));
       // 将字符串转换为整数
@@ -895,6 +780,8 @@ export default {
         }
       });
     },
+
+
     /** 删除按钮操作 */
     handleDelete(row) {
       const projectIds = row.projectId || this.ids;
@@ -910,7 +797,9 @@ export default {
       this.download('project/Info/export', {
         ...this.queryParams
       }, `Info_${new Date().getTime()}.xlsx`)
-    }
+    },
+
+
   }
 };
 </script>
@@ -945,4 +834,13 @@ export default {
   .column {
     flex: 1;
   }
+  .progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
 </style>

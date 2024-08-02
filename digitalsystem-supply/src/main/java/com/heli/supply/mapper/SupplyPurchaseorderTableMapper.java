@@ -7,8 +7,8 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 采购订单导入Mapper接口
  * 
- * @author ruoyi
- * @date 2024-04-23
+ * @author Teandron
+ * @date 2024-07-30
  */
 public interface SupplyPurchaseorderTableMapper 
 {
@@ -28,9 +28,6 @@ public interface SupplyPurchaseorderTableMapper
      */
     public List<SupplyPurchaseorderTable> selectSupplyPurchaseorderTableList(SupplyPurchaseorderTable supplyPurchaseorderTable);
 
-
-    //查询数据库最后一条数据id
-    public Long selectLastId();
     /**
      * 新增采购订单导入
      * 

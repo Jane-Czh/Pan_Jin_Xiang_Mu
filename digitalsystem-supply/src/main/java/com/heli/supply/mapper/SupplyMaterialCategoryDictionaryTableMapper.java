@@ -21,6 +21,8 @@ public interface SupplyMaterialCategoryDictionaryTableMapper
      */
     public SupplyMaterialCategoryDictionaryTable selectSupplyMaterialCategoryDictionaryTableBySmcdId(Long smcdId);
 
+    public String selectSupplyMaterialCategoryDictionaryTableByMaterialNumber(String MaterialNumber);
+
     /**
      * 查询物料类别字典存储列表
      * 

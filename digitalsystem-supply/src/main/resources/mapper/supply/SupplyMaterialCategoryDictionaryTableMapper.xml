@@ -26,6 +26,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSupplyMaterialCategoryDictionaryTableVo"/>
         where SMCD_ID = #{smcdId}
     </select>
+
+    <select id="selectSupplyMaterialCategoryDictionaryTableByMaterialNumber" parameterType="String" resultType="String">
+        SELECT Material_Class
+        FROM supply_material_category_dictionary_table
+        WHERE Material_Number = #{materialNumber}
+    </select>
         
     <insert id="insertSupplyMaterialCategoryDictionaryTable" parameterType="SupplyMaterialCategoryDictionaryTable" useGeneratedKeys="true" keyProperty="smcdId">
         insert into supply_material_category_dictionary_table

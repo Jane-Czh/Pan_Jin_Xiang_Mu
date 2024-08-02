@@ -153,8 +153,8 @@
           <span>{{ formatNumber(scope.row.monthlyInventoryTotalAmount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="存货增长率" align="center" prop="growthRateInventory" width="160" />
-      <el-table-column label="销售增长率" align="center" prop="growthRateSales" width="160" />
+      <el-table-column label="存货增长率/销售增长率" align="center" prop="growthRateInventory" width="160" />
+      <!-- <el-table-column label="销售增长率" align="center" prop="growthRateSales" width="160" /> -->
       <!-- <el-table-column label="应收账款(万元)" align="center" prop="receivables" width="120" /> -->
       <el-table-column label="应收账款(万元)" align="center" prop="receivables" width="120">
         <template slot-scope="scope">
@@ -433,7 +433,7 @@ export default {
   methods: {
     formatNumber(value) {
       if (value === null || value === undefined) return '';
-      return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
 
     handleDownload() {

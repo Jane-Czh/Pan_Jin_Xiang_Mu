@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteAllMarketUnsoldCar" >
-        delete from Market_Unsold_Car
+        truncate table Market_Unsold_Car
     </delete>
 
 </mapper>

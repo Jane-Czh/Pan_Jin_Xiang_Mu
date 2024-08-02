@@ -1,21 +1,37 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="导入人" prop="createdBy">
+      <el-form-item label="物料号" prop="materialNumber">
         <el-input
-          v-model="queryParams.createdBy"
-          placeholder="请输入导入人"
+          v-model="queryParams.materialNumber"
+          placeholder="请输入物料号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="导入时间" prop="createdTime">
-        <el-date-picker clearable
-          v-model="queryParams.createdTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择导入时间">
-        </el-date-picker>
+      <el-form-item label="采购数量" prop="purchaseQuantity">
+        <el-input
+          v-model="queryParams.purchaseQuantity"
+          placeholder="请输入采购数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="净价" prop="netPrice">
+        <el-input
+          v-model="queryParams.netPrice"
+          placeholder="请输入净价"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="订单净值" prop="netValueOrder">
+        <el-input
+          v-model="queryParams.netValueOrder"
+          placeholder="请输入订单净值"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="凭证日期" prop="documentDate">
         <el-date-picker clearable
@@ -25,70 +41,22 @@
           placeholder="请选择凭证日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="采购凭证" prop="purchasingDocuments">
+      <el-form-item label="供应商" prop="supplier">
         <el-input
-          v-model="queryParams.purchasingDocuments"
-          placeholder="请输入采购凭证"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!-- <el-form-item label="物料号" prop="materialNumber">
-        <el-input
-          v-model="queryParams.materialNumber"
-          placeholder="请输入物料号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否为集采(0/1)" prop="collectiveProcurement">
-        <el-input
-          v-model="queryParams.collectiveProcurement"
-          placeholder="请输入是否为集采(0/1)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="短文本" prop="ShortText">
-        <el-input
-          v-model="queryParams.ShortText"
-          placeholder="请输入短文本"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="单位" prop="Unit">
-        <el-input
-          v-model="queryParams.Unit"
-          placeholder="请输入单位"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="数量" prop="Quantity">
-        <el-input
-          v-model="queryParams.Quantity"
-          placeholder="请输入数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单净值" prop="orderNetvalue">
-        <el-input
-          v-model="queryParams.orderNetvalue"
-          placeholder="请输入订单净值"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="供应商" prop="Supplier">
-        <el-input
-          v-model="queryParams.Supplier"
+          v-model="queryParams.supplier"
           placeholder="请输入供应商"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item> -->
+      </el-form-item>
+      <el-form-item label="供应商名称" prop="supplierName">
+        <el-input
+          v-model="queryParams.supplierName"
+          placeholder="请输入供应商名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -172,31 +140,24 @@
         </span>
         </el-dialog>
       </el-col>
+      
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="purchaseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="spId" />
-      <el-table-column label="导入人" align="center" prop="createdBy" />
-      <el-table-column label="导入时间" align="center" prop="createdTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createdTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="主键" align="center" prop="spId" />
+      <el-table-column label="物料号" align="center" prop="materialNumber" />
+      <el-table-column label="采购数量" align="center" prop="purchaseQuantity" />
+      <el-table-column label="净价" align="center" prop="netPrice" />
+      <el-table-column label="订单净值" align="center" prop="netValueOrder" />
       <el-table-column label="凭证日期" align="center" prop="documentDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.documentDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="采购凭证" align="center" prop="purchasingDocuments" />
-      <el-table-column label="物料号" align="center" prop="materialNumber" />
-      <el-table-column label="是否为集采(0/1)" align="center" prop="collectiveProcurement" />
-      <el-table-column label="短文本" align="center" prop="shortText" />
-      <el-table-column label="单位" align="center" prop="unit" />
-      <el-table-column label="数量" align="center" prop="quantity" />
-      <el-table-column label="订单净值" align="center" prop="orderNetvalue" />
       <el-table-column label="供应商" align="center" prop="supplier" />
+      <el-table-column label="供应商名称" align="center" prop="supplierName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -228,16 +189,17 @@
     <!-- 添加或修改采购订单导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="导入人" prop="createdBy">
-          <el-input v-model="form.createdBy" placeholder="请输入导入人" />
+        <el-form-item label="物料号" prop="materialNumber">
+          <el-input v-model="form.materialNumber" placeholder="请输入物料号" />
         </el-form-item>
-        <el-form-item label="导入时间" prop="createdTime">
-          <el-date-picker clearable
-            v-model="form.createdTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择导入时间">
-          </el-date-picker>
+        <el-form-item label="采购数量" prop="purchaseQuantity">
+          <el-input v-model="form.purchaseQuantity" placeholder="请输入采购数量" />
+        </el-form-item>
+        <el-form-item label="净价" prop="netPrice">
+          <el-input v-model="form.netPrice" placeholder="请输入净价" />
+        </el-form-item>
+        <el-form-item label="订单净值" prop="netValueOrder">
+          <el-input v-model="form.netValueOrder" placeholder="请输入订单净值" />
         </el-form-item>
         <el-form-item label="凭证日期" prop="documentDate">
           <el-date-picker clearable
@@ -247,29 +209,11 @@
             placeholder="请选择凭证日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="采购凭证" prop="purchasingDocuments">
-          <el-input v-model="form.purchasingDocuments" placeholder="请输入采购凭证" />
-        </el-form-item>
-        <el-form-item label="物料号" prop="materialNumber">
-          <el-input v-model="form.materialNumber" placeholder="请输入物料号" />
-        </el-form-item>
-        <el-form-item label="是否为集采(0/1)" prop="collectiveProcurement">
-          <el-input v-model="form.collectiveProcurement" placeholder="请输入是否为集采(0/1)" />
-        </el-form-item>
-        <el-form-item label="短文本" prop="shortText">
-          <el-input v-model="form.shortText" placeholder="请输入短文本" />
-        </el-form-item>
-        <el-form-item label="单位" prop="unit">
-          <el-input v-model="form.unit" placeholder="请输入单位" />
-        </el-form-item>
-        <el-form-item label="数量" prop="quantity">
-          <el-input v-model="form.quantity" placeholder="请输入数量" />
-        </el-form-item>
-        <el-form-item label="订单净值" prop="orderNetvalue">
-          <el-input v-model="form.orderNetvalue" placeholder="请输入订单净值" />
-        </el-form-item>
         <el-form-item label="供应商" prop="supplier">
           <el-input v-model="form.supplier" placeholder="请输入供应商" />
+        </el-form-item>
+        <el-form-item label="供应商名称" prop="supplierName">
+          <el-input v-model="form.supplierName" placeholder="请输入供应商名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -282,7 +226,6 @@
 
 <script>
 import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase, uploadImport } from "@/api/supply/purchase";
-import axios from 'axios'
 
 export default {
   name: "Purchase",
@@ -310,17 +253,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        createdBy: null,
-        createdTime: null,
-        documentDate: null,
-        purchasingDocuments: null,
         materialNumber: null,
-        collectiveProcurement: null,
-        ShortText: null,
-        unit: null,
-        quantity: null,
-        orderNetvalue: null,
-        supplier: null
+        purchaseQuantity: null,
+        netPrice: null,
+        netValueOrder: null,
+        documentDate: null,
+        Supplier: null,
+        supplierName: null
       },
       // 表单参数
       form: {},
@@ -329,17 +268,18 @@ export default {
         materialNumber: [
           { required: true, message: "物料号不能为空", trigger: "blur" }
         ],
-        quantity: [
-          { required: true, message: "数量不能为空", trigger: "blur" }
-        ],
-        supplier: [
+        Supplier: [
           { required: true, message: "供应商不能为空", trigger: "blur" }
+        ],
+        supplierName: [
+          { required: true, message: "供应商名称不能为空", trigger: "blur" }
         ]
       },
 
       //新增参数
       showDialog: false,
       progress: 0
+
     };
   },
   created() {
@@ -364,17 +304,13 @@ export default {
     reset() {
       this.form = {
         spId: null,
-        createdBy: null,
-        createdTime: null,
-        documentDate: null,
-        purchasingDocuments: null,
         materialNumber: null,
-        collectiveProcurement: null,
-        shortText: null,
-        unit: null,
-        quantity: null,
-        orderNetvalue: null,
-        supplier: null
+        purchaseQuantity: null,
+        netPrice: null,
+        netValueOrder: null,
+        documentDate: null,
+        Supplier: null,
+        supplierName: null
       };
       this.resetForm("form");
     },
@@ -515,7 +451,7 @@ export default {
         this.$refs.fileInput.value = ""; // 清空文件选择框
       }
     }
-
+    
   }
 };
 </script>

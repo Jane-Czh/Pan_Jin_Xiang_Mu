@@ -8,7 +8,7 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="检索细分业务" prop="subBusinessesName">
+      <el-form-item label="细分业务" prop="subBusinessesName">
         <el-input
           v-model="queryParams.subBusinessesName"
           placeholder="请输入细分业务名称"
@@ -24,7 +24,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="上级业务模块" prop="parentModule">
+      <el-form-item label="业务模块" prop="parentModule">
         <el-input
           v-model="queryParams.parentModule"
           placeholder="请输入上级业务模块"

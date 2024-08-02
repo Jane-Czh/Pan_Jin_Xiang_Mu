@@ -8,7 +8,7 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="业务模块名称" prop="moduleName">
+      <el-form-item label="业务模块" prop="moduleName">
         <el-input
           v-model="queryParams.moduleName"
           placeholder="请输入业务模块名称"
@@ -25,22 +25,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="逻辑删除flag" prop="isDeleted">
+      <!-- <el-form-item label="逻辑删除flag" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
           placeholder="请输入逻辑删除flag"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="描述" prop="description">
+      </el-form-item> -->
+      <!-- <el-form-item label="描述" prop="description">
         <el-input
           v-model="queryParams.description"
           placeholder="请输入描述"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button
           type="primary"

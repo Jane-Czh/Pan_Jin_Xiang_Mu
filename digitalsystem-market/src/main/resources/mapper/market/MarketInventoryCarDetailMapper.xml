@@ -101,4 +101,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{micdId}
         </foreach>
     </delete>
+
+    <delete id="deleteAll" >
+        truncate table Market_Inventory_Car_Detail;
+    </delete>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO Market_Inventory_Car_Detail (
+        MICD_ID,
+        Online_Time,
+        Wagon_Number,
+        Vehicle_Model,
+        Door_Frame,
+        Accessory,
+        Valve_Block_Number,
+        Configuration,
+        Plannde_Completion_Time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.micdId},
+            #{item.onlineTime},
+            #{item.wagonNumber},
+            #{item.vehicleModel},
+            #{item.doorFrame},
+            #{item.accessory},
+            #{item.valveBlockNumber},
+            #{item.configuration},
+            #{item.planndeCompletionTime}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

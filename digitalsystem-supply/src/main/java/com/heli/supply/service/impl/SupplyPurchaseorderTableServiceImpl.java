@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.alibaba.excel.util.ListUtils;
 import com.heli.supply.utils.ExcelUtils;
-import com.heli.supply.utils.GenerateId;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 采购订单导入Service业务层处理
  * 
- * @author ruoyi
- * @date 2024-04-23
+ * @author Teandron
+ * @date 2024-07-30
  */
 @Service
 public class SupplyPurchaseorderTableServiceImpl implements ISupplyPurchaseorderTableService 
@@ -68,11 +67,6 @@ public class SupplyPurchaseorderTableServiceImpl implements ISupplyPurchaseorder
         }
     }
 
-    //查询数据库最后一条数据id
-    public Long selectLastId(){
-        return supplyPurchaseorderTableMapper.selectLastId();
-    }
-
     /**
      * 查询采购订单导入
      * 
@@ -106,12 +100,6 @@ public class SupplyPurchaseorderTableServiceImpl implements ISupplyPurchaseorder
     @Override
     public int insertSupplyPurchaseorderTable(SupplyPurchaseorderTable supplyPurchaseorderTable)
     {
-        Long lastid = selectLastId();
-        if(lastid == null){
-            lastid = 0L;
-        }
-        Long SpId = GenerateId.getNextId(lastid);
-        supplyPurchaseorderTable.setSpId(SpId);
         return supplyPurchaseorderTableMapper.insertSupplyPurchaseorderTable(supplyPurchaseorderTable);
     }
 

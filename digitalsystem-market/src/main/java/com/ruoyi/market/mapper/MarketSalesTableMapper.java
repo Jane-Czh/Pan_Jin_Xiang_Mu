@@ -2,6 +2,7 @@ package com.ruoyi.market.mapper;
 
 import java.util.List;
 import com.ruoyi.market.domain.MarketSalesTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 市场科销售台账Mapper接口
@@ -63,4 +64,6 @@ public interface MarketSalesTableMapper
      * @return 结果
      */
     public int deleteMarketSalesTableByMsIds(Long[] msIds);
+
+    public void batchInsert(@Param("list") List<MarketSalesTable> marketSalesTable);
 }

@@ -2,6 +2,8 @@ package com.ruoyi.market.mapper;
 
 import java.util.List;
 import com.ruoyi.market.domain.MarketCarType;
+import com.ruoyi.market.domain.MarketInventoryCarDetail;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 主要车型维护Mapper接口
@@ -61,4 +63,6 @@ public interface MarketCarTypeMapper
      * @return 结果
      */
     public int deleteMarketCarTypeByMctIds(Long[] mctIds);
+
+    public void batchInsert(@Param("list") List<MarketCarType> marketCarTypes);
 }

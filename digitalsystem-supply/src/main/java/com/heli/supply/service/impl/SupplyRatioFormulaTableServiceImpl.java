@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.heli.supply.domain.SupplyPurchaseorderTable;
+import com.heli.supply.mapper.SupplyMaterialCategoryDictionaryTableMapper;
 import com.heli.supply.utils.ExcelUtils;
 import com.heli.supply.utils.GenerateId;
 import com.ruoyi.common.exception.ServiceException;
@@ -31,6 +32,8 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
     @Autowired
     private SupplyRatioFormulaTableMapper supplyRatioFormulaTableMapper;
 
+    @Autowired
+    private SupplyMaterialCategoryDictionaryTableMapper supplyMaterialCategoryDictionaryTableMapper;
 
     @Override
     public void importInterests(MultipartFile excelFile) throws IOException {
@@ -79,47 +82,72 @@ public class SupplyRatioFormulaTableServiceImpl implements ISupplyRatioFormulaTa
             int documentYear = documentCalendar.get(Calendar.YEAR);
             int documentMonth = documentCalendar.get(Calendar.MONTH) + 1;
             //过滤出凭证日期年月和当前日期年月相同的数据
-            return documentYear == year && documentMonth == month;
-        }).collect(Collectors.groupingBy(SupplyPurchaseorderTable::getMaterialNumber, Collectors.groupingBy(SupplyPurchaseorderTable::getSupplier)));
+            return documentYear == currentYear && documentMonth == currentMonth;
+        }).filter(a->{
+            String materialclass = supplyMaterialCategoryDictionaryTableMapper.selectSupplyMaterialCategoryDictionaryTableByMaterialNumber(a.getMaterialNumber());
+            return materialclass != null && !materialclass.isEmpty();
+        }) .collect(Collectors.groupingBy(a -> {
+            // 使用物料编号获取物料类别
+            String materialNumber = a.getMaterialNumber();
+            String materialclass = supplyMaterialCategoryDictionaryTableMapper.selectSupplyMaterialCategoryDictionaryTableByMaterialNumber(materialNumber);
+            return materialclass; // 使用物料类别作为分组键
+        }, Collectors.groupingBy(a -> {
+            String Supplier = a.getSupplier();
+            String Supplier_Name = a.getSupplierName();
+            return Supplier + " " + Supplier_Name;
+        })));
+
 
         System.out.println("删除全部记录");
         supplyRatioFormulaTableMapper.deleteAll();
+        //循环计算不同物料比例
         for (Map.Entry<String, Map<String, List<SupplyPurchaseorderTable>>> entry : collect.entrySet()){
 //            System.out.println("物料号======"+entry.getKey());
             //相同物料号（前缀）计算
-            String Material_Number = entry.getKey();
+            String Material_Class = entry.getKey();
             //记录该物料总数
             long amount = 0L;
             Map<String, List<SupplyPurchaseorderTable>> value = entry.getValue();
             Map<String, Long> Material_Amount = new HashMap<>();
+            //当前物料在不同公司的占比
             for (Map.Entry<String, List<SupplyPurchaseorderTable>> entry1 : value.entrySet()){
-                //获取供应商代码和名称
+                //获取供应商代码
                 String Supplier = entry1.getKey();
-//                String Supplier_Code = SplitSupplierCode(Supplier);
-//                String Supplier_Name = SplitSupplierName(Supplier);
+
                 //相同物料、相同供应商数量累计
                 long number = 0L;
+
                 List<SupplyPurchaseorderTable> supplyPurchaseorderTables= entry1.getValue();
+                //
                 for (SupplyPurchaseorderTable supplyPurchaseorderTable : supplyPurchaseorderTables) {
-                    number = number + supplyPurchaseorderTable.getQuantity();
+                    //todo 暂时按照数量计算，等提供计算方式后，加入if判断是哪种计算方式
+                    number = number + supplyPurchaseorderTable.getPurchaseQuantity();
                 }
                 Material_Amount.put(Supplier,number);
 
-                amount = amount + number;
+                amount += number;
 //                System.out.println("    供应商代码======="+Supplier_Code + "供应商名称======="+Supplier_Name);
 //                System.out.println("           内容========"+entry1.getValue().size());
             }
+            System.out.println("当前物料为"+Material_Class);
+            System.out.println("当前物料各公司数量"+Material_Amount);
+            System.out.println("当前物料总数"+amount);
 
             for (Map.Entry<String, Long> entry2 : Material_Amount.entrySet()){
                 String Supplier = entry2.getKey();
                 String Supplier_Code = SplitSupplierCode(Supplier);
                 String Supplier_Name = SplitSupplierName(Supplier);
                 float ratio = (float)entry2.getValue() / amount;
-                String formattedPercentage = String.format("%.1f%%", ratio * 100);
-                supplyRatioFormulaTable.setMaterialNumber(Material_Number);
+                String formattedPercentage = String.format("%1.1f%%", ratio * 100);
+
+                supplyRatioFormulaTable.setMaterialClass(Material_Class);
                 supplyRatioFormulaTable.setSupplierCode(Supplier_Code);
                 supplyRatioFormulaTable.setSupplierName(Supplier_Name);
                 supplyRatioFormulaTable.setSupplyProportion(formattedPercentage);
+                //todo 根据 Material_Class 查找计算方式，并将其输入
+//                supplyRatioFormulaTable.setProportionStatisticalMethod("数量");
+
+
                 insertSupplyRatioFormulaTable(supplyRatioFormulaTable);
             }
         }

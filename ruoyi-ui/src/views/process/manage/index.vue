@@ -160,7 +160,7 @@
       stripe
       @cell-mouse-enter="enter"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="ID" align="center" prop="id" /> -->
       <el-table-column label="序号" align="center" prop="id">
         <template slot-scope="scope">
@@ -775,7 +775,7 @@ export default {
             细分业务: project.subBusinesses,
             制度名称: "《" + fileNames.selectedFileNames + "》",
             制度等级: fileNames.selectedFileLeval,
-            流程名称:  "《" + project.name + "》",
+            流程名称: "《" + project.name + "》",
             流程等级: project.level,
             表单名称: "《" + fileNames.selectedFormsNames + "》",
           };
@@ -1215,8 +1215,19 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
 
         // // 按照updateDate字段进行排序
@@ -1244,8 +1255,20 @@ export default {
       this.loading = true;
       getProjectFileName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
+
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
 
         // // 按照updateDate字段进行排序

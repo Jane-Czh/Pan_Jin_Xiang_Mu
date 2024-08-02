@@ -6,13 +6,6 @@
         <div class="ef-tooltar">
           <el-link type="primary" :underline="false">{{ data.name }}</el-link>
           <el-divider direction="vertical"></el-divider>
-          <el-button
-            type="text"
-            icon="el-icon-delete"
-            size="large"
-            @click="deleteElement"
-            :disabled="!this.activeElement.type"
-          ></el-button>
 
           <!-- 流程json下载 -->
           <!-- <el-divider direction="vertical"></el-divider>
@@ -23,7 +16,7 @@
             @click="downloadData"
           ></el-button>  -->
 
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider> -->
           <!-- <el-button
             type="text"
             icon="el-icon-plus"
@@ -38,13 +31,7 @@
             @click="zoomSub"
           ></el-button>
           <el-divider direction="vertical"></el-divider> -->
-          <el-button
-            type="text"
-            icon="el-icon-document"
-            @click="openHelp"
-            size="mini"
-            >使用说明</el-button
-          >
+
           <!-- <el-divider direction="vertical"></el-divider> -->
 
           <!-- <el-button
@@ -75,7 +62,7 @@
             size="mini"
             >流程模板B</el-button
           > -->
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider> -->
 
           <el-button type="primary" plain size="mini" @click="toggleDialog"
             >自定义模板库</el-button
@@ -151,6 +138,26 @@
 
           <!-- 右侧button -->
           <div style="float: right; margin-right: 5px">
+            <el-divider direction="vertical"></el-divider>
+
+            <el-button
+              type="text"
+              icon="el-icon-document"
+              @click="openHelp"
+              size="mini"
+              >使用说明</el-button
+            >
+            <el-divider direction="vertical"></el-divider>
+            <!-- 删除节点、连线等 -->
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              size="large"
+              @click="deleteElement"
+              :disabled="!this.activeElement.type"
+            ></el-button>
+            <el-divider direction="vertical"></el-divider>
+
             <!-- <el-button type="primary" plain round @click="dataReloadC" icon="el-icon-refresh" size="mini">切换流程C</el-button> -->
             <el-button
               type="primary"
@@ -161,6 +168,7 @@
               size="mini"
               >自定义样式</el-button
             >
+            <el-divider direction="vertical"></el-divider>
             <!-- <el-button type="primary" plain round @click="dataReloadE" icon="el-icon-refresh" size="mini">力导图</el-button> -->
 
             <!-- 弹出面板 设置流程绑定文件(制度&表单) -->
@@ -185,6 +193,7 @@
               size="mini"
               >更改已绑定文件</el-button
             >
+            <el-divider direction="vertical"></el-divider>
             <!-- 对流程进行保存 v-hasPermi="['process:ef:add']" -->
             <el-button
               type="success"
@@ -261,7 +270,6 @@
                     :label="item"
                     :value="item"
                   />
-                
                 </el-select>
               </el-form-item>
 
@@ -276,7 +284,6 @@
                     :label="level"
                     :value="level"
                   ></el-option>
-                  
                 </el-select>
               </el-form-item>
               <!-- -------------------------------------------------- -->
@@ -515,7 +522,6 @@ import {
 import { listModuless } from "@/api/function/modules";
 //细分业务api
 import { listBusinessess } from "@/api/function/businesses";
-
 
 export default {
   name: "Project",

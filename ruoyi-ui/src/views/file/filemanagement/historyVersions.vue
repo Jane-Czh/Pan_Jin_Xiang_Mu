@@ -1,170 +1,164 @@
 <template>
   <div class="app-container">
-    <el-collapse v-model="activeNames" >
-      <el-collapse-item title="制度检索" name="search">
-        <div>
-          <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
-                   label-width="68px">
-            <el-form-item label="制度标题" prop="regulationsTitle">
-              <el-input
-                v-model="queryParams.regulationsTitle"
-                placeholder="请输入制度标题"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="适用范围" prop="useScope">
-              <el-input
-                v-model="queryParams.useScope"
-                placeholder="请输入适用范围"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="上传日期" prop="uploadDate">
-              <el-date-picker clearable
-                              v-model="queryParams.uploadDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择上传日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="生效日期" prop="effectiveDate">
-              <el-date-picker clearable
-                              v-model="queryParams.effectiveDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择生效日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="文件名称" prop="fileName">
-              <el-input
-                v-model="queryParams.fileName"
-                placeholder="请输入文件名称"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <!--            <el-form-item label="文件路径" prop="filePath">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.filePath"-->
-            <!--                placeholder="请输入文件路径"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
-<!--            <el-form-item label="文件类型" prop="fileType">-->
-<!--              <el-input-->
-<!--                v-model="queryParams.fileType"-->
-<!--                placeholder="请输入文件类型"-->
-<!--                clearable-->
-<!--                @keyup.enter.native="handleQuery"-->
-<!--              />-->
-<!--            </el-form-item>-->
-            <!--            <el-form-item label="文件大小" prop="fileSize">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.fileSize"-->
-            <!--                placeholder="请输入文件大小"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
-            <el-form-item label="制度创建日期" prop="createDate">
-              <el-date-picker clearable
-                              v-model="queryParams.createDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择制度创建日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="制度上传人" prop="createUsername">
-              <el-input
-                v-model="queryParams.uploadUsername"
-                placeholder="请输入制度创建人"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度使用状态" prop="useState">
-              <el-input
-                v-model="queryParams.useState"
-                placeholder="请输入制度使用状态"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度所属科室" prop="departmentCategory">
-              <el-input
-                v-model="queryParams.departmentCategory"
-                placeholder="请输入制度所属科室"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
-              <el-input
-                v-model="queryParams.mainResponsibleDepartment"
-                placeholder="请输入制度主责部门"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
-              <el-input
-                v-model="queryParams.classificationOfSpecialties"
-                placeholder="请输入制度专业分类"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度等级" prop="regulationLeval">
-              <el-input
-                v-model="queryParams.regulationLeval"
-                placeholder="请输入制度等级"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度编号" prop="regulationNumber">
-              <el-input
-                v-model="queryParams.regulationNumber"
-                placeholder="请输入制度编号"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="制度标签名称" prop="fileTag">
-              <el-input
-                v-model="queryParams.fileTag"
-                placeholder="请输入制度标签名称"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <!--            <el-form-item label="修订时间" prop="revisionDate">-->
-            <!--              <el-date-picker clearable-->
-            <!--                              v-model="queryParams.revisionDate"-->
-            <!--                              type="date"-->
-            <!--                              value-format="yyyy-MM-dd"-->
-            <!--                              placeholder="请选择修订时间">-->
-            <!--              </el-date-picker>-->
-            <!--            </el-form-item>-->
-            <!--            <el-form-item label="修订人" prop="reviser">-->
-            <!--              <el-input-->
-            <!--                v-model="queryParams.reviser"-->
-            <!--                placeholder="请输入修订人"-->
-            <!--                clearable-->
-            <!--                @keyup.enter.native="handleQuery"-->
-            <!--              />-->
-            <!--            </el-form-item>-->
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-collapse-item>
-    </el-collapse>
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
+             label-width="68px">
+      <el-form-item label="制度标题" prop="regulationsTitle">
+        <el-input
+          v-model="queryParams.regulationsTitle"
+          placeholder="请输入制度标题"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="适用范围" prop="useScope">
+        <el-input
+          v-model="queryParams.useScope"
+          placeholder="请输入适用范围"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="上传日期" prop="uploadDate">
+        <el-date-picker clearable
+                        v-model="queryParams.uploadDate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择上传日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="生效日期" prop="effectiveDate">
+        <el-date-picker clearable
+                        v-model="queryParams.effectiveDate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择生效日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="文件名称" prop="fileName">
+        <el-input
+          v-model="queryParams.fileName"
+          placeholder="请输入文件名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <!--            <el-form-item label="文件路径" prop="filePath">-->
+      <!--              <el-input-->
+      <!--                v-model="queryParams.filePath"-->
+      <!--                placeholder="请输入文件路径"-->
+      <!--                clearable-->
+      <!--                @keyup.enter.native="handleQuery"-->
+      <!--              />-->
+      <!--            </el-form-item>-->
+      <!--            <el-form-item label="文件类型" prop="fileType">-->
+      <!--              <el-input-->
+      <!--                v-model="queryParams.fileType"-->
+      <!--                placeholder="请输入文件类型"-->
+      <!--                clearable-->
+      <!--                @keyup.enter.native="handleQuery"-->
+      <!--              />-->
+      <!--            </el-form-item>-->
+      <!--            <el-form-item label="文件大小" prop="fileSize">-->
+      <!--              <el-input-->
+      <!--                v-model="queryParams.fileSize"-->
+      <!--                placeholder="请输入文件大小"-->
+      <!--                clearable-->
+      <!--                @keyup.enter.native="handleQuery"-->
+      <!--              />-->
+      <!--            </el-form-item>-->
+      <el-form-item label="制度创建日期" prop="createDate">
+        <el-date-picker clearable
+                        v-model="queryParams.createDate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择制度创建日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="制度上传人" prop="createUsername">
+        <el-input
+          v-model="queryParams.uploadUsername"
+          placeholder="请输入制度创建人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度使用状态" prop="useState">
+        <el-input
+          v-model="queryParams.useState"
+          placeholder="请输入制度使用状态"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度所属科室" prop="departmentCategory">
+        <el-input
+          v-model="queryParams.departmentCategory"
+          placeholder="请输入制度所属科室"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
+        <el-input
+          v-model="queryParams.mainResponsibleDepartment"
+          placeholder="请输入制度主责部门"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+        <el-input
+          v-model="queryParams.classificationOfSpecialties"
+          placeholder="请输入制度专业分类"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度等级" prop="regulationLeval">
+        <el-input
+          v-model="queryParams.regulationLeval"
+          placeholder="请输入制度等级"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度编号" prop="regulationNumber">
+        <el-input
+          v-model="queryParams.regulationNumber"
+          placeholder="请输入制度编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制度标签名称" prop="fileTag">
+        <el-input
+          v-model="queryParams.fileTag"
+          placeholder="请输入制度标签名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <!--            <el-form-item label="修订时间" prop="revisionDate">-->
+      <!--              <el-date-picker clearable-->
+      <!--                              v-model="queryParams.revisionDate"-->
+      <!--                              type="date"-->
+      <!--                              value-format="yyyy-MM-dd"-->
+      <!--                              placeholder="请选择修订时间">-->
+      <!--              </el-date-picker>-->
+      <!--            </el-form-item>-->
+      <!--            <el-form-item label="修订人" prop="reviser">-->
+      <!--              <el-input-->
+      <!--                v-model="queryParams.reviser"-->
+      <!--                placeholder="请输入修订人"-->
+      <!--                clearable-->
+      <!--                @keyup.enter.native="handleQuery"-->
+      <!--              />-->
+      <!--            </el-form-item>-->
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -313,9 +307,8 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:filemanagement:edit']"
-            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >
-            更新
+            修改
           </el-button>
           <el-button
             size="mini"
@@ -323,7 +316,6 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
-            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >
             删除
           </el-button>

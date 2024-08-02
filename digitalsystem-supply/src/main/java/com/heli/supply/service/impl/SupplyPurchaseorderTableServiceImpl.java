@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.alibaba.excel.util.ListUtils;
 import com.heli.supply.utils.ExcelUtils;
 import com.heli.supply.utils.GenerateId;
 import com.ruoyi.common.exception.ServiceException;
@@ -26,19 +27,35 @@ public class SupplyPurchaseorderTableServiceImpl implements ISupplyPurchaseorder
     @Autowired
     private SupplyPurchaseorderTableMapper supplyPurchaseorderTableMapper;
 
+    private static final int BATCH_COUNT = 5000; // 批处理数量
+    //缓存一批数据
+    private List<SupplyPurchaseorderTable> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+
 
     @Override
     public void importInterests(MultipartFile excelFile) throws IOException {
-        SupplyPurchaseorderTable supplyPurchaseorderTable = new SupplyPurchaseorderTable();
+
         InputStream is = null;
         try {
             List<SupplyPurchaseorderTable> SupplyPurchaseorderTables = ExcelUtils.parseExcel2SupplyPurchaseorderTable(excelFile);
 
             int i = 0;
+
             while (i < SupplyPurchaseorderTables.size()){
-                supplyPurchaseorderTable = SupplyPurchaseorderTables.get(i);
-                insertSupplyPurchaseorderTable(supplyPurchaseorderTable);
+//                supplyPurchaseorderTable = SupplyPurchaseorderTables.get(i);
+//                insertSupplyPurchaseorderTable(supplyPurchaseorderTable);
+                cachedDataList.add(SupplyPurchaseorderTables.get(i));
+                if (cachedDataList.size() >= BATCH_COUNT) {
+                    supplyPurchaseorderTableMapper.batchInsert(cachedDataList);
+                    cachedDataList.clear();
+                    System.out.println("插入一轮");
+                }
                 i++;
+            }
+
+            if (cachedDataList.size() > 0){
+                supplyPurchaseorderTableMapper.batchInsert(cachedDataList);
+                cachedDataList.clear();
             }
 
         } catch (IOException e) {

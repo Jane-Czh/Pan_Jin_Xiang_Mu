@@ -59,6 +59,8 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
         long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
         long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
         qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
+        qualityInspectionRecord.setElectricCarPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getElectricCarProblemVehicles() / (double) qualityInspectionRecord.getElectricCarProductionQuantity()) * 100));
+        qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getK2largetonnageProblemVehicles() / (double) qualityInspectionRecord.getK2largetonnageProductionQuantity()) * 100));
 
         log.info(String.valueOf("读取质检表并计算" + qualityInspectionRecord));
         qualityInspectionRecordMapper.insertQualityInspectionRecord(qualityInspectionRecord);
@@ -100,6 +102,11 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
     @Override
     public int insertQualityInspectionRecord(QualityInspectionRecord qualityInspectionRecord) {
         qualityInspectionRecord.setCreateTime(DateUtils.getNowDate());
+        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
+        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
+        qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
+        qualityInspectionRecord.setElectricCarPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getElectricCarProblemVehicles() / (double) qualityInspectionRecord.getElectricCarProductionQuantity()) * 100));
+        qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getK2largetonnageProblemVehicles() / (double) qualityInspectionRecord.getK2largetonnageProductionQuantity()) * 100));
         return qualityInspectionRecordMapper.insertQualityInspectionRecord(qualityInspectionRecord);
     }
 
@@ -112,6 +119,13 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
     @Override
     public int updateQualityInspectionRecord(QualityInspectionRecord qualityInspectionRecord) {
         qualityInspectionRecord.setUpdateTime(DateUtils.getNowDate());
+        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
+        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
+        qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
+        qualityInspectionRecord.setElectricCarPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getElectricCarProblemVehicles() / (double) qualityInspectionRecord.getElectricCarProductionQuantity()) * 100));
+        qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getK2largetonnageProblemVehicles() / (double) qualityInspectionRecord.getK2largetonnageProductionQuantity()) * 100));
+
+
         return qualityInspectionRecordMapper.updateQualityInspectionRecord(qualityInspectionRecord);
     }
 

@@ -84,6 +84,14 @@ public class FinancialInterestsTableController extends BaseController {
         return AjaxResult.success(sumInfoByYear);
     }
 
+    @PreAuthorize("@ss.hasPermi('financial:interests:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectInterestsSumInfoByYear() {
+        FinancialInterestsTable sumInfoByYear = financialInterestsTableService.selectMaxMonthInterests();
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+
 
     /**
      * 查询财务-利润列表

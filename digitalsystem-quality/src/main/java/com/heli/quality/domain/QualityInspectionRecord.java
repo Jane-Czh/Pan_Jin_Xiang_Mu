@@ -77,6 +77,18 @@ public class QualityInspectionRecord extends BaseEntity {
     private Long k2largetonnageProblemVehicles;
 
     /**
+     * 电车一次交检合格率
+     */
+    @Excel(name = "电车一次交检合格率")
+    private BigDecimal electricCarPassRate;
+
+    /**
+     * 大吨位一次交检合格率
+     */
+    @Excel(name = "大吨位一次交检合格率")
+    private BigDecimal largeTonPassRate;
+
+    /**
      * 电车、大吨位一次交检合格率
      */
     @Excel(name = "电车、大吨位一次交检合格率")

@@ -69,7 +69,7 @@ public class FinancialInterestsTable extends BaseEntity {
     private BigDecimal cogsFreight;
 
     /**
-     * 主营业务成本-运费
+     * 主营业务成本-差异
      */
     @RecordTemplate(rowNo = 11, columnNo = 1, comment = FillCommentEnum.EMPTY, name = "主营业务成本-运费")
     private BigDecimal cogsVariation;

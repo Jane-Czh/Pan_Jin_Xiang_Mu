@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.common.indicator.mapper.IndicatorsTargetMapper">
+
+    <resultMap type="IndicatorsTarget" id="IndicatorsTargetResult">
+        <result property="itId"    column="it_id"    />
+        <result property="indicatorNameCn"    column="indicator_name_cn"    />
+        <result property="indicatorName"    column="indicator_name"    />
+        <result property="indicatorDept"    column="indicator_dept"    />
+        <result property="natureYear"    column="nature_year"    />
+        <result property="targetValue"    column="target_value"    />
+        <result property="targetLowerLimit"    column="target_lower_limit"    />
+        <result property="targetUpperLimit"    column="target_upper_limit"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectIndicatorsTargetVo">
+        select it_id, indicator_name_cn, indicator_name, indicator_dept, nature_year, target_value, target_lower_limit, target_upper_limit, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from indicators_target
+    </sql>
+
+    <select id="selectIndicatorsTargetList" parameterType="IndicatorsTarget" resultMap="IndicatorsTargetResult">
+        <include refid="selectIndicatorsTargetVo"/>
+        <where>
+            <if test="indicatorNameCn != null  and indicatorNameCn != ''"> and indicator_name_cn = #{indicatorNameCn}</if>
+            <if test="indicatorName != null  and indicatorName != ''"> and indicator_name = #{indicatorName}</if>
+            <if test="indicatorDept != null  and indicatorDept != ''"> and indicator_dept = #{indicatorDept}</if>
+            <if test="natureYear != null "> and nature_year = #{natureYear}</if>
+            <if test="targetValue != null "> and target_value = #{targetValue}</if>
+            <if test="targetLowerLimit != null "> and target_lower_limit = #{targetLowerLimit}</if>
+            <if test="targetUpperLimit != null "> and target_upper_limit = #{targetUpperLimit}</if>
+            <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null "> and UPDATE_TIME = #{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectIndicatorsTargetByItId" parameterType="Long" resultMap="IndicatorsTargetResult">
+        <include refid="selectIndicatorsTargetVo"/>
+        where it_id = #{itId}
+    </select>
+
+    <insert id="insertIndicatorsTarget" parameterType="IndicatorsTarget" useGeneratedKeys="true" keyProperty="itId">
+        insert into indicators_target
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="indicatorNameCn != null">indicator_name_cn,</if>
+            <if test="indicatorName != null">indicator_name,</if>
+            <if test="indicatorDept != null">indicator_dept,</if>
+            <if test="natureYear != null">nature_year,</if>
+            <if test="targetValue != null">target_value,</if>
+            <if test="targetLowerLimit != null">target_lower_limit,</if>
+            <if test="targetUpperLimit != null">target_upper_limit,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="indicatorNameCn != null">#{indicatorNameCn},</if>
+            <if test="indicatorName != null">#{indicatorName},</if>
+            <if test="indicatorDept != null">#{indicatorDept},</if>
+            <if test="natureYear != null">#{natureYear},</if>
+            <if test="targetValue != null">#{targetValue},</if>
+            <if test="targetLowerLimit != null">#{targetLowerLimit},</if>
+            <if test="targetUpperLimit != null">#{targetUpperLimit},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateIndicatorsTarget" parameterType="IndicatorsTarget">
+        update indicators_target
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="indicatorNameCn != null">indicator_name_cn = #{indicatorNameCn},</if>
+            <if test="indicatorName != null">indicator_name = #{indicatorName},</if>
+            <if test="indicatorDept != null">indicator_dept = #{indicatorDept},</if>
+            <if test="natureYear != null">nature_year = #{natureYear},</if>
+            <if test="targetValue != null">target_value = #{targetValue},</if>
+            <if test="targetLowerLimit != null">target_lower_limit = #{targetLowerLimit},</if>
+            <if test="targetUpperLimit != null">target_upper_limit = #{targetUpperLimit},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where it_id = #{itId}
+    </update>
+
+    <delete id="deleteIndicatorsTargetByItId" parameterType="Long">
+        delete from indicators_target where it_id = #{itId}
+    </delete>
+
+    <delete id="deleteIndicatorsTargetByItIds" parameterType="String">
+        delete from indicators_target where it_id in
+        <foreach item="itId" collection="array" open="(" separator="," close=")">
+            #{itId}
+        </foreach>
+    </delete>
+</mapper>

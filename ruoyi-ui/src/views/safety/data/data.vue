@@ -48,7 +48,8 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
@@ -123,7 +124,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
@@ -140,7 +141,7 @@ export default {
       showDialog: false,
       progress: 0,
       selectedType: '',
-
+      isLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -186,14 +187,14 @@ export default {
         curEquipmentFailuresTotaltime: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         curEquipmentReplacementCost: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -208,7 +209,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      window.location.href = 'http://172.19.8.85:8080/profile/upload/2024/07/29/维修数据样表_20240729123751A006.xlsx';
+      const url = "/profile/modelFile/维修数据样表.xlsx";
+      handleTrueDownload(url);
     },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
@@ -357,6 +359,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         const aimUrl = `/safety/data/import`
@@ -374,6 +377,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
+            this.isLoading = false;
           });
       }
     },

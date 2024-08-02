@@ -483,7 +483,7 @@ export default {
             this.showDialog = false; // 关闭上传面板
             this.$message.success("上传成功");
             location.reload(); // 刷新页面数据
-          }, 2000); // 2000毫秒后执行
+          }, 5000); // 2000毫秒后执行
         })
         .catch(error => {
           // 处理错误

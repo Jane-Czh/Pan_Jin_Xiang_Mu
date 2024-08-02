@@ -79,6 +79,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <!-- 批量插入的 SQL 语句 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO supply_purchaseorder_table (SP_ID, CREATED_BY, CREATED_TIME, Document_Date, Purchasing_Documents, Material_Number, Collective_Procurement, ShortText, Unit, Quantity, Order_NetValue, Supplier)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.spId},
+            #{item.createdBy},
+            #{item.createdTime},
+            #{item.documentDate},
+            #{item.purchasingDocuments},
+            #{item.materialNumber},
+            #{item.collectiveProcurement},
+            #{item.ShortText},
+            #{item.Unit},
+            #{item.Quantity},
+            #{item.orderNetvalue},
+            #{item.Supplier}
+            )
+        </foreach>
+    </insert>
+
     <update id="updateSupplyPurchaseorderTable" parameterType="SupplyPurchaseorderTable">
         update Supply_PurchaseOrder_table
         <trim prefix="SET" suffixOverrides=",">

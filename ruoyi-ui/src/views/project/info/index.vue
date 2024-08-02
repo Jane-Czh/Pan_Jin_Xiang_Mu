@@ -243,7 +243,7 @@
           plain
           size="mini"
           @click="dialogVisible = true"
-           v-hasPermi="['updata_recode:recode:export']"
+           v-hasPermi="['updata_recode:recode:list']"
         >更新历史记录</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>

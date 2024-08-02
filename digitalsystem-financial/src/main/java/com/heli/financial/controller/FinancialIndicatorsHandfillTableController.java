@@ -127,6 +127,12 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //        logger.info("sumInfoByYear: " + sumInfoByYear);
         return AjaxResult.success(sumInfoByYear);
     }
+    @PreAuthorize("@ss.hasPermi('financial:fill:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectMaxMonthHandfill() {
+        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectMaxMonthHandfill();
+        return AjaxResult.success(sumInfoByYear);
+    }
 
 
     /**

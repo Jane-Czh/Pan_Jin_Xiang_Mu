@@ -23,6 +23,9 @@ public interface IFinancialInterestsTableService {
 
     FinancialInterestsTable selectInterestsSumInfoByYear(Date yearAndMonth);
 
+    FinancialInterestsTable selectMaxMonthInterests();
+
+
 
     /**
      * @description: 利润表导入

@@ -216,6 +216,7 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名称" align="center" prop="fileName" />
+      <el-table-column label="文件来源" align="center" prop="reviser" />
       <!-- <el-table-column label="文件路径" align="center" prop="filePath">
         <template slot-scope="scope">
           <a :href="scope.row.filePath" download>点击下载</a>
@@ -236,23 +237,23 @@
 
       <el-table-column label="文件类型" align="center" prop="fileType" />
       <!--      <el-table-column label="文件大小" align="center" prop="fileSize" />-->
-      <el-table-column
-        label="文件创建日期"
-        align="center"
-        prop="createDate"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        label="文件创建日期"-->
+<!--        align="center"-->
+<!--        prop="createDate"-->
+<!--        width="180"-->
+<!--      >-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.createDate, "{y}-{m}-{d}") }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
         label="文件上传人"
         align="center"
         prop="uploadUsername"
       />
       <!--      <el-table-column label="制度使用状态" align="center" prop="useState" />-->
-      <!--      <el-table-column label="制度所属科室" align="center" prop="departmentCategory" />-->
+            <el-table-column label="发送单位" align="center" prop="departmentCategory" />
       <!--      <el-table-column label="制度标签名称" align="center" prop="fileTag" />-->
       <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId" />-->
       <!--      <el-table-column label="修订时间" align="center" prop="revisionDate" width="180">-->
@@ -261,7 +262,7 @@
       <!--        </template>-->
       <!--      </el-table-column>-->
       <!--      <el-table-column label="修订内容" align="center" prop="revisionContent" />-->
-      <!--      <el-table-column label="修订人" align="center" prop="reviser" />-->
+
       <!--      <el-table-column label="标志位(是否为最新文件)" align="center" prop="newFlag" />-->
       <!--      <el-table-column label="该制度下一制度id" align="center" prop="newRegulationsId" />-->
       <el-table-column
@@ -369,6 +370,30 @@
               <el-input
                 v-model="form.regulationsTitle"
                 placeholder="请输入标题"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="文件来源" prop="reviser">
+              <el-input
+                v-model="form.reviser"
+                placeholder="请输入文件来源"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="文件上传人" prop="uploadUsername">
+              <el-input
+                v-model="form.uploadUsername"
+                placeholder="请输入文件上传人"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="发送单位" prop="departmentCategory">
+              <el-input
+                v-model="form.departmentCategory"
+                placeholder="请输入发送单位"
               />
             </el-form-item>
           </el-col>
@@ -902,7 +927,6 @@ export default {
     },
     /** 上传文件提交按钮 */
     uploadSubmitForm() {
-
       if (this.form.fileName === null) {
         this.$modal.msgWarning("请上传文件");
         return;
@@ -920,7 +944,7 @@ export default {
       }).then(() => {
         this.fileList = [];
         })
-      
+      this.fileList = [];
     },
     /** 修改文件提交按钮 */
     modifySubmitForm() {
@@ -1067,7 +1091,7 @@ export default {
       // 获取当前时间作为上传日期，并填充到对应的输入框
       const currentDate = new Date();
       this.form.uploadDate = currentDate.toISOString().split("T")[0];
-      this.getUserInfo();
+      // this.getUserInfo();
     },
     // 上传成功回调
     handleUploadSuccess(res, file) {
@@ -1166,6 +1190,8 @@ export default {
 
       // 根据文件后缀名判断文件类型
       switch (fileExtension.toLowerCase()) {
+        case "jpg":
+          return "图片";
         case "pdf":
           return "pdf";
         case "doc":
@@ -1183,30 +1209,32 @@ export default {
       }
     },
     // 调用接口获取用户信息
-    getUserInfo() {
-      getUserProfile()
-        .then((response) => {
-          // 处理成功的情况
-          console.log("成功获取用户信息:", response.data);
-          const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
-          // 填充到对应的输入框中
-          this.form.uploadUsername = userInfo.userName;
-          //根据部门id获取部门名称
-          getDept(userInfo.deptId).then((response) => {
-            const deptInfo = response.data;
-            this.form.departmentCategory = deptInfo.deptName;
-          });
-        })
-        .catch((error) => {
-          // 处理失败的情况
-          console.error("获取用户信息失败:", error);
-        });
-    },
+    // getUserInfo() {
+    //   getUserProfile()
+    //     .then((response) => {
+    //       // 处理成功的情况
+    //       console.log("成功获取用户信息:", response.data);
+    //       const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+    //       // 填充到对应的输入框中
+    //       // this.form.uploadUsername = userInfo.userName;
+    //       //根据部门id获取部门名称
+    //       getDept(userInfo.deptId).then((response) => {
+    //         const deptInfo = response.data;
+    //         // this.form.departmentCategory = deptInfo.deptName;
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       // 处理失败的情况
+    //       console.error("获取用户信息失败:", error);
+    //     });
+    // },
     //文件预览
     previewFile(filePath) {
+      // 获取文件类型
       const fileType = this.getFileType(filePath);
       console.log("filePath:", filePath);
       console.log("fileType:", fileType);
+      if (fileType === 'pdf' || fileType === 'word') {
       switch (fileType) {
         case "pdf":
           console.log("fileType1111:", fileType);
@@ -1220,13 +1248,15 @@ export default {
           word2Pdf(filePath, pdfFilePath).then((response) => {});
           window.open(pdfFilePath, "_blank");
           break;
-        // this.convertToPdfPath(filePath).then(pdfFilePath => {
-        //   console.log("pdfFilePath:",pdfFilePath);
-        //   window.open(pdfFilePath, '_blank');
-        // });
-        // break;
       }
       // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
+    }else {
+        // 如果文件类型既不是 'pdf' 也不是 'word'，给出提示信息
+        this.$message({
+          message: '无法预览此文件类型',
+          type: 'warning'
+        });
+      }
     },
     convertToPdfPath(wordFilePath) {
       // 找到文件路径中的最后一个点的位置

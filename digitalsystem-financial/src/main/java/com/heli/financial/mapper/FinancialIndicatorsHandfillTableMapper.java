@@ -27,6 +27,7 @@ public interface FinancialIndicatorsHandfillTableMapper {
 
     FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(@Param("yearAndMonth") Date yearAndMonth);
     FinancialIndicatorsHandfillTable selectHandfillRateByYear(@Param("yearAndMonth") Date yearAndMonth);
+    FinancialIndicatorsHandfillTable selectMaxMonthHandfill();
 
     /**
      * @description: 按月查询手动填报数据

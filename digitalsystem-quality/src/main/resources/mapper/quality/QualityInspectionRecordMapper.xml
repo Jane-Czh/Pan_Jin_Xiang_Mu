@@ -13,6 +13,8 @@
         <result property="electricCarProblemVehicles"    column="Electric_Car_Problem_Vehicles"    />
         <result property="k2lessthan5tonProblemVehicles"    column="K2LessThan5Ton_Problem_Vehicles"    />
         <result property="k2largetonnageProblemVehicles"    column="K2LargeTonnage_Problem_Vehicles"    />
+        <result property="electricCarPassRate"    column="Electric_Car_Pass_Rate"    />
+        <result property="largeTonPassRate"    column="LargeTon_Pass_Rate"    />
         <result property="singleInspectionPassRate"    column="Single_Inspection_Pass_Rate"    />
         <result property="createBy"    column="CREATE_BY"    />
         <result property="createTime"    column="CREATE_TIME"    />
@@ -21,7 +23,7 @@
     </resultMap>
 
     <sql id="selectQualityInspectionRecordVo">
-        select QI_ID, Year_And_Month, Electric_Car_Production_Quantity, K2LessThan5Ton_Production_Quantity, K2LargeTonnage_Production_Quantity, Electric_Car_Problem_Vehicles, K2LessThan5Ton_Problem_Vehicles, K2LargeTonnage_Problem_Vehicles, Single_Inspection_Pass_Rate, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_Inspection_Record
+        select QI_ID, Year_And_Month, Electric_Car_Production_Quantity, K2LessThan5Ton_Production_Quantity, K2LargeTonnage_Production_Quantity, Electric_Car_Problem_Vehicles, K2LessThan5Ton_Problem_Vehicles, K2LargeTonnage_Problem_Vehicles, Electric_Car_Pass_Rate, LargeTon_Pass_Rate, Single_Inspection_Pass_Rate, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_Inspection_Record
     </sql>
 
     <!--  检查当月数据是否上传，不允许重复上传  -->
@@ -40,6 +42,8 @@
             <if test="electricCarProblemVehicles != null "> and Electric_Car_Problem_Vehicles = #{electricCarProblemVehicles}</if>
             <if test="k2lessthan5tonProblemVehicles != null "> and K2LessThan5Ton_Problem_Vehicles = #{k2lessthan5tonProblemVehicles}</if>
             <if test="k2largetonnageProblemVehicles != null "> and K2LargeTonnage_Problem_Vehicles = #{k2largetonnageProblemVehicles}</if>
+            <if test="electricCarPassRate != null "> and Electric_Car_Pass_Rate = #{electricCarPassRate}</if>
+            <if test="largeTonPassRate != null "> and LargeTon_Pass_Rate = #{largeTonPassRate}</if>
             <if test="singleInspectionPassRate != null "> and Single_Inspection_Pass_Rate = #{singleInspectionPassRate}</if>
             <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
@@ -64,6 +68,8 @@
             <if test="electricCarProblemVehicles != null">Electric_Car_Problem_Vehicles,</if>
             <if test="k2lessthan5tonProblemVehicles != null">K2LessThan5Ton_Problem_Vehicles,</if>
             <if test="k2largetonnageProblemVehicles != null">K2LargeTonnage_Problem_Vehicles,</if>
+            <if test="electricCarPassRate != null">Electric_Car_Pass_Rate,</if>
+            <if test="largeTonPassRate != null">LargeTon_Pass_Rate,</if>
             <if test="singleInspectionPassRate != null">Single_Inspection_Pass_Rate,</if>
             <if test="createBy != null">CREATE_BY,</if>
             <if test="createTime != null">CREATE_TIME,</if>
@@ -79,6 +85,8 @@
             <if test="electricCarProblemVehicles != null">#{electricCarProblemVehicles},</if>
             <if test="k2lessthan5tonProblemVehicles != null">#{k2lessthan5tonProblemVehicles},</if>
             <if test="k2largetonnageProblemVehicles != null">#{k2largetonnageProblemVehicles},</if>
+            <if test="electricCarPassRate != null">#{electricCarPassRate},</if>
+            <if test="largeTonPassRate != null">#{largeTonPassRate},</if>
             <if test="singleInspectionPassRate != null">#{singleInspectionPassRate},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -97,6 +105,8 @@
             <if test="electricCarProblemVehicles != null">Electric_Car_Problem_Vehicles = #{electricCarProblemVehicles},</if>
             <if test="k2lessthan5tonProblemVehicles != null">K2LessThan5Ton_Problem_Vehicles = #{k2lessthan5tonProblemVehicles},</if>
             <if test="k2largetonnageProblemVehicles != null">K2LargeTonnage_Problem_Vehicles = #{k2largetonnageProblemVehicles},</if>
+            <if test="electricCarPassRate != null">Electric_Car_Pass_Rate = #{electricCarPassRate},</if>
+            <if test="largeTonPassRate != null">LargeTon_Pass_Rate = #{largeTonPassRate},</if>
             <if test="singleInspectionPassRate != null">Single_Inspection_Pass_Rate = #{singleInspectionPassRate},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>

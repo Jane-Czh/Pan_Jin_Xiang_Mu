@@ -202,7 +202,10 @@ import CustomFiles from "./CustomFiles.vue";
 // import { listFilemanagement } from "@/api/file/filemanagement";
 // // 表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
 
 import { compareProjects } from "@/api/system/project";
 //更新数据api
@@ -1024,7 +1027,6 @@ export default {
         //   projectData
         // );
 
-        
         // 创建保存节点和连线的请求数组
         const nodePromises = nodeData.map((node) => saveNode(node));
         const linePromises = lineData.map((line) => saveLine(line));
@@ -1082,6 +1084,18 @@ export default {
             : JSON.stringify(this.idsRegulation), //制度文件ids
         type:
           this.idsForm == null ? this.idsForm : JSON.stringify(this.idsForm), //表单文件ids
+
+        //0731新增
+        number: this.oriData.number,
+        department: this.oriData.department,
+        level: this.oriData.level,
+        purpose: this.oriData.purpose,
+        applicationScope: this.oriData.applicationScope,
+
+        //业务模块
+        businessesModules: this.oriData.businessesModules,
+        //细分业务
+        subBusinesses: this.oriData.subBusinesses,
       };
 
       const nodeData = data.nodeList.map((node) => ({
@@ -1099,7 +1113,6 @@ export default {
         description: node.description,
         operationalStaff: node.operationalStaff,
         date: node.date,
-
       }));
 
       const lineData = data.lineList.map((line) => ({

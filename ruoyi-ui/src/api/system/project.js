@@ -248,10 +248,20 @@ export function listFormfilemanagement(query) {
 
 
 
-// 查询部门详细
+// 通过depId查询部门详细
 export function getDept(deptId) {
   return request({
     url: '/system/dept/dept/' + deptId,
     method: 'get'
   })
 }
+
+//直接获取部门list
+export function listDept(query) {
+  return request({
+    url: '/system/dept/dept/list',
+    method: 'get',
+    params: query
+  })
+}
+

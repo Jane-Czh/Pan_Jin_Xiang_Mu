@@ -55,6 +55,15 @@
         where Year_And_Month = #{date}
     </select>
 
+    <!--  获取年月最大的数据  -->
+    <select id="selectMaxMonthMetrics" resultMap="QualityIndicatorsMetricsResult">
+        <include refid="selectQualityIndicatorsMetricsVo"/>
+        where Year_And_Month IN (
+        SELECT MAX(Year_And_Month)
+        FROM Quality_Indicators_Metrics
+        )
+    </select>
+
 
 
 

@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface QualityIndicatorsHandfillTableMapper {
 
+    QualityIndicatorsHandfillTable selectMaxMonthHandfill();
+
 
     Boolean checkQualityFillingDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);
 

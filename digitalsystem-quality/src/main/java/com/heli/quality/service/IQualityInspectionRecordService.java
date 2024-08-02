@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IQualityInspectionRecordService {
 
+    QualityInspectionRecord selectMaxMonthInspection();
+
 
     void importQualityInspectionTable(MultipartFile excelFile, Date yearAndMonth,String userName) throws IOException;
 

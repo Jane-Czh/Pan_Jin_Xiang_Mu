@@ -31,6 +31,15 @@
         select count(1) from Quality_Inspection_Record where Year_And_Month = #{yearAndMonth}
     </select>
 
+    <!--  获取年月最大的数据  -->
+    <select id="selectMaxMonthInspection" resultMap="QualityInspectionRecordResult">
+        <include refid="selectQualityInspectionRecordVo"/>
+        where Year_And_Month IN (
+            SELECT MAX(Year_And_Month)
+            FROM Quality_Inspection_Record
+        )
+    </select>
+
 
     <select id="selectQualityInspectionRecordList" parameterType="QualityInspectionRecord" resultMap="QualityInspectionRecordResult">
         <include refid="selectQualityInspectionRecordVo"/>

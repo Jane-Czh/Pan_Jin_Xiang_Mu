@@ -3,6 +3,7 @@ package com.heli.quality.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +29,26 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2024-04-26
  */
+@Slf4j
 @RestController
 @RequestMapping("/quality/data/handfill")
 public class QualityIndicatorsHandfillTableController extends BaseController {
     @Autowired
     private IQualityIndicatorsHandfillTableService qualityIndicatorsHandfillTableService;
 
+
+    /**
+     * @description: 获取最大年月的数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('quality:data:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectMaxMonthHandfill() {
+        QualityIndicatorsHandfillTable infoMaxMonth = qualityIndicatorsHandfillTableService.selectMaxMonthHandfill();
+        log.info("填报最大数据:{}", infoMaxMonth);
+        return AjaxResult.success(infoMaxMonth);
+    }
 
     /**
      * 查询[质量]指标填报列表

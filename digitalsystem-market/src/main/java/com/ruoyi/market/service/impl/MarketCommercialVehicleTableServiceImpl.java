@@ -36,39 +36,62 @@ public class MarketCommercialVehicleTableServiceImpl implements IMarketCommercia
     @Autowired
     private MarketCommercialVehicleTableMapper marketCommercialVehicleTableMapper;
 
-    @Override
-    public int CVimportInterests(MultipartFile excelFile) throws IOException {
-        MarketCommercialVehicleTable marketCommercialVehicleTable;
-        InputStream is = null;
-        try {
-            List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
-            int i = 0;
-            while (i < marketCommercialVehicleTables.size()){
-                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
-                }
-                Long MCV_id = GenerateId.getNextId(lastid);
-                marketCommercialVehicleTable.setMcvId(MCV_id);
-                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
-                if (marketCommercialVehicleTable.getVehicleModel() == null){
-                    continue;
-                }
-                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
-                i++;
+//    @Override
+//    public int CVimportInterests(MultipartFile excelFile) throws IOException {
+//        MarketCommercialVehicleTable marketCommercialVehicleTable;
+//        InputStream is = null;
+//        try {
+//            List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
+//            int i = 0;
+//            while (i < marketCommercialVehicleTables.size()){
+//                marketCommercialVehicleTable = marketCommercialVehicleTables.get(i);
+//                Long lastid = selectLastId();
+//                if(lastid == null){
+//                    lastid = 0L;
+//                }
+//                Long MCV_id = GenerateId.getNextId(lastid);
+//                marketCommercialVehicleTable.setMcvId(MCV_id);
+//                marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+//                if (marketCommercialVehicleTable.getVehicleModel() == null){
+//                    continue;
+//                }
+//                marketCommercialVehicleTableMapper.insertMarketCommercialVehicleTable(marketCommercialVehicleTable);
+//                i++;
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new ServiceException("excel解析失败");
+//        } finally {
+//            if (is != null) {
+//                is.close();
+//            }
+//        }
+//
+//        return 0;
+//    }
+@Override
+public int CVimportInterests(MultipartFile excelFile) throws IOException {
+    try (InputStream is = excelFile.getInputStream()) {
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
+        List<MarketCommercialVehicleTable> batchInsertList = new ArrayList<>();
+
+        for (MarketCommercialVehicleTable marketCommercialVehicleTable : marketCommercialVehicleTables) {
+            if (marketCommercialVehicleTable.getVehicleModel() == null) {
+                continue;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ServiceException("excel解析失败");
-        } finally {
-            if (is != null) {
-                is.close();
-            }
+            marketCommercialVehicleTable.setCreatedTime(getTime.getCurrentDate());
+            batchInsertList.add(marketCommercialVehicleTable);
         }
 
-        return 0;
+        // 批量插入
+        marketCommercialVehicleTableMapper.batchInsertMarketCommercialVehicleTable(batchInsertList);
+    } catch (IOException e) {
+        e.printStackTrace();
+        throw new ServiceException("excel解析失败");
     }
+    return 0;
+}
+
 
      private Long selectLastId() {
         return marketCommercialVehicleTableMapper.selectLastId();

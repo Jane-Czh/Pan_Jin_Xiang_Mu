@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.heli.enterprise.mapper.EnterpriseManagementAnnualDataMapper;
+import com.heli.enterprise.service.IEnterpriseManagementAnnualDataService;
 import com.heli.enterprise.service.IEnterpriseManagementAnnualDataService;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
@@ -69,6 +71,10 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         }
 
         EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
+        if (enterpriseManagementAnnualDataService.checkEMAnnualDataIsExisted(DateUtils.getYear(yearAndMonth))) {
+            System.out.println("year"+DateUtils.getYear(yearAndMonth));
+            return 0;
+        }
 
 
         monthlyData.setYearAndMonth(yearAndMonth);

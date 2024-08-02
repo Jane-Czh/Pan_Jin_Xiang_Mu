@@ -8,7 +8,11 @@
             <div class="enterpriseOperatingIndicators-item__body">
               <i :class="item.icon" />
               <div class="main-content">
-                <h3>{{ item.title }}</h3>
+                <h3>{{ item.title }}
+                  <!-- <span v-if="item.showWarning">
+                    <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
+                  </span> -->
+                </h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
@@ -85,7 +89,8 @@
 </template>
 
 <script>
-import { getBalanceSumData, getInterestSumData, getMonthSumData, getMonthRateData, getBalanceData, getDaySumData } from '@/api/financial/chartAPI'
+import { getBalanceNewData, getInterestSumData, getMonthSumData, getBalanceNewRateData, getDaySumData, getInterestNewData, getMonthNewData } from '@/api/financial/chartAPI'
+import { getTargetData } from '@/api/financial/target'
 import moment from 'moment'
 export default {
   name: 'Index',
@@ -106,126 +111,206 @@ export default {
       activeName: '1',
       // 企业运营指标: 1, 成本指标: 2, 效率指标: 3
       allIndex: [
-        { id: '1', kind: 'interests', apiName: 'getMainRevenueData', date: '', yDataName: 'MainRevenue', type: '1', icon: 'el-icon-s-data', title: '主营业务收入', dataName: '金额', content: ``, sun: 'mainRevenue' },
-        { id: '2', kind: 'month', apiName: 'getTotalSalesRevenueData', date: '', yDataName: 'Total_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '整机销售收入', dataName: '金额', content: '', sun: 'totalSalesRevenue' },
-        { id: '3', kind: 'month', apiName: 'getExternalGroupSalesRevenueData', date: '', yDataName: 'External_Group_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '集团外部销售收入', dataName: '金额', content: '', sun: 'externalGroupSalesRevenue' },
-        { id: '4', kind: 'month', apiName: 'getTotalVehicleProductionData', date: '', yDataName: 'Total_Vehicle_Production', type: '1', icon: 'el-icon-s-data', title: '整车产量', dataName: '金额', content: '', sun: 'totalVehicleProduction' },
-        { id: '5', kind: 'month', apiName: 'getTotalVehicleSalesData', date: '', yDataName: 'Total_Vehicle_Sales', type: '1', icon: 'el-icon-s-data', title: '整车销量', dataName: '金额', content: '', sun: 'totalVehicleSales' },
-        { id: '6', kind: 'month', apiName: 'getNewProductSalesRevenueData', date: '', yDataName: 'New_Product_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '新产品销售收入', dataName: '金额', content: '', sun: 'newProductSalesRevenue' },
-        { id: '7', kind: 'month', apiName: 'getSpecialtyProductRevenueData', date: '', yDataName: 'Specialty_Product_Revenue', type: '1', icon: 'el-icon-s-data', title: '特色产品收入', dataName: '金额', content: '', sun: 'specialtyProductRevenue' },
-        { id: '8', kind: 'interests', apiName: 'getCOGSData', date: '', yDataName: 'COGS', type: '1', icon: 'el-icon-s-data', title: '主营业务成本', dataName: '金额', content: '', sun: 'cogs' },
-        { id: '9', kind: 'month', apiName: 'getTotalSalesCostData', date: '', yDataName: 'Total_Sales_Cost', type: '1', icon: 'el-icon-s-data', title: '整机销售成本', dataName: '金额', content: '', sun: 'totalSalesCost' },
-        { id: '10', kind: 'interests', apiName: 'getNetProfitData', date: '', yDataName: 'NetProfit', type: '1', icon: 'el-icon-s-data', title: '净利润', dataName: '金额', content: '', sun: 'netProfit' },
-        { id: '20', kind: 'interests', apiName: 'getManagementExpenseData', date: '', yDataName: 'ManagementExpense', type: '2', icon: 'el-icon-s-data', title: '当月管理费用', dataName: '金额', content: '', sun: 'managementExpense' },
-        { id: '21', kind: 'interests', apiName: 'getRdExpenseData', date: '', yDataName: 'RD_Expense', type: '2', icon: 'el-icon-s-data', title: '当月研发费用', dataName: '金额', content: '', sun: 'rdExpense' },
-        { id: '22', kind: 'month', apiName: 'getManufacturingExpensesMonthData', date: '', yDataName: 'Manufacturing_Expenses_Month', type: '2', icon: 'el-icon-s-data', title: '当月制造费用', dataName: '金额', content: '', sun: 'manufacturingExpensesMonth' },
-        { id: '26', kind: 'balance', apiName: 'getMonthlyRawMaterialInventoryData', date: '', yDataName: 'MonthlyRawMaterialInventory', type: '2', icon: 'el-icon-s-data', title: '当月原材料存货额', dataName: '金额', content: '', sun: 'monthlyRawMaterialInventory' },
-        { id: '27', kind: 'balance', apiName: 'getMonthlyWorkInProgressInventoryData', date: '', yDataName: 'MonthlyWorkInProgressInventory', type: '2', icon: 'el-icon-s-data', title: '当月在制品存货额', dataName: '金额', content: '', sun: 'monthlyWorkInProgressInventory' },
-        { id: '28', kind: 'balance', apiName: 'getMonthAmountInStockData', date: '', yDataName: 'Month_Amount_InStock', type: '2', icon: 'el-icon-s-data', title: '当月库存商品存货额', dataName: '金额', content: '', sun: 'monthAmountInStock' },
-        { id: '30', kind: 'balance', apiName: 'getGrowthRateInventoryAndSalesData', date: '', yDataName: 'GrowthRate_Sales', yDataName2: 'GrowthRate_Inventory', type: '2', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', dataName: '增长率', content: '', sun: 'growthRateSales', sun2: 'growthRateInventory' },
-        { id: '32', kind: 'balance', apiName: 'getTurnoverRateReceivableData', date: '', yDataName: 'TurnoverRate_Receivable', type: '3', icon: 'el-icon-s-data', title: '应收账款周转率', dataName: '周转率', content: '', sun: 'turnoverRateReceivable' },
-        { id: '33', kind: 'month', apiName: 'getCapitalTurnoverRateData', date: '', yDataName: 'Capital_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '资金周转率', dataName: '周转率', content: '', sun: 'capitalTurnoverRate' },
-        { id: '34', kind: 'month', apiName: 'getInventoryTurnoverRateData', date: '', yDataName: 'Inventory_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '库存商品周转率', dataName: '周转率', content: '', sun: 'inventoryTurnoverRate' },
-        { id: '35', kind: 'month', apiName: 'getRawMaterialTurnoverRateData', date: '', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '原材料周转率', dataName: '周转率', content: '', sun: 'rawMaterialTurnoverRate' },
-        { id: '36', kind: 'month', apiName: 'getInprogressTurnoverRateData', date: '', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '在制品周转率', dataName: '周转率', content: '', sun: 'inprogressTurnoverRate' },
-        { id: '66', kind: 'month', apiName: 'getLongEstimatedItemsData', date: '', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '', sun: 'longEstimatedItems' },
-        { id: '70', kind: 'day', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sun: 'inProgressDayRevenue' },
-        { id: '77', kind: 'balance', apiName: 'getMonthlyInventoryTotalAmountData', date: '', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '月度存货金额', dataName: '金额', content: '', sun: 'monthlyInventoryTotalAmount' },
-        { id: '78', kind: 'month', apiName: 'getAddedValueMonthlyData', date: '', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '', sun: 'addedValueMonthly' },
+        { id: '1', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'interests', apiName: 'getMainRevenueData', date: '', yDataName: 'MainRevenue', type: '1', icon: 'el-icon-s-data', title: '主营业务收入', dataName: '金额', content: ``, sum: 'mainRevenue' },
+        { id: '2', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getTotalSalesRevenueData', date: '', yDataName: 'Total_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '整机销售收入', dataName: '金额', content: '', sum: 'totalSalesRevenue' },
+        { id: '3', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getExternalGroupSalesRevenueData', date: '', yDataName: 'External_Group_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '集团外部销售收入', dataName: '金额', content: '', sum: 'externalGroupSalesRevenue' },
+        { id: '4', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getTotalVehicleProductionData', date: '', yDataName: 'Total_Vehicle_Production', type: '1', icon: 'el-icon-s-data', title: '整车产量', dataName: '金额', content: '', sum: 'totalVehicleProduction' },
+        { id: '5', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getTotalVehicleSalesData', date: '', yDataName: 'Total_Vehicle_Sales', type: '1', icon: 'el-icon-s-data', title: '整车销量', dataName: '金额', content: '', sum: 'totalVehicleSales' },
+        { id: '6', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getNewProductSalesRevenueData', date: '', yDataName: 'New_Product_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '新产品销售收入', dataName: '金额', content: '', sum: 'newProductSalesRevenue' },
+        { id: '7', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getSpecialtyProductRevenueData', date: '', yDataName: 'Specialty_Product_Revenue', type: '1', icon: 'el-icon-s-data', title: '特色产品收入', dataName: '金额', content: '', sum: 'specialtyProductRevenue' },
+        { id: '8', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'interests', apiName: 'getCOGSData', date: '', yDataName: 'COGS', type: '1', icon: 'el-icon-s-data', title: '主营业务成本', dataName: '金额', content: '', sum: 'cogs' },
+        { id: '9', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getTotalSalesCostData', date: '', yDataName: 'Total_Sales_Cost', type: '1', icon: 'el-icon-s-data', title: '整机销售成本', dataName: '金额', content: '', sum: 'totalSalesCost' },
+        { id: '10', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'interests', apiName: 'getNetProfitData', date: '', yDataName: 'NetProfit', type: '1', icon: 'el-icon-s-data', title: '净利润', dataName: '金额', content: '', sum: 'netProfit' },
+        { id: '20', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'interests', apiName: 'getManagementExpenseData', date: '', yDataName: 'ManagementExpense', type: '2', icon: 'el-icon-s-data', title: '当月管理费用', dataName: '金额', content: '', sum: 'managementExpense' },
+        { id: '21', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'interests', apiName: 'getRdExpenseData', date: '', yDataName: 'RD_Expense', type: '2', icon: 'el-icon-s-data', title: '当月研发费用', dataName: '金额', content: '', sum: 'rdExpense' },
+        { id: '22', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getManufacturingExpensesMonthData', date: '', yDataName: 'Manufacturing_Expenses_Month', type: '2', icon: 'el-icon-s-data', title: '当月制造费用', dataName: '金额', content: '', sum: 'manufacturingExpensesMonth' },
+        { id: '26', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getMonthlyRawMaterialInventoryData', date: '', yDataName: 'MonthlyRawMaterialInventory', type: '2', icon: 'el-icon-s-data', title: '当月原材料存货额', dataName: '金额', content: '', sum: 'monthlyRawMaterialInventory' },
+        { id: '27', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getMonthlyWorkInProgressInventoryData', date: '', yDataName: 'MonthlyWorkInProgressInventory', type: '2', icon: 'el-icon-s-data', title: '当月在制品存货额', dataName: '金额', content: '', sum: 'monthlyWorkInProgressInventory' },
+        { id: '28', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getMonthAmountInStockData', date: '', yDataName: 'Month_Amount_InStock', type: '2', icon: 'el-icon-s-data', title: '当月库存商品存货额', dataName: '金额', content: '', sum: 'monthAmountInStock' },
+        { id: '30', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getGrowthRateInventoryAndSalesData', date: '', yDataName: 'GrowthRate_Sales', yDataName2: 'GrowthRate_Inventory', type: '2', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', dataName: '增长率', content: '', sum: 'growthRateInventory', sum2: 'growthRateSales' },
+        { id: '32', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getTurnoverRateReceivableData', date: '', yDataName: 'TurnoverRate_Receivable', type: '3', icon: 'el-icon-s-data', title: '应收账款周转率', dataName: '周转率', content: '', sum: 'turnoverRateReceivable' },
+        { id: '33', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getCapitalTurnoverRateData', date: '', yDataName: 'Capital_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月资金周转率', dataName: '周转率', content: '', sum: 'capitalTurnoverRate' },
+        { id: '34', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getInventoryTurnoverRateData', date: '', yDataName: 'Inventory_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月库存商品周转率', dataName: '周转率', content: '', sum: 'inventoryTurnoverRate' },
+        { id: '35', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getRawMaterialTurnoverRateData', date: '', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月原材料周转率', dataName: '周转率', content: '', sum: 'rawMaterialTurnoverRate' },
+        { id: '36', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getInprogressTurnoverRateData', date: '', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月在制品周转率', dataName: '周转率', content: '', sum: 'inprogressTurnoverRate' },
+        { id: '66', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getLongEstimatedItemsData', date: '', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '', sum: 'longEstimatedItems' },
+        { id: '70', showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'day', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sum: 'inProgressDayRevenue' },
+        { id: '77', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getMonthlyInventoryTotalAmountData', date: '', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '当月存货总额', dataName: '金额', content: '', sum: 'monthlyInventoryTotalAmount' },
+        { id: '78', showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'month', apiName: 'getAddedValueMonthlyData', date: '', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '', sum: 'addedValueMonthly' },
       ]
     }
   },
   computed: {},
   watch: {},
   created() {
-    this.allData = this.initData();
+    this.initData();
   },
   mounted() {
   },
   methods: {
     async initData() {
       try {
+        let target = {
+          date: new Date(),
+          deptName: 'financial',
+        }
         // 定义一个空对象来存储所有数据
         let allData = {};
+        let allNewData = {};
         // 发起并行请求
-        const [res1, res2, res3, res4, res5, res6] = await Promise.all([
-          getBalanceSumData(this.date),
+        const [resBalanceNew, resInterestSum, resMonthSum, resBalanceRate, resDaySum, resTarget, resInterestNew, resMonthNew] = await Promise.all([
+          getBalanceNewData(),
           getInterestSumData(this.date),
           getMonthSumData(this.date),
-          getMonthRateData(this.date),
-          getBalanceData(this.date),
-          getDaySumData(this.date)
-        ]);
-        console.log(res6)
-        delete res1.data.growthRateSales;
-        delete res1.data.growthRateInventory;
-        delete res1.data.turnoverRateReceivable;
-        delete res3.data.capitalTurnoverRate;
-        delete res3.data.inventoryTurnoverRate;
-        delete res3.data.rawMaterialTurnoverRate;
-        delete res3.data.inprogressTurnoverRate;
+          getBalanceNewRateData(),
+          getDaySumData(this.date),
+          getTargetData(target),
+          getInterestNewData(),
+          getMonthNewData()
+        ].map(p => p.catch(e => {
+          console.error('API 请求失败:', e);
+          return null; // 返回 null 或其他默认值
+        }))
+        );
 
-        const res4DataNeededFields = {
-          capitalTurnoverRate: res4.data.capitalTurnoverRate,
-          inventoryTurnoverRate: res4.data.inventoryTurnoverRate,
-          rawMaterialTurnoverRate: res4.data.rawMaterialTurnoverRate,
-          inprogressTurnoverRate: res4.data.inprogressTurnoverRate
+        //利润总和数据
+        const resInterestSumNeededFields = {
+          mainRevenue: resInterestSum && resInterestSum.data ? resInterestSum.data.mainRevenue : '',
+          cogs: resInterestSum && resInterestSum.data ? resInterestSum.data.cogs : '',
+          netProfit: resInterestSum && resInterestSum.data ? resInterestSum.data.netProfit : '',
         };
 
-        const res5DataNeededFields = {
-          growthRateInventory: res5.data.growthRateInventory,
-          growthRateSales: res5.data.growthRateSales,
-          turnoverRateReceivable: res5.data.turnoverRateReceivable
+        //月度总和数据
+        const resMonthSumNeededFields = {
+          totalSalesRevenue: resMonthSum && resMonthSum.data ? resMonthSum.data.totalSalesRevenue : '',
+          externalGroupSalesRevenue: resMonthSum && resMonthSum.data ? resMonthSum.data.externalGroupSalesRevenue : '',
+          totalVehicleProduction: resMonthSum && resMonthSum.data ? resMonthSum.data.totalVehicleProduction : '',
+          totalVehicleSales: resMonthSum && resMonthSum.data ? resMonthSum.data.totalVehicleSales : '',
+          newProductSalesRevenue: resMonthSum && resMonthSum.data ? resMonthSum.data.newProductSalesRevenue : '',
+          totalSalesCost: resMonthSum && resMonthSum.data ? resMonthSum.data.totalSalesCost : '',
+          specialtyProductRevenue: resMonthSum && resMonthSum.data ? resMonthSum.data.specialtyProductRevenue : '',
         };
-        const res6DataNeededFields = {
-          dataTime: res6.data.dataTime,
-          inProgressDayRevenue: res6.data.inProgressDayRevenue
+
+        //当日在制品总和数据
+        const resDaySumDataNeededFields = {
+          dataTime: resDaySum && resDaySum.data ? resDaySum.data.dataTime : '',
+          inProgressDayRevenue: resDaySum && resDaySum.data ? resDaySum.data.inProgressDayRevenue : 0
+        };
+
+        //资产负债最新数据
+        const resBalanceNewDataNeededFields = {
+          monthlyRawMaterialInventory: resBalanceNew && resBalanceNew.data ? resBalanceNew.data.monthlyRawMaterialInventory : '',
+          monthlyWorkInProgressInventory: resBalanceNew && resBalanceNew.data ? resBalanceNew.data.monthlyWorkInProgressInventory : '',
+          monthAmountInStock: resBalanceNew && resBalanceNew.data ? resBalanceNew.data.monthAmountInStock : '',
+          monthlyInventoryTotalAmount: resBalanceNew && resBalanceNew.data ? resBalanceNew.data.monthlyInventoryTotalAmount : '',
+        };
+
+        //利润最新数据
+        const resInterestNewNeededFields = {
+          managementExpense: resInterestNew && resInterestNew.data ? resInterestNew.data.managementExpense : '',
+          rdExpense: resInterestNew && resInterestNew.data ? resInterestNew.data.rdExpense : '',
 
         };
+        //月度最新数据
+        const resMonthNewNeededFields = {
+          manufacturingExpensesMonth: resMonthNew && resMonthNew.data ? resMonthNew.data.manufacturingExpensesMonth : '',
+          capitalTurnoverRate: resMonthNew && resMonthNew.data ? resMonthNew.data.capitalTurnoverRate : '',
+          inprogressTurnoverRate: resMonthNew && resMonthNew.data ? resMonthNew.data.inprogressTurnoverRate : '',
+          longEstimatedItems: resMonthNew && resMonthNew.data ? resMonthNew.data.longEstimatedItems : '',
+          addedValueMonthly: resMonthNew && resMonthNew.data ? resMonthNew.data.addedValueMonthly : '',
+          rawMaterialTurnoverRate: resMonthNew && resMonthNew.data ? resMonthNew.data.rawMaterialTurnoverRate : '',
+          inventoryTurnoverRate: resMonthNew && resMonthNew.data ? resMonthNew.data.inventoryTurnoverRate : '',
+        };
 
+        //资产负债比例数据
+        const resBalanceRateDataNeededFields = {
+          growthRateInventory: resBalanceRate && resBalanceRate.data ? resBalanceRate.data.growthRateInventory : '',
+          turnoverRateReceivable: resBalanceRate && resBalanceRate.data ? resBalanceRate.data.turnoverRateReceivable : ''
+        };
+
+
+        //截至日期展示
         this.allIndex.forEach(item => {
           if (item.kind === 'balance') {
-            item.date = moment(res1.data.yearAndMonth).format('YYYY-MM');
+            item.date = resBalanceNew && resBalanceNew.data ? moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') : '';
           } else if (item.kind === 'interests') {
-            item.date = moment(res2.data.yearAndMonth).format('YYYY-MM');
+            item.date = resInterestSum && resInterestSum.data ? moment(resInterestSum.data.yearAndMonth).format('YYYY-MM') : '';
           } else if (item.kind === 'day') {
-            item.date = res6.data.dataTime;
+            item.date = resDaySum && resDaySum.data ? resDaySum.data.dataTime : '';
           } else {
-            item.date = moment(res3.data.yearAndMonth).format('YYYY-MM');
+            item.date = resMonthSum && resMonthSum.data ? moment(resMonthSum.data.yearAndMonth).format('YYYY-MM') : '';
           }
         });
+
         allData = {
-          ...res1.data,
-          ...res2.data,
-          ...res3.data,
-          ...res4DataNeededFields,
-          ...res5DataNeededFields,
-          ...res6DataNeededFields,
+          ...resInterestSumNeededFields,
+          ...resMonthSumNeededFields,
+          ...resDaySumDataNeededFields,
         };
-        this.balanceData = res1.data;
-        this.interestsData = res2.data;
-        this.monthData = res3.data;
-        console.log(allData);
-        this.allData.yearAndMonth = moment(res1.data.yearAndMonth).format('YYYY-MM');
+        const allTargetData = allData
+        Object.keys(allData).forEach(key => {
+
+          allData[key] = this.formatNumber(allData[key]);
+        });
+        allNewData = {
+          ...resBalanceNewDataNeededFields,
+          ...resBalanceRateDataNeededFields,
+          ...resInterestNewNeededFields,
+          ...resMonthNewNeededFields,
+        };
+        Object.keys(allNewData).forEach(key => {
+          if (key !== 'growthRateInventory' && key !== 'turnoverRateReceivable' && key !== 'capitalTurnoverRate' && key !== 'inventoryTurnoverRate' && key !== 'rawMaterialTurnoverRate' && key !== 'inprogressTurnoverRate' && key !== 'longEstimatedItems')
+            allNewData[key] = this.formatNumber(allNewData[key]);
+        });
+
+        this.balanceData = resBalanceNew.data || '';
+        this.interestsData = resInterestSum.data || '';
+        this.monthData = resMonthSum.data || '';
+        this.allData.yearAndMonth = moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') || '';
         // 更新 allIndex 数组中每个元素的 content 字段
         this.allIndex.forEach(item => {
           if (item.id === '30') {
-            item.content = `销售增长率：${allData[item.sun]}%\t\t存货增长率：${allData[item.sun2]}%`;
-          } else if (item.id === '70') {
-            item.content = `当月总计：${allData[item.sun]}\t(万元)`;
-          } else {
-            const key = item.sun;
-            if (allData[key] !== undefined) {
-              item.content = `全年总计：${allData[key]}\t(万元)`;
-            } else {
-              console.warn(`Key ${key} not found in response data.`);
+            item.content = `最新一月：${allData[item.sum] || ''}`;
+          }
+          else if (item.id === '70') {
+            item.content = `当月总计：${allData[item.sum] || ''}\t(元)`;
+          }
+          else {
+            const key = item.sum;
+            if (allData[key] !== undefined && item.showType == "SUM") {
+              item.content = `全年总计：${allData[key] || ''}\t(万元)`;
             }
+            else if (allNewData[key] !== undefined && item.showType == "NEW") {
+              if (item.id === '32' || item.id === '33' || item.id === '34' || item.id === '35' || item.id === '36') {
+                item.content = `最新一月：${allNewData[key] || ''}\t(次)`;
+              } else if (item.id === '66') {
+                item.content = `最新一月：${allNewData[key] || ''}\t(项)`;
+              }
+              else {
+                item.content = `最新一月：${allNewData[key] || ''}\t(万元)`;
+              }
+            }
+            // else if (item.id === '32' || item.id === '33' || item.id === '34' || item.id === '35' || item.id === '36') {
+            //   item.content = `当月总计：${allData[item.sum] || ''}\t(元)`;
+            // }
           }
         });
+
+        //目标值赋予及上下限预警
+        this.allIndex.forEach(item => {
+          resTarget.rows.forEach(row => {
+            if (item.sum === row.indicatorName) {
+              item.targetValue = row.targetValue;
+              item.targetValueDate = row.natureYear;
+              if (allTargetData[item.sum] < row.targetLowerLimit || allTargetData[item.sum] > row.targetUpperLimit) {
+                item.showWarning = true;
+              }
+            }
+          });
+        });
         // 返回整合后的数据对象
-        return allData;
       } catch (error) {
-        console.error('Error initializing data:', error);
+        console.error('初始化数据失败:', error);
       }
     },
     toDetail(item) {
@@ -243,8 +328,12 @@ export default {
           }
         })
       }
+    },
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
 
-    }
   }
 }
 

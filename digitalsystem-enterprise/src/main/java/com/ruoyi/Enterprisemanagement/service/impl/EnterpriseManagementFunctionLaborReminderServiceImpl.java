@@ -158,7 +158,6 @@ public class EnterpriseManagementFunctionLaborReminderServiceImpl implements IEn
             EnterpriseManagementLaborContractLedger enterpriseManagementFunctionLaborReminder = list.get(count1);
             String IDnumber = enterpriseManagementFunctionLaborReminder.getIdNumber();//身份证
             String Name = enterpriseManagementFunctionLaborReminder.getName();//姓名
-            long Number = enterpriseManagementFunctionLaborReminder.getNumber();//序号
             String Department = enterpriseManagementFunctionLaborReminder.getDocument();//部门
             String stats = enterpriseManagementFunctionLaborReminder.getEmploymentStatus();//就职状态
             String Phone = enterpriseManagementFunctionLaborReminder.getPhoneNumber();//电话号码
@@ -176,7 +175,6 @@ public class EnterpriseManagementFunctionLaborReminderServiceImpl implements IEn
             if (result.get(IDnumber) == null){
                 EnterpriseManagementFunctionLaborReminder enterpriseManagementFunctionLaborReminder2 = new EnterpriseManagementFunctionLaborReminder();
                 /*新建车号并将相关数据从商品车台账表导入到市场科计划完成情况统计表*/
-                enterpriseManagementFunctionLaborReminder2.setNumber(Number);
                 enterpriseManagementFunctionLaborReminder2.setName(Name);
                 enterpriseManagementFunctionLaborReminder2.setDocument(Department);
                 enterpriseManagementFunctionLaborReminder2.setEmploymentStatus(stats);

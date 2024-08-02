@@ -123,21 +123,21 @@ export default {
         annualTotalSalary: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         stockTargetValue: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         panjinTargetValue: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

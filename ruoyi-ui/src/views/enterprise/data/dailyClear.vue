@@ -94,7 +94,7 @@
 
 <script>
 import { listDailyClearData, getDailyClearData, addDailyClearData, updateDailyClearData, delDailyClearData } from "@/api/enterprise/dailyClearData";
-import { numValidatorPercentage } from '@/api/financial/numValidator.js';
+import { numValidatorPercentage, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Settlement",
   data() {
@@ -140,42 +140,42 @@ export default {
         orderEntryDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         shipmentDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         productionReportDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         inspectionDelayRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         invoicePostingDelayRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         unsettledAccountsRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

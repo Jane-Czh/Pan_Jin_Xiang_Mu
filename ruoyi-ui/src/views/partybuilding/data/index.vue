@@ -45,7 +45,7 @@
       </el-table-column>
 
       <el-table-column label="党建分数" align="center" prop="score" />
-      <el-table-column label="党建排名" align="center" prop="ranking" />
+      <!-- <el-table-column label="党建排名" align="center" prop="ranking" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -139,7 +139,7 @@ export default {
         ranking: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur",
           }
         ],

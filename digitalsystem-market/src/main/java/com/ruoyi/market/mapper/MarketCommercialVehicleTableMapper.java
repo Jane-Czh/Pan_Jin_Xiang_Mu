@@ -38,6 +38,12 @@ public interface MarketCommercialVehicleTableMapper
      * @return 结果
      */
     public int insertMarketCommercialVehicleTable(MarketCommercialVehicleTable marketCommercialVehicleTable);
+    /**
+     * 批量导入商品车台账
+     *
+     */
+    void batchInsertMarketCommercialVehicleTable(List<MarketCommercialVehicleTable> marketCommercialVehicleTables);
+
 
     /**
      * 修改商品车台账

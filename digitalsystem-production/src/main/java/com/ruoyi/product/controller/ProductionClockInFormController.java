@@ -6,7 +6,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.product.domain.ProductionCommuteTime;
 import com.ruoyi.product.domain.WorkTimeData;
+import com.ruoyi.product.service.IProductionCommuteTimeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,18 +34,20 @@ public class ProductionClockInFormController extends BaseController
 {
     @Autowired
     private IProductionClockInFormService productionClockInFormService;
+    @Autowired
+    private IProductionCommuteTimeService productionCommuteTimeService;
 
     /**
      * 导入excel表格功能
      */
     @Log(title = "[生产]表上传", businessType = BusinessType.INSERT)
-    @PreAuthorize("@ss.hasPermi('product:form:import')")
     @PostMapping("/FOimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");
         System.out.println("excelFile" + excelFile);
         try {
-            productionClockInFormService.importInterests(excelFile);
+            ProductionCommuteTime productionCommuteTime =productionCommuteTimeService.selectProductionCommuteTimeByCommuteTimeMAXId();
+            productionClockInFormService.importInterests(excelFile,productionCommuteTime);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel上传失败");

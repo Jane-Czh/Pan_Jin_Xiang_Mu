@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+<!--    <el-upload-->
+<!--      id="inputFile"-->
+<!--      :auto-upload="false"-->
+<!--      :on-change="handleFileChange">-->
+<!--      <el-button slot="trigger" type="primary">选取文件</el-button>-->
+<!--      <el-button type="success" @click="fileSend">上传到服务器</el-button>-->
+<!--    </el-upload>-->
+    <el-progress v-if="showProgress" :percentage="100" status="success"></el-progress>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 <!--      <el-form-item label="创建人" prop="createdBy">
         <el-input
@@ -345,9 +353,10 @@
       <el-table-column label="生产现场问题" align="center" prop="productionSiteissues" />
       <el-table-column label="现场异常问题采购" align="center" prop="procurementOfOnSiteAbnormalIssues" />
       <el-table-column label="现场异常问题质量" align="center" prop="qualityOfOnSiteAbnormalIssues" />
-      <el-table-column label="上线" align="center" prop="goLive" />
+
       <el-table-column label="入库" align="center" prop="warehousing" />
       <el-table-column label="生产周期" align="center" prop="productionCycle" />
+      <el-table-column label="未报工原因" align="center" prop="goLive" />
 <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
 <!--        <template slot-scope="scope">-->
 <!--          <el-button-->
@@ -488,14 +497,14 @@
         <el-form-item label="现场异常问题质量" prop="qualityOfOnSiteAbnormalIssues">
           <el-input v-model="form.qualityOfOnSiteAbnormalIssues" placeholder="请输入现场异常问题质量" />
         </el-form-item>
-        <el-form-item label="上线" prop="goLive">
-          <el-input v-model="form.goLive" placeholder="请输入上线" />
-        </el-form-item>
         <el-form-item label="入库" prop="warehousing">
           <el-input v-model="form.warehousing" placeholder="请输入入库" />
         </el-form-item>
         <el-form-item label="生产周期" prop="productionCycle">
           <el-input v-model="form.productionCycle" placeholder="请输入生产周期" />
+        </el-form-item>
+        <el-form-item label="未报工原因" prop="goLive">
+          <el-input v-model="form.goLive" placeholder="请输入上线" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -801,6 +810,14 @@ export default {
         formData.append("file", file);
         console.log("file====>", formData);
 
+        // 显示进度条
+        // this.progress = 10; // 设置初始进度
+
+        // 模拟上传过程
+        for (let i = 0; i <= 100; i += 10) {
+          await new Promise(resolve => setTimeout(resolve, 500)); // 模拟上传进度
+          this.progress = i;
+        }
         await uploadFile(formData); // 调用 uploadFile API
 
         // 上传成功后的处理

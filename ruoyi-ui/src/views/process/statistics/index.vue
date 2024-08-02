@@ -43,9 +43,8 @@
           plain
           icon="el-icon-download"
           size="mini"
-          
           @click="exportAll"
-          >总台账导出</el-button
+          >流程台账导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -108,7 +107,10 @@ import {
 // // 表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
 
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
@@ -234,7 +236,6 @@ export default {
   },
 
   methods: {
-
     //用户信息
     async getUserInfo() {
       try {
@@ -339,16 +340,17 @@ export default {
         return this.getFileNamesByIds(project).then((fileNames) => {
           return {
             流程名称: project.name,
-           
+            流程等级: project.level,
+            主责部门: project.department,
+            流程编号: project.number,
+
             创建日期: project.createDate,
             创建人: project.createBy,
-            更新日期: project.updateDate,
-            更新人: project.updateBy,
-            // 流程绑定的制度文件: fileNames.selectedFileNames,
-            // 流程绑定的表单文件: fileNames.selectedFormsNames,
+            制度文件: fileNames.selectedFileNames,
+            表单文件: fileNames.selectedFormsNames,
             // 节点绑定的文件s???
 
-            最近一次更新内容描述: this.formattedContent(project.file),
+            // 最近一次更新内容描述: this.formattedContent(project.file),
           };
         });
       });
@@ -383,8 +385,8 @@ export default {
       let id = item.id;
       this.$router.push("/process/statistics/indicators/" + id);
     },
- //-----------------------------------------------------------------------
-  
+    //-----------------------------------------------------------------------
+
     /** 查询流程列表 */
     async getList() {
       this.projectList = [];
@@ -401,7 +403,11 @@ export default {
         for (var i = 0; i < response.length; i++) {
           console.log("response[i].createBy===>", response[i].createBy);
 
-          if (this.departmentCategory == response[i].createBy.split("/")[1]) {
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
             this.projectList.push(response[i]);
           }
         }
@@ -451,8 +457,20 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
+
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
 
         // // 按照updateDate字段进行排序
@@ -512,7 +530,7 @@ export default {
         this.title = "修改流程名称";
       });
     },
-   
+
     /** 导出按钮操作 */
     handleExport() {
       this.download(
@@ -528,7 +546,6 @@ export default {
 </script>
 
 <style>
-
 .query-form {
   display: flex;
   align-items: center;
@@ -537,5 +554,4 @@ export default {
 .query-form .el-form-item.export-button {
   margin-left: auto;
 }
-
 </style>

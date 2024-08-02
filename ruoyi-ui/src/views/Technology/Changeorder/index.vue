@@ -1219,7 +1219,7 @@ export default {
       // 获取当前时间作为上传日期，并填充到对应的输入框
       const currentDate = new Date();
       this.form.uploadDate = currentDate.toISOString().split("T")[0];
-      this.getUserInfo();
+      // this.getUserInfo();
     },
     // 上传成功回调
     handleUploadSuccess(res, file) {
@@ -1335,25 +1335,25 @@ export default {
       }
     },
     // 调用接口获取用户信息
-    getUserInfo() {
-      getUserProfile()
-        .then((response) => {
-          // 处理成功的情况
-          console.log("成功获取用户信息:", response.data);
-          const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
-          // 填充到对应的输入框中
-          this.form.uploadUsername = userInfo.userName;
-          //根据部门id获取部门名称
-          getDept(userInfo.deptId).then((response) => {
-            const deptInfo = response.data;
-            this.form.departmentCategory = deptInfo.deptName;
-          });
-        })
-        .catch((error) => {
-          // 处理失败的情况
-          console.error("获取用户信息失败:", error);
-        });
-    },
+    // getUserInfo() {
+    //   getUserProfile()
+    //     .then((response) => {
+    //       // 处理成功的情况
+    //       console.log("成功获取用户信息:", response.data);
+    //       const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+    //       // 填充到对应的输入框中
+    //       this.form.uploadUsername = userInfo.userName;
+    //       //根据部门id获取部门名称
+    //       getDept(userInfo.deptId).then((response) => {
+    //         const deptInfo = response.data;
+    //         this.form.departmentCategory = deptInfo.deptName;
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       // 处理失败的情况
+    //       console.error("获取用户信息失败:", error);
+    //     });
+    // },
 
     //文件预览
     previewFile(filePath) {

@@ -216,7 +216,6 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
-            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >更新
           </el-button>
           <el-button
@@ -225,7 +224,6 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:formfilemanagement:remove']"
-            :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"
           >删除
           </el-button>
         </template>
@@ -511,7 +509,9 @@ export default {
         revisionContent: null,
         reviser: null,
         newFlag: null,
-        newFormId: null
+        newFormId: null,
+        businesses: null,
+        subBusinesses: null
       },
       //流程查询参数
       projecQueryParams: {
@@ -648,6 +648,7 @@ export default {
     modifyCancel() {
       this.formModifyDialogVisible = false;
       this.reset();
+      this.formList = [];
     },
     // 文件更新取消按钮
     updateCancel() {
@@ -942,14 +943,14 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       const uploadedFile = file.raw; // 获取上传的文件对象
-      const uploadedFileName = uploadedFile.name; // 获取上传文件的文件名
+      const uploadedFileName = uploadedFile.name.substring(0, uploadedFile.name.lastIndexOf('.')); // 获取上传文件的文件名
       // 发起请求检查文件名是否存在于数据库中
       const isFormNameDuplicate = this.formmanagementList.some(item => item.formName === uploadedFileName);
       console.log("发起请求检查文件名是否存在于数据库中",isFormNameDuplicate);
 
       if (isFormNameDuplicate) {
         // 如果文件名重复，弹出警告框
-        this.$modal.msgError('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
+        this.$modal.msgWarning('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
         console.log('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
         return false; // 中断上传流程
       }
@@ -1076,7 +1077,9 @@ export default {
             const pdfFilePath = this.convertToPdfPath(filePath);
             console.log("filePath:",filePath);
             console.log("pdfFilePath:",pdfFilePath);
+            this.loading = true;
             word2Pdf(filePath, pdfFilePath).then(response => {
+              this.loading = false;
               window.open(pdfFilePath, '_blank');
             });
             break;

@@ -6,8 +6,10 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -44,7 +47,8 @@ public class FinancialDataController extends BaseController {
     private IFinancialDailyInProgressTableService financialDailyInProgressTableService;
     @Autowired
     private IFinancialDataService financialDataService;
-
+    @Autowired
+    private IFinancialTempTableService financialTempTableService;
     private static final Logger log = LoggerFactory.getLogger(FinancialDataController.class);
 
 
@@ -147,6 +151,7 @@ public class FinancialDataController extends BaseController {
     @Log(title = "[财务]利润表上传", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:interests:import')")
     @PostMapping("/interests/import")
+    @Transactional
     public AjaxResult importIndicatorsTable(Date yearAndMonth, MultipartFile excelFile) {
 
 //        log.info("yearAndMonth: " + yearAndMonth);
@@ -180,15 +185,38 @@ public class FinancialDataController extends BaseController {
 
         int status = 0;
 
-        try {
-            status = financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, excelFile);
+//        try {
+//            status = financialInterestsTableService.importInterestsTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, excelFile);
+//        } catch (Exception e) {
+//            logger.info(String.valueOf(e));
+//        }
+//        if (status == 0) {
+//            return AjaxResult.error("excel格式错误");
+//        }
+
+        try (InputStream inputStream = excelFile.getInputStream()) {
+            //清空数据库
+            log.info("清空数据库");
+            financialTempTableService.clearTempTable();
+
+            log.info("开始读取 " + excelFile.getName() + " 文件");
+            financialTempTableService.readSalaryExcelToDB(excelFile.getOriginalFilename(), inputStream);
+
+            //资产负债表信息转换
+            financialTempTableService.tempTableToInterestsTable(yearAndMonth);
+
+            status = 1;
+
+
         } catch (Exception e) {
-            logger.info(String.valueOf(e));
+            log.error("读取 " + excelFile.getName() + " 文件失败, 原因: {}", e.getMessage());
+            throw new ServiceException("读取 " + excelFile.getName() + " 文件失败");
+        } finally {
+            log.info("清空数据库");
+            financialTempTableService.clearTempTable();
+
         }
 
-        if (status == 0) {
-            return AjaxResult.error("excel格式错误");
-        }
 
         // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
         if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
@@ -203,6 +231,7 @@ public class FinancialDataController extends BaseController {
     @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:balance:import')")
     @PostMapping("/balance/import")
+    @Transactional
     public AjaxResult importBalanceTable(Date yearAndMonth, MultipartFile BalanceFile) {
 
 //        Date lastMonth = DateUtils.getLastMonth(yearAndMonth);
@@ -221,13 +250,31 @@ public class FinancialDataController extends BaseController {
         }
 
         int status = 0;
-        try {
-            status = financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
+//        try {
+//            status = financialBalanceTableService.importBalanceTable(getUsername(), DateUtils.getNowDate(), yearAndMonth, BalanceFile);
+//        } catch (Exception e) {
+//            logger.info(String.valueOf(e));
+//        }
+//        if (status == 0) {
+//            return AjaxResult.error("excel格式错误");
+//        }
+        try (InputStream inputStream = BalanceFile.getInputStream()) {
+            //清空数据库
+            log.info("清空数据库");
+            financialTempTableService.clearTempTable();
+
+            log.info("开始读取 " + BalanceFile.getName() + " 文件");
+            financialTempTableService.readSalaryExcelToDB(BalanceFile.getOriginalFilename(), inputStream);
+
+            //资产负债表信息转换
+            financialTempTableService.tempTableToBalanceTable(yearAndMonth);
+            status = 1;
         } catch (Exception e) {
-            logger.info(String.valueOf(e));
-        }
-        if (status == 0) {
-            return AjaxResult.error("excel格式错误");
+            log.error("读取 " + BalanceFile.getName() + " 文件失败, 原因: {}", e.getMessage());
+            throw new ServiceException("读取 " + BalanceFile.getName() + " 文件失败");
+        } finally {
+            log.info("清空数据库");
+            financialTempTableService.clearTempTable();
         }
 
 
@@ -235,7 +282,7 @@ public class FinancialDataController extends BaseController {
         if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
                 && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
             // 开始计算
-            status =  financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
+            status = financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
         }
 
 

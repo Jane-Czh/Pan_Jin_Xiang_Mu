@@ -126,7 +126,7 @@ export default {
         nonStandardAvgPreparationDays: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur"
           }
         ],

@@ -52,12 +52,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="normalClosingTime != null "> and Normal_closing_time = #{normalClosingTime}</if>
         </where>
     </select>
+
     <select id="selectLastId" resultType="java.lang.Long">
         SELECT PCIF_ID
         FROM Production_Clock_in_form
         WHERE PCIF_ID = (SELECT MAX(PCIF_ID) FROM Production_Clock_in_form);
     </select>
-    
     <select id="selectProductionClockInFormByPcifId" parameterType="Long" resultMap="ProductionClockInFormResult">
         <include refid="selectProductionClockInFormVo"/>
         where PCIF_ID = #{pcifId}

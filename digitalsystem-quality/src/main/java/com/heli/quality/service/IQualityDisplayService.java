@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface IQualityDisplayService {
 
@@ -30,7 +31,8 @@ public interface IQualityDisplayService {
     List<DisplayEntity> selectMeantimeWithoutFailure(Date startTime, Date endTime);
 
     //电车、大吨位一次交检合格率
-    List<DisplayEntity> selectSingleInspectionPassRate(Date startTime, Date endTime);
+    List<Map<String, Object>> selectSingleInspectionPassRate(Date startTime, Date endTime);
+//    List<DisplayEntity> selectSingleInspectionPassRate(Date startTime, Date endTime);
 
     //供应商不合格件返厂及时率
     List<DisplayEntity> selectInTimeReturnRate(Date startTime, Date endTime);

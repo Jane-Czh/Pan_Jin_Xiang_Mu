@@ -32,7 +32,8 @@ public interface QualityDisplayMapper {
     List<DisplayEntity> selectMeantimeWithoutFailure(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     //电车、大吨位一次交检合格率
-    List<DisplayEntity> selectSingleInspectionPassRate(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<Map<String, Object> >selectSingleInspectionPassRate(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+//    List<DisplayEntity> selectSingleInspectionPassRate(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     //供应商不合格件返厂及时率
     List<DisplayEntity> selectInTimeReturnRate(@Param("startTime") Date startTime, @Param("endTime") Date endTime);

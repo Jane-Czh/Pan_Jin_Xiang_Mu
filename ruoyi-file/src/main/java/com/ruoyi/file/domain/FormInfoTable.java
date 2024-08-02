@@ -83,6 +83,14 @@ public class FormInfoTable extends BaseEntity
     @Excel(name = "该表单下一表单id")
     private Long newFormId;
 
+    /** 业务模块 */
+    @Excel(name = "业务模块")
+    private String businesses;
+
+    /** 细分业务 */
+    @Excel(name = "细分业务")
+    private String subBusinesses;
+
     public void setFormId(Long formId)
     {
         this.formId = formId;
@@ -228,6 +236,22 @@ public class FormInfoTable extends BaseEntity
         return newFormId;
     }
 
+    public String getBusinesses() {
+        return businesses;
+    }
+
+    public void setBusinesses(String businesses) {
+        this.businesses = businesses;
+    }
+
+    public String getSubBusinesses() {
+        return subBusinesses;
+    }
+
+    public void setSubBusinesses(String subBusinesses) {
+        this.subBusinesses = subBusinesses;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -248,6 +272,8 @@ public class FormInfoTable extends BaseEntity
                 .append("reviser", getReviser())
                 .append("newFlag", getNewFlag())
                 .append("newFormId", getNewFormId())
+                .append("businesses", getBusinesses())
+                .append("subBusinesses", getSubBusinesses())
                 .toString();
     }
 }

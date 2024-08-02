@@ -359,7 +359,9 @@
           revisionContent: null,
           reviser: null,
           newFlag: null,
-          newFormId: null
+          newFormId: null,
+          businesses: null,
+          subBusinesses: null
         },
         //流程查询参数
         projecQueryParams: {

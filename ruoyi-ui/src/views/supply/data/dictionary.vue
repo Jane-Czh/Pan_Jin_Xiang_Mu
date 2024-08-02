@@ -178,9 +178,8 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/upload/采购订单汇总表样表.xlsx"
+      const url = "/profile/modelFile/采购订单汇总表样表.xlsx"
       handleTrueDownload(url);
-
     },
     /** 查询供应科-指标-集采物料字典列表 */
     getList() {

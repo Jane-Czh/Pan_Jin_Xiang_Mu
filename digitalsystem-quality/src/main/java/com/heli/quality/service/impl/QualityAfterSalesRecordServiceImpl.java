@@ -2,6 +2,7 @@ package com.heli.quality.service.impl;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -172,6 +173,10 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
         String data = "";
         String msg = "";
         R<String> r = R.ok();
+
+        log.info("startTime: " + startTime);
+        log.info("endTime: " + endTime);
+
         //循环从start Time，到endTime
         for (Date date = startTime; date.before(DateUtils.getNextMonth(endTime)); date = DateUtils.getNextMonth(date)) {
             log.info("当前计算的月份为：" + date);
@@ -201,13 +206,18 @@ public class QualityAfterSalesRecordServiceImpl implements IQualityAfterSalesRec
 
         //检查数据是否齐全
         //1、财务科-填报-整车销量，date之前十二个月数据是否齐全
-        List<Date> dates = qualityAfterSalesRecordMapper.checkInWarrantyVehiclesIsExisted(DateUtils.getInWarrantyTime(date), date);
+        List<Date> dates = qualityAfterSalesRecordMapper.checkInWarrantyVehiclesIsExisted(DateUtils.getInWarrantyTime(date), DateUtils.getLastMonth(date));
+
+        log.info("DateUtils.getInWarrantyTime(date): " + DateUtils.getInWarrantyTime(date));
+        log.info("date: " + date);
+        log.info("dates: " + dates);
+
         if (dates.size() != 12){
             Date d = DateUtils.getInWarrantyTime(date);
             //遍历dates，找到缺少的月份
             for (int i = 0; i < dates.size(); i++, d = DateUtils.getNextMonth(d)){
                 if (!dates.get(i).equals(d)){
-                    log.info("缺少" + d + "月在保车辆数据数据");
+                    log.info("缺少" +  new SimpleDateFormat("yyyy-MM-dd").format(d) + "月在保车辆数据数据");
                     return R.fail(dates.get(i) + "月在保车辆数据未上传");
                 }
             }

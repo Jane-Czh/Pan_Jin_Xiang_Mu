@@ -27,11 +27,21 @@
           v-hasPermi="['quality:handFill:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-refresh" size="mini" @click="handleUpdateList"
+        <el-button type="primary" plain icon="el-icon-refresh" size="mini" @click="showDateSelectionDialog"
           v-hasPermi="['quality:handFill:update']">更新</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
+    <!-- 更新的弹窗 -->
+    <el-dialog title="请选择更新时间段" :visible.sync="dialogVisible" width="30%">
+      <el-date-picker v-model="selectedDate" type="monthrange" range-separator="至" start-placeholder="开始日期"
+        end-placeholder="结束日期">
+      </el-date-picker>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleUpdateListWithDate">确 定</el-button>
+      </span>
+    </el-dialog>
 
     <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange">
@@ -49,9 +59,11 @@
       <el-table-column label="平均无故障时间(小时)" align="center" prop="meantimeWithoutFailure" width="200">
       </el-table-column>
       <!-- <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220" /> -->
-      <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220">
+      <el-table-column label="供应商不合格件返厂及时情况" align="center" prop="intimeReturnrate" width="220">
         <template slot-scope="scope">
-          <span>{{ scope.row.intimeReturnrate }}%</span>
+          <span v-if="scope.row.intimeReturnrate === 0" style="color: #bd3e47;">不及时</span>
+          <span v-else-if="scope.row.intimeReturnrate === 1">及时</span>
+          <span v-else>-</span> <!-- 处理未知状态 -->
         </template>
       </el-table-column>
       <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate">
@@ -98,8 +110,11 @@
         <el-form-item label="平均无故障时间(小时)" prop="meantimeWithoutFailure">
           <el-input v-model="form.meantimeWithoutFailure" placeholder="请选择平均无故障时间(小时)" />
         </el-form-item>
-        <el-form-item label="供应商不合格件返厂及时率(%)" prop="intimeReturnrate">
-          <el-input v-model="form.intimeReturnrate" placeholder="请输入供应商不合格件返厂及时率(%)" />
+        <el-form-item label="供应商不合格件返厂及时情况" prop="intimeReturnrate">
+          <el-select v-model="form.intimeReturnrate" placeholder="请选择供应商不合格件返厂及时情况">
+            <el-option label="及时" value="1"></el-option>
+            <el-option label="不及时" value="0"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="班组自查合格率(%)" prop="selfcheckPassrate">
           <el-input v-model="form.selfcheckPassrate" placeholder="请输入班组自查合格率(%)" />
@@ -123,6 +138,8 @@ export default {
   name: "HandFill",
   data() {
     return {
+      dialogVisible: false,
+      selectedDate: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -291,10 +308,16 @@ export default {
       this.title = "新增";
     },
     /** 修改按钮操作 */
+    // intimeReturnrate
     handleUpdate(row) {
       this.reset();
       const qihfId = row.qihfId || this.ids
       getHandFill(qihfId).then(response => {
+        if (response.data.intimeReturnrate === 0) {
+          response.data.intimeReturnrate = '不及时';
+        } else if (response.data.intimeReturnrate === 1) {
+          response.data.intimeReturnrate = '及时';
+        }
         this.form = response.data;
         this.open = true;
         this.title = "修改";
@@ -338,13 +361,35 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-    /** 更新按钮操作 */
-    handleUpdateList() {
-      updateList().then(() => {
-        this.getList();
-        this.$modal.msgSuccess("更新成功");
-      });
+    // /** 更新按钮操作 */
+    // handleUpdateList() {
+    //   updateList().then(() => {
+    //     this.getList();
+    //     this.$modal.msgSuccess("更新成功");
+    //   });
+    // },
+    showDateSelectionDialog() {
+      this.dialogVisible = true;
+    },
+    handleUpdateListWithDate() {
+      this.dialogVisible = false;
+      if (this.selectedDate) {
+        const timeData = {
+          startTime: new Date(),
+          endTime: new Date(),
+        }
+        timeData.startTime = this.selectedDate[0],
+          timeData.endTime = this.selectedDate[1]
+        updateList(timeData).then(() => {
+          this.getList();
+          this.$modal.msgSuccess("更新成功");
+        });
+      } else {
+        this.$modal.msgError("请选择日期");
+      }
     }
+
+
   }
 };
 </script>

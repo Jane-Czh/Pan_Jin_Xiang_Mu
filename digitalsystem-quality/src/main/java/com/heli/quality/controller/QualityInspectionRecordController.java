@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.quality.domain.QualityIndicatorsMetrics;
 import com.ruoyi.common.exception.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +34,27 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ruoyi
  * @date 2024-05-16
  */
+@Slf4j
 @RestController
 @RequestMapping("/quality/data/inspection")
 public class QualityInspectionRecordController extends BaseController {
     @Autowired
     private IQualityInspectionRecordService qualityInspectionRecordService;
+
+
+    /**
+     * @description: 获取最大年月的数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('quality:data:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectMaxMonthMetrics() {
+        QualityInspectionRecord infoMaxMonth = qualityInspectionRecordService.selectMaxMonthInspection();
+        log.info("infoMaxMonth:{}", infoMaxMonth);
+        return AjaxResult.success(infoMaxMonth);
+    }
+
 
     @PostMapping("/read")
     public AjaxResult importTable(Date yearAndMonth, MultipartFile excelFile) {

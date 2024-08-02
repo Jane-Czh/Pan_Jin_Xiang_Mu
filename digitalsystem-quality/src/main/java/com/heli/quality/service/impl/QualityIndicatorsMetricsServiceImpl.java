@@ -20,6 +20,11 @@ public class QualityIndicatorsMetricsServiceImpl implements IQualityIndicatorsMe
     @Autowired
     private QualityIndicatorsMetricsMapper qualityIndicatorsMetricsMapper;
 
+    @Override
+    public QualityIndicatorsMetrics selectMaxMonthMetrics() {
+        return qualityIndicatorsMetricsMapper.selectMaxMonthMetrics();
+    }
+
     /**
      * 查询质量指标-统计
      *

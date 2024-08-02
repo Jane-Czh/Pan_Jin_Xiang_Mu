@@ -157,18 +157,15 @@ public class EnterpriseManagementFunctionSpecialOperationWarningServiceImpl impl
                 EnterpriseManagementSpecialOperationsManagementLedger enterpriseManagementFunctionSpecialOperationWarning = list.get(count1);
                 String IDnumber = enterpriseManagementFunctionSpecialOperationWarning.getIdNumber();//身份证
                 String IDcard = enterpriseManagementFunctionSpecialOperationWarning.getIdCard();//证件号
-                long Number = enterpriseManagementFunctionSpecialOperationWarning.getNumber();//序号
                 String Department = enterpriseManagementFunctionSpecialOperationWarning.getDepartment();//部门
                 Date FirstExpiration = enterpriseManagementFunctionSpecialOperationWarning.getFirstExpiration(); //第一次到期
                 Date SecondExpiration = enterpriseManagementFunctionSpecialOperationWarning.getSecondExpiration(); //第二次到期
                 Date ThirdExpiration = enterpriseManagementFunctionSpecialOperationWarning.getThirdExpiration();//第三次到期
 
                 //hash中没有当前证件数据，新建一个MarketStatisticsCompletionStatus类插入其中，分别给出其初始值
-                if (result.get(Number) == null){
-                    System.out.println(Number);
+                if (result.get(IDcard) == null){
                     EnterpriseManagementFunctionSpecialOperationWarning enterpriseManagementFunctionSpecialOperationWarning2 = new EnterpriseManagementFunctionSpecialOperationWarning();
                     /*新建车号并将相关数据从商品车台账表导入到市场科计划完成情况统计表*/
-                    enterpriseManagementFunctionSpecialOperationWarning2.setNumber(Number);
                     enterpriseManagementFunctionSpecialOperationWarning2.setDepartment(Department);
                     enterpriseManagementFunctionSpecialOperationWarning2.setName(enterpriseManagementFunctionSpecialOperationWarning.getName());
                     enterpriseManagementFunctionSpecialOperationWarning2.setGender(enterpriseManagementFunctionSpecialOperationWarning.getGender());
@@ -187,17 +184,17 @@ public class EnterpriseManagementFunctionSpecialOperationWarningServiceImpl impl
                     //判断作业证是否快要到期，先从第三次到期时间对比currentDate.getTime()
                     if (ThirdExpiration!=null&&(ThirdExpiration.getTime()-currentDate.getTime())<=((long) 2 * 30 * 24 * 60 * 60 * 1000)&&(ThirdExpiration.getTime()-currentDate.getTime())>0){
                         enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
-                        result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
+                        result.put(String.valueOf(IDcard), enterpriseManagementFunctionSpecialOperationWarning2);
                         System.out.println(1);
                     }
                     else if (ThirdExpiration==null&&SecondExpiration!=null&&(SecondExpiration.getTime()-currentDate.getTime())<=((long) 2 * 30 * 24 * 60 * 60 * 1000)&&(SecondExpiration.getTime()-currentDate.getTime())>0) {
                         enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
-                        result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
+                        result.put(String.valueOf(IDcard), enterpriseManagementFunctionSpecialOperationWarning2);
                         System.out.println(2);
                     }
                     else if (ThirdExpiration==null&&SecondExpiration==null&&FirstExpiration!=null&&(FirstExpiration.getTime()-currentDate.getTime())<=((long) 2 * 30 * 24 * 60 * 60 * 1000)&&(FirstExpiration.getTime()-currentDate.getTime())>0) {
                         enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
-                        result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
+                        result.put(String.valueOf(IDcard), enterpriseManagementFunctionSpecialOperationWarning2);
                         System.out.println(currentDate.getTime()-FirstExpiration.getTime()+"=======");
                     }
                     else enterpriseManagementFunctionSpecialOperationWarning2.setWarn("否");
@@ -216,7 +213,7 @@ public class EnterpriseManagementFunctionSpecialOperationWarningServiceImpl impl
                             if ((ThirdExpiration.getTime() - currentDate.getTime()) > 0) {
                                 System.out.println("ThirdExpiration is after the current date: true");
                                 enterpriseManagementFunctionSpecialOperationWarning2.setWarn("是");
-                                result.put(String.valueOf(Number), enterpriseManagementFunctionSpecialOperationWarning2);
+                                result.put(String.valueOf(IDcard), enterpriseManagementFunctionSpecialOperationWarning2);
                                 System.out.println(1);
                             } else {
                                 System.out.println("ThirdExpiration is after the current date: false");

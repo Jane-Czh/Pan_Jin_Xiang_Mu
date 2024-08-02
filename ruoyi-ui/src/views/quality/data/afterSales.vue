@@ -94,9 +94,9 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" /> -->
-      <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate">
+      <el-table-column label="外部质量损失率(‰)" align="center" prop="externalLossRate">
         <template slot-scope="scope">
-          <span>{{ scope.row.externalLossRate }}%</span>
+          <span>{{ scope.row.externalLossRate }}‰</span>
         </template>
       </el-table-column>
       <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
@@ -133,8 +133,8 @@
         <el-form-item label="三包期内整车月度返修率(%)" prop="warrantyVehicleRepairRate">
           <el-input v-model="form.warrantyVehicleRepairRate" placeholder="请输入三包期内整车月度返修率(%)" />
         </el-form-item>
-        <el-form-item label="外部质量损失率(%)" prop="externalLossRate">
-          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率(%)" />
+        <el-form-item label="外部质量损失率(‰)" prop="externalLossRate">
+          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率(‰)" />
         </el-form-item>
         <el-form-item label="售后问题生产责任次数" prop="productionLiabilityIssues">
           <el-input v-model="form.productionLiabilityIssues" placeholder="请输入售后问题生产责任次数" />

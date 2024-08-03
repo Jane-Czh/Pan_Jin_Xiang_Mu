@@ -14,6 +14,9 @@ import com.ruoyi.common.core.domain.DisplayEntity;
  */
 public interface ITechService {
 
+    int insertOrUpdateTech(Tech tech);
+
+
     Boolean checkTechMonthlyDataIsExisted(Date date);
 
     Boolean checkDataExist();

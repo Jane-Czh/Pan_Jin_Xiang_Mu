@@ -131,4 +131,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{mfqrId}
         </foreach>
     </delete>
+
+    <delete id="deleteAll">
+        truncate table Market_function_quick_report;
+    </delete>
 </mapper>

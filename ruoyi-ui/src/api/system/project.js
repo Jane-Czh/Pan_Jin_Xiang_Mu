@@ -255,14 +255,14 @@ export function listFormfilemanagement(query) {
   })
 }
 
-// //2.2 查询所有的 表单文件列表
-// export function listFormfilemanagementAll(query) {
-//   return request({
-//     url: '/file/formfilemanagement/list3',
-//     method: 'get',
-//     params: query
-//   })
-// }
+//2.2 查询所有的 表单文件列表
+export function listFormfilemanagementAll(query) {
+  return request({
+    url: '/file/formfilemanagement/list1',
+    method: 'get',
+    params: query
+  })
+}
 
 
 

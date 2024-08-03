@@ -57,9 +57,7 @@
 
 <script>
 //制度文件api
-// import { listFilemanagement } from "@/api/file/filemanagement";
-
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import { listFilemanagement, listFormfilemanagement, listFilemanagementAll } from "@/api/system/project";
 export default {
   props: {
     selectedFileNames: {
@@ -135,7 +133,7 @@ export default {
     // },
     /** 查询制度文件列表 */
     getRegularFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
+      listFilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });

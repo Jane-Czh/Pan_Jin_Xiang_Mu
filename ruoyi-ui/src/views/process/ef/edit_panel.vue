@@ -197,7 +197,7 @@ import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/project";
 
 // 绑定文件(制度与表单)
-import CustomFiles from "./CustomFiles.vue";
+import CustomFiles from "./edit_CustomFiles.vue";
 // // 制度文件api
 // import { listFilemanagement } from "@/api/file/filemanagement";
 // // 表单文件api

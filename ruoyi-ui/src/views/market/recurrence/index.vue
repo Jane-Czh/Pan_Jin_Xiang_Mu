@@ -99,8 +99,8 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="masrrId" /> -->
       <el-table-column label="车型" align="center" prop="vehicleModel" />
-      <el-table-column label="相同问题复发率" align="center" prop="problemRecurrenceRate" />
-      <el-table-column label="不同问题出现率" align="center" prop="differentProblemOccurrenceRate" />
+      <el-table-column label="相同问题复发率" align="center" prop="problemRecurrenceRate" :formatter="formatPercentage" />
+      <el-table-column label="不同问题出现率" align="center" prop="differentProblemOccurrenceRate" :formatter="formatPercentage" />
       <el-table-column label="月份" align="center" prop="month" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -202,6 +202,11 @@ export default {
     this.getList();
   },
   methods: {
+
+    formatPercentage(row, column, cellValue) {
+      // 假设cellValue是一个0到1之间的数字，乘以100并保留两位小数
+      return (cellValue * 100).toFixed(2) + '%';
+    },
     /** 查询售后台账问题复发率列表 */
     getList() {
       this.loading = true;

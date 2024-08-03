@@ -2,71 +2,75 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
              label-width="68px">
-      <el-form-item label="制度标题" prop="regulationsTitle">
-        <el-input
-          v-model="queryParams.regulationsTitle"
-          placeholder="请输入制度标题"
+
+      <!-- 部门 进行搜索  -->
+      <el-form-item label="主责部门" prop="mainResponsibleDepartment">
+        <el-select
+          v-model="queryParams.mainResponsibleDepartment"
+          placeholder="请选择主责部门"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="item in departments"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="适用范围" prop="useScope">
+<!--      <el-form-item label="业务模块" prop="businesses">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.businesses"-->
+<!--          placeholder="请输入业务模块"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="细分业务" prop="subBusinesses">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.subBusinesses"-->
+<!--          placeholder="请输入细分业务"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+      <el-form-item label="专业分类" prop="classificationOfSpecialties">
+        <el-select
+          v-model="queryParams.classificationOfSpecialties"
+          placeholder="请选择制度专业分类"
+          clearable
+        >
+          <el-option
+            v-for="item in classificationOfSpecialtiesList"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="制度范围" prop="useScope">
         <el-input
           v-model="queryParams.useScope"
-          placeholder="请输入适用范围"
+          placeholder="请选择制度范围"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="上传日期" prop="uploadDate">
-        <el-date-picker clearable
-                        v-model="queryParams.uploadDate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择上传日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="生效日期" prop="effectiveDate">
-        <el-date-picker clearable
-                        v-model="queryParams.effectiveDate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择生效日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="文件名称" prop="fileName">
-        <el-input
-          v-model="queryParams.fileName"
-          placeholder="请输入文件名称"
+      <el-form-item label="制度等级" prop="regulationLeval">
+        <el-select
+          v-model="queryParams.regulationLeval"
+          placeholder="请选择制度专业分类"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="item in regulationLevalList"
+            :key="item"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
       </el-form-item>
-      <!--            <el-form-item label="文件路径" prop="filePath">-->
-      <!--              <el-input-->
-      <!--                v-model="queryParams.filePath"-->
-      <!--                placeholder="请输入文件路径"-->
-      <!--                clearable-->
-      <!--                @keyup.enter.native="handleQuery"-->
-      <!--              />-->
-      <!--            </el-form-item>-->
-      <!--            <el-form-item label="文件类型" prop="fileType">-->
-      <!--              <el-input-->
-      <!--                v-model="queryParams.fileType"-->
-      <!--                placeholder="请输入文件类型"-->
-      <!--                clearable-->
-      <!--                @keyup.enter.native="handleQuery"-->
-      <!--              />-->
-      <!--            </el-form-item>-->
-      <!--            <el-form-item label="文件大小" prop="fileSize">-->
-      <!--              <el-input-->
-      <!--                v-model="queryParams.fileSize"-->
-      <!--                placeholder="请输入文件大小"-->
-      <!--                clearable-->
-      <!--                @keyup.enter.native="handleQuery"-->
-      <!--              />-->
-      <!--            </el-form-item>-->
-      <el-form-item label="制度创建日期" prop="createDate">
+      <el-form-item label="发布日期" prop="createDate">
         <el-date-picker clearable
                         v-model="queryParams.createDate"
                         type="date"
@@ -74,66 +78,10 @@
                         placeholder="请选择制度创建日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="制度上传人" prop="createUsername">
-        <el-input
-          v-model="queryParams.uploadUsername"
-          placeholder="请输入制度创建人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度使用状态" prop="useState">
-        <el-input
-          v-model="queryParams.useState"
-          placeholder="请输入制度使用状态"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度所属科室" prop="departmentCategory">
-        <el-input
-          v-model="queryParams.departmentCategory"
-          placeholder="请输入制度所属科室"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
-        <el-input
-          v-model="queryParams.mainResponsibleDepartment"
-          placeholder="请输入制度主责部门"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
-        <el-input
-          v-model="queryParams.classificationOfSpecialties"
-          placeholder="请输入制度专业分类"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度等级" prop="regulationLeval">
-        <el-input
-          v-model="queryParams.regulationLeval"
-          placeholder="请输入制度等级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度编号" prop="regulationNumber">
-        <el-input
-          v-model="queryParams.regulationNumber"
-          placeholder="请输入制度编号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制度标签名称" prop="fileTag">
+      <el-form-item label="关键字" prop="fileTag">
         <el-input
           v-model="queryParams.fileTag"
-          placeholder="请输入制度标签名称"
+          placeholder="请输入关键字"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -192,7 +140,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
+          @click="exportAll"
           v-hasPermi="['file:filemanagement:export']"
         >导出</el-button>
       </el-col>
@@ -203,55 +151,27 @@
     <el-table v-loading="loading" :data="filemanagementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
 <!--      <el-table-column label="id(主键)" align="center" prop="regulationsId"/>-->
-      <el-table-column label="制度标题" align="center" prop="regulationsTitle">S
+      <el-table-column label="主责部门" align="center" prop="mainResponsibleDepartment" />
+      <el-table-column label="业务模块" align="center" prop="businesses" />
+      <el-table-column label="细分业务" align="center" prop="subBusinesses" />
+      <el-table-column label="制度名称" align="center" prop="regulationsTitle">
         <template slot-scope="scope">
         <a  @click.prevent="previewFile(scope.row.pdfPath)" style="color: #6495ED;">{{scope.row.regulationsTitle}}</a>
         </template>
       </el-table-column>
-      <el-table-column label="适用范围" align="center" prop="useScope"/>
-      <el-table-column label="上传日期" align="center" prop="uploadDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="生效日期" align="center" prop="effectiveDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="文件名称" align="center" prop="fileName"/>
-<!--      <el-table-column label="文件下载" align="center" prop="filePath">-->
-<!--        <template slot-scope="scope">-->
-<!--          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-      <el-table-column label="pdf下载" align="center" prop="pdfPath">
-        <template v-slot:default="scope">
-          <a v-if="scope.row.pdfPath" @click.prevent="downloadFile(scope.row.pdfPath)" style="color: #6495ED;">点击下载</a>
-        </template>
-      </el-table-column>
-      <el-table-column label="word下载" align="center" prop="wordPath">
-        <template v-slot:default="scope">
-          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
-        </template>
-      </el-table-column>
-<!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
-<!--      <el-table-column label="文件大小" align="center" prop="fileSize"/>-->
-      <el-table-column label="pdf文件大小" align="center" prop="pdfSize"/>
-      <el-table-column label="word文件大小" align="center" prop="wordSize"/>
-      <el-table-column label="制度创建日期" align="center" prop="createDate" width="180">
+      <el-table-column label="专业分类" align="center" prop="classificationOfSpecialties" />
+      <el-table-column label="制度范围" align="center" prop="useScope"/>
+      <el-table-column label="制度编号" align="center" prop="regulationNumber" />
+      <el-table-column label="发布日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>
-      <el-table-column label="制度使用状态" align="center" prop="useState"/>
-      <el-table-column label="制度所属科室" align="center" prop="departmentCategory"/>
-      <el-table-column label="制度主责部门" align="center" prop="mainResponsibleDepartment" />
-      <el-table-column label="制度专业分类" align="center" prop="classificationOfSpecialties" />
-      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
-      <el-table-column label="制度编号" align="center" prop="regulationNumber" />
-      <el-table-column label="制度标签名称" align="center" prop="fileTag" />
+      <el-table-column label="实施日期" align="center" prop="effectiveDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="关联流程" align="center">
         <template slot-scope="scope">
           <!-- 111111111111制度文件 -->
@@ -286,6 +206,35 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="文件名称" align="center" prop="fileName"/>-->
+<!--      <el-table-column label="文件下载" align="center" prop="filePath">-->
+<!--        <template slot-scope="scope">-->
+<!--          <a @click.prevent="downloadFile(scope.row.filePath)" style="color: #6495ED;">点击下载</a>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="pdf下载" align="center" prop="pdfPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.pdfPath" @click.prevent="downloadFile(scope.row.pdfPath)" style="color: #6495ED;">点击下载</a>
+        </template>
+      </el-table-column>
+      <el-table-column label="word下载" align="center" prop="wordPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
+<!--      <el-table-column label="文件大小" align="center" prop="fileSize"/>-->
+<!--      <el-table-column label="pdf文件大小" align="center" prop="pdfSize"/>-->
+<!--      <el-table-column label="word文件大小" align="center" prop="wordSize"/>-->
+<!--      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>-->
+<!--      <el-table-column label="制度使用状态" align="center" prop="useState"/>-->
+      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
+      <el-table-column label="关键字" align="center" prop="fileTag" />
 <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
 <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -418,84 +367,8 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="制度标题" prop="regulationsTitle">
-              <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度创建日期" prop="createDate">
-              <el-date-picker clearable
-                              v-model="form.createDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择制度创建日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="适用范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入适用范围"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="生效日期" prop="effectiveDate">
-              <el-date-picker clearable
-                              v-model="form.effectiveDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择生效日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="pdf文件大小" prop="pdfSize">
-              <el-input v-model="form.pdfSize" placeholder="请输入pdf文件大小" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="word文件大小" prop="wordSize">
-              <el-input v-model="form.wordSize" placeholder="请输入word文件大小" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度使用状态" prop="useState">
-              <el-select v-model="form.useState" placeholder="请选择制度使用状态">
-                <el-option label="正常" value="正常"></el-option>
-                <el-option label="停用" value="停用"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="所属科室" prop="departmentCategory">
-              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">
-                <!-- 循环遍历this.deptList中的部门数据 -->
-                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
-              <el-input v-model="form.mainResponsibleDepartment" placeholder="请输入制度主责部门" />
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
-              <el-input v-model="form.classificationOfSpecialties" placeholder="请输入制度专业分类" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度等级" prop="regulationLeval">
-              <el-input v-model="form.regulationLeval" placeholder="请输入制度等级" />
+            <el-form-item label="制度名称" prop="regulationsTitle">
+              <el-input v-model="form.regulationsTitle" placeholder="请输入制度名称"/>
             </el-form-item>
           </el-col>
           <el-col :span='12'>
@@ -505,9 +378,139 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="制度范围" prop="useScope">
+              <el-input v-model="form.useScope" placeholder="请输入制度范围"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="主责部门" prop="mainResponsibleDepartment" required="true">
+              <el-select
+                v-model="form.mainResponsibleDepartment"
+                placeholder="请选择主责部门"
+                clearable
+                @change="handleDepartmentChange"
+              >
+                <el-option
+                  v-for="item in departments"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+            <el-form-item label="业务模块">
+              <el-select
+                v-model="form.businesses"
+                placeholder="请选择业务模块"
+                clearable
+                :disabled="!form.mainResponsibleDepartment"
+                @change="handleModuleChange"
+              >
+                <el-option
+                  v-for="item in modules"
+                  :key="item.bm_id"
+                  :label="item.moduleName"
+                  :value="item.moduleName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col  :span="12">
+            <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+            <el-form-item label="细分业务">
+              <el-select
+                v-model="form.subBusinesses"
+                placeholder="请选择细分业务"
+                clearable
+                :disabled="!form.businesses"
+              >
+                <el-option
+                  v-for="item in subBusinesses"
+                  :key="item.subb_id"
+                  :label="item.subBusinessesName"
+                  :value="item.subBusinessesName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+<!--        <el-row>-->
+<!--          <el-col :span='12'>-->
+<!--            <el-form-item label="所属科室" prop="departmentCategory">-->
+<!--              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">-->
+<!--                &lt;!&ndash; 循环遍历this.deptList中的部门数据 &ndash;&gt;-->
+<!--                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-select
+                v-model="form.regulationLeval"
+                placeholder="请选择制度专业分类"
+                clearable
+              >
+                <el-option
+                  v-for="item in regulationLevalList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-select
+                v-model="form.classificationOfSpecialties"
+                placeholder="请选择制度专业分类"
+                clearable
+              >
+                <el-option
+                  v-for="item in classificationOfSpecialtiesList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度发布日期" prop="createDate">
+              <el-date-picker clearable
+                              v-model="form.createDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="请选择制度发布日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度实施日期" prop="effectiveDate">
+              <el-date-picker clearable
+                              v-model="form.effectiveDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="请选择制度实施日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col>
-            <el-form-item label="制度标签名称" prop="fileTag">
-              <el-input  autosize v-model="form.fileTag" placeholder="请输入制度标签名称" />
+            <el-form-item label="关键字" prop="fileTag">
+              <el-input  autosize v-model="form.fileTag" placeholder="请输入关键字" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -565,72 +568,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="制度标题" prop="regulationsTitle">
-              <el-input v-model="form.regulationsTitle" placeholder="请输入制度标题"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="适用范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入适用范围"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="生效日期" prop="effectiveDate">
-              <el-date-picker clearable
-                              v-model="form.effectiveDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择生效日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度创建日期" prop="createDate">
-              <el-date-picker clearable
-                              v-model="form.createDate"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="请选择制度创建日期">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度使用状态" prop="useState">
-              <el-select v-model="form.useState" placeholder="请选择制度使用状态">
-                <el-option label="正常" value="正常"></el-option>
-                <el-option label="停用" value="停用"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="所属科室" prop="departmentCategory">
-              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">
-                <!-- 循环遍历this.deptList中的部门数据 -->
-                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度主责部门" prop="mainResponsibleDepartment">
-              <el-input v-model="form.mainResponsibleDepartment" placeholder="请输入制度主责部门" />
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
-              <el-input v-model="form.classificationOfSpecialties" placeholder="请输入制度专业分类" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="制度等级" prop="regulationLeval">
-              <el-input v-model="form.regulationLeval" placeholder="请输入制度等级" />
+            <el-form-item label="制度名称" prop="regulationsTitle">
+              <el-input v-model="form.regulationsTitle" placeholder="请输入制度名称"/>
             </el-form-item>
           </el-col>
           <el-col :span='12'>
@@ -640,9 +579,139 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="制度范围" prop="useScope">
+              <el-input v-model="form.useScope" placeholder="请输入制度范围"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="主责部门" prop="mainResponsibleDepartment" required="true">
+              <el-select
+                v-model="form.mainResponsibleDepartment"
+                placeholder="请选择主责部门"
+                clearable
+                @change="handleDepartmentChange"
+              >
+                <el-option
+                  v-for="item in departments"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+            <el-form-item label="业务模块">
+              <el-select
+                v-model="form.businesses"
+                placeholder="请选择业务模块"
+                clearable
+                :disabled="!form.mainResponsibleDepartment"
+                @change="handleModuleChange"
+              >
+                <el-option
+                  v-for="item in modules"
+                  :key="item.bm_id"
+                  :label="item.moduleName"
+                  :value="item.moduleName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col  :span="12">
+            <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+            <el-form-item label="细分业务">
+              <el-select
+                v-model="form.subBusinesses"
+                placeholder="请选择细分业务"
+                clearable
+                :disabled="!form.businesses"
+              >
+                <el-option
+                  v-for="item in subBusinesses"
+                  :key="item.subb_id"
+                  :label="item.subBusinessesName"
+                  :value="item.subBusinessesName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--        <el-row>-->
+        <!--          <el-col :span='12'>-->
+        <!--            <el-form-item label="所属科室" prop="departmentCategory">-->
+        <!--              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">-->
+        <!--                &lt;!&ndash; 循环遍历this.deptList中的部门数据 &ndash;&gt;-->
+        <!--                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>-->
+        <!--              </el-select>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--        </el-row>-->
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度等级" prop="regulationLeval">
+              <el-select
+                v-model="form.regulationLeval"
+                placeholder="请选择制度专业分类"
+                clearable
+              >
+                <el-option
+                  v-for="item in regulationLevalList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
+              <el-select
+                v-model="form.classificationOfSpecialties"
+                placeholder="请选择制度专业分类"
+                clearable
+              >
+                <el-option
+                  v-for="item in classificationOfSpecialtiesList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span='12'>
+            <el-form-item label="制度发布日期" prop="createDate">
+              <el-date-picker clearable
+                              v-model="form.createDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="请选择制度发布日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="制度实施日期" prop="effectiveDate">
+              <el-date-picker clearable
+                              v-model="form.effectiveDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="请选择制度实施日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col>
-            <el-form-item label="制度标签名称" prop="fileTag">
-              <el-input v-model="form.fileTag" placeholder="请输入制度标签名称" />
+            <el-form-item label="关键字" prop="fileTag">
+              <el-input  autosize v-model="form.fileTag" placeholder="请输入关键字" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -676,7 +745,16 @@
   import {word2Pdf} from "../../../api/file/filemanagement";
   import mammoth from 'mammoth';
   import {listDept02} from "../../../api/file/filemanagement";
-  // import pdfjsLib from 'pdfjs-dist';
+  //业务模块api，
+  import { listModules } from "@/api/function/modules";
+  //细分业务api
+  import { listBusinesses } from "@/api/function/businesses";
+  //导出总台账excel功能
+  import * as XLSX from "xlsx";
+  import { saveAs } from "file-saver";
+  import {Loading} from "element-ui";
+  import { listDept } from "@/api/system/project";  //获取部门列表
+
 
   export default {
     name: "Filemanagement",
@@ -701,9 +779,71 @@
     },
     data() {
       return {
-        projectNames:[], //关联流程名称列表
         //部门列表
-        deptList: [],
+        departments: [],
+        // 查询参数
+        subBusinessesList: [], //获取的全部的业务列表
+        subBusinesses: [], //过滤后的细分业务列表
+
+        // 业务模块 查询参数
+        moduleQueryParams: {
+          pageNum: 1,
+          pageSize: 5000,
+          moduleName: null,
+          parentDepartment: null,
+          isDeleted: null,
+          description: null,
+        },
+
+        // 细分业务 查询参数
+        xifenQueryParams: {
+          pageNum: 1,
+          pageSize: 5000,
+          subBusinessesName: null,
+          parentDepartment: null,
+          parentModule: null,
+          isDeleted: null,
+          description: null,
+        },
+        modules: [], //过滤后 业务模块 数据
+        modulesList: [],//全部的 业务模块 数据
+        //制度专业类别
+        classificationOfSpecialtiesList: [
+          "安全管理",
+          "财务管理",
+          "采购管理",
+          "成本管理",
+          "党群管理",
+          "法人治理",
+          "会计核算管理",
+          "监察管理",
+          "人力资源管理",
+          "设备管理",
+          "生产管理",
+          "投资、规划管理",
+          "信息管理",
+          "研发管理",
+          "营销管理",
+          "质量管理",
+          "综合管理"
+        ],
+        //制度等级
+        regulationLevalList: [
+          "公司级",
+          "部门级"
+        ],
+        //表单展示数据
+        formData: {
+          //主责部门
+          department: "",
+          //业务模块
+          businessesModules: "",
+          //细分业务
+          subBusinesses: "",
+        },
+        projectNames:[], //关联流程名称列表
+        projectNamesString : "",  //关联流程名称列表（用”，“拼接）
+        allProjectList:[],  //所有制度关联的流程名称列表
         //当前账号的dept
         thisDept: null,
         //文件上传绑定的部门
@@ -775,7 +915,9 @@
           reviser: null,
           projectIds: null,
           newFlag: null,
-          newRegulationsId: null
+          newRegulationsId: null,
+          businesses: null,
+          subBusinesses: null
         },
         //流程查询参数
         projecQueryParams: {
@@ -826,7 +968,9 @@
           reviser: null,
           projectIds: null,
           newFlag: null,
-          newRegulationsId: null
+          newRegulationsId: null,
+          businesses: null,
+          subBusinesses: null
         },
         // 表单校验
         rules: {
@@ -834,31 +978,13 @@
             {required: true, message: "制度标题不能为空", trigger: "blur"}
           ],
           useScope: [
-            {required: true, message: "适用范围不能为空", trigger: "blur"}
-          ],
-          uploadDate: [
-            {required: true, message: "上传日期不能为空", trigger: "blur"}
-          ],
-          effectiveDate: [
-            {required: true, message: "生效日期不能为空", trigger: "blur"}
-          ],
-          fileName: [
-            {required: true, message: "文件名称不能为空", trigger: "blur"}
-          ],
-          filePath: [
-            { required: true, message: "文件路径不能为空", trigger: "blur" }
-          ],
-          fileType: [
-            {required: true, message: "文件类型不能为空", trigger: "blur"}
+            {required: true, message: "制度范围不能为空", trigger: "blur"}
           ],
           createDate: [
-            {required: true, message: "制度创建日期不能为空", trigger: "blur"}
+            {required: true, message: "制度发布日期不能为空", trigger: "blur"}
           ],
-          uploadUsername: [
-            {required: true, message: "制度上传人不能为空", trigger: "blur"}
-          ],
-          useState: [
-            {required: true, message: "制度使用状态不能为空", trigger: "blur"}
+          effectiveDate: [
+            {required: true, message: "制度实施日期不能为空", trigger: "blur"}
           ],
           departmentCategory: [
             {required: true, message: "制度所属科室不能为空", trigger: "blur"}
@@ -866,12 +992,17 @@
           mainResponsibleDepartment: [
             {required: true, message: "制度主责部门不能为空", trigger: "blur"}
           ],
-
+          businesses: [
+            {required: true, message: "业务模块不能为空", trigger: "blur"}
+          ],
+          subBusinesses: [
+            {required: true, message: "细分业务不能为空", trigger: "blur"}
+          ],
           classificationOfSpecialties: [
-            {required: true, message: "分类专业不能为空", trigger: "blur"}
+            {required: true, message: "专业分类不能为空", trigger: "blur"}
           ],
           regulationLeval: [
-            {required: true, message: "制度级别不能为空", trigger: "blur"}
+            {required: true, message: "制度等级不能为空", trigger: "blur"}
           ],
           regulationNumber: [
             {required: true, message: "制度编号不能为空", trigger: "blur"}
@@ -932,9 +1063,7 @@
       });
 
       //获取部门列表
-      listDept02().then(response => {
-        this.deptList = response.data;
-      });
+      this.getDeptList();
 
 
     },
@@ -949,8 +1078,8 @@
       getList() {
         this.loading = true;
         console.log("刷新页面");
-        // 如果部门是研发或企管，则不添加departmentCategory到queryParams
-        if (!['研发', '企管'].includes(this.thisDept)) {
+        // 如果部门是研发或总部，则不添加departmentCategory到queryParams
+        if (!['研发', '总部'].includes(this.thisDept)) {
           this.queryParams.departmentCategory = this.thisDept;
         }
         listFilemanagement(this.queryParams).then(response => {
@@ -961,15 +1090,22 @@
           this.loading = false;
         });
       },
-      /** 查询绑定的流程信息 */
+      // // 获取所有制度关联的流程
+      // getAllProjects() {
+      //   // 使用 Promise.all 处理异步操作
+      //   const promises = this.filemanagementList.map(row => this.handleProjectDetails(row));
+      //
+      //   Promise.all(promises).then(() => {
+      //     console.log("Updated All Projects List:", this.allProjectList);
+      //   });
+      // },
+      // 查询绑定的流程信息
       handleProjectDetails(row) {
-        let projectList;
-        let nodeList;
-        this.projectNames = [];
-        listProject(this.projecQueryParams).then(response => {
-          console.log("response111:：", response);
-          projectList = response;
-          console.log("projectNames:", this.projectNames);
+        return listProject(this.projecQueryParams).then(response => {
+          console.log("response111:", response);
+          const projectList = response;
+          this.projectNames = [];
+
           projectList.forEach(process => {
             if (process.state && process.state.includes(row.regulationsId)) {
               this.projectNames.push(process.name);
@@ -977,7 +1113,43 @@
             }
           });
 
+          // 将 projectNames 转换为用逗号分隔的字符串
+          this.projectNamesString = this.projectNames.join(",");
+          // 将projectNamesString插入到allProjectList中
+          this.allProjectList.push(this.projectNamesString);
         });
+      },
+
+      // //获取所有制度关联的流程
+      // getAllProjects() {
+      //   // 遍历 filemanagementList
+      //   this.filemanagementList.forEach(row => {
+      //     this.handleProjectDetails(row);
+      //     console.log("Updated All Projects List:", this.allProjectList);
+      //   });
+      // },
+      // /** 查询绑定的流程信息 */
+      // handleProjectDetails(row) {
+      //   let projectList;
+      //   let nodeList;
+      //   this.projectNames = [];
+      //   listProject(this.projecQueryParams).then(response => {
+      //     console.log("response111:：", response);
+      //     projectList = response;
+      //     console.log("projectNames:", this.projectNames);
+      //     projectList.forEach(process => {
+      //       if (process.state && process.state.includes(row.regulationsId)) {
+      //         this.projectNames.push(process.name);
+      //         console.log("projectNames=>", this.projectNames);
+      //       }
+      //     });
+      //     // 将 projectNames 转换为用逗号分隔的字符串
+      //     let projectNamesString = this.projectNames.join(",");
+      //     // 将projectNamesString插入到allProjectList中
+      //     this.allProjectList.push(projectNamesString);
+      //
+      //
+      //   });
         // listNode(this.nodeQueryParams).then(response => {
         //   console.log("response222:：",response);
         //   console.log("row:",row);
@@ -992,7 +1164,7 @@
         //     }
         //   });
         // })
-      },
+      // },
       // 文件上传取消按钮
       uploadCancel() {
         this.fileUploadDialogVisible = false;
@@ -1271,8 +1443,9 @@
       /** 导出按钮操作 */
       handleExport() {
         this.download('file/filemanagement/export', {
-          ...this.queryParams
-        }, `filemanagement_${new Date().getTime()}.xlsx`)
+          ...this.exportQueryParams,
+          exportFields: this.exportList
+        }, `制度文件管理_${new Date().getTime()}.xlsx`)
       },
       /** 文件下载 */
       downloadFile(url) {
@@ -1701,6 +1874,121 @@
           // 文件路径中没有点，无法更改后缀
           throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
         }
+      },
+
+      async handleDepartmentChange(department) {
+        this.formData.businessesModules = ""; // 重置上级业务模块选择
+        this.modules = []; // 清空之前的模块
+        if (department) {
+          try {
+            await listModules(this.moduleQueryParams).then((response) => {
+              this.modulesList = response.rows;
+            });
+
+            for (let i = 0; i < this.modulesList.length; i++) {
+              console.log("123===" + this.modulesList[i].parentDepartment);
+              // 根据部门字段进行筛选
+              if (this.modulesList[i].parentDepartment === department) {
+                this.modules.push(this.modulesList[i]);
+              }
+            }
+
+            console.log("this.modules===", this.modules);
+          } catch (error) {
+            console.error("Failed to fetch modules:", error);
+          }
+        }
+      },
+
+
+      //通过 业务模块内容 限制选择: 细分业务内容
+      async handleModuleChange(module) {
+        this.formData.subBusinesses = ""; // 重置细分业务选择
+        this.subBusinesses = []; // 清空之前的细分业务
+        if (module) {
+          try {
+            // 获取所有细分业务
+            await listBusinesses(this.xifenQueryParams).then((response) => {
+              this.subBusinessesList = response.rows;
+            });
+
+            for (let i = 0; i < this.subBusinessesList.length; i++) {
+              console.log("12321===" + this.subBusinessesList[i]);
+              // 根据业务模块字段进行筛选
+              if (this.subBusinessesList[i].parentModule === module) {
+                this.subBusinesses.push(this.subBusinessesList[i]);
+              }
+            }
+
+            console.log("this.subBusinesses===", this.subBusinesses);
+          } catch (error) {
+            console.error("Failed to fetch sub-businesses:", error);
+          }
+        }
+      },
+
+      exportAll(){
+        const loadingInstance = Loading.service({
+          lock: true,
+          text: "正在导出，请稍后...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+
+        const promises = this.filemanagementList.map((regulation) => {
+          return this.handleProjectDetails(regulation).then((projectNames) => {
+            return {
+              主责部门 : regulation.departmentCategory,
+              制度名称 : regulation.regulationsTitle,
+              专业分类 : regulation.classificationOfSpecialties,
+              制度范围 : regulation.useScope,
+              制度编号 : regulation.regulationNumber,
+              发布日期 : regulation.createDate,
+              实施日期 : regulation.effectiveDate,
+              关联流程 :this.projectNamesString,
+              最新上传日期 : regulation.uploadDate,
+            };
+          });
+        });
+        Promise.all(promises)
+          .then((data) => {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+            saveAs(
+              new Blob([wbout], { type: "application/octet-stream" }),
+              "流程总台账.xlsx"
+            );
+          })
+          .finally(() => {
+            loadingInstance.close();
+          })
+          .catch((error) => {
+            console.error("导出失败:", error);
+            loadingInstance.close();
+          });
+
+      },
+      /** 查询部门列表 */
+      getDeptList() {
+        listDept02().then((response) => {
+          // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+          const filteredData = response.data.filter(
+            (department) =>
+              department.deptName !== "产品研发" &&
+              department.deptName !== "研发" &&
+              department.deptName !== "测试" &&
+              department.deptName !== "总部" &&
+              department.deptName !== "合力（盘锦）"
+          );
+
+          // 将每个过滤后的部门的 deptName 放入 departments 数组
+          this.departments = filteredData.map(
+            (department) => department.deptName
+          );
+        });
       },
     }
   };

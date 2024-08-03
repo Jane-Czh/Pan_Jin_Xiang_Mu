@@ -37,6 +37,14 @@ public interface FormInfoTableMapper
     public List<FormInfoTable> selectFormInfoTableList(FormInfoTable formInfoTable);
 
     /**
+     * 查询表单文件管理列表(全部)
+     *
+     * @param formInfoTable 表单文件管理
+     * @return 表单文件管理集合
+     */
+    public List<FormInfoTable> selectAllFormList(FormInfoTable formInfoTable);
+
+    /**
      * 新增表单文件管理
      * 
      * @param formInfoTable 表单文件管理

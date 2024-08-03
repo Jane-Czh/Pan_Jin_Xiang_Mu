@@ -2,6 +2,8 @@ package com.ruoyi.market.mapper;
 
 import java.util.List;
 import com.ruoyi.market.domain.MarketInventoryCarDetail;
+import com.ruoyi.market.domain.MarketSalesTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 库存车明细Mapper接口
@@ -64,4 +66,8 @@ public interface MarketInventoryCarDetailMapper
      * @return 结果
      */
     public int deleteMarketInventoryCarDetailByMicdIds(Long[] micdIds);
+
+    public void deleteAll();
+
+    public void batchInsert(@Param("list") List<MarketInventoryCarDetail> marketInventoryCarDetails);
 }

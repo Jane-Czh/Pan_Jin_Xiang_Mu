@@ -99,7 +99,9 @@ public class ExcelUtils {
             }
             //24、系统交货期
             if (getNumericCellValue(row.getCell(count)) != 0.0){
-                marketSalesTable.setSystemDeliveryTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//                marketSalesTable.setSystemDeliveryTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+                marketSalesTable.setSystemDeliveryTime(getDateCellValue(getStringCellValue(row.getCell(count++))));
+
             }else {
                 count++;
             }
@@ -110,7 +112,7 @@ public class ExcelUtils {
                 marketSalesTable.setTechnicalPreparationCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
             }
 
-
+            System.out.println(marketSalesTable);
 
             dataList.add(marketSalesTable);
         }
@@ -246,11 +248,11 @@ public class ExcelUtils {
             int count = 0;
 
             //1、类别
-            marketCarType.setCategory(getStringCellValue(row.getCell(count++)));
+            marketCarType.setCategory(getStringCellValue(row.getCell(1)));
             //2、车型
-            marketCarType.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            marketCarType.setVehicleModel(getStringCellValue(row.getCell(0)));
             //3、关系
-            marketCarType.setRelation(getStringCellValue(row.getCell(count++)));
+            marketCarType.setRelation(getStringCellValue(row.getCell(1)) + "=" + getStringCellValue(row.getCell(0)) );
 
 
             dataList.add(marketCarType);

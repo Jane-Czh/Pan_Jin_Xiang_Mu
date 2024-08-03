@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.heli.quality.domain.QualityIndicatorsHandfillTable;
 import com.heli.quality.service.IQualityAfterSalesRecordService;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.domain.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,9 +63,9 @@ public class QualityIndicatorsMetricsController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('quality:data:update')")
     @PostMapping("/updateList")
-    public R<String> calculateQualityIndicators(Date startTime, Date endTime) {
+    public R<String> calculateQualityIndicators(@RequestBody DisplayRequestParam time) {
         // 计算指定时间范围内的质量指标
-        return qualityAfterSalesRecordService.calculateQualityIndicators(startTime, endTime);
+        return qualityAfterSalesRecordService.calculateQualityIndicators(time.getStartTime(), time.getEndTime());
     }
 
 

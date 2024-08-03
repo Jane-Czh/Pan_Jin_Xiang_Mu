@@ -2,6 +2,8 @@ package com.ruoyi.market.mapper;
 
 import java.util.List;
 import com.ruoyi.market.domain.MarketAfterSaleLedger;
+import com.ruoyi.market.domain.MarketSalesTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 售后台账导入Mapper接口
@@ -63,4 +65,6 @@ public interface MarketAfterSaleLedgerMapper
     public int deleteMarketAfterSaleLedgerByMaslIds(Long[] maslIds);
 
     List<MarketAfterSaleLedger> selectMarketAfterSaleLedgerList1();
+
+    public void batchInsert(@Param("list") List<MarketAfterSaleLedger> marketSalesTable);
 }

@@ -2,38 +2,57 @@
   <div class="app-container">
     <!-- 查询 -->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="项目名称" prop="projectName">
-        <el-input
-          v-model="queryParams.projectName"
-          placeholder="请输入项目名称"
+      <el-form-item label="主责部门" prop="department">
+        <el-select
+          v-model="queryParams.department"
+          placeholder="请选择主责部门"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in departmentOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="项目类别" prop="category">
-        <el-input
-          v-model="queryParams.category"
-          placeholder="请输入项目类别"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="项目等级" prop="level">
-        <el-input
+        <el-select
           v-model="queryParams.level"
           placeholder="请输入项目等级"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in levelOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="主责部门" prop="department">
-        <el-input
-          v-model="queryParams.department"
-          placeholder="请输入主责部门"
+
+      <el-form-item label="项目类别" prop="category">
+        <el-select
+          v-model="queryParams.category"
+          placeholder="请输入项目类别"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in categoryOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
+      
       <el-form-item label="负责人" prop="manager">
         <el-input
           v-model="queryParams.manager"
@@ -43,150 +62,6 @@
         />
       </el-form-item>
 
-      <el-form-item label="项目状态" prop="status">
-        <el-input
-          v-model="queryParams.status"
-          placeholder="请输入项目状态"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!-- <el-form-item label="承接属性" prop="attribute">
-        <el-input
-          v-model="queryParams.attribute"
-          placeholder="请输入承接属性"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item label="项目描述" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入项目描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item label="立项时间" prop="startDate">
-        <el-date-picker clearable
-          v-model="queryParams.startDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择立项时间">
-        </el-date-picker>
-      </el-form-item> -->
-      <!-- <el-form-item label="项目总进度" prop="progressAlloverProgress">
-        <el-input
-          v-model="queryParams.progressAlloverProgress"
-          placeholder="请输入项目总进度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="导入时间" prop="importDate">
-        <el-date-picker clearable
-          v-model="queryParams.importDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择导入时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="描述" prop="remake">
-        <el-input
-          v-model="queryParams.remake"
-          placeholder="请输入描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="历史项目" prop="oldProjectId">
-        <el-input
-          v-model="queryParams.oldProjectId"
-          placeholder="请输入历史项目"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联时间" prop="associationDate">
-        <el-date-picker clearable
-          v-model="queryParams.associationDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择关联时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="负责人" prop="manager">
-        <el-input
-          v-model="queryParams.manager"
-          placeholder="请输入负责人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="组成员" prop="teamMembers">
-        <el-input
-          v-model="queryParams.teamMembers"
-          placeholder="请输入组成员"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="项目进度" prop="progress">
-        <el-input
-          v-model="queryParams.progress"
-          placeholder="请输入项目进度"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="目标" prop="goal">
-        <el-input
-          v-model="queryParams.goal"
-          placeholder="请输入目标"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="范围" prop="scope">
-        <el-input
-          v-model="queryParams.scope"
-          placeholder="请输入范围"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="计划结项时间" prop="plannedCompletionTime">
-        <el-date-picker clearable
-          v-model="queryParams.plannedCompletionTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择计划结项时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="已过天数(自动计算)" prop="daysPassed">
-        <el-input
-          v-model="queryParams.daysPassed"
-          placeholder="请输入已过天数(自动计算)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="剩余天数(自动计算)" prop="daysRemaining">
-        <el-input
-          v-model="queryParams.daysRemaining"
-          placeholder="请输入剩余天数(自动计算)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="完成内容概述" prop="completionSummary">
-        <el-input
-          v-model="queryParams.completionSummary"
-          placeholder="请输入完成内容概述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -387,7 +262,14 @@
           <el-input v-model="form.projectName" placeholder="请输入项目名称" />
         </el-form-item>
         <el-form-item label="项目类别" prop="category">
-          <el-input v-model="form.category" placeholder="请输入项目类别" />
+          <el-select v-model="form.category" placeholder="请选择项目类别">
+            <el-option
+              v-for="item in categoryOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="项目等级" prop="level">
           <el-select v-model="form.level" placeholder="请选择项目等级">
@@ -598,35 +480,31 @@ export default {
           label: 'C级'
         }
       ],
+      //项目类别
+      categoryOptions: [
+        { value: '党工群团类', label: '党工群团类' },
+        { value: '质量攻关类', label: '质量攻关类' },
+        { value: '工艺技改类', label: '工艺技改类' },
+        { value: '生产改善类', label: '生产改善类' },
+        { value: '设备改善类', label: '设备改善类' },
+        { value: '安全环保类', label: '安全环保类' },
+        { value: '采购供应类', label: '采购供应类' },
+        { value: '财务管理类', label: '财务管理类' },
+        { value: '企业运行类', label: '企业运行类' },
+      ],
       //项目主责部门
       departmentOptions:[
-        { 
-          value: '财务科',
-          label: '财务科'},
-          { 
-          value: '市场科',
-          label: '市场科'},
-          { 
-          value: '安环科',
-          label: '安环科'},
-          { 
-          value: '生产科',
-          label: '生产科'},
-          { 
-          value: '供应科',
-          label: '供应科'},
-          { 
-          value: '技术科',
-          label: '技术科'},
-          { 
-          value: '企管科',
-          label: '企管科'},
-          { 
-          value: '党群科',
-          label: '党群科'},
-          { 
-          value: '质量科',
-          label: '质量科'}
+        { value: '财务科', label: '财务科' },
+        { value: '市场科', label: '市场科' },
+        { value: '安环设备科', label: '安环设备科' },
+        { value: '生产管理科', label: '生产管理科' },
+        { value: '供应科', label: '供应科' },
+        { value: '技术科', label: '技术科' },
+        { value: '企业管理科', label: '企业管理科' },
+        { value: '党群办公室', label: '党群办公室科' },
+        { value: '质量科', label: '质量科' },
+        { value: '执纪监督室', label: '执纪监督室' },
+        { value: '团委', label: '团委' }
       ],
       //项目状态选项
       statusOptions:[

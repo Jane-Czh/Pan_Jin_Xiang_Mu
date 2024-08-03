@@ -13,6 +13,7 @@ export default {
     yAxisData: { type: Array, default: () => [] },
     legendData: { type: String, default: null },
     targetValue: { type: Number, default: 0 },
+    targetValueDate: { type: String, default: null },
   },
   data() {
     return {

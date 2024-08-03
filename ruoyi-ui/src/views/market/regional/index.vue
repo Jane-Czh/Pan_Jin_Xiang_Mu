@@ -99,7 +99,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="masrcId" /> -->
       <el-table-column label="区域" align="center" prop="area" />
-      <el-table-column label="区域问题占比" align="center" prop="regionalProblemsProportion" />
+      <el-table-column label="区域问题占比" align="center" prop="regionalProblemsProportion" :formatter="formatPercentage" />
       <el-table-column label="未处理数目" align="center" prop="unprocessedNmber" />
       <el-table-column label="周数" align="center" prop="week" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -211,6 +211,12 @@ export default {
     this.getList();
   },
   methods: {
+
+    formatPercentage(row, column, cellValue) {
+      // 假设cellValue是一个0到1之间的数字，乘以100并保留两位小数
+      return (cellValue * 100).toFixed(2) + '%';
+    },
+
     /** 查询售后区域分类列表 */
     getList() {
       this.loading = true;

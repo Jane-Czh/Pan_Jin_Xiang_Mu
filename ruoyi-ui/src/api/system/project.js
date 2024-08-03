@@ -228,7 +228,7 @@ export function delHistoryProject(id) {
 }
 
 //查询文件
-// 查询制度文件列表
+// 1.1 查询制度文件列表 newest == 1
 export function listFilemanagement(query) {
   return request({
     url: '/file/filemanagement/list2',
@@ -236,8 +236,17 @@ export function listFilemanagement(query) {
     params: query
   })
 }
+// 1.2 查询制度文件列表 所有的文件
+export function listFilemanagementAll(query) {
+  return request({
+    url: '/file/filemanagement/list3',
+    method: 'get',
+    params: query
+  })
+}
 
-//查询表单文件列表
+
+// 2.1查询表单文件列表 newest == 1
 export function listFormfilemanagement(query) {
   return request({
     url: '/file/formfilemanagement/list2',
@@ -246,12 +255,31 @@ export function listFormfilemanagement(query) {
   })
 }
 
+//2.2 查询所有的 表单文件列表
+export function listFormfilemanagementAll(query) {
+  return request({
+    url: '/file/formfilemanagement/list1',
+    method: 'get',
+    params: query
+  })
+}
 
 
-// 查询部门详细
+
+// 通过depId查询部门详细
 export function getDept(deptId) {
   return request({
     url: '/system/dept/dept/' + deptId,
     method: 'get'
   })
 }
+
+//直接获取部门list
+export function listDept(query) {
+  return request({
+    url: '/system/dept/dept/list',
+    method: 'get',
+    params: query
+  })
+}
+

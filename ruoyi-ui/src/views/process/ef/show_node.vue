@@ -148,6 +148,8 @@ import { word2Pdf } from "@/api/file/filemanagement";
 import {
   listFilemanagement,
   listFormfilemanagement,
+  listFilemanagementAll,
+  listFormfilemanagementAll
 } from "@/api/system/project";
 export default {
   props: {
@@ -351,7 +353,7 @@ export default {
       // -- word
       this.wordHyperLinks = [];
 
-      listFilemanagement(this.queryParams)
+      listFilemanagementAll(this.queryParams)
         .then((response) => {
           this.filemanagementList = response.rows;
         })
@@ -387,11 +389,12 @@ export default {
     /** 查询表单文件列表 */
     getFormFileData() {
       //存储表单文件名称
+      //存储表单文件名称
       this.nodeFormNames = [];
       //存储相应的下载地址
       this.formHyperLinks = [];
 
-      listFormfilemanagement(this.queryParams)
+      listFormfilemanagementAll(this.queryParams)
         .then((response) => {
           this.formList = response.rows;
         })

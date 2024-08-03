@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.alibaba.excel.util.ListUtils;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.domain.MarketSalesTable;
 import com.ruoyi.market.domain.MarketSalesTableStorage;
@@ -29,6 +30,9 @@ public class MarketAfterSaleLedgerServiceImpl implements IMarketAfterSaleLedgerS
     @Autowired
     private MarketAfterSaleLedgerMapper marketAfterSaleLedgerMapper;
 
+    private static final int BATCH_COUNT = 500; // 批处理数量
+    //缓存一批数据
+    private List<MarketAfterSaleLedger> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
 
     @Override
     public void importInterests(MultipartFile excelFile) throws IOException {
@@ -41,17 +45,30 @@ public class MarketAfterSaleLedgerServiceImpl implements IMarketAfterSaleLedgerS
             int i = 0;
             while (i < marketAfterSaleLedgers.size()){
                 marketAfterSaleLedger = marketAfterSaleLedgers.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
-                }
-                Long MASL_ID = GenerateId.getNextId(lastid);
-                marketAfterSaleLedger.setMaslId(MASL_ID);
+//                Long lastid = selectLastId();
+//                if(lastid == null){
+//                    lastid = 0L;
+//                }
+//                Long MASL_ID = GenerateId.getNextId(lastid);
+//                marketAfterSaleLedger.setMaslId(MASL_ID);
                 if (marketAfterSaleLedger.getVehicleModel() == null || marketAfterSaleLedger.getFeedbackDate() == null ){
+                    i++;
                     continue;
                 }
-                marketAfterSaleLedgerMapper.insertMarketAfterSaleLedger(marketAfterSaleLedger);
+
+                cachedDataList.add(marketAfterSaleLedger);
+                if (cachedDataList.size() >= BATCH_COUNT) {
+                    marketAfterSaleLedgerMapper.batchInsert(cachedDataList);
+                    cachedDataList.clear();
+                    System.out.println("插入一轮");
+                }
+//                marketAfterSaleLedgerMapper.insertMarketAfterSaleLedger(marketAfterSaleLedger);
                 i++;
+            }
+
+            if (cachedDataList.size() > 0){
+                marketAfterSaleLedgerMapper.batchInsert(cachedDataList);
+                cachedDataList.clear();
             }
 
         } catch (IOException e) {

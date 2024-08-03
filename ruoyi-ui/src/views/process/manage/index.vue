@@ -552,10 +552,14 @@ import {
   getProjectByName,
   getProjectFileName,
 } from "@/api/system/project";
+
 import {
   listFilemanagement,
   listFormfilemanagement,
+  listFilemanagementAll,
+  listFormfilemanagementAll
 } from "@/api/system/project";
+
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import "@/views/process/ef/button.css";
@@ -569,7 +573,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 //加载效果
 import { Loading } from "element-ui";
-
+import { listDept } from "@/api/system/project";
 export default {
   name: "Project",
   inject: ["reload"],
@@ -702,18 +706,24 @@ export default {
         //细分业务
         subBusinesses: "",
       },
-      departments: [
-        "安环设备科",
-        "财务科",
-        "党群办公室",
-        "供应科",
-        "技术科",
-        "企业管理科",
-        "生产管理科",
-        "市场科",
-        "执纪监督室",
-        "质量科",
-      ],
+      // departments: [
+      //   "安环设备科",
+      //   "财务科",
+      //   "党群办公室",
+      //   "供应科",
+      //   "技术科",
+      //   "企业管理科",
+      //   "生产管理科",
+      //   "市场科",
+      //   "执纪监督室",
+      //   "质量科",
+      // ],
+      departments: [],
+      // 查询参数
+      queryDeptParams: {
+        deptName: undefined,
+        status: undefined,
+      },
       levels: ["A级", "B级", "C级"],
       rules: {
         name: [{ required: true, message: "请输入流程名称", trigger: "blur" }],
@@ -750,10 +760,30 @@ export default {
   mounted() {
     //获取当前用户信息
     this.getList();
+    this.getDeptList();
   },
   created() {},
 
   methods: {
+    /** 查询部门列表 */
+    getDeptList() {
+      listDept(this.queryDeptParams).then((response) => {
+        // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+        const filteredData = response.data.filter(
+          (department) =>
+            department.deptName !== "产品研发" &&
+            department.deptName !== "研发" &&
+            department.deptName !== "测试" &&
+            department.deptName !== "总部" &&
+            department.deptName !== "合力（盘锦）"
+        );
+
+        // 将每个过滤后的部门的 deptName 放入 departments 数组
+        this.departments = filteredData.map(
+          (department) => department.deptName
+        );
+      });
+    },
     //流程信息导出
     exportAll() {
       const loadingInstance = Loading.service({
@@ -874,7 +904,7 @@ export default {
         let selectedFileLeval = [];
 
         // 制度文件
-        listFilemanagement(this.queryParams)
+        listFilemanagementAll(this.queryParams)
           .then((response) => {
             this.filemanagementList = response.rows;
             console.log(
@@ -904,7 +934,7 @@ export default {
           })
           .then(() => {
             // 表单文件
-            return listFormfilemanagement(this.queryParams);
+            return listFormfilemanagementAll(this.queryParams);
           })
           .then((response) => {
             this.formmanagementList = response.rows;
@@ -1054,7 +1084,7 @@ export default {
       this.wordHyperLinks = [];
 
       console.log("1.1 查询制度文件列表 row=====>", row);
-      listFilemanagement(this.queryParams).then((response) => {
+      listFilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
       });
       //对 filemanagementList 查找符合state中ids的文件 将其放入 nodeFileNames
@@ -1083,7 +1113,7 @@ export default {
       this.formHyperLinks = [];
       console.log("1.1 查询表单文件列表 row=====>", row);
 
-      listFormfilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagementAll(this.queryParams).then((response) => {
         this.formList = response.rows;
         console.log("this.formList===>", this.formList);
       });

@@ -65,6 +65,18 @@ public class FormInfoTableServiceImpl implements IFormInfoTableService
     }
 
     /**
+     * 查询表单文件管理列表(全部)
+     *
+     * @param formInfoTable 表单文件管理
+     * @return 表单文件管理
+     */
+    @Override
+    public List<FormInfoTable> selectAllFormList(FormInfoTable formInfoTable)
+    {
+        return formInfoTableMapper.selectAllFormList(formInfoTable);
+    }
+
+    /**
      * 查询历史版本文件列表
      *
      * @param currentId 文件管理

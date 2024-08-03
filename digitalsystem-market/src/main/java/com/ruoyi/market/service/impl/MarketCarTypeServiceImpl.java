@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.alibaba.excel.util.ListUtils;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.market.domain.MarketInventoryCarDetail;
 import com.ruoyi.market.domain.MarketSalesTable;
 import com.ruoyi.market.domain.MarketSalesTableStorage;
 import com.ruoyi.market.utils.ExcelUtils;
@@ -29,6 +31,9 @@ public class MarketCarTypeServiceImpl implements IMarketCarTypeService
     @Autowired
     private MarketCarTypeMapper marketCarTypeMapper;
 
+    private static final int BATCH_COUNT = 5000; // 批处理数量
+    //缓存一批数据
+    private List<MarketCarType> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
 
     @Override
     public int importInterests(MultipartFile excelFile) throws IOException {
@@ -37,12 +42,22 @@ public class MarketCarTypeServiceImpl implements IMarketCarTypeService
         InputStream is = null;
         try {
             List<MarketCarType> marketCarTypes = ExcelUtils.parseExcel2MarketCarType(excelFile);
-            System.out.println(marketCarTypes);
+
             int i = 0;
             while (i < marketCarTypes.size()){
                 marketCarType = marketCarTypes.get(i);
-                insertMarketCarType(marketCarType);
+//                insertMarketCarType(marketCarType);
+                cachedDataList.add(marketCarType);
+                if (cachedDataList.size() >= BATCH_COUNT) {
+                    marketCarTypeMapper.batchInsert(cachedDataList);
+                    cachedDataList.clear();
+                    System.out.println("插入一轮");
+                }
                 i++;
+            }
+            if (cachedDataList.size() > 0){
+                marketCarTypeMapper.batchInsert(cachedDataList);
+                cachedDataList.clear();
             }
 
         } catch (IOException e) {

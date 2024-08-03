@@ -38,6 +38,14 @@ public interface IRegulationsInfoTableService {
      */
     public List<RegulationsInfoTable> selectRegulationsInfoTableList(RegulationsInfoTable regulationsInfoTable);
 
+    /**
+     * 查询文件管理列表(全部)
+     *
+     * @param regulationsInfoTable 文件管理
+     * @return 文件管理集合
+     */
+    public List<RegulationsInfoTable> selectAllRegulationsList(RegulationsInfoTable regulationsInfoTable);
+
 
     /**
      * 查询历史版本文件管理列表

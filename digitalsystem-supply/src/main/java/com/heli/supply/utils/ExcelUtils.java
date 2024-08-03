@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,28 +39,39 @@ public class ExcelUtils {
 
             int count = 0;
 
-            //1、凭证日期
-//            System.out.println("============"+row.getCell(0));
-            if (row.getCell(0).getCellType() == CellType.NUMERIC)
-            {
-                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(0)))));
-            }
-            else if (row.getCell(0).getCellType() == CellType.STRING)
-            {
-                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(getStringCellValue(row.getCell(0))));
-            }
-            //5、物料号
-            if (getStringCellValue(row.getCell(4)) == null || getStringCellValue(row.getCell(4)).equals("")){
+
+            //3、物料号
+            if (getStringCellValue(row.getCell(2)) == null || getStringCellValue(row.getCell(2)).equals("")){
                 continue;
             }
-            supplyPurchaseorderTable.setMaterialNumber(StringUtils.getPrefix(getStringCellValue(row.getCell(4)))); //取物料前缀
-            //6、短文本
-            supplyPurchaseorderTable.setShortText(getStringCellValue(row.getCell(5)));
-            //8、数量
-            supplyPurchaseorderTable.setQuantity((long)getIntegerCellValue(row.getCell(7)));
-            //15、供应商
-            supplyPurchaseorderTable.setSupplier(getStringCellValue(row.getCell(14)));
+            supplyPurchaseorderTable.setMaterialNumber(getStringCellValue(row.getCell(2)));
+            //5、采购数量
+            supplyPurchaseorderTable.setPurchaseQuantity((long)getIntegerCellValue(row.getCell(4)));
+            //9、净价
+            supplyPurchaseorderTable.setNetPrice(BigDecimal.valueOf(getNumericCellValue(row.getCell(8))));
+            //10、订单净值
+            supplyPurchaseorderTable.setNetValueOrder(BigDecimal.valueOf(getNumericCellValue(row.getCell(9))));
+            //12、凭证日期
+            if (row.getCell(11).getCellType() == CellType.NUMERIC)
+            {
+                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(11)))));
+            }
+            else if (row.getCell(11).getCellType() == CellType.STRING)
+            {
+                supplyPurchaseorderTable.setDocumentDate(getDateCellValue(getStringCellValue(row.getCell(11))));
+            }
+            //13、供应商
+            if (row.getCell(12) == null){
+                continue;
+            }
+            supplyPurchaseorderTable.setSupplier(getStringCellValue(row.getCell(12)));
+            //14、供应商名称
+            if (row.getCell(13) == null){
+                continue;
+            }
+            supplyPurchaseorderTable.setSupplierName(getStringCellValue(row.getCell(13)));
 
+//            System.out.println(supplyPurchaseorderTable);
             dataList.add(supplyPurchaseorderTable);
         }
 

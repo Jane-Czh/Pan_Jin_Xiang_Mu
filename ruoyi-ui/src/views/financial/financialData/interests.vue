@@ -331,7 +331,7 @@ export default {
   methods: {
     formatNumber(value) {
       if (value === null || value === undefined) return '';
-      return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
     handleDownload() {
       const url = "/profile/modelFile/利润表样表.xlsx";

@@ -91,7 +91,7 @@
               <!-- ref 组件 -->
               <div v-if="this.dialogFilesVisible">
                 <custom-files
-                  ref="customFiles"
+                  ref="CustomFiles"
                   :selectedFormNames="this.selectedFormsTemp"
                   :selectedRegulationNames="this.selectedRegulationTemp"
                 ></custom-files>
@@ -116,7 +116,7 @@
               <!-- ref 组件 el-table 显示制度文件的数据   v-on:backShow="backShow" -->
               <div v-if="this.dialogMoreFilesVisible">
                 <custom-files
-                  ref="customFiles"
+                  ref="CustomFiles"
                   :selectedFormNames="this.selectedFormsTemp"
                   :selectedRegulationNames="this.selectedRegulationTemp"
                 ></custom-files>
@@ -197,7 +197,7 @@ import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/project";
 
 // 绑定文件(制度与表单)
-import CustomFiles from "./edit_CustomFiles.vue";
+import CustomFiles from "./CustomFiles.vue";
 // // 制度文件api
 // import { listFilemanagement } from "@/api/file/filemanagement";
 // // 表单文件api
@@ -301,7 +301,7 @@ export default {
     FlowNodeForm,
     FlowHelp,
     //绑定文件
-    CustomFiles,
+    CustomFiles
   },
   directives: {
     flowDrag: {
@@ -429,7 +429,7 @@ export default {
           /**处理制度文件 */
           // 调用 CustomFiles 组件的方法来获取 选中的 [制度文件] 的 [idsRegulation] 和 [namesRegulation] 数据
           let { idsRegulation, namesRegulation } =
-            this.$refs.customFiles.getSelectedRegulationIdsAndNames();
+            this.$refs.CustomFiles.getSelectedRegulationIdsAndNames();
           // 将获取到的filenames给本地的展示变量：this.regulationFiles
           this.regulationFiles = namesRegulation;
           this.selectedRegulationTemp = this.regulationFiles;
@@ -437,7 +437,7 @@ export default {
 
           /**处理表单文件 */
           let { idsForm, namesForm } =
-            this.$refs.customFiles.getSelectedFormIdsAndNames();
+            this.$refs.CustomFiles.getSelectedFormIdsAndNames();
           // 将获取到的filenames给本地的展示变量：this.formFiles
           this.formFiles = namesForm;
           this.selectedFormsTemp = this.formFiles;

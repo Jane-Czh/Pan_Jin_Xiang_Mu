@@ -114,8 +114,9 @@
 // import { listFilemanagement } from "@/api/file/filemanagement";
 // //表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
-
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+// newest == 1 X
+// import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import { listFilemanagementAll, listFormfilemanagementAll } from "@/api/system/project";
 
 export default {
   props: {
@@ -204,7 +205,7 @@ export default {
   methods: {
     /** 1.1 查询制度文件列表 */
     getRegularFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
+      listFilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });
@@ -266,7 +267,7 @@ export default {
 
     /** 2.1 查询表单文件列表 */
     getFormFileData() {
-      listFormfilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagementAll(this.queryParams).then((response) => {
         this.formsmanagementList = response.rows;
         this.total = response.total;
       });

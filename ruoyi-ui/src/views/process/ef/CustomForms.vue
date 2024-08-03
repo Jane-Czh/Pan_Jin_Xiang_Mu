@@ -55,7 +55,7 @@
 //表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import { listFilemanagement, listFormfilemanagement, listFormfilemanagementAll } from "@/api/system/project";
 
 export default {
   props: {
@@ -124,7 +124,7 @@ export default {
     },
     /** 查询表单文件列表 */
     getRegularFileData() {
-      listFormfilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });

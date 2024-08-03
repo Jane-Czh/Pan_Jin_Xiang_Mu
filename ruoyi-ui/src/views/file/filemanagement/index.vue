@@ -78,6 +78,14 @@
                         placeholder="请选择制度创建日期">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="制度名称" prop="regulationsTitle">
+        <el-input
+          v-model="queryParams.regulationsTitle"
+          placeholder="请输入制度名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="关键字" prop="fileTag">
         <el-input
           v-model="queryParams.fileTag"
@@ -140,10 +148,20 @@
           plain
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
+          @click="exportAll"
           v-hasPermi="['file:filemanagement:export']"
         >导出</el-button>
       </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="exportAllCombined"-->
+<!--          v-hasPermi="['file:filemanagement:export']"-->
+<!--        >制度表单导出</el-button>-->
+<!--      </el-col>-->
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -162,6 +180,7 @@
       <el-table-column label="专业分类" align="center" prop="classificationOfSpecialties" />
       <el-table-column label="制度范围" align="center" prop="useScope"/>
       <el-table-column label="制度编号" align="center" prop="regulationNumber" />
+      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
       <el-table-column label="发布日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
@@ -233,8 +252,7 @@
 <!--      <el-table-column label="word文件大小" align="center" prop="wordSize"/>-->
 <!--      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>-->
 <!--      <el-table-column label="制度使用状态" align="center" prop="useState"/>-->
-      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
-      <el-table-column label="制度标签名称" align="center" prop="fileTag" />
+<!--      <el-table-column label="关键字" align="center" prop="fileTag" />-->
 <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
 <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -749,6 +767,13 @@
   import { listModules } from "@/api/function/modules";
   //细分业务api
   import { listBusinesses } from "@/api/function/businesses";
+  //导出总台账excel功能
+  import * as XLSX from "xlsx";
+  import { saveAs } from "file-saver";
+  import {Loading} from "element-ui";
+  import { listDept } from "@/api/system/project";
+  import {listFormfilemanagement} from "@/api/file/formfilemanagement";  //获取部门列表
+
 
   export default {
     name: "Filemanagement",
@@ -773,6 +798,9 @@
     },
     data() {
       return {
+        //部门列表
+        departments: [],
+        // 查询参数
         subBusinessesList: [], //获取的全部的业务列表
         subBusinesses: [], //过滤后的细分业务列表
 
@@ -818,19 +846,6 @@
           "质量管理",
           "综合管理"
         ],
-        //部门
-        departments: [
-          "安环设备科",
-          "财务科",
-          "党群办公室",
-          "供应科",
-          "技术科",
-          "企业管理科",
-          "生产管理科",
-          "市场科",
-          "执纪监督室",
-          "质量科",
-        ],
         //制度等级
         regulationLevalList: [
           "公司级",
@@ -846,8 +861,8 @@
           subBusinesses: "",
         },
         projectNames:[], //关联流程名称列表
-        //部门列表
-        deptList: [],
+        projectNamesString : "",  //关联流程名称列表（用”，“拼接）
+        allProjectList:[],  //所有制度关联的流程名称列表
         //当前账号的dept
         thisDept: null,
         //文件上传绑定的部门
@@ -879,8 +894,10 @@
         showSearch: true,
         // 总条数
         total: 0,
-        // 文件管理表格数据
+        // 制度文件管理表格数据
         filemanagementList: [],
+        // 表单文件管理表格数据
+        formmanagementList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -923,18 +940,27 @@
           businesses: null,
           subBusinesses: null
         },
-        // 查询参数
-        exportList: [
-          'regulationsTitle',
-          'useScope',
-          'uploadDate',
-          'effectiveDate',
-          'createDate',
-          'mainResponsibleDepartment',
-          'classificationOfSpecialties',
-          'regulationLeval',
-          'regulationNumber'
-        ],
+        // 表单查询参数
+        formQueryParams: {
+          formTitle: null,
+          scope: null,
+          effectiveDate: null,
+          formName: null,
+          formType: null,
+          formPath: null,
+          formSize: null,
+          createUsername: null,
+          departmentCategory: null,
+          remark: null,
+          oldFormId: null,
+          revisionTime: null,
+          revisionContent: null,
+          reviser: null,
+          newFlag: null,
+          newFormId: null,
+          businesses: null,
+          subBusinesses: null
+        },
         //流程查询参数
         projecQueryParams: {
           pageNum: 1,
@@ -1079,9 +1105,7 @@
       });
 
       //获取部门列表
-      listDept02().then(response => {
-        this.deptList = response.data;
-      });
+      this.getDeptList();
 
 
     },
@@ -1107,16 +1131,29 @@
           this.total = response.total;
           this.loading = false;
         });
+        listFormfilemanagement(this.formQueryParams).then(response => {
+          console.log("response:：",response);
+          this.formmanagementList = response.rows;
+          console.log("formmanagementList=>",this.formmanagementList);
+        });
+
       },
-      /** 查询绑定的流程信息 */
+      // // 获取所有制度关联的流程
+      // getAllProjects() {
+      //   // 使用 Promise.all 处理异步操作
+      //   const promises = this.filemanagementList.map(row => this.handleProjectDetails(row));
+      //
+      //   Promise.all(promises).then(() => {
+      //     console.log("Updated All Projects List:", this.allProjectList);
+      //   });
+      // },
+      // 查询绑定的流程信息
       handleProjectDetails(row) {
-        let projectList;
-        let nodeList;
-        this.projectNames = [];
-        listProject(this.projecQueryParams).then(response => {
-          console.log("response111:：", response);
-          projectList = response;
-          console.log("projectNames:", this.projectNames);
+        return listProject(this.projecQueryParams).then(response => {
+          console.log("response111:", response);
+          const projectList = response;
+          this.projectNames = [];
+
           projectList.forEach(process => {
             if (process.state && process.state.includes(row.regulationsId)) {
               this.projectNames.push(process.name);
@@ -1124,7 +1161,46 @@
             }
           });
 
+          // 将 projectNames 转换为用逗号分隔的字符串
+          this.projectNamesString = this.projectNames.join(",");
+          console.log("projectNamesString=>", this.projectNamesString);
+          // 将projectNamesString插入到allProjectList中
+          this.allProjectList.push(this.projectNamesString);
+          console.log("this.allProjectList====>",this.allProjectList);
+          // 使用事件总线发送数据
         });
+      },
+
+      // //获取所有制度关联的流程
+      // getAllProjects() {
+      //   // 遍历 filemanagementList
+      //   this.filemanagementList.forEach(row => {
+      //     this.handleProjectDetails(row);
+      //     console.log("Updated All Projects List:", this.allProjectList);
+      //   });
+      // },
+      // /** 查询绑定的流程信息 */
+      // handleProjectDetails(row) {
+      //   let projectList;
+      //   let nodeList;
+      //   this.projectNames = [];
+      //   listProject(this.projecQueryParams).then(response => {
+      //     console.log("response111:：", response);
+      //     projectList = response;
+      //     console.log("projectNames:", this.projectNames);
+      //     projectList.forEach(process => {
+      //       if (process.state && process.state.includes(row.regulationsId)) {
+      //         this.projectNames.push(process.name);
+      //         console.log("projectNames=>", this.projectNames);
+      //       }
+      //     });
+      //     // 将 projectNames 转换为用逗号分隔的字符串
+      //     let projectNamesString = this.projectNames.join(",");
+      //     // 将projectNamesString插入到allProjectList中
+      //     this.allProjectList.push(projectNamesString);
+      //
+      //
+      //   });
         // listNode(this.nodeQueryParams).then(response => {
         //   console.log("response222:：",response);
         //   console.log("row:",row);
@@ -1139,7 +1215,7 @@
         //     }
         //   });
         // })
-      },
+      // },
       // 文件上传取消按钮
       uploadCancel() {
         this.fileUploadDialogVisible = false;
@@ -1900,6 +1976,172 @@
             console.error("Failed to fetch sub-businesses:", error);
           }
         }
+      },
+
+      exportAll(){
+        const loadingInstance = Loading.service({
+          lock: true,
+          text: "正在导出，请稍后...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+
+        const promises = this.filemanagementList.map((regulation) => {
+          return this.handleProjectDetails(regulation).then((projectNames) => {
+            return {
+              主责部门 : regulation.departmentCategory,
+              制度名称 : regulation.regulationsTitle,
+              专业分类 : regulation.classificationOfSpecialties,
+              制度范围 : regulation.useScope,
+              制度编号 : regulation.regulationNumber,
+              发布日期 : regulation.createDate,
+              实施日期 : regulation.effectiveDate,
+              关联流程 :this.projectNamesString,
+              最新上传日期 : regulation.uploadDate,
+            };
+          });
+        });
+        Promise.all(promises)
+          .then((data) => {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+            saveAs(
+              new Blob([wbout], { type: "application/octet-stream" }),
+              "制度总台账.xlsx"
+            );
+          })
+          .finally(() => {
+            loadingInstance.close();
+          })
+          .catch((error) => {
+            console.error("导出失败:", error);
+            loadingInstance.close();
+          });
+
+      },
+
+      // 合并导出制度文件和表单文件
+      exportAllCombined() {
+        const loadingInstance = Loading.service({
+          lock: true,
+          text: "正在导出，请稍后...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        // 制度文件导出数据
+        const regulationPromises = this.filemanagementList.map((regulation) => {
+          return this.handleProjectDetails(regulation).then(() => {
+            return {
+              主责部门: regulation.mainResponsibleDepartment,
+              业务模块: regulation.businesses || '', // 制度文件没有业务模块字段，设置为空
+              细分业务: regulation.subBusinesses || '', // 制度文件没有细分业务字段，设置为空
+              制度名称: regulation.regulationsTitle,
+              制度等级: regulation.regulationLeval || '', // 如果有制度等级字段，使用它，否则为空
+              表单名称: '', // 制度文件没有表单名称字段，设置为空
+            };
+          });
+        });
+
+        // 表单文件导出数据
+        const formPromises = this.formmanagementList.map((form) => {
+          return this.handleProjectDetails(form).then(() => {
+            return {
+              主责部门: form.departmentCategory,
+              业务模块: form.businesses,
+              细分业务: form.subBusinesses,
+              制度名称: '', // 表单文件没有制度名称字段，设置为空
+              制度等级: '', // 表单文件没有制度等级字段，设置为空
+              表单名称: form.formTitle,
+            };
+          });
+        });
+
+        // 合并两组数据
+        Promise.all([...regulationPromises, ...formPromises])
+          .then((data) => {
+            // 创建合并后的数据结构
+            const mergedData = {};
+
+            // 将制度文件和表单文件数据合并到一个对象中
+            data.forEach((item) => {
+              const key = `${item.主责部门}-${item.业务模块}-${item.细分业务}`;
+              if (!mergedData[key]) {
+                mergedData[key] = {
+                  主责部门: item.主责部门,
+                  业务模块: item.业务模块,
+                  细分业务: item.细分业务,
+                  制度名称: [],
+                  制度等级: [],
+                  表单名称: [],
+                };
+              }
+              if (item.制度名称) {
+                mergedData[key].制度名称.push(item.制度名称);
+              }
+              if (item.制度等级) {
+                mergedData[key].制度等级.push(item.制度等级);
+              }
+              if (item.表单名称) {
+                mergedData[key].表单名称.push(item.表单名称);
+              }
+            });
+
+            // 将合并后的对象转换为数组并格式化字段
+            const mergedArray = Object.values(mergedData).map((entry) => {
+              return {
+                主责部门: entry.主责部门,
+                业务模块: entry.业务模块,
+                细分业务: entry.细分业务,
+                制度名称: entry.制度名称.join(', '),
+                制度等级: entry.制度等级.join(', '),
+                表单名称: entry.表单名称.join(', '),
+              };
+            });
+
+            // 创建 Excel 工作表
+            const ws = XLSX.utils.json_to_sheet(mergedArray);
+            // 创建 Excel 工作簿
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "综合总台账");
+
+            // 写出 Excel 文件
+            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+            saveAs(
+              new Blob([wbout], { type: "application/octet-stream" }),
+              "综合总台账.xlsx"
+            );
+          })
+          .finally(() => {
+            loadingInstance.close();
+          })
+          .catch((error) => {
+            console.error("导出失败:", error);
+            loadingInstance.close();
+          });
+      },
+
+
+      /** 查询部门列表 */
+      getDeptList() {
+        listDept02().then((response) => {
+          // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+          const filteredData = response.data.filter(
+            (department) =>
+              department.deptName !== "产品研发" &&
+              department.deptName !== "研发" &&
+              department.deptName !== "测试" &&
+              department.deptName !== "总部" &&
+              department.deptName !== "合力（盘锦）"
+          );
+
+          // 将每个过滤后的部门的 deptName 放入 departments 数组
+          this.departments = filteredData.map(
+            (department) => department.deptName
+          );
+        });
       },
     }
   };

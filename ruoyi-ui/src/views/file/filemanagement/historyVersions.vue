@@ -126,7 +126,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
+          @click="exportAll"
           v-hasPermi="['file:filemanagement:export']"
         >导出</el-button>
       </el-col>
@@ -221,7 +221,7 @@
       <!--      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>-->
       <!--      <el-table-column label="制度使用状态" align="center" prop="useState"/>-->
       <el-table-column label="制度等级" align="center" prop="regulationLeval" />
-      <el-table-column label="制度标签名称" align="center" prop="fileTag" />
+      <el-table-column label="关键字" align="center" prop="fileTag" />
       <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
       <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
       <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -481,6 +481,8 @@
   import { listModules } from "@/api/function/modules";
   //细分业务api
   import { listBusinesses } from "@/api/function/businesses";
+  import {Loading} from "element-ui";
+  import * as XLSX from "xlsx";
 
   export default {
     name: "HistoryVersions",
@@ -532,24 +534,14 @@
           "综合管理"
         ],
         //部门
-        departments: [
-          "安环设备科",
-          "财务科",
-          "党群办公室",
-          "供应科",
-          "技术科",
-          "企业管理科",
-          "生产管理科",
-          "市场科",
-          "执纪监督室",
-          "质量科",
-        ],
+        departments: [],
         //制度等级
         regulationLevalList: [
           "公司级",
           "部门级"
         ],
-        projectNames:[],
+        projectNames:[],  //关联流程名称列表
+        projectNamesString : "",  //关联流程名称列表（用”，“拼接）
         //部门列表
         deptList: [],
         //当前账号的dept
@@ -778,9 +770,7 @@
         console.error('获取用户信息失败:', error);
       });
       //获取部门列表
-      listDept02().then(response => {
-        this.deptList = response.data;
-      });
+      this.getDeptList();
 
     },
     methods: {
@@ -800,35 +790,21 @@
       },
       /** 查询绑定的流程信息 */
       handleProjectDetails(row) {
-        let projectList;
-        let nodeList;
-        this.projectNames = [];
-        listProject(this.projecQueryParams).then(response => {
-          console.log("response111:：",response);
-          projectList = response;
-          console.log("projectNames:",this.projectNames);
+        return listProject(this.projecQueryParams).then(response => {
+          console.log("response111:", response);
+          const projectList = response;
+          this.projectNames = [];
+
           projectList.forEach(process => {
             if (process.state && process.state.includes(row.regulationsId)) {
               this.projectNames.push(process.name);
-              console.log("projectNames=>",this.projectNames);
+              console.log("projectNames=>", this.projectNames);
             }
           });
 
+          // 将 projectNames 转换为用逗号分隔的字符串
+          this.projectNamesString = this.projectNames.join(",");
         });
-        // listNode(this.nodeQueryParams).then(response => {
-        //   console.log("response222:：",response);
-        //   console.log("row:",row);
-        //   nodeList = response.rows;
-        //   nodeList.forEach(node => {
-        //     if (node.state && node.state.includes(row.regulationsId)) {
-        //       getNode(node.projectId).then(response1 => {
-        //         console.log("response333=>",response1);
-        //         this.projectNames.push(response.rows.name);
-        //       })
-        //       console.log("projectNames=>",this.projectNames);
-        //     }
-        //   });
-        // })
       },
       // 文件修改取消按钮
       modifyCancel() {
@@ -1158,6 +1134,70 @@
             console.error("Failed to fetch sub-businesses:", error);
           }
         }
+      },
+      exportAll(){
+        const loadingInstance = Loading.service({
+          lock: true,
+          text: "正在导出，请稍后...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+
+        const promises = this.filemanagementList.map((regulation) => {
+          return this.handleProjectDetails(regulation).then((projectNames) => {
+            return {
+              主责部门 : regulation.departmentCategory,
+              制度名称 : regulation.regulationsTitle,
+              专业分类 : regulation.classificationOfSpecialties,
+              制度范围 : regulation.useScope,
+              制度编号 : regulation.regulationNumber,
+              发布日期 : regulation.createDate,
+              实施日期 : regulation.effectiveDate,
+              关联流程 :this.projectNamesString,
+              最新上传日期 : regulation.uploadDate,
+            };
+          });
+        });
+        Promise.all(promises)
+          .then((data) => {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+            saveAs(
+              new Blob([wbout], { type: "application/octet-stream" }),
+              "制度历史版本台账.xlsx"
+            );
+          })
+          .finally(() => {
+            loadingInstance.close();
+          })
+          .catch((error) => {
+            console.error("导出失败:", error);
+            loadingInstance.close();
+          });
+
+      },
+
+      /** 查询部门列表 */
+      getDeptList() {
+        listDept02().then((response) => {
+          // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+          const filteredData = response.data.filter(
+            (department) =>
+              department.deptName !== "产品研发" &&
+              department.deptName !== "研发" &&
+              department.deptName !== "测试" &&
+              department.deptName !== "总部" &&
+              department.deptName !== "合力（盘锦）"
+          );
+
+          // 将每个过滤后的部门的 deptName 放入 departments 数组
+          this.departments = filteredData.map(
+            (department) => department.deptName
+          );
+        });
       },
 
     }

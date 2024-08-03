@@ -522,7 +522,7 @@ import {
 import { listModuless } from "@/api/function/modules";
 //细分业务api
 import { listBusinessess } from "@/api/function/businesses";
-
+import { listDept } from "@/api/system/project";
 export default {
   name: "Project",
   inject: ["reload"],
@@ -559,18 +559,24 @@ export default {
       modules: [], //过滤后的上级 业务模块
       modulesList: [],
       //部门
-      departments: [
-        "安环设备科",
-        "财务科",
-        "党群办公室",
-        "供应科",
-        "技术科",
-        "企业管理科",
-        "生产管理科",
-        "市场科",
-        "执纪监督室",
-        "质量科",
-      ],
+      // departments: [
+      //   "安环设备科",
+      //   "财务科",
+      //   "党群办公室",
+      //   "供应科",
+      //   "技术科",
+      //   "企业管理科",
+      //   "生产管理科",
+      //   "市场科",
+      //   "执纪监督室",
+      //   "质量科",
+      // ],
+      departments: [],
+      // 查询参数
+      queryDeptParams: {
+        deptName: undefined,
+        status: undefined,
+      },
       levels: ["A级", "B级", "C级"],
       //用户名
       uploadUsername: null,
@@ -713,9 +719,29 @@ export default {
     this.getUserInfo();
     //获取现有流程名称
     this.getList();
+    this.getDeptList();
   },
 
   methods: {
+    /** 查询部门列表 */
+    getDeptList() {
+      listDept(this.queryDeptParams).then((response) => {
+        // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+        const filteredData = response.data.filter(
+          (department) =>
+            department.deptName !== "产品研发" &&
+            department.deptName !== "研发" &&
+            department.deptName !== "测试" &&
+            department.deptName !== "总部" &&
+            department.deptName !== "合力（盘锦）"
+        );
+
+        // 将每个过滤后的部门的 deptName 放入 departments 数组
+        this.departments = filteredData.map(
+          (department) => department.deptName
+        );
+      });
+    },
     // 通过 department部门 限制选择:  业务模块内容 this.modules
     async handleDepartmentChange(department) {
       this.formData.businessesModules = ""; // 重置上级业务模块选择

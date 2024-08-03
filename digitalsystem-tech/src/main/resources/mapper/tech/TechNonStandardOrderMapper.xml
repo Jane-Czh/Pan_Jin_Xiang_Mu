@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.tech.mapper.TechNonStandardOrderMapper">
+
+    <resultMap type="TechNonStandardOrder" id="TechNonStandardOrderResult">
+        <result property="tnId"    column="TN_id"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="tableId"    column="Table_Id"    />
+        <result property="orderId"    column="Order_Id"    />
+        <result property="carModel"    column="Car_Model"    />
+        <result property="carConfiguration"    column="Car_Configuration"    />
+        <result property="principal"    column="Principal"    />
+        <result property="participants"    column="Participants"    />
+        <result property="pickupDate"    column="Pickup_Date"    />
+        <result property="transferDate"    column="Transfer_Date"    />
+        <result property="totalDurationHours"    column="Total_Duration_Hours"    />
+        <result property="totalDurationDays"    column="Total_Duration_Days"    />
+        <result property="overtimeRemark"    column="Overtime_Remark"    />
+        <result property="comments"    column="Comments"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectTechNonStandardOrderVo">
+        select TN_id, Year_And_Month, Table_Id, Order_Id, Car_Model, Car_Configuration, Principal, Participants, Pickup_Date, Transfer_Date, Total_Duration_Hours, Total_Duration_Days, Overtime_Remark, Comments, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Tech_Non_Standard_Order
+    </sql>
+
+    <select id="selectTechNonStandardOrderList" parameterType="TechNonStandardOrder" resultMap="TechNonStandardOrderResult">
+        <include refid="selectTechNonStandardOrderVo"/>
+        <where>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="tableId != null  and tableId != ''"> and Table_Id = #{tableId}</if>
+            <if test="orderId != null  and orderId != ''"> and Order_Id = #{orderId}</if>
+            <if test="carModel != null  and carModel != ''"> and Car_Model = #{carModel}</if>
+            <if test="carConfiguration != null  and carConfiguration != ''"> and Car_Configuration = #{carConfiguration}</if>
+            <if test="principal != null  and principal != ''"> and Principal = #{principal}</if>
+            <if test="participants != null  and participants != ''"> and Participants = #{participants}</if>
+            <if test="pickupDate != null  and pickupDate != ''"> and Pickup_Date = #{pickupDate}</if>
+            <if test="transferDate != null  and transferDate != ''"> and Transfer_Date = #{transferDate}</if>
+            <if test="totalDurationHours != null "> and Total_Duration_Hours = #{totalDurationHours}</if>
+            <if test="totalDurationDays != null "> and Total_Duration_Days &gt; #{totalDurationDays}</if>
+<!--            <if test="totalDurationDays != null "> and Total_Duration_Days = #{totalDurationDays}</if>-->
+            <if test="overtimeRemark != null  and overtimeRemark != ''"> and Overtime_Remark = #{overtimeRemark}</if>
+            <if test="comments != null  and comments != ''"> and Comments = #{comments}</if>
+        </where>
+    </select>
+
+    <select id="selectTechNonStandardOrderByTnId" parameterType="Long" resultMap="TechNonStandardOrderResult">
+        <include refid="selectTechNonStandardOrderVo"/>
+        where TN_id = #{tnId}
+    </select>
+
+    <select id="countNonStandardOrderOvertimeNum" resultType="java.lang.Integer">
+        select count(*) from Tech_Non_Standard_Order
+        where Year_And_Month = #{yearAndMonth} and Total_Duration_Days &gt; 2
+    </select>
+
+    <select id="countNonStandardOrderAvgDays" resultType="java.math.BigDecimal">
+        select avg(Total_Duration_Days) from Tech_Non_Standard_Order
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <!--  检查当月数据是否上传，已上传返回1，未上传返回0  -->
+    <select id="checkNonStandardOrderUploadStatus" resultType="boolean">
+        select count(*) from Tech_Non_Standard_Order
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <!--  删除当月的数据，入参为日期  -->
+    <delete id="deleteTechNonStandardOrderByMonth" parameterType="Date">
+        delete from Tech_Non_Standard_Order
+        where Year_And_Month = #{yearAndMonth}
+    </delete>
+
+
+
+
+
+    <insert id="insertTechNonStandardOrder" parameterType="TechNonStandardOrder" useGeneratedKeys="true" keyProperty="tnId">
+        insert into Tech_Non_Standard_Order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="tableId != null">Table_Id,</if>
+            <if test="orderId != null">Order_Id,</if>
+            <if test="carModel != null">Car_Model,</if>
+            <if test="carConfiguration != null">Car_Configuration,</if>
+            <if test="principal != null">Principal,</if>
+            <if test="participants != null">Participants,</if>
+            <if test="pickupDate != null">Pickup_Date,</if>
+            <if test="transferDate != null">Transfer_Date,</if>
+            <if test="totalDurationHours != null">Total_Duration_Hours,</if>
+            <if test="totalDurationDays != null">Total_Duration_Days,</if>
+            <if test="overtimeRemark != null">Overtime_Remark,</if>
+            <if test="comments != null">Comments,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="tableId != null">#{tableId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="carModel != null">#{carModel},</if>
+            <if test="carConfiguration != null">#{carConfiguration},</if>
+            <if test="principal != null">#{principal},</if>
+            <if test="participants != null">#{participants},</if>
+            <if test="pickupDate != null">#{pickupDate},</if>
+            <if test="transferDate != null">#{transferDate},</if>
+            <if test="totalDurationHours != null">#{totalDurationHours},</if>
+            <if test="totalDurationDays != null">#{totalDurationDays},</if>
+            <if test="overtimeRemark != null">#{overtimeRemark},</if>
+            <if test="comments != null">#{comments},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsertNonStandardOrder" parameterType="java.util.List">
+        insert into Tech_Non_Standard_Order(Year_And_Month,Table_Id,Order_Id,Car_Model,Car_Configuration,Principal,Participants,
+        Pickup_Date,Transfer_Date,Total_Duration_Hours,Total_Duration_Days,Overtime_Remark,Comments)
+        values
+        <foreach collection="nonStandardOrderList" item="item" separator=",">
+            (#{item.yearAndMonth},#{item.tableId},#{item.orderId},#{item.carModel},#{item.carConfiguration},#{item.principal},#{item.participants},
+            #{item.pickupDate},#{item.transferDate},#{item.totalDurationHours},#{item.totalDurationDays},#{item.overtimeRemark},#{item.comments})
+        </foreach>
+    </insert>
+<!--    <insert id="batchInsertNonStandardOrder" parameterType="java.util.List">-->
+<!--        insert into Tech_Non_Standard_Order(Order_Id)-->
+<!--        values-->
+<!--        <foreach collection="nonStandardOrderList" item="item" separator=",">-->
+<!--            (#{item.orderId})-->
+<!--        </foreach>-->
+<!--        ON DUPLICATE KEY UPDATE-->
+<!--        Order_Id = values(Order_Id)-->
+<!--    </insert>-->
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertSalaryTable" parameterType="java.util.List">
+        insert into Enterprise_Management_Salary_Table(Salary_Calculation_Year_Month,Employee_Id,Name,Position,Department,
+        Group_Code,Subgroup_Code,Overtime_Salary,Total_Salary,Salary_Table_Index,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
+        VALUES
+        <foreach collection="salaryTableList" item="item" separator=",">
+            (#{item.salaryCalculationYearMonth},#{item.employeeId},#{item.name},#{item.position},#{item.department},
+            #{item.groupCode},#{item.subgroupCode},#{item.overtimeSalary},#{item.totalSalary},#{item.salaryTableIndex},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        Salary_Calculation_Year_Month = values(Salary_Calculation_Year_Month),Employee_Id = values(Employee_Id),
+        Name = values(Name),Position = values(Position),Department = values(Department),Group_Code = values(Group_Code),
+        Subgroup_Code = values(Subgroup_Code),Overtime_Salary = values(Overtime_Salary),Total_Salary = values(Total_Salary),
+        Salary_Table_Index = values(Salary_Table_Index),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),
+        UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)
+    </insert>
+
+    <update id="updateTechNonStandardOrder" parameterType="TechNonStandardOrder">
+        update Tech_Non_Standard_Order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="tableId != null">Table_Id = #{tableId},</if>
+            <if test="orderId != null">Order_Id = #{orderId},</if>
+            <if test="carModel != null">Car_Model = #{carModel},</if>
+            <if test="carConfiguration != null">Car_Configuration = #{carConfiguration},</if>
+            <if test="principal != null">Principal = #{principal},</if>
+            <if test="participants != null">Participants = #{participants},</if>
+            <if test="pickupDate != null">Pickup_Date = #{pickupDate},</if>
+            <if test="transferDate != null">Transfer_Date = #{transferDate},</if>
+            <if test="totalDurationHours != null">Total_Duration_Hours = #{totalDurationHours},</if>
+            <if test="totalDurationDays != null">Total_Duration_Days = #{totalDurationDays},</if>
+            <if test="overtimeRemark != null">Overtime_Remark = #{overtimeRemark},</if>
+            <if test="comments != null">Comments = #{comments},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where TN_id = #{tnId}
+    </update>
+
+    <delete id="deleteTechNonStandardOrderByTnId" parameterType="Long">
+        delete from Tech_Non_Standard_Order where TN_id = #{tnId}
+    </delete>
+
+    <delete id="deleteTechNonStandardOrderByTnIds" parameterType="String">
+        delete from Tech_Non_Standard_Order where TN_id in
+        <foreach item="tnId" collection="array" open="(" separator="," close=")">
+            #{tnId}
+        </foreach>
+    </delete>
+</mapper>

@@ -113,7 +113,7 @@
         :showSearch.sync="showSearch"
         @queryTable="getList"
       ></right-toolbar>
-    </el-row> 
+    </el-row>
 
     <el-table
       v-loading="loading"
@@ -265,6 +265,7 @@ import {
 } from "@/api/function/businesses";
 
 import { listModules } from "@/api/function/modules";
+import { listDept } from "@/api/system/project";
 
 export default {
   name: "Businesses",
@@ -324,24 +325,52 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
-      departments: [
-        "安环设备科",
-        "财务科",
-        "党群办公室",
-        "供应科",
-        "技术科",
-        "企业管理科",
-        "生产管理科",
-        "市场科",
-        "执纪监督室",
-        "质量科",
-      ],
+      // departments: [
+      //   "安环设备科",
+      //   "财务科",
+      //   "党群办公室",
+      //   "供应科",
+      //   "技术科",
+      //   "企业管理科",
+      //   "生产管理科",
+      //   "市场科",
+      //   "执纪监督室",
+      //   "质量科",
+      // ],
+
+      departments: [],
+      // 查询参数
+      queryDeptParams: {
+        deptName: undefined,
+        status: undefined,
+      },
     };
   },
   created() {
     this.getList();
+    this.getDeptList();
   },
   methods: {
+    /** 查询部门列表 */
+    getDeptList() {
+      listDept(this.queryDeptParams).then((response) => {
+        // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+        const filteredData = response.data.filter(
+          (department) =>
+            department.deptName !== "产品研发" &&
+            department.deptName !== "研发" &&
+            department.deptName !== "测试" &&
+            department.deptName !== "总部" &&
+            department.deptName !== "合力（盘锦）"
+        );
+
+        // 将每个过滤后的部门的 deptName 放入 departments 数组
+        this.departments = filteredData.map(
+          (department) => department.deptName
+        );
+      });
+    },
+    
     async handleDepartmentChange(department) {
       this.form.parentModule = ""; // 重置上级业务模块选择
       this.modules = []; // 清空之前的模块

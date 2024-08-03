@@ -203,7 +203,7 @@ import CustomForms from "./CustomForms.vue";
 // // 表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import { listFilemanagement, listFormfilemanagement, listFilemanagementAll, listFormfilemanagementAll} from "@/api/system/project";
 
 export default {
   props: {
@@ -280,7 +280,7 @@ export default {
     getRegularFileData() {
       this.selectedFileNames = [];
 
-      listFilemanagement(this.queryParams)
+      listFilemanagementAll(this.queryParams)
         .then((response) => {
           this.filemanagementList = response.rows;
           // console.log(" this.filemanagementList ==>", this.filemanagementList);
@@ -307,7 +307,7 @@ export default {
     getFormsData() {
       this.selectedFormsNames = [];
 
-      listFormfilemanagement(this.queryParams)
+      listFormfilemanagementAll(this.queryParams)
         .then((response) => {
           this.formmanagementList = response.rows;
           // console.log(" this.filemanagementList ==>", this.filemanagementList);

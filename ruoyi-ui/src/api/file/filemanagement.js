@@ -9,6 +9,15 @@ export function listFilemanagement(query) {
   })
 }
 
+// 查询文件管理列表(全部 无权限)
+export function listAllFilemanagement(query) {
+  return request({
+    url: '/file/filemanagement/list3',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询历史文件列表
 export function getRegulationsHistory(currentId) {
   return request({
@@ -25,6 +34,8 @@ export function getFilemanagement(regulationsId) {
     method: 'get'
   })
 }
+
+
 
 // 新增文件管理
 export function addFilemanagement(data) {

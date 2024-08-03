@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface TechMapper {
 
+    int insertOrUpdateTech(Tech tech);
+
     /**
      * @description: 统计当年已经研发完成的数目
      * @author: hong

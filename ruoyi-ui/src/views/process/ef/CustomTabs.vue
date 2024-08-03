@@ -6,13 +6,21 @@
       name="first"
       style="background-color: #f2f2f2; padding: 2px"
     >
+      <!-- 检索框 -->
+      <el-input
+        v-model="searchQuery"
+        placeholder="请输入[表单文件名称]进行检索"
+        @input="handleSearch"
+        style="margin-bottom: 10px"
+      />
+
       <!-- 制度文件table -->
       <el-table
         ref="multipleTable"
-        :data="filemanagementList"
+        :data="filteredFileList"
         style="width: 100%"
         border
-        height="170px"
+        height="300px"
         @selection-change="handleSelectionChange"
         :selectable="selectEnable"
       >
@@ -56,33 +64,27 @@
 </template>
 
 <script>
-//制度文件api
-import { listFilemanagement, listFormfilemanagement, listFilemanagementAll } from "@/api/system/project";
+import { listFilemanagementAll } from "@/api/system/project";
+
 export default {
   props: {
     selectedFileNames: {
-      // 接收父组件传递的已绑定的文件信息
       type: Array,
       default: () => [],
     },
-    activeName: "first",
+    activeName: {
+      type: String,
+      default: "first",
+    },
   },
   name: "CustomTabs",
   inject: ["reload"],
   data() {
     return {
-      // 制度文件数据
       filemanagementList: [],
-      // activeName: "first",
-      // 制度文件数据
-
-      // 选中数组传给 node
       ids: [],
       names: [],
-      // 从node传来的 已绑定的文件信息
-      // selectedFileNames: [],
-
-      // 制度查询参数
+      searchQuery: "", // 检索框绑定的数据属性
       queryParams: {
         pageNum: 1,
         pageSize: 10,
@@ -105,103 +107,76 @@ export default {
         revisionContent: null,
         reviser: null,
       },
-      // 总条数
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
     };
   },
+  computed: {
+    filteredFileList() {
+      return this.filemanagementList.filter((item) =>
+        item.fileName.includes(this.searchQuery)
+      );
+    },
+  },
   created() {
     this.getRegularFileData();
   },
-
   mounted() {
-    // 当组件挂载时，设置已绑定的文件信息为选中状态--展示回显效果
     this.setFilesSelected(
       JSON.parse(JSON.stringify(this.$props.selectedFileNames))
     );
-
   },
-
-  destroyed() {
-    this.$destroy();
-  },
-
   methods: {
-    // hello() {
-    //   console.log("hello");
-    // },
-    /** 查询制度文件列表 */
     getRegularFileData() {
       listFilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });
-
-      //数据分页
       this.filemanagementList = this.filemanagementList.slice(
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize
       );
     },
-
     handleClick(tab, event) {
       console.log(tab, event);
     },
-
-    /** 保存选择的行数据 */
     handleSelectionChange(selection) {
-      // 选中的行数据
       this.ids = selection.map((item) => item.regulationsId);
       this.names = selection.map((item) => item.fileName);
-      // 触发自定义事件，并传递 ids 和 names 数据
-      // this.$emit("selection-change", { ids: this.ids, names: this.names });
     },
-    //传递给node数据ids&names
     getSelectedIdsAndNames() {
       return {
         ids: this.ids,
         names: this.names,
       };
     },
-
-    // //接收node的数据
-    // setSelectedFileNames(name) {
-    //   // 接收父组件传递的已绑定的文件信息
-    //   // this.props.selectedFileNames = names;
-    //   // 设置已绑定的文件信息为已选状态
-    //   this.setFilesSelected(name);
-    // },
-
-    setFilesSelected(name) {
-      if (name != null) {
-        // 将已绑定的文件信息设置为已选状态
-        setTimeout(() => {
-          this.$nextTick(() => {
-            name.forEach((name) => {
-              const row = this.filemanagementList.find(
-                (item) => item.fileName === name
-              );
-              if (row) {
-                this.$refs.multipleTable.toggleRowSelection(row, true);
-              }
-            });
+    setFilesSelected() {
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.selectedFileNames.forEach((name) => {
+            const row = this.filemanagementList.find(
+              (item) => item.fileName === name
+            );
+            if (row) {
+              this.$refs.multipleTable.toggleRowSelection(row, true);
+            }
           });
-        }, 1000);
-      }
+        });
+      }, 1000);
     },
-
-    //分页功能相关
-    // 每页数
+    handleSearch() {
+      this.pageIndex = 1;
+      this.getRegularFileData();
+    },
     sizeChangeHandle(val) {
       this.pageSize = val;
       this.pageIndex = 1;
-      this.getDataList();
+      this.getRegularFileData();
     },
-    // 当前页
     currentChangeHandle(val) {
       this.pageIndex = val;
-      this.getDataList();
+      this.getRegularFileData();
     },
   },
 };

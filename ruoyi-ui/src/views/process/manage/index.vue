@@ -552,10 +552,14 @@ import {
   getProjectByName,
   getProjectFileName,
 } from "@/api/system/project";
+
 import {
   listFilemanagement,
   listFormfilemanagement,
+  listFilemanagementAll,
+  listFormfilemanagementAll
 } from "@/api/system/project";
+
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
 import "@/views/process/ef/button.css";
@@ -909,7 +913,7 @@ export default {
         let selectedFileLeval = [];
 
         // 制度文件
-        listFilemanagement(this.queryParams)
+        listFilemanagementAll(this.queryParams)
           .then((response) => {
             this.filemanagementList = response.rows;
             console.log(
@@ -939,7 +943,7 @@ export default {
           })
           .then(() => {
             // 表单文件
-            return listFormfilemanagement(this.queryParams);
+            return listFormfilemanagementAll(this.queryParams);
           })
           .then((response) => {
             this.formmanagementList = response.rows;
@@ -1089,7 +1093,7 @@ export default {
       this.wordHyperLinks = [];
 
       console.log("1.1 查询制度文件列表 row=====>", row);
-      listFilemanagement(this.queryParams).then((response) => {
+      listFilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
       });
       //对 filemanagementList 查找符合state中ids的文件 将其放入 nodeFileNames
@@ -1118,7 +1122,7 @@ export default {
       this.formHyperLinks = [];
       console.log("1.1 查询表单文件列表 row=====>", row);
 
-      listFormfilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagementAll(this.queryParams).then((response) => {
         this.formList = response.rows;
         console.log("this.formList===>", this.formList);
       });

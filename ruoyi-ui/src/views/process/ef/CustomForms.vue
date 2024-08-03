@@ -6,13 +6,21 @@
       name="first"
       style="background-color: #f2f2f2; padding: 2px"
     >
+      <!-- 检索框 -->
+      <el-input
+        v-model="searchQuery"
+        placeholder="请输入[制度文件名称]进行检索"
+        @input="handleSearch"
+        style="margin-bottom: 10px"
+      />
+
       <!-- 表单文件 -->
       <el-table
         ref="multipleTable"
-        :data="filemanagementList"
+        :data="filteredFileList"
         style="width: 100%"
         border
-        height="170px"
+        height="300px"
         @selection-change="handleSelectionChange"
         :selectable="selectEnable"
       >
@@ -29,7 +37,6 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
         <el-table-column label="文件名称" align="center" prop="formName" />
         <el-table-column
           label="表单所属科室"
@@ -50,12 +57,9 @@
     </el-tab-pane>
   </el-tabs>
 </template>
-  
-  <script>
-//表单文件api
-// import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+<script>
+import { listFormfilemanagementAll } from "@/api/system/project";
 
 export default {
   props: {
@@ -79,6 +83,7 @@ export default {
       names: [],
       // 从node传来的 已绑定的文件信息
       selectedFileNames: [],
+      searchQuery: "", // 检索框绑定的数据属性
 
       // 制度查询参数
       queryParams: {
@@ -109,6 +114,14 @@ export default {
       totalPage: 0,
     };
   },
+  computed: {
+    filteredFileList() {
+      // 过滤文件列表
+      return this.filemanagementList.filter((item) =>
+        item.formName.includes(this.searchQuery)
+      );
+    },
+  },
   created() {
     this.getRegularFileData();
   },
@@ -124,7 +137,7 @@ export default {
     },
     /** 查询表单文件列表 */
     getRegularFileData() {
-      listFormfilemanagement(this.queryParams).then((response) => {
+      listFormfilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });
@@ -134,14 +147,6 @@ export default {
         this.pageIndex * this.pageSize
       );
     },
-
-    /** 查询表单文件列表 */
-    // getFormFileData() {
-    //   listFormfilemanagement(this.queryParams).then((response) => {
-    //     this.filemanagementList = response.rows;
-    //     this.total = response.total;
-    //   });
-    // },
 
     handleClick(tab, event) {
       console.log(tab, event);
@@ -163,13 +168,7 @@ export default {
       };
     },
 
-    // //接收node的数据
-    // setSelectedFileNames(names) {
-    //   // 接收父组件传递的已绑定的文件信息
-    //   this.selectedFileNames = names;
-    //   // 设置已绑定的文件信息为已选状态
-    //   this.setFilesSelected();
-    // },
+    //接收node的数据
     setFilesSelected() {
       setTimeout(() => {
         // 将已绑定的文件信息设置为已选状态
@@ -184,6 +183,13 @@ export default {
           });
         });
       }, 1000);
+    },
+
+    // 检索框输入事件
+    handleSearch() {
+      // 在检索时自动更新显示的文件列表
+      this.pageIndex = 1;
+      this.getRegularFileData();
     },
 
     //分页功能相关
@@ -201,8 +207,7 @@ export default {
   },
 };
 </script>
-  
-  <style>
+
+<style>
 /* 可以根据需要添加样式 */
 </style>
-  

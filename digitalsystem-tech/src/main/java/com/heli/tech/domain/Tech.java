@@ -36,13 +36,17 @@ public class Tech extends BaseEntity {
      * 非标准单平均技术准备天数
      */
     @Excel(name = "非标准单平均技术准备天数")
-    private Long nonStandardAvgPreparationDays;
+    private BigDecimal nonStandardAvgPreparationDays;
+
+    private Integer nonStandardOvertimeNum;
 
     /**
      * 当月完成的计划
      */
     @Excel(name = "当月完成的计划")
     private Long completedmonthlyPlancounts;
+
+    private Long completedPlanCount;
 
     /**
      * 研发项目计划进度完成率

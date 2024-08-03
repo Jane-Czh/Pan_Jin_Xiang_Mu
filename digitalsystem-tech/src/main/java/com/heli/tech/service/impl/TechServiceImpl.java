@@ -84,6 +84,7 @@ public class TechServiceImpl implements ITechService {
         if(checkDataExist()){
 
             annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
+            log.info("当前计算的数据为"+tech);
         }else {
             annualCompletionNumber = tech.getCompletedmonthlyPlancounts();
         }

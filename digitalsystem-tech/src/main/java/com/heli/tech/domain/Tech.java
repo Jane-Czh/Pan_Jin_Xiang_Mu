@@ -46,6 +46,8 @@ public class Tech extends BaseEntity {
     @Excel(name = "当月完成的计划")
     private Long completedmonthlyPlancounts;
 
+    private Long completedPlanCount;
+
     /**
      * 研发项目计划进度完成率
      */

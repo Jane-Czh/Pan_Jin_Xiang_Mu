@@ -122,8 +122,8 @@
             <if test="reviser != null">#{reviser},</if>
             <if test="newFlag != null">#{newFlag},</if>
             <if test="newFormId != null">#{newFormId},</if>
-            <if test="businesses != null">businesses,</if>
-            <if test="subBusinesses != null">sub_businesses,</if>
+            <if test="businesses != null">#{businesses},</if>
+            <if test="subBusinesses != null">#{subBusinesses},</if>
         </trim>
     </insert>
 

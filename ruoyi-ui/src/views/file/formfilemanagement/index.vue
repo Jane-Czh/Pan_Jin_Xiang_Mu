@@ -123,7 +123,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
+          @click="exportAll"
           v-hasPermi="['file:formfilemanagement:list']"
         >导出</el-button>
       </el-col>
@@ -138,20 +138,7 @@
       <el-table-column label="细分业务" align="center" prop="subBusinesses" />
       <el-table-column label="表单名称" align="center" prop="formTitle" />
       <el-table-column label="存储表单内容" align="center" prop="scope" />
-      <el-table-column label="表单上传时间" align="center" prop="effectiveDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="表单类型" align="center" prop="formType" />
-      <el-table-column label="表单下载" align="center" prop="formPath">
-        <template v-slot:default="scope">
-          <a v-if="scope.row.formPath" @click.prevent="downloadFile(scope.row.formPath)" style="color: #6495ED;">点击下载</a>
-        </template>
-      </el-table-column>
-<!--      <el-table-column label="表单大小" align="center" prop="formSize" />-->
-<!--      <el-table-column label="上传人" align="center" prop="createUsername" />-->
-      <el-table-column label="表单标签名称" align="center" prop="remark" />
       <el-table-column label="关联流程" align="center">
         <template slot-scope="scope">
           <el-tooltip
@@ -185,6 +172,19 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="关键字" align="center" prop="remark" />
+      <el-table-column label="表单上传时间" align="center" prop="effectiveDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.effectiveDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="表单下载" align="center" prop="formPath">
+        <template v-slot:default="scope">
+          <a v-if="scope.row.formPath" @click.prevent="downloadFile(scope.row.formPath)" style="color: #6495ED;">点击下载</a>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="表单大小" align="center" prop="formSize" />-->
+<!--      <el-table-column label="上传人" align="center" prop="createUsername" />-->
 <!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
 <!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
 <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -282,34 +282,67 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span='12'>
-            <el-form-item label="表单大小" prop="formSize">
-              <el-input v-model="form.formSize" placeholder="请输入表单大小" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span='12'>
-            <el-form-item label="表单标签名称" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入表单标签名称"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='12'>
-            <el-form-item label="主责部门" prop="departmentCategory">
+            <el-form-item label="主责部门" prop="departmentCategory"  required="true">
               <el-select
-                v-model="queryParams.departmentCategory"
+                v-model="form.departmentCategory"
                 placeholder="请选择主责部门"
                 clearable
+                @change="handleDepartmentChange"
               >
                 <el-option
                   v-for="item in departments"
                   :key="item"
                   :label="item"
                   :value="item"
-                ></el-option>
+                />
+
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+            <el-form-item label="业务模块" prop="businesses">
+              <el-select
+                v-model="form.businesses"
+                placeholder="请选择业务模块"
+                clearable
+                :disabled="!form.departmentCategory"
+                @change="handleModuleChange"
+              >
+                <el-option
+                  v-for="item in modules"
+                  :key="item.bm_id"
+                  :label="item.moduleName"
+                  :value="item.moduleName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col  :span="12">
+            <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+            <el-form-item label="细分业务" prop="subBusinesses">
+              <el-select
+                v-model="form.subBusinesses"
+                placeholder="请选择细分业务"
+                clearable
+                :disabled="!form.businesses"
+              >
+                <el-option
+                  v-for="item in subBusinesses"
+                  :key="item.subb_id"
+                  :label="item.subBusinessesName"
+                  :value="item.subBusinessesName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span='12'>
+            <el-form-item label="关键字" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入关键字"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -376,24 +409,73 @@
               <el-input v-model="form.formTitle" placeholder="请输入表单标题"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span='12'>
             <el-form-item label="表单存储内容" prop="scope">
               <el-input v-model="form.scope" placeholder="请输入表单存储内容"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span='12'>
+            <el-form-item label="主责部门" prop="departmentCategory"  required="true">
+              <el-select
+                v-model="form.departmentCategory"
+                placeholder="请选择主责部门"
+                clearable
+                @change="handleDepartmentChange"
+              >
+                <el-option
+                  v-for="item in departments"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
-            <el-form-item label="表单标签名称" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入表单标签名称"/>
+            <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+            <el-form-item label="业务模块">
+              <el-select
+                v-model="form.businesses"
+                placeholder="请选择业务模块"
+                clearable
+                :disabled="!form.departmentCategory"
+                @change="handleModuleChange"
+              >
+                <el-option
+                  v-for="item in modules"
+                  :key="item.bm_id"
+                  :label="item.moduleName"
+                  :value="item.moduleName"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col  :span="12">
+            <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+            <el-form-item label="细分业务">
+              <el-select
+                v-model="form.subBusinesses"
+                placeholder="请选择细分业务"
+                clearable
+                :disabled="!form.businesses"
+              >
+                <el-option
+                  v-for="item in subBusinesses"
+                  :key="item.subb_id"
+                  :label="item.subBusinessesName"
+                  :value="item.subBusinessesName"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span='12'>
-            <el-form-item label="所属科室" prop="departmentCategory">
-              <el-select v-model="form.departmentCategory" placeholder="请输入表单所属科室">
-                <!-- 循环遍历this.deptList中的部门数据 -->
-                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>
-              </el-select>
+            <el-form-item label="关键字" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入关键字"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -480,26 +562,6 @@ export default {
       },
       modules: [], //过滤后 业务模块 数据
       modulesList: [],//全部的 业务模块 数据
-      //制度专业类别
-      classificationOfSpecialtiesList: [
-        "安全管理",
-        "财务管理",
-        "采购管理",
-        "成本管理",
-        "党群管理",
-        "法人治理",
-        "会计核算管理",
-        "监察管理",
-        "人力资源管理",
-        "设备管理",
-        "生产管理",
-        "投资、规划管理",
-        "信息管理",
-        "研发管理",
-        "营销管理",
-        "质量管理",
-        "综合管理"
-      ],
       //表单展示数据
       formData: {
         //主责部门
@@ -510,6 +572,7 @@ export default {
         subBusinesses: "",
       },
       projectNames:[], //关联流程名称列表
+      projectNamesString : "",  //关联流程名称列表（用”，“拼接）
       //部门列表
       deptList: [],
       //当前账号的dept
@@ -664,37 +727,23 @@ export default {
         this.loading = false;
       });
     },
-    /** 查询绑定的流程信息 */
+    // 查询绑定的流程信息
     handleProjectDetails(row) {
-      let projectList;
-      let nodeList;
-      this.projectNames = [];
-      listProject(this.projecQueryParams).then(response => {
-        console.log("response111:：",response);
-        projectList = response;
-        console.log("projectNames:",this.projectNames);
+      return listProject(this.projecQueryParams).then(response => {
+        console.log("response111:", response);
+        const projectList = response;
+        this.projectNames = [];
+
         projectList.forEach(process => {
           if (process.type && process.type.includes(row.formId)) {
             this.projectNames.push(process.name);
-            console.log("projectNames=>",this.projectNames);
+            console.log("projectNames=>", this.projectNames);
           }
         });
 
+        // 将 projectNames 转换为用逗号分隔的字符串
+        this.projectNamesString = this.projectNames.join(",");
       });
-      // listNode(this.nodeQueryParams).then(response => {
-      //   console.log("response222:：",response);
-      //   console.log("row:",row);
-      //   nodeList = response.rows;
-      //   nodeList.forEach(node => {
-      //     if (node.state && node.state.includes(row.regulationsId)) {
-      //       getNode(node.projectId).then(response1 => {
-      //         console.log("response333=>",response1);
-      //         this.projectNames.push(response.rows.name);
-      //       })
-      //       console.log("projectNames=>",this.projectNames);
-      //     }
-      //   });
-      // })
     },
     // 文件上传取消按钮
     uploadCancel() {
@@ -766,7 +815,7 @@ export default {
       getFormfilemanagement(formId).then(response => {
         this.form = response.data;
         this.formModifyDialogVisible = true;
-        this.title = "修改表单文件";
+        this.title = "更新表单文件";
       });
     },
     /** 更新表单文件 */
@@ -995,7 +1044,6 @@ export default {
       // 获取当前时间作为上传日期，并填充到对应的输入框
       const currentDate = new Date();
       this.form.effectiveDate = currentDate.toISOString().split('T')[0];
-      this.getUserInfo();
       console.log('上传文件时的form2',this.form);
     },
     // 上传成功回调
@@ -1221,6 +1269,7 @@ export default {
     },
 
     exportAll(){
+      console.log("this.formmanagementList=======>",this.formmanagementList);
       const loadingInstance = Loading.service({
         lock: true,
         text: "正在导出，请稍后...",
@@ -1228,18 +1277,17 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
 
-      const promises = this.filemanagementList.map((regulation) => {
-        return this.handleProjectDetails(regulation).then((projectNames) => {
+      const promises = this.formmanagementList.map((form) => {
+        return this.handleProjectDetails(form).then((projectNames) => {
           return {
-            主责部门 : regulation.departmentCategory,
-            制度名称 : regulation.regulationsTitle,
-            专业分类 : regulation.classificationOfSpecialties,
-            制度范围 : regulation.useScope,
-            制度编号 : regulation.regulationNumber,
-            发布日期 : regulation.createDate,
-            实施日期 : regulation.effectiveDate,
+            主责部门 : form.departmentCategory,
+            业务模块 : form.businesses,
+            细分业务 : form.subBusinesses,
+            表单名称 : form.formTitle,
+            存储表单内容 : form.scope,
+            表单类型 : form.formType,
             关联流程 :this.projectNamesString,
-            最新上传日期 : regulation.uploadDate,
+            表单上传日期 : form.effectiveDate,
           };
         });
       });
@@ -1252,7 +1300,7 @@ export default {
           const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
           saveAs(
             new Blob([wbout], { type: "application/octet-stream" }),
-            "流程总台账.xlsx"
+            "表单总台账.xlsx"
           );
         })
         .finally(() => {

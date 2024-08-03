@@ -419,15 +419,18 @@
         <el-form-item label="凭证归档" prop="voucher">
           <el-input v-model="form.voucher" placeholder="请输入凭证归档" />
         </el-form-item>
+        <el-form-item label="类型/生效日期" prop="type">
+          <el-input v-model="form.type" placeholder="请输入类型/生效日期" />
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="文件地址" prop="filepath">
-          <el-input v-model="form.filepath" placeholder="请输入文件地址" />
-        </el-form-item>
-        <el-form-item label="图片地址" prop="imagepath">
-          <el-input v-model="form.imagepath" placeholder="请输入图片地址" />
-        </el-form-item>
+<!--        <el-form-item label="文件地址" prop="filepath">-->
+<!--          <el-input v-model="form.filepath" placeholder="请输入文件地址" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="图片地址" prop="imagepath">-->
+<!--          <el-input v-model="form.imagepath" placeholder="请输入图片地址" />-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

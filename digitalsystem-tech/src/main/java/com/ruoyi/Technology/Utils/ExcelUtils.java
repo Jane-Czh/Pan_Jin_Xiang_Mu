@@ -63,15 +63,16 @@ public class ExcelUtils {
 //6.分配时间
             double assignmentTimeValue = getNumericCellValue(row.getCell(count));
             String assignmentTimeString = ExcelDateUtils.converttoExcelDateToString(assignmentTimeValue, "yyyy.MM.dd");
-
-                technologyFunctionChangerorderTable.setAssignmentTime(getDateCellValue(assignmentTimeString));
-
+            technologyFunctionChangerorderTable.setAssignmentTime(getDateCellValue(assignmentTimeString));
             count++;
             //7.完成时间
 //            if (date.before(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count)))))){
 //
-                technologyFunctionChangerorderTable.setFinishTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));//
-
+// 处理 finishTime
+            double finishTimeValue = getNumericCellValue(row.getCell(count));
+            String finishTimeString = ExcelDateUtils.converttoExcelDateToString(finishTimeValue, "yyyy.MM.dd");
+            technologyFunctionChangerorderTable.setFinishTime(getDateCellValue(finishTimeString));
+            count++;
             //7.完成时间
             //8.凭证归档
             technologyFunctionChangerorderTable.setVoucher(getStringCellValue(row.getCell(count++)));

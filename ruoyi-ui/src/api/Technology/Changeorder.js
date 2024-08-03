@@ -9,19 +9,10 @@ export function listChangeorder(query) {
   })
 }
 
-// 查询历史文件列表
-export function getRegulationsHistory(currentId) {
-  return request({
-    url: '/file/filemanagement/history/' + currentId,
-    method: 'get',
-    // params: query
-  });
-}
-
 // 查询变更单留存详细
-export function getChangeorder(tfcoId) {
+export function getChangeorder(changetableId) {
   return request({
-    url: '/Technology/Changeorder/' + tfcoId,
+    url: '/Technology/Changeorder/' + changetableId,
     method: 'get'
   })
 }
@@ -45,10 +36,21 @@ export function updateChangeorder(data) {
 }
 
 // 删除变更单留存
-export function delChangeorder(tfcoId) {
+export function delChangeorder(changetableId) {
   return request({
-    url: '/Technology/Changeorder/' + tfcoId,
+    url: '/Technology/Changeorder/' + changetableId,
     method: 'delete'
   })
 }
 
+export function uploadFile(formData) {
+  return request({
+    url: '/Technology/Changeorder/FOimport',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+  });
+}

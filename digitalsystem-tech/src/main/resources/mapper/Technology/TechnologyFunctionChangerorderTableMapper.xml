@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Technology.mapper.TechnologyFunctionChangerorderTableMapper">
+    
+    <resultMap type="TechnologyFunctionChangerorderTable" id="TechnologyFunctionChangerorderTableResult">
+        <result property="changetableId"    column="Changetable_ID"    />
+        <result property="number"    column="number"    />
+        <result property="changeorderId"    column="Changeorder_ID"    />
+        <result property="information"    column="information"    />
+        <result property="receiver"    column="receiver"    />
+        <result property="isfinish"    column="isfinish"    />
+        <result property="assignmentTime"    column="assignment_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="voucher"    column="voucher"    />
+        <result property="type"    column="type"    />
+        <result property="remark"    column="remark"    />
+        <result property="filepath"    column="filepath"    />
+        <result property="imagepath"    column="imagepath"    />
+    </resultMap>
+
+    <sql id="selectTechnologyFunctionChangerorderTableVo">
+        select Changetable_ID, number, Changeorder_ID, information, receiver, isfinish, assignment_time, finish_time, voucher, type, remark, filepath, imagepath from Technology_Function_ChangerOrder_Table
+    </sql>
+
+    <select id="selectTechnologyFunctionChangerorderTableList" parameterType="TechnologyFunctionChangerorderTable" resultMap="TechnologyFunctionChangerorderTableResult">
+        <include refid="selectTechnologyFunctionChangerorderTableVo"/>
+        <where>  
+            <if test="number != null "> and number = #{number}</if>
+            <if test="changeorderId != null "> and Changeorder_ID = #{changeorderId}</if>
+            <if test="information != null  and information != ''"> and information = #{information}</if>
+            <if test="receiver != null  and receiver != ''"> and receiver = #{receiver}</if>
+            <if test="isfinish != null  and isfinish != ''"> and isfinish = #{isfinish}</if>
+            <if test="assignmentTime != null "> and assignment_time = #{assignmentTime}</if>
+            <if test="finishTime != null "> and finish_time = #{finishTime}</if>
+            <if test="voucher != null  and voucher != ''"> and voucher = #{voucher}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="filepath != null  and filepath != ''"> and filepath = #{filepath}</if>
+            <if test="imagepath != null  and imagepath != ''"> and imagepath = #{imagepath}</if>
+        </where>
+    </select>
+    
+    <select id="selectTechnologyFunctionChangerorderTableByChangetableId" parameterType="Long" resultMap="TechnologyFunctionChangerorderTableResult">
+        <include refid="selectTechnologyFunctionChangerorderTableVo"/>
+        where Changetable_ID = #{changetableId}
+    </select>
+        
+    <insert id="insertTechnologyFunctionChangerorderTable" parameterType="TechnologyFunctionChangerorderTable">
+        insert into Technology_Function_ChangerOrder_Table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="changetableId != null">Changetable_ID,</if>
+            <if test="number != null">number,</if>
+            <if test="changeorderId != null">Changeorder_ID,</if>
+            <if test="information != null">information,</if>
+            <if test="receiver != null">receiver,</if>
+            <if test="isfinish != null">isfinish,</if>
+            <if test="assignmentTime != null">assignment_time,</if>
+            <if test="finishTime != null">finish_time,</if>
+            <if test="voucher != null">voucher,</if>
+            <if test="type != null">type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="filepath != null">filepath,</if>
+            <if test="imagepath != null">imagepath,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="changetableId != null">#{changetableId},</if>
+            <if test="number != null">#{number},</if>
+            <if test="changeorderId != null">#{changeorderId},</if>
+            <if test="information != null">#{information},</if>
+            <if test="receiver != null">#{receiver},</if>
+            <if test="isfinish != null">#{isfinish},</if>
+            <if test="assignmentTime != null">#{assignmentTime},</if>
+            <if test="finishTime != null">#{finishTime},</if>
+            <if test="voucher != null">#{voucher},</if>
+            <if test="type != null">#{type},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="filepath != null">#{filepath},</if>
+            <if test="imagepath != null">#{imagepath},</if>
+         </trim>
+    </insert>
+
+<!--    <insert id="batchInsertMarketCommercialVehicleTable" parameterType="java.util.List">-->
+<!--        INSERT INTO Market_Commercial_Vehicle_table-->
+<!--        (-->
+<!--        MCV_ID, CREATED_BY, CREATED_TIME, Acceptance_Date, Launch_Date, Order_Number, Contract_Number, Car_Number, Vehicle_Model, Door_Frame_Height,-->
+<!--        Number, Accessory, Valve_Block, Configuration, Planned_Completion_Period, Customer, Vehicle_Launch_Date, Completion_Period_Of_Door_Frame_Assembly,-->
+<!--        Trial_Completion_Period, Special_Operations, Precision_Completion_Period, Production_SiteIssues, Procurement_Of_On_site_Abnormal_Issues, Quality_Of_On_site_Abnormal_Issues,-->
+<!--        Go_Live, Warehousing, Production_Cycle-->
+<!--        )-->
+<!--        VALUES-->
+<!--        <foreach collection="list" item="item" separator=",">-->
+<!--            (-->
+<!--            #{item.mcvId}, #{item.createdBy}, #{item.createdTime}, #{item.acceptanceDate}, #{item.launchDate}, #{item.orderNumber}, #{item.contractNumber}, #{item.carNumber}, #{item.vehicleModel}, #{item.doorFrameHeight},-->
+<!--            #{item.Number}, #{item.Accessory}, #{item.valveBlock}, #{item.Configuration}, #{item.plannedCompletionPeriod}, #{item.Customer}, #{item.vehicleLaunchDate}, #{item.completionPeriodOfDoorFrameAssembly},-->
+<!--            #{item.trialCompletionPeriod}, #{item.specialOperations}, #{item.precisionCompletionPeriod}, #{item.productionSiteissues}, #{item.procurementOfOnSiteAbnormalIssues}, #{item.qualityOfOnSiteAbnormalIssues},-->
+<!--            #{item.goLive}, #{item.Warehousing}, #{item.productionCycle}-->
+<!--            )-->
+<!--        </foreach>-->
+<!--    </insert>-->
+    <insert id="batchInsertMarketCommercialVehicleTable" parameterType="java.util.List">
+        INSERT INTO Technology_Function_ChangerOrder_Table
+        (
+        Changetable_ID, number, Changeorder_ID, information, receiver, isfinish, assignment_time, finish_time, voucher, type, remark, filepath, imagepath
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.changetableId}, #{item.number}, #{item.changeorderId}, #{item.information}, #{item.receiver}, #{item.isfinish}, #{item.assignmentTime}, #{item.finishTime}, #{item.voucher}, #{item.type}, #{item.remark}, #{item.filepath}, #{item.imagepath}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateTechnologyFunctionChangerorderTable" parameterType="TechnologyFunctionChangerorderTable">
+        update Technology_Function_ChangerOrder_Table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="number != null">number = #{number},</if>
+            <if test="changeorderId != null">Changeorder_ID = #{changeorderId},</if>
+            <if test="information != null">information = #{information},</if>
+            <if test="receiver != null">receiver = #{receiver},</if>
+            <if test="isfinish != null">isfinish = #{isfinish},</if>
+            <if test="assignmentTime != null">assignment_time = #{assignmentTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="voucher != null">voucher = #{voucher},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="filepath != null">filepath = #{filepath},</if>
+            <if test="imagepath != null">imagepath = #{imagepath},</if>
+        </trim>
+        where Changetable_ID = #{changetableId}
+    </update>
+
+    <delete id="deleteTechnologyFunctionChangerorderTableByChangetableId" parameterType="Long">
+        delete from Technology_Function_ChangerOrder_Table where Changetable_ID = #{changetableId}
+    </delete>
+
+    <delete id="deleteTechnologyFunctionChangerorderTableByChangetableIds" parameterType="String">
+        delete from Technology_Function_ChangerOrder_Table where Changetable_ID in 
+        <foreach item="changetableId" collection="array" open="(" separator="," close=")">
+            #{changetableId}
+        </foreach>
+    </delete>
+</mapper>

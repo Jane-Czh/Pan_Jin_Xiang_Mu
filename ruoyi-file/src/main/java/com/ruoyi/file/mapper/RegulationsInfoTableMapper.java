@@ -40,6 +40,14 @@ public interface RegulationsInfoTableMapper
     public List<RegulationsInfoTable> selectRegulationsInfoTableList(RegulationsInfoTable regulationsInfoTable);
 
     /**
+     * 查询文件管理列表(全部)
+     *
+     * @param regulationsInfoTable 文件管理
+     * @return 文件管理集合
+     */
+    public List<RegulationsInfoTable> selectAllRegulationsList(RegulationsInfoTable regulationsInfoTable);
+
+    /**
      * 新增文件管理
      *
      * @param regulationsInfoTable 文件管理

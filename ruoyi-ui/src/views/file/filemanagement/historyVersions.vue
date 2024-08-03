@@ -221,7 +221,7 @@
       <!--      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>-->
       <!--      <el-table-column label="制度使用状态" align="center" prop="useState"/>-->
       <el-table-column label="制度等级" align="center" prop="regulationLeval" />
-      <el-table-column label="制度标签名称" align="center" prop="fileTag" />
+      <el-table-column label="关键字" align="center" prop="fileTag" />
       <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
       <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
       <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -532,18 +532,7 @@
           "综合管理"
         ],
         //部门
-        departments: [
-          "安环设备科",
-          "财务科",
-          "党群办公室",
-          "供应科",
-          "技术科",
-          "企业管理科",
-          "生产管理科",
-          "市场科",
-          "执纪监督室",
-          "质量科",
-        ],
+        departments: [],
         //制度等级
         regulationLevalList: [
           "公司级",
@@ -778,9 +767,7 @@
         console.error('获取用户信息失败:', error);
       });
       //获取部门列表
-      listDept02().then(response => {
-        this.deptList = response.data;
-      });
+      this.getDeptList();
 
     },
     methods: {
@@ -1158,6 +1145,26 @@
             console.error("Failed to fetch sub-businesses:", error);
           }
         }
+      },
+
+      /** 查询部门列表 */
+      getDeptList() {
+        listDept02().then((response) => {
+          // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+          const filteredData = response.data.filter(
+            (department) =>
+              department.deptName !== "产品研发" &&
+              department.deptName !== "研发" &&
+              department.deptName !== "测试" &&
+              department.deptName !== "总部" &&
+              department.deptName !== "合力（盘锦）"
+          );
+
+          // 将每个过滤后的部门的 deptName 放入 departments 数组
+          this.departments = filteredData.map(
+            (department) => department.deptName
+          );
+        });
       },
 
     }

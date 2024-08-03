@@ -52,6 +52,16 @@ public class RegulationsInfoTableController extends BaseController {
     }
 
     /**
+     * 查询文件管理列表(全部 无权限)
+     */
+    @GetMapping("/list3")
+    public TableDataInfo list03(RegulationsInfoTable regulationsInfoTable) {
+        startPage();
+        List<RegulationsInfoTable> list = regulationsInfoTableService.selectAllRegulationsList(regulationsInfoTable);
+        return getDataTable(list);
+    }
+
+    /**
      * 提供给流程部分使用绑定文件
      * 不需要绑定权限
      */

@@ -143,7 +143,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-         
+
           >导出</el-button
         >
       </el-col> -->
@@ -570,6 +570,9 @@ import { saveAs } from "file-saver";
 //加载效果
 import { Loading } from "element-ui";
 import { listDept } from "@/api/system/project";
+
+import { computerExcel } from  "@/views/file/filemanagement"
+
 export default {
   name: "Project",
   inject: ["reload"],
@@ -751,6 +754,7 @@ export default {
   components: {
     ShowPanel,
     EditPanel,
+    computerExcel,
   },
 
   mounted() {
@@ -758,7 +762,9 @@ export default {
     this.getList();
     this.getDeptList();
   },
-  created() {},
+  created() {
+
+  },
 
   methods: {
     /** 查询部门列表 */
@@ -782,6 +788,9 @@ export default {
     },
     //流程信息导出
     exportAll() {
+
+      // computerExcel.exportAllCombined();
+
       const loadingInstance = Loading.service({
         lock: true,
         text: "正在导出，请稍后...",

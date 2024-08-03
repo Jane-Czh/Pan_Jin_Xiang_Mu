@@ -112,6 +112,11 @@ public class TechServiceImpl implements ITechService {
         return techMapper.selectPRDScheduleCompletionRate(startTime, endTime);
     }
 
+    @Override
+    public int insertOrUpdateTech(Tech tech) {
+        return techMapper.insertOrUpdateTech(tech);
+    }
+
     /**
      * @description: 检查当月月度数据是否存在
      * @param: date

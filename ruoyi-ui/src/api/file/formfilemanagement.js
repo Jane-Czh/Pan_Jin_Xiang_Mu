@@ -9,6 +9,15 @@ export function listFormfilemanagement(query) {
   })
 }
 
+// 查询表单文件管理列表（全部+无权限）
+export function listFormfilemanagement(query) {
+  return request({
+    url: '/file/formfilemanagement/list1',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询历史文件列表
 export function getFormHistory(currentId) {
   return request({
@@ -25,6 +34,7 @@ export function getFormfilemanagement(formId) {
     method: 'get'
   })
 }
+
 
 // 新增表单文件管理
 export function addFormfilemanagement(data) {

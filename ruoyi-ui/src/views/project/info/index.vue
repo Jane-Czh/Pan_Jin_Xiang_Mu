@@ -384,6 +384,9 @@
 import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
 import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadImport } from "@/api/project/history";
 import { listRecode, getRecode, delRecode, addRecode, updateRecode } from "@/api/project/recode";
+import { listDept } from "@/api/system/project";
+import { getUserProfile } from "@/api/system/user";
+import { getDept } from "@/api/system/project";
 
 export default {
   name: "Info",
@@ -403,7 +406,12 @@ export default {
     };
 
     return {
-
+      departments: [],
+      //用户名
+      Username: null,
+      //所属部门
+      departmentCategory: null,
+      userInfo: {}, // 存储用户信息
       historyList: [],
       selectedHistoryList: [],
       loading: false,
@@ -580,6 +588,24 @@ export default {
 
   methods: {
 
+
+    // 调用接口获取用户信息  uploadUsername、departmentCategory
+    async getUserInfo() {
+      try {
+        const response = await getUserProfile();
+        const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        console.log("成功获取用户信息=======", userInfo);
+        this.Username = userInfo.userName;
+
+        const deptResponse = await getDept(userInfo.deptId);
+        const deptInfo = deptResponse.data;
+        this.departmentCategory = deptInfo.deptName;
+        console.log("成功获取部门信息=======", this.departmentCategory);
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+      }
+    },
+
     formattedDaysPassed(startDate) {
       // 获取当前日期
       const currentDate = new Date();
@@ -686,12 +712,39 @@ export default {
     },
 
     /** 查询项目基本信息列表 */
-    getList() {
+    // getList() {
+    //   this.loading = true;
+    //   listInfo(this.queryParams).then(response => {
+    //     this.InfoList = response.rows;
+    //     this.total = response.total;
+    //     this.loading = false;
+    //     this.split(this.InfoList,this.total);
+    //   });
+    // },
+
+    async getList() {
       this.loading = true;
+      this.InfoList = [],
+      this.rowList = [],
+
+      await this.getUserInfo();
       listInfo(this.queryParams).then(response => {
-        this.InfoList = response.rows;
+
+        for (var i = 0; i < response.total; i++) {
+
+          if (
+            this.departmentCategory == response.rows[i].department ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.InfoList.push(response.rows[i]);
+            
+          }
+        }
+        // this.InfoList = response.rows;
         this.total = response.total;
         this.loading = false;
+        
         this.split(this.InfoList,this.total);
       });
     },

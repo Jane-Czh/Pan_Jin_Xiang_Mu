@@ -84,6 +84,7 @@
             </el-progress>
 
             <p>已过天数: {{ formattedDaysPassed(info.startDate) }}</p>
+            <!-- <el-progress :percentage="progress1(info.startDate, info.plannedCompletionTime)"></el-progress> -->
             <p>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</p>
             <p>项目id: {{ info.projectId }}</p>
             <p>项目名称: {{ info.projectName }}</p>
@@ -354,8 +355,12 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
 import { listHistory } from "@/api/project/history";
+import { listDept } from "@/api/system/project";
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/project";
 
 export default {
   inject: ["reload"],
@@ -376,6 +381,12 @@ export default {
     };
 
     return {
+
+      departments: [],
+      //用户名
+      Username: null,
+      //所属部门
+      departmentCategory: null,
 
 
       historyList: [],
@@ -546,26 +557,64 @@ export default {
         plannedCompletionTime: [
           { required: true, message: "计划结项时间不能为空", trigger: "blur" }
         ],
-      }
+      },
+      userInfo: {}, // 存储用户信息
     };
   },
   created() {
+
+    // this.fetchUserInfo();
     this.getList();
   },
 
   methods: {
 
+    // getDeptList() {
+    //   listDept(this.queryDeptParams).then((response) => {
+    //     // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+    //     const filteredData = response.data.filter(
+    //       (department) =>
+    //         department.deptName !== "产品研发" &&
+    //         department.deptName !== "研发" &&
+    //         department.deptName !== "测试" &&
+    //         department.deptName !== "总部" &&
+    //         department.deptName !== "合力（盘锦）"
+    //     );
 
+    //     // 将每个过滤后的部门的 deptName 放入 departments 数组
+    //     this.departments = filteredData.map(
+    //       (department) => department.deptName
+    //     );
+    //   });
+    // },
+
+    // 调用接口获取用户信息  uploadUsername、departmentCategory
+    async getUserInfo() {
+      try {
+        const response = await getUserProfile();
+        const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        console.log("成功获取用户信息=======", userInfo);
+        this.Username = userInfo.userName;
+
+        const deptResponse = await getDept(userInfo.deptId);
+        const deptInfo = deptResponse.data;
+        this.departmentCategory = deptInfo.deptName;
+        console.log("成功获取部门信息=======", this.departmentCategory);
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+      }
+    },
 
     getPercentageValue(progressString) {
       // 移除字符串末尾的 '%'
-      console.log(progressString);
+      // console.log(progressString);
       const progressValue = progressString.replace('%', '');
-      console.log(parseInt(progressValue, 10));
+      // console.log(parseInt(progressValue, 10));
       // 将字符串转换为整数
       return parseInt(progressValue, 10);
     },
     
+    //计算当日与startDate的日期差
     formattedDaysPassed(startDate) {
       // 获取当前日期
       const currentDate = new Date();
@@ -581,6 +630,26 @@ export default {
         return daysPassed;
       }
     },
+
+    //获取已过时间的百分比
+    // progress1(startDate, endDate){
+    //   const daysPassed = formattedDaysPassed(startDate);
+    //   const startDateObj = new Date(startDate);
+    //   const endDateObj = new Date(endDate);
+
+    //   const allDays = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+
+
+    //   const res = 0;
+
+    //   if(daysPassed >= allDays){
+    //     res = 100;
+    //   }else{
+    //     res = daysPassed/allDays;
+    //   }
+
+    //   return res;
+    // },
 
     formattedDaysRemaining(endDate) {
       // 获取当前日期
@@ -627,7 +696,7 @@ export default {
 
     confirmSelection(info) {
       // 处理确认选项的逻辑，例如将选中的历史项目进行关联操作
-      console.log("确认选择的历史项目:", this.selectedHistoryList);
+      // console.log("确认选择的历史项目:", this.selectedHistoryList);
       if (this.selectedHistoryList.length === 0) {
         this.$message.error('请选择至少一个历史项目！');
         return;
@@ -646,8 +715,8 @@ export default {
       this.isPopoverVisible = false; // 关闭弹窗
 
 
-      console.log("projectId========="+info.projectId);
-      console.log("history========="+info.oldProjectId)
+      // console.log("projectId========="+info.projectId);
+      // console.log("history========="+info.oldProjectId)
       // 调用更新数据库的函数
       updateInfoHistory(info).then(response => {
         this.$message.success('关联成功');
@@ -664,23 +733,38 @@ export default {
 
     cancelSelection() {
       // 处理取消选项的逻辑，例如清空选中的历史项目
-      console.log("取消选择");
+      // console.log("取消选择");
       // 重置状态
       this.selectedHistoryList = [];
       this.isPopoverVisible = false;
-      console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
+      // console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
       // this.$refs.historyPopover.doClose(); // 手动关闭弹窗
     },
 
     /** 查询项目基本信息列表 */
-    getList() {
+    async getList() {
       this.loading = true;
       this.InfoList = [],
       this.rowList = [],
+
+      await this.getUserInfo();
       listInfo(this.queryParams).then(response => {
-        this.InfoList = response.rows;
+
+        for (var i = 0; i < response.total; i++) {
+
+          if (
+            this.departmentCategory == response.rows[i].department ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.InfoList.push(response.rows[i]);
+            
+          }
+        }
+        // this.InfoList = response.rows;
         this.total = response.total;
         this.loading = false;
+        
         this.split(this.InfoList,this.total);
       });
     },
@@ -692,6 +776,18 @@ export default {
           this.rowList.push(data.slice(i, i + 4));
         }
     }, 
+
+
+    // fetchUserInfo() {
+    //   getInfo().then(response => {
+    //   // 假设返回的数据结构是 { data: { ...用户信息... } }
+    //   this.userInfo = response.data;
+    //   console.log(this.userInfo);
+    // }).catch(error => {
+    //   console.error('获取用户信息失败', error);
+    //   // 这里可以添加更多的错误处理逻辑
+    // });
+    // },
 
     // 取消按钮
     cancel() {
@@ -754,7 +850,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const projectId = row.projectId || this.ids
-      getInfo(projectId).then(response => {
+      getProjectInfo(projectId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改项目基本信息";

@@ -233,7 +233,7 @@
     <el-table v-loading="loading" :data="LedgerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="主键" align="center" prop="emsiId" />-->
-<!--      <el-table-column label="序号" align="center" prop="number" />-->
+      <el-table-column label="序号" align="center" prop="number" />
       <el-table-column label="部门" align="center" prop="department" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender" />

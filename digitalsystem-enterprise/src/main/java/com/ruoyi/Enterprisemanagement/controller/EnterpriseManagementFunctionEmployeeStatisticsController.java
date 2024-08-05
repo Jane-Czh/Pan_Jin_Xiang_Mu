@@ -66,7 +66,7 @@ public class EnterpriseManagementFunctionEmployeeStatisticsController extends Ba
      * 导出员工统计列表
      */
     @PreAuthorize("@ss.hasPermi('Enterprisemanagement:statistics:export')")
-    @Log(title = "员工统计", businessType = BusinessType.EXPORT)
+//    @Log(title = "员工统计", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, EnterpriseManagementFunctionEmployeeStatistics enterpriseManagementFunctionEmployeeStatistics)
     {

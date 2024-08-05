@@ -2,7 +2,9 @@ package com.ruoyi.Enterprisemanagement.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementLaborContractLedger;
 import com.ruoyi.Enterprisemanagement.utils.EMExcelUtils;
@@ -105,6 +107,11 @@ public class EnterpriseManagementPersonnelRosterServiceImpl implements IEnterpri
         InputStream is = null;
         try {
             List<EnterpriseManagementPersonnelRoster> enterpriseManagementPersonnelRosters = EMExcelUtils.PRparseExcel(excelFile);
+            // 批量获取并删除原来的数据
+            List<EnterpriseManagementPersonnelRoster> existingRosters = enterpriseManagementPersonnelRosterMapper.selectEnterpriseManagementPersonnelRosterList(new EnterpriseManagementPersonnelRoster());
+            for (EnterpriseManagementPersonnelRoster existingRoster : existingRosters) {
+                enterpriseManagementPersonnelRosterMapper.deleteEnterpriseManagementPersonnelRosterByEmprId(existingRoster.getEmprId());
+            }
             int i = 0;
             while (i < enterpriseManagementPersonnelRosters.size()){
                 enterpriseManagementPersonnelRoster = enterpriseManagementPersonnelRosters.get(i);

@@ -233,6 +233,14 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
+        path: 'indicators102',
+        component: () => import('@/views/quality/display/indexChart/indicators102'),
+        name: 'Indicators102',
+        meta: {
+          title: '电车、大吨位一次交检合格率',
+        }
+      },
+      {
         path: 'indicators104',
         component: () => import('@/views/quality/display/indexChart/indicators104'),
         name: 'Indicators104',

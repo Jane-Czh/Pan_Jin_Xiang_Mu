@@ -71,7 +71,7 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         }
 
         EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
-        if (enterpriseManagementAnnualDataService.checkEMAnnualDataIsExisted(DateUtils.getYear(yearAndMonth))) {
+        if (!enterpriseManagementAnnualDataService.checkEMAnnualDataIsExisted(DateUtils.getYear(yearAndMonth))) {
             System.out.println("year"+DateUtils.getYear(yearAndMonth));
             return 0;
         }

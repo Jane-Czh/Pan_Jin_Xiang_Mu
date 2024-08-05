@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementFunctionLaborReminder;
+import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementPersonnelRoster;
 import com.ruoyi.Enterprisemanagement.utils.EMExcelUtils;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.utils.GenerateId;
@@ -105,6 +106,11 @@ public class EnterpriseManagementLaborContractLedgerServiceImpl implements IEnte
         InputStream is = null;
         try {
             List<EnterpriseManagementLaborContractLedger> enterpriseManagementLaborContractLedgers = EMExcelUtils.LRparseExcel(excelFile);
+            // 批量获取并删除原来的数据
+            List<EnterpriseManagementLaborContractLedger> existingRosters = enterpriseManagementLaborContractLedgerMapper.selectEnterpriseManagementLaborContractLedgerList(new EnterpriseManagementLaborContractLedger());
+            for (EnterpriseManagementLaborContractLedger existingRoster : existingRosters) {
+                enterpriseManagementLaborContractLedgerMapper.deleteEnterpriseManagementLaborContractLedgerByEmlcId(existingRoster.getEmlcId());
+            }
             int i = 0;
             while (i < enterpriseManagementLaborContractLedgers.size()){
                 enterpriseManagementLaborContractLedger = enterpriseManagementLaborContractLedgers.get(i);

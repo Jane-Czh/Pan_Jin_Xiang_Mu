@@ -14,6 +14,19 @@ export function getPartQualificationRateData(data) {
 }
 
 
+// 电车、大吨位一次交检合格率 指标102
+export function getSingleInspectionPassRateData(data) {
+  return request({
+    url: `/quality/display/singleInspectionPassRate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+
 const api = {
   // 三包期内新车返修率 指标57
   getWarrantyRepairRateData(data) {
@@ -101,17 +114,7 @@ const api = {
     })
   },
 
-  // 电车、大吨位一次交检合格率 指标102
-  getSingleInspectionPassRateData(data) {
-    return request({
-      url: `/quality/display/singleInspectionPassRate`,
-      method: 'post',
-      data: {
-        startTime: data.startTime,
-        endTime: data.endTime
-      }
-    })
-  },
+
 
   // 供应商不合格件返厂及时率 指标103
   getInTimeReturnRateData(data) {
@@ -131,3 +134,31 @@ const api = {
 
 
 export default api
+
+
+
+// 月度数据最新数据
+export function getMonthNewData() {
+  return request({
+    url: `/quality/data/handfill/newData`,
+    method: 'post',
+  })
+}
+
+// 售后表指标最新数据
+export function getAfterNewData() {
+  return request({
+    url: `/quality/data/metrics/newData`,
+    method: 'post',
+  })
+}
+
+
+// 质检表最新数据
+export function getInspectionNewData() {
+  return request({
+    url: `/quality/data/inspection/newData`,
+    method: 'post',
+  })
+}
+

@@ -152,6 +152,7 @@ export default {
       try {
         let target = {
           date: new Date(),
+          // endTime: new Date(),
           deptName: 'financial',
         }
         // 定义一个空对象来存储所有数据

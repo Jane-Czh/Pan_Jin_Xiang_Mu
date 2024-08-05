@@ -9,7 +9,7 @@
     <div>
       <br>
       <div class="centered-value">
-        当前累计值：{{ yAxisData.reduce((a, b) => a + b, 0) }} (万元)
+        当前累计值：{{ this.currentSum }} (万元)
       </div>
     </div>
     <div v-if="loading"
@@ -45,6 +45,7 @@ export default {
       pickerOptions: [],
       xAxisData: [],
       yAxisData: [],
+      currentSum: [],
       option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' },
       name: '',
     }
@@ -73,6 +74,8 @@ export default {
         this.data = res.rows;
         this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
         this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
+        this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
+        this.currentSum = this.formatNumber(this.currentSum)
         this.loading = false;
       } catch (error) {
         this.$modal.msgError("数据加载失败")
@@ -95,6 +98,10 @@ export default {
       const startDate = new Date(currentYear, 0, 1);
       const endDate = new Date(currentYear, currentMonth, 0);
       this.selectedDate = [startDate, endDate];
+    },
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
   },
 }

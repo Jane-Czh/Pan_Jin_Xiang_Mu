@@ -27,6 +27,8 @@
           v-hasPermi="['tech:monthly:remove']">删除</el-button>
       </el-col>
 
+
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -83,16 +85,19 @@
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/tech/data";
 import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
+
 export default {
   name: "Data",
   data() {
     return {
       // 遮罩层
       loading: true,
+
       // 选中数组
       ids: [],
       dates: [],
       // 非单个禁用
+      showDialog: false,
       single: true,
       // 非多个禁用
       multiple: true,
@@ -102,10 +107,13 @@ export default {
       total: 0,
       // [技术]指标填报表格数据
       dataList: [],
+      techList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      selectedType: '',
+      form3: { yearAndMonth: null },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -145,7 +153,6 @@ export default {
       // 获取年份和月份
       const year = date.getFullYear();
       const month = date.getMonth() + 1; // 月份要加1，因为getMonth返回的是0-11
-
       // 返回格式化后的字符串，例如："2024年6月"
       return `${year}-${month}`;
     }
@@ -154,6 +161,10 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      const url = "/profile/modelFile/采购订单汇总表样表.xlsx"
+      handleTrueDownload(url);
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序

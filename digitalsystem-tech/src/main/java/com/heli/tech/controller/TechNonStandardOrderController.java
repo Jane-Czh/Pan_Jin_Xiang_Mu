@@ -1,17 +1,20 @@
 package com.heli.tech.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.heli.tech.domain.TechNonStandardOrder;
 import com.heli.tech.service.ITechNonStandardOrderService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,10 +43,12 @@ public class TechNonStandardOrderController extends BaseController {
      * @version: 1.0
      */
     @PostMapping("/check")
-    public Boolean checkNonStandardOrderUploadStatus(Date yearAndMonth) {
-        Boolean status = techNonStandardOrderService.checkNonStandardOrderUploadStatus(yearAndMonth);
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+        public R checkNonStandardOrderUploadStatus(@RequestBody DisplayRequestParam displayRequestParam) {
+        log.info("当前时间:"+displayRequestParam.getStartTime());
+        Boolean status = techNonStandardOrderService.checkNonStandardOrderUploadStatus(displayRequestParam.getStartTime());
         log.info("检查当月数据是否上传"+status);
-        return status;
+        return R.ok(status);
     }
 
 
@@ -53,7 +58,7 @@ public class TechNonStandardOrderController extends BaseController {
      * @date: 2024/8/2 13:58
      * @version: 1.0
      */
-//    @PreAuthorize("@ss.hasPermi('enterprise:salary:import')")
+    @PreAuthorize("@ss.hasPermi('tech:Tech_Non_Standard_Order:import')")
     @PostMapping("/read")
     public R<String> simpleRead(Date yearAndMonth, MultipartFile multipartFile) {
 

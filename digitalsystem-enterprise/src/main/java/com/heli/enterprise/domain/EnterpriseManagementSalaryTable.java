@@ -68,6 +68,11 @@ public class EnterpriseManagementSalaryTable extends BaseEntity{
      */
     @ExcelProperty(value = "员工子组")
     private String subgroupCode;
+    /**
+     * 其他奖金
+     */
+    @ExcelProperty(value = "其他奖金")
+    private BigDecimal otherBonuses;
 
     /**
      * 加班合计

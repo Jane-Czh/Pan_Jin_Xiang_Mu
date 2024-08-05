@@ -8,6 +8,7 @@
         <result property="esId"    column="ES_ID"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
         <result property="employeesNumber"    column="Employees_Number"    />
+        <result property="productionInternNumbers"    column="Production_Intern_Numbers"    />
         <result property="employeesAvgMonthlyNumber"    column="Employees_AVG_Monthly_Number"    />
         <result property="employeesAvgAnnualNumber"    column="Employees_AVG_Annual_Number"    />
         <result property="totalMonthlySalary"    column="Total_Monthly_Salary"    />
@@ -24,15 +25,62 @@
     </resultMap>
 
     <sql id="selectEnterpriseManagementMonthlyDataVo">
-        select ES_ID, Year_And_Month, Employees_Number, Employees_AVG_Monthly_Number, Employees_AVG_Annual_Number, Total_Monthly_Salary, Monthly_Salary_Ratio, Annual_Salary_Ratio, Cumulative_Average_Income, Monthly_Production_AVG_Income, Monthly_Functional_AVG_Income, Functional_Dept_Overtime_Cost, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Monthly_Data
+        select ES_ID, Year_And_Month, Employees_Number,Production_Intern_Numbers, Employees_AVG_Monthly_Number, Employees_AVG_Annual_Number, Total_Monthly_Salary, Monthly_Salary_Ratio, Annual_Salary_Ratio, Cumulative_Average_Income, Monthly_Production_AVG_Income, Monthly_Functional_AVG_Income, Functional_Dept_Overtime_Cost, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Monthly_Data
     </sql>
 
+    <!--从花名册中统计一线从业人数、实习生人数-->
+    <select id="selectFrontLineEmployeeNumbers" resultType="int">
+        SELECT count(*) FROM Enterprise_Management_Personnel_roster
+        WHERE Third_tissue = "生产管理科"
+        AND (Employee_Group = "合同制" OR Employee_Group = "劳务派遣")
+        AND Employee_sub_Group = "生产类"
+    </select>
+    <select id="selectInternNumbers" resultType="int">
+        SELECT count(*) FROM Enterprise_Management_Personnel_roster
+        WHERE Third_tissue = "生产管理科" AND Employee_Group = "实习生"
+    </select>
 
+    <!-- 统计当年月度数据条数，截止当月  -->
+    <select id="countMonthDataNumber" parameterType="Date" resultType="int">
+        SELECT COUNT(*)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND Employees_Number is not null
+    </select>
+    <!-- 当年人数求和 -->
+    <select id="countEmployeesNumberByYear" parameterType="Date" resultType="int">
+        SELECT sum(Employees_Number)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
+    <!-- 统计当年工资总额填报数据条数，截止当月  -->
+    <select id="countMonthSalaryFillDataNumber" parameterType="Date" resultType="int">
+        SELECT COUNT(*)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND Total_Monthly_Salary is not null
+    </select>
+    <!-- 当年月度工资总额求和 -->
+    <select id="countSalaryFillNumberByYear" parameterType="Date" resultType="java.math.BigDecimal">
+        SELECT sum(Total_Monthly_Salary)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
+    <select id="selectMonthDateByDate" parameterType="Date" resultMap="EnterpriseManagementMonthlyDataResult">
+        <include refid="selectEnterpriseManagementMonthlyDataVo"/>
+        where Year_And_Month = #{yearAndMonth}
+    </select>
 
     <!--检查当月填报数据是否上传-->
     <select id="checkEMEmployeesDataIsExisted" parameterType="Date" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Monthly_Data WHERE Year_And_Month=#{yearAndMonth} AND Employees_Number IS NOT NULL)
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month=#{yearAndMonth} AND Employees_Number IS NOT NULL)
     </select>
+
 
     <!--  按月查询EmployeesNumber  -->
     <select id="selectEmployeesNumberByMonth" resultType="Long">
@@ -113,6 +161,7 @@
         update Enterprise_Management_Indicators_Monthly_Data
         <trim prefix="SET" suffixOverrides=",">
             <if test="employeesNumber != null">Employees_Number = #{employeesNumber},</if>
+            <if test="productionInternNumbers != null">Production_Intern_Numbers = #{productionInternNumbers},</if>
             <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},</if>
             <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},</if>
             <if test="totalMonthlySalary != null">Total_Monthly_Salary = #{totalMonthlySalary},</if>
@@ -132,11 +181,30 @@
 
     <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
     <insert id="insertMonthlyFillingDataByMonth" parameterType="EnterpriseManagementMonthlyData">
+        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Production_Intern_Numbers,Total_Monthly_Salary)
+        values (#{yearAndMonth},#{employeesNumber},#{productionInternNumbers},#{totalMonthlySalary})
+        on duplicate key update
+        Employees_Number = values(Employees_Number),
+        Production_Intern_Numbers = values(Production_Intern_Numbers),
+        Total_Monthly_Salary =values(Total_Monthly_Salary)
+    </insert>
+
+    <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
+    <insert id="insertMonthlyFillingDataByMonth" parameterType="EnterpriseManagementMonthlyData">
         insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Total_Monthly_Salary)
         values (#{yearAndMonth},#{employeesNumber},#{totalMonthlySalary})
         on duplicate key update
         Employees_Number = values(Employees_Number),
         Total_Monthly_Salary =values(Total_Monthly_Salary)
+    </insert>
+
+    <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
+    <insert id="insertOrUpdateEmployeesData" parameterType="EnterpriseManagementMonthlyData">
+        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Production_Intern_Numbers)
+        values (#{yearAndMonth},#{employeesNumber},#{productionInternNumbers})
+        on duplicate key update
+        Employees_Number = values(Employees_Number),
+        Production_Intern_Numbers = values(Production_Intern_Numbers)
     </insert>
 
     <!--检查当月工资表是否上传-->
@@ -184,11 +252,40 @@
                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
     </select>
+    <!-- 当月职能其他奖金 76-->
+    <select id="selectMonthlyFunctionalAverageOtherBonuses" resultType="decimal">
+        SELECT SUM(Other_Bonuses)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN(
+            SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
+            WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+                OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
+                OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
+        ) and Salary_Calculation_Year_Month=#{yearAndMonth}
+    </select>
 
     <!--  检查数据库中是否有数据  -->
     <select id="checkEMMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Salary_Table)
     </select>
+
+    <update id="updateMonthlyData" parameterType="EnterpriseManagementMonthlyData">
+        update Enterprise_Management_Indicators_Monthly_Data
+        SET Year_And_Month = #{yearAndMonth},Employees_Number = #{employeesNumber},
+            Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},
+            Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},
+            Total_Monthly_Salary = #{totalMonthlySalary},
+            Monthly_Salary_Ratio = #{monthlySalaryRatio},
+            Annual_Salary_Ratio = #{annualSalaryRatio},
+            Cumulative_Average_Income = #{cumulativeAverageIncome},
+            Monthly_Production_AVG_Income = #{monthlyProductionAvgIncome},
+            Monthly_Functional_AVG_Income = #{monthlyFunctionalAvgIncome},
+            Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost},
+            CREATE_BY = #{createBy},
+            CREATE_TIME = #{createTime},
+            UPDATE_BY = #{updateBy},
+            UPDATE_TIME = #{updateTime}
+        where ES_ID = #{esId}
+    </update>
 
     <!-- 计算工资数据，存入数据库 -->
 <!--    <update id="updateCalculateSalaryDataByMonth" parameterType="EnterpriseManagementEmployeesData">-->

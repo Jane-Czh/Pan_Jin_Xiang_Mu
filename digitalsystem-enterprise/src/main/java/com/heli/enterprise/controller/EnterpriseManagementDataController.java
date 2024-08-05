@@ -50,11 +50,11 @@ public class EnterpriseManagementDataController extends BaseController {
         if (enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(enterpriseManagementMonthlyData.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
         }
-        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))
-                && enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()
-                && !enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsMinMonth(enterpriseManagementMonthlyData.getYearAndMonth())) {
-            return AjaxResult.error("上月数据未填报");
-        }
+//        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))
+//                && enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()
+//                && !enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsMinMonth(enterpriseManagementMonthlyData.getYearAndMonth())) {
+//            return AjaxResult.error("上月数据未填报");
+//        }
         enterpriseManagementMonthlyData.setCreateBy(getUsername());
 
 //        enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
@@ -97,7 +97,7 @@ public class EnterpriseManagementDataController extends BaseController {
             enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, getUsername());
             enterpriseManagementMonthlyDataService.calculateSalaryTableIndicators(yearAndMonth);
             log.info("计算完毕，清空数据库");
-            enterpriseManagementSalaryTableService.clearSalaryTableAllInfo();
+//            enterpriseManagementSalaryTableService.clearSalaryTableAllInfo();
             return R.ok("上传成功");
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());

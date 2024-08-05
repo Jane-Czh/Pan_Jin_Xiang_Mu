@@ -37,6 +37,12 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
     private Long employeesNumber;
 
     /**
+     * 生产实习生人数
+     */
+    @Excel(name = "生产实习生人数")
+    private Long productionInternNumbers;
+
+    /**
      * 公司平均从业人数（月度）
      */
     @Excel(name = "公司平均从业人数", readConverterExp = "月=度")

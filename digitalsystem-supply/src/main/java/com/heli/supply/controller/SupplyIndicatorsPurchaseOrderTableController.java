@@ -35,7 +35,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
      * @author: hong
      * @date: 2024/4/28 14:25
      **/
-//    @PreAuthorize("@ss.hasPermi('supply:data:read')")
+    @PreAuthorize("@ss.hasPermi('supply:data:import')")
     @PostMapping("/readPurchaseOrderTable")
     @Transactional
     public R<String> readPurchaseOrderTable(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {
@@ -58,7 +58,7 @@ public class SupplyIndicatorsPurchaseOrderTableController extends BaseController
      * @author: hong
      * @date: 2024/4/28 14:25
      **/
-    @PreAuthorize("@ss.hasPermi('supply:dictionary:read')")
+    @PreAuthorize("@ss.hasPermi('supply:dictionary:import')")
     @PostMapping("/readCollectibleMaterialsTable")
     @Transactional
     public R<String> readCollectibleMaterialsTable(@RequestParam(value = "multipartFile") MultipartFile multipartFile) {

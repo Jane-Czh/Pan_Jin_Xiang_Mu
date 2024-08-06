@@ -124,6 +124,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into Enterprise_Management_Labor_Contract_Ledger
+        (
+        EMLC_ID, Number, Name, Document, Employment_status, ID_number, Phone_number,
+        First_Contract_Period_Start, First_Contract_Period_End, Contract_status_Firstly,
+        Second_Contract_Period_Start, Second_Contract_Period_End, Contract_status_Secondly,
+        Third_Contract_Period_Start, Third_Contract_Period_End, Contract_status_Thirdly, Warn
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.emlcId}, #{item.Number}, #{item.Name}, #{item.Document}, #{item.employmentStatus},
+            #{item.idNumber}, #{item.phoneNumber}, #{item.firstContractPeriodStart}, #{item.firstContractPeriodEnd},
+            #{item.contractStatusFirstly}, #{item.secondContractPeriodStart}, #{item.secondContractPeriodEnd},
+            #{item.contractStatusSecondly}, #{item.thirdContractPeriodStart}, #{item.thirdContractPeriodEnd},
+            #{item.contractStatusThirdly}, #{item.Warn}
+            )
+        </foreach>
+    </insert>
+
+
     <update id="updateEnterpriseManagementLaborContractLedger" parameterType="EnterpriseManagementLaborContractLedger">
         update Enterprise_Management_Labor_Contract_Ledger
         <trim prefix="SET" suffixOverrides=",">

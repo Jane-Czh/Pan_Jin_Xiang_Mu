@@ -495,6 +495,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into Enterprise_Management_Personnel_roster
+        (
+        EMPR_ID, Number, Employee_ID, Name, Gender, Birthday, Age, Record_birth, ID_Card, Social_security_number,
+        Personnel_scope, Personnel_scope_text, Personnel_sub_scope, Personnel_sub_scope_text, Salary_accounting_scope,
+        Salary_accounting_scope_text, Cost_Center, Cost_Center_text, Root_tissue_ID, Root_tissue, First_tissue_ID,
+        First_tissue, Second_tissue_ID, Second_tissue, Third_tissue_ID, Third_tissue, Fourth_tissue_ID, Fourth_tissue,
+        Fifth_tissue_ID, Fifth_tissue, Sixth_tissue_ID, Sixth_tissue, Position_ethnic_group_ID, Position_ethnic_group,
+        Job_category_ID, Job_category, Job, Job_title, Technical_title, The_highest_technical_titl, Technical_level,
+        The_highest_technical_level, Rank, Position_ID, Position, Jobb_title, Salary_grade, Salaryy_grade, Position_salary,
+        Employee_Group, Employee_sub_Group, Backbone_level, Personnel_Management_Classification, The_highest_educational_level,
+        The_highest_educational_school, The_highest_educational_major, The_highest_degree, The_highest_degree_school,
+        The_highest_degree_major, First_educational_level, FIrst_highest_degree, First_highest_degree_school,
+        First_highest_degree_major, Contract_start_time, Contract_end_time, Contract_term, Contract_signing_unit,
+        Signing_frequency, Working_hours, Joined_time, Starting_time_of_service_life, Retirement_date, Si_Ling, Nation,
+        Political_landscape, Party_membership_time, marital_status, Hometown, Household_registration_nature, Resident_address,
+        Contact_information, Emergency_contact, Emergency_contact_phone, Work_Contract, Provident_fund_account,
+        Enterprise_annuity_account, Upload_photo
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.emprId}, #{item.Number}, #{item.employeeId}, #{item.Name}, #{item.Gender}, #{item.Birthday}, #{item.Age},
+            #{item.recordBirth}, #{item.idCard}, #{item.socialSecurityNumber}, #{item.personnelScope}, #{item.personnelScopeText},
+            #{item.personnelSubScope}, #{item.personnelSubScopeText}, #{item.salaryAccountingScope}, #{item.salaryAccountingScopeText},
+            #{item.costCenter}, #{item.costCenterText}, #{item.rootTissueId}, #{item.rootTissue}, #{item.firstTissueId},
+            #{item.firstTissue}, #{item.secondTissueId}, #{item.secondTissue}, #{item.thirdTissueId}, #{item.thirdTissue},
+            #{item.fourthTissueId}, #{item.fourthTissue}, #{item.fifthTissueId}, #{item.fifthTissue}, #{item.sixthTissueId},
+            #{item.sixthTissue}, #{item.positionEthnicGroupId}, #{item.positionEthnicGroup}, #{item.jobCategoryId}, #{item.jobCategory},
+            #{item.Job}, #{item.jobTitle}, #{item.technicalTitle}, #{item.theHighestTechnicalTitl}, #{item.technicalLevel},
+            #{item.theHighestTechnicalLevel}, #{item.Rank}, #{item.positionId}, #{item.Position}, #{item.jobbTitle}, #{item.salaryGrade},
+            #{item.salaryyGrade}, #{item.positionSalary}, #{item.employeeGroup}, #{item.employeeSubGroup}, #{item.backboneLevel},
+            #{item.personnelManagementClassification}, #{item.theHighestEducationalLevel}, #{item.theHighestEducationalSchool},
+            #{item.theHighestEducationalMajor}, #{item.theHighestDegree}, #{item.theHighestDegreeSchool}, #{item.theHighestDegreeMajor},
+            #{item.firstEducationalLevel}, #{item.firstHighestDegree}, #{item.firstHighestDegreeSchool}, #{item.firstHighestDegreeMajor},
+            #{item.contractStartTime}, #{item.contractEndTime}, #{item.contractTerm}, #{item.contractSigningUnit}, #{item.signingFrequency},
+            #{item.workingHours}, #{item.joinedTime}, #{item.startingTimeOfServiceLife}, #{item.retirementDate}, #{item.siLing},
+            #{item.Nation}, #{item.politicalLandscape}, #{item.partyMembershipTime}, #{item.maritalStatus}, #{item.Hometown},
+            #{item.householdRegistrationNature}, #{item.residentAddress}, #{item.contactInformation}, #{item.emergencyContact},
+            #{item.emergencyContactPhone}, #{item.workContract}, #{item.providentFundAccount}, #{item.enterpriseAnnuityAccount},
+            #{item.uploadPhoto}
+            )
+        </foreach>
+    </insert>
+
     <update id="updateEnterpriseManagementPersonnelRoster" parameterType="EnterpriseManagementPersonnelRoster">
         update Enterprise_Management_Personnel_roster
         <trim prefix="SET" suffixOverrides=",">

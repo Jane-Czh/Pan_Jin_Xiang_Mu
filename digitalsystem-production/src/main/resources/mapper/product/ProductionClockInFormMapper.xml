@@ -93,6 +93,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into Production_Clock_in_form
+        (
+        PCIF_ID, Number, ID_number, Name, Gender, First_time_clocking_in_at_work,
+        First_time_clocking_in_after_work, Second_time_clocking_in_at_work, Second_time_clocking_in_after_work,
+        Normal_working_hours, Normal_closing_time
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pcifId}, #{item.Number}, #{item.idNumber}, #{item.Name}, #{item.Gender},
+            #{item.firstTimeClockingInAtWork}, #{item.firstTimeClockingInAfterWork}, #{item.secondTimeClockingInAtWork},
+            #{item.secondTimeClockingInAfterWork}, #{item.normalWorkingHours}, #{item.normalClosingTime}
+            )
+        </foreach>
+    </insert>
+
+
     <update id="updateProductionClockInForm" parameterType="ProductionClockInForm">
         update Production_Clock_in_form
         <trim prefix="SET" suffixOverrides=",">

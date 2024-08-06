@@ -69,4 +69,6 @@ public interface ProductionClockInFormMapper
     public Long selectLastId();
 
     public List<ProductionClockInForm> selectProductionClockInFormList1();
+
+    void insertBatch(List<ProductionClockInForm> formList);
 }

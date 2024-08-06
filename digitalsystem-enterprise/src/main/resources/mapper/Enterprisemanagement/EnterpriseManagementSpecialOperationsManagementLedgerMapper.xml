@@ -138,6 +138,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into Enterprise_Management_Special_Operations_Management_Ledger
+        (
+        EMSI_ID, Number, Department, Name, Gender, Issuing_authority, Document_type, Assignment_category,
+        ID_number, ID_card, Evidence_collection_time, First_expiration, Reexamination_firstly, Second_expiration,
+        Reexamination_secondly, Third_expiration, Reexamination_thirdly, Warn, CREATED_BY, CREATED_TIME
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.emsiId}, #{item.Number}, #{item.Department}, #{item.Name}, #{item.Gender}, #{item.issuingAuthority},
+            #{item.documentType}, #{item.assignmentCategory}, #{item.idNumber}, #{item.idCard}, #{item.evidenceCollectionTime},
+            #{item.firstExpiration}, #{item.reexaminationFirstly}, #{item.secondExpiration}, #{item.reexaminationSecondly},
+            #{item.thirdExpiration}, #{item.reexaminationThirdly}, #{item.Warn}, #{item.createdBy}, #{item.createdTime}
+            )
+        </foreach>
+    </insert>
+
     <update id="updateEnterpriseManagementSpecialOperationsManagementLedger" parameterType="EnterpriseManagementSpecialOperationsManagementLedger">
         update Enterprise_Management_Special_Operations_Management_Ledger
         <trim prefix="SET" suffixOverrides=",">

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +50,8 @@ public class TechNewProjectDesignController extends BaseController {
      * @version: 1.0
      */
     @PostMapping("/check")
-    public Boolean checkTechNewProjectDesignIsExisted(Date yearAndMonth) {
-        Boolean status = techNewProjectDesignService.checkTechNewProjectDesignIsExisted(yearAndMonth);
+    public Boolean checkTechNewProjectDesignIsExisted(@RequestBody DisplayRequestParam displayRequestParam) {
+        Boolean status = techNewProjectDesignService.checkTechNewProjectDesignIsExisted(displayRequestParam.getStartTime());
         log.info("检查当月数据是否上传"+status);
         return status;
     }

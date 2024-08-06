@@ -51,10 +51,29 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
         InputStream is = null;
         try {
             List<MarketSalesTable> marketSalesTables = ExcelUtils.parseExcel(excelFile);
+
+            //删除
+            marketSalesTableMapper.deleteAll();
+
             int i = 0;
             while (i < marketSalesTables.size()){
                 marketSalesTable = marketSalesTables.get(i);
-                if (marketSalesTable.getBranch() == null){
+                if (    marketSalesTable.getBranch() == null ||
+                        marketSalesTable.getContractNumber() == null ||
+                        marketSalesTable.getOrderNumber() == null ||
+                        marketSalesTable.getOrderAcceptanceTime() == null ||
+                        marketSalesTable.getVehicleModel() == null ||
+                        marketSalesTable.getValveBlock() == null ||
+                        marketSalesTable.getFork() == null ||
+                        marketSalesTable.getDoorFrame() == null ||
+                        marketSalesTable.getTyre() == null ||
+                        marketSalesTable.getConfiguration() == null ||
+                        marketSalesTable.getDeliveryForm() == null ||
+                        marketSalesTable.getDeliveryLocation() == null ||
+                        marketSalesTable.getContacts() == null ||
+                        marketSalesTable.getOrderSystemDeliveryTime() == null ||
+                        marketSalesTable.getOrderOverdueWarning() == null
+                ){
                     i++;
                     continue;
                 }
@@ -104,10 +123,10 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
                 i++;
             }
 
-//            if (cachedDataList.size() > 0){
-//                marketSalesTableMapper.batchInsert(cachedDataList);
-//                cachedDataList.clear();
-//            }
+            if (cachedDataList.size() > 0){
+                marketSalesTableMapper.batchInsert(cachedDataList);
+                cachedDataList.clear();
+            }
 
             //查看当天的台账信息，单独存储
 //            i = 0;

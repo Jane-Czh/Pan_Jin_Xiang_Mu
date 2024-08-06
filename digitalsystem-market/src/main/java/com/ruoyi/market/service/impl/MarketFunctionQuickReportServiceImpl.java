@@ -119,6 +119,7 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
 
                 //判断实际发车日期
                 if (ActualDepartureDate != null){
+
                     //年相等，本年累计实发数加一
                     if (SplitDate.splitDate(ActualDepartureDate)[0] == year){
                         marketFunctionQuickReport.setCumulativeIssuedThisMonth(1);
@@ -127,6 +128,7 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
                             marketFunctionQuickReport.setIssuedThisMonth(1);
                             //日相等，本日累计实发数加一
                             if (SplitDate.splitDate(ActualDepartureDate)[2] == day){
+                                System.out.println("=======>实际发车数初始化");
                                 marketFunctionQuickReport.setIssuedThisDay(1);
                             }else {
                                 marketFunctionQuickReport.setIssuedThisDay(0);
@@ -165,7 +167,8 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
                 marketFunctionQuickReport.setLastMonthBalanceOrder(0);
                 //插入hash
                 result.put(branch,marketFunctionQuickReport);
-            }else {
+            }
+            else {
                 //hash中存在当前网点数据,取出并更新数据
                 MarketFunctionQuickReport marketFunctionQuickReport = result.get(branch);
                 //判断接单日期
@@ -221,6 +224,7 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
                 //判断实际发车日期
                 if (ActualDepartureDate != null){
                     //年相等，本年累计实发数加一
+
                     if (SplitDate.splitDate(ActualDepartureDate)[0] == year){
                         int i = marketFunctionQuickReport.getCumulativeIssuedThisMonth();
                         i++;
@@ -232,6 +236,7 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
                             marketFunctionQuickReport.setIssuedThisMonth(k);
                             //日相等，本日累计实发数加一
                             if (SplitDate.splitDate(ActualDepartureDate)[2] == day){
+                                System.out.println("=======>实际发车数累计");
                                 int j = marketFunctionQuickReport.getIssuedThisDay();
                                 j++;
                                 marketFunctionQuickReport.setIssuedThisDay(j);
@@ -264,18 +269,8 @@ public class MarketFunctionQuickReportServiceImpl implements IMarketFunctionQuic
         }
 
         //先删除数据库中所有快报
-        List<MarketFunctionQuickReport> list1 = selectMarketFunctionQuickReportList(marketFunctionQuickReport1);
-        if (list1.size() > 0){
-            int x = 0;
-            Long[] deleteId = new Long[list1.size()];
-            while (x < list1.size()){
-                MarketFunctionQuickReport value = list1.get(x);
-                deleteId[x] = value.getMfqrId();
-                x++;
-            }
-            deleteMarketFunctionQuickReportByMfqrIds(deleteId);
-            System.out.println("删除成功");
-        }
+        marketFunctionQuickReportMapper.deleteAll();
+
 
         //依次插入新生成的快报
         Long id = 0L;

@@ -5,10 +5,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
@@ -117,14 +114,14 @@ public class ProductionClockInFormServiceImpl implements IProductionClockInFormS
 
     @Override
     public int importInterests(MultipartFile excelFile,ProductionCommuteTime productionCommuteTime) throws IOException {
-        ProductionClockInForm productionClockInForm;
+//        ProductionClockInForm productionClockInForm;
         InputStream is = null;
         try {
             List<ProductionClockInForm> productionClockInForms = ExcelUtilsPro.parseExcelform(excelFile);
-            int i = 0;
-            System.out.println("============"+productionCommuteTime+"=========");
-            while (i < productionClockInForms.size()){
-                productionClockInForm = productionClockInForms.get(i);
+            List<ProductionClockInForm> batchInsertList = new ArrayList<>();
+
+            System.out.println("============" + productionCommuteTime + "=========");
+            for (ProductionClockInForm productionClockInForm : productionClockInForms) {
                 Date Firststart = productionClockInForm.getFirstTimeClockingInAtWork();
                 // 获取 Firststart 的年月日
                 LocalDate firstStartDate = Firststart.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -147,20 +144,25 @@ public class ProductionClockInFormServiceImpl implements IProductionClockInFormS
                 Date newNormalstartstr = Date.from(zonedStartDateTime.toInstant());
                 // 将 ZonedDateTime 对象转换为 Instant，然后将其转换为 Date 类型的 Normalend
                 Date newNormalend = Date.from(zonedDateTime.toInstant());
-                System.out.println("------------"+newNormalend+"-------------");
+                System.out.println("------------" + newNormalend + "-------------");
                 productionClockInForm.setNormalWorkingHours(newNormalstartstr);
                 productionClockInForm.setNormalClosingTime(newNormalend);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
-                }
-                long PQR_id = GenerateId.getNextId(lastid);
-                productionClockInForm.setPcifId(PQR_id);
-                if (productionClockInForm.getIdNumber() == null){
+
+                if (productionClockInForm.getIdNumber() == null) {
                     continue;
                 }
-                productionClockInFormMapper.insertProductionClockInForm(productionClockInForm);
-                i++;
+                batchInsertList.add(productionClockInForm);
+
+                // 每4000条数据进行一次批量插入
+                if (batchInsertList.size() >= 4000) {
+                    productionClockInFormMapper.insertBatch(batchInsertList);
+                    batchInsertList.clear();
+                }
+            }
+
+            // 插入剩余的数据
+            if (!batchInsertList.isEmpty()) {
+                productionClockInFormMapper.insertBatch(batchInsertList);
             }
         } catch (IOException e) {
             e.printStackTrace();

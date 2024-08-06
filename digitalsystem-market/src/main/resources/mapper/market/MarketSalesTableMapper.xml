@@ -306,4 +306,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </insert>
 
+    <delete id="deleteAll">
+        truncate table Market_Sales_table;
+    </delete>
 </mapper>

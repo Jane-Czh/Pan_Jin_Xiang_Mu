@@ -47,10 +47,12 @@ public class IndicatorsTargetController extends BaseController {
     @PreAuthorize("@ss.hasPermi('indicators:target:list')")
     @PostMapping("/allTargetInfoByDept")
     public TableDataInfo allList(@RequestBody TargetByDeptParam targetByDeptParam) {
+    log.info("+1+1+1+1+1+1+1"+String.valueOf(targetByDeptParam));
 
         IndicatorsTarget target = new IndicatorsTarget();
 
         java.util.Date utilDate = targetByDeptParam.getDate();
+
         LocalDate currentDate = utilDate.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();

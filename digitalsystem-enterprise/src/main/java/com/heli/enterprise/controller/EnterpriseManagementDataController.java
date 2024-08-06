@@ -50,11 +50,11 @@ public class EnterpriseManagementDataController extends BaseController {
         if (enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(enterpriseManagementMonthlyData.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
         }
-        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))
-                && enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()
-                && !enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsMinMonth(enterpriseManagementMonthlyData.getYearAndMonth())) {
-            return AjaxResult.error("上月数据未填报");
-        }
+//        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))
+//                && enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()
+//                && !enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsMinMonth(enterpriseManagementMonthlyData.getYearAndMonth())) {
+//            return AjaxResult.error("上月数据未填报");
+//        }
         enterpriseManagementMonthlyData.setCreateBy(getUsername());
 
 //        enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
@@ -93,9 +93,12 @@ public class EnterpriseManagementDataController extends BaseController {
     public R<String> simpleRead(Date yearAndMonth, MultipartFile multipartFile) {
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
+            enterpriseManagementSalaryTableService.clearSalaryTableAllInfo();
 
             enterpriseManagementSalaryTableService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, getUsername());
-            enterpriseManagementMonthlyDataService.calculateSalaryTableIndicators(yearAndMonth);
+            enterpriseManagementMonthlyDataService.statisticsSalaryTableIndicators(yearAndMonth);
+            enterpriseManagementMonthlyDataService.calculateMonthlyDataSalary(yearAndMonth);
+//            enterpriseManagementMonthlyDataService.calculateSalaryTableIndicators(yearAndMonth);
             log.info("计算完毕，清空数据库");
             enterpriseManagementSalaryTableService.clearSalaryTableAllInfo();
             return R.ok("上传成功");

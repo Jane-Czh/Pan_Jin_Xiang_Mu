@@ -170,40 +170,49 @@
       <el-table-column label="项目类别" align="center" prop="category" />
       <el-table-column label="项目等级" align="center" prop="level" />
       <el-table-column label="主责部门" align="center" prop="department" />
-      <!-- <el-table-column label="承接属性" align="center" prop="attribute" /> -->
-      <el-table-column label="项目描述" align="center" prop="description" />
-      <el-table-column label="立项时间" align="center" prop="startDate" width="180">
+      <el-table-column label="项目负责人" align="center" prop="manager" />
+      <!-- <el-table-column label="项目描述" align="center" prop="description" /> -->
+      <el-table-column label="立项评审时间" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
-      <el-table-column label="导入时间" align="center" prop="importDate" width="180">
+      <el-table-column label="项目组成员" align="center" prop="teamMembers" />
+      <el-table-column label="项目现状" align="center" prop="currentStatus" />
+
+      <el-table-column label="项目目标" align="center" prop="goal" />
+      <el-table-column label="项目范围" align="center" prop="scope" />
+
+      <!-- <el-table-column label="导入时间" align="center" prop="importDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="描述" align="center" prop="remake" />
-      <el-table-column label="历史项目" align="center" prop="oldProjectId" />
-      <el-table-column label="关联时间" align="center" prop="associationDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.associationDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="负责人" align="center" prop="manager" />
-      <el-table-column label="组成员" align="center" prop="teamMembers" />
-      <el-table-column label="项目状态" align="center" prop="status" />
-      <!-- <el-table-column label="项目进度" align="center" prop="progress" /> -->
-      <el-table-column label="项目现状" align="center" prop="currentStatus" />
-      <el-table-column label="目标" align="center" prop="goal" />
-      <el-table-column label="范围" align="center" prop="scope" />
+      </el-table-column> -->
+      <!-- <el-table-column label="描述" align="center" prop="remake" /> -->
       <el-table-column label="计划结项时间" align="center" prop="plannedCompletionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.plannedCompletionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="已过天数" align="center" prop="daysPassed" />
-      <el-table-column label="剩余天数" align="center" prop="daysRemaining" />
+      <el-table-column label="项目归属" align="center" prop="attribute" />
+      <el-table-column label="历史项目" align="center" prop="oldProjectId" />
+      <el-table-column label="项目状态" align="center" prop="status" />
+      <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
+      <!-- <el-table-column label="关联时间" align="center" prop="associationDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.associationDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column> -->
+
+
+
+      <!-- <el-table-column label="项目进度" align="center" prop="progress" /> -->
+
+
+
+
+      <!-- <el-table-column label="已过天数" align="center" prop="daysPassed" />
+      <el-table-column label="剩余天数" align="center" prop="daysRemaining" /> -->
       <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -292,13 +301,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="承接属性" prop="attribute">
-          <el-input v-model="form.attribute" placeholder="请输入承接属性" />
-        </el-form-item> -->
-        <el-form-item label="项目描述" prop="description">
-          <el-input v-model="form.description" placeholder="请输入项目描述" />
+        <el-form-item label="项目负责人" prop="manager">
+          <el-input v-model="form.manager" placeholder="请输入负责人" />
         </el-form-item>
-        <el-form-item label="立项时间" prop="startDate">
+        <el-form-item label="立项评审时间" prop="startDate">
           <el-date-picker clearable
             v-model="form.startDate"
             type="date"
@@ -306,36 +312,45 @@
             placeholder="请选择立项时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="项目总进度" prop="progressAlloverProgress">
-          <el-input v-model="form.progressAlloverProgress" placeholder="请输入一个百分数（例如20%）" />
+        <el-form-item label="项目组成员" prop="teamMembers">
+          <el-input v-model="form.teamMembers" placeholder="请输入组成员" />
         </el-form-item>
-        <el-form-item label="导入时间" prop="importDate">
+        <el-form-item label="项目现状" prop="currentStatus">
+          <el-input v-model="form.currentStatus" placeholder="请输入项目现状" />
+        </el-form-item>
+        <el-form-item label="项目目标" prop="goal">
+          <el-input v-model="form.goal" placeholder="请输入目标" />
+        </el-form-item>
+        <el-form-item label="项目范围" prop="scope">
+          <el-input v-model="form.scope" placeholder="请输入范围" />
+        </el-form-item>
+        <el-form-item label="计划结项时间" prop="plannedCompletionTime">
           <el-date-picker clearable
-            v-model="form.importDate"
+            v-model="form.plannedCompletionTime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择导入时间">
+            placeholder="请选择计划结项时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="描述" prop="remake">
-          <el-input v-model="form.remake" placeholder="请输入描述" />
+        <!-- <el-form-item label="项目归属" prop="attribute">
+          <el-input v-model="form.attribute" placeholder="请输入承接属性" />
+        </el-form-item> -->
+
+        <el-form-item label="项目归属" prop="attribute">
+          <el-select v-model="selectedAttributes" multiple placeholder="请选择承接属性" value-key="attribute" allow-no-choice>
+            <el-option label="四零活动" value="四零活动"></el-option>
+            <el-option label="三大行动" value="三大行动"></el-option>
+            <el-option label="精益党建项目" value="精益党建项目"></el-option>
+            <el-option label="公司方针目标" value="公司方针目标"></el-option>
+          </el-select>
         </el-form-item>
+
         <el-form-item label="历史项目" prop="oldProjectId">
           <el-input v-model="form.oldProjectId" placeholder="请输入历史项目" />
         </el-form-item>
-        <el-form-item label="关联时间" prop="associationDate">
-          <el-date-picker clearable
-            v-model="form.associationDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择关联时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="负责人" prop="manager">
-          <el-input v-model="form.manager" placeholder="请输入负责人" />
-        </el-form-item>
-        <el-form-item label="组成员" prop="teamMembers">
-          <el-input v-model="form.teamMembers" placeholder="请输入组成员" />
+
+        <el-form-item label="项目总进度" prop="progressAlloverProgress">
+          <el-input v-model="form.progressAlloverProgress" placeholder="请输入一个百分数（例如20%）" />
         </el-form-item>
         <el-form-item label="项目状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择项目状态">
@@ -347,30 +362,41 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <!-- <el-form-item label="项目描述" prop="description">
+          <el-input v-model="form.description" placeholder="请输入项目描述" />
+        </el-form-item> -->
+
+
+        <!-- <el-form-item label="导入时间" prop="importDate">
+          <el-date-picker clearable
+            v-model="form.importDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择导入时间">
+          </el-date-picker>
+        </el-form-item> -->
+
+        <!-- <el-form-item label="描述" prop="remake">
+          <el-input v-model="form.remake" placeholder="请输入描述" />
+        </el-form-item> -->
+
+        <!-- <el-form-item label="关联时间" prop="associationDate">
+          <el-date-picker clearable
+            v-model="form.associationDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择关联时间">
+          </el-date-picker>
+        </el-form-item> -->
+
         <!-- <el-form-item label="项目进度" prop="progress">
           <el-input v-model="form.progress" placeholder="请输入项目进度" />
         </el-form-item> -->
-        <el-form-item label="项目现状" prop="currentStatus">
-          <el-input v-model="form.currentStatus" placeholder="请输入项目现状" />
-        </el-form-item>
-        <el-form-item label="目标" prop="goal">
-          <el-input v-model="form.goal" placeholder="请输入目标" />
-        </el-form-item>
-        <el-form-item label="范围" prop="scope">
-          <el-input v-model="form.scope" placeholder="请输入范围" />
-        </el-form-item>
-        <el-form-item label="计划结项时间" prop="plannedCompletionTime">
-          <el-date-picker clearable
-            v-model="form.plannedCompletionTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择计划结项时间">
-          </el-date-picker>
-        </el-form-item>
 
-        <el-form-item label="完成内容概述" prop="completionSummary">
+        <!-- <el-form-item label="完成内容概述" prop="completionSummary">
           <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
-        </el-form-item>
+        </el-form-item> -->
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -381,10 +407,9 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
 import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadImport } from "@/api/project/history";
 import { listRecode, getRecode, delRecode, addRecode, updateRecode } from "@/api/project/recode";
-import { listDept } from "@/api/system/project";
 import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/project";
 
@@ -406,6 +431,9 @@ export default {
     };
 
     return {
+
+      selectedAttributes: [],
+
       departments: [],
       //用户名
       Username: null,
@@ -538,7 +566,9 @@ export default {
       ],
 
       // 表单参数
-      form: {},
+      form: {
+        attribute: '',
+      },
       // 表单校验
       rules: {
         projectName: [
@@ -556,9 +586,9 @@ export default {
         /*attribute: [
           { required: true, message: "承接属性不能为空", trigger: "blur" }
         ],*/
-        description: [
-          { required: true, message: "项目描述不能为空", trigger: "blur" }
-        ],
+        // description: [
+        //   { required: true, message: "项目描述不能为空", trigger: "blur" }
+        // ],
         startDate: [
           { required: true, message: "立项时间不能为空", trigger: "blur" }
         ],
@@ -566,9 +596,9 @@ export default {
           { required: true, message: "项目总进度不能为空", trigger: "blur" },
           { validator: validateProgressFormat, trigger: 'blur' }
         ],
-        importDate: [
-          { required: true, message: "导入时间不能为空", trigger: "blur" }
-        ],
+        // importDate: [
+        //   { required: true, message: "导入时间不能为空", trigger: "blur" }
+        // ],
         status: [
           { required: true, message: "项目状态不能为空", trigger: "blur" }
         ],
@@ -580,6 +610,14 @@ export default {
         ],
       }
     };
+
+    
+  },
+  watch: {
+    // 监听 selectedAttributes 数组的变化，并转换为字符串
+    selectedAttributes(newVal) {
+      this.form.attribute = newVal.join(','); // 使用逗号将数组元素连接成字符串
+    }
   },
   created() {
     this.getList();
@@ -828,7 +866,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const projectId = row.projectId || this.ids
-      getInfo(projectId).then(response => {
+      getProjectInfo(projectId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改项目基本信息";

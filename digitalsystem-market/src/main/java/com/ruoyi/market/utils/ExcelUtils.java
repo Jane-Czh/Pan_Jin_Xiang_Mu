@@ -113,11 +113,11 @@ public class ExcelUtils {
 
 //            row.getCell(count++).setDate(new Date())
             Cell cell = row.getCell(count++);
-            System.out.println("测试");
-            System.out.println(cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue() :
-                    cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() :
-                            cell.getCellType() == CellType.STRING ? cell.getStringCellValue() :
-                                    "Unknown type: " + cell.getCellType());
+//            System.out.println("测试");
+//            System.out.println(cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue() :
+//                    cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() :
+//                            cell.getCellType() == CellType.STRING ? cell.getStringCellValue() :
+//                                    "Unknown type: " + cell.getCellType());
 
 
 

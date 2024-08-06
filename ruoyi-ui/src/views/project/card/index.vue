@@ -84,7 +84,9 @@
             </el-progress>
 
             <p>已过天数: {{ formattedDaysPassed(info.startDate) }}</p>
+            <el-progress :percentage="progress1(info.startDate, info.plannedCompletionTime)"></el-progress> 
             <p>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</p>
+            <el-progress :percentage="progress2(info.startDate, info.plannedCompletionTime)"></el-progress> 
             <p>项目id: {{ info.projectId }}</p>
             <p>项目名称: {{ info.projectName }}</p>
             <p>项目类别: {{ info.category }}</p>
@@ -229,7 +231,7 @@
     />
 
     <!-- 添加或修改项目基本信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <!-- <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="项目名称" prop="projectName">
           <el-input v-model="form.projectName" placeholder="请输入项目名称" />
@@ -349,13 +351,156 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+        <!-- 添加或修改项目基本信息对话框 -->
+        <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+            <el-form-item label="项目名称" prop="projectName">
+              <el-input v-model="form.projectName" placeholder="请输入项目名称" />
+            </el-form-item>
+            <el-form-item label="项目类别" prop="category">
+              <el-select v-model="form.category" placeholder="请选择项目类别">
+                <el-option
+                  v-for="item in categoryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="项目等级" prop="level">
+              <el-select v-model="form.level" placeholder="请选择项目等级">
+                <el-option
+                  v-for="item in levelOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="主责部门" prop="department">
+              <!-- <el-input v-model="form.department" placeholder="请输入主责部门" /> -->
+              <el-select v-model="form.department" placeholder="请选择主责部门">
+                <el-option
+                  v-for="item in departmentOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="项目负责人" prop="manager">
+              <el-input v-model="form.manager" placeholder="请输入负责人" />
+            </el-form-item>
+            <el-form-item label="立项评审时间" prop="startDate">
+              <el-date-picker clearable
+                v-model="form.startDate"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请选择立项时间">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="项目组成员" prop="teamMembers">
+              <el-input v-model="form.teamMembers" placeholder="请输入组成员" />
+            </el-form-item>
+            <el-form-item label="项目现状" prop="currentStatus">
+              <el-input v-model="form.currentStatus" placeholder="请输入项目现状" />
+            </el-form-item>
+            <el-form-item label="项目目标" prop="goal">
+              <el-input v-model="form.goal" placeholder="请输入目标" />
+            </el-form-item>
+            <el-form-item label="项目范围" prop="scope">
+              <el-input v-model="form.scope" placeholder="请输入范围" />
+            </el-form-item>
+            <el-form-item label="计划结项时间" prop="plannedCompletionTime">
+              <el-date-picker clearable
+                v-model="form.plannedCompletionTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请选择计划结项时间">
+              </el-date-picker>
+            </el-form-item>
+            <!-- <el-form-item label="项目归属" prop="attribute">
+              <el-input v-model="form.attribute" placeholder="请输入承接属性" />
+            </el-form-item> -->
+
+            <el-form-item label="项目归属" prop="attribute">
+              <el-select v-model="selectedAttributes" multiple placeholder="请选择承接属性" value-key="attribute" allow-no-choice>
+                <el-option label="四零活动" value="四零活动"></el-option>
+                <el-option label="三大行动" value="三大行动"></el-option>
+                <el-option label="精益党建项目" value="精益党建项目"></el-option>
+                <el-option label="公司方针目标" value="公司方针目标"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="历史项目" prop="oldProjectId">
+              <el-input v-model="form.oldProjectId" placeholder="请输入历史项目" />
+            </el-form-item>
+
+            <el-form-item label="项目总进度" prop="progressAlloverProgress">
+              <el-input v-model="form.progressAlloverProgress" placeholder="请输入一个百分数（例如20%）" />
+            </el-form-item>
+            <el-form-item label="项目状态" prop="status">
+              <el-select v-model="form.status" placeholder="请选择项目状态">
+                <el-option
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="项目描述" prop="description">
+              <el-input v-model="form.description" placeholder="请输入项目描述" />
+            </el-form-item> -->
+
+
+            <!-- <el-form-item label="导入时间" prop="importDate">
+              <el-date-picker clearable
+                v-model="form.importDate"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请选择导入时间">
+              </el-date-picker>
+            </el-form-item> -->
+
+            <!-- <el-form-item label="描述" prop="remake">
+              <el-input v-model="form.remake" placeholder="请输入描述" />
+            </el-form-item> -->
+
+            <!-- <el-form-item label="关联时间" prop="associationDate">
+              <el-date-picker clearable
+                v-model="form.associationDate"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请选择关联时间">
+              </el-date-picker>
+            </el-form-item> -->
+
+            <!-- <el-form-item label="项目进度" prop="progress">
+              <el-input v-model="form.progress" placeholder="请输入项目进度" />
+            </el-form-item> -->
+
+            <!-- <el-form-item label="完成内容概述" prop="completionSummary">
+              <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
+            </el-form-item> -->
+
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitForm">确 定</el-button>
+            <el-button @click="cancel">取 消</el-button>
+          </div>
+        </el-dialog>
   </div>
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
 import { listHistory } from "@/api/project/history";
+import { listDept } from "@/api/system/project";
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/project";
 
 export default {
   inject: ["reload"],
@@ -376,6 +521,13 @@ export default {
     };
 
     return {
+
+      selectedAttributes: [],
+      departments: [],
+      //用户名
+      Username: null,
+      //所属部门
+      departmentCategory: null,
 
 
       historyList: [],
@@ -506,7 +658,9 @@ export default {
       ],
 
       // 表单参数
-      form: {},
+      form: {
+        attribute: '',
+      },
       // 表单校验
       rules: {
         projectName: [
@@ -546,26 +700,70 @@ export default {
         plannedCompletionTime: [
           { required: true, message: "计划结项时间不能为空", trigger: "blur" }
         ],
-      }
+      },
+      userInfo: {}, // 存储用户信息
     };
   },
+  watch: {
+    // 监听 selectedAttributes 数组的变化，并转换为字符串
+    selectedAttributes(newVal) {
+      this.form.attribute = newVal.join(','); // 使用逗号将数组元素连接成字符串
+    }
+  },
   created() {
+
+    // this.fetchUserInfo();
     this.getList();
   },
 
   methods: {
 
+    // getDeptList() {
+    //   listDept(this.queryDeptParams).then((response) => {
+    //     // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+    //     const filteredData = response.data.filter(
+    //       (department) =>
+    //         department.deptName !== "产品研发" &&
+    //         department.deptName !== "研发" &&
+    //         department.deptName !== "测试" &&
+    //         department.deptName !== "总部" &&
+    //         department.deptName !== "合力（盘锦）"
+    //     );
 
+    //     // 将每个过滤后的部门的 deptName 放入 departments 数组
+    //     this.departments = filteredData.map(
+    //       (department) => department.deptName
+    //     );
+    //   });
+    // },
+
+    // 调用接口获取用户信息  uploadUsername、departmentCategory
+    async getUserInfo() {
+      try {
+        const response = await getUserProfile();
+        const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        console.log("成功获取用户信息=======", userInfo);
+        this.Username = userInfo.userName;
+
+        const deptResponse = await getDept(userInfo.deptId);
+        const deptInfo = deptResponse.data;
+        this.departmentCategory = deptInfo.deptName;
+        console.log("成功获取部门信息=======", this.departmentCategory);
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+      }
+    },
 
     getPercentageValue(progressString) {
       // 移除字符串末尾的 '%'
-      console.log(progressString);
+      // console.log(progressString);
       const progressValue = progressString.replace('%', '');
-      console.log(parseInt(progressValue, 10));
+      // console.log(parseInt(progressValue, 10));
       // 将字符串转换为整数
       return parseInt(progressValue, 10);
     },
     
+    //计算当日与startDate的日期差
     formattedDaysPassed(startDate) {
       // 获取当前日期
       const currentDate = new Date();
@@ -581,6 +779,82 @@ export default {
         return daysPassed;
       }
     },
+
+    //获取已过时间的百分比
+     progress1(startDate, endDate){
+      const currentDate = new Date();
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
+
+          // 计算已过天数
+      const daysPassed = Math.floor((currentDate - startDateObj) / (1000 * 60 * 60 * 24));
+      const allDays = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+
+
+      let res = 0;
+
+      if(daysPassed >= allDays){
+        return 100;
+      }
+      if(daysPassed <= 0){
+        return 0;
+      }
+
+      res = Math.floor(daysPassed / allDays * 100);
+
+      res = Math.max(res, 0);
+
+      return res;
+     },
+
+    //获取剩余时间的百分比
+    progress2(startDate, endDate){
+      // const currentDate = new Date();
+      // const startDateObj = new Date(startDate);
+      // const endDateObj = new Date(endDate);
+
+      // // 计算剩余天数
+      // const daysHas = Math.floor((endDateObj - currentDate) / (1000 * 60 * 60 * 24));
+      // const allDays = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+
+
+      // let res = 0;
+
+      // if(daysHas >= allDays){
+      //   return 100;
+      // }
+      // if(daysHas <= 0){
+      //   return 0;
+      // }
+      // res = Math.floor(daysHas / allDays * 100);
+      // res = daysHas / allDays * 100;
+
+      // res = Math.max(res, 0);
+
+      // return res;
+      const currentDate = new Date();
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
+
+      const daysPassed = Math.floor((currentDate - startDateObj) / (1000 * 60 * 60 * 24));
+      const allDays = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
+
+
+      let res = 0;
+
+      if(daysPassed >= allDays){
+        return 0;
+      }
+      if(daysPassed <= 0){
+        return 100;
+      }
+      res = Math.floor(daysPassed / allDays * 100);
+
+      res = 100 - res;
+
+      console.log(res);
+      return res;
+     },
 
     formattedDaysRemaining(endDate) {
       // 获取当前日期
@@ -627,7 +901,7 @@ export default {
 
     confirmSelection(info) {
       // 处理确认选项的逻辑，例如将选中的历史项目进行关联操作
-      console.log("确认选择的历史项目:", this.selectedHistoryList);
+      // console.log("确认选择的历史项目:", this.selectedHistoryList);
       if (this.selectedHistoryList.length === 0) {
         this.$message.error('请选择至少一个历史项目！');
         return;
@@ -646,8 +920,8 @@ export default {
       this.isPopoverVisible = false; // 关闭弹窗
 
 
-      console.log("projectId========="+info.projectId);
-      console.log("history========="+info.oldProjectId)
+      // console.log("projectId========="+info.projectId);
+      // console.log("history========="+info.oldProjectId)
       // 调用更新数据库的函数
       updateInfoHistory(info).then(response => {
         this.$message.success('关联成功');
@@ -664,23 +938,38 @@ export default {
 
     cancelSelection() {
       // 处理取消选项的逻辑，例如清空选中的历史项目
-      console.log("取消选择");
+      // console.log("取消选择");
       // 重置状态
       this.selectedHistoryList = [];
       this.isPopoverVisible = false;
-      console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
+      // console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
       // this.$refs.historyPopover.doClose(); // 手动关闭弹窗
     },
 
     /** 查询项目基本信息列表 */
-    getList() {
+    async getList() {
       this.loading = true;
       this.InfoList = [],
       this.rowList = [],
+
+      await this.getUserInfo();
       listInfo(this.queryParams).then(response => {
-        this.InfoList = response.rows;
+
+        for (var i = 0; i < response.total; i++) {
+
+          if (
+            this.departmentCategory == response.rows[i].department ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.InfoList.push(response.rows[i]);
+            
+          }
+        }
+        // this.InfoList = response.rows;
         this.total = response.total;
         this.loading = false;
+        
         this.split(this.InfoList,this.total);
       });
     },
@@ -692,6 +981,18 @@ export default {
           this.rowList.push(data.slice(i, i + 4));
         }
     }, 
+
+
+    // fetchUserInfo() {
+    //   getInfo().then(response => {
+    //   // 假设返回的数据结构是 { data: { ...用户信息... } }
+    //   this.userInfo = response.data;
+    //   console.log(this.userInfo);
+    // }).catch(error => {
+    //   console.error('获取用户信息失败', error);
+    //   // 这里可以添加更多的错误处理逻辑
+    // });
+    // },
 
     // 取消按钮
     cancel() {
@@ -754,7 +1055,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const projectId = row.projectId || this.ids
-      getInfo(projectId).then(response => {
+      getProjectInfo(projectId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改项目基本信息";

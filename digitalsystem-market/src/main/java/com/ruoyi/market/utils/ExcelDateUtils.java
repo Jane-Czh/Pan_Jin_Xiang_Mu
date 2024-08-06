@@ -16,6 +16,11 @@ public class ExcelDateUtils {
         Date javaDate = convertExcelDateToJavaDate(excelDate);
         return formatDate(javaDate);
     }
+    public static String converttoExcelDateToString(double excelDate,String format) {
+        Date javaDate = convertExcelDateToJavaDate(excelDate);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(javaDate);
+    }
     // 将Excel日期数值转换为字符串表示的日期
     public static String convertExcelDateTimeToString(double excelDate) {
         Date javaDate = convertExcelDateTimeToJavaDate(excelDate);

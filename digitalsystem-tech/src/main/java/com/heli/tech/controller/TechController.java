@@ -49,10 +49,10 @@ public class TechController extends BaseController {
         if (!techAnnualPlanCountService.checkTechAnnualDataIsExisted(DateUtils.getYear(tech.getYearAndMonth()))) {
             return AjaxResult.error("年度总计划未上传");
         }
-        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))
-            && techService.checkDataExist()) {
-            return AjaxResult.error("上月数据未填报");
-        }
+//        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))
+//            && techService.checkDataExist()) {
+//            return AjaxResult.error("上月数据未填报");
+//        }
         if (techService.checkTechMonthlyDataIsExisted(tech.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
         }

@@ -60,4 +60,6 @@ public interface MarketFunctionQuickReportMapper
      * @return 结果
      */
     public int deleteMarketFunctionQuickReportByMfqrIds(Long[] mfqrIds);
+
+    public void deleteAll();
 }

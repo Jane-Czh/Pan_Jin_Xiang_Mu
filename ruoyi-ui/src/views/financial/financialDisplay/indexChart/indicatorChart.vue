@@ -209,7 +209,12 @@ export default {
           this.myChart.setOption(this.option);
         }
       });
-    }
+
+    },
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
   },
 }
 

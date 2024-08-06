@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.tech.mapper.TechNewProjectDesignMapper">
+
+    <resultMap type="TechNewProjectDesign" id="TechNewProjectDesignResult">
+        <result property="tdId"    column="TD_id"    />
+        <result property="yearAndMonth"    column="Year_And_Month"    />
+        <result property="projectId"    column="Project_Id"    />
+        <result property="projectName"    column="Project_Name"    />
+        <result property="projectType"    column="Project_Type"    />
+        <result property="projectLeader"    column="Project_Leader"    />
+        <result property="projectParticipants"    column="Project_Participants"    />
+        <result property="establishmentState"    column="Establishment_State"    />
+        <result property="designPlanState"    column="Design_Plan_State"    />
+        <result property="drawingDesignState"    column="Drawing_Design_State"    />
+        <result property="prototypeProductionState"    column="Prototype_Production_State"    />
+        <result property="prototypeTestState"    column="Prototype_Test_State"    />
+        <result property="prototypeReviewState"    column="Prototype_Review_State"    />
+        <result property="pilotReleaseState"    column="Pilot_Release_State"    />
+        <result property="massReleaseState"    column="Mass_Release_State"    />
+        <result property="completionRate"    column="Completion_Rate"    />
+        <result property="remarks"    column="Remarks"    />
+        <result property="isCompleted"    column="Is_Completed"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+    </resultMap>
+
+    <sql id="selectTechNewProjectDesignVo">
+        select TD_id, Year_And_Month, Project_Id, Project_Name, Project_Type, Project_Leader, Project_Participants, Establishment_State, Design_Plan_State, Drawing_Design_State, Prototype_Production_State, Prototype_Test_State, Prototype_Review_State, Pilot_Release_State, Mass_Release_State, Completion_Rate, Remarks, Is_Completed, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Tech_New_Project_Design
+    </sql>
+
+
+    <insert id="batchInsertNewProjectDesign" parameterType="java.util.List">
+        insert into Tech_New_Project_Design(Year_And_Month,Project_Id,Project_Name,Project_Type,Project_Leader,
+        Project_Participants,Establishment_State,Design_Plan_State,Drawing_Design_State,Prototype_Production_State,
+        Prototype_Test_State,Prototype_Review_State,Pilot_Release_State,Mass_Release_State,Completion_Rate,Remarks,
+        Is_Completed,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
+        values
+        <foreach collection="newProjectDesignList" item="item" separator=",">
+            (#{item.yearAndMonth},#{item.projectId},#{item.projectName},#{item.projectType},#{item.projectLeader},
+            #{item.projectParticipants},#{item.establishmentState},#{item.designPlanState},#{item.drawingDesignState},#{item.prototypeProductionState},
+            #{item.prototypeTestState},#{item.prototypeReviewState},#{item.pilotReleaseState},#{item.massReleaseState},#{item.completionRate},#{item.remarks},
+            #{item.isCompleted},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!--  统计计划完成数，传入时间  -->
+    <select id="selectTechNewProjectDesignCount" parameterType="java.util.Date" resultType="java.lang.Integer">
+        select count(TD_id) from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth} and Is_Completed = 1
+    </select>
+
+    <!--  检查当月数据是否存在  -->
+    <select id="checkTechNewProjectDesignIsExisted" parameterType="java.util.Date" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1 FROM Tech_New_Project_Design WHERE Year_And_Month=#{yearAndMonth})
+    </select>
+
+    <!--  清空当月数据  -->
+    <delete id="deleteTechNewProjectDesignByYearAndMonth" parameterType="java.util.Date">
+        delete from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth}
+    </delete>
+
+
+
+    <select id="selectTechNewProjectDesignList" parameterType="TechNewProjectDesign" resultMap="TechNewProjectDesignResult">
+        <include refid="selectTechNewProjectDesignVo"/>
+        <where>
+            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
+            <if test="projectId != null  and projectId != ''"> and Project_Id = #{projectId}</if>
+            <if test="projectName != null  and projectName != ''"> and Project_Name like concat('%', #{projectName}, '%')</if>
+            <if test="projectType != null  and projectType != ''"> and Project_Type = #{projectType}</if>
+            <if test="projectLeader != null  and projectLeader != ''"> and Project_Leader = #{projectLeader}</if>
+            <if test="projectParticipants != null  and projectParticipants != ''"> and Project_Participants = #{projectParticipants}</if>
+            <if test="establishmentState != null  and establishmentState != ''"> and Establishment_State = #{establishmentState}</if>
+            <if test="designPlanState != null  and designPlanState != ''"> and Design_Plan_State = #{designPlanState}</if>
+            <if test="drawingDesignState != null  and drawingDesignState != ''"> and Drawing_Design_State = #{drawingDesignState}</if>
+            <if test="prototypeProductionState != null  and prototypeProductionState != ''"> and Prototype_Production_State = #{prototypeProductionState}</if>
+            <if test="prototypeTestState != null  and prototypeTestState != ''"> and Prototype_Test_State = #{prototypeTestState}</if>
+            <if test="prototypeReviewState != null  and prototypeReviewState != ''"> and Prototype_Review_State = #{prototypeReviewState}</if>
+            <if test="pilotReleaseState != null  and pilotReleaseState != ''"> and Pilot_Release_State = #{pilotReleaseState}</if>
+            <if test="massReleaseState != null  and massReleaseState != ''"> and Mass_Release_State = #{massReleaseState}</if>
+            <if test="completionRate != null  and completionRate != ''"> and Completion_Rate = #{completionRate}</if>
+            <if test="remarks != null  and remarks != ''"> and Remarks = #{remarks}</if>
+            <if test="isCompleted != null "> and Is_Completed = #{isCompleted}</if>
+        </where>
+    </select>
+
+    <select id="selectTechNewProjectDesignByTdId" parameterType="Long" resultMap="TechNewProjectDesignResult">
+        <include refid="selectTechNewProjectDesignVo"/>
+        where TD_id = #{tdId}
+    </select>
+
+    <insert id="insertTechNewProjectDesign" parameterType="TechNewProjectDesign" useGeneratedKeys="true" keyProperty="tdId">
+        insert into Tech_New_Project_Design
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month,</if>
+            <if test="projectId != null">Project_Id,</if>
+            <if test="projectName != null">Project_Name,</if>
+            <if test="projectType != null">Project_Type,</if>
+            <if test="projectLeader != null">Project_Leader,</if>
+            <if test="projectParticipants != null">Project_Participants,</if>
+            <if test="establishmentState != null">Establishment_State,</if>
+            <if test="designPlanState != null">Design_Plan_State,</if>
+            <if test="drawingDesignState != null">Drawing_Design_State,</if>
+            <if test="prototypeProductionState != null">Prototype_Production_State,</if>
+            <if test="prototypeTestState != null">Prototype_Test_State,</if>
+            <if test="prototypeReviewState != null">Prototype_Review_State,</if>
+            <if test="pilotReleaseState != null">Pilot_Release_State,</if>
+            <if test="massReleaseState != null">Mass_Release_State,</if>
+            <if test="completionRate != null">Completion_Rate,</if>
+            <if test="remarks != null">Remarks,</if>
+            <if test="isCompleted != null">Is_Completed,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yearAndMonth != null">#{yearAndMonth},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="projectType != null">#{projectType},</if>
+            <if test="projectLeader != null">#{projectLeader},</if>
+            <if test="projectParticipants != null">#{projectParticipants},</if>
+            <if test="establishmentState != null">#{establishmentState},</if>
+            <if test="designPlanState != null">#{designPlanState},</if>
+            <if test="drawingDesignState != null">#{drawingDesignState},</if>
+            <if test="prototypeProductionState != null">#{prototypeProductionState},</if>
+            <if test="prototypeTestState != null">#{prototypeTestState},</if>
+            <if test="prototypeReviewState != null">#{prototypeReviewState},</if>
+            <if test="pilotReleaseState != null">#{pilotReleaseState},</if>
+            <if test="massReleaseState != null">#{massReleaseState},</if>
+            <if test="completionRate != null">#{completionRate},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="isCompleted != null">#{isCompleted},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+
+    <update id="updateTechNewProjectDesign" parameterType="TechNewProjectDesign">
+        update Tech_New_Project_Design
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
+            <if test="projectId != null">Project_Id = #{projectId},</if>
+            <if test="projectName != null">Project_Name = #{projectName},</if>
+            <if test="projectType != null">Project_Type = #{projectType},</if>
+            <if test="projectLeader != null">Project_Leader = #{projectLeader},</if>
+            <if test="projectParticipants != null">Project_Participants = #{projectParticipants},</if>
+            <if test="establishmentState != null">Establishment_State = #{establishmentState},</if>
+            <if test="designPlanState != null">Design_Plan_State = #{designPlanState},</if>
+            <if test="drawingDesignState != null">Drawing_Design_State = #{drawingDesignState},</if>
+            <if test="prototypeProductionState != null">Prototype_Production_State = #{prototypeProductionState},</if>
+            <if test="prototypeTestState != null">Prototype_Test_State = #{prototypeTestState},</if>
+            <if test="prototypeReviewState != null">Prototype_Review_State = #{prototypeReviewState},</if>
+            <if test="pilotReleaseState != null">Pilot_Release_State = #{pilotReleaseState},</if>
+            <if test="massReleaseState != null">Mass_Release_State = #{massReleaseState},</if>
+            <if test="completionRate != null">Completion_Rate = #{completionRate},</if>
+            <if test="remarks != null">Remarks = #{remarks},</if>
+            <if test="isCompleted != null">Is_Completed = #{isCompleted},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+        </trim>
+        where TD_id = #{tdId}
+    </update>
+
+    <delete id="deleteTechNewProjectDesignByTdId" parameterType="Long">
+        delete from Tech_New_Project_Design where TD_id = #{tdId}
+    </delete>
+
+    <delete id="deleteTechNewProjectDesignByTdIds" parameterType="String">
+        delete from Tech_New_Project_Design where TD_id in
+        <foreach item="tdId" collection="array" open="(" separator="," close=")">
+            #{tdId}
+        </foreach>
+    </delete>
+</mapper>

@@ -66,4 +66,6 @@ public interface MarketSalesTableMapper
     public int deleteMarketSalesTableByMsIds(Long[] msIds);
 
     public void batchInsert(@Param("list") List<MarketSalesTable> marketSalesTable);
+
+    public void deleteAll();
 }

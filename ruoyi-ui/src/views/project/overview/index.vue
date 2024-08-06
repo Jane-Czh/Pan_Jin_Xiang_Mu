@@ -8,7 +8,7 @@
       <el-select v-model="queryParams.selectedOption" placeholder="请选择部门" size="small" @change="handleDepartmentChange">
       <option disabled value="">请选择部门</option>
       <el-option
-          v-for="option in options"
+          v-for="option in departmentOptions"
           :key="option.value"
           :label="option.text"
           :value="option.value">
@@ -29,6 +29,66 @@
       </el-date-picker>
 
     </div>
+
+    <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="主责部门" prop="department">
+        <el-select
+          v-model="queryParams.department"
+          placeholder="请选择主责部门"
+          clearable
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in departmentOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="项目等级" prop="level">
+        <el-select
+          v-model="queryParams.level"
+          placeholder="请输入项目等级"
+          clearable
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in levelOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="项目类别" prop="category">
+        <el-select
+          v-model="queryParams.category"
+          placeholder="请输入项目类别"
+          clearable
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in categoryOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['project:Info:add']">新增</el-button>
+      </el-form-item>
+    </el-form> -->
+
     <div class="echarts-wrapper">
       <div
         class="echart"
@@ -131,7 +191,7 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/project/info";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo } from "@/api/project/info";
 import PieChart from '@/components/PieChart.vue'; // 导入饼状图组件
 import * as echarts from "echarts";
 export default {
@@ -208,20 +268,38 @@ export default {
       selectedTime: [],
       shouldUpdateChart: false, // 控制图表是否需要更新
 
-      options: [ // 下拉框的选项数据
-        { text: '财务科', value: '财务科' },
-        { text: '市场科', value: '市场科' },
-        { text: '安环设备科', value: '安环设备科' },
-        { text: '生产科管理', value: '生产科管理' },
-        { text: '供应科', value: '供应科' },
-        { text: '技术科', value: '技术科' },
-        { text: '企业管理科', value: '企业管理科' },
-        { text: '党群办公室', value: '党群办公室' },
-        { text: '质量科', value: '质量科' },
-        { text: '执纪监督室', value: '执纪监督室' },
-        { text: '团委', value: '团委' },
+            //项目主责部门
+      departmentOptions:[
+        { value: '财务科', label: '财务科' },
+        { value: '市场科', label: '市场科' },
+        { value: '安环设备科', label: '安环设备科' },
+        { value: '生产管理科', label: '生产管理科' },
+        { value: '供应科', label: '供应科' },
+        { value: '技术科', label: '技术科' },
+        { value: '企业管理科', label: '企业管理科' },
+        { value: '党群办公室', label: '党群办公室科' },
+        { value: '质量科', label: '质量科' },
+        { value: '执纪监督室', label: '执纪监督室' },
+        { value: '团委', label: '团委' }
       ],
-
+      //项目等级
+      levelOptions:[
+        { value: 'A级', label: 'A级' },
+        { value: 'B级', label: 'B级' },
+        { value: 'C级', label: 'C级' },
+      ],
+      //项目类别
+      categoryOptions: [
+        { value: '党工群团类', label: '党工群团类' },
+        { value: '质量攻关类', label: '质量攻关类' },
+        { value: '工艺技改类', label: '工艺技改类' },
+        { value: '生产改善类', label: '生产改善类' },
+        { value: '设备改善类', label: '设备改善类' },
+        { value: '安全环保类', label: '安全环保类' },
+        { value: '采购供应类', label: '采购供应类' },
+        { value: '财务管理类', label: '财务管理类' },
+        { value: '企业运行类', label: '企业运行类' },
+      ],
 
       selectedDate: [],
       pickerOptions: [],
@@ -738,7 +816,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const projectId = row.projectId || this.ids
-      getInfo(projectId).then(response => {
+      getProjectInfo(projectId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改项目基本信息";

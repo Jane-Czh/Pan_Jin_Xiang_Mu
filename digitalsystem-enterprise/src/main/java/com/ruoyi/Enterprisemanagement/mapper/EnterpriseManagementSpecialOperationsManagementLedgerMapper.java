@@ -65,4 +65,6 @@ public interface EnterpriseManagementSpecialOperationsManagementLedgerMapper
 
     //无参数方法
     public List<EnterpriseManagementSpecialOperationsManagementLedger> selectEnterpriseManagementSpecialOperationsManagementLedgerList1();
+
+    void insertBatch(List<EnterpriseManagementSpecialOperationsManagementLedger> ledgerList);
 }

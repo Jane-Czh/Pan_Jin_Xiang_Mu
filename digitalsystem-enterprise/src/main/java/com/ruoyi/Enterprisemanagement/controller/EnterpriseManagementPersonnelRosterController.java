@@ -31,7 +31,7 @@ public class EnterpriseManagementPersonnelRosterController extends BaseControlle
     @Autowired
     private IEnterpriseManagementPersonnelRosterService enterpriseManagementPersonnelRosterService;
     /*表单导入功能*/
-    @Log(title = "[市场]员工花名册", businessType = BusinessType.INSERT)
+//    @Log(title = "[市场]员工花名册", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('Enterprisemanagement:roster:import')")
     @PostMapping("/PRimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {

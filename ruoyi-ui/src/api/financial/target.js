@@ -50,6 +50,7 @@ export function getTargetData(data) {
     method: 'post',
     data: {
       date: data.date,
+      // date: data.endTime,
       deptName: data.deptName
     }
   })

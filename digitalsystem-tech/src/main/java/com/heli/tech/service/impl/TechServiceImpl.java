@@ -84,6 +84,7 @@ public class TechServiceImpl implements ITechService {
         if(checkDataExist()){
 
             annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
+            log.info("当前计算的数据为"+tech);
         }else {
             annualCompletionNumber = tech.getCompletedmonthlyPlancounts();
         }
@@ -110,6 +111,11 @@ public class TechServiceImpl implements ITechService {
     @Override
     public List<DisplayEntity> selectPRDScheduleCompletionRate(Date startTime, Date endTime) {
         return techMapper.selectPRDScheduleCompletionRate(startTime, endTime);
+    }
+
+    @Override
+    public int insertOrUpdateTech(Tech tech) {
+        return techMapper.insertOrUpdateTech(tech);
     }
 
     /**

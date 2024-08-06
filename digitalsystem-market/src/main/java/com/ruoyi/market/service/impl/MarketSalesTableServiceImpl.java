@@ -51,6 +51,10 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
         InputStream is = null;
         try {
             List<MarketSalesTable> marketSalesTables = ExcelUtils.parseExcel(excelFile);
+
+            //删除
+            marketSalesTableMapper.deleteAll();
+
             int i = 0;
             while (i < marketSalesTables.size()){
                 marketSalesTable = marketSalesTables.get(i);

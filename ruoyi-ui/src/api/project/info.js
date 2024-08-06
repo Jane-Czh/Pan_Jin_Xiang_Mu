@@ -10,7 +10,7 @@ export function listInfo(query) {
 }
 
 // 查询项目基本信息详细
-export function getInfo(projectId) {
+export function getProjectInfo(projectId) {
   return request({
     url: '/project/Info/' + projectId,
     method: 'get'

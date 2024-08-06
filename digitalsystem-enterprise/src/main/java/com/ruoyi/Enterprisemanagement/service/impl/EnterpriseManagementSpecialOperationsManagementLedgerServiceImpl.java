@@ -107,6 +107,11 @@ public class EnterpriseManagementSpecialOperationsManagementLedgerServiceImpl im
             InputStream is = null;
             try {
                 List<EnterpriseManagementSpecialOperationsManagementLedger> enterpriseManagementSpecialOperationsManagementLedgers = EMExcelUtils.SOparseExcel(excelFile);
+                // 批量获取并删除原来的数据
+                List<EnterpriseManagementSpecialOperationsManagementLedger> existingRosters = enterpriseManagementSpecialOperationsManagementLedgerMapper.selectEnterpriseManagementSpecialOperationsManagementLedgerList(new EnterpriseManagementSpecialOperationsManagementLedger());
+                for (EnterpriseManagementSpecialOperationsManagementLedger existingRoster : existingRosters) {
+                    enterpriseManagementSpecialOperationsManagementLedgerMapper.deleteEnterpriseManagementSpecialOperationsManagementLedgerByEmsiId(existingRoster.getEmsiId());
+                }
                 int i = 0;
                 while (i < enterpriseManagementSpecialOperationsManagementLedgers.size()){
                     enterpriseManagementSpecialOperationsManagementLedger = enterpriseManagementSpecialOperationsManagementLedgers.get(i);

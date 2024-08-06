@@ -58,6 +58,12 @@ public class EnterpriseManagementSalaryTable extends BaseEntity{
     private String department;
 
     /**
+     * 四级组织
+     */
+    @ExcelProperty(value = "四级组织")
+    private String fourthLevelOrgName;
+
+    /**
      * 员工组
      */
     @ExcelProperty(value = "员工组")

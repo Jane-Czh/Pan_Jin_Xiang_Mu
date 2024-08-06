@@ -49,7 +49,7 @@ public class EnterpriseManagementSalaryTableServiceImpl implements IEnterpriseMa
             enterpriseManagementSalaryTableMapper.clearSalaryTableAllInfo();
             // 读取文件内容
             log.info("开始读取文件: {}", fileName);
-            EasyExcel.read(inputStream, EnterpriseManagementSalaryTable.class, new SalaryTableListener(enterpriseManagementSalaryTableMapper,username)).sheet(4).doRead();
+            EasyExcel.read(inputStream, EnterpriseManagementSalaryTable.class, new SalaryTableListener(enterpriseManagementSalaryTableMapper,username)).sheet("源数据").doRead();
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
             e.printStackTrace();

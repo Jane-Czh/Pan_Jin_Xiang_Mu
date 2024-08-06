@@ -29,6 +29,17 @@ public interface EnterpriseManagementMonthlyDataMapper {
     int countMonthSalaryFillDataNumber(@Param("yearAndMonth") Date yearAndMonth);
     BigDecimal countSalaryFillNumberByYear(@Param("yearAndMonth") Date yearAndMonth);
 
+    //新-工资表统计
+    BigDecimal selectMonthlyCumulativeAverageIncome();
+    BigDecimal selectMonthlyProductionAverageIncome();
+    BigDecimal selectMonthlyFunctionalAverageIncome();
+    BigDecimal selectMonthlyFunctionalAverageOvertimeCost();
+    BigDecimal selectMonthlyFunctionalAverageOtherBonuses();
+    int countMonthDataSalaryNumber(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectCumulativeAverageIncome(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectProductionAVGIncome(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectFunctionalAVGIncome(@Param("yearAndMonth") Date yearAndMonth);
+
 
 
     int selectCountEmployeesNumberByYear(@Param("yearAndMonth") Date yearAndMonth);

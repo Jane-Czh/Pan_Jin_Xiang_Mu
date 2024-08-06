@@ -23,12 +23,14 @@ public interface IEnterpriseManagementMonthlyDataService {
     public int calculateHandFillIndicators(Date yearAndMonth);
 
     public void calculateSalaryTableIndicators(Date date);
+    public void statisticsSalaryTableIndicators(Date date);
 
     Boolean checkEMEmployeesDataIsExisted(Date date);
 
 
     int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
 
+    public int calculateMonthlyDataSalary(Date yearAndMonth);
 
     Boolean checkEMMonthlyDataIsExisted();
 

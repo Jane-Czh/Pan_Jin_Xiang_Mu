@@ -79,7 +79,18 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
     private BigDecimal cumulativeAverageIncome;
 
     /**
-     * 月度累计生产人均收入
+     * 月度人均收入
+     */
+    private BigDecimal monthlyCumulativeAverageIncome;
+
+    /**
+     * 累计生产人均收入
+     */
+    @Excel(name = "月度累计生产人均收入")
+    private BigDecimal productionAvgIncome;
+
+    /**
+     * 月度生产人均收入
      */
     @Excel(name = "月度累计生产人均收入")
     private BigDecimal monthlyProductionAvgIncome;
@@ -89,6 +100,12 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
      */
     @Excel(name = "月度累计职能人均收入")
     private BigDecimal monthlyFunctionalAvgIncome;
+
+    /**
+     * 月度累计职能人均收入
+     */
+    @Excel(name = "月度累计职能人均收入")
+    private BigDecimal functionalAvgIncome;
 
     /**
      * 职能部门人均加班费用

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.project.mapper.ProjectInfoRecycleMapper">
+    
+    <resultMap type="ProjectInfoRecycle" id="ProjectInfoRecycleResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="category"    column="category"    />
+        <result property="level"    column="level"    />
+        <result property="department"    column="department"    />
+        <result property="manager"    column="manager"    />
+        <result property="teamMembers"    column="team_members"    />
+        <result property="currentStatus"    column="current_status"    />
+        <result property="goal"    column="goal"    />
+        <result property="scope"    column="scope"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="plannedCompletionTime"    column="planned_completion_time"    />
+        <result property="attribute"    column="attribute"    />
+        <result property="oldProjectId"    column="old_project_id"    />
+        <result property="status"    column="status"    />
+        <result property="progressAlloverProgress"    column="progress_allover_progress"    />
+        <result property="description"    column="description"    />
+        <result property="importDate"    column="import_date"    />
+        <result property="remake"    column="remake"    />
+        <result property="associationDate"    column="association_date"    />
+        <result property="progress"    column="progress"    />
+        <result property="daysPassed"    column="days_passed"    />
+        <result property="daysRemaining"    column="days_remaining"    />
+        <result property="completionSummary"    column="completion_summary"    />
+    </resultMap>
+
+    <sql id="selectProjectInfoRecycleVo">
+        select project_id, project_name, category, level, department, manager, team_members, current_status, goal, scope, start_date, planned_completion_time, attribute, old_project_id, status, progress_allover_progress, description, import_date, remake, association_date, progress, days_passed, days_remaining, completion_summary from project_info_recycle
+    </sql>
+
+    <select id="selectProjectInfoRecycleList" parameterType="ProjectInfoRecycle" resultMap="ProjectInfoRecycleResult">
+        <include refid="selectProjectInfoRecycleVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="level != null  and level != ''"> and level = #{level}</if>
+            <if test="department != null  and department != ''"> and department = #{department}</if>
+            <if test="manager != null  and manager != ''"> and manager = #{manager}</if>
+            <if test="teamMembers != null  and teamMembers != ''"> and team_members = #{teamMembers}</if>
+            <if test="currentStatus != null  and currentStatus != ''"> and current_status = #{currentStatus}</if>
+            <if test="goal != null  and goal != ''"> and goal = #{goal}</if>
+            <if test="scope != null  and scope != ''"> and scope = #{scope}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="plannedCompletionTime != null "> and planned_completion_time = #{plannedCompletionTime}</if>
+            <if test="attribute != null  and attribute != ''"> and attribute = #{attribute}</if>
+            <if test="oldProjectId != null  and oldProjectId != ''"> and old_project_id = #{oldProjectId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="progressAlloverProgress != null  and progressAlloverProgress != ''"> and progress_allover_progress = #{progressAlloverProgress}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="importDate != null "> and import_date = #{importDate}</if>
+            <if test="remake != null  and remake != ''"> and remake = #{remake}</if>
+            <if test="associationDate != null "> and association_date = #{associationDate}</if>
+            <if test="progress != null  and progress != ''"> and progress = #{progress}</if>
+            <if test="daysPassed != null "> and days_passed = #{daysPassed}</if>
+            <if test="daysRemaining != null "> and days_remaining = #{daysRemaining}</if>
+            <if test="completionSummary != null  and completionSummary != ''"> and completion_summary = #{completionSummary}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectInfoRecycleByProjectId" parameterType="Long" resultMap="ProjectInfoRecycleResult">
+        <include refid="selectProjectInfoRecycleVo"/>
+        where project_id = #{projectId}
+    </select>
+        
+    <insert id="insertProjectInfoRecycle" parameterType="ProjectInfoRecycle" useGeneratedKeys="true" keyProperty="projectId">
+        insert into project_info_recycle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="level != null and level != ''">level,</if>
+            <if test="department != null and department != ''">department,</if>
+            <if test="manager != null">manager,</if>
+            <if test="teamMembers != null">team_members,</if>
+            <if test="currentStatus != null">current_status,</if>
+            <if test="goal != null">goal,</if>
+            <if test="scope != null">scope,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="plannedCompletionTime != null">planned_completion_time,</if>
+            <if test="attribute != null">attribute,</if>
+            <if test="oldProjectId != null">old_project_id,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">progress_allover_progress,</if>
+            <if test="description != null">description,</if>
+            <if test="importDate != null">import_date,</if>
+            <if test="remake != null">remake,</if>
+            <if test="associationDate != null">association_date,</if>
+            <if test="progress != null">progress,</if>
+            <if test="daysPassed != null">days_passed,</if>
+            <if test="daysRemaining != null">days_remaining,</if>
+            <if test="completionSummary != null">completion_summary,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="level != null and level != ''">#{level},</if>
+            <if test="department != null and department != ''">#{department},</if>
+            <if test="manager != null">#{manager},</if>
+            <if test="teamMembers != null">#{teamMembers},</if>
+            <if test="currentStatus != null">#{currentStatus},</if>
+            <if test="goal != null">#{goal},</if>
+            <if test="scope != null">#{scope},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="plannedCompletionTime != null">#{plannedCompletionTime},</if>
+            <if test="attribute != null">#{attribute},</if>
+            <if test="oldProjectId != null">#{oldProjectId},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">#{progressAlloverProgress},</if>
+            <if test="description != null">#{description},</if>
+            <if test="importDate != null">#{importDate},</if>
+            <if test="remake != null">#{remake},</if>
+            <if test="associationDate != null">#{associationDate},</if>
+            <if test="progress != null">#{progress},</if>
+            <if test="daysPassed != null">#{daysPassed},</if>
+            <if test="daysRemaining != null">#{daysRemaining},</if>
+            <if test="completionSummary != null">#{completionSummary},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectInfoRecycle" parameterType="ProjectInfoRecycle">
+        update project_info_recycle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="level != null and level != ''">level = #{level},</if>
+            <if test="department != null and department != ''">department = #{department},</if>
+            <if test="manager != null">manager = #{manager},</if>
+            <if test="teamMembers != null">team_members = #{teamMembers},</if>
+            <if test="currentStatus != null">current_status = #{currentStatus},</if>
+            <if test="goal != null">goal = #{goal},</if>
+            <if test="scope != null">scope = #{scope},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="plannedCompletionTime != null">planned_completion_time = #{plannedCompletionTime},</if>
+            <if test="attribute != null">attribute = #{attribute},</if>
+            <if test="oldProjectId != null">old_project_id = #{oldProjectId},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">progress_allover_progress = #{progressAlloverProgress},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="importDate != null">import_date = #{importDate},</if>
+            <if test="remake != null">remake = #{remake},</if>
+            <if test="associationDate != null">association_date = #{associationDate},</if>
+            <if test="progress != null">progress = #{progress},</if>
+            <if test="daysPassed != null">days_passed = #{daysPassed},</if>
+            <if test="daysRemaining != null">days_remaining = #{daysRemaining},</if>
+            <if test="completionSummary != null">completion_summary = #{completionSummary},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteProjectInfoRecycleByProjectId" parameterType="Long">
+        delete from project_info_recycle where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteProjectInfoRecycleByProjectIds" parameterType="String">
+        delete from project_info_recycle where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+</mapper>

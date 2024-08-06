@@ -773,6 +773,7 @@
   import {Loading} from "element-ui";
   import { listDept } from "@/api/system/project";
   import {listFormfilemanagement} from "@/api/file/formfilemanagement";  //获取部门列表
+  import { mapActions } from 'vuex';
 
 
   export default {
@@ -1106,9 +1107,8 @@
 
       //获取部门列表
       this.getDeptList();
-
-
     },
+
     // 路由钩子，每次进入该路由时都会调用getList方法
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -1977,7 +1977,8 @@
           }
         }
       },
-
+// 使用命名空间映射actions
+      ...mapActions('exportData', ['updateExportedData']),
       exportAll(){
         const loadingInstance = Loading.service({
           lock: true,
@@ -2012,6 +2013,11 @@
               new Blob([wbout], { type: "application/octet-stream" }),
               "制度总台账.xlsx"
             );
+
+            // 提交数据到Vuex Store
+            this.updateExportedData(data);
+
+
           })
           .finally(() => {
             loadingInstance.close();

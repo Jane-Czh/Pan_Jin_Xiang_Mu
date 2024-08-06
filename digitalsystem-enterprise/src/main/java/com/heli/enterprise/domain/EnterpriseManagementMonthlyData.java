@@ -37,6 +37,12 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
     private Long employeesNumber;
 
     /**
+     * 生产实习生人数
+     */
+    @Excel(name = "生产实习生人数")
+    private Long productionInternNumbers;
+
+    /**
      * 公司平均从业人数（月度）
      */
     @Excel(name = "公司平均从业人数", readConverterExp = "月=度")
@@ -73,7 +79,18 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
     private BigDecimal cumulativeAverageIncome;
 
     /**
-     * 月度累计生产人均收入
+     * 月度人均收入
+     */
+    private BigDecimal monthlyCumulativeAverageIncome;
+
+    /**
+     * 累计生产人均收入
+     */
+    @Excel(name = "月度累计生产人均收入")
+    private BigDecimal productionAvgIncome;
+
+    /**
+     * 月度生产人均收入
      */
     @Excel(name = "月度累计生产人均收入")
     private BigDecimal monthlyProductionAvgIncome;
@@ -83,6 +100,12 @@ public class EnterpriseManagementMonthlyData extends BaseEntity {
      */
     @Excel(name = "月度累计职能人均收入")
     private BigDecimal monthlyFunctionalAvgIncome;
+
+    /**
+     * 月度累计职能人均收入
+     */
+    @Excel(name = "月度累计职能人均收入")
+    private BigDecimal functionalAvgIncome;
 
     /**
      * 职能部门人均加班费用

@@ -12,19 +12,25 @@ import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
  * @date 2024-05-09
  */
 public interface IEnterpriseManagementMonthlyDataService {
+    //统计一线和实习生人数
+    int countEmployeesNumber(Date yearAndMonth);
+    //计算月度和年度人数
+    int calculateEmployeesNumber(Date yearAndMonth);
 
     boolean checkEMMonthlyDataIsMinMonth(Date yearAndMonth);
-
+    int calculateSalaryFillNumber(Date yearAndMonth);
 
     public int calculateHandFillIndicators(Date yearAndMonth);
 
     public void calculateSalaryTableIndicators(Date date);
+    public void statisticsSalaryTableIndicators(Date date);
 
     Boolean checkEMEmployeesDataIsExisted(Date date);
 
 
     int insertMonthlyFillingDataByMonth(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
 
+    public int calculateMonthlyDataSalary(Date yearAndMonth);
 
     Boolean checkEMMonthlyDataIsExisted();
 

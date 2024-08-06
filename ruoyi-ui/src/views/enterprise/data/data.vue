@@ -29,9 +29,7 @@
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
           v-hasPermi="['enterprise:monthly:import']">导入Excel文件
         </el-button>
-
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
-
           <el-form :model="form" ref="form" label-width="90px">
             <el-form-item label="上传表类">
               <span style="color: rgb(68, 140, 39);">工资表</span>
@@ -74,12 +72,16 @@
         </template>
       </el-table-column>
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" width="120" />
+      <el-table-column label="生产实习生人数人数" align="center" prop="productionInternNumbers" width="150" />
       <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" width="150" />
       <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
       <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
       <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
       <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
       <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140" />
+      <el-table-column label="生产人均收入" align="center" prop="productionAvgIncome" width="140" />
+      <el-table-column label="月度人均收入" align="center" prop="monthlyCumulativeAverageIncome" width="140" />
+      <el-table-column label="职能人均收入" align="center" prop="functionalAvgIncome" width="140" />
       <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
       <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
       <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
@@ -104,6 +106,9 @@
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
+          <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
+        </el-form-item>
         <el-form-item label="一线从业人数" prop="employeesNumber">
           <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数" />
         </el-form-item>
@@ -113,9 +118,6 @@
         <!-- <el-form-item label="公司年度平均从业人数" prop="employeesAvgAnnualNumber">
           <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司年度平均从业人数" />
         </el-form-item> -->
-        <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
-          <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
-        </el-form-item>
         <!-- <el-form-item label="工资总额月度占比" prop="monthlySalaryRatio">
           <el-input v-model="form.monthlySalaryRatio" placeholder="请输入工资总额月度占比" />
         </el-form-item> -->
@@ -124,6 +126,9 @@
         </el-form-item> -->
         <el-form-item label="累计人均收入" prop="cumulativeAverageIncome">
           <el-input v-model="form.cumulativeAverageIncome" placeholder="请输入累计人均收入" />
+        </el-form-item>
+        <el-form-item label="当月人均收入" prop="monthlyCumulativeAverageIncome">
+          <el-input v-model="form.monthlyCumulativeAverageIncome" placeholder="请输入当月人均收入" />
         </el-form-item>
         <el-form-item label="月度累计生产人均收入" prop="monthlyProductionAvgIncome">
           <el-input v-model="form.monthlyProductionAvgIncome" placeholder="请输入月度累计生产人均收入" />
@@ -156,9 +161,6 @@ export default {
 
       // 遮罩层
       loading: true,
-
-
-
       showDialog: false,
       progress: 0,
       selectedType: '',
@@ -190,12 +192,16 @@ export default {
         employeesNumber: null,
         employeesAvgMonthlyNumber: null,
         employeesAvgAnnualNumber: null,
+        productionInternNumbers: null,
         totalMonthlySalary: null,
         monthlySalaryRatio: null,
+        functionalAvgIncome: null,
+        monthlyCumulativeAverageIncome: null,
         annualSalaryRatio: null,
         cumulativeAverageIncome: null,
         monthlyProductionAvgIncome: null,
         monthlyFunctionalAvgIncome: null,
+        productionAvgIncome: null,
         functionalDeptOvertimeCost: null,
       },
       // 表单参数
@@ -208,13 +214,13 @@ export default {
             required: true, message: "日期不能为空", trigger: "blur"
           }
         ],
-        employeesNumber: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
+        // employeesNumber: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
         // employeesAvgMonthlyNumber: [
         //   {
         //     required: true,
@@ -340,9 +346,13 @@ export default {
         monthlySalaryRatio: null,
         annualSalaryRatio: null,
         cumulativeAverageIncome: null,
+        functionalAvgIncome: null,
         monthlyProductionAvgIncome: null,
+        productionAvgIncome: null,
         monthlyFunctionalAvgIncome: null,
+        productionInternNumbers: null,
         functionalDeptOvertimeCost: null,
+        monthlyCumulativeAverageIncome: null,
         createBy: null,
         createTime: null,
         updateBy: null,

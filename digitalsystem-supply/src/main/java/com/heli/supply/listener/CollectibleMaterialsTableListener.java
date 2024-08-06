@@ -21,7 +21,7 @@ import java.util.List;
 public class CollectibleMaterialsTableListener implements ReadListener<SupplyIndicatorsCollectibleMaterialsTable> {
 
     private static final Logger log = LoggerFactory.getLogger(CollectibleMaterialsTableListener.class);
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 500;
 
     @Autowired
     private SupplyIndicatorsCollectibleMaterialsTableMapper supplyIndicatorsCollectibleMaterialsTableMapper;

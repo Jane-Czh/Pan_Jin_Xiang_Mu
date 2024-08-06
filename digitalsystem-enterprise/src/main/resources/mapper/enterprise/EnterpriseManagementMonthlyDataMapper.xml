@@ -8,13 +8,17 @@
         <result property="esId"    column="ES_ID"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
         <result property="employeesNumber"    column="Employees_Number"    />
+        <result property="productionInternNumbers"    column="Production_Intern_Numbers"    />
         <result property="employeesAvgMonthlyNumber"    column="Employees_AVG_Monthly_Number"    />
         <result property="employeesAvgAnnualNumber"    column="Employees_AVG_Annual_Number"    />
         <result property="totalMonthlySalary"    column="Total_Monthly_Salary"    />
         <result property="monthlySalaryRatio"    column="Monthly_Salary_Ratio"    />
         <result property="annualSalaryRatio"    column="Annual_Salary_Ratio"    />
         <result property="cumulativeAverageIncome"    column="Cumulative_Average_Income"    />
+        <result property="monthlyCumulativeAverageIncome"    column="Monthly_Cumulative_Average_Income"    />
+        <result property="productionAvgIncome"    column="Production_AVG_Income"    />
         <result property="monthlyProductionAvgIncome"    column="Monthly_Production_AVG_Income"    />
+        <result property="functionalAvgIncome"    column="Functional_AVG_Income"    />
         <result property="monthlyFunctionalAvgIncome"    column="Monthly_Functional_AVG_Income"    />
         <result property="functionalDeptOvertimeCost"    column="Functional_Dept_Overtime_Cost"    />
         <result property="createBy"    column="CREATE_BY"    />
@@ -24,14 +28,60 @@
     </resultMap>
 
     <sql id="selectEnterpriseManagementMonthlyDataVo">
-        select ES_ID, Year_And_Month, Employees_Number, Employees_AVG_Monthly_Number, Employees_AVG_Annual_Number, Total_Monthly_Salary, Monthly_Salary_Ratio, Annual_Salary_Ratio, Cumulative_Average_Income, Monthly_Production_AVG_Income, Monthly_Functional_AVG_Income, Functional_Dept_Overtime_Cost, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Monthly_Data
+        select ES_ID, Year_And_Month, Employees_Number,Production_Intern_Numbers, Employees_AVG_Monthly_Number, Employees_AVG_Annual_Number, Total_Monthly_Salary, Monthly_Salary_Ratio, Annual_Salary_Ratio, Cumulative_Average_Income, Monthly_Cumulative_Average_Income, Production_AVG_Income, Monthly_Production_AVG_Income, Functional_AVG_Income, Monthly_Functional_AVG_Income, Functional_Dept_Overtime_Cost, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Monthly_Data
     </sql>
 
+    <!--从花名册中统计一线从业人数、实习生人数-->
+    <select id="selectFrontLineEmployeeNumbers" resultType="int">
+        SELECT count(*) FROM Enterprise_Management_Personnel_roster
+        WHERE Third_tissue = "生产管理科"
+        AND (Employee_Group = "合同制" OR Employee_Group = "劳务派遣")
+        AND Employee_sub_Group = "生产类"
+    </select>
+    <select id="selectInternNumbers" resultType="int">
+        SELECT count(*) FROM Enterprise_Management_Personnel_roster
+        WHERE Third_tissue = "生产管理科" AND Employee_Group = "实习生"
+    </select>
 
+    <!-- 统计当年月度数据条数，截止当月  -->
+    <select id="countMonthDataNumber" parameterType="Date" resultType="int">
+        SELECT COUNT(*)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND Employees_Number is not null
+    </select>
+    <!-- 当年人数求和 -->
+    <select id="countEmployeesNumberByYear" parameterType="Date" resultType="int">
+        SELECT sum(Employees_Number)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
+    <!-- 统计当年工资总额填报数据条数，截止当月  -->
+    <select id="countMonthSalaryFillDataNumber" parameterType="Date" resultType="int">
+        SELECT COUNT(*)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND Total_Monthly_Salary is not null
+    </select>
+    <!-- 当年月度工资总额求和 -->
+    <select id="countSalaryFillNumberByYear" parameterType="Date" resultType="java.math.BigDecimal">
+        SELECT sum(Total_Monthly_Salary)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
+    <select id="selectMonthDateByDate" parameterType="Date" resultMap="EnterpriseManagementMonthlyDataResult">
+        <include refid="selectEnterpriseManagementMonthlyDataVo"/>
+        where Year_And_Month = #{yearAndMonth}
+    </select>
 
     <!--检查当月填报数据是否上传-->
     <select id="checkEMEmployeesDataIsExisted" parameterType="Date" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Monthly_Data WHERE Year_And_Month=#{yearAndMonth} AND Employees_Number IS NOT NULL)
+        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month=#{yearAndMonth} AND Employees_Number IS NOT NULL)
     </select>
 
     <!--  按月查询EmployeesNumber  -->
@@ -46,6 +96,97 @@
         from Enterprise_Management_Indicators_Monthly_Data
         WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
     </select>
+
+
+
+
+    <!-- 查询当月人均收入 -->
+    <select id="selectMonthlyCumulativeAverageIncome" resultType="java.math.BigDecimal">
+        SELECT SUM(Total_Salary) / COUNT(*)
+        FROM Enterprise_Management_Salary_Table
+    </select>
+
+    <!-- 当月生产人均收入 指标55-->
+    <select id="selectMonthlyProductionAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary) / COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE (Group_Code NOT IN("实习生") AND Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
+    </select>
+
+    <!-- 当月职能人均收入 56-->
+    <select id="selectMonthlyFunctionalAverageIncome" resultType="decimal">
+        SELECT SUM(Total_Salary) / COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN (
+	        SELECT Salary_Table_index
+	        FROM Enterprise_Management_Salary_Table
+	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
+                  OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" )  ) )
+		OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" ) AND Fourth_Level_Org_Name IN ( "生产部直" ))
+    </select>
+
+    <!-- 当月职能人均加班费 76-->
+    <select id="selectMonthlyFunctionalAverageOvertimeCost" resultType="decimal">
+        SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN (
+	        SELECT Salary_Table_index
+	        FROM Enterprise_Management_Salary_Table
+	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
+                  OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" )  ) )
+		OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" ) AND Fourth_Level_Org_Name IN ( "生产部直" ))
+    </select>
+
+    <!-- 当月职能其他奖金 76-->
+    <select id="selectMonthlyFunctionalAverageOtherBonuses" resultType="decimal">
+        SELECT SUM(Other_Bonuses)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN (
+	        SELECT Salary_Table_index
+	        FROM Enterprise_Management_Salary_Table
+	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
+                  OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" )  ) )
+		OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" ) AND Fourth_Level_Org_Name IN ( "生产部直" ))
+    </select>
+
+    <!-- 统计当年月度数据-工资数据条数，截止当月  -->
+    <select id="countMonthDataSalaryNumber" parameterType="Date" resultType="int">
+        SELECT COUNT(*)
+        FROM Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+              AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+              AND Monthly_Cumulative_Average_Income is not null
+              AND Monthly_Production_AVG_Income is not null
+              AND Monthly_Functional_AVG_Income is not null
+    </select>
+
+    <!--  累计人均收入,自然年从一月加到当月/当前月份  -->
+    <select id="selectCumulativeAverageIncome" resultType="decimal">
+        select sum(Monthly_Cumulative_Average_Income) / DATE_FORMAT(#{yearAndMonth}, '%m')
+        from Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!--  累计生产人均收入,自然年从一月加到当月/当前月份  -->
+    <select id="selectProductionAVGIncome" resultType="decimal">
+        select sum(Monthly_Production_AVG_Income) / DATE_FORMAT(#{yearAndMonth}, '%m')
+        from Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!--  累计职能人均收入,自然年从一月加到当月/当前月份  -->
+    <select id="selectFunctionalAVGIncome" resultType="decimal">
+        select sum(Monthly_Functional_AVG_Income) / DATE_FORMAT(#{yearAndMonth}, '%m')
+        from Enterprise_Management_Indicators_Monthly_Data
+        WHERE Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Year_And_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
+    </select>
+
+
+
+
+
+
+
+
 
     <!--  查询已上传数据的最大月份  -->
     <select id="selectMaxMonths" resultType="Date">
@@ -113,14 +254,18 @@
         update Enterprise_Management_Indicators_Monthly_Data
         <trim prefix="SET" suffixOverrides=",">
             <if test="employeesNumber != null">Employees_Number = #{employeesNumber},</if>
+            <if test="productionInternNumbers != null">Production_Intern_Numbers = #{productionInternNumbers},</if>
             <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},</if>
             <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},</if>
             <if test="totalMonthlySalary != null">Total_Monthly_Salary = #{totalMonthlySalary},</if>
             <if test="monthlySalaryRatio != null">Monthly_Salary_Ratio = #{monthlySalaryRatio},</if>
             <if test="annualSalaryRatio != null">Annual_Salary_Ratio = #{annualSalaryRatio},</if>
             <if test="cumulativeAverageIncome != null">Cumulative_Average_Income = #{cumulativeAverageIncome},</if>
+            <if test="monthlyCumulativeAverageIncome != null">Monthly_Cumulative_Average_Income = #{monthlyCumulativeAverageIncome},</if>
             <if test="monthlyProductionAvgIncome != null">Monthly_Production_AVG_Income = #{monthlyProductionAvgIncome},</if>
+            <if test="productionAvgIncome != null">Production_AVG_Income = #{productionAvgIncome},</if>
             <if test="monthlyFunctionalAvgIncome != null">Monthly_Functional_AVG_Income = #{monthlyFunctionalAvgIncome},</if>
+            <if test="functionalAvgIncome != null">Functional_AVG_Income = #{functionalAvgIncome},</if>
             <if test="functionalDeptOvertimeCost != null">Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>
@@ -132,11 +277,30 @@
 
     <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
     <insert id="insertMonthlyFillingDataByMonth" parameterType="EnterpriseManagementMonthlyData">
+        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Production_Intern_Numbers,Total_Monthly_Salary)
+        values (#{yearAndMonth},#{employeesNumber},#{productionInternNumbers},#{totalMonthlySalary})
+        on duplicate key update
+        Employees_Number = values(Employees_Number),
+        Production_Intern_Numbers = values(Production_Intern_Numbers),
+        Total_Monthly_Salary =values(Total_Monthly_Salary)
+    </insert>
+
+    <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
+    <insert id="insertMonthlyFillingDataByMonth" parameterType="EnterpriseManagementMonthlyData">
         insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Total_Monthly_Salary)
         values (#{yearAndMonth},#{employeesNumber},#{totalMonthlySalary})
         on duplicate key update
         Employees_Number = values(Employees_Number),
         Total_Monthly_Salary =values(Total_Monthly_Salary)
+    </insert>
+
+    <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
+    <insert id="insertOrUpdateEmployeesData" parameterType="EnterpriseManagementMonthlyData">
+        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Production_Intern_Numbers)
+        values (#{yearAndMonth},#{employeesNumber},#{productionInternNumbers})
+        on duplicate key update
+        Employees_Number = values(Employees_Number),
+        Production_Intern_Numbers = values(Production_Intern_Numbers)
     </insert>
 
     <!--检查当月工资表是否上传-->
@@ -157,38 +321,96 @@
         WHERE Salary_Calculation_Year_Month <![CDATA[ <= ]]> #{yearAndMonth} AND YEAR(Salary_Calculation_Year_Month) = DATE_FORMAT(#{yearAndMonth}, '%Y')
     </select>
 
-    <!-- 当月生产人均收入 指标55-->
-    <select id="selectMonthlyProductionAverageIncome" resultType="decimal">
+
+
+
+    <select id="selectMonthlyFunctionalAverageIncome-o1" resultType="decimal">
+--         SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+--         WHERE Salary_Table_index NOT IN(
+--             SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
+--             WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%' OR Position LIKE '%经理%'
+--                 OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
+--                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
+--         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
         SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE (Group_Code NOT IN("实习生") AND Department IN("生产管理科") AND Subgroup_Code IN("生产类")) and Salary_Calculation_Year_Month=#{yearAndMonth}
+        WHERE Salary_Table_index NOT IN (
+	        SELECT Salary_Table_index
+	        FROM Enterprise_Management_Salary_Table
+	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
+                  OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" )  ) )
+		OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" ) AND Fourth_Level_Org_Name IN ( "生产部直" ))
+		And Salary_Calculation_Year_Month=#{yearAndMonth}
     </select>
 
-    <!-- 当月职能人均收入 56-->
-    <select id="selectMonthlyFunctionalAverageIncome" resultType="decimal">
-        SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN(
-            SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
-            WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%' OR Position LIKE '%经理%'
-                OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
-                OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
-        ) and Salary_Calculation_Year_Month=#{yearAndMonth}
-    </select>
 
-    <!-- 当月职能人均加班费 76-->
-    <select id="selectMonthlyFunctionalAverageOvertimeCost" resultType="decimal">
+    <select id="selectMonthlyFunctionalAverageOvertimeCost-o1" resultType="decimal">
+--         SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
+--         WHERE Salary_Table_index NOT IN(
+--             SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
+--             WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+--                 OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
+--                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
+--         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
         SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN(
-            SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
-            WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
-                OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
-                OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
-        ) and Salary_Calculation_Year_Month=#{yearAndMonth}
+        WHERE Salary_Table_index NOT IN (
+	        SELECT Salary_Table_index
+	        FROM Enterprise_Management_Salary_Table
+	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
+                  OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" )  ) )
+		OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" ) AND Fourth_Level_Org_Name IN ( "生产部直" ))
+		And Salary_Calculation_Year_Month=#{yearAndMonth}
+    </select>
+
+
+    <select id="selectMonthlyFunctionalAverageOtherBonuses-o1" resultType="decimal">
+--         SELECT SUM(Other_Bonuses)/COUNT(*) FROM Enterprise_Management_Salary_Table
+--         WHERE Salary_Table_index NOT IN(
+--             SELECT Salary_Table_index FROM Enterprise_Management_Salary_Table
+--             WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+--                 OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN("实习生")
+--                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
+--         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
+        SELECT SUM(Other_Bonuses)/COUNT(*) FROM Enterprise_Management_Salary_Table
+        WHERE Salary_Table_index NOT IN (
+	        SELECT Salary_Table_index
+	        FROM Enterprise_Management_Salary_Table
+	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
+		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
+                  OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" )  ) )
+		OR (Department IN ( "生产管理科" ) AND Subgroup_Code IN ( "生产类" ) AND Fourth_Level_Org_Name IN ( "生产部直" ))
+		And Salary_Calculation_Year_Month=#{yearAndMonth}
     </select>
 
     <!--  检查数据库中是否有数据  -->
     <select id="checkEMMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Salary_Table)
     </select>
+
+    <update id="updateMonthlyData" parameterType="EnterpriseManagementMonthlyData">
+        update Enterprise_Management_Indicators_Monthly_Data
+        SET Year_And_Month = #{yearAndMonth},
+            Employees_Number = #{employeesNumber},
+            Production_Intern_Numbers = #{productionInternNumbers},
+            Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},
+            Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},
+            Total_Monthly_Salary = #{totalMonthlySalary},
+            Monthly_Salary_Ratio = #{monthlySalaryRatio},
+            Annual_Salary_Ratio = #{annualSalaryRatio},
+            Monthly_Cumulative_Average_Income = #{monthlyCumulativeAverageIncome},
+            Cumulative_Average_Income = #{cumulativeAverageIncome},
+            Monthly_Production_AVG_Income = #{monthlyProductionAvgIncome},
+            Production_AVG_Income = #{productionAvgIncome},
+            Monthly_Functional_AVG_Income = #{monthlyFunctionalAvgIncome},
+            Functional_AVG_Income = #{functionalAvgIncome},
+            Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost},
+            CREATE_BY = #{createBy},
+            CREATE_TIME = #{createTime},
+            UPDATE_BY = #{updateBy},
+            UPDATE_TIME = #{updateTime}
+        where ES_ID = #{esId}
+    </update>
 
     <!-- 计算工资数据，存入数据库 -->
 <!--    <update id="updateCalculateSalaryDataByMonth" parameterType="EnterpriseManagementEmployeesData">-->
@@ -221,10 +443,10 @@
 
     <!-- 安全更新财务表数据、数据存在则更新，不存在则插入 -->
     <insert id="updateCalculateSalaryDataByMonth" parameterType="EnterpriseManagementMonthlyData">
-        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Cumulative_Average_Income,Monthly_Production_AVG_Income,Monthly_Functional_AVG_Income,Functional_Dept_Overtime_Cost)
-        values (#{yearAndMonth},#{cumulativeAverageIncome},#{monthlyProductionAvgIncome},#{monthlyFunctionalAvgIncome},#{functionalDeptOvertimeCost})
+        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Monthly_Cumulative_Average_Income,Monthly_Production_AVG_Income,Monthly_Functional_AVG_Income,Functional_Dept_Overtime_Cost)
+        values (#{yearAndMonth},#{monthlyCumulativeAverageIncome},#{monthlyProductionAvgIncome},#{monthlyFunctionalAvgIncome},#{functionalDeptOvertimeCost})
         on duplicate key update
-        Cumulative_Average_Income = values(Cumulative_Average_Income),
+        Monthly_Cumulative_Average_Income = values(Monthly_Cumulative_Average_Income),
         Monthly_Production_AVG_Income =values(Monthly_Production_AVG_Income),
         Monthly_Functional_AVG_Income =values(Monthly_Functional_AVG_Income),
         Functional_Dept_Overtime_Cost =values(Functional_Dept_Overtime_Cost)
@@ -237,14 +459,18 @@
         <where>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
             <if test="employeesNumber != null "> and Employees_Number = #{employeesNumber}</if>
+            <if test="productionInternNumbers != null "> and Production_Intern_Numbers = #{productionInternNumbers}</if>
             <if test="employeesAvgMonthlyNumber != null "> and Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber}</if>
             <if test="employeesAvgAnnualNumber != null "> and Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber}</if>
             <if test="totalMonthlySalary != null "> and Total_Monthly_Salary = #{totalMonthlySalary}</if>
             <if test="monthlySalaryRatio != null "> and Monthly_Salary_Ratio = #{monthlySalaryRatio}</if>
             <if test="annualSalaryRatio != null "> and Annual_Salary_Ratio = #{annualSalaryRatio}</if>
+            <if test="monthlyCumulativeAverageIncome != null "> and Monthly_Cumulative_Average_Income = #{monthlyCumulativeAverageIncome}</if>
             <if test="cumulativeAverageIncome != null "> and Cumulative_Average_Income = #{cumulativeAverageIncome}</if>
             <if test="monthlyProductionAvgIncome != null "> and Monthly_Production_AVG_Income = #{monthlyProductionAvgIncome}</if>
+            <if test="productionAvgIncome != null "> and Production_AVG_Income = #{productionAvgIncome}</if>
             <if test="monthlyFunctionalAvgIncome != null "> and Monthly_Functional_AVG_Income = #{monthlyFunctionalAvgIncome}</if>
+            <if test="functionalAvgIncome != null "> and Functional_AVG_Income = #{functionalAvgIncome}</if>
             <if test="functionalDeptOvertimeCost != null "> and Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost}</if>
         </where>
     </select>
@@ -259,13 +485,17 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
             <if test="employeesNumber != null">Employees_Number,</if>
+            <if test="productionInternNumbers != null">Production_Intern_Numbers,</if>
             <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number,</if>
             <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number,</if>
             <if test="totalMonthlySalary != null">Total_Monthly_Salary,</if>
             <if test="monthlySalaryRatio != null">Monthly_Salary_Ratio,</if>
             <if test="annualSalaryRatio != null">Annual_Salary_Ratio,</if>
             <if test="cumulativeAverageIncome != null">Cumulative_Average_Income,</if>
+            <if test="monthlyCumulativeAverageIncome != null">Monthly_Cumulative_Average_Income,</if>
+            <if test="productionAvgIncome != null">Production_AVG_Income,</if>
             <if test="monthlyProductionAvgIncome != null">Monthly_Production_AVG_Income,</if>
+            <if test="functionalAvgIncome != null">Functional_AVG_Income,</if>
             <if test="monthlyFunctionalAvgIncome != null">Monthly_Functional_AVG_Income,</if>
             <if test="functionalDeptOvertimeCost != null">Functional_Dept_Overtime_Cost,</if>
             <if test="createBy != null">CREATE_BY,</if>
@@ -276,13 +506,17 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
             <if test="employeesNumber != null">#{employeesNumber},</if>
+            <if test="productionInternNumbers != null">#{productionInternNumbers},</if>
             <if test="employeesAvgMonthlyNumber != null">#{employeesAvgMonthlyNumber},</if>
             <if test="employeesAvgAnnualNumber != null">#{employeesAvgAnnualNumber},</if>
             <if test="totalMonthlySalary != null">#{totalMonthlySalary},</if>
             <if test="monthlySalaryRatio != null">#{monthlySalaryRatio},</if>
             <if test="annualSalaryRatio != null">#{annualSalaryRatio},</if>
             <if test="cumulativeAverageIncome != null">#{cumulativeAverageIncome},</if>
+            <if test="monthlyCumulativeAverageIncome != null">#{monthlyCumulativeAverageIncome},</if>
+            <if test="productionAvgIncome != null">#{productionAvgIncome},</if>
             <if test="monthlyProductionAvgIncome != null">#{monthlyProductionAvgIncome},</if>
+            <if test="functionalAvgIncome != null">#{functionalAvgIncome},</if>
             <if test="monthlyFunctionalAvgIncome != null">#{monthlyFunctionalAvgIncome},</if>
             <if test="functionalDeptOvertimeCost != null">#{functionalDeptOvertimeCost},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -297,13 +531,17 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
             <if test="employeesNumber != null">Employees_Number = #{employeesNumber},</if>
+            <if test="productionInternNumbers != null">Production_Intern_Numbers = #{productionInternNumbers},</if>
             <if test="employeesAvgMonthlyNumber != null">Employees_AVG_Monthly_Number = #{employeesAvgMonthlyNumber},</if>
             <if test="employeesAvgAnnualNumber != null">Employees_AVG_Annual_Number = #{employeesAvgAnnualNumber},</if>
             <if test="totalMonthlySalary != null">Total_Monthly_Salary = #{totalMonthlySalary},</if>
             <if test="monthlySalaryRatio != null">Monthly_Salary_Ratio = #{monthlySalaryRatio},</if>
             <if test="annualSalaryRatio != null">Annual_Salary_Ratio = #{annualSalaryRatio},</if>
             <if test="cumulativeAverageIncome != null">Cumulative_Average_Income = #{cumulativeAverageIncome},</if>
+            <if test="monthlyCumulativeAverageIncome != null">Monthly_Cumulative_Average_Income = #{monthlyCumulativeAverageIncome},</if>
+            <if test="productionAvgIncome != null">Production_AVG_Income = #{productionAvgIncome},</if>
             <if test="monthlyProductionAvgIncome != null">Monthly_Production_AVG_Income = #{monthlyProductionAvgIncome},</if>
+            <if test="functionalAvgIncome != null">Functional_AVG_Income = #{functionalAvgIncome},</if>
             <if test="monthlyFunctionalAvgIncome != null">Monthly_Functional_AVG_Income = #{monthlyFunctionalAvgIncome},</if>
             <if test="functionalDeptOvertimeCost != null">Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>

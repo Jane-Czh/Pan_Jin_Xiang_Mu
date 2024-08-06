@@ -32,7 +32,7 @@ public class EnterpriseManagementSpecialOperationsManagementLedgerController ext
     private IEnterpriseManagementSpecialOperationsManagementLedgerService enterpriseManagementSpecialOperationsManagementLedgerService;
 
     /*表单导入功能*/
-    @Log(title = "[市场]特种作业管理台账上传", businessType = BusinessType.INSERT)
+//    @Log(title = "[市场]特种作业管理台账上传", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('Enterprisemanagement:Ledger:import')")
     @PostMapping("/SOimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {

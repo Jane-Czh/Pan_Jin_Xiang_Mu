@@ -40,7 +40,7 @@ public class ProductionClockInFormController extends BaseController
     /**
      * 导入excel表格功能
      */
-    @Log(title = "[生产]表上传", businessType = BusinessType.INSERT)
+//    @Log(title = "[生产]表上传", businessType = BusinessType.INSERT)
     @PostMapping("/FOimport")
     public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
         System.out.println("------------import-------import------------");

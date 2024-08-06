@@ -64,4 +64,6 @@ public interface EnterpriseManagementLaborContractLedgerMapper
 
     //无参数方法
     public List<EnterpriseManagementLaborContractLedger> selectEnterpriseManagementLaborContractLedgerList1();
+
+    void insertBatch(List<EnterpriseManagementLaborContractLedger> ledgerList);
 }

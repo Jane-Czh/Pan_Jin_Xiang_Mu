@@ -64,6 +64,8 @@ public interface EnterpriseManagementPersonnelRosterMapper
     //查询数据库最后一条数据id
     public Long selectLastId();
 
+    void insertBatch(List<EnterpriseManagementPersonnelRoster> rosterList);
+
     //无参数方法
     public List<EnterpriseManagementPersonnelRoster> selectEnterpriseManagementPersonnelRosterList1();
 }

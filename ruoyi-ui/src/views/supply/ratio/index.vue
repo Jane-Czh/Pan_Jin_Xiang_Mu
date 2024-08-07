@@ -206,7 +206,13 @@
       <el-table-column label="是否入驻第三方" align="center" prop="thirdParty" />
       <el-table-column label="备注" align="center" prop="Remarks" />
       <el-table-column label="实际比例" align="center" prop="actualProportion" />
-      <el-table-column label="差异" align="center" prop="difference" />
+      <el-table-column label="差异" align="center" prop="difference" >
+        <template slot-scope="scope">
+          <span :style="{ color: getDifferenceColor(scope.row.difference) }">
+            {{ scope.row.difference }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -482,8 +488,20 @@ export default {
       // window.location.reload();
     },
 
+    getDifferenceColor(difference) {
+      // 移除百分比符号并转换为数字
+      const diffNum = parseFloat(difference.replace('%', '')) / 100;
+      // 检查转换是否成功
+      if (isNaN(diffNum)) {
+        // 如果转换失败，返回默认颜色
+        return 'black';
+      }
+      // 如果绝对值大于3%，返回红色，否则返回默认颜色
+      return Math.abs(diffNum) > 0.03 ? 'red' : 'black';
+    },
+
         /*  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
-        fileSend() {
+    fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
       // console.log(file);

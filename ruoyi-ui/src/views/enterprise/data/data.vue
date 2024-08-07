@@ -25,6 +25,11 @@
           v-hasPermi="['enterprise:monthly:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-button type="success" plain icon="el-icon-refresh" v-if="!updateLoading" size="mini"  @click="handleCacluation"
+          v-hasPermi="['enterprise:monthly:calculation']">更新</el-button>
+        <el-button type="primary" v-if="updateLoading" :loading="true">更新中</el-button>
+      </el-col>
+      <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
           v-hasPermi="['enterprise:monthly:import']">导入Excel文件
@@ -72,18 +77,24 @@
         </template>
       </el-table-column>
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" width="120" />
-      <el-table-column label="生产实习生人数人数" align="center" prop="productionInternNumbers" width="150" />
-      <el-table-column label="公司平均从业人数" align="center" prop="employeesAvgMonthlyNumber" width="150" />
-      <el-table-column label="公司年度平均从业人数" align="center" prop="employeesAvgAnnualNumber" width="150" />
+      <el-table-column label="生产实习生人数" align="center" prop="productionInternNumbers" width="150" />
+      <el-table-column label="公司当月从业人数" align="center" prop="employeesNumberCurrentMonth" width="150" />
+      <el-table-column label="公司平均从业人数(月度)" align="center" prop="employeesAvgMonthlyNumber" width="150" />
+      <el-table-column label="公司平均从业人数(年度)" align="center" prop="employeesAvgAnnualNumber" width="150" />
       <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
       <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
       <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
-      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140" />
-      <el-table-column label="生产人均收入" align="center" prop="productionAvgIncome" width="140" />
+
       <el-table-column label="月度人均收入" align="center" prop="monthlyCumulativeAverageIncome" width="140" />
-      <el-table-column label="职能人均收入" align="center" prop="functionalAvgIncome" width="140" />
-      <el-table-column label="月度累计生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
-      <el-table-column label="月度累计职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
+      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140" />
+
+      <el-table-column label="月度生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
+      <el-table-column label="累计生产人均收入" align="center" prop="productionAvgIncome" width="140" />
+      
+      <el-table-column label="月度职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
+      <el-table-column label="累计职能人均收入" align="center" prop="functionalAvgIncome" width="140" />
+      
+      
       <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -109,9 +120,18 @@
         <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
           <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
         </el-form-item>
+        <el-form-item label="公司当月从业人数" prop="employeesNumberCurrentMonth">
+          <el-input v-model="form.employeesNumberCurrentMonth" placeholder="请输入公司当月从业人数" />
+        </el-form-item>
         <el-form-item label="一线从业人数" prop="employeesNumber">
           <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数" />
         </el-form-item>
+        <el-form-item label="生产实习生人数" prop="productionInternNumbers">
+          <el-input v-model="form.productionInternNumbers" placeholder="请输入生产实习生人数" />
+        </el-form-item>
+        <!-- <el-form-item label="累计生产人均收入" prop="productionAvgIncome">
+          <el-input v-model="form.productionAvgIncome" placeholder="请输入生产人均收入" />
+        </el-form-item> -->
         <!-- <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
           <el-input v-model="form.employeesAvgMonthlyNumber" placeholder="请输入公司平均从业人数" />
         </el-form-item> -->
@@ -124,16 +144,16 @@
         <!-- <el-form-item label="工资总额年度占比" prop="annualSalaryRatio">
           <el-input v-model="form.annualSalaryRatio" placeholder="请输入工资总额年度占比" />
         </el-form-item> -->
-        <el-form-item label="累计人均收入" prop="cumulativeAverageIncome">
+        <!-- <el-form-item label="累计人均收入" prop="cumulativeAverageIncome">
           <el-input v-model="form.cumulativeAverageIncome" placeholder="请输入累计人均收入" />
-        </el-form-item>
-        <el-form-item label="当月人均收入" prop="monthlyCumulativeAverageIncome">
+        </el-form-item> -->
+        <el-form-item label="月度人均收入" prop="monthlyCumulativeAverageIncome">
           <el-input v-model="form.monthlyCumulativeAverageIncome" placeholder="请输入当月人均收入" />
         </el-form-item>
-        <el-form-item label="月度累计生产人均收入" prop="monthlyProductionAvgIncome">
+        <el-form-item label="月度生产人均收入" prop="monthlyProductionAvgIncome">
           <el-input v-model="form.monthlyProductionAvgIncome" placeholder="请输入月度累计生产人均收入" />
         </el-form-item>
-        <el-form-item label="月度累计职能人均收入" prop="monthlyFunctionalAvgIncome">
+        <el-form-item label="月度职能人均收入" prop="monthlyFunctionalAvgIncome">
           <el-input v-model="form.monthlyFunctionalAvgIncome" placeholder="请输入月度累计职能人均收入" />
         </el-form-item>
         <el-form-item label="职能部门人均加班费用" prop="functionalDeptOvertimeCost">
@@ -150,9 +170,10 @@
 </template>
 
 <script>
-import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData } from "@/api/enterprise/data";
+import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData ,calculation} from "@/api/enterprise/data";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorEnableEmpty, numValidatorOnlyPositive, numValidator } from '@/api/financial/numValidator.js';
+import { numValidatorEnableEmpty,  numValidator } from '@/api/financial/numValidator.js';
+import moment from 'moment';
 export default {
   name: "Data",
 
@@ -176,7 +197,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-
+      updateLoading :false,
       // [企业管理]指标月度数据表格数据
       DataList: [],
       // 弹出层标题
@@ -196,6 +217,7 @@ export default {
         totalMonthlySalary: null,
         monthlySalaryRatio: null,
         functionalAvgIncome: null,
+        employeesNumberCurrentMonth: null,
         monthlyCumulativeAverageIncome: null,
         annualSalaryRatio: null,
         cumulativeAverageIncome: null,
@@ -235,7 +257,15 @@ export default {
         //     trigger: "blur",
         //   }
         // ],
+        
         totalMonthlySalary: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        employeesNumberCurrentMonth: [
           {
             required: true,
             validator: numValidator,
@@ -258,6 +288,18 @@ export default {
         // ],
 
         //允许空值
+        monthlyCumulativeAverageIncome: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
+        productionInternNumbers: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
         cumulativeAverageIncome: [
           {
             validator: numValidatorEnableEmpty,
@@ -346,6 +388,7 @@ export default {
         monthlySalaryRatio: null,
         annualSalaryRatio: null,
         cumulativeAverageIncome: null,
+        employeesNumberCurrentMonth: null,
         functionalAvgIncome: null,
         monthlyProductionAvgIncome: null,
         productionAvgIncome: null,
@@ -382,6 +425,18 @@ export default {
       this.reset();
       this.open = true;
       this.title = "新增";
+    },
+    //同步数据
+    handleCacluation() {
+      calculation().then(response => {
+        this.updateLoading = true;
+        this.$modal.msgSuccess("更新成功");
+        this.getList();
+        this.updateLoading = false;
+      }).catch(error => {
+        this.$modal.msgError("更新失败: " + error.message);
+        this.updateLoading = false;
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -520,7 +575,12 @@ export default {
               this.isLoading = false;
             });
         } else {
-          this.$modal.confirm('检测到文件日期与所选日期可能不匹配，确定继续上传该表吗？').then(() => {
+          let nowDate = moment(yearAndMonth).format("YYYY-MM");
+         
+          let file1 = file.name;
+          //给${nowDate}${file1}修改为绿色颜色
+          
+          this.$modal.confirm(`当前上传的工资表月份为${nowDate},您当前选择的表格为《${file1}》是否上传？`).then(() => {
             return uploadFile(formData, aimUrl)
               .then(data => {
                 // 处理上传成功的情况0.

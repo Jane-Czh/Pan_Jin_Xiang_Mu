@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/enterprise/data")
@@ -34,6 +35,17 @@ public class EnterpriseManagementDataController extends BaseController {
     private IEnterpriseManagementSalaryTableService enterpriseManagementSalaryTableService;
 
     private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementDataController.class);
+
+    /**
+     * 更新-指标月度数据
+     */
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:calculation')")
+    @PostMapping("/calculation")
+    @Transactional
+    public AjaxResult calculation() {
+        int i = enterpriseManagementMonthlyDataService.calculationAllData();
+        return AjaxResult.success(i);
+    }
 
     /**
      * 新增[企业管理]指标月度填报数据
@@ -59,7 +71,9 @@ public class EnterpriseManagementDataController extends BaseController {
 
 //        enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
         enterpriseManagementMonthlyDataService.insertMonthlyFillingDataByMonth(enterpriseManagementMonthlyData);
-        enterpriseManagementMonthlyDataService.calculateHandFillIndicators(enterpriseManagementMonthlyData.getYearAndMonth());
+//        enterpriseManagementMonthlyDataService.calculateHandFillIndicators(enterpriseManagementMonthlyData.getYearAndMonth());
+        enterpriseManagementMonthlyDataService.calculateEmployeesNumber(enterpriseManagementMonthlyData.getYearAndMonth());
+        enterpriseManagementMonthlyDataService.calculateSalaryFillNumber(enterpriseManagementMonthlyData.getYearAndMonth());
 
         return AjaxResult.success();
     }

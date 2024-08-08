@@ -91,4 +91,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{spId}
         </foreach>
     </delete>
+
+    <select id="calculateSupplierRatioByQuantity" resultType="java.lang.Double">
+        WITH TotalPurchaseQuantities AS (
+            SELECT
+                SUM(sp.Purchase_Quantity) AS TotalQuantity
+            FROM
+                supply_purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+        ), SupplierPurchaseQuantities AS (
+            SELECT
+                SUM(sp.Purchase_Quantity) AS SupplierTotalQuantity
+            FROM
+                supply_purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+            AND sp.Supplier = #{supplierCode}
+        )
+        SELECT
+            (COALESCE(SupplierTotalQuantity, 0) / TotalQuantity) * 100 AS RatioPercentage
+        FROM
+            TotalPurchaseQuantities, SupplierPurchaseQuantities;
+    </select>
+
+    <select id="calculateSupplierRatioByNetValueOrder" resultType="java.lang.Double">
+        WITH TotalNetValue AS (
+            SELECT
+                SUM(sp.Net_Value_Order) AS TotalNetValue
+            FROM
+                supply_purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+        ), SupplierNetValue AS (
+            SELECT
+                SUM(sp.Net_Value_Order) AS SupplierNetValue
+            FROM
+                supply_purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+            AND sp.Supplier = #{supplierCode}
+        )
+        SELECT
+            (COALESCE(SupplierNetValue, 0) / TotalNetValue) * 100 AS RatioPercentage
+        FROM
+            TotalNetValue, SupplierNetValue;
+    </select>
+
 </mapper>

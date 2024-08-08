@@ -67,4 +67,6 @@ public interface SupplyMaterialCategoryDictionaryTableMapper
 
     public void deleteAll();
 
+    public List<String> getMaterial_Number(String materialClass);
+
 }

@@ -143,17 +143,19 @@ export default {
   height: 100%;
   background-image: url("../assets/images/login-background.jpg");
   background-size: cover;
+  backdrop-filter: blur(5px); /* 磨砂效果 */
 }
 
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
-  color: #707070;
+  color: #333; /* 亮黑色 */
 }
 
 .login-form {
   border-radius: 6px;
-  background: #ffffff;
+  background: rgba(141, 137, 137, 0.9); /* 半透明背景 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 阴影效果 */
   width: 400px;
   padding: 25px 25px 5px 25px;
 

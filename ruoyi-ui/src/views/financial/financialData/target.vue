@@ -11,9 +11,9 @@
         <el-input v-model="queryParams.indicatorNameCn" placeholder="请输入指标名" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="年" prop="natureYear">
+      <el-form-item label="日期" prop="natureYear">
         <el-date-picker clearable v-model="queryParams.natureYear" type="year" value-format="yyyy-MM-dd"
-          placeholder="请选择年">
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="目标值" prop="targetValue">
@@ -54,11 +54,11 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="targetList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="targetList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="指标名" align="center" prop="dictLabel"/> -->
       <el-table-column label="指标名" align="center" prop="indicatorNameCn" />
-      <el-table-column label="年" align="center" prop="natureYear" width="180">
+      <el-table-column label="日期" align="center" prop="natureYear" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.natureYear, '{y}') }}</span>
         </template>
@@ -90,8 +90,8 @@
               :value="dict.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="年" prop="natureYear">
-          <el-date-picker clearable v-model="form.natureYear" type="year" value-format="yyyy-MM-dd" placeholder="请选择年">
+        <el-form-item label="日期" prop="natureYear">
+          <el-date-picker clearable v-model="form.natureYear" type="year" value-format="yyyy-MM-dd" placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="目标值" prop="targetValue">
@@ -114,7 +114,7 @@
 
 <script>
 import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
-
+import { numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
   dicts: ['indicators_financial'],
@@ -161,6 +161,19 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        indicatorDept: [
+          { required: true, message: "指标名不能为空", trigger: "blur" }
+        ],
+        natureYear: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        targetValue: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
       }
     };
   },

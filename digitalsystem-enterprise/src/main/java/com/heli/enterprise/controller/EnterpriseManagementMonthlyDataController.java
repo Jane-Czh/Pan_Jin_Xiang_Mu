@@ -1,5 +1,6 @@
 package com.heli.enterprise.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +34,14 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class EnterpriseManagementMonthlyDataController extends BaseController {
     @Autowired
     private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
+
+
+    @PostMapping("/test")
+    public void test(Date yearAndMonth) {
+//        enterpriseManagementMonthlyDataService.countEmployeesNumber(yearAndMonth);
+//        enterpriseManagementMonthlyDataService.calculateEmployeesNumber(yearAndMonth);
+        enterpriseManagementMonthlyDataService.calculateSalaryFillNumber(yearAndMonth);
+    }
 
     /**
      * 查询[企业管理]指标月度数据列表

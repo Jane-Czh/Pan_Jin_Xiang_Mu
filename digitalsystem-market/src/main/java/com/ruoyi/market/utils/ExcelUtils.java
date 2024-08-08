@@ -459,6 +459,9 @@ public class ExcelUtils {
             //24、生产周期
             MarketCommercialVehicleTable.setProductionCycle(getStringCellValue(row.getCell(count++)));
             //25、未报工原因
+//            if(getStringCellValue(row.getCell(count)).length() > 255){
+//                System.out.println("==>"+getStringCellValue(row.getCell(count)));
+//            }
             MarketCommercialVehicleTable.setGoLive(getStringCellValue(row.getCell(count++)));
 
 

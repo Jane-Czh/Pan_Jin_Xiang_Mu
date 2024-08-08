@@ -11,8 +11,10 @@
         <result property="name"    column="Name"    />
         <result property="position"    column="Position"    />
         <result property="department"    column="Department"    />
+        <result property="fourthLevelOrgName"    column="Fourth_Level_Org_Name"    />
         <result property="groupCode"    column="Group_Code"    />
         <result property="subgroupCode"    column="Subgroup_Code"    />
+        <result property="otherBonuses"    column="Other_Bonuses"    />
         <result property="overtimeSalary"    column="Overtime_Salary"    />
         <result property="totalSalary"    column="Total_Salary"    />
         <result property="salaryTableIndex"    column="Salary_Table_Index"    />
@@ -23,7 +25,7 @@
     </resultMap>
 
     <sql id="selectEnterpriseManagementSalaryTableVo">
-        select ES_ID, Salary_Calculation_Year_Month, Employee_Id, Name, Position, Department, Group_Code, Subgroup_Code, Overtime_Salary, Total_Salary, Salary_Table_Index, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Salary_Table
+        select ES_ID, Salary_Calculation_Year_Month, Employee_Id, Name, Position, Department,Fourth_Level_Org_Name, Group_Code, Subgroup_Code, Other_Bonuses, Overtime_Salary, Total_Salary, Salary_Table_Index, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Salary_Table
     </sql>
 
     <select id="selectEnterpriseManagementSalaryTableList" parameterType="EnterpriseManagementSalaryTable" resultMap="EnterpriseManagementSalaryTableResult">
@@ -34,8 +36,10 @@
             <if test="name != null  and name != ''"> and Name like concat('%', #{name}, '%')</if>
             <if test="position != null  and position != ''"> and Position = #{position}</if>
             <if test="department != null  and department != ''"> and Department = #{department}</if>
+            <if test="fourthLevelOrgName != null  and fourthLevelOrgName != ''"> and Fourth_Level_Org_Name = #{fourthLevelOrgName}</if>
             <if test="groupCode != null  and groupCode != ''"> and Group_Code = #{groupCode}</if>
             <if test="subgroupCode != null  and subgroupCode != ''"> and Subgroup_Code = #{subgroupCode}</if>
+            <if test="otherBonuses != null "> and Other_Bonuses = #{otherBonuses}</if>
             <if test="overtimeSalary != null "> and Overtime_Salary = #{overtimeSalary}</if>
             <if test="totalSalary != null "> and Total_Salary = #{totalSalary}</if>
             <if test="salaryTableIndex != null  and salaryTableIndex != ''"> and Salary_Table_Index = #{salaryTableIndex}</if>
@@ -55,8 +59,10 @@
             <if test="name != null">Name,</if>
             <if test="position != null">Position,</if>
             <if test="department != null">Department,</if>
+            <if test="fourthLevelOrgName != null">Fourth_Level_Org_Name,</if>
             <if test="groupCode != null">Group_Code,</if>
             <if test="subgroupCode != null">Subgroup_Code,</if>
+            <if test="otherBonuses != null">Other_Bonuses,</if>
             <if test="overtimeSalary != null">Overtime_Salary,</if>
             <if test="totalSalary != null">Total_Salary,</if>
             <if test="salaryTableIndex != null">Salary_Table_Index,</if>
@@ -71,8 +77,10 @@
             <if test="name != null">#{name},</if>
             <if test="position != null">#{position},</if>
             <if test="department != null">#{department},</if>
+            <if test="fourthLevelOrgName != null">#{fourthLevelOrgName},</if>
             <if test="groupCode != null">#{groupCode},</if>
             <if test="subgroupCode != null">#{subgroupCode},</if>
+            <if test="otherBonuses != null">#{otherBonuses},</if>
             <if test="overtimeSalary != null">#{overtimeSalary},</if>
             <if test="totalSalary != null">#{totalSalary},</if>
             <if test="salaryTableIndex != null">#{salaryTableIndex},</if>
@@ -85,17 +93,17 @@
 
     <!--  批量插入数据库  -->
     <insert id="batchInsertSalaryTable" parameterType="java.util.List">
-        insert into Enterprise_Management_Salary_Table(Salary_Calculation_Year_Month,Employee_Id,Name,Position,Department,
-        Group_Code,Subgroup_Code,Overtime_Salary,Total_Salary,Salary_Table_Index,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
+        insert into Enterprise_Management_Salary_Table(Salary_Calculation_Year_Month,Employee_Id,Name,Position,Department,Fourth_Level_Org_Name,
+        Group_Code,Subgroup_Code,Other_Bonuses,Overtime_Salary,Total_Salary,Salary_Table_Index,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
         VALUES
         <foreach collection="salaryTableList" item="item" separator=",">
-            (#{item.salaryCalculationYearMonth},#{item.employeeId},#{item.name},#{item.position},#{item.department},
-             #{item.groupCode},#{item.subgroupCode},#{item.overtimeSalary},#{item.totalSalary},#{item.salaryTableIndex},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+            (#{item.salaryCalculationYearMonth},#{item.employeeId},#{item.name},#{item.position},#{item.department},#{item.fourthLevelOrgName},
+             #{item.groupCode},#{item.subgroupCode},#{item.otherBonuses},#{item.overtimeSalary},#{item.totalSalary},#{item.salaryTableIndex},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
         </foreach>
         ON DUPLICATE KEY UPDATE
         Salary_Calculation_Year_Month = values(Salary_Calculation_Year_Month),Employee_Id = values(Employee_Id),
-        Name = values(Name),Position = values(Position),Department = values(Department),Group_Code = values(Group_Code),
-        Subgroup_Code = values(Subgroup_Code),Overtime_Salary = values(Overtime_Salary),Total_Salary = values(Total_Salary),
+        Name = values(Name),Position = values(Position),Department = values(Department),Fourth_Level_Org_Name = values(Fourth_Level_Org_Name),Group_Code = values(Group_Code),
+        Subgroup_Code = values(Subgroup_Code),Other_Bonuses = values(Other_Bonuses),Overtime_Salary = values(Overtime_Salary),Total_Salary = values(Total_Salary),
         Salary_Table_Index = values(Salary_Table_Index),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),
         UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)
 
@@ -150,8 +158,10 @@
             <if test="name != null">Name = #{name},</if>
             <if test="position != null">Position = #{position},</if>
             <if test="department != null">Department = #{department},</if>
+            <if test="fourthLevelOrgName != null">Fourth_Level_Org_Name = #{fourthLevelOrgName},</if>
             <if test="groupCode != null">Group_Code = #{groupCode},</if>
             <if test="subgroupCode != null">Subgroup_Code = #{subgroupCode},</if>
+            <if test="otherBonuses != null">Other_Bonuses = #{otherBonuses},</if>
             <if test="overtimeSalary != null">Overtime_Salary = #{overtimeSalary},</if>
             <if test="totalSalary != null">Total_Salary = #{totalSalary},</if>
             <if test="salaryTableIndex != null">Salary_Table_Index = #{salaryTableIndex},</if>

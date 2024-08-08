@@ -63,4 +63,5 @@ public interface SupplyRatioFormulaTableMapper
     public int deleteSupplyRatioFormulaTableBySrftIds(Long[] srftIds);
 
     public void deleteAll();
+
 }

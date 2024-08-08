@@ -14,6 +14,35 @@ import org.apache.ibatis.annotations.Param;
  * @date 2024-05-09
  */
 public interface EnterpriseManagementMonthlyDataMapper {
+    EnterpriseManagementMonthlyData selectMonthDateByDate(@Param("yearAndMonth") Date yearAndMonth);
+
+    int selectFrontLineEmployeeNumbers();
+    int selectInternNumbers();
+
+    //统计当年数据条数
+    int countMonthDataNumber(@Param("yearAndMonth") Date yearAndMonth);
+    int countEmployeesNumberByYear(@Param("yearAndMonth") Date yearAndMonth);
+    int updateMonthlyData(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
+
+    int insertOrUpdateEmployeesData(EnterpriseManagementMonthlyData enterpriseManagementMonthlyData);
+
+    int countMonthSalaryFillDataNumber(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal countSalaryFillNumberByYear(@Param("yearAndMonth") Date yearAndMonth);
+
+    //新-工资表统计
+    BigDecimal selectMonthlyCumulativeAverageIncome();
+    BigDecimal selectMonthlyProductionAverageIncome();
+    BigDecimal selectMonthlyFunctionalAverageIncome();
+    BigDecimal selectMonthlyFunctionalAverageOvertimeCost();
+    BigDecimal selectMonthlyFunctionalAverageOtherBonuses();
+    int countMonthDataSalaryNumber(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectCumulativeAverageIncome(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectProductionAVGIncome(@Param("yearAndMonth") Date yearAndMonth);
+    BigDecimal selectFunctionalAVGIncome(@Param("yearAndMonth") Date yearAndMonth);
+
+    // 更新
+    Date selectMinMonthFromMonthData();
+    Date selectMaxMonthFromMonthData();
 
     int selectCountEmployeesNumberByYear(@Param("yearAndMonth") Date yearAndMonth);
     int selectCountMonthsByYear(@Param("yearAndMonth") Date yearAndMonth);
@@ -108,4 +137,11 @@ public interface EnterpriseManagementMonthlyDataMapper {
      * @return 结果
      */
     public int deleteEnterpriseManagementMonthlyDataByEsIds(Long[] esIds);
+
+    BigDecimal selectMonthlyFunctionalAverageOtherBonuses(Date date);
+
+
+    boolean checkEMSalaryFillDataIsExisted(Date yearAndMonth);
+
+    boolean checkEMMonthlyDataSalaryIsExisted(Date yearAndMonth);
 }

@@ -67,7 +67,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
@@ -334,7 +334,7 @@ export default {
       return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
     handleDownload() {
-      const url = "/profile/modelFile/利润表样表.xlsx";
+      const url = "/digital_operations_management_system/file/利润表样表.xlsx";
       handleTrueDownload(url);
     },
 

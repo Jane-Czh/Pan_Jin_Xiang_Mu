@@ -47,7 +47,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="targetList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="targetList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="itId" /> -->
       <!-- <el-table-column label="指标所属部门" align="center" prop="indicatorDept">
@@ -110,7 +110,7 @@
 
 <script>
 import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
-
+import { numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
   dicts: ['indicators_quality'],
@@ -153,6 +153,19 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        indicatorDept: [
+          { required: true, message: "指标名不能为空", trigger: "blur" }
+        ],
+        natureYear: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        targetValue: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
       }
     };
   },

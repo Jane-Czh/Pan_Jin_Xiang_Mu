@@ -117,11 +117,21 @@ public class ExcelUtils {
             //4、供应商名称
             supplyRatioFormulaTable.setSupplierName(getStringCellValue(row.getCell(3)));
             //5、供货比例
-            supplyRatioFormulaTable.setSupplyProportion(getStringCellValue(row.getCell(4)));
+
+            String oldValue = getStringCellValue(row.getCell(4));
+            if (oldValue.equals("/")){
+                oldValue = "0";
+            }
+            String inputValue = Double.toString(Double.parseDouble(oldValue)*100) + "%";
+            supplyRatioFormulaTable.setSupplyProportion(inputValue);
             //6、付款方式
             supplyRatioFormulaTable.setPaymentMethod(getStringCellValue(row.getCell(5)));
             //7、比例统计方式
             supplyRatioFormulaTable.setProportionStatisticalMethod(getStringCellValue(row.getCell(6)));
+            //8、是否入驻第三方
+            supplyRatioFormulaTable.setThirdParty(getStringCellValue(row.getCell(8)));
+            //9、备注
+            supplyRatioFormulaTable.setRemarks(getStringCellValue(row.getCell(9)));
 
             dataList.add(supplyRatioFormulaTable);
         }

@@ -41,10 +41,9 @@ public class SupplyRatioFormulaTableController extends BaseController
     @PostMapping("/synchronization")
     @PreAuthorize("@ss.hasPermi('supply:ratio:syncReport')")
     public void Database_Synchronization(){
-        System.out.println("------同步------");
-        SupplyPurchaseorderTable supplyPurchaseorderTable = new SupplyPurchaseorderTable();
-        List<SupplyPurchaseorderTable> list = supplyPurchaseorderTableService.selectSupplyPurchaseorderTableList(supplyPurchaseorderTable);
-        supplyRatioFormulaTableService.Synchronization(list);
+//        SupplyPurchaseorderTable supplyPurchaseorderTable = new SupplyPurchaseorderTable();
+//        List<SupplyPurchaseorderTable> list = supplyPurchaseorderTableService.selectSupplyPurchaseorderTableList(supplyPurchaseorderTable);
+        supplyRatioFormulaTableService.Synchronization();
     }
 
     /**
@@ -71,7 +70,6 @@ public class SupplyRatioFormulaTableController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SupplyRatioFormulaTable supplyRatioFormulaTable)
     {
-        System.out.println("test----------test");
         startPage();
         List<SupplyRatioFormulaTable> list = supplyRatioFormulaTableService.selectSupplyRatioFormulaTableList(supplyRatioFormulaTable);
         return getDataTable(list);

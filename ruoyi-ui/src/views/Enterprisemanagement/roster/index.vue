@@ -2,695 +2,608 @@
   <div class="app-container">
 
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="序号" prop="Number">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Number"-->
-<!--          placeholder="请输入序号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="员工编号" prop="employeeId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.employeeId"-->
-<!--          placeholder="请输入员工编号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="姓名" prop="Name">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Name"-->
-<!--          placeholder="请输入姓名"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="序号" prop="Number">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Number"-->
+      <!--          placeholder="请输入序号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="员工编号" prop="employeeId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.employeeId"-->
+      <!--          placeholder="请输入员工编号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="姓名" prop="Name">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Name"-->
+      <!--          placeholder="请输入姓名"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="性别" prop="Gender">
-        <el-input
-          v-model="queryParams.Gender"
-          placeholder="请输入性别"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.Gender" placeholder="请输入性别" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="出生日期" prop="Birthday">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.Birthday"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择出生日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="出生日期" prop="Birthday">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.Birthday"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择出生日期">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
       <el-form-item label="年龄" prop="Age">
-        <el-input
-          v-model="queryParams.Age"
-          placeholder="请输入年龄"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.Age" placeholder="请输入年龄" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="档案出生日期" prop="recordBirth">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.recordBirth"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择档案出生日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="身份证号" prop="idCard">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.idCard"-->
-<!--          placeholder="请输入身份证号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="社保编码" prop="socialSecurityNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.socialSecurityNumber"-->
-<!--          placeholder="请输入社保编码"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="人事范围" prop="personnelScope">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.personnelScope"-->
-<!--          placeholder="请输入人事范围"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="人事范围文本" prop="personnelScopeText">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.personnelScopeText"-->
-<!--          placeholder="请输入人事范围文本"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="人事子范围" prop="personnelSubScope">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.personnelSubScope"-->
-<!--          placeholder="请输入人事子范围"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="人事子范围文本" prop="personnelSubScopeText">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.personnelSubScopeText"-->
-<!--          placeholder="请输入人事子范围文本"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="工资核算范围" prop="salaryAccountingScope">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.salaryAccountingScope"-->
-<!--          placeholder="请输入工资核算范围"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="工资核算范围文本" prop="salaryAccountingScopeText">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.salaryAccountingScopeText"-->
-<!--          placeholder="请输入工资核算范围文本"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="成本中心" prop="costCenter">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.costCenter"-->
-<!--          placeholder="请输入成本中心"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="成本中心文本" prop="costCenterText">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.costCenterText"-->
-<!--          placeholder="请输入成本中心文本"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="根组织ID" prop="rootTissueId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.rootTissueId"-->
-<!--          placeholder="请输入根组织ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="根组织" prop="rootTissue">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.rootTissue"-->
-<!--          placeholder="请输入根组织"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="一级组织ID" prop="firstTissueId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.firstTissueId"-->
-<!--          placeholder="请输入一级组织ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="一级组织" prop="firstTissue">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.firstTissue"-->
-<!--          placeholder="请输入一级组织"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="二级组织ID" prop="secondTissueId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.secondTissueId"-->
-<!--          placeholder="请输入二级组织ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="二级组织" prop="secondTissue">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.secondTissue"-->
-<!--          placeholder="请输入二级组织"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="档案出生日期" prop="recordBirth">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.recordBirth"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择档案出生日期">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="身份证号" prop="idCard">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.idCard"-->
+      <!--          placeholder="请输入身份证号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="社保编码" prop="socialSecurityNumber">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.socialSecurityNumber"-->
+      <!--          placeholder="请输入社保编码"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="人事范围" prop="personnelScope">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.personnelScope"-->
+      <!--          placeholder="请输入人事范围"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="人事范围文本" prop="personnelScopeText">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.personnelScopeText"-->
+      <!--          placeholder="请输入人事范围文本"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="人事子范围" prop="personnelSubScope">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.personnelSubScope"-->
+      <!--          placeholder="请输入人事子范围"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="人事子范围文本" prop="personnelSubScopeText">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.personnelSubScopeText"-->
+      <!--          placeholder="请输入人事子范围文本"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="工资核算范围" prop="salaryAccountingScope">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.salaryAccountingScope"-->
+      <!--          placeholder="请输入工资核算范围"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="工资核算范围文本" prop="salaryAccountingScopeText">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.salaryAccountingScopeText"-->
+      <!--          placeholder="请输入工资核算范围文本"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="成本中心" prop="costCenter">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.costCenter"-->
+      <!--          placeholder="请输入成本中心"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="成本中心文本" prop="costCenterText">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.costCenterText"-->
+      <!--          placeholder="请输入成本中心文本"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="根组织ID" prop="rootTissueId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.rootTissueId"-->
+      <!--          placeholder="请输入根组织ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="根组织" prop="rootTissue">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.rootTissue"-->
+      <!--          placeholder="请输入根组织"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="一级组织ID" prop="firstTissueId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.firstTissueId"-->
+      <!--          placeholder="请输入一级组织ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="一级组织" prop="firstTissue">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.firstTissue"-->
+      <!--          placeholder="请输入一级组织"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="二级组织ID" prop="secondTissueId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.secondTissueId"-->
+      <!--          placeholder="请输入二级组织ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="二级组织" prop="secondTissue">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.secondTissue"-->
+      <!--          placeholder="请输入二级组织"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="三级组织ID" prop="thirdTissueId">
-        <el-input
-          v-model="queryParams.thirdTissueId"
-          placeholder="请输入三级组织ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.thirdTissueId" placeholder="请输入三级组织ID" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="三级组织" prop="thirdTissue">
-        <el-input
-          v-model="queryParams.thirdTissue"
-          placeholder="请输入三级组织"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.thirdTissue" placeholder="请输入三级组织" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="四级组织ID" prop="fourthTissueId">
-        <el-input
-          v-model="queryParams.fourthTissueId"
-          placeholder="请输入四级组织ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.fourthTissueId" placeholder="请输入四级组织ID" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="四级组织" prop="fourthTissue">
-        <el-input
-          v-model="queryParams.fourthTissue"
-          placeholder="请输入四级组织"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.fourthTissue" placeholder="请输入四级组织" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="五级组织ID" prop="fifthTissueId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.fifthTissueId"-->
-<!--          placeholder="请输入五级组织ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="五级组织" prop="fifthTissue">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.fifthTissue"-->
-<!--          placeholder="请输入五级组织"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="六级组织ID" prop="sixthTissueId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.sixthTissueId"-->
-<!--          placeholder="请输入六级组织ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="六级组织" prop="sixthTissue">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.sixthTissue"-->
-<!--          placeholder="请输入六级组织"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职务族群ID" prop="positionEthnicGroupId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.positionEthnicGroupId"-->
-<!--          placeholder="请输入职务族群ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职务族群" prop="positionEthnicGroup">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.positionEthnicGroup"-->
-<!--          placeholder="请输入职务族群"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职务类别ID" prop="jobCategoryId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.jobCategoryId"-->
-<!--          placeholder="请输入职务类别ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职务类别" prop="jobCategory">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.jobCategory"-->
-<!--          placeholder="请输入职务类别"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职务" prop="Job">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Job"-->
-<!--          placeholder="请输入职务"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职务名称" prop="jobTitle">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.jobTitle"-->
-<!--          placeholder="请输入职务名称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="技术职称" prop="technicalTitle">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.technicalTitle"-->
-<!--          placeholder="请输入技术职称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="五级组织ID" prop="fifthTissueId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.fifthTissueId"-->
+      <!--          placeholder="请输入五级组织ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="五级组织" prop="fifthTissue">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.fifthTissue"-->
+      <!--          placeholder="请输入五级组织"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="六级组织ID" prop="sixthTissueId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.sixthTissueId"-->
+      <!--          placeholder="请输入六级组织ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="六级组织" prop="sixthTissue">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.sixthTissue"-->
+      <!--          placeholder="请输入六级组织"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职务族群ID" prop="positionEthnicGroupId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.positionEthnicGroupId"-->
+      <!--          placeholder="请输入职务族群ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职务族群" prop="positionEthnicGroup">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.positionEthnicGroup"-->
+      <!--          placeholder="请输入职务族群"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职务类别ID" prop="jobCategoryId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.jobCategoryId"-->
+      <!--          placeholder="请输入职务类别ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职务类别" prop="jobCategory">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.jobCategory"-->
+      <!--          placeholder="请输入职务类别"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职务" prop="Job">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Job"-->
+      <!--          placeholder="请输入职务"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职务名称" prop="jobTitle">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.jobTitle"-->
+      <!--          placeholder="请输入职务名称"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="技术职称" prop="technicalTitle">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.technicalTitle"-->
+      <!--          placeholder="请输入技术职称"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="最高技术职称" prop="theHighestTechnicalTitl">
-        <el-input
-          v-model="queryParams.theHighestTechnicalTitl"
-          placeholder="请输入最高技术职称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.theHighestTechnicalTitl" placeholder="请输入最高技术职称" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="技术等级" prop="technicalLevel">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.technicalLevel"-->
-<!--          placeholder="请输入技术等级"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="技术等级" prop="technicalLevel">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.technicalLevel"-->
+      <!--          placeholder="请输入技术等级"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="最高技术等级" prop="theHighestTechnicalLevel">
-        <el-input
-          v-model="queryParams.theHighestTechnicalLevel"
-          placeholder="请输入最高技术等级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.theHighestTechnicalLevel" placeholder="请输入最高技术等级" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="职级" prop="Rank">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Rank"-->
-<!--          placeholder="请输入职级"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职位ID" prop="positionId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.positionId"-->
-<!--          placeholder="请输入职位ID"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="职位" prop="Position">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Position"-->
-<!--          placeholder="请输入职位"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="岗位名称" prop="jobbTitle">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.jobbTitle"-->
-<!--          placeholder="请输入岗位名称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="薪等" prop="salaryGrade">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.salaryGrade"-->
-<!--          placeholder="请输入薪等"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="薪级" prop="salaryyGrade">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.salaryyGrade"-->
-<!--          placeholder="请输入薪级"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="岗位工资" prop="positionSalary">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.positionSalary"-->
-<!--          placeholder="请输入岗位工资"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="职级" prop="Rank">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Rank"-->
+      <!--          placeholder="请输入职级"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职位ID" prop="positionId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.positionId"-->
+      <!--          placeholder="请输入职位ID"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="职位" prop="Position">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Position"-->
+      <!--          placeholder="请输入职位"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="岗位名称" prop="jobbTitle">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.jobbTitle"-->
+      <!--          placeholder="请输入岗位名称"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="薪等" prop="salaryGrade">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.salaryGrade"-->
+      <!--          placeholder="请输入薪等"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="薪级" prop="salaryyGrade">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.salaryyGrade"-->
+      <!--          placeholder="请输入薪级"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="岗位工资" prop="positionSalary">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.positionSalary"-->
+      <!--          placeholder="请输入岗位工资"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="员工组" prop="employeeGroup">
-        <el-input
-          v-model="queryParams.employeeGroup"
-          placeholder="请输入员工组"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.employeeGroup" placeholder="请输入员工组" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="员工子组" prop="employeeSubGroup">
-        <el-input
-          v-model="queryParams.employeeSubGroup"
-          placeholder="请输入员工子组"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.employeeSubGroup" placeholder="请输入员工子组" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="骨干等级" prop="backboneLevel">
-        <el-input
-          v-model="queryParams.backboneLevel"
-          placeholder="请输入骨干等级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.backboneLevel" placeholder="请输入骨干等级" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="人事管理分类" prop="personnelManagementClassification">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.personnelManagementClassification"-->
-<!--          placeholder="请输入人事管理分类"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="人事管理分类" prop="personnelManagementClassification">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.personnelManagementClassification"-->
+      <!--          placeholder="请输入人事管理分类"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="最高学历" prop="theHighestEducationalLevel">
-        <el-input
-          v-model="queryParams.theHighestEducationalLevel"
-          placeholder="请输入最高学历"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.theHighestEducationalLevel" placeholder="请输入最高学历" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="最高学历学校" prop="theHighestEducationalSchool">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.theHighestEducationalSchool"-->
-<!--          placeholder="请输入最高学历学校"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="最高学历专业" prop="theHighestEducationalMajor">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.theHighestEducationalMajor"-->
-<!--          placeholder="请输入最高学历专业"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="最高学位" prop="theHighestDegree">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.theHighestDegree"-->
-<!--          placeholder="请输入最高学位"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="最高学位学校" prop="theHighestDegreeSchool">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.theHighestDegreeSchool"-->
-<!--          placeholder="请输入最高学位学校"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="最高学位专业" prop="theHighestDegreeMajor">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.theHighestDegreeMajor"-->
-<!--          placeholder="请输入最高学位专业"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="最高学历学校" prop="theHighestEducationalSchool">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.theHighestEducationalSchool"-->
+      <!--          placeholder="请输入最高学历学校"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="最高学历专业" prop="theHighestEducationalMajor">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.theHighestEducationalMajor"-->
+      <!--          placeholder="请输入最高学历专业"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="最高学位" prop="theHighestDegree">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.theHighestDegree"-->
+      <!--          placeholder="请输入最高学位"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="最高学位学校" prop="theHighestDegreeSchool">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.theHighestDegreeSchool"-->
+      <!--          placeholder="请输入最高学位学校"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="最高学位专业" prop="theHighestDegreeMajor">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.theHighestDegreeMajor"-->
+      <!--          placeholder="请输入最高学位专业"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="第一学历" prop="firstEducationalLevel">
-        <el-input
-          v-model="queryParams.firstEducationalLevel"
-          placeholder="请输入第一学历"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.firstEducationalLevel" placeholder="请输入第一学历" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="第一学位" prop="firstHighestDegree">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.firstHighestDegree"-->
-<!--          placeholder="请输入第一学位"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="第一学位学校" prop="firstHighestDegreeSchool">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.firstHighestDegreeSchool"-->
-<!--          placeholder="请输入第一学位学校"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="第一学位专业" prop="firstHighestDegreeMajor">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.firstHighestDegreeMajor"-->
-<!--          placeholder="请输入第一学位专业"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="第一学位" prop="firstHighestDegree">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.firstHighestDegree"-->
+      <!--          placeholder="请输入第一学位"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="第一学位学校" prop="firstHighestDegreeSchool">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.firstHighestDegreeSchool"-->
+      <!--          placeholder="请输入第一学位学校"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="第一学位专业" prop="firstHighestDegreeMajor">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.firstHighestDegreeMajor"-->
+      <!--          placeholder="请输入第一学位专业"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="合同开始时间" prop="contractStartTime">
-        <el-date-picker clearable
-          v-model="queryParams.contractStartTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.contractStartTime" type="date" value-format="yyyy-MM-dd"
           placeholder="请选择合同开始时间">
         </el-date-picker>
       </el-form-item>
-<!--      <el-form-item label="合同结束时间" prop="contractEndTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.contractEndTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择合同结束时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="合同年限" prop="contractTerm">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.contractTerm"-->
-<!--          placeholder="请输入合同年限"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="合同结束时间" prop="contractEndTime">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.contractEndTime"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择合同结束时间">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="合同年限" prop="contractTerm">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.contractTerm"-->
+      <!--          placeholder="请输入合同年限"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="合同签订单位" prop="contractSigningUnit">
-        <el-input
-          v-model="queryParams.contractSigningUnit"
-          placeholder="请输入合同签订单位"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.contractSigningUnit" placeholder="请输入合同签订单位" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="签订次数" prop="signingFrequency">
-        <el-input
-          v-model="queryParams.signingFrequency"
-          placeholder="请输入签订次数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.signingFrequency" placeholder="请输入签订次数" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="加入工作时间" prop="workingHours">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.workingHours"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择加入工作时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="加入工作时间" prop="workingHours">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.workingHours"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择加入工作时间">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
       <el-form-item label="加入合力时间" prop="joinedTime">
-        <el-date-picker clearable
-          v-model="queryParams.joinedTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.joinedTime" type="date" value-format="yyyy-MM-dd"
           placeholder="请选择加入合力时间">
         </el-date-picker>
       </el-form-item>
-<!--      <el-form-item label="司龄起算时间" prop="startingTimeOfServiceLife">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.startingTimeOfServiceLife"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择司龄起算时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="退休日期" prop="retirementDate">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.retirementDate"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择退休日期">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="司龄起算时间" prop="startingTimeOfServiceLife">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.startingTimeOfServiceLife"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择司龄起算时间">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="退休日期" prop="retirementDate">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.retirementDate"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择退休日期">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
       <el-form-item label="司龄" prop="siLing">
-        <el-input
-          v-model="queryParams.siLing"
-          placeholder="请输入司龄"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.siLing" placeholder="请输入司龄" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="民族" prop="Nation">
-        <el-input
-          v-model="queryParams.Nation"
-          placeholder="请输入民族"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.Nation" placeholder="请输入民族" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="政治面貌" prop="politicalLandscape">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.politicalLandscape"-->
-<!--          placeholder="请输入政治面貌"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="入党时间" prop="partyMembershipTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.partyMembershipTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择入党时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="政治面貌" prop="politicalLandscape">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.politicalLandscape"-->
+      <!--          placeholder="请输入政治面貌"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="入党时间" prop="partyMembershipTime">-->
+      <!--        <el-date-picker clearable-->
+      <!--          v-model="queryParams.partyMembershipTime"-->
+      <!--          type="date"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          placeholder="请选择入党时间">-->
+      <!--        </el-date-picker>-->
+      <!--      </el-form-item>-->
       <el-form-item label="婚姻状况" prop="marriageStatus">
-        <el-input
-          v-model="queryParams.maritalStatus"
-          placeholder="请输入婚姻状况"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.maritalStatus" placeholder="请输入婚姻状况" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
 
       <!--      <el-form-item label="籍贯" prop="Hometown">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Hometown"-->
-<!--          placeholder="请输入籍贯"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Hometown"-->
+      <!--          placeholder="请输入籍贯"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="户口性质" prop="householdRegistrationNature">
-        <el-input
-          v-model="queryParams.householdRegistrationNature"
-          placeholder="请输入户口性质"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.householdRegistrationNature" placeholder="请输入户口性质" clearable
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
-<!--      <el-form-item label="常驻地址" prop="residentAddress">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.residentAddress"-->
-<!--          placeholder="请输入常驻地址"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="联系方式" prop="contactInformation">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.contactInformation"-->
-<!--          placeholder="请输入联系方式"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="紧急联系人" prop="emergencyContact">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.emergencyContact"-->
-<!--          placeholder="请输入紧急联系人"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="紧急联系人电话" prop="emergencyContactPhone">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.emergencyContactPhone"-->
-<!--          placeholder="请输入紧急联系人电话"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="工作合同" prop="workContract">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.workContract"-->
-<!--          placeholder="请输入工作合同"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="住房公积金账号" prop="providentFundAccount">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.providentFundAccount"-->
-<!--          placeholder="请输入住房公积金账号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="企业年金账号" prop="enterpriseAnnuityAccount">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.enterpriseAnnuityAccount"-->
-<!--          placeholder="请输入企业年金账号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="是否上传照片" prop="uploadPhoto">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.uploadPhoto"-->
-<!--          placeholder="请输入是否上传照片"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="常驻地址" prop="residentAddress">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.residentAddress"-->
+      <!--          placeholder="请输入常驻地址"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="联系方式" prop="contactInformation">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.contactInformation"-->
+      <!--          placeholder="请输入联系方式"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="紧急联系人" prop="emergencyContact">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.emergencyContact"-->
+      <!--          placeholder="请输入紧急联系人"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="紧急联系人电话" prop="emergencyContactPhone">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.emergencyContactPhone"-->
+      <!--          placeholder="请输入紧急联系人电话"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="工作合同" prop="workContract">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.workContract"-->
+      <!--          placeholder="请输入工作合同"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="住房公积金账号" prop="providentFundAccount">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.providentFundAccount"-->
+      <!--          placeholder="请输入住房公积金账号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="企业年金账号" prop="enterpriseAnnuityAccount">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.enterpriseAnnuityAccount"-->
+      <!--          placeholder="请输入企业年金账号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="是否上传照片" prop="uploadPhoto">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.uploadPhoto"-->
+      <!--          placeholder="请输入是否上传照片"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -700,78 +613,61 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['Enterprisemanagement:roster:add']"
-        >新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
+          v-hasPermi="['Enterprisemanagement:roster:add']">新增</el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['Enterprisemanagement:roster:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          plain-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['Enterprisemanagement:roster:edit']"-->
+      <!--        >修改</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['Enterprisemanagement:roster:remove']"
-        >删除</el-button>
+        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
+          v-hasPermi="['Enterprisemanagement:roster:remove']">删除</el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['Enterprisemanagement:roster:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="warning"-->
+      <!--          plain-->
+      <!--          icon="el-icon-download"-->
+      <!--          size="mini"-->
+      <!--          @click="handleExport"-->
+      <!--          v-hasPermi="['Enterprisemanagement:roster:export']"-->
+      <!--        >导出</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="showDialog = true"
-          v-hasPermi="['Enterprisemanagement:roster:import']"
-        >导入Excel文件</el-button>
-        <el-dialog
-          title="导入Excel文件"
-          :visible.sync="showDialog"
-          width="30%"
-          :before-close="handleClose"
-          @close="resetFileInput"
-        >
+        <el-button type="primary" plain icon="el-icon-download" size="mini" @click="showDialog = true"
+          v-hasPermi="['Enterprisemanagement:roster:import']">导入Excel文件</el-button>
+        <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" :before-close="handleClose"
+          @close="resetFileInput">
+          <el-form :model="form" ref="form" label-width="90px">
+            <el-form-item label="上传表类">
+              <span style="color: rgb(68, 140, 39);">员工花名册</span>
+              <br>
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                placeholder="请选择日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-form>
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
 
           <!-- 进度动画条 -->
           <div v-if="progress > 0">
-            <el-progress
-              :percentage="progress"
-              color="rgb(19, 194, 194)"
-            ></el-progress>
+            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
           </div>
 
           <span slot="footer" class="dialog-footer">
-          <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="fileSend()">确 定</el-button>
-        </span>
+            <el-button @click="showDialog = false">取 消</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
+          </span>
         </el-dialog>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -779,7 +675,7 @@
 
     <el-table v-loading="loading" :data="rosterList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="主键" align="center" prop="emprId" />-->
+      <!--      <el-table-column label="主键" align="center" prop="emprId" />-->
       <el-table-column label="序号" align="center" prop="number" />
       <el-table-column label="员工编号" align="center" prop="employeeId" />
       <el-table-column label="姓名" align="center" prop="name" />
@@ -904,31 +800,16 @@
       <el-table-column label="是否上传照片" align="center" prop="uploadPhoto" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['Enterprisemanagement:roster:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['Enterprisemanagement:roster:remove']"
-          >删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
+            v-hasPermi="['Enterprisemanagement:roster:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
+            v-hasPermi="['Enterprisemanagement:roster:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改员工花名单导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -946,21 +827,14 @@
           <el-input v-model="form.gender" placeholder="请输入性别" />
         </el-form-item>
         <el-form-item label="出生日期" prop="birthday">
-          <el-date-picker clearable
-            v-model="form.birthday"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择出生日期">
+          <el-date-picker clearable v-model="form.birthday" type="date" value-format="yyyy-MM-dd" placeholder="请选择出生日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" placeholder="请输入年龄" />
         </el-form-item>
         <el-form-item label="档案出生日期" prop="recordBirth">
-          <el-date-picker clearable
-            v-model="form.recordBirth"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.recordBirth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择档案出生日期">
           </el-date-picker>
         </el-form-item>
@@ -1130,18 +1004,12 @@
           <el-input v-model="form.firstHighestDegreeMajor" placeholder="请输入第一学位专业" />
         </el-form-item>
         <el-form-item label="合同开始时间" prop="contractStartTime">
-          <el-date-picker clearable
-            v-model="form.contractStartTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.contractStartTime" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择合同开始时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="合同结束时间" prop="contractEndTime">
-          <el-date-picker clearable
-            v-model="form.contractEndTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.contractEndTime" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择合同结束时间">
           </el-date-picker>
         </el-form-item>
@@ -1155,34 +1023,22 @@
           <el-input v-model="form.signingFrequency" placeholder="请输入签订次数" />
         </el-form-item>
         <el-form-item label="加入工作时间" prop="workingHours">
-          <el-date-picker clearable
-            v-model="form.workingHours"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.workingHours" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择加入工作时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="加入合力时间" prop="joinedTime">
-          <el-date-picker clearable
-            v-model="form.joinedTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.joinedTime" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择加入合力时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="司龄起算时间" prop="startingTimeOfServiceLife">
-          <el-date-picker clearable
-            v-model="form.startingTimeOfServiceLife"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.startingTimeOfServiceLife" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择司龄起算时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="退休日期" prop="retirementDate">
-          <el-date-picker clearable
-            v-model="form.retirementDate"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.retirementDate" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择退休日期">
           </el-date-picker>
         </el-form-item>
@@ -1196,10 +1052,7 @@
           <el-input v-model="form.politicalLandscape" placeholder="请输入政治面貌" />
         </el-form-item>
         <el-form-item label="入党时间" prop="partyMembershipTime">
-          <el-date-picker clearable
-            v-model="form.partyMembershipTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.partyMembershipTime" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择入党时间">
           </el-date-picker>
         </el-form-item>
@@ -1243,7 +1096,7 @@
 </template>
 
 <script>
-import { listRoster, getRoster, delRoster, addRoster, updateRoster,uploadFile } from "@/api/Enterprisemanagement/roster";
+import { listRoster, getRoster, delRoster, addRoster, updateRoster, uploadFile } from "@/api/Enterprisemanagement/roster";
 import axios from "axios";
 
 export default {
@@ -1256,6 +1109,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      isLoading: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -1363,6 +1217,7 @@ export default {
       },
       // 表单参数
       form: {},
+      form3: { yearAndMonth: null },
       // 表单校验
       rules: {
         employeeId: [
@@ -1374,7 +1229,7 @@ export default {
       progress: 0
     };
   },
-  mounted(){
+  mounted() {
 
   },
   created() {
@@ -1501,7 +1356,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.emprId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -1543,12 +1398,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const emprIds = row.emprId || this.ids;
-      this.$modal.confirm('是否确认删除员工花名单导入编号为"' + emprIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除员工花名单导入编号为"' + emprIds + '"的数据项？').then(function () {
         return delRoster(emprIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => { });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -1595,17 +1450,26 @@ export default {
 
     async fileSend() {
       try {
+        const yearAndMonth = this.form3.yearAndMonth;
         const fileInput = document.getElementById("inputFile");
-        if (!fileInput.files.length) {
-          this.$message.error("请选择上传文件");
-          return;
+        if (!fileInput.files.length || yearAndMonth == null) {
+          if (!fileInput.files.length) {
+            this.$message.error("请选择上传文件");
+            return;
+          } else {
+            this.$message.error("请选择日期！");
+            return;
+          }
         }
         const formData = new FormData();
         const file = document.getElementById("inputFile").files[0]; // 获取文件对象
         console.log(file);
         formData.append("file", file);
-        console.log("file====>", formData);
-
+        formData.append("yearAndMonth", yearAndMonth);
+        // console.log("file====>", formData);
+        // console.log("yearAndMonth====>", formData.get('yearAndMonth'));
+        // console.log("+--------------------------+");
+        this.isLoading = true;
         await uploadFile(formData); // 调用 uploadFile API
 
         // 上传成功后的处理
@@ -1615,6 +1479,7 @@ export default {
           // location.reload(); // 调用此方法刷新页面数据
         }, 1000); // 2000毫秒后关闭
         this.getList();
+        this.isLoading = true;
       } catch (error) {
         console.error('上传失败!', error);
       }
@@ -1625,7 +1490,7 @@ export default {
         .then(_ => {
           done();
         })
-        .catch(_ => {});
+        .catch(_ => { });
     },
     //导入excel，取消按钮绑定取消所选的xlsx
     resetFileInput() {

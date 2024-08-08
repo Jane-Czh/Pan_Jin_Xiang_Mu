@@ -40,7 +40,9 @@ public interface EnterpriseManagementMonthlyDataMapper {
     BigDecimal selectProductionAVGIncome(@Param("yearAndMonth") Date yearAndMonth);
     BigDecimal selectFunctionalAVGIncome(@Param("yearAndMonth") Date yearAndMonth);
 
-
+    // 更新
+    Date selectMinMonthFromMonthData();
+    Date selectMaxMonthFromMonthData();
 
     int selectCountEmployeesNumberByYear(@Param("yearAndMonth") Date yearAndMonth);
     int selectCountMonthsByYear(@Param("yearAndMonth") Date yearAndMonth);
@@ -139,4 +141,7 @@ public interface EnterpriseManagementMonthlyDataMapper {
     BigDecimal selectMonthlyFunctionalAverageOtherBonuses(Date date);
 
 
+    boolean checkEMSalaryFillDataIsExisted(Date yearAndMonth);
+
+    boolean checkEMMonthlyDataSalaryIsExisted(Date yearAndMonth);
 }

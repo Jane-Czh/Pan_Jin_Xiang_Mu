@@ -25,7 +25,7 @@ public interface ISupplyRatioFormulaTableService
      */
     public void importInterests(MultipartFile excelFile) throws IOException;
 
-    public void Synchronization(List<SupplyPurchaseorderTable> list);
+    public void Synchronization();
     /**
      * 查询月供货比例统计
      * 

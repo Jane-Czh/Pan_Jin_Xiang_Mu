@@ -61,4 +61,10 @@ public interface SupplyPurchaseorderTableMapper
     public int deleteSupplyPurchaseorderTableBySpIds(Long[] spIds);
 
     public void batchInsert(@Param("list") List<SupplyPurchaseorderTable> supplyPurchaseorderTable);
+
+
+    public Double calculateSupplierRatioByQuantity(@Param("materialClass") String materialClass, @Param("supplierCode") String supplierCode);
+
+    public Double calculateSupplierRatioByNetValueOrder(@Param("materialClass") String materialClass, @Param("supplierCode") String supplierCode);
+
 }

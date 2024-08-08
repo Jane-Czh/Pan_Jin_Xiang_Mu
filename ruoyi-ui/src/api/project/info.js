@@ -51,3 +51,11 @@ export function delInfo(projectId) {
     method: 'delete'
   })
 }
+
+// 移入回收站
+export function recycleInfo(projectId) {
+  return request({
+    url: '/project/Info/recycle' + projectId,
+    method: 'delete'
+  })
+}

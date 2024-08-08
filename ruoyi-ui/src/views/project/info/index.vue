@@ -80,7 +80,7 @@
           v-hasPermi="['project:Info:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -90,7 +90,7 @@
           @click="handleUpdate"
           v-hasPermi="['project:Info:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <!-- <el-col :span="1.5">
         <el-button
           type="danger"
@@ -119,7 +119,7 @@
           size="mini"
           @click="dialogVisible = true"
            v-hasPermi="['updata_recode:recode:list']"
-        >更新历史记录</el-button>
+        >历史记录</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -217,13 +217,20 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <div class="button-group">
-            <el-button
+            <!-- <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['project:Info:edit']"
-            >修改</el-button>
+            >修改</el-button> -->
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="recycleInfo(scope.row)"
+              v-hasPermi="['project:Info:remove']"
+            >删除</el-button>
             <el-button
               size="mini"
               type="text"
@@ -408,8 +415,9 @@
 
 <script>
 import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
-import { listHistory, getHistory, delHistory, addHistory, updateHistory, uploadImport } from "@/api/project/history";
-import { listRecode, getRecode, delRecode, addRecode, updateRecode } from "@/api/project/recode";
+import { listHistory } from "@/api/project/history";
+import { addRecycle } from "@/api/project/recycle";
+import { listRecode } from "@/api/project/recode";
 import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/project";
 
@@ -918,6 +926,19 @@ export default {
         this.$modal.msgSuccess("移除成功，已加入历史项目");
       }).catch(() => {});
 
+    },
+    //将项目移入回收站
+    recycleInfo(row){
+      const projectIds = row.projectId || this.ids;
+      this.$modal.confirm('是否确认移除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
+        return delInfo(projectIds);
+      }).then(function(){
+        row.status = "已取消";
+        return addRecycle(row);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("移除成功，已移入回收站");
+      }).catch(() => {});
     },
 
     /** 导出按钮操作 */

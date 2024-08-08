@@ -80,4 +80,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteAll">
         TRUNCATE TABLE supply_material_category_dictionary_table
     </delete>
+
+    <select id="getMaterial_Number" parameterType="String" resultType="String">
+        SELECT Material_Number
+        FROM supply_material_category_dictionary_table
+        WHERE Material_Class = #{materialClass}
+    </select>
 </mapper>

@@ -61,7 +61,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="DictionaryList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="DictionaryList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="SCM_ID" align="center" prop="scmId" /> -->
       <el-table-column label="序号" align="center" prop="materialSerialNumber" />

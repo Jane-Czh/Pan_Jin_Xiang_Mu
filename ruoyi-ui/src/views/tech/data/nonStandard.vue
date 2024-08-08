@@ -105,7 +105,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="Tech_Non_Standard_OrderList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="Tech_Non_Standard_OrderList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="tnId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="100">
@@ -117,14 +117,14 @@
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="车型" align="center" prop="carModel" />
       <el-table-column label="配置信息" align="center" prop="carConfiguration" width="200" />
-      <el-table-column label="负责人" align="center" prop="principal" width="100" />
+      <el-table-column label="负责人" align="center" prop="principal" width="140" />
       <el-table-column label="参与人" align="center" prop="participants" width="100" />
       <el-table-column label="接单日期" align="center" prop="pickupDate" />
       <el-table-column label="转单日期" align="center" prop="transferDate" />
       <el-table-column label="累计时长" align="center" prop="totalDurationHours" />
       <el-table-column label="累计天数" align="center" prop="totalDurationDays" />
       <el-table-column label="超时说明" align="center" prop="overtimeRemark" />
-      <el-table-column label="备注" align="center" prop="comments" />
+      <el-table-column label="备注" align="center" prop="comments" width="200" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -244,6 +244,86 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        tableId: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        orderId: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        carModel: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        carConfiguration: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        principal: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        participants: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        pickupDate: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        transferDate: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        totalDurationHours: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        totalDurationDays: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        overtimeRemark: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
       }
     };
   },
@@ -314,7 +394,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加Tech_Non_Standard_Order";
+      this.title = "新增非标订单";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -323,7 +403,7 @@ export default {
       getTech_Non_Standard_Order(tnId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改Tech_Non_Standard_Order";
+        this.title = "修改非标订单";
       });
     },
     /** 提交按钮 */
@@ -359,7 +439,7 @@ export default {
       const yearMonth = year && month ? `${year}-${month}` : '';
 
       this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
-        return delTechNewProjectDesign(techIds);
+        return delTech_Non_Standard_Order(techIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

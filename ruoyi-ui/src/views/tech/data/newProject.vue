@@ -123,7 +123,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="TechNewProjectDesignList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="TechNewProjectDesignList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="tdId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120">
@@ -135,7 +135,7 @@
       <el-table-column label="项目名称" align="center" prop="projectName" width="200" />
       <el-table-column label="项目类型" align="center" prop="projectType" width="140" />
       <el-table-column label="负责人" align="center" prop="projectLeader" />
-      <el-table-column label="参与人" align="center" prop="projectParticipants" />
+      <el-table-column label="参与人" align="center" prop="projectParticipants" width="160" />
       <el-table-column label="项目立项" align="center" prop="establishmentState">
         <template slot-scope="scope">
           <span :style="{ color: scope.row.establishmentState === '进行中' ? 'blue' : 'green' }">
@@ -200,7 +200,7 @@
       : '未完成' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remarks" width="200" />
+      <el-table-column label="备注" align="center" prop="remarks" width="260" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -216,7 +216,7 @@
 
     <!-- 添加或修改技术-项目计划完成统计对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -235,38 +235,66 @@
           <el-input v-model="form.projectParticipants" placeholder="请输入参与人" />
         </el-form-item>
         <el-form-item label="项目立项" prop="establishmentState">
-          <el-input v-model="form.establishmentState" placeholder="请输入项目立项" />
+          <el-select v-model="form.establishmentState" placeholder="请选择项目立项">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="方案设计" prop="designPlanState">
-          <el-input v-model="form.designPlanState" placeholder="请输入方案设计" />
+          <el-select v-model="form.designPlanState" placeholder="请选择方案设计">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="图纸设计" prop="drawingDesignState">
-          <el-input v-model="form.drawingDesignState" placeholder="请输入图纸设计" />
+          <el-select v-model="form.drawingDesignState" placeholder="请选择图纸设计">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="样机试制" prop="prototypeProductionState">
-          <el-input v-model="form.prototypeProductionState" placeholder="请输入样机试制" />
+          <el-select v-model="form.prototypeProductionState" placeholder="请选择样机试制">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="样机试验" prop="prototypeTestState">
-          <el-input v-model="form.prototypeTestState" placeholder="请输入样机试验" />
+          <el-select v-model="form.prototypeTestState" placeholder="请选择样机试验">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="样机评审" prop="prototypeReviewState">
-          <el-input v-model="form.prototypeReviewState" placeholder="请输入样机评审" />
+          <el-select v-model="form.prototypeReviewState" placeholder="请选择样机评审">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="小批量上市" prop="pilotReleaseState">
-          <el-input v-model="form.pilotReleaseState" placeholder="请输入小批量上市" />
+          <el-select v-model="form.pilotReleaseState" placeholder="请选择小批量上市">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="批量上市" prop="massReleaseState">
-          <el-input v-model="form.massReleaseState" placeholder="请输入批量上市" />
+          <el-select v-model="form.massReleaseState" placeholder="请选择批量上市">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="项目完成率" prop="completionRate">
           <el-input v-model="form.completionRate" placeholder="请输入项目完成率" />
         </el-form-item>
+        <el-form-item label="项目是否完成" prop="isCompleted">
+          <el-select v-model="form.isCompleted" placeholder="请选择项目是否完成">
+            <el-option label="完成" value="完成"></el-option>
+            <el-option label="未完成" value="未完成"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="form.remarks" type="textarea" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="项目是否完成" prop="isCompleted">
-          <el-input v-model="form.isCompleted" placeholder="请输入项目是否完成" />
-        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -332,6 +360,107 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        yearAndMonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        projectId: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        projectName: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        projectLeader: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        projectParticipants: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        establishmentState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        designPlanState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        drawingDesignState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        prototypeProductionState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        prototypeTestState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        pilotReleaseState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        massReleaseState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        completionRate: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        isCompleted: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
+        prototypeReviewState: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ],
       }
     };
   },
@@ -406,7 +535,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加技术-项目计划完成统计";
+      this.title = "新增项目计划完成统计";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -415,7 +544,7 @@ export default {
       getTechNewProjectDesign(tdId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改技术-项目计划完成统计";
+        this.title = "修改项目计划完成统计";
       });
     },
     /** 提交按钮 */

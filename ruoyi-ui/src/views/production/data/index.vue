@@ -63,7 +63,7 @@
     </div>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column sortable="custom" :sort-orders="['descending', 'ascending']" label="日期" align="center"
         prop="yearAndMonth" width="150">

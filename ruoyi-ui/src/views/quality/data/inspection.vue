@@ -67,7 +67,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="inspectionList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="" align="center" prop="qiId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="100"
@@ -78,9 +78,9 @@
       </el-table-column>
       <el-table-column label="电车的问题数量" align="center" prop="electricCarProductionQuantity" width="150" />
       <el-table-column label="K2型号中小于5吨的问题数量" align="center" prop="k2lessthan5tonProductionQuantity" width="190" />
-      <el-table-column label="K2型号中大吨位的问题数量" align="center" prop="k2largetonnageProductionQuantity" width="180" />
+      <el-table-column label="K2型号中大吨位的问题数量" align="center" prop="k2largetonnageProductionQuantity" width="190" />
       <el-table-column label="电车的问题车数量" align="center" prop="electricCarProblemVehicles" width="180" />
-      <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="200" />
+      <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="210" />
       <el-table-column label="K2型号中大吨位的问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
       <!-- <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" /> -->
       <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="200">

@@ -25,8 +25,8 @@
           v-hasPermi="['enterprise:monthly:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="el-icon-refresh" v-if="!updateLoading" size="mini"  @click="handleCacluation"
-          v-hasPermi="['enterprise:monthly:calculation']">更新</el-button>
+        <el-button type="success" plain icon="el-icon-refresh" v-if="!updateLoading" size="mini"
+          @click="handleCacluation" v-hasPermi="['enterprise:monthly:calculation']">更新</el-button>
         <el-button type="primary" v-if="updateLoading" :loading="true">更新中</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,15 +42,13 @@
               <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
                 placeholder="请选择日期">
               </el-date-picker>
+              <el-form-item label="含其他奖金">
+                <el-switch v-model="form4.otherBonus"></el-switch>
+              </el-form-item>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
-          <!-- 进度动画条 -->
-          <!-- <div v-if="progress > 0">
-            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div> -->
-
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
             <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
@@ -68,7 +66,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="DataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="esId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
@@ -79,8 +77,8 @@
       <el-table-column label="一线从业人数" align="center" prop="employeesNumber" width="120" />
       <el-table-column label="生产实习生人数" align="center" prop="productionInternNumbers" width="150" />
       <el-table-column label="公司当月从业人数" align="center" prop="employeesNumberCurrentMonth" width="150" />
-      <el-table-column label="公司平均从业人数(月度)" align="center" prop="employeesAvgMonthlyNumber" width="150" />
-      <el-table-column label="公司平均从业人数(年度)" align="center" prop="employeesAvgAnnualNumber" width="150" />
+      <el-table-column label="公司平均从业人数(月度)" align="center" prop="employeesAvgMonthlyNumber" width="170" />
+      <el-table-column label="公司平均从业人数(年度)" align="center" prop="employeesAvgAnnualNumber" width="170" />
       <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
       <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
       <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
@@ -90,11 +88,11 @@
 
       <el-table-column label="月度生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
       <el-table-column label="累计生产人均收入" align="center" prop="productionAvgIncome" width="140" />
-      
+
       <el-table-column label="月度职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
       <el-table-column label="累计职能人均收入" align="center" prop="functionalAvgIncome" width="140" />
-      
-      
+
+
       <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -170,9 +168,9 @@
 </template>
 
 <script>
-import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData ,calculation} from "@/api/enterprise/data";
+import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData, calculation } from "@/api/enterprise/data";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorEnableEmpty,  numValidator } from '@/api/financial/numValidator.js';
+import { numValidatorEnableEmpty, numValidator } from '@/api/financial/numValidator.js';
 import moment from 'moment';
 export default {
   name: "Data",
@@ -197,7 +195,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      updateLoading :false,
+      updateLoading: false,
       // [企业管理]指标月度数据表格数据
       DataList: [],
       // 弹出层标题
@@ -229,6 +227,7 @@ export default {
       // 表单参数
       form: {},
       form3: { yearAndMonth: null },
+      form4: { otherBonus: true },
       // 表单校验
       rules: {
         yearAndMonth: [
@@ -257,7 +256,7 @@ export default {
         //     trigger: "blur",
         //   }
         // ],
-        
+
         totalMonthlySalary: [
           {
             required: true,
@@ -538,8 +537,10 @@ export default {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
       const yearAndMonth = this.form3.yearAndMonth;
+      const otherBonus = this.form4.otherBonus;
       formData.append("yearAndMonth", yearAndMonth);
       formData.append("multipartFile", file);
+      formData.append("otherBonus", otherBonus);
       const aimUrl = `/enterprise/data/salary`;
       const Str = this.extractMiddleMonth(yearAndMonth);
       const charMonth = this.convertMonthToChinese(Str);
@@ -576,11 +577,11 @@ export default {
             });
         } else {
           let nowDate = moment(yearAndMonth).format("YYYY-MM");
-         
+
           let file1 = file.name;
           //给${nowDate}${file1}修改为绿色颜色
-          
-          this.$modal.confirm(`当前上传的工资表月份为${nowDate},您当前选择的表格为《${file1}》是否上传？`).then(() => {
+
+          this.$modal.confirm(`当前选择的工资表月份为${nowDate},您当前上传的表格为《${file1}》是否确认上传？`).then(() => {
             return uploadFile(formData, aimUrl)
               .then(data => {
                 // 处理上传成功的情况0.

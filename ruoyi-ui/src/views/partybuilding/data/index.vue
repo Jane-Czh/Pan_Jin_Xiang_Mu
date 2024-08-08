@@ -35,7 +35,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">

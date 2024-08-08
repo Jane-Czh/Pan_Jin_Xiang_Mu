@@ -70,7 +70,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="MetricsList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="qcId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
@@ -83,8 +83,9 @@
       <!-- <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" /> -->
       <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate">
         <template slot-scope="scope">
-          <span v-if="scope.row.warrantyRepairRate || scope.row.warrantyRepairRate === 0">{{ scope.row.warrantyRepairRate
-            }}%</span>
+          <span v-if="scope.row.warrantyRepairRate || scope.row.warrantyRepairRate === 0">{{
+      scope.row.warrantyRepairRate
+    }}%</span>
           <span v-else>-</span>
         </template>
       </el-table-column>

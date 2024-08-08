@@ -44,7 +44,7 @@
     </el-dialog>
 
     <el-table v-loading="loading" :data="handFillList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="qihfId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"

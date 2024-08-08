@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
-        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+        <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
@@ -110,7 +110,7 @@
       <!-- <el-table-column label="${comment}" align="center" prop="tnId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="100">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="序号" align="center" prop="tableId" width="55" />
@@ -142,7 +142,7 @@
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="日期" prop="yearAndMonth">
-          <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
@@ -216,6 +216,7 @@ export default {
       techList: [],
       // 弹出层标题
       title: "",
+      dates: [],
       showDialog: false,
       selectedType: '',
       form3: { yearAndMonth: null },
@@ -251,7 +252,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/modelFile/采购订单汇总表样表.xlsx"
+      const url = "/digital_operations_management_system/file/非标订单统计样表.xlsx"
       handleTrueDownload(url);
     },
     /** 查询Tech_Non_Standard_Order列表 */
@@ -305,6 +306,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.tnId)
+      this.dates = selection.map(item => item.yearAndMonth)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -346,9 +348,18 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const tnIds = row.tnId || this.ids;
-      this.$modal.confirm('是否确认删除Tech_Non_Standard_Order编号为"' + tnIds + '"的数据项？').then(function () {
-        return delTech_Non_Standard_Order(tnIds);
+      const techIds = row.tnId || this.ids;
+      const date = row.yearAndMonth || this.dates;
+
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+      const month = parsedDate ? ('0' + (parsedDate.getMonth() + 1)).slice(-2) : '';
+
+      const yearMonth = year && month ? `${year}-${month}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
+        return delTechNewProjectDesign(techIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

@@ -83,11 +83,25 @@
       <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="200" />
       <el-table-column label="K2型号中大吨位的问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
       <!-- <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" /> -->
-      <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="200" />
-      <el-table-column label="大吨位一次交检合格率(%)" align="center" prop="largeTonPassRate" width="200" />
+      <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="200">
+        <template slot-scope="scope">
+          <span v-if="scope.row.electricCarPassRate || scope.row.electricCarPassRate === 0">{{
+      scope.row.electricCarPassRate }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="大吨位一次交检合格率(%)" align="center" prop="largeTonPassRate" width="200">
+        <template slot-scope="scope">
+          <span v-if="scope.row.largeTonPassRate || scope.row.largeTonPassRate === 0">{{ scope.row.largeTonPassRate
+            }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210">
         <template slot-scope="scope">
-          <span>{{ scope.row.singleInspectionPassRate }}%</span>
+          <span v-if="scope.row.singleInspectionPassRate || scope.row.singleInspectionPassRate === 0">{{
+      scope.row.singleInspectionPassRate }}%</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -260,7 +274,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/modelFile/整机质检记录样表.xlsx";
+      const url = "/digital_operations_management_system/file/整机质检记录样表.xlsx";
       handleTrueDownload(url);
     },
     handleClose(done) {

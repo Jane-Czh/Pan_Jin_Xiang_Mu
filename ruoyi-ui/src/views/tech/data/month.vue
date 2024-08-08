@@ -43,7 +43,9 @@
         </template>
       </el-table-column>
       <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays" />
+      <el-table-column label="非标准单超时数" align="center" prop="nonStandardOvertimeNum" />
       <el-table-column label="当月完成的计划" align="center" prop="completedmonthlyPlancounts" />
+      <el-table-column label="计划完成总数" align="center" prop="completedPlanCount" />
       <el-table-column label="研发项目计划进度完成率(%)" align="center" prop="prdscheduleCompletionrate" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -60,7 +62,7 @@
 
     <!-- 添加或修改[技术]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="200px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -69,8 +71,17 @@
         <el-form-item label="非标准单平均技术准备天数" prop="nonStandardAvgPreparationDays">
           <el-input v-model="form.nonStandardAvgPreparationDays" placeholder="请输入非标准单平均技术准备天数" />
         </el-form-item>
+        <el-form-item label="非标订单超时数" prop="nonStandardOvertimeNum">
+          <el-input v-model="form.nonStandardOvertimeNum" placeholder="请输入非标订单超时数" />
+        </el-form-item>
         <el-form-item label="当月完成的计划" prop="completedmonthlyPlancounts">
           <el-input v-model="form.completedmonthlyPlancounts" placeholder="请输入当月完成的计划" />
+        </el-form-item>
+        <el-form-item label="计划完成总数" prop="completedPlanCount">
+          <el-input v-model="form.completedPlanCount" placeholder="请输入计划完成总数" />
+        </el-form-item>
+        <el-form-item label="研发项目计划进度完成率(%)" prop="prdscheduleCompletionrate">
+          <el-input v-model="form.prdscheduleCompletionrate" placeholder="请输入研发项目计划进度完成率(%)" />
         </el-form-item>
 
       </el-form>
@@ -120,6 +131,8 @@ export default {
         pageSize: 10,
         yearAndMonth: null,
         nonStandardAvgPreparationDays: null,
+        completedPlanCount: null,
+        nonStandardOvertimeNum: null,
         completedmonthlyPlancounts: null,
 
 
@@ -145,6 +158,27 @@ export default {
             trigger: "blur"
           }
         ],
+        nonStandardOvertimeNum: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        completedPlanCount: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        prdscheduleCompletionrate: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
       }
     };
   },
@@ -161,10 +195,6 @@ export default {
     this.getList();
   },
   methods: {
-    handleDownload() {
-      const url = "/profile/modelFile/采购订单汇总表样表.xlsx"
-      handleTrueDownload(url);
-    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -192,6 +222,8 @@ export default {
         yearAndMonth: null,
         nonStandardAvgPreparationDays: null,
         completedmonthlyPlancounts: null,
+        nonStandardOvertimeNum: null,
+        completedPlanCount: null,
         createBy: null,
         createTime: null,
         updateBy: null,

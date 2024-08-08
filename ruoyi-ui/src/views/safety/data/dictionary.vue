@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/modelFile/重点设备字典样表.xlsx";
+      const url = "/digital_operations_management_system/file/重点设备字典样表.xlsx";
       handleTrueDownload(url);
     },
     /** 查询重点设备字典列表 */

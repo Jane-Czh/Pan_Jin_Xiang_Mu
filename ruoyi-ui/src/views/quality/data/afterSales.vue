@@ -83,20 +83,26 @@
       <!-- <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" /> -->
       <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate">
         <template slot-scope="scope">
-          <span>{{ scope.row.warrantyRepairRate }}%</span>
+          <span v-if="scope.row.warrantyRepairRate || scope.row.warrantyRepairRate === 0">{{ scope.row.warrantyRepairRate
+            }}%</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="月度售后质量问题总数" align="center" prop="monthlyAfterSalesIssues" />
       <!-- <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate" /> -->
       <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate">
         <template slot-scope="scope">
-          <span>{{ scope.row.warrantyVehicleRepairRate }}%</span>
+          <span v-if="scope.row.warrantyVehicleRepairRate || scope.row.warrantyVehicleRepairRate === 0">{{
+      scope.row.warrantyVehicleRepairRate }}%</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" /> -->
       <el-table-column label="外部质量损失率(‰)" align="center" prop="externalLossRate">
         <template slot-scope="scope">
-          <span>{{ scope.row.externalLossRate }}‰</span>
+          <span v-if="scope.row.externalLossRate || scope.row.externalLossRate === 0">{{ scope.row.externalLossRate
+            }}%</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
@@ -254,7 +260,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/modelFile/售后台账样表.xlsx";
+      const url = "/digital_operations_management_system/file/售后台账样表.xlsx";
       handleTrueDownload(url);
     },
     handleClose(done) {

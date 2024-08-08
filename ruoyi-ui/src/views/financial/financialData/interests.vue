@@ -334,7 +334,7 @@ export default {
       return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
     handleDownload() {
-      const url = "/profile/modelFile/利润表样表.xlsx";
+      const url = "/digital_operations_management_system/file/利润表样表.xlsx";
       handleTrueDownload(url);
     },
 

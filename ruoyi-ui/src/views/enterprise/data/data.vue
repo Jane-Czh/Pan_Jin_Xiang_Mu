@@ -291,7 +291,7 @@ export default {
   methods: {
 
     handleDownload() {
-      const url = "/profile/modelFile/工资表样表.xlsx";
+      const url = "/digital_operations_management_system/file/工资表样表.xlsx";
       handleTrueDownload(url);
     },
 

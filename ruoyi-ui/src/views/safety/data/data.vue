@@ -209,7 +209,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/modelFile/维修数据样表.xlsx";
+      const url = "/digital_operations_management_system/file/维修数据样表.xlsx";
       handleTrueDownload(url);
     },
     handleClose(done) {

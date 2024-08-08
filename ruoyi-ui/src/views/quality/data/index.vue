@@ -68,13 +68,17 @@
       </el-table-column>
       <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate">
         <template slot-scope="scope">
-          <span>{{ scope.row.selfcheckPassrate }}%</span>
+          <span v-if="scope.row.selfcheckPassrate || scope.row.selfcheckPassrate === 0">{{ scope.row.selfcheckPassrate
+            }}%</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220" /> -->
       <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220">
         <template slot-scope="scope">
-          <span>{{ scope.row.nextprocessFeedbackPassrate }}%</span>
+          <span v-if="scope.row.nextprocessFeedbackPassrate || scope.row.nextprocessFeedbackPassrate === 0">{{
+      scope.row.nextprocessFeedbackPassrate }}%</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

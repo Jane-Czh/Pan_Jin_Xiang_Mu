@@ -67,4 +67,5 @@ public interface SupplyPurchaseorderTableMapper
 
     public Double calculateSupplierRatioByNetValueOrder(@Param("materialClass") String materialClass, @Param("supplierCode") String supplierCode);
 
+    public void deleteAll();
 }

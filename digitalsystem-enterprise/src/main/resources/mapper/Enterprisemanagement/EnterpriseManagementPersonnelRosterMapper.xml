@@ -1,112 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.Enterprisemanagement.mapper.EnterpriseManagementPersonnelRosterMapper">
 
     <resultMap type="EnterpriseManagementPersonnelRoster" id="EnterpriseManagementPersonnelRosterResult">
-        <result property="emprId"    column="`EMPR_ID`"    />
-        <result property="Number"    column="`Number`"    />
-        <result property="employeeId"    column="`Employee_ID`"    />
-        <result property="Name"    column="`Name`"    />
-        <result property="Gender"    column="`Gender`"    />
-        <result property="Birthday"    column="`Birthday`"    />
-        <result property="Age"    column="`Age`"    />
-        <result property="recordBirth"    column="`Record_birth`"    />
-        <result property="idCard"    column="`ID_Card`"    />
-        <result property="socialSecurityNumber"    column="`Social_security_number`"    />
-        <result property="personnelScope"    column="`Personnel_scope`"    />
-        <result property="personnelScopeText"    column="`Personnel_scope_text`"    />
-        <result property="personnelSubScope"    column="`Personnel_sub_scope`"    />
-        <result property="personnelSubScopeText"    column="`Personnel_sub_scope_text`"    />
-        <result property="salaryAccountingScope"    column="`Salary_accounting_scope`"    />
-        <result property="salaryAccountingScopeText"    column="`Salary_accounting_scope_text`"    />
-        <result property="costCenter"    column="`Cost_Center`"    />
-        <result property="costCenterText"    column="`Cost_Center_text`"    />
-        <result property="rootTissueId"    column="`Root_tissue_ID`"    />
-        <result property="rootTissue"    column="`Root_tissue`"    />
-        <result property="firstTissueId"    column="`First_tissue_ID`"    />
-        <result property="firstTissue"    column="`First_tissue`"    />
-        <result property="secondTissueId"    column="`Second_tissue_ID`"    />
-        <result property="secondTissue"    column="`Second_tissue`"    />
-        <result property="thirdTissueId"    column="`Third_tissue_ID`"    />
-        <result property="thirdTissue"    column="`Third_tissue`"    />
-        <result property="fourthTissueId"    column="`Fourth_tissue_ID`"    />
-        <result property="fourthTissue"    column="`Fourth_tissue`"    />
+        <result property="emprId"    column="EMPR_ID"    />
+        <result property="Number"    column="Number"    />
+        <result property="employeeId"    column="Employee_ID"    />
+        <result property="Name"    column="Name"    />
+        <result property="Gender"    column="Gender"    />
+        <result property="Birthday"    column="Birthday"    />
+        <result property="Age"    column="Age"    />
+        <result property="recordBirth"    column="Record_birth"    />
+        <result property="idCard"    column="ID_Card"    />
+        <result property="socialSecurityNumber"    column="Social_security_number"    />
+        <result property="personnelScope"    column="Personnel_scope"    />
+        <result property="personnelScopeText"    column="Personnel_scope_text"    />
+        <result property="personnelSubScope"    column="Personnel_sub_scope"    />
+        <result property="personnelSubScopeText"    column="Personnel_sub_scope_text"    />
+        <result property="salaryAccountingScope"    column="Salary_accounting_scope"    />
+        <result property="salaryAccountingScopeText"    column="Salary_accounting_scope_text"    />
+        <result property="costCenter"    column="Cost_Center"    />
+        <result property="costCenterText"    column="Cost_Center_text"    />
+        <result property="rootTissueId"    column="Root_tissue_ID"    />
+        <result property="rootTissue"    column="Root_tissue"    />
+        <result property="firstTissueId"    column="First_tissue_ID"    />
+        <result property="firstTissue"    column="First_tissue"    />
+        <result property="secondTissueId"    column="Second_tissue_ID"    />
+        <result property="secondTissue"    column="Second_tissue"    />
+        <result property="thirdTissueId"    column="Third_tissue_ID"    />
+        <result property="thirdTissue"    column="Third_tissue"    />
+        <result property="fourthTissueId"    column="Fourth_tissue_ID"    />
         <result property="fourthTissue"    column="Fourth_tissue"    />
         <result property="fifthTissueId"    column="Fifth_tissue_ID"    />
-        <result property="fourthTissue"    column="`Fourth_tissue`"    />
-        <result property="fifthTissueId"    column="`Fifth_tissue_ID`"    />
-        <result property="fifthTissue"    column="`Fifth_tissue`"    />
-        <result property="sixthTissueId"    column="`Sixth_tissue_ID`"    />
-        <result property="sixthTissue"    column="`Sixth_tissue`"    />
-        <result property="positionEthnicGroupId"    column="`Position_ethnic_group_ID`"    />
-        <result property="positionEthnicGroup"    column="`Position_ethnic_group`"    />
-        <result property="jobCategoryId"    column="`Job_category_ID`"    />
-        <result property="jobCategory"    column="`Job_category`"    />
-        <result property="Job"    column="`Job`"    />
-        <result property="jobTitle"    column="`Job_title`"    />
-        <result property="technicalTitle"    column="`Technical_title`"    />
-        <result property="theHighestTechnicalTitl"    column="`The_highest_technical_titl`"    />
-        <result property="technicalLevel"    column="`Technical_level`"    />
-        <result property="theHighestTechnicalLevel"    column="`The_highest_technical_level`"    />
-        <result property="Rank"    column="`Rank`"    />
-        <result property="positionId"    column="`Position_ID`"    />
-        <result property="Position"    column="`Position`"    />
-        <result property="jobbTitle"    column="`Jobb_title`"    />
-        <result property="salaryGrade"    column="`Salary_grade`"    />
-        <result property="salaryyGrade"    column="`Salaryy_grade`"    />
-        <result property="positionSalary"    column="`Position_salary`"    />
-        <result property="employeeGroup"    column="`Employee_Group`"    />
-        <result property="employeeSubGroup"    column="`Employee_sub_Group`"    />
-        <result property="backboneLevel"    column="`Backbone_level`"    />
-
-        <result property="personnelManagementClassification"    column="`Personnel_Management_Classification`"    />
-        <result property="theHighestEducationalLevel"    column="`The_highest_educational_level`"    />
-        <result property="theHighestEducationalSchool"    column="`The_highest_educational_school`"    />
-        <result property="theHighestEducationalMajor"    column="`The_highest_educational_major`"    />
-        <result property="theHighestDegree"    column="`The_highest_degree`"    />
-        <result property="theHighestDegreeSchool"    column="`The_highest_degree_school`"    />
-        <result property="theHighestDegreeMajor"    column="`The_highest_degree_major`"    />
-        <result property="firstEducationalLevel"    column="`First_educational_level`"    />
-        <result property="firstHighestDegree"    column="`FIrst_highest_degree`"    />
-        <result property="firstHighestDegreeSchool"    column="`First_highest_degree_school`"    />
-        <result property="firstHighestDegreeMajor"    column="`First_highest_degree_major`"    />
-        <result property="contractStartTime"    column="`Contract_start_time`"    />
-        <result property="contractEndTime"    column="`Contract_end_time`"    />
-        <result property="contractTerm"    column="`Contract_term`"    />
-        <result property="contractSigningUnit"    column="`Contract_signing_unit`"    />
-        <result property="signingFrequency"    column="`Signing_frequency`"    />
-        <result property="workingHours"    column="`Working_hours`"    />
-        <result property="joinedTime"    column="`Joined_time`"    />
-        <result property="startingTimeOfServiceLife"    column="`Starting_time_of_service_life`"    />
-        <result property="retirementDate"    column="`Retirement_date`"    />
-        <result property="siLing"    column="`Si_Ling`"    />
-        <result property="Nation"    column="`Nation`"    />
-        <result property="politicalLandscape"    column="`Political_landscape`"    />
-        <result property="partyMembershipTime"    column="`Party_membership_time`"    />
-        <result property="maritalStatus"    column="`marital_status`"    />
-        <result property="Hometown"    column="`Hometown`"    />
-
-        <result property="householdRegistrationNature"    column="`Household_registration_nature`"    />
-        <result property="residentAddress"    column="`Resident_address`"    />
-        <result property="contactInformation"    column="`Contact_information`"    />
-        <result property="emergencyContact"    column="`Emergency_contact`"    />
-        <result property="emergencyContactPhone"    column="`Emergency_contact_phone`"    />
-        <result property="workContract"    column="`Work_Contract`"    />
-        <result property="providentFundAccount"    column="`Provident_fund_account`"    />
-        <result property="enterpriseAnnuityAccount"    column="`Enterprise_annuity_account`"    />
-        <result property="uploadPhoto"    column="`Upload_photo`"    />
-
+        <result property="fifthTissue"    column="Fifth_tissue"    />
+        <result property="sixthTissueId"    column="Sixth_tissue_ID"    />
+        <result property="sixthTissue"    column="Sixth_tissue"    />
+        <result property="positionEthnicGroupId"    column="Position_ethnic_group_ID"    />
+        <result property="positionEthnicGroup"    column="Position_ethnic_group"    />
+        <result property="jobCategoryId"    column="Job_category_ID"    />
+        <result property="jobCategory"    column="Job_category"    />
+        <result property="Job"    column="Job"    />
+        <result property="jobTitle"    column="Job_title"    />
+        <result property="technicalTitle"    column="Technical_title"    />
+        <result property="theHighestTechnicalTitl"    column="The_highest_technical_titl"    />
+        <result property="technicalLevel"    column="Technical_level"    />
+        <result property="theHighestTechnicalLevel"    column="The_highest_technical_level"    />
+        <result property="Rankked"    column="Rankked"    />
+        <result property="positionId"    column="Position_ID"    />
+        <result property="Positionno"    column="Positionno"    />
+        <result property="jobbTitle"    column="Jobb_title"    />
+        <result property="salaryGrade"    column="Salary_grade"    />
+        <result property="salaryyGrade"    column="Salaryy_grade"    />
+        <result property="positionSalary"    column="Position_salary"    />
+        <result property="employeeGroup"    column="Employee_Group"    />
+        <result property="employeeSubGroup"    column="Employee_sub_Group"    />
+        <result property="backboneLevel"    column="Backbone_level"    />
+        <result property="personnelManagementClassification"    column="Personnel_Management_Classification"    />
+        <result property="theHighestEducationalLevel"    column="The_highest_educational_level"    />
+        <result property="theHighestEducationalSchool"    column="The_highest_educational_school"    />
+        <result property="theHighestEducationalMajor"    column="The_highest_educational_major"    />
+        <result property="theHighestDegree"    column="The_highest_degree"    />
+        <result property="theHighestDegreeSchool"    column="The_highest_degree_school"    />
+        <result property="theHighestDegreeMajor"    column="The_highest_degree_major"    />
+        <result property="firstEducationalLevel"    column="First_educational_level"    />
+        <result property="firstHighestDegree"    column="FIrst_highest_degree"    />
+        <result property="firstHighestDegreeSchool"    column="First_highest_degree_school"    />
+        <result property="firstHighestDegreeMajor"    column="First_highest_degree_major"    />
+        <result property="contractStartTime"    column="Contract_start_time"    />
+        <result property="contractEndTime"    column="Contract_end_time"    />
+        <result property="contractTerm"    column="Contract_term"    />
+        <result property="contractSigningUnit"    column="Contract_signing_unit"    />
+        <result property="signingFrequency"    column="Signing_frequency"    />
+        <result property="workingHours"    column="Working_hours"    />
+        <result property="joinedTime"    column="Joined_time"    />
+        <result property="startingTimeOfServiceLife"    column="Starting_time_of_service_life"    />
+        <result property="retirementDate"    column="Retirement_date"    />
+        <result property="siLing"    column="Si_Ling"    />
+        <result property="Nation"    column="Nation"    />
+        <result property="politicalLandscape"    column="Political_landscape"    />
+        <result property="partyMembershipTime"    column="Party_membership_time"    />
+        <result property="maritalStatus"    column="marital_status"    />
+        <result property="Hometown"    column="Hometown"    />
+        <result property="householdRegistrationNature"    column="Household_registration_nature"    />
+        <result property="residentAddress"    column="Resident_address"    />
+        <result property="contactInformation"    column="Contact_information"    />
+        <result property="emergencyContact"    column="Emergency_contact"    />
+        <result property="emergencyContactPhone"    column="Emergency_contact_phone"    />
+        <result property="workContract"    column="Work_Contract"    />
+        <result property="providentFundAccount"    column="Provident_fund_account"    />
+        <result property="enterpriseAnnuityAccount"    column="Enterprise_annuity_account"    />
+        <result property="uploadPhoto"    column="Upload_photo"    />
     </resultMap>
 
     <sql id="selectEnterpriseManagementPersonnelRosterVo">
-        select EMPR_ID, Number, Employee_ID, Name, Gender, Birthday, Age, Record_birth, ID_Card, Social_security_number, Personnel_scope, Personnel_scope_text, Personnel_sub_scope, Personnel_sub_scope_text, Salary_accounting_scope, Salary_accounting_scope_text, Cost_Center, Cost_Center_text, Root_tissue_ID, Root_tissue, First_tissue_ID, First_tissue, Second_tissue_ID, Second_tissue, Third_tissue_ID, Third_tissue, Fourth_tissue_ID, Fourth_tissue, Fifth_tissue_ID, Fifth_tissue, Sixth_tissue_ID, Sixth_tissue, Position_ethnic_group_ID, Position_ethnic_group, Job_category_ID, Job_category, Job, Job_title, Technical_title, The_highest_technical_titl, Technical_level, The_highest_technical_level, Rank, Position_ID, Position, Jobb_title, Salary_grade, Salaryy_grade, Position_salary, Employee_Group, Employee_sub_Group, Backbone_level, Personnel_Management_Classification, The_highest_educational_level, The_highest_educational_school, The_highest_educational_major, The_highest_degree, The_highest_degree_school, The_highest_degree_major, First_educational_level, FIrst_highest_degree, First_highest_degree_school, First_highest_degree_major, Contract_start_time, Contract_end_time, Contract_term, Contract_signing_unit, Signing_frequency, Working_hours, Joined_time, Starting_time_of_service_life, Retirement_date, Si_Ling, Nation, Political_landscape, Party_membership_time, marital_status, Hometown, Household_registration_nature, Resident_address, Contact_information, Emergency_contact, Emergency_contact_phone, Work_Contract, Provident_fund_account, Enterprise_annuity_account, Upload_photo from Enterprise_Management_Personnel_roster
+        select EMPR_ID, Number, Employee_ID, Name, Gender, Birthday, Age, Record_birth, ID_Card, Social_security_number, Personnel_scope, Personnel_scope_text, Personnel_sub_scope, Personnel_sub_scope_text, Salary_accounting_scope, Salary_accounting_scope_text, Cost_Center, Cost_Center_text, Root_tissue_ID, Root_tissue, First_tissue_ID, First_tissue, Second_tissue_ID, Second_tissue, Third_tissue_ID, Third_tissue, Fourth_tissue_ID, Fourth_tissue, Fifth_tissue_ID, Fifth_tissue, Sixth_tissue_ID, Sixth_tissue, Position_ethnic_group_ID, Position_ethnic_group, Job_category_ID, Job_category, Job, Job_title, Technical_title, The_highest_technical_titl, Technical_level, The_highest_technical_level, Rankked, Position_ID, Positionno, Jobb_title, Salary_grade, Salaryy_grade, Position_salary, Employee_Group, Employee_sub_Group, Backbone_level, Personnel_Management_Classification, The_highest_educational_level, The_highest_educational_school, The_highest_educational_major, The_highest_degree, The_highest_degree_school, The_highest_degree_major, First_educational_level, FIrst_highest_degree, First_highest_degree_school, First_highest_degree_major, Contract_start_time, Contract_end_time, Contract_term, Contract_signing_unit, Signing_frequency, Working_hours, Joined_time, Starting_time_of_service_life, Retirement_date, Si_Ling, Nation, Political_landscape, Party_membership_time, marital_status, Hometown, Household_registration_nature, Resident_address, Contact_information, Emergency_contact, Emergency_contact_phone, Work_Contract, Provident_fund_account, Enterprise_annuity_account, Upload_photo from Enterprise_Management_Personnel_roster
     </sql>
 
     <select id="selectEnterpriseManagementPersonnelRosterList" parameterType="EnterpriseManagementPersonnelRoster" resultMap="EnterpriseManagementPersonnelRosterResult">
         <include refid="selectEnterpriseManagementPersonnelRosterVo"/>
-        <where>  
+        <where>
             <if test="Number != null "> and Number = #{Number}</if>
             <if test="employeeId != null  and employeeId != ''"> and Employee_ID = #{employeeId}</if>
             <if test="Name != null  and Name != ''"> and Name like concat('%', #{Name}, '%')</if>
@@ -130,15 +124,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="firstTissue != null  and firstTissue != ''"> and First_tissue = #{firstTissue}</if>
             <if test="secondTissueId != null  and secondTissueId != ''"> and Second_tissue_ID = #{secondTissueId}</if>
             <if test="secondTissue != null  and secondTissue != ''"> and Second_tissue = #{secondTissue}</if>
-<!--            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID = #{thirdTissueId}</if>-->
-<!--            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue = #{thirdTissue}</if>-->
-<!--            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID = #{fourthTissueId}</if>-->
-<!--            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue = #{fourthTissue}</if>-->
-            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID like concat('%', #{thirdTissueId}, '%')</if>
-            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue like concat('%', #{thirdTissue}, '%')</if>
-            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID like concat('%', #{fourthTissueId}, '%')</if>
-            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue like concat('%', #{fourthTissue}, '%')</if>
-
+            <if test="thirdTissueId != null  and thirdTissueId != ''"> and Third_tissue_ID = #{thirdTissueId}</if>
+            <if test="thirdTissue != null  and thirdTissue != ''"> and Third_tissue = #{thirdTissue}</if>
+            <if test="fourthTissueId != null  and fourthTissueId != ''"> and Fourth_tissue_ID = #{fourthTissueId}</if>
+            <if test="fourthTissue != null  and fourthTissue != ''"> and Fourth_tissue = #{fourthTissue}</if>
             <if test="fifthTissueId != null  and fifthTissueId != ''"> and Fifth_tissue_ID = #{fifthTissueId}</if>
             <if test="fifthTissue != null  and fifthTissue != ''"> and Fifth_tissue = #{fifthTissue}</if>
             <if test="sixthTissueId != null  and sixthTissueId != ''"> and Sixth_tissue_ID = #{sixthTissueId}</if>
@@ -150,49 +139,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="Job != null  and Job != ''"> and Job = #{Job}</if>
             <if test="jobTitle != null  and jobTitle != ''"> and Job_title = #{jobTitle}</if>
             <if test="technicalTitle != null  and technicalTitle != ''"> and Technical_title = #{technicalTitle}</if>
-<!--            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>-->
-            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl like concat('%', #{theHighestTechnicalTitl}, '%')</if>
-
+            <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>
             <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level = #{technicalLevel}</if>
-<!--            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>-->
-<!--            <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level like concat('%', #{technicalLevel}, '%')</if>-->
-            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level like concat('%', #{theHighestTechnicalLevel}, '%')</if>
-
-            <if test="Rank != null  and Rank != ''"> and Rank = #{Rank}</if>
+            <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>
+            <if test="Rankked != null  and Rankked != ''"> and Rankked = #{Rankked}</if>
             <if test="positionId != null  and positionId != ''"> and Position_ID = #{positionId}</if>
-            <if test="Position != null  and Position != ''"> and Position = #{Position}</if>
+            <if test="Positionno != null  and Positionno != ''"> and Positionno = #{Positionno}</if>
             <if test="jobbTitle != null  and jobbTitle != ''"> and Jobb_title = #{jobbTitle}</if>
             <if test="salaryGrade != null  and salaryGrade != ''"> and Salary_grade = #{salaryGrade}</if>
             <if test="salaryyGrade != null  and salaryyGrade != ''"> and Salaryy_grade = #{salaryyGrade}</if>
             <if test="positionSalary != null "> and Position_salary = #{positionSalary}</if>
-<!--            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>-->
-<!--            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group = #{employeeSubGroup}</if>-->
-<!--            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level = #{backboneLevel}</if>-->
-            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group like concat('%', #{employeeGroup}, '%')</if>
-            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group like concat('%', #{employeeSubGroup}, '%')</if>
-            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level like concat('%', #{backboneLevel}, '%')</if>
-
+            <if test="employeeGroup != null  and employeeGroup != ''"> and Employee_Group = #{employeeGroup}</if>
+            <if test="employeeSubGroup != null  and employeeSubGroup != ''"> and Employee_sub_Group = #{employeeSubGroup}</if>
+            <if test="backboneLevel != null  and backboneLevel != ''"> and Backbone_level = #{backboneLevel}</if>
             <if test="personnelManagementClassification != null  and personnelManagementClassification != ''"> and Personnel_Management_Classification = #{personnelManagementClassification}</if>
-<!--            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level = #{theHighestEducationalLevel}</if>-->
-            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level like concat('%', #{theHighestEducationalLevel}, '%')</if>
-
+            <if test="theHighestEducationalLevel != null  and theHighestEducationalLevel != ''"> and The_highest_educational_level = #{theHighestEducationalLevel}</if>
             <if test="theHighestEducationalSchool != null  and theHighestEducationalSchool != ''"> and The_highest_educational_school = #{theHighestEducationalSchool}</if>
             <if test="theHighestEducationalMajor != null  and theHighestEducationalMajor != ''"> and The_highest_educational_major = #{theHighestEducationalMajor}</if>
             <if test="theHighestDegree != null  and theHighestDegree != ''"> and The_highest_degree = #{theHighestDegree}</if>
             <if test="theHighestDegreeSchool != null  and theHighestDegreeSchool != ''"> and The_highest_degree_school = #{theHighestDegreeSchool}</if>
             <if test="theHighestDegreeMajor != null  and theHighestDegreeMajor != ''"> and The_highest_degree_major = #{theHighestDegreeMajor}</if>
-<!--            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level = #{firstEducationalLevel}</if>-->
-            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level like concat('%', #{firstEducationalLevel}, '%')</if>
-
+            <if test="firstEducationalLevel != null  and firstEducationalLevel != ''"> and First_educational_level = #{firstEducationalLevel}</if>
             <if test="firstHighestDegree != null  and firstHighestDegree != ''"> and FIrst_highest_degree = #{firstHighestDegree}</if>
             <if test="firstHighestDegreeSchool != null  and firstHighestDegreeSchool != ''"> and First_highest_degree_school = #{firstHighestDegreeSchool}</if>
             <if test="firstHighestDegreeMajor != null  and firstHighestDegreeMajor != ''"> and First_highest_degree_major = #{firstHighestDegreeMajor}</if>
             <if test="contractStartTime != null "> and Contract_start_time = #{contractStartTime}</if>
             <if test="contractEndTime != null "> and Contract_end_time = #{contractEndTime}</if>
             <if test="contractTerm != null  and contractTerm != ''"> and Contract_term = #{contractTerm}</if>
-<!--            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit = #{contractSigningUnit}</if>-->
-            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit like concat('%', #{contractSigningUnit}, '%')</if>
-
+            <if test="contractSigningUnit != null  and contractSigningUnit != ''"> and Contract_signing_unit = #{contractSigningUnit}</if>
             <if test="signingFrequency != null "> and Signing_frequency = #{signingFrequency}</if>
             <if test="workingHours != null "> and Working_hours = #{workingHours}</if>
             <if test="joinedTime != null "> and Joined_time = #{joinedTime}</if>
@@ -260,9 +234,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="theHighestTechnicalTitl != null  and theHighestTechnicalTitl != ''"> and The_highest_technical_titl = #{theHighestTechnicalTitl}</if>
             <if test="technicalLevel != null  and technicalLevel != ''"> and Technical_level = #{technicalLevel}</if>
             <if test="theHighestTechnicalLevel != null  and theHighestTechnicalLevel != ''"> and The_highest_technical_level = #{theHighestTechnicalLevel}</if>
-            <if test="Rank != null  and Rank != ''"> and Rank = #{Rank}</if>
+            <if test="Rankked != null  and Rankked != ''"> and Rankked = #{Rankked}</if>
             <if test="positionId != null  and positionId != ''"> and Position_ID = #{positionId}</if>
-            <if test="Position != null  and Position != ''"> and Position = #{Position}</if>
+            <if test="Positionno != null  and Positionno != ''"> and Positionno = #{Positionno}</if>
             <if test="jobbTitle != null  and jobbTitle != ''"> and Jobb_title = #{jobbTitle}</if>
             <if test="salaryGrade != null  and salaryGrade != ''"> and Salary_grade = #{salaryGrade}</if>
             <if test="salaryyGrade != null  and salaryyGrade != ''"> and Salaryy_grade = #{salaryyGrade}</if>
@@ -307,7 +281,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uploadPhoto != null  and uploadPhoto != ''"> and Upload_photo = #{uploadPhoto}</if>
         </where>
     </select>
-    
+
     <select id="selectEnterpriseManagementPersonnelRosterByEmprId" parameterType="Long" resultMap="EnterpriseManagementPersonnelRosterResult">
         <include refid="selectEnterpriseManagementPersonnelRosterVo"/>
         where EMPR_ID = #{emprId}
@@ -318,7 +292,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM Enterprise_Management_Personnel_roster
         WHERE EMPR_ID = (SELECT MAX(EMPR_ID) FROM Enterprise_Management_Personnel_roster);
     </select>
-        
+
     <insert id="insertEnterpriseManagementPersonnelRoster" parameterType="EnterpriseManagementPersonnelRoster">
         insert into Enterprise_Management_Personnel_roster
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -364,9 +338,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="theHighestTechnicalTitl != null">The_highest_technical_titl,</if>
             <if test="technicalLevel != null">Technical_level,</if>
             <if test="theHighestTechnicalLevel != null">The_highest_technical_level,</if>
-            <if test="Rank != null">Rank,</if>
+            <if test="Rankked != null">Rankked,</if>
             <if test="positionId != null">Position_ID,</if>
-            <if test="Position != null">Position,</if>
+            <if test="Positionno != null">Positionno,</if>
             <if test="jobbTitle != null">Jobb_title,</if>
             <if test="salaryGrade != null">Salary_grade,</if>
             <if test="salaryyGrade != null">Salaryy_grade,</if>
@@ -409,7 +383,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="providentFundAccount != null">Provident_fund_account,</if>
             <if test="enterpriseAnnuityAccount != null">Enterprise_annuity_account,</if>
             <if test="uploadPhoto != null">Upload_photo,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="emprId != null">#{emprId},</if>
             <if test="Number != null">#{Number},</if>
@@ -453,9 +427,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="theHighestTechnicalTitl != null">#{theHighestTechnicalTitl},</if>
             <if test="technicalLevel != null">#{technicalLevel},</if>
             <if test="theHighestTechnicalLevel != null">#{theHighestTechnicalLevel},</if>
-            <if test="Rank != null">#{Rank},</if>
+            <if test="Rankked != null">#{Rankked},</if>
             <if test="positionId != null">#{positionId},</if>
-            <if test="Position != null">#{Position},</if>
+            <if test="Positionno != null">#{Positionno},</if>
             <if test="jobbTitle != null">#{jobbTitle},</if>
             <if test="salaryGrade != null">#{salaryGrade},</if>
             <if test="salaryyGrade != null">#{salaryyGrade},</if>
@@ -498,7 +472,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="providentFundAccount != null">#{providentFundAccount},</if>
             <if test="enterpriseAnnuityAccount != null">#{enterpriseAnnuityAccount},</if>
             <if test="uploadPhoto != null">#{uploadPhoto},</if>
-         </trim>
+        </trim>
     </insert>
 
     <insert id="insertBatch" parameterType="java.util.List">
@@ -510,7 +484,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         First_tissue, Second_tissue_ID, Second_tissue, Third_tissue_ID, Third_tissue, Fourth_tissue_ID, Fourth_tissue,
         Fifth_tissue_ID, Fifth_tissue, Sixth_tissue_ID, Sixth_tissue, Position_ethnic_group_ID, Position_ethnic_group,
         Job_category_ID, Job_category, Job, Job_title, Technical_title, The_highest_technical_titl, Technical_level,
-        The_highest_technical_level, Rank, Position_ID, Position, Jobb_title, Salary_grade, Salaryy_grade, Position_salary,
+        The_highest_technical_level, Rankked, Position_ID, Positionno, Jobb_title, Salary_grade, Salaryy_grade, Position_salary,
         Employee_Group, Employee_sub_Group, Backbone_level, Personnel_Management_Classification, The_highest_educational_level,
         The_highest_educational_school, The_highest_educational_major, The_highest_degree, The_highest_degree_school,
         The_highest_degree_major, First_educational_level, FIrst_highest_degree, First_highest_degree_school,
@@ -531,7 +505,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{item.fourthTissueId}, #{item.fourthTissue}, #{item.fifthTissueId}, #{item.fifthTissue}, #{item.sixthTissueId},
             #{item.sixthTissue}, #{item.positionEthnicGroupId}, #{item.positionEthnicGroup}, #{item.jobCategoryId}, #{item.jobCategory},
             #{item.Job}, #{item.jobTitle}, #{item.technicalTitle}, #{item.theHighestTechnicalTitl}, #{item.technicalLevel},
-            #{item.theHighestTechnicalLevel}, #{item.Rank}, #{item.positionId}, #{item.Position}, #{item.jobbTitle}, #{item.salaryGrade},
+            #{item.theHighestTechnicalLevel}, #{item.Rankked}, #{item.positionId}, #{item.Positionno}, #{item.jobbTitle}, #{item.salaryGrade},
             #{item.salaryyGrade}, #{item.positionSalary}, #{item.employeeGroup}, #{item.employeeSubGroup}, #{item.backboneLevel},
             #{item.personnelManagementClassification}, #{item.theHighestEducationalLevel}, #{item.theHighestEducationalSchool},
             #{item.theHighestEducationalMajor}, #{item.theHighestDegree}, #{item.theHighestDegreeSchool}, #{item.theHighestDegreeMajor},
@@ -590,9 +564,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="theHighestTechnicalTitl != null">The_highest_technical_titl = #{theHighestTechnicalTitl},</if>
             <if test="technicalLevel != null">Technical_level = #{technicalLevel},</if>
             <if test="theHighestTechnicalLevel != null">The_highest_technical_level = #{theHighestTechnicalLevel},</if>
-            <if test="Rank != null">Rank = #{Rank},</if>
+            <if test="Rankked != null">Rankked = #{Rankked},</if>
             <if test="positionId != null">Position_ID = #{positionId},</if>
-            <if test="Position != null">Position = #{Position},</if>
+            <if test="Positionno != null">Positionno = #{Positionno},</if>
             <if test="jobbTitle != null">Jobb_title = #{jobbTitle},</if>
             <if test="salaryGrade != null">Salary_grade = #{salaryGrade},</if>
             <if test="salaryyGrade != null">Salaryy_grade = #{salaryyGrade},</if>
@@ -644,7 +618,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteEnterpriseManagementPersonnelRosterByEmprIds" parameterType="String">
-        delete from Enterprise_Management_Personnel_roster where EMPR_ID in 
+        delete from Enterprise_Management_Personnel_roster where EMPR_ID in
         <foreach item="emprId" collection="array" open="(" separator="," close=")">
             #{emprId}
         </foreach>

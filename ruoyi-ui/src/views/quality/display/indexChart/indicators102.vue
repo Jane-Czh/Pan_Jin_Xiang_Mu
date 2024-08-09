@@ -24,11 +24,14 @@ export default {
         return {
             loading: false,
             data: [],
+            date: new Date(),
             timeData: {
                 startTime: new Date(),
                 endTime: new Date(),
             },
+            targetValue: 0,
             selectedDate: [],
+            targetValueArray: [],
             pickerOptions: [],
             option: {},
             myChart: {}
@@ -42,16 +45,34 @@ export default {
     },
     methods: {
         async initData() {
+            // const datePost = {
+            //     date: new Date(),
+            //     deptName: 'quality'
+            // }
             this.timeData.startTime = this.selectedDate[0],
                 this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
                 const res = await getSingleInspectionPassRateData(this.timeData);
                 this.data = res.rows
-                // const target = await getTargetData({ startTime: this.selectedDate[0], endTime: this.selectedDate[1], deptName: 'quality' })
+
+                // let target = await getTargetData(datePost);
+
+                // target.forEach(item => {
+                //     item.rows.forEach(row => {
+                //         if (row.indicatorName === 'singleInspectionPassRate') {
+                //             this.targetValue = row.targetValue;
+                //         }
+                //     });
+                // });
+                // console.log(this.targetValue)
+                // console.log('-------------++++++')
+                // const yAxisDataLength = this.data.length;
+                // this.targetValueArray = Array(yAxisDataLength).fill(this.targetValue);
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log('-------------++++++:error')
                 this.loading = false
             }
         },
@@ -222,7 +243,17 @@ export default {
                             focus: 'series'
                         },
                         data: this.data.map(item => item.singleInspectionPassRate),
-                    }]
+                    },
+                    // {
+                    //     name: '目标值',
+                    //     type: 'line',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     data: this.targetValueArray,
+                    // }
+                ]
             };
 
             this.option && this.myChart.setOption(this.option);

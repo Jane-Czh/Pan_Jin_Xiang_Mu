@@ -14,12 +14,14 @@ export default {
     legendData: { type: String, default: null },
     targetValue: { type: Number, default: 0 },
     targetValueDate: { type: String, default: null },
+    showTarget: { type: Boolean, default: false },
   },
   data() {
     return {
       loading: false,
       data: [],
       option: {},
+      shouldShowTargetValue: false,
       myChart: {},
       targetValueArray: [],
     }
@@ -148,7 +150,7 @@ export default {
           }
         },
         legend: {
-          data: [this.dataName, '目标值'],
+          data: [this.dataName, this.showTarget ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,
@@ -191,7 +193,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          data: this.targetValueArray,
+          data: this.showTarget ? this.targetValueArray : [],
         }
         ]
       };

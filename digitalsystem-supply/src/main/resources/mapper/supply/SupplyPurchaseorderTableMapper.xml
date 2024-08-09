@@ -97,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SELECT
                 SUM(sp.Purchase_Quantity) AS TotalQuantity
             FROM
-                supply_purchaseorder_table sp
+                Supply_Purchaseorder_table sp
             INNER JOIN
                 supply_material_category_dictionary_table smcd
                 ON sp.Material_Number = smcd.Material_Number
@@ -107,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SELECT
                 SUM(sp.Purchase_Quantity) AS SupplierTotalQuantity
             FROM
-                supply_purchaseorder_table sp
+                Supply_Purchaseorder_table sp
             INNER JOIN
                 supply_material_category_dictionary_table smcd
                 ON sp.Material_Number = smcd.Material_Number
@@ -126,7 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SELECT
                 SUM(sp.Net_Value_Order) AS TotalNetValue
             FROM
-                supply_purchaseorder_table sp
+                Supply_Purchaseorder_table sp
             INNER JOIN
                 supply_material_category_dictionary_table smcd
                 ON sp.Material_Number = smcd.Material_Number
@@ -136,7 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SELECT
                 SUM(sp.Net_Value_Order) AS SupplierNetValue
             FROM
-                supply_purchaseorder_table sp
+                Supply_Purchaseorder_table sp
             INNER JOIN
                 supply_material_category_dictionary_table smcd
                 ON sp.Material_Number = smcd.Material_Number
@@ -150,4 +150,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             TotalNetValue, SupplierNetValue;
     </select>
 
+    <delete id="deleteAll">
+        truncate table Supply_Purchaseorder_table
+    </delete>
 </mapper>

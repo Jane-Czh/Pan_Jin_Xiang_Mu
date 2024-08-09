@@ -55,12 +55,13 @@
           <dict-tag :options="dict.type.indicators_quality" :value="scope.row.indicatorDept" />
         </template>
 </el-table-column> -->
+      <el-table-column label="指标名" align="center" prop="indicatorNameCn" />
       <el-table-column label="日期" align="center" prop="natureYear" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.natureYear, '{y}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="指标名" align="center" prop="indicatorNameCn" />
+
       <el-table-column label="目标值" align="center" prop="targetValue" />
       <el-table-column label="目标下限" align="center" prop="targetLowerLimit" />
       <el-table-column label="目标上限" align="center" prop="targetUpperLimit" />
@@ -130,6 +131,8 @@ export default {
       total: 0,
       // 指标-目标值表格数据
       targetList: [],
+      dates: [],
+      indicatorNameCn: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -218,6 +221,8 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.itId)
+      this.dates = selection.map(item => item.natureYear)
+      this.indicatorNameCn = selection.map(item => item.indicatorNameCn)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -260,8 +265,16 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const itIds = row.itId || this.ids;
-      this.$modal.confirm('是否确认删除指标-目标值编号为"' + itIds + '"的数据项？').then(function () {
-        return delTarget(itIds);
+      const date = row.natureYear || this.dates;
+      const name = row.indicatorNameCn || this.indicatorNameCn;
+      // 提取年份和月份
+      const parsedDate = date ? new Date(date) : null;
+      const year = parsedDate ? parsedDate.getFullYear() : '';
+
+      const yearMonth = year ? `${year}` : '';
+
+      this.$modal.confirm(`是否删除日期为"${yearMonth}"的"${name}"的数据？`).then(() => {
+        return delInterests(itIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

@@ -12,7 +12,7 @@ export function uploadFile(data, aimUrl) {
 
 
 export function handleTrueDownload(url) {
-  return window.location.href = "http://localhost:8080" + url;
+  return window.location.href = "http://10.36.53.24:8080" + url;
 }
 
 

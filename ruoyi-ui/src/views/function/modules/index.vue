@@ -122,13 +122,13 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="${comment}" align="center" prop="bmId" /> -->
-      <el-table-column label="业务模块名称" align="center" prop="moduleName" />
 
       <el-table-column
         label="上级部门"
         align="center"
         prop="parentDepartment"
       />
+      <el-table-column label="业务模块名称" align="center" prop="moduleName" />
       <!-- <el-table-column label="逻辑删除flag" align="center" prop="isDeleted" /> -->
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column

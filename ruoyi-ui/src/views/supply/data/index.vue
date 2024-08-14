@@ -205,7 +205,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/digital_operations_management_system/file/采购订单汇总表样表.xlsx"
+      const url = "/profile/excel_templates/采购订单汇总表样表.xlsx"
       handleTrueDownload(url);
     },
     handleSortChange(column) {

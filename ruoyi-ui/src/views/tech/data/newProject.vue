@@ -539,7 +539,7 @@ export default {
       return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
     },
     handleDownload() {
-      const url = "/digital_operations_management_system/file/产品开发项目样表.xlsx"
+      const url = "/profile/excel_templates/产品开发项目样表.xlsx"
       handleTrueDownload(url);
     },
     /** 查询技术-项目计划完成统计列表 */

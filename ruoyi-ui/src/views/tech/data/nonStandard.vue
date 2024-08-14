@@ -348,7 +348,7 @@ export default {
       return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
     },
     handleDownload() {
-      const url = "/digital_operations_management_system/file/非标订单统计样表.xlsx"
+      const url = "/profile/excel_templates/非标订单统计样表.xlsx"
       handleTrueDownload(url);
     },
     /** 查询Tech_Non_Standard_Order列表 */

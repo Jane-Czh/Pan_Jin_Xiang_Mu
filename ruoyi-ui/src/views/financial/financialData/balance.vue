@@ -437,7 +437,7 @@ export default {
     },
 
     handleDownload() {
-      const url = "/digital_operations_management_system/file/资产负债表样表.xlsx";
+      const url = "/profile/excel_templates/资产负债表样表.xlsx";
       handleTrueDownload(url);
     },
 

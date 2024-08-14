@@ -74,14 +74,14 @@ spring:
   # redis 配置
   redis:
     # docker
-    host: 124.222.36.192
-    port: 6379
-    password: suRCEu#ZxNT#%Pga
+#    host: 124.222.36.192
+#    port: 6379
+#    password: suRCEu#ZxNT#%Pga
 
     # 实验室堡垒机 地址、端口，默认为6379
-#    host: 172.17.101.85
-#    port: 6378
-#    password:
+    host: 172.19.6.245
+    port: 6379
+    password:
 
     # 本地测试
 #    host: 192.168.10.132

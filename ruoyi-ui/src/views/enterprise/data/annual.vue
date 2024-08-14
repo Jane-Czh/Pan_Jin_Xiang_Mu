@@ -29,7 +29,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emasId" /> -->
       <el-table-column label="年份" align="center" prop="naturalYear" sortable="custom" />

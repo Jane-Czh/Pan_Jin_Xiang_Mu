@@ -446,7 +446,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt !== "xlsx" && fileExt !== "xlsm") {
+      if (fileExt !== "xlsx" && fileExt !== "xlsm" && fileExt !== "XLSX" ) {
         this.$message.error("只能上传 Excel 文件！");
         this.$refs.fileInput.value = ""; // 清空文件选择框
       }

@@ -56,7 +56,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="KEIndexList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="KEIndexList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="skId" /> -->
       <el-table-column label="重点设备编号" align="center" prop="seKeyEquipmentId" />
@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/profile/modelFile/重点设备字典样表.xlsx";
+      const url = "/profile/excel_templates/重点设备字典样表.xlsx";
       handleTrueDownload(url);
     },
     /** 查询重点设备字典列表 */

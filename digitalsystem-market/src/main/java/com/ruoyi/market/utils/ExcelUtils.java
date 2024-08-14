@@ -96,7 +96,7 @@ public class ExcelUtils {
             }
             //23、实际发车日期
             if (DateUtil.isCellDateFormatted(row.getCell(count))){
-                System.out.println("实际发车日期"+row.getCell(count).getDateCellValue());
+//                System.out.println("实际发车日期"+row.getCell(count).getDateCellValue());
                 Date dateCellValue = row.getCell(count).getDateCellValue();
 //                Data dateValue =  row.getCell(count).getDateCellValue();
                 marketSalesTable.setActualDepartureDate( dateCellValue);
@@ -122,7 +122,7 @@ public class ExcelUtils {
 
 
             if (DateUtil.isCellDateFormatted(row.getCell(count))){
-                System.out.println("系统交货期"+row.getCell(count).getDateCellValue());
+//                System.out.println("系统交货期"+row.getCell(count).getDateCellValue());
                 Date dateCellValue = row.getCell(count).getDateCellValue();
                 marketSalesTable.setSystemDeliveryTime( dateCellValue);
                 count++;
@@ -140,7 +140,7 @@ public class ExcelUtils {
             if (getNumericCellValue(row.getCell(count)) != 0.0){
 
                 marketSalesTable.setTechnicalPreparationCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
-                System.out.println("当前日期"+getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//                System.out.println("当前日期"+getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
             }
             if (DateUtil.isCellDateFormatted(row.getCell(count))) {
                 Date dateValue =  row.getCell(count).getDateCellValue();

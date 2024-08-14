@@ -3,6 +3,7 @@ package com.heli.enterprise.service.impl;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.heli.enterprise.mapper.EnterpriseManagementAnnualDataMapper;
 import com.heli.enterprise.service.IEnterpriseManagementAnnualDataService;
@@ -68,6 +69,8 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         monthlyData.setEmployeesNumber((long) employeeNumbers);
         monthlyData.setProductionInternNumbers((long) internNumbers);
         monthlyData.setYearAndMonth(yearAndMonth);
+        log.info("当月一线员工总数："+employeeNumbers);
+        log.info("当月生产实习生人数："+internNumbers);
         return enterpriseManagementMonthlyDataMapper.insertOrUpdateEmployeesData(monthlyData);
     }
 
@@ -78,6 +81,9 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      **/
     @Override
     public int calculateEmployeesNumber(Date yearAndMonth) {
+        if (!enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(yearAndMonth)){
+            return 0;
+        }
         EnterpriseManagementMonthlyData enterpriseManagementMonthlyData = enterpriseManagementMonthlyDataMapper.selectMonthDateByDate(yearAndMonth);
         log.info("计算前数据：" + yearAndMonth + enterpriseManagementMonthlyData);
 
@@ -89,7 +95,6 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         } else {
             enterpriseManagementMonthlyData.setEmployeesAvgMonthlyNumber(null);
         }
-
 
         //如果截止到当月数据条数 = 当前月数，则计算平均人数
         int monthDataNumber = enterpriseManagementMonthlyDataMapper.countMonthDataNumber(yearAndMonth);
@@ -111,6 +116,9 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      * @date: 2024/8/6 0:27
      **/
     public int calculateSalaryFillNumber(Date yearAndMonth) {
+        if (!enterpriseManagementMonthlyDataMapper.checkEMSalaryFillDataIsExisted(yearAndMonth)){
+            return 0;
+        }
         EnterpriseManagementMonthlyData enterpriseManagementMonthlyData = enterpriseManagementMonthlyDataMapper.selectMonthDateByDate(yearAndMonth);
         log.info("计算前数据：" + yearAndMonth + enterpriseManagementMonthlyData);
 
@@ -182,6 +190,9 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      **/
     @Override
     public int calculateMonthlyDataSalary(Date yearAndMonth) {
+        if (!enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataSalaryIsExisted(yearAndMonth)){
+            return 0;
+        }
 
         EnterpriseManagementMonthlyData enterpriseManagementMonthlyData = enterpriseManagementMonthlyDataMapper.selectMonthDateByDate(yearAndMonth);
         log.info("计算前数据：" + yearAndMonth + enterpriseManagementMonthlyData);
@@ -212,6 +223,32 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
 
 
         return enterpriseManagementMonthlyDataMapper.updateMonthlyData(enterpriseManagementMonthlyData);
+    }
+
+    /**
+     * @description: 更新表中全部计算数据
+     * @author: hong
+     * @date: 2024/8/7 0:27
+     **/
+    @Override
+    public int calculationAllData(){
+        Date maxMonth = enterpriseManagementMonthlyDataMapper.selectMaxMonthFromMonthData();
+        Date minMonth = enterpriseManagementMonthlyDataMapper.selectMinMonthFromMonthData();
+        int i=0;
+        //循环从start Time，到endTime
+        for (Date date = minMonth; date.before(DateUtils.getNextMonth(maxMonth)); date = DateUtils.getNextMonth(date)) {
+            log.info("当前计算的月份为：" + date);
+            //计算员工数据
+            calculateEmployeesNumber(date);
+            //计算填报的月度工资总额数据
+            calculateSalaryFillNumber(date);
+            //计算月度数据，工资表数据累计值
+            calculateMonthlyDataSalary(date);
+
+            i++;
+
+        }
+        return i;
     }
 
 

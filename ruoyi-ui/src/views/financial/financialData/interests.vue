@@ -67,7 +67,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
@@ -162,8 +162,8 @@
         <el-form-item label="主营业务成本-运费(万元)" prop="cogsFreight">
           <el-input v-model="form.cogsFreight" placeholder="请输入主营业务成本-运费(万元)" />
         </el-form-item>
-        <el-form-item label="主营业务成本-运费变化(万元)" prop="cogsVariation">
-          <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-运费变化(万元)" />
+        <el-form-item label="主营业务成本-差异(万元)" prop="cogsVariation">
+          <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-差异(万元)" />
         </el-form-item>
         <el-form-item label="主营业务成本(万元)" prop="cogs">
           <el-input v-model="form.cogs" placeholder="请输入主营业务成本(万元)" />
@@ -334,7 +334,7 @@ export default {
       return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
     handleDownload() {
-      const url = "/profile/modelFile/利润表样表.xlsx";
+      const url = "/profile/excel_templates/利润表样表.xlsx";
       handleTrueDownload(url);
     },
 

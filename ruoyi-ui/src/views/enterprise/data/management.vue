@@ -30,7 +30,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="ManagementList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column label="SD 销售订单有效性考核" align="center" prop="sdSalesordervalidity" width="170" />
       <el-table-column label="PP 手工创建生产订单比例(%)" align="center" prop="ppManualpocreationratio" width="200" />
-      <el-table-column label="PP 生产订单已收货未报工的比例(%)" align="center" prop="ppDeliveredunreportedratio" width="230" />
+      <el-table-column label="PP 生产订单已收货未报工的比例(%)" align="center" prop="ppDeliveredunreportedratio" width="250" />
       <el-table-column label="MES 报工不及时率比率(%)" align="center" prop="mesLateworkreportingrate" width="190" />
       <el-table-column label="QM 外检业务不及时率(%)" align="center" prop="qmExternalinspectiondelay" width="180" />
       <el-table-column label="MM 采购订单交货不及时的比例(%)" align="center" prop="mmPurchaseorderlatedelivery" width="230" />

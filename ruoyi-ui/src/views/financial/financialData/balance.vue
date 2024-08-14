@@ -66,7 +66,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="balanceList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id(主键)" align="center" prop="fbId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="100"
@@ -118,7 +118,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="月末在制品(万元)" align="center" prop="workInProgressEndOfMonth" width="120" /> -->
-      <el-table-column label="月末在制品(万元)" align="center" prop="workInProgressEndOfMonth" width="120">
+      <el-table-column label="月末在制品(万元)" align="center" prop="workInProgressEndOfMonth" width="150">
         <template slot-scope="scope">
           <span>{{ formatNumber(scope.row.workInProgressEndOfMonth) }}</span>
         </template>
@@ -437,7 +437,7 @@ export default {
     },
 
     handleDownload() {
-      const url = "/profile/modelFile/资产负债表样表.xlsx";
+      const url = "/profile/excel_templates/资产负债表样表.xlsx";
       handleTrueDownload(url);
     },
 

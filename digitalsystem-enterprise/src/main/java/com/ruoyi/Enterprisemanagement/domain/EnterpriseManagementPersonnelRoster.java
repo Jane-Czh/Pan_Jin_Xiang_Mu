@@ -9,9 +9,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 员工花名单导入对象 Enterprise_Management_Personnel_roster
- * 
+ *
  * @author ruoyi
- * @date 2024-05-06
+ * @date 2024-08-09
  */
 public class EnterpriseManagementPersonnelRoster extends BaseEntity
 {
@@ -188,7 +188,7 @@ public class EnterpriseManagementPersonnelRoster extends BaseEntity
 
     /** 职级 */
     @Excel(name = "职级")
-    private String Rank;
+    private String Rankked;
 
     /** 职位ID */
     @Excel(name = "职位ID")
@@ -196,7 +196,7 @@ public class EnterpriseManagementPersonnelRoster extends BaseEntity
 
     /** 职位 */
     @Excel(name = "职位")
-    private String Position;
+    private String Positionno;
 
     /** 岗位名称 */
     @Excel(name = "岗位名称")
@@ -373,786 +373,786 @@ public class EnterpriseManagementPersonnelRoster extends BaseEntity
     @Excel(name = "是否上传照片")
     private String uploadPhoto;
 
-    public void setEmprId(Long emprId) 
+    public void setEmprId(Long emprId)
     {
         this.emprId = emprId;
     }
 
-    public Long getEmprId() 
+    public Long getEmprId()
     {
         return emprId;
     }
-    public void setNumber(Long Number) 
+    public void setNumber(Long Number)
     {
         this.Number = Number;
     }
 
-    public Long getNumber() 
+    public Long getNumber()
     {
         return Number;
     }
-    public void setEmployeeId(String employeeId) 
+    public void setEmployeeId(String employeeId)
     {
         this.employeeId = employeeId;
     }
 
-    public String getEmployeeId() 
+    public String getEmployeeId()
     {
         return employeeId;
     }
-    public void setName(String Name) 
+    public void setName(String Name)
     {
         this.Name = Name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return Name;
     }
-    public void setGender(String Gender) 
+    public void setGender(String Gender)
     {
         this.Gender = Gender;
     }
 
-    public String getGender() 
+    public String getGender()
     {
         return Gender;
     }
-    public void setBirthday(Date Birthday) 
+    public void setBirthday(Date Birthday)
     {
         this.Birthday = Birthday;
     }
 
-    public Date getBirthday() 
+    public Date getBirthday()
     {
         return Birthday;
     }
-    public void setAge(Long Age) 
+    public void setAge(Long Age)
     {
         this.Age = Age;
     }
 
-    public Long getAge() 
+    public Long getAge()
     {
         return Age;
     }
-    public void setRecordBirth(Date recordBirth) 
+    public void setRecordBirth(Date recordBirth)
     {
         this.recordBirth = recordBirth;
     }
 
-    public Date getRecordBirth() 
+    public Date getRecordBirth()
     {
         return recordBirth;
     }
-    public void setIdCard(String idCard) 
+    public void setIdCard(String idCard)
     {
         this.idCard = idCard;
     }
 
-    public String getIdCard() 
+    public String getIdCard()
     {
         return idCard;
     }
-    public void setSocialSecurityNumber(String socialSecurityNumber) 
+    public void setSocialSecurityNumber(String socialSecurityNumber)
     {
         this.socialSecurityNumber = socialSecurityNumber;
     }
 
-    public String getSocialSecurityNumber() 
+    public String getSocialSecurityNumber()
     {
         return socialSecurityNumber;
     }
-    public void setPersonnelScope(String personnelScope) 
+    public void setPersonnelScope(String personnelScope)
     {
         this.personnelScope = personnelScope;
     }
 
-    public String getPersonnelScope() 
+    public String getPersonnelScope()
     {
         return personnelScope;
     }
-    public void setPersonnelScopeText(String personnelScopeText) 
+    public void setPersonnelScopeText(String personnelScopeText)
     {
         this.personnelScopeText = personnelScopeText;
     }
 
-    public String getPersonnelScopeText() 
+    public String getPersonnelScopeText()
     {
         return personnelScopeText;
     }
-    public void setPersonnelSubScope(String personnelSubScope) 
+    public void setPersonnelSubScope(String personnelSubScope)
     {
         this.personnelSubScope = personnelSubScope;
     }
 
-    public String getPersonnelSubScope() 
+    public String getPersonnelSubScope()
     {
         return personnelSubScope;
     }
-    public void setPersonnelSubScopeText(String personnelSubScopeText) 
+    public void setPersonnelSubScopeText(String personnelSubScopeText)
     {
         this.personnelSubScopeText = personnelSubScopeText;
     }
 
-    public String getPersonnelSubScopeText() 
+    public String getPersonnelSubScopeText()
     {
         return personnelSubScopeText;
     }
-    public void setSalaryAccountingScope(String salaryAccountingScope) 
+    public void setSalaryAccountingScope(String salaryAccountingScope)
     {
         this.salaryAccountingScope = salaryAccountingScope;
     }
 
-    public String getSalaryAccountingScope() 
+    public String getSalaryAccountingScope()
     {
         return salaryAccountingScope;
     }
-    public void setSalaryAccountingScopeText(String salaryAccountingScopeText) 
+    public void setSalaryAccountingScopeText(String salaryAccountingScopeText)
     {
         this.salaryAccountingScopeText = salaryAccountingScopeText;
     }
 
-    public String getSalaryAccountingScopeText() 
+    public String getSalaryAccountingScopeText()
     {
         return salaryAccountingScopeText;
     }
-    public void setCostCenter(String costCenter) 
+    public void setCostCenter(String costCenter)
     {
         this.costCenter = costCenter;
     }
 
-    public String getCostCenter() 
+    public String getCostCenter()
     {
         return costCenter;
     }
-    public void setCostCenterText(String costCenterText) 
+    public void setCostCenterText(String costCenterText)
     {
         this.costCenterText = costCenterText;
     }
 
-    public String getCostCenterText() 
+    public String getCostCenterText()
     {
         return costCenterText;
     }
-    public void setRootTissueId(String rootTissueId) 
+    public void setRootTissueId(String rootTissueId)
     {
         this.rootTissueId = rootTissueId;
     }
 
-    public String getRootTissueId() 
+    public String getRootTissueId()
     {
         return rootTissueId;
     }
-    public void setRootTissue(String rootTissue) 
+    public void setRootTissue(String rootTissue)
     {
         this.rootTissue = rootTissue;
     }
 
-    public String getRootTissue() 
+    public String getRootTissue()
     {
         return rootTissue;
     }
-    public void setFirstTissueId(String firstTissueId) 
+    public void setFirstTissueId(String firstTissueId)
     {
         this.firstTissueId = firstTissueId;
     }
 
-    public String getFirstTissueId() 
+    public String getFirstTissueId()
     {
         return firstTissueId;
     }
-    public void setFirstTissue(String firstTissue) 
+    public void setFirstTissue(String firstTissue)
     {
         this.firstTissue = firstTissue;
     }
 
-    public String getFirstTissue() 
+    public String getFirstTissue()
     {
         return firstTissue;
     }
-    public void setSecondTissueId(String secondTissueId) 
+    public void setSecondTissueId(String secondTissueId)
     {
         this.secondTissueId = secondTissueId;
     }
 
-    public String getSecondTissueId() 
+    public String getSecondTissueId()
     {
         return secondTissueId;
     }
-    public void setSecondTissue(String secondTissue) 
+    public void setSecondTissue(String secondTissue)
     {
         this.secondTissue = secondTissue;
     }
 
-    public String getSecondTissue() 
+    public String getSecondTissue()
     {
         return secondTissue;
     }
-    public void setThirdTissueId(String thirdTissueId) 
+    public void setThirdTissueId(String thirdTissueId)
     {
         this.thirdTissueId = thirdTissueId;
     }
 
-    public String getThirdTissueId() 
+    public String getThirdTissueId()
     {
         return thirdTissueId;
     }
-    public void setThirdTissue(String thirdTissue) 
+    public void setThirdTissue(String thirdTissue)
     {
         this.thirdTissue = thirdTissue;
     }
 
-    public String getThirdTissue() 
+    public String getThirdTissue()
     {
         return thirdTissue;
     }
-    public void setFourthTissueId(String fourthTissueId) 
+    public void setFourthTissueId(String fourthTissueId)
     {
         this.fourthTissueId = fourthTissueId;
     }
 
-    public String getFourthTissueId() 
+    public String getFourthTissueId()
     {
         return fourthTissueId;
     }
-    public void setFourthTissue(String fourthTissue) 
+    public void setFourthTissue(String fourthTissue)
     {
         this.fourthTissue = fourthTissue;
     }
 
-    public String getFourthTissue() 
+    public String getFourthTissue()
     {
         return fourthTissue;
     }
-    public void setFifthTissueId(String fifthTissueId) 
+    public void setFifthTissueId(String fifthTissueId)
     {
         this.fifthTissueId = fifthTissueId;
     }
 
-    public String getFifthTissueId() 
+    public String getFifthTissueId()
     {
         return fifthTissueId;
     }
-    public void setFifthTissue(String fifthTissue) 
+    public void setFifthTissue(String fifthTissue)
     {
         this.fifthTissue = fifthTissue;
     }
 
-    public String getFifthTissue() 
+    public String getFifthTissue()
     {
         return fifthTissue;
     }
-    public void setSixthTissueId(String sixthTissueId) 
+    public void setSixthTissueId(String sixthTissueId)
     {
         this.sixthTissueId = sixthTissueId;
     }
 
-    public String getSixthTissueId() 
+    public String getSixthTissueId()
     {
         return sixthTissueId;
     }
-    public void setSixthTissue(String sixthTissue) 
+    public void setSixthTissue(String sixthTissue)
     {
         this.sixthTissue = sixthTissue;
     }
 
-    public String getSixthTissue() 
+    public String getSixthTissue()
     {
         return sixthTissue;
     }
-    public void setPositionEthnicGroupId(String positionEthnicGroupId) 
+    public void setPositionEthnicGroupId(String positionEthnicGroupId)
     {
         this.positionEthnicGroupId = positionEthnicGroupId;
     }
 
-    public String getPositionEthnicGroupId() 
+    public String getPositionEthnicGroupId()
     {
         return positionEthnicGroupId;
     }
-    public void setPositionEthnicGroup(String positionEthnicGroup) 
+    public void setPositionEthnicGroup(String positionEthnicGroup)
     {
         this.positionEthnicGroup = positionEthnicGroup;
     }
 
-    public String getPositionEthnicGroup() 
+    public String getPositionEthnicGroup()
     {
         return positionEthnicGroup;
     }
-    public void setJobCategoryId(String jobCategoryId) 
+    public void setJobCategoryId(String jobCategoryId)
     {
         this.jobCategoryId = jobCategoryId;
     }
 
-    public String getJobCategoryId() 
+    public String getJobCategoryId()
     {
         return jobCategoryId;
     }
-    public void setJobCategory(String jobCategory) 
+    public void setJobCategory(String jobCategory)
     {
         this.jobCategory = jobCategory;
     }
 
-    public String getJobCategory() 
+    public String getJobCategory()
     {
         return jobCategory;
     }
-    public void setJob(String Job) 
+    public void setJob(String Job)
     {
         this.Job = Job;
     }
 
-    public String getJob() 
+    public String getJob()
     {
         return Job;
     }
-    public void setJobTitle(String jobTitle) 
+    public void setJobTitle(String jobTitle)
     {
         this.jobTitle = jobTitle;
     }
 
-    public String getJobTitle() 
+    public String getJobTitle()
     {
         return jobTitle;
     }
-    public void setTechnicalTitle(String technicalTitle) 
+    public void setTechnicalTitle(String technicalTitle)
     {
         this.technicalTitle = technicalTitle;
     }
 
-    public String getTechnicalTitle() 
+    public String getTechnicalTitle()
     {
         return technicalTitle;
     }
-    public void setTheHighestTechnicalTitl(String theHighestTechnicalTitl) 
+    public void setTheHighestTechnicalTitl(String theHighestTechnicalTitl)
     {
         this.theHighestTechnicalTitl = theHighestTechnicalTitl;
     }
 
-    public String getTheHighestTechnicalTitl() 
+    public String getTheHighestTechnicalTitl()
     {
         return theHighestTechnicalTitl;
     }
-    public void setTechnicalLevel(String technicalLevel) 
+    public void setTechnicalLevel(String technicalLevel)
     {
         this.technicalLevel = technicalLevel;
     }
 
-    public String getTechnicalLevel() 
+    public String getTechnicalLevel()
     {
         return technicalLevel;
     }
-    public void setTheHighestTechnicalLevel(String theHighestTechnicalLevel) 
+    public void setTheHighestTechnicalLevel(String theHighestTechnicalLevel)
     {
         this.theHighestTechnicalLevel = theHighestTechnicalLevel;
     }
 
-    public String getTheHighestTechnicalLevel() 
+    public String getTheHighestTechnicalLevel()
     {
         return theHighestTechnicalLevel;
     }
-    public void setRank(String Rank) 
+    public void setRankked(String Rankked)
     {
-        this.Rank = Rank;
+        this.Rankked = Rankked;
     }
 
-    public String getRank() 
+    public String getRankked()
     {
-        return Rank;
+        return Rankked;
     }
-    public void setPositionId(String positionId) 
+    public void setPositionId(String positionId)
     {
         this.positionId = positionId;
     }
 
-    public String getPositionId() 
+    public String getPositionId()
     {
         return positionId;
     }
-    public void setPosition(String Position) 
+    public void setPositionno(String Positionno)
     {
-        this.Position = Position;
+        this.Positionno = Positionno;
     }
 
-    public String getPosition() 
+    public String getPositionno()
     {
-        return Position;
+        return Positionno;
     }
-    public void setJobbTitle(String jobbTitle) 
+    public void setJobbTitle(String jobbTitle)
     {
         this.jobbTitle = jobbTitle;
     }
 
-    public String getJobbTitle() 
+    public String getJobbTitle()
     {
         return jobbTitle;
     }
-    public void setSalaryGrade(String salaryGrade) 
+    public void setSalaryGrade(String salaryGrade)
     {
         this.salaryGrade = salaryGrade;
     }
 
-    public String getSalaryGrade() 
+    public String getSalaryGrade()
     {
         return salaryGrade;
     }
-    public void setSalaryyGrade(String salaryyGrade) 
+    public void setSalaryyGrade(String salaryyGrade)
     {
         this.salaryyGrade = salaryyGrade;
     }
 
-    public String getSalaryyGrade() 
+    public String getSalaryyGrade()
     {
         return salaryyGrade;
     }
-    public void setPositionSalary(Long positionSalary) 
+    public void setPositionSalary(Long positionSalary)
     {
         this.positionSalary = positionSalary;
     }
 
-    public Long getPositionSalary() 
+    public Long getPositionSalary()
     {
         return positionSalary;
     }
-    public void setEmployeeGroup(String employeeGroup) 
+    public void setEmployeeGroup(String employeeGroup)
     {
         this.employeeGroup = employeeGroup;
     }
 
-    public String getEmployeeGroup() 
+    public String getEmployeeGroup()
     {
         return employeeGroup;
     }
-    public void setEmployeeSubGroup(String employeeSubGroup) 
+    public void setEmployeeSubGroup(String employeeSubGroup)
     {
         this.employeeSubGroup = employeeSubGroup;
     }
 
-    public String getEmployeeSubGroup() 
+    public String getEmployeeSubGroup()
     {
         return employeeSubGroup;
     }
-    public void setBackboneLevel(String backboneLevel) 
+    public void setBackboneLevel(String backboneLevel)
     {
         this.backboneLevel = backboneLevel;
     }
 
-    public String getBackboneLevel() 
+    public String getBackboneLevel()
     {
         return backboneLevel;
     }
-    public void setPersonnelManagementClassification(String personnelManagementClassification) 
+    public void setPersonnelManagementClassification(String personnelManagementClassification)
     {
         this.personnelManagementClassification = personnelManagementClassification;
     }
 
-    public String getPersonnelManagementClassification() 
+    public String getPersonnelManagementClassification()
     {
         return personnelManagementClassification;
     }
-    public void setTheHighestEducationalLevel(String theHighestEducationalLevel) 
+    public void setTheHighestEducationalLevel(String theHighestEducationalLevel)
     {
         this.theHighestEducationalLevel = theHighestEducationalLevel;
     }
 
-    public String getTheHighestEducationalLevel() 
+    public String getTheHighestEducationalLevel()
     {
         return theHighestEducationalLevel;
     }
-    public void setTheHighestEducationalSchool(String theHighestEducationalSchool) 
+    public void setTheHighestEducationalSchool(String theHighestEducationalSchool)
     {
         this.theHighestEducationalSchool = theHighestEducationalSchool;
     }
 
-    public String getTheHighestEducationalSchool() 
+    public String getTheHighestEducationalSchool()
     {
         return theHighestEducationalSchool;
     }
-    public void setTheHighestEducationalMajor(String theHighestEducationalMajor) 
+    public void setTheHighestEducationalMajor(String theHighestEducationalMajor)
     {
         this.theHighestEducationalMajor = theHighestEducationalMajor;
     }
 
-    public String getTheHighestEducationalMajor() 
+    public String getTheHighestEducationalMajor()
     {
         return theHighestEducationalMajor;
     }
-    public void setTheHighestDegree(String theHighestDegree) 
+    public void setTheHighestDegree(String theHighestDegree)
     {
         this.theHighestDegree = theHighestDegree;
     }
 
-    public String getTheHighestDegree() 
+    public String getTheHighestDegree()
     {
         return theHighestDegree;
     }
-    public void setTheHighestDegreeSchool(String theHighestDegreeSchool) 
+    public void setTheHighestDegreeSchool(String theHighestDegreeSchool)
     {
         this.theHighestDegreeSchool = theHighestDegreeSchool;
     }
 
-    public String getTheHighestDegreeSchool() 
+    public String getTheHighestDegreeSchool()
     {
         return theHighestDegreeSchool;
     }
-    public void setTheHighestDegreeMajor(String theHighestDegreeMajor) 
+    public void setTheHighestDegreeMajor(String theHighestDegreeMajor)
     {
         this.theHighestDegreeMajor = theHighestDegreeMajor;
     }
 
-    public String getTheHighestDegreeMajor() 
+    public String getTheHighestDegreeMajor()
     {
         return theHighestDegreeMajor;
     }
-    public void setFirstEducationalLevel(String firstEducationalLevel) 
+    public void setFirstEducationalLevel(String firstEducationalLevel)
     {
         this.firstEducationalLevel = firstEducationalLevel;
     }
 
-    public String getFirstEducationalLevel() 
+    public String getFirstEducationalLevel()
     {
         return firstEducationalLevel;
     }
-    public void setFirstHighestDegree(String firstHighestDegree) 
+    public void setFirstHighestDegree(String firstHighestDegree)
     {
         this.firstHighestDegree = firstHighestDegree;
     }
 
-    public String getFirstHighestDegree() 
+    public String getFirstHighestDegree()
     {
         return firstHighestDegree;
     }
-    public void setFirstHighestDegreeSchool(String firstHighestDegreeSchool) 
+    public void setFirstHighestDegreeSchool(String firstHighestDegreeSchool)
     {
         this.firstHighestDegreeSchool = firstHighestDegreeSchool;
     }
 
-    public String getFirstHighestDegreeSchool() 
+    public String getFirstHighestDegreeSchool()
     {
         return firstHighestDegreeSchool;
     }
-    public void setFirstHighestDegreeMajor(String firstHighestDegreeMajor) 
+    public void setFirstHighestDegreeMajor(String firstHighestDegreeMajor)
     {
         this.firstHighestDegreeMajor = firstHighestDegreeMajor;
     }
 
-    public String getFirstHighestDegreeMajor() 
+    public String getFirstHighestDegreeMajor()
     {
         return firstHighestDegreeMajor;
     }
-    public void setContractStartTime(Date contractStartTime) 
+    public void setContractStartTime(Date contractStartTime)
     {
         this.contractStartTime = contractStartTime;
     }
 
-    public Date getContractStartTime() 
+    public Date getContractStartTime()
     {
         return contractStartTime;
     }
-    public void setContractEndTime(Date contractEndTime) 
+    public void setContractEndTime(Date contractEndTime)
     {
         this.contractEndTime = contractEndTime;
     }
 
-    public Date getContractEndTime() 
+    public Date getContractEndTime()
     {
         return contractEndTime;
     }
-    public void setContractTerm(String contractTerm) 
+    public void setContractTerm(String contractTerm)
     {
         this.contractTerm = contractTerm;
     }
 
-    public String getContractTerm() 
+    public String getContractTerm()
     {
         return contractTerm;
     }
-    public void setContractSigningUnit(String contractSigningUnit) 
+    public void setContractSigningUnit(String contractSigningUnit)
     {
         this.contractSigningUnit = contractSigningUnit;
     }
 
-    public String getContractSigningUnit() 
+    public String getContractSigningUnit()
     {
         return contractSigningUnit;
     }
-    public void setSigningFrequency(Long signingFrequency) 
+    public void setSigningFrequency(Long signingFrequency)
     {
         this.signingFrequency = signingFrequency;
     }
 
-    public Long getSigningFrequency() 
+    public Long getSigningFrequency()
     {
         return signingFrequency;
     }
-    public void setWorkingHours(Date workingHours) 
+    public void setWorkingHours(Date workingHours)
     {
         this.workingHours = workingHours;
     }
 
-    public Date getWorkingHours() 
+    public Date getWorkingHours()
     {
         return workingHours;
     }
-    public void setJoinedTime(Date joinedTime) 
+    public void setJoinedTime(Date joinedTime)
     {
         this.joinedTime = joinedTime;
     }
 
-    public Date getJoinedTime() 
+    public Date getJoinedTime()
     {
         return joinedTime;
     }
-    public void setStartingTimeOfServiceLife(Date startingTimeOfServiceLife) 
+    public void setStartingTimeOfServiceLife(Date startingTimeOfServiceLife)
     {
         this.startingTimeOfServiceLife = startingTimeOfServiceLife;
     }
 
-    public Date getStartingTimeOfServiceLife() 
+    public Date getStartingTimeOfServiceLife()
     {
         return startingTimeOfServiceLife;
     }
-    public void setRetirementDate(Date retirementDate) 
+    public void setRetirementDate(Date retirementDate)
     {
         this.retirementDate = retirementDate;
     }
 
-    public Date getRetirementDate() 
+    public Date getRetirementDate()
     {
         return retirementDate;
     }
-    public void setSiLing(Long siLing) 
+    public void setSiLing(Long siLing)
     {
         this.siLing = siLing;
     }
 
-    public Long getSiLing() 
+    public Long getSiLing()
     {
         return siLing;
     }
-    public void setNation(String Nation) 
+    public void setNation(String Nation)
     {
         this.Nation = Nation;
     }
 
-    public String getNation() 
+    public String getNation()
     {
         return Nation;
     }
-    public void setPoliticalLandscape(String politicalLandscape) 
+    public void setPoliticalLandscape(String politicalLandscape)
     {
         this.politicalLandscape = politicalLandscape;
     }
 
-    public String getPoliticalLandscape() 
+    public String getPoliticalLandscape()
     {
         return politicalLandscape;
     }
-    public void setPartyMembershipTime(Date partyMembershipTime) 
+    public void setPartyMembershipTime(Date partyMembershipTime)
     {
         this.partyMembershipTime = partyMembershipTime;
     }
 
-    public Date getPartyMembershipTime() 
+    public Date getPartyMembershipTime()
     {
         return partyMembershipTime;
     }
-    public void setMaritalStatus(String maritalStatus) 
+    public void setMaritalStatus(String maritalStatus)
     {
         this.maritalStatus = maritalStatus;
     }
 
-    public String getMaritalStatus() 
+    public String getMaritalStatus()
     {
         return maritalStatus;
     }
-    public void setHometown(String Hometown) 
+    public void setHometown(String Hometown)
     {
         this.Hometown = Hometown;
     }
 
-    public String getHometown() 
+    public String getHometown()
     {
         return Hometown;
     }
-    public void setHouseholdRegistrationNature(String householdRegistrationNature) 
+    public void setHouseholdRegistrationNature(String householdRegistrationNature)
     {
         this.householdRegistrationNature = householdRegistrationNature;
     }
 
-    public String getHouseholdRegistrationNature() 
+    public String getHouseholdRegistrationNature()
     {
         return householdRegistrationNature;
     }
-    public void setResidentAddress(String residentAddress) 
+    public void setResidentAddress(String residentAddress)
     {
         this.residentAddress = residentAddress;
     }
 
-    public String getResidentAddress() 
+    public String getResidentAddress()
     {
         return residentAddress;
     }
-    public void setContactInformation(String contactInformation) 
+    public void setContactInformation(String contactInformation)
     {
         this.contactInformation = contactInformation;
     }
 
-    public String getContactInformation() 
+    public String getContactInformation()
     {
         return contactInformation;
     }
-    public void setEmergencyContact(String emergencyContact) 
+    public void setEmergencyContact(String emergencyContact)
     {
         this.emergencyContact = emergencyContact;
     }
 
-    public String getEmergencyContact() 
+    public String getEmergencyContact()
     {
         return emergencyContact;
     }
-    public void setEmergencyContactPhone(String emergencyContactPhone) 
+    public void setEmergencyContactPhone(String emergencyContactPhone)
     {
         this.emergencyContactPhone = emergencyContactPhone;
     }
 
-    public String getEmergencyContactPhone() 
+    public String getEmergencyContactPhone()
     {
         return emergencyContactPhone;
     }
-    public void setWorkContract(String workContract) 
+    public void setWorkContract(String workContract)
     {
         this.workContract = workContract;
     }
 
-    public String getWorkContract() 
+    public String getWorkContract()
     {
         return workContract;
     }
-    public void setProvidentFundAccount(String providentFundAccount) 
+    public void setProvidentFundAccount(String providentFundAccount)
     {
         this.providentFundAccount = providentFundAccount;
     }
 
-    public String getProvidentFundAccount() 
+    public String getProvidentFundAccount()
     {
         return providentFundAccount;
     }
-    public void setEnterpriseAnnuityAccount(String enterpriseAnnuityAccount) 
+    public void setEnterpriseAnnuityAccount(String enterpriseAnnuityAccount)
     {
         this.enterpriseAnnuityAccount = enterpriseAnnuityAccount;
     }
 
-    public String getEnterpriseAnnuityAccount() 
+    public String getEnterpriseAnnuityAccount()
     {
         return enterpriseAnnuityAccount;
     }
-    public void setUploadPhoto(String uploadPhoto) 
+    public void setUploadPhoto(String uploadPhoto)
     {
         this.uploadPhoto = uploadPhoto;
     }
 
-    public String getUploadPhoto() 
+    public String getUploadPhoto()
     {
         return uploadPhoto;
     }
@@ -1160,93 +1160,93 @@ public class EnterpriseManagementPersonnelRoster extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("emprId", getEmprId())
-            .append("Number", getNumber())
-            .append("employeeId", getEmployeeId())
-            .append("Name", getName())
-            .append("Gender", getGender())
-            .append("Birthday", getBirthday())
-            .append("Age", getAge())
-            .append("recordBirth", getRecordBirth())
-            .append("idCard", getIdCard())
-            .append("socialSecurityNumber", getSocialSecurityNumber())
-            .append("personnelScope", getPersonnelScope())
-            .append("personnelScopeText", getPersonnelScopeText())
-            .append("personnelSubScope", getPersonnelSubScope())
-            .append("personnelSubScopeText", getPersonnelSubScopeText())
-            .append("salaryAccountingScope", getSalaryAccountingScope())
-            .append("salaryAccountingScopeText", getSalaryAccountingScopeText())
-            .append("costCenter", getCostCenter())
-            .append("costCenterText", getCostCenterText())
-            .append("rootTissueId", getRootTissueId())
-            .append("rootTissue", getRootTissue())
-            .append("firstTissueId", getFirstTissueId())
-            .append("firstTissue", getFirstTissue())
-            .append("secondTissueId", getSecondTissueId())
-            .append("secondTissue", getSecondTissue())
-            .append("thirdTissueId", getThirdTissueId())
-            .append("thirdTissue", getThirdTissue())
-            .append("fourthTissueId", getFourthTissueId())
-            .append("fourthTissue", getFourthTissue())
-            .append("fifthTissueId", getFifthTissueId())
-            .append("fifthTissue", getFifthTissue())
-            .append("sixthTissueId", getSixthTissueId())
-            .append("sixthTissue", getSixthTissue())
-            .append("positionEthnicGroupId", getPositionEthnicGroupId())
-            .append("positionEthnicGroup", getPositionEthnicGroup())
-            .append("jobCategoryId", getJobCategoryId())
-            .append("jobCategory", getJobCategory())
-            .append("Job", getJob())
-            .append("jobTitle", getJobTitle())
-            .append("technicalTitle", getTechnicalTitle())
-            .append("theHighestTechnicalTitl", getTheHighestTechnicalTitl())
-            .append("technicalLevel", getTechnicalLevel())
-            .append("theHighestTechnicalLevel", getTheHighestTechnicalLevel())
-            .append("Rank", getRank())
-            .append("positionId", getPositionId())
-            .append("Position", getPosition())
-            .append("jobbTitle", getJobbTitle())
-            .append("salaryGrade", getSalaryGrade())
-            .append("salaryyGrade", getSalaryyGrade())
-            .append("positionSalary", getPositionSalary())
-            .append("employeeGroup", getEmployeeGroup())
-            .append("employeeSubGroup", getEmployeeSubGroup())
-            .append("backboneLevel", getBackboneLevel())
-            .append("personnelManagementClassification", getPersonnelManagementClassification())
-            .append("theHighestEducationalLevel", getTheHighestEducationalLevel())
-            .append("theHighestEducationalSchool", getTheHighestEducationalSchool())
-            .append("theHighestEducationalMajor", getTheHighestEducationalMajor())
-            .append("theHighestDegree", getTheHighestDegree())
-            .append("theHighestDegreeSchool", getTheHighestDegreeSchool())
-            .append("theHighestDegreeMajor", getTheHighestDegreeMajor())
-            .append("firstEducationalLevel", getFirstEducationalLevel())
-            .append("firstHighestDegree", getFirstHighestDegree())
-            .append("firstHighestDegreeSchool", getFirstHighestDegreeSchool())
-            .append("firstHighestDegreeMajor", getFirstHighestDegreeMajor())
-            .append("contractStartTime", getContractStartTime())
-            .append("contractEndTime", getContractEndTime())
-            .append("contractTerm", getContractTerm())
-            .append("contractSigningUnit", getContractSigningUnit())
-            .append("signingFrequency", getSigningFrequency())
-            .append("workingHours", getWorkingHours())
-            .append("joinedTime", getJoinedTime())
-            .append("startingTimeOfServiceLife", getStartingTimeOfServiceLife())
-            .append("retirementDate", getRetirementDate())
-            .append("siLing", getSiLing())
-            .append("Nation", getNation())
-            .append("politicalLandscape", getPoliticalLandscape())
-            .append("partyMembershipTime", getPartyMembershipTime())
-            .append("maritalStatus", getMaritalStatus())
-            .append("Hometown", getHometown())
-            .append("householdRegistrationNature", getHouseholdRegistrationNature())
-            .append("residentAddress", getResidentAddress())
-            .append("contactInformation", getContactInformation())
-            .append("emergencyContact", getEmergencyContact())
-            .append("emergencyContactPhone", getEmergencyContactPhone())
-            .append("workContract", getWorkContract())
-            .append("providentFundAccount", getProvidentFundAccount())
-            .append("enterpriseAnnuityAccount", getEnterpriseAnnuityAccount())
-            .append("uploadPhoto", getUploadPhoto())
-            .toString();
+                .append("emprId", getEmprId())
+                .append("Number", getNumber())
+                .append("employeeId", getEmployeeId())
+                .append("Name", getName())
+                .append("Gender", getGender())
+                .append("Birthday", getBirthday())
+                .append("Age", getAge())
+                .append("recordBirth", getRecordBirth())
+                .append("idCard", getIdCard())
+                .append("socialSecurityNumber", getSocialSecurityNumber())
+                .append("personnelScope", getPersonnelScope())
+                .append("personnelScopeText", getPersonnelScopeText())
+                .append("personnelSubScope", getPersonnelSubScope())
+                .append("personnelSubScopeText", getPersonnelSubScopeText())
+                .append("salaryAccountingScope", getSalaryAccountingScope())
+                .append("salaryAccountingScopeText", getSalaryAccountingScopeText())
+                .append("costCenter", getCostCenter())
+                .append("costCenterText", getCostCenterText())
+                .append("rootTissueId", getRootTissueId())
+                .append("rootTissue", getRootTissue())
+                .append("firstTissueId", getFirstTissueId())
+                .append("firstTissue", getFirstTissue())
+                .append("secondTissueId", getSecondTissueId())
+                .append("secondTissue", getSecondTissue())
+                .append("thirdTissueId", getThirdTissueId())
+                .append("thirdTissue", getThirdTissue())
+                .append("fourthTissueId", getFourthTissueId())
+                .append("fourthTissue", getFourthTissue())
+                .append("fifthTissueId", getFifthTissueId())
+                .append("fifthTissue", getFifthTissue())
+                .append("sixthTissueId", getSixthTissueId())
+                .append("sixthTissue", getSixthTissue())
+                .append("positionEthnicGroupId", getPositionEthnicGroupId())
+                .append("positionEthnicGroup", getPositionEthnicGroup())
+                .append("jobCategoryId", getJobCategoryId())
+                .append("jobCategory", getJobCategory())
+                .append("Job", getJob())
+                .append("jobTitle", getJobTitle())
+                .append("technicalTitle", getTechnicalTitle())
+                .append("theHighestTechnicalTitl", getTheHighestTechnicalTitl())
+                .append("technicalLevel", getTechnicalLevel())
+                .append("theHighestTechnicalLevel", getTheHighestTechnicalLevel())
+                .append("Rankked", getRankked())
+                .append("positionId", getPositionId())
+                .append("Positionno", getPositionno())
+                .append("jobbTitle", getJobbTitle())
+                .append("salaryGrade", getSalaryGrade())
+                .append("salaryyGrade", getSalaryyGrade())
+                .append("positionSalary", getPositionSalary())
+                .append("employeeGroup", getEmployeeGroup())
+                .append("employeeSubGroup", getEmployeeSubGroup())
+                .append("backboneLevel", getBackboneLevel())
+                .append("personnelManagementClassification", getPersonnelManagementClassification())
+                .append("theHighestEducationalLevel", getTheHighestEducationalLevel())
+                .append("theHighestEducationalSchool", getTheHighestEducationalSchool())
+                .append("theHighestEducationalMajor", getTheHighestEducationalMajor())
+                .append("theHighestDegree", getTheHighestDegree())
+                .append("theHighestDegreeSchool", getTheHighestDegreeSchool())
+                .append("theHighestDegreeMajor", getTheHighestDegreeMajor())
+                .append("firstEducationalLevel", getFirstEducationalLevel())
+                .append("firstHighestDegree", getFirstHighestDegree())
+                .append("firstHighestDegreeSchool", getFirstHighestDegreeSchool())
+                .append("firstHighestDegreeMajor", getFirstHighestDegreeMajor())
+                .append("contractStartTime", getContractStartTime())
+                .append("contractEndTime", getContractEndTime())
+                .append("contractTerm", getContractTerm())
+                .append("contractSigningUnit", getContractSigningUnit())
+                .append("signingFrequency", getSigningFrequency())
+                .append("workingHours", getWorkingHours())
+                .append("joinedTime", getJoinedTime())
+                .append("startingTimeOfServiceLife", getStartingTimeOfServiceLife())
+                .append("retirementDate", getRetirementDate())
+                .append("siLing", getSiLing())
+                .append("Nation", getNation())
+                .append("politicalLandscape", getPoliticalLandscape())
+                .append("partyMembershipTime", getPartyMembershipTime())
+                .append("maritalStatus", getMaritalStatus())
+                .append("Hometown", getHometown())
+                .append("householdRegistrationNature", getHouseholdRegistrationNature())
+                .append("residentAddress", getResidentAddress())
+                .append("contactInformation", getContactInformation())
+                .append("emergencyContact", getEmergencyContact())
+                .append("emergencyContactPhone", getEmergencyContactPhone())
+                .append("workContract", getWorkContract())
+                .append("providentFundAccount", getProvidentFundAccount())
+                .append("enterpriseAnnuityAccount", getEnterpriseAnnuityAccount())
+                .append("uploadPhoto", getUploadPhoto())
+                .toString();
     }
 }

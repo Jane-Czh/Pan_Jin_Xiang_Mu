@@ -111,4 +111,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteAll">
         delete from Supply_Ratio_Formula_Table
     </delete>
+
 </mapper>

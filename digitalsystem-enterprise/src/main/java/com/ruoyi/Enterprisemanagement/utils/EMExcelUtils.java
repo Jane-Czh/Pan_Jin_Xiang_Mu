@@ -451,11 +451,11 @@ public class EMExcelUtils {
 
             enterpriseManagementPersonnelRoster.setTheHighestTechnicalLevel(getStringCellValue(row.getCell(count++)));
 
-            enterpriseManagementPersonnelRoster.setRank(getStringCellValue(row.getCell(count++)));
+            enterpriseManagementPersonnelRoster.setRankked(getStringCellValue(row.getCell(count++)));
 
             enterpriseManagementPersonnelRoster.setPositionId(getStringCellValue(row.getCell(count++)));
 
-            enterpriseManagementPersonnelRoster.setPosition(getStringCellValue(row.getCell(count++)));
+            enterpriseManagementPersonnelRoster.setPositionno(getStringCellValue(row.getCell(count++)));
 
             enterpriseManagementPersonnelRoster.setJobbTitle(getStringCellValue(row.getCell(count++)));
 

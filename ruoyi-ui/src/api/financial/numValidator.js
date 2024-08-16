@@ -93,7 +93,7 @@ export function numValidatorNonZeroNature(rule, value, callback) {
       //   callback(new Error('请输入有效的数字'));
       if (isNaN(numValue) || numValue <= 0) {
         callback(new Error('请输入正整数'));
-      } else if (numValue > 99999) {
+      } else if (numValue > 999999999999) {
         // 验证是否在数据范围内
         callback(new Error('数据长度过大!'));
       } else {

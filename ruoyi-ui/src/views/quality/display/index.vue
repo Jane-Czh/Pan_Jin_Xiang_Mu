@@ -19,7 +19,8 @@
             </div>
             <div class="allIndex-item__footer">
               <div class="footer-content">
-                <span style="font-size: 16px;">截至{{ item.date }}</span>
+                <span v-if="item.id === '102'" style="font-size: 16px;">{{ item.date }}</span>
+                <span v-else style="font-size: 16px;">截至{{ item.date }}</span>
                 <el-button type="text" style="font-size: 18px;" @click="toDetail(item, index)">指标数据图</el-button>
               </div>
             </div>

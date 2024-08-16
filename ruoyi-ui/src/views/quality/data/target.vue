@@ -111,7 +111,7 @@
 
 <script>
 import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
-import { numValidator } from '@/api/financial/numValidator.js';
+import { numValidator, numValidatorEnableEmpty } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
   dicts: ['indicators_quality'],
@@ -166,6 +166,20 @@ export default {
           {
             required: true,
             validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        targetLowerLimit: [
+          {
+            required: true,
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
+        targetUpperLimit: [
+          {
+            required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur",
           }
         ],
@@ -274,7 +288,7 @@ export default {
       const yearMonth = year ? `${year}` : '';
 
       this.$modal.confirm(`是否删除日期为"${yearMonth}"的"${name}"的数据？`).then(() => {
-        return delInterests(itIds);
+        return delTarget(itIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

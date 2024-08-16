@@ -5,6 +5,10 @@
         <el-input v-model="queryParams.seKeyEquipmentId" placeholder="请输入重点设备编号" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
+      <el-form-item label="重点设备名称" prop="keyEquipmentName">
+        <el-input v-model="queryParams.keyEquipmentName" placeholder="请输入重点设备名称" clearable
+          @keyup.enter.native="handleQuery" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -27,7 +31,7 @@
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['enterprise:monthly:import']">导入Excel文件
+          v-hasPermi="['safety:dictionary:import']">导入Excel文件
         </el-button>
 
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
@@ -167,6 +171,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         seKeyEquipmentId: null,
+        keyEquipmentName: null,
       },
       // 表单参数
       form: {},

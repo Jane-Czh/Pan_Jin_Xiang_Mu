@@ -70,9 +70,9 @@
         <el-form-item label="党建分数" prop="score">
           <el-input v-model="form.score" placeholder="请输入党建分数" />
         </el-form-item>
-        <el-form-item label="党建排名" prop="ranking">
+        <!-- <el-form-item label="党建排名" prop="ranking">
           <el-input v-model="form.ranking" placeholder="请输入党建排名" />
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <div slot="footer" class="dialog-footer">

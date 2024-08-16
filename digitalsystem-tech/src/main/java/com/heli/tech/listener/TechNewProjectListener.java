@@ -74,15 +74,20 @@ public class TechNewProjectListener implements ReadListener<TechNewProjectDesign
             registerInfoExcel.setCompletionRate(registerInfoExcel.getCompletionRate().replace("%", ""));
         }
 
-        if (registerInfoExcel.getCompletionRate().equals("100") ||
-                (registerInfoExcel.getEstablishmentState().equals("完成") && registerInfoExcel.getDesignPlanState().equals("完成")
-                 && registerInfoExcel.getDrawingDesignState().equals("完成") && registerInfoExcel.getPrototypeProductionState().equals("完成")
-                 && registerInfoExcel.getPrototypeTestState().equals("完成") && registerInfoExcel.getPrototypeReviewState().equals("完成")
-                 && registerInfoExcel.getPilotReleaseState().equals("完成") && registerInfoExcel.getMassReleaseState().equals("完成"))){
+        if (registerInfoExcel.getCompletionRate().equals("100")){
             registerInfoExcel.setIsCompleted(1);
         } else {
             registerInfoExcel.setIsCompleted(0);
         }
+//        if (registerInfoExcel.getCompletionRate().equals("100") ||
+//                (registerInfoExcel.getEstablishmentState().equals("完成") && registerInfoExcel.getDesignPlanState().equals("完成")
+//                 && registerInfoExcel.getDrawingDesignState().equals("完成") && registerInfoExcel.getPrototypeProductionState().equals("完成")
+//                 && registerInfoExcel.getPrototypeTestState().equals("完成") && registerInfoExcel.getPrototypeReviewState().equals("完成")
+//                 && registerInfoExcel.getPilotReleaseState().equals("完成") && registerInfoExcel.getMassReleaseState().equals("完成"))){
+//            registerInfoExcel.setIsCompleted(1);
+//        } else {
+//            registerInfoExcel.setIsCompleted(0);
+//        }
 
 
         if (registerInfoExcel.getProjectName() != null){

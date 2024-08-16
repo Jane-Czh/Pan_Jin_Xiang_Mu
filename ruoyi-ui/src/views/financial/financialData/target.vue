@@ -282,7 +282,7 @@ export default {
       const yearMonth = year ? `${year}` : '';
 
       this.$modal.confirm(`是否删除日期为"${yearMonth}"的"${name}"的数据？`).then(() => {
-        return delInterests(itIds);
+        return delTarget(itIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

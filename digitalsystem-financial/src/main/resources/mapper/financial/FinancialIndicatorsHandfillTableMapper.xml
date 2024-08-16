@@ -151,6 +151,7 @@
             resultMap="FinancialIndicatorsHandfillTableResult">
         <include refid="selectFinancialIndicatorsHandfillTableVo"/>
         <where>
+            <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>
             <if test="totalSalesRevenue != null ">and Total_Sales_Revenue = #{totalSalesRevenue}</if>
             <if test="externalGroupSalesRevenue != null ">and External_Group_Sales_Revenue = #{externalGroupSalesRevenue}</if>
             <if test="totalVehicleProduction != null ">and Total_Vehicle_Production = #{totalVehicleProduction}</if>

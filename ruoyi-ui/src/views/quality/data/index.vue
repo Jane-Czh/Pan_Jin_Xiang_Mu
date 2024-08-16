@@ -149,6 +149,7 @@ export default {
       // 选中数组
       ids: [],
       dates: [],
+      updateLoading: false,
       // 非单个禁用
       single: true,
       // 非多个禁用

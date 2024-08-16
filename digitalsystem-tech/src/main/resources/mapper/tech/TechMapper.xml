@@ -80,6 +80,28 @@
         SELECT EXISTS(SELECT 1 FROM Tech WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
+    <select id="checkCompletionIsExisted" resultType="java.lang.Boolean">
+        select count(*) from Tech
+        where Year_And_Month = #{yearAndMonth} and Completed_Plan_Count is not null
+    </select>
+
+    <select id="selectCompletionDataNumByYear" resultType="int">
+        select count(*) from Tech
+        where DATE_FORMAT(Year_And_Month,'%Y') = DATE_FORMAT(#{yearAndMonth},'%Y') and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth} and Completed_Plan_Count is not null
+    </select>
+
+    <!--  查询最小月份  -->
+    <select id="selectMinMonth" resultType="java.util.Date">
+        select min(Year_And_Month) as yearAndMonth
+        from Tech
+    </select>
+
+    <!--  查询最大月份  -->
+    <select id="selectMaxMonth" resultType="java.util.Date">
+        select max(Year_And_Month) as yearAndMonth
+        from Tech
+    </select>
+
 
 
     <!-- 非标订单平均技术准备天数 指标47 -->
@@ -140,6 +162,11 @@
         <include refid="selectTechVo"/>
         where Tech_ID = #{techId}
     </select>
+    <select id="selectTechByDate" resultType="com.heli.tech.domain.Tech">
+        <include refid="selectTechVo"/>
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
 
     <insert id="insertTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
         insert into Tech

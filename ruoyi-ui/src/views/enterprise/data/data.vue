@@ -42,9 +42,9 @@
               <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
                 placeholder="请选择日期">
               </el-date-picker>
-              <el-form-item label="含其他奖金">
-                <el-switch v-model="form4.otherBonus"></el-switch>
-              </el-form-item>
+            </el-form-item>
+            <el-form-item label="含其他奖金">
+              <el-switch v-model="form4.otherBonus"></el-switch>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
@@ -332,7 +332,7 @@ export default {
   methods: {
 
     handleDownload() {
-      const url = "/digital_operations_management_system/file/工资表样表.xlsx";
+      const url = "/profile/excel_templates/工资表样表.xlsx";
       handleTrueDownload(url);
     },
 

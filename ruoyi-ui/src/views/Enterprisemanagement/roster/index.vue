@@ -178,18 +178,18 @@
       <!--      </el-form-item>-->
       <el-form-item label="三级组织ID" prop="thirdTissueId">
         <el-input v-model="queryParams.thirdTissueId" placeholder="请输入三级组织ID" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="三级组织" prop="thirdTissue">
         <el-input v-model="queryParams.thirdTissue" placeholder="请输入三级组织" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="四级组织ID" prop="fourthTissueId">
         <el-input v-model="queryParams.fourthTissueId" placeholder="请输入四级组织ID" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="四级组织" prop="fourthTissue">
         <el-input v-model="queryParams.fourthTissue" placeholder="请输入四级组织" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="五级组织ID" prop="fifthTissueId">-->
       <!--        <el-input-->
@@ -281,7 +281,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="最高技术职称" prop="theHighestTechnicalTitl">
         <el-input v-model="queryParams.theHighestTechnicalTitl" placeholder="请输入最高技术职称" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="技术等级" prop="technicalLevel">-->
       <!--        <el-input-->
@@ -293,7 +293,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="最高技术等级" prop="theHighestTechnicalLevel">
         <el-input v-model="queryParams.theHighestTechnicalLevel" placeholder="请输入最高技术等级" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="职级" prop="Rank">-->
       <!--        <el-input-->
@@ -353,15 +353,15 @@
       <!--      </el-form-item>-->
       <el-form-item label="员工组" prop="employeeGroup">
         <el-input v-model="queryParams.employeeGroup" placeholder="请输入员工组" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="员工子组" prop="employeeSubGroup">
         <el-input v-model="queryParams.employeeSubGroup" placeholder="请输入员工子组" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="骨干等级" prop="backboneLevel">
         <el-input v-model="queryParams.backboneLevel" placeholder="请输入骨干等级" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="人事管理分类" prop="personnelManagementClassification">-->
       <!--        <el-input-->
@@ -373,7 +373,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="最高学历" prop="theHighestEducationalLevel">
         <el-input v-model="queryParams.theHighestEducationalLevel" placeholder="请输入最高学历" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="最高学历学校" prop="theHighestEducationalSchool">-->
       <!--        <el-input-->
@@ -417,7 +417,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="第一学历" prop="firstEducationalLevel">
         <el-input v-model="queryParams.firstEducationalLevel" placeholder="请输入第一学历" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="第一学位" prop="firstHighestDegree">-->
       <!--        <el-input-->
@@ -445,7 +445,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="合同开始时间" prop="contractStartTime">
         <el-date-picker clearable v-model="queryParams.contractStartTime" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择合同开始时间">
+                        placeholder="请选择合同开始时间">
         </el-date-picker>
       </el-form-item>
       <!--      <el-form-item label="合同结束时间" prop="contractEndTime">-->
@@ -466,11 +466,11 @@
       <!--      </el-form-item>-->
       <el-form-item label="合同签订单位" prop="contractSigningUnit">
         <el-input v-model="queryParams.contractSigningUnit" placeholder="请输入合同签订单位" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="签订次数" prop="signingFrequency">
         <el-input v-model="queryParams.signingFrequency" placeholder="请输入签订次数" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="加入工作时间" prop="workingHours">-->
       <!--        <el-date-picker clearable-->
@@ -482,7 +482,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="加入合力时间" prop="joinedTime">
         <el-date-picker clearable v-model="queryParams.joinedTime" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择加入合力时间">
+                        placeholder="请选择加入合力时间">
         </el-date-picker>
       </el-form-item>
       <!--      <el-form-item label="司龄起算时间" prop="startingTimeOfServiceLife">-->
@@ -525,7 +525,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="婚姻状况" prop="marriageStatus">
         <el-input v-model="queryParams.maritalStatus" placeholder="请输入婚姻状况" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
 
       <!--      <el-form-item label="籍贯" prop="Hometown">-->
@@ -538,7 +538,7 @@
       <!--      </el-form-item>-->
       <el-form-item label="户口性质" prop="householdRegistrationNature">
         <el-input v-model="queryParams.householdRegistrationNature" placeholder="请输入户口性质" clearable
-          @keyup.enter.native="handleQuery" />
+                  @keyup.enter.native="handleQuery" />
       </el-form-item>
       <!--      <el-form-item label="常驻地址" prop="residentAddress">-->
       <!--        <el-input-->
@@ -614,7 +614,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['Enterprisemanagement:roster:add']">新增</el-button>
+                   v-hasPermi="['Enterprisemanagement:roster:add']">新增</el-button>
       </el-col>
       <!--      <el-col :span="1.5">-->
       <!--        <el-button-->
@@ -629,7 +629,7 @@
       <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['Enterprisemanagement:roster:remove']">删除</el-button>
+                   v-hasPermi="['Enterprisemanagement:roster:remove']">删除</el-button>
       </el-col>
       <!--      <el-col :span="1.5">-->
       <!--        <el-button-->
@@ -643,16 +643,16 @@
       <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-download" size="mini" @click="showDialog = true"
-          v-hasPermi="['Enterprisemanagement:roster:import']">导入Excel文件</el-button>
+                   v-hasPermi="['Enterprisemanagement:roster:import']">导入Excel文件</el-button>
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" :before-close="handleClose"
-          @close="resetFileInput">
+                   @close="resetFileInput">
           <el-form :model="form" ref="form" label-width="90px">
             <el-form-item label="上传表类">
               <span style="color: rgb(68, 140, 39);">员工花名册</span>
               <br>
-              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-                placeholder="请选择日期">
-              </el-date-picker>
+                            <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+                              placeholder="请选择日期">
+                            </el-date-picker>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
@@ -725,9 +725,9 @@
       <el-table-column label="最高技术职称" align="center" prop="theHighestTechnicalTitl" />
       <el-table-column label="技术等级" align="center" prop="technicalLevel" />
       <el-table-column label="最高技术等级" align="center" prop="theHighestTechnicalLevel" />
-      <el-table-column label="职级" align="center" prop="rank" />
+      <el-table-column label="职级" align="center" prop="rankked" />
       <el-table-column label="职位ID" align="center" prop="positionId" />
-      <el-table-column label="职位" align="center" prop="position" />
+      <el-table-column label="职位" align="center" prop="positionno" />
       <el-table-column label="岗位名称" align="center" prop="jobbTitle" />
       <el-table-column label="薪等" align="center" prop="salaryGrade" />
       <el-table-column label="薪级" align="center" prop="salaryyGrade" />
@@ -746,7 +746,7 @@
       <el-table-column label="第一学位" align="center" prop="firstHighestDegree" />
       <el-table-column label="第一学位学校" align="center" prop="firstHighestDegreeSchool" />
       <el-table-column label="第一学位专业" align="center" prop="firstHighestDegreeMajor" />
-      <el-table-column label="合同开始时间" align="center" prop="contractStartTime" width="180">
+      <el-table-column label="合同开始时间" align="center" prop="contractStartTime" width="180">z
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.contractStartTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -801,15 +801,15 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['Enterprisemanagement:roster:edit']">修改</el-button>
+                     v-hasPermi="['Enterprisemanagement:roster:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['Enterprisemanagement:roster:remove']">删除</el-button>
+                     v-hasPermi="['Enterprisemanagement:roster:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-      @pagination="getList" />
+                @pagination="getList" />
 
     <!-- 添加或修改员工花名单导入对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -835,7 +835,7 @@
         </el-form-item>
         <el-form-item label="档案出生日期" prop="recordBirth">
           <el-date-picker clearable v-model="form.recordBirth" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择档案出生日期">
+                          placeholder="请选择档案出生日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="身份证号" prop="idCard">
@@ -940,13 +940,13 @@
         <el-form-item label="最高技术等级" prop="theHighestTechnicalLevel">
           <el-input v-model="form.theHighestTechnicalLevel" placeholder="请输入最高技术等级" />
         </el-form-item>
-        <el-form-item label="职级" prop="rank">
-          <el-input v-model="form.rank" placeholder="请输入职级" />
+        <el-form-item label="职级" prop="rankked">
+          <el-input v-model="form.rankked" placeholder="请输入职级" />
         </el-form-item>
         <el-form-item label="职位ID" prop="positionId">
           <el-input v-model="form.positionId" placeholder="请输入职位ID" />
         </el-form-item>
-        <el-form-item label="职位" prop="position">
+        <el-form-item label="职位" prop="positionno">
           <el-input v-model="form.position" placeholder="请输入职位" />
         </el-form-item>
         <el-form-item label="岗位名称" prop="jobbTitle">
@@ -1005,12 +1005,12 @@
         </el-form-item>
         <el-form-item label="合同开始时间" prop="contractStartTime">
           <el-date-picker clearable v-model="form.contractStartTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择合同开始时间">
+                          placeholder="请选择合同开始时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="合同结束时间" prop="contractEndTime">
           <el-date-picker clearable v-model="form.contractEndTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择合同结束时间">
+                          placeholder="请选择合同结束时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="合同年限" prop="contractTerm">
@@ -1024,22 +1024,22 @@
         </el-form-item>
         <el-form-item label="加入工作时间" prop="workingHours">
           <el-date-picker clearable v-model="form.workingHours" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择加入工作时间">
+                          placeholder="请选择加入工作时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="加入合力时间" prop="joinedTime">
           <el-date-picker clearable v-model="form.joinedTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择加入合力时间">
+                          placeholder="请选择加入合力时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="司龄起算时间" prop="startingTimeOfServiceLife">
           <el-date-picker clearable v-model="form.startingTimeOfServiceLife" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择司龄起算时间">
+                          placeholder="请选择司龄起算时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="退休日期" prop="retirementDate">
           <el-date-picker clearable v-model="form.retirementDate" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择退休日期">
+                          placeholder="请选择退休日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="司龄" prop="siLing">
@@ -1053,7 +1053,7 @@
         </el-form-item>
         <el-form-item label="入党时间" prop="partyMembershipTime">
           <el-date-picker clearable v-model="form.partyMembershipTime" type="date" value-format="yyyy-MM-dd"
-            placeholder="请选择入党时间">
+                          placeholder="请选择入党时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="籍贯" prop="hometown">
@@ -1169,9 +1169,9 @@ export default {
         theHighestTechnicalTitl: null,
         technicalLevel: null,
         theHighestTechnicalLevel: null,
-        rank: null,
+        rankked: null,
         positionId: null,
-        position: null,
+        positionno: null,
         jobbTitle: null,
         salaryGrade: null,
         salaryyGrade: null,
@@ -1295,9 +1295,9 @@ export default {
         theHighestTechnicalTitl: null,
         technicalLevel: null,
         theHighestTechnicalLevel: null,
-        Rank: null,
+        Rankked: null,
         positionId: null,
-        Position: null,
+        Positionno: null,
         jobbTitle: null,
         salaryGrade: null,
         salaryyGrade: null,

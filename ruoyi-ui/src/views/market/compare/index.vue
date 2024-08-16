@@ -176,7 +176,7 @@
     <el-table v-loading="loading" :data="compareList" @selection-change="handleSelectionChange" @sort-change="handleSortChanged">
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="ID" align="center" prop="mfcdId" />-->
-      <el-table-column label="车型（前缀吨位）" align="center" prop="vehicleModel" />
+      <el-table-column label="车型" align="center" prop="vehicleModel" />
       <el-table-column label="每天平均交货天数" align="center" prop="numberOfDayDelivery" />
       <el-table-column label="每周平均交货天数" align="center" prop="numberOfWeekDelivery" />
       <el-table-column label="操作时间" align="center" prop="createTime" width="180" sortable="custom">
@@ -542,7 +542,7 @@ export default {
       let chartDom = document.getElementById('today');
       let myChart = echarts.init(chartDom);
       // 生成 x 轴数据
-      let xAxisData = this.numberOfDayDeliveryData.map(item => `${item.name} 吨位`);
+      let xAxisData = this.numberOfDayDeliveryData.map(item => `${item.name} `);
       let option;
 
       option = {
@@ -576,7 +576,7 @@ export default {
       let chartDom = document.getElementById('week');
       let myChart = echarts.init(chartDom);
       // 生成 x 轴数据
-      let xAxisData = this.numberOfDayDeliveryData.map(item => `${item.name} 吨位`);
+      let xAxisData = this.numberOfDayDeliveryData.map(item => `${item.name} `);
       let option;
 
       option = {

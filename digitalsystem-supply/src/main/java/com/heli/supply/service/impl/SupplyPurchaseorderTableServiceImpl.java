@@ -39,7 +39,7 @@ public class SupplyPurchaseorderTableServiceImpl implements ISupplyPurchaseorder
             List<SupplyPurchaseorderTable> SupplyPurchaseorderTables = ExcelUtils.parseExcel2SupplyPurchaseorderTable(excelFile);
 
             int i = 0;
-
+            supplyPurchaseorderTableMapper.deleteAll();
             while (i < SupplyPurchaseorderTables.size()){
 //                supplyPurchaseorderTable = SupplyPurchaseorderTables.get(i);
 //                insertSupplyPurchaseorderTable(supplyPurchaseorderTable);

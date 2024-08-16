@@ -136,70 +136,123 @@
       <el-table-column label="项目类型" align="center" prop="projectType" width="140" />
       <el-table-column label="负责人" align="center" prop="projectLeader" />
       <el-table-column label="参与人" align="center" prop="projectParticipants" width="160" />
+      <el-table-column label="项目完成率(%)" align="center" prop="completionRate" width="120">
+        <template slot-scope="scope">
+          <span>{{ formatNumberOne(scope.row.completionRate) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="项目立项" align="center" prop="establishmentState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.establishmentState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.establishmentState }}
+          <span v-if="scope.row.establishmentState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.establishmentState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="方案设计" align="center" prop="designPlanState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.designPlanState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.designPlanState }}
+          <span v-if="scope.row.designPlanState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.designPlanState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="图纸设计" align="center" prop="drawingDesignState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.drawingDesignState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.drawingDesignState }}
+          <span v-if="scope.row.drawingDesignState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.drawingDesignState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="样机试制" align="center" prop="prototypeProductionState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.prototypeProductionState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.prototypeProductionState }}
+          <span v-if="scope.row.prototypeProductionState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.prototypeProductionState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="样机试验" align="center" prop="prototypeTestState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.prototypeTestState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.prototypeTestState }}
+          <span v-if="scope.row.prototypeTestState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.prototypeTestState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="样机评审" align="center" prop="prototypeReviewState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.prototypeReviewState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.prototypeReviewState }}
+          <span v-if="scope.row.prototypeReviewState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.prototypeReviewState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="小批量上市" align="center" prop="pilotReleaseState" width="100">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.pilotReleaseState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.pilotReleaseState }}
+          <span v-if="scope.row.pilotReleaseState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.pilotReleaseState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
       <el-table-column label="批量上市" align="center" prop="massReleaseState">
         <template slot-scope="scope">
-          <span :style="{ color: scope.row.massReleaseState === '进行中' ? 'blue' : 'green' }">
-            {{ scope.row.massReleaseState }}
+          <span v-if="scope.row.massReleaseState === '进行中'" class="large-symbol" style="color: green;">
+            ○
+          </span>
+          <span v-else-if="scope.row.massReleaseState === '完成'" style="color: black;">
+            ✔
+          </span>
+          <span v-else style="color: red;">
+            —
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="项目完成率(%)" align="center" prop="completionRate" width="120" />
-      <el-table-column label="项目是否完成" align="center" prop="isCompleted">
+
+      <!-- <el-table-column label="项目是否完成" align="center" prop="isCompleted">
         <template slot-scope="scope">
           <span :style="{ color: scope.row.isCompleted === 1 ? 'green' : 'blue' }">{{ scope.row.isCompleted === 1 ?
       '完成'
       : '未完成' }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="备注" align="center" prop="remarks" width="260" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -234,63 +287,72 @@
         <el-form-item label="参与人" prop="projectParticipants">
           <el-input v-model="form.projectParticipants" placeholder="请输入参与人" />
         </el-form-item>
+        <el-form-item label="项目完成率" prop="completionRate">
+          <el-input v-model="form.completionRate" placeholder="请输入项目完成率" />
+        </el-form-item>
         <el-form-item label="项目立项" prop="establishmentState">
           <el-select v-model="form.establishmentState" placeholder="请选择项目立项">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="方案设计" prop="designPlanState">
           <el-select v-model="form.designPlanState" placeholder="请选择方案设计">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="图纸设计" prop="drawingDesignState">
           <el-select v-model="form.drawingDesignState" placeholder="请选择图纸设计">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="样机试制" prop="prototypeProductionState">
           <el-select v-model="form.prototypeProductionState" placeholder="请选择样机试制">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="样机试验" prop="prototypeTestState">
           <el-select v-model="form.prototypeTestState" placeholder="请选择样机试验">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="样机评审" prop="prototypeReviewState">
           <el-select v-model="form.prototypeReviewState" placeholder="请选择样机评审">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="小批量上市" prop="pilotReleaseState">
           <el-select v-model="form.pilotReleaseState" placeholder="请选择小批量上市">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="批量上市" prop="massReleaseState">
           <el-select v-model="form.massReleaseState" placeholder="请选择批量上市">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未开始" value="未开始"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="项目完成率" prop="completionRate">
-          <el-input v-model="form.completionRate" placeholder="请输入项目完成率" />
-        </el-form-item>
-        <el-form-item label="项目是否完成" prop="isCompleted">
+
+        <!-- <el-form-item label="项目是否完成" prop="isCompleted">
           <el-select v-model="form.isCompleted" placeholder="请选择项目是否完成">
             <el-option label="完成" value="完成"></el-option>
             <el-option label="未完成" value="未完成"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="form.remarks" type="textarea" placeholder="请输入备注" />
         </el-form-item>
@@ -468,8 +530,16 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
+    formatNumberOne(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+    },
     handleDownload() {
-      const url = "/digital_operations_management_system/file/产品开发项目样表.xlsx"
+      const url = "/profile/excel_templates/产品开发项目样表.xlsx"
       handleTrueDownload(url);
     },
     /** 查询技术-项目计划完成统计列表 */
@@ -671,3 +741,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.large-symbol {
+  font-size: 2em;
+  /* 调整字体大小 */
+}
+</style>

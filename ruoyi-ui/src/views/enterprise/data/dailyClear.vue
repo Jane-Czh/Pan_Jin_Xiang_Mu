@@ -44,7 +44,7 @@
       <el-table-column label="成品检验业务不及时率(%)" align="center" prop="inspectionDelayRate" />
       <el-table-column label="销售发票过账不及时率(%)" align="center" prop="invoicePostingDelayRate" />
       <el-table-column label="客户未清账比例(%)" align="center" prop="unsettledAccountsRatio" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>

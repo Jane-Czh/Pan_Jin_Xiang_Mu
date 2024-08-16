@@ -137,7 +137,7 @@
 
 <script>
 import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill, updateList } from "@/api/quality/data";
-import { numValidator, numValidatorOnlyPositive, numValidatorPercentage } from '@/api/financial/numValidator.js';
+import { numValidator, numValidatorOnlyPositive, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
 export default {
   name: "HandFill",
   data() {
@@ -201,7 +201,7 @@ export default {
         quarterlyRank: [
           {
             required: true,
-            validator: numValidator,
+            validator: numValidatorNonZeroNature,
             trigger: "blur"
           }
         ],

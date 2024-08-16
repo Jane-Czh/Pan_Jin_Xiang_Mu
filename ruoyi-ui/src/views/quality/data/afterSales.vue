@@ -425,7 +425,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
-            this.isLoading = true;
+            this.isLoading = false;
           });
       }
     },

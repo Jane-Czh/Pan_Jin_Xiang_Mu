@@ -74,6 +74,30 @@ export function numValidatorEnableEmpty(rule, value, callback) {
   // }
 }
 
+//允许非空自然数
+export function numValidatorEnableEmptyNature(rule, value, callback) {
+  if (value && value !== null && value !== '') {
+    if (!/^\d+$/.test(value)) {
+      callback(new Error('请输入自然数'));
+    } else {
+      const numValue = parseFloat(value);
+      // 验证是否为有效数字
+      // if (isNaN(numValue)) {
+      //   callback(new Error('请输入有效的数字'));
+      if (numValue < -999999999 || numValue > 9999999999) {
+        // 验证是否在数据范围内
+        callback(new Error('数据长度过大!'));
+      } else {
+        // 如果所有验证都通过，则调用callback无参数
+        callback();
+      }
+    }
+  } else {
+    callback();
+  }
+  // }
+}
+
 
 //只允许自然数
 export function numValidatorOnlyNature(rule, value, callback) {

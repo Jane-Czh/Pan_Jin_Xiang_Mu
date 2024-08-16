@@ -817,13 +817,13 @@ export default {
         for (let i = 0; i <= 100; i += 10) {
           await new Promise(resolve => setTimeout(resolve, 500)); // 模拟上传进度
           this.progress = i;
-        }
-        await uploadFile(formData); // 调用 uploadFile API
+        }await uploadFile(formData); // 调用 uploadFile API
 
         // 上传成功后的处理
         this.$message.success("上传成功"); // 提示上传成功
         setTimeout(() => {
           this.showDialog = false; // 关闭上传面板
+          this.progress = 0 ;
           // location.reload(); // 调用此方法刷新页面数据
         }, 1000); // 2000毫秒后关闭
         this.getList();

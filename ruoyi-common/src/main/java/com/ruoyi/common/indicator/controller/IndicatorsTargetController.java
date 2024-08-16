@@ -118,6 +118,7 @@ public class IndicatorsTargetController extends BaseController {
     @Log(title = "指标-目标值", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody IndicatorsTarget indicatorsTarget) {
+        log.info("指标-目标值: " + indicatorsTarget);
         //dept中存的是indicatorId
         String indicatorId = indicatorsTarget.getIndicatorDept();
         // string转int
@@ -127,8 +128,13 @@ public class IndicatorsTargetController extends BaseController {
         indicatorsTarget.setIndicatorName(indicatorsIndex.getIndicatorNameEn());
         indicatorsTarget.setIndicatorDept(indicatorsIndex.getIndicatorDeptEn());
         indicatorsTarget.setIndicatorNameCn(indicatorsIndex.getIndicatorNameCn());
+
+        IndicatorsTarget temp = new IndicatorsTarget();
+        temp.setNatureYear(indicatorsTarget.getNatureYear());
+        temp.setIndicatorName(indicatorsTarget.getIndicatorName());
+
         // 根据目标值年份和指标en名判断是否已存在
-        if (indicatorsTargetService.selectIndicatorsTargetList(indicatorsTarget).size() > 0) {
+        if (indicatorsTargetService.selectIndicatorsTargetList(temp).size() > 0) {
             return AjaxResult.error(indicatorsIndex.getIndicatorNameCn()+"当年目标值已设置");
         }
 

@@ -30,7 +30,7 @@ public class QualityInspectionRecord extends BaseEntity {
     /**
      * 质检月份
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
     @Excel(name = "质检月份", width = 30, dateFormat = "yyyy-MM-dd")
     private Date yearAndMonth;
 

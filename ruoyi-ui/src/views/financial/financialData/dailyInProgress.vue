@@ -186,7 +186,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.dates = selection.map(item => item.yearAndMonth)
+      this.dates = selection.map(item => item.dataTime)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -229,7 +229,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      const date = row.yearAndMonth || this.dates;
+      const date = row.dataTime || this.dates;
       this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData(ids);
       }).then(() => {

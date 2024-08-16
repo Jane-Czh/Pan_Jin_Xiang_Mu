@@ -114,7 +114,7 @@
 
 <script>
 import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
-import { numValidator } from '@/api/financial/numValidator.js';
+import { numValidator, numValidatorEnableEmpty } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
   dicts: ['indicators_financial'],
@@ -173,6 +173,18 @@ export default {
           {
             required: true,
             validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        targetLowerLimit: [
+          {
+            validator: numValidatorEnableEmpty,
+            trigger: "blur",
+          }
+        ],
+        targetUpperLimit: [
+          {
+            validator: numValidatorEnableEmpty,
             trigger: "blur",
           }
         ],

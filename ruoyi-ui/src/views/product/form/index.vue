@@ -413,6 +413,12 @@ export default {
           { required: true, message: '请输入性别', trigger: 'blur' },
           { validator: validateGender, trigger: 'blur' }
         ],
+        firstTimeClockingInAtWork: [
+          { required: true, message: '请输入首次上班打卡时间', trigger: 'blur' }
+        ],
+        firstTimeClockingInAfterWork: [
+          { required: true, message: '请输入首次下班打卡时间', trigger: 'blur' }
+        ]
       },
       //新增参数
       showDialog: false,

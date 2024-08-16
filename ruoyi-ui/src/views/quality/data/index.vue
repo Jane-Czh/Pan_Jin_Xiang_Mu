@@ -201,7 +201,7 @@ export default {
         quarterlyRank: [
           {
             required: true,
-            validator: numValidator,
+            validator: numValidatorOnlyPositive,
             trigger: "blur"
           }
         ],

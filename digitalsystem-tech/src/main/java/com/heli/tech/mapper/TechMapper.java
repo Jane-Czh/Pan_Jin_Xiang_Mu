@@ -120,4 +120,13 @@ public interface TechMapper {
     boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
 
     boolean checkDataExist();
+
+    boolean checkCompletionIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+
+    Integer selectCompletionDataNumByYear(@Param("yearAndMonth") Date yearAndMonth);
+
+    Tech selectTechByDate(@Param("yearAndMonth") Date date);
+
+    Date selectMaxMonth();
+    Date selectMinMonth();
 }

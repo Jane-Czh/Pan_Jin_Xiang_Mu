@@ -4,36 +4,54 @@
              label-width="68px">
 
       <!-- 部门 进行搜索  -->
-      <el-form-item label="主责部门" prop="mainResponsibleDepartment">
+      <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
         <el-select
           v-model="queryParams.mainResponsibleDepartment"
           placeholder="请选择主责部门"
           clearable
+          @change="handleDepartmentChange"
         >
           <el-option
             v-for="item in departments"
             :key="item"
             :label="item"
             :value="item"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="业务模块" prop="businesses">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.businesses"-->
-<!--          placeholder="请输入业务模块"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="细分业务" prop="subBusinesses">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.subBusinesses"-->
-<!--          placeholder="请输入细分业务"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+      <el-form-item label="业务模块" prop="businesses">
+        <el-select
+          v-model="queryParams.businesses"
+          placeholder="请选择业务模块"
+          clearable
+          :disabled="!queryParams.mainResponsibleDepartment"
+          @change="handleModuleChange"
+        >
+          <el-option
+            v-for="item in modules"
+            :key="item.bmId"
+            :label="item.moduleName"
+            :value="item.moduleName"
+          />
+        </el-select>
+      </el-form-item>
+      <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+      <el-form-item label="细分业务" prop="subBusinesses">
+        <el-select
+          v-model="queryParams.subBusinesses"
+          placeholder="请选择细分业务"
+          clearable
+          :disabled="!queryParams.businesses"
+        >
+          <el-option
+            v-for="item in subBusinesses"
+            :key="item.subbId"
+            :label="item.subBusinessesName"
+            :value="item.subBusinessesName"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="专业分类" prop="classificationOfSpecialties">
         <el-select
           v-model="queryParams.classificationOfSpecialties"
@@ -402,7 +420,7 @@
             </el-form-item>
           </el-col>
           <el-col :span='12'>
-            <el-form-item label="主责部门" prop="mainResponsibleDepartment" required="true">
+            <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
               <el-select
                 v-model="form.mainResponsibleDepartment"
                 placeholder="请选择主责部门"
@@ -603,7 +621,7 @@
             </el-form-item>
           </el-col>
           <el-col :span='12'>
-            <el-form-item label="主责部门" prop="mainResponsibleDepartment" required="true">
+            <el-form-item label="主责部门" prop="mainResponsibleDepartment">
               <el-select
                 v-model="form.mainResponsibleDepartment"
                 placeholder="请选择主责部门"
@@ -764,9 +782,9 @@
   import mammoth from 'mammoth';
   import {listDept02} from "../../../api/file/filemanagement";
   //业务模块api，
-  import { listModules } from "@/api/function/modules";
+  import {listModules, listModuless} from "@/api/function/modules";
   //细分业务api
-  import { listBusinesses } from "@/api/function/businesses";
+  import {listBusinesses, listBusinessess} from "@/api/function/businesses";
   //导出总台账excel功能
   import * as XLSX from "xlsx";
   import { saveAs } from "file-saver";
@@ -1932,7 +1950,7 @@
         this.modules = []; // 清空之前的模块
         if (department) {
           try {
-            await listModules(this.moduleQueryParams).then((response) => {
+            await listModuless(this.moduleQueryParams).then((response) => {
               this.modulesList = response.rows;
             });
 
@@ -1954,12 +1972,13 @@
 
       //通过 业务模块内容 限制选择: 细分业务内容
       async handleModuleChange(module) {
+        console.log("module===", module);
         this.formData.subBusinesses = ""; // 重置细分业务选择
         this.subBusinesses = []; // 清空之前的细分业务
         if (module) {
           try {
             // 获取所有细分业务
-            await listBusinesses(this.xifenQueryParams).then((response) => {
+            await listBusinessess(this.xifenQueryParams).then((response) => {
               this.subBusinessesList = response.rows;
             });
 
@@ -2133,6 +2152,7 @@
       /** 查询部门列表 */
       getDeptList() {
         listDept02().then((response) => {
+          console.log("response======>",response);
           // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
           const filteredData = response.data.filter(
             (department) =>
@@ -2147,6 +2167,7 @@
           this.departments = filteredData.map(
             (department) => department.deptName
           );
+          console.log("this.departments======>",this.departments);
         });
       },
     }

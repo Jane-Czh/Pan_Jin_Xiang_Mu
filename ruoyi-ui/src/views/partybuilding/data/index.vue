@@ -85,7 +85,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/partybuilding/data";
-import { numValidator, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { numValidator, partyValidator } from '@/api/financial/numValidator.js';
 
 export default {
   name: "Data",
@@ -132,17 +132,17 @@ export default {
         score: [
           {
             required: true,
-            validator: numValidator,
+            validator: partyValidator,
             trigger: "blur",
           }
         ],
-        ranking: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
+        // ranking: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
       }
     };
   },

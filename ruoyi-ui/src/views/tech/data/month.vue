@@ -26,9 +26,12 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['tech:monthly:remove']">删除</el-button>
       </el-col>
-
-
-
+      <el-col :span="1.5">
+        <el-button v-if="updateLoading" type="primary" plain icon="el-icon-loading" size="mini"
+          v-hasPermi="['tech:monthly:update']" disable>更新中</el-button>
+        <el-button v-else type="primary" plain icon="el-icon-refresh" size="mini" @click="handleUpdateListWithDate"
+          v-hasPermi="['tech:monthly:update']">更新</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -42,11 +45,31 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays" />
-      <el-table-column label="非标准单超时数" align="center" prop="nonStandardOvertimeNum" />
-      <el-table-column label="当月完成的计划" align="center" prop="completedmonthlyPlancounts" />
-      <el-table-column label="计划完成总数" align="center" prop="completedPlanCount" />
-      <el-table-column label="研发项目计划进度完成率(%)" align="center" prop="prdscheduleCompletionrate" />
+      <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.nonStandardAvgPreparationDays) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="非标准单超时数" align="center" prop="nonStandardOvertimeNum">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.nonStandardOvertimeNum) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="当月完成的计划" align="center" prop="completedmonthlyPlancounts">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.completedmonthlyPlancounts) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="计划完成总数" align="center" prop="completedPlanCount">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.completedPlanCount) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="研发项目计划进度完成率(%)" align="center" prop="prdscheduleCompletionrate">
+        <template slot-scope="scope">
+          <span>{{ formatNumberOne(scope.row.prdscheduleCompletionrate) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -94,8 +117,9 @@
 </template>
 
 <script>
-import { listData, getData, delData, addData, updateData } from "@/api/tech/data";
+import { listData, getData, delData, addData, updateData, updateList } from "@/api/tech/data";
 import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
+
 
 export default {
   name: "Data",
@@ -110,6 +134,7 @@ export default {
       // 非单个禁用
       showDialog: false,
       single: true,
+      updateLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -195,6 +220,14 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
+    formatNumberOne(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -305,7 +338,18 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-
+    handleUpdateListWithDate() {
+      this.updateLoading = true
+      const timeData = {
+        startTime: new Date(),
+        endTime: new Date(),
+      }
+      updateList(timeData).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("更新成功");
+      });
+      this.updateLoading = false
+    }
 
   }
 };

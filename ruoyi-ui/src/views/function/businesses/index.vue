@@ -128,20 +128,21 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="${comment}" align="center" prop="subbId" /> -->
+
       <el-table-column
-        label="细分业务名称"
-        align="center"
-        prop="subBusinessesName"
-      />
-      <el-table-column
-        label="上级部门"
+        label="主责部门"
         align="center"
         prop="parentDepartment"
       />
       <el-table-column
-        label="上级业务模块"
+        label="业务模块"
         align="center"
         prop="parentModule"
+      />
+      <el-table-column
+        label="细分业务名称"
+        align="center"
+        prop="subBusinessesName"
       />
       <!-- <el-table-column label="逻辑删除flag" align="center" prop="isDeleted" /> -->
       <el-table-column label="描述" align="center" prop="description" />

@@ -121,8 +121,16 @@
       <el-table-column label="参与人" align="center" prop="participants" width="100" />
       <el-table-column label="接单日期" align="center" prop="pickupDate" />
       <el-table-column label="转单日期" align="center" prop="transferDate" />
-      <el-table-column label="累计时长" align="center" prop="totalDurationHours" />
-      <el-table-column label="累计天数" align="center" prop="totalDurationDays" />
+      <el-table-column label="累计时长" align="center" prop="totalDurationHours">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.totalDurationHours) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="累计天数" align="center" prop="totalDurationDays">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.totalDurationDays) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="超时说明" align="center" prop="overtimeRemark" />
       <el-table-column label="备注" align="center" prop="comments" width="200" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -331,8 +339,16 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
+    formatNumberOne(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+    },
     handleDownload() {
-      const url = "/digital_operations_management_system/file/非标订单统计样表.xlsx"
+      const url = "/profile/excel_templates/非标订单统计样表.xlsx"
       handleTrueDownload(url);
     },
     /** 查询Tech_Non_Standard_Order列表 */

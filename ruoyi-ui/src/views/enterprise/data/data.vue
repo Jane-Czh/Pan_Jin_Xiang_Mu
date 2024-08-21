@@ -42,9 +42,9 @@
               <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
                 placeholder="请选择日期">
               </el-date-picker>
-              <el-form-item label="含其他奖金">
-                <el-switch v-model="form4.otherBonus"></el-switch>
-              </el-form-item>
+            </el-form-item>
+            <el-form-item label="含其他奖金">
+              <el-switch v-model="form4.otherBonus"></el-switch>
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
@@ -94,7 +94,7 @@
 
 
       <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['enterprise:monthly:edit']">修改</el-button>
@@ -170,7 +170,7 @@
 <script>
 import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData, calculation } from "@/api/enterprise/data";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorEnableEmpty, numValidator } from '@/api/financial/numValidator.js';
+import { numValidatorEnableEmpty, numValidator, numValidatorEnableEmptyNature, numValidatorOnlyNature } from '@/api/financial/numValidator.js';
 import moment from 'moment';
 export default {
   name: "Data",
@@ -235,13 +235,12 @@ export default {
             required: true, message: "日期不能为空", trigger: "blur"
           }
         ],
-        // employeesNumber: [
-        //   {
-        //     required: true,
-        //     validator: numValidator,
-        //     trigger: "blur",
-        //   }
-        // ],
+        employeesNumber: [
+          {
+            validator: numValidatorEnableEmptyNature,
+            trigger: "blur",
+          }
+        ],
         // employeesAvgMonthlyNumber: [
         //   {
         //     required: true,
@@ -267,7 +266,7 @@ export default {
         employeesNumberCurrentMonth: [
           {
             required: true,
-            validator: numValidator,
+            validator: numValidatorOnlyNature,
             trigger: "blur",
           }
         ],
@@ -295,7 +294,7 @@ export default {
         ],
         productionInternNumbers: [
           {
-            validator: numValidatorEnableEmpty,
+            validator: numValidatorEnableEmptyNature,
             trigger: "blur",
           }
         ],
@@ -332,7 +331,7 @@ export default {
   methods: {
 
     handleDownload() {
-      const url = "/digital_operations_management_system/file/工资表样表.xlsx";
+      const url = "/profile/excel_templates/工资表样表.xlsx";
       handleTrueDownload(url);
     },
 

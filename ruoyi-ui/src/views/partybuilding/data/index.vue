@@ -70,9 +70,9 @@
         <el-form-item label="党建分数" prop="score">
           <el-input v-model="form.score" placeholder="请输入党建分数" />
         </el-form-item>
-        <el-form-item label="党建排名" prop="ranking">
+        <!-- <el-form-item label="党建排名" prop="ranking">
           <el-input v-model="form.ranking" placeholder="请输入党建排名" />
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -85,7 +85,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/partybuilding/data";
-import { numValidator, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { numValidator, partyValidator } from '@/api/financial/numValidator.js';
 
 export default {
   name: "Data",
@@ -132,17 +132,17 @@ export default {
         score: [
           {
             required: true,
-            validator: numValidator,
+            validator: partyValidator,
             trigger: "blur",
           }
         ],
-        ranking: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
+        // ranking: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
       }
     };
   },

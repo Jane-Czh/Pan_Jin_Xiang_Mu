@@ -274,7 +274,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/digital_operations_management_system/file/整机质检记录样表.xlsx";
+      const url = "/profile/excel_templates/整机质检记录样表.xlsx";
       handleTrueDownload(url);
     },
     handleClose(done) {

@@ -50,7 +50,12 @@ public class ExcelUtilsPro {
 
             int count = 0;
             //5、产品型号
-            prouctionFunctionQualifiedRate.setModel(getStringCellValue(row.getCell(count++)));
+            if(getStringCellValue(row.getCell(count))!=null) {
+                prouctionFunctionQualifiedRate.setModel(getStringCellValue(row.getCell(count++)));
+            }
+            else{
+                continue;
+            }
 
             //生产数量
             prouctionFunctionQualifiedRate.setProductionNumber(getIntegerCellValue(row.getCell(count++)));

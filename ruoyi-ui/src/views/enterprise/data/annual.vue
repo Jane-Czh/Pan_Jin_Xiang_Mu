@@ -36,7 +36,7 @@
       <el-table-column label="工资总额年度值" align="center" prop="annualTotalSalary" />
       <el-table-column label="日清日结-股份目标值" align="center" prop="stockTargetValue" />
       <el-table-column label="日清日结-盘锦目标值" align="center" prop="panjinTargetValue" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['enterprise:annual:edit']">修改</el-button>

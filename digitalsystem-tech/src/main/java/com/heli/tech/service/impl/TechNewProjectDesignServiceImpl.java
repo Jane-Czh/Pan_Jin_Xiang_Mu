@@ -58,23 +58,24 @@ public class TechNewProjectDesignServiceImpl implements ITechNewProjectDesignSer
 
             log.info("读取文件: {} 成功", fileName);
 
-            log.info("开始统计，时间：" + yearAndMonth);
+//            log.info("开始统计，时间：" + yearAndMonth);
 
             Integer completeNum = techNewProjectDesignMapper.selectTechNewProjectDesignCount(yearAndMonth);
-            Integer completeNumLastMonth = techNewProjectDesignMapper.selectTechNewProjectDesignCount(DateUtils.getLastMonth(yearAndMonth));
-            log.info("统计结果：本月完成总数：" + completeNum);
-            log.info("统计结果：上月完成总数：" + completeNumLastMonth);
-            int temp = completeNum - completeNumLastMonth;
-
+//            Integer completeNumLastMonth = techNewProjectDesignMapper.selectTechNewProjectDesignCount(DateUtils.getLastMonth(yearAndMonth));
+//            log.info("统计结果：本月完成总数：" + completeNum);
+//            log.info("统计结果：上月完成总数：" + completeNumLastMonth);
+//            int temp = completeNum - completeNumLastMonth;
+//
             Tech tech = new Tech();
             tech.setYearAndMonth(yearAndMonth);
-            tech.setCompletedmonthlyPlancounts((long) temp);
+//            tech.setCompletedmonthlyPlancounts((long) temp);
             tech.setCompletedPlanCount(Long.valueOf(completeNum));
-
-//            int i = techService.insertOrUpdateTech(techService.calculateCompletionRate(tech));
-            Long annualNumber = techAnnualPlanCountService.selectTechAnnualNumberByYear(DateUtils.getYear(yearAndMonth));
-            tech.setPrdscheduleCompletionrate(BigDecimal.valueOf(completeNum* 100.0 / annualNumber ));
+//
+////            int i = techService.insertOrUpdateTech(techService.calculateCompletionRate(tech));
+//            Long annualNumber = techAnnualPlanCountService.selectTechAnnualNumberByYear(DateUtils.getYear(yearAndMonth));
+//            tech.setPrdscheduleCompletionrate(BigDecimal.valueOf(completeNum* 100.0 / annualNumber ));
             techService.insertOrUpdateTech(tech);
+            techService.calculateCompletionRate(yearAndMonth);
 
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
@@ -83,6 +84,8 @@ public class TechNewProjectDesignServiceImpl implements ITechNewProjectDesignSer
             return R.fail("读取文件失败,当前上传的文件为：" + fileName);
         }
     }
+
+
 
 
     /**

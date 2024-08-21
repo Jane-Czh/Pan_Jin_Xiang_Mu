@@ -167,7 +167,7 @@
           <span>{{ formatNumber(scope.row.turnoverRateReceivable) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['financial:balance:edit']">修改</el-button>
@@ -437,7 +437,7 @@ export default {
     },
 
     handleDownload() {
-      const url = "/digital_operations_management_system/file/资产负债表样表.xlsx";
+      const url = "/profile/excel_templates/资产负债表样表.xlsx";
       handleTrueDownload(url);
     },
 

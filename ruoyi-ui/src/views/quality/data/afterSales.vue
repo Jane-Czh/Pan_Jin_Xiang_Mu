@@ -261,7 +261,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/digital_operations_management_system/file/售后台账样表.xlsx";
+      const url = "/profile/excel_templates/售后台账样表.xlsx";
       handleTrueDownload(url);
     },
     handleClose(done) {
@@ -425,7 +425,7 @@ export default {
           .finally(() => {
             // 无论成功或失败，都关闭上传面板
             this.showDialog = false;
-            this.isLoading = true;
+            this.isLoading = false;
           });
       }
     },

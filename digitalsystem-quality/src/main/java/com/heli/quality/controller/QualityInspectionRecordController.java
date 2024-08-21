@@ -98,12 +98,13 @@ public class QualityInspectionRecordController extends BaseController {
     /**
      * 新增质检部分字段
      */
-//    @PreAuthorize("@ss.hasPermi('quality:inspection:add')")
-//    @Log(title = "质检部分字段", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestBody QualityInspectionRecord qualityInspectionRecord) {
-//        return toAjax(qualityInspectionRecordService.insertQualityInspectionRecord(qualityInspectionRecord));
-//    }
+    @PreAuthorize("@ss.hasPermi('quality:inspection:add')")
+    @Log(title = "质检部分字段", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody QualityInspectionRecord qualityInspectionRecord) {
+        log.info(String.valueOf(qualityInspectionRecord));
+        return toAjax(qualityInspectionRecordService.insertQualityInspectionRecord(qualityInspectionRecord));
+    }
 
     /**
      * 修改质检部分字段

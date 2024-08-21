@@ -116,3 +116,18 @@ export function getPrdScheduleCompletionRateData(data) {
     }
   })
 }
+
+
+
+// 更新[技术]指标填报状态
+export function updateList(data) {
+  return request({
+    url: '/tech/data/update',
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+

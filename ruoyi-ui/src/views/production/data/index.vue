@@ -250,7 +250,7 @@ export default {
   },
   methods: {
     handleDownload() {
-      const url = "/digital_operations_management_system/file/商品车台账样表.xlsx";
+      const url = "/profile/excel_templates/商品车台账样表.xlsx";
       handleTrueDownload(url);
     },
     handleClose(done) {

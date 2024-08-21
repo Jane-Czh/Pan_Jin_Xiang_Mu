@@ -416,7 +416,7 @@
 <script>
 import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
 import { listHistory } from "@/api/project/history";
-import { addRecycle } from "@/api/project/recycle";
+import { listRecycle, addRecycle } from "@/api/project/recycle";
 import { listRecode } from "@/api/project/recode";
 import { getUserProfile } from "@/api/system/user";
 import { getDept } from "@/api/system/project";
@@ -804,6 +804,16 @@ export default {
       });
     },
 
+    /** 查询项目信息回收列表 */
+    getRecycleList() {
+      this.loading = true;
+      listRecycle(this.queryParams).then(response => {
+        this.recycleList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+
     split(data, total){
       for (let i = 0; i < total; i += 4) {
           // 4表示每行4条
@@ -937,6 +947,7 @@ export default {
         return addRecycle(row);
       }).then(() => {
         this.getList();
+        // this.getRecycleList();
         this.$modal.msgSuccess("移除成功，已移入回收站");
       }).catch(() => {});
     },

@@ -725,9 +725,9 @@
       <el-table-column label="最高技术职称" align="center" prop="theHighestTechnicalTitl" />
       <el-table-column label="技术等级" align="center" prop="technicalLevel" />
       <el-table-column label="最高技术等级" align="center" prop="theHighestTechnicalLevel" />
-      <el-table-column label="职级" align="center" prop="rank" />
+      <el-table-column label="职级" align="center" prop="rankked" />
       <el-table-column label="职位ID" align="center" prop="positionId" />
-      <el-table-column label="职位" align="center" prop="position" />
+      <el-table-column label="职位" align="center" prop="positionno" />
       <el-table-column label="岗位名称" align="center" prop="jobbTitle" />
       <el-table-column label="薪等" align="center" prop="salaryGrade" />
       <el-table-column label="薪级" align="center" prop="salaryyGrade" />
@@ -940,13 +940,13 @@
         <el-form-item label="最高技术等级" prop="theHighestTechnicalLevel">
           <el-input v-model="form.theHighestTechnicalLevel" placeholder="请输入最高技术等级" />
         </el-form-item>
-        <el-form-item label="职级" prop="rank">
-          <el-input v-model="form.rank" placeholder="请输入职级" />
+        <el-form-item label="职级" prop="rankked">
+          <el-input v-model="form.rankked" placeholder="请输入职级" />
         </el-form-item>
         <el-form-item label="职位ID" prop="positionId">
           <el-input v-model="form.positionId" placeholder="请输入职位ID" />
         </el-form-item>
-        <el-form-item label="职位" prop="position">
+        <el-form-item label="职位" prop="positionno">
           <el-input v-model="form.position" placeholder="请输入职位" />
         </el-form-item>
         <el-form-item label="岗位名称" prop="jobbTitle">
@@ -1169,9 +1169,9 @@ export default {
         theHighestTechnicalTitl: null,
         technicalLevel: null,
         theHighestTechnicalLevel: null,
-        rank: null,
+        rankked: null,
         positionId: null,
-        position: null,
+        positionno: null,
         jobbTitle: null,
         salaryGrade: null,
         salaryyGrade: null,
@@ -1295,9 +1295,9 @@ export default {
         theHighestTechnicalTitl: null,
         technicalLevel: null,
         theHighestTechnicalLevel: null,
-        Rank: null,
+        Rankked: null,
         positionId: null,
-        Position: null,
+        Positionno: null,
         jobbTitle: null,
         salaryGrade: null,
         salaryyGrade: null,

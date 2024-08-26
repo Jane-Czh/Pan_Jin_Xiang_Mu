@@ -58,4 +58,6 @@ public interface ProductionFunctionStatisticsOfPlanCompletionStatusMapper
      * @return 结果
      */
     public int deleteProductionFunctionStatisticsOfPlanCompletionStatusByMpcIds(Long[] mpcIds);
+
+    void insertBatch(List<ProductionFunctionStatisticsOfPlanCompletionStatus> batchLedgers);
 }

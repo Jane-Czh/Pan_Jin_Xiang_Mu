@@ -93,6 +93,27 @@
         </trim>
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into Production_function_Statistics_of_plan_completion_status
+        (
+        MPC_ID, Car_Number, Acceptance_Date, Launch_Date, Waiting_time_for_production, Vehicle_Launch_Date,
+        Planned_Completion_Period, Production_Cycle, Precision_Completion_Period, Overdue_days,
+        Total_number_Waiting_time_for_production, Total_number_Completion_Period_Of_Door_Frame_Assembly,
+        Total_number_Trial_Completion_Period, Total_number_Special_Operations, Total_number_Precision_Completion_Period, Plan_rate
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.mpcId}, #{item.carNumber}, #{item.acceptanceDate}, #{item.launchDate}, #{item.waitingTimeForProduction},
+            #{item.vehicleLaunchDate}, #{item.plannedCompletionPeriod}, #{item.productionCycle}, #{item.precisionCompletionPeriod},
+            #{item.overdueDays}, #{item.totalNumberWaitingTimeForProduction}, #{item.totalNumberCompletionPeriodOfDoorFrameAssembly},
+            #{item.totalNumberTrialCompletionPeriod}, #{item.totalNumberSpecialOperations}, #{item.totalNumberPrecisionCompletionPeriod},
+            #{item.planRate}
+            )
+        </foreach>
+    </insert>
+
+
     <update id="updateProductionFunctionStatisticsOfPlanCompletionStatus" parameterType="ProductionFunctionStatisticsOfPlanCompletionStatus">
         update Production_function_Statistics_of_plan_completion_status
         <trim prefix="SET" suffixOverrides=",">

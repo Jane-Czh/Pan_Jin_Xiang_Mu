@@ -62,6 +62,7 @@
 
 <script>
   import * as echarts from "echarts";
+  console.log("echarts===>",echarts);
   import moment from "moment";
   import { getMainRevenueData } from "@/api/financial/data";
   import {getRegulationsImplementationRateByData, addRegulationsImplementationRate} from "@/api/file/regulationsImplementation";

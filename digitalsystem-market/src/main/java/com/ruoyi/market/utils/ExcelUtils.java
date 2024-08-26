@@ -180,24 +180,24 @@ public class ExcelUtils {
              * 将excel设置的字段，写入到数据库对应字段
              */
 
-            int count = 0;
+//            int count = 0;
 
 
-            count++;
+//            count++;
             //2、车号
-            marketInventoryCarDetail.setWagonNumber(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setWagonNumber(getStringCellValue(row.getCell(3)));
             //3、车型
-            marketInventoryCarDetail.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setVehicleModel(getStringCellValue(row.getCell(4)));
             //4、门架
-            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(5)));
             //5、属具
-            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(6)));
             //6、阀片数
-            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(7)));
             //7、配置
-            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(8)));
             //8、计划完工期
-            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(9)))));
 
             dataList.add(marketInventoryCarDetail);
         }

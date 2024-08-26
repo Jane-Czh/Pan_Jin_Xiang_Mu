@@ -2,7 +2,7 @@ package com.ruoyi.market.service;
 
 import java.util.List;
 import com.ruoyi.market.domain.MarketUnsoldCar;
-
+import com.ruoyi.market.domain.MarketInventoryCarDetail;
 /**
  * 统计库存车数量Service接口
  * 
@@ -18,6 +18,8 @@ public interface IMarketUnsoldCarService
      * @return 统计库存车数量
      */
     public MarketUnsoldCar selectMarketUnsoldCarByUcId(Long ucId);
+
+    public List<MarketInventoryCarDetail> selectMarketInventoryCarDetailByType(String type);
 
     /**
      * 查询统计库存车数量列表

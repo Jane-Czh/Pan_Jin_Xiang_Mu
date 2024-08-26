@@ -53,3 +53,10 @@ export function synchronization(){
 
   });
 }
+
+export function vehicleTypequery(type){
+  return request({
+    url: '/market/unsoldcar/vehicleTypequery/' + type,
+    method: 'get',
+  });
+}

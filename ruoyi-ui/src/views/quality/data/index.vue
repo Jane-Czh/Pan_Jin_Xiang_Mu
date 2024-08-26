@@ -137,7 +137,7 @@
 
 <script>
 import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill, updateList } from "@/api/quality/data";
-import { numValidator, numValidatorOnlyPositive, numValidatorPercentage } from '@/api/financial/numValidator.js';
+import { numValidator, numValidatorOnlyPositive, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
 export default {
   name: "HandFill",
   data() {
@@ -149,6 +149,7 @@ export default {
       // 选中数组
       ids: [],
       dates: [],
+      updateLoading: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -200,7 +201,7 @@ export default {
         quarterlyRank: [
           {
             required: true,
-            validator: numValidator,
+            validator: numValidatorNonZeroNature,
             trigger: "blur"
           }
         ],

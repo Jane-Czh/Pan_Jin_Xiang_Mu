@@ -50,7 +50,7 @@
         width="310" />
       <el-table-column label="跨月生产订单比例(%)" align="center" prop="crossMonthProductionOrders" width="160" />
       <el-table-column label="PM 维修订单完工不及时率(%)" align="center" prop="pmLatemaintenanceordercompletion" width="200" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['enterprise:management:edit']">修改</el-button>

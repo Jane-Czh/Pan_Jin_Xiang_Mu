@@ -12,6 +12,7 @@ import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
 import com.heli.financial.service.IFinancialInterestsTableService;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author loophong
  * @date 2024-03-29
  */
+@Slf4j
 @RestController
 @RequestMapping("/financial/data/fill")
 public class FinancialIndicatorsHandfillTableController extends BaseController {
@@ -141,8 +143,11 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     @PreAuthorize("@ss.hasPermi('financial:fill:list')")
     @GetMapping("/list")
     public TableDataInfo list(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+
+        log.info("list: " + financialIndicatorsHandfillTable);
         System.out.println("-------------test___________________");
         startPage();
+
         List<FinancialIndicatorsHandfillTable> list = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableList(financialIndicatorsHandfillTable);
         return getDataTable(list);
     }

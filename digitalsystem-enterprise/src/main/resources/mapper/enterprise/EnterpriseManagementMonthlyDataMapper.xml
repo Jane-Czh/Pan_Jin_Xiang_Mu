@@ -332,10 +332,11 @@
 
     <!-- 计算数据员工人数，存入数据库、数据存在则更新，不存在则插入 -->
     <insert id="insertOrUpdateEmployeesData" parameterType="EnterpriseManagementMonthlyData">
-        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Production_Intern_Numbers)
-        values (#{yearAndMonth},#{employeesNumber},#{productionInternNumbers})
+        insert into Enterprise_Management_Indicators_Monthly_Data(Year_And_Month,Employees_Number,Employees_Number_Current_Month,Production_Intern_Numbers)
+        values (#{yearAndMonth},#{employeesNumber},#{employeesNumberCurrentMonth},#{productionInternNumbers})
         on duplicate key update
         Employees_Number = values(Employees_Number),
+        Employees_Number_Current_Month = values(Employees_Number_Current_Month),
         Production_Intern_Numbers = values(Production_Intern_Numbers)
     </insert>
 
@@ -517,6 +518,11 @@
         <include refid="selectEnterpriseManagementMonthlyDataVo"/>
         where ES_ID = #{esId}
     </select>
+
+    <select id="selectAllEmployeeNumbers" resultType="java.lang.Integer">
+        select count(*) from Enterprise_Management_Personnel_roster
+    </select>
+
 
     <insert id="insertEnterpriseManagementMonthlyData" parameterType="EnterpriseManagementMonthlyData" useGeneratedKeys="true" keyProperty="esId">
         insert into Enterprise_Management_Indicators_Monthly_Data

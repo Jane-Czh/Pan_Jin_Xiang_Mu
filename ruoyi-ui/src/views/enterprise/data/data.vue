@@ -265,8 +265,8 @@ export default {
         ],
         employeesNumberCurrentMonth: [
           {
-            required: true,
-            validator: numValidatorOnlyNature,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur",
           }
         ],

@@ -1,31 +1,18 @@
 <template>
-
   <div class="app-container">
 
     <div class="operation">
 
       <span class="DataSelect" style="margin-right:10px">部门选择</span>
       <el-select v-model="queryParams.selectedOption" placeholder="请选择部门" size="small" @change="handleDepartmentChange">
-      <option disabled value="">请选择部门</option>
-      <el-option
-          v-for="option in departmentOptions"
-          :key="option.value"
-          :label="option.text"
-          :value="option.value">
+        <option disabled value="">请选择部门</option>
+        <el-option v-for="option in departmentOptions" :key="option.value" :label="option.text" :value="option.value">
         </el-option>
-    </el-select>
+      </el-select>
 
-    <span class="DataSelect" style="margin-right:10px">日期选择</span>
-    <el-date-picker
-        v-model="selectedDate"
-        type="daterange"
-        align="right"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="立项时间"
-        end-placeholder="结项时间"
-        :picker-options="pickerOptions"
-        size="small">
+      <span class="DataSelect" style="margin-right:10px">日期选择</span>
+      <el-date-picker v-model="selectedDate" type="daterange" align="right" unlink-panels range-separator="至"
+        start-placeholder="立项时间" end-placeholder="结项时间" :picker-options="pickerOptions" size="small">
       </el-date-picker>
 
     </div>
@@ -90,24 +77,12 @@
     </el-form> -->
 
     <div class="echarts-wrapper">
-      <div
-        class="echart"
-        ref="ProjectCategoriesProportion"
-        id="ProjectCategoriesProportion"
-        :style="{ width: '33.3%', height: '400px', display: 'inline-block' }"
-      ></div>
-      <div
-        class="echart"
-        ref="ProjectLevelDistribution"
-        id="ProjectLevelDistribution"
-        :style="{ width: '33.3%', height: '400px', display: 'inline-block' }"
-      ></div>
-      <div
-        class="echart"
-        ref="ProjectAverageSchedule"
-        id="ProjectAverageSchedule"
-        :style="{ width: '33.3%', height: '400px', display: 'inline-block' }"
-      ></div>
+      <div class="echart" ref="ProjectCategoriesProportion" id="ProjectCategoriesProportion"
+        :style="{ width: '33.3%', height: '400px', display: 'inline-block' }"></div>
+      <div class="echart" ref="ProjectLevelDistribution" id="ProjectLevelDistribution"
+        :style="{ width: '33.3%', height: '400px', display: 'inline-block' }"></div>
+      <div class="echart" ref="ProjectAverageSchedule" id="ProjectAverageSchedule"
+        :style="{ width: '33.3%', height: '400px', display: 'inline-block' }"></div>
     </div>
 
     <div class="charts-container">
@@ -182,7 +157,7 @@
         </template>
       </el-table-column>
     </el-table> -->
-    
+
 
 
 
@@ -268,8 +243,8 @@ export default {
       selectedTime: [],
       shouldUpdateChart: false, // 控制图表是否需要更新
 
-            //项目主责部门
-      departmentOptions:[
+      //项目主责部门
+      departmentOptions: [
         { value: '财务科', label: '财务科' },
         { value: '市场科', label: '市场科' },
         { value: '安环设备科', label: '安环设备科' },
@@ -283,7 +258,7 @@ export default {
         { value: '团委', label: '团委' }
       ],
       //项目等级
-      levelOptions:[
+      levelOptions: [
         { value: 'A级', label: 'A级' },
         { value: 'B级', label: 'B级' },
         { value: 'C级', label: 'C级' },
@@ -371,47 +346,47 @@ export default {
       // 使用 reduce 方法遍历数据列表，统计不同类别的数量
 
       this.DepartmentProjectStatisticsData = {
-          '财务科': 0,
-          '市场科': 0,
-          '安环设备科': 0,
-          '生产管理科': 0,
-          '供应科': 0,
-          '技术科': 0,
-          '企业管理科': 0,
-          '党群办公室': 0,
-          '质量科': 0,
-          '执纪监督室': 0,
-          '团委': 0
+        '财务科': 3,
+        '市场科': 2,
+        '安环设备科': 21,
+        '生产管理科': 7,
+        '供应科': 3,
+        '技术科': 8,
+        '企业管理科': 1,
+        '党群办公室': 0,
+        '质量科': 12,
+        '执纪监督室': 0,
+        '团委': 0
 
       };
 
       this.InfoList.forEach(item => {
-          if (item.hasOwnProperty('category') && (this.selectedOption === '' || item.department === this.selectedOption)) {
-            this.ProjectCategoriesProportionData[item.category] = (this.ProjectCategoriesProportionData[item.category] || 0) + 1;
-          }
-          if (item.hasOwnProperty('level') && (this.selectedOption === '' || item.department === this.selectedOption)) {
-            this.ProjectLevelDistributionData[item.level] = (this.ProjectLevelDistributionData[item.level] || 0) + 1;
-          }
-          if (item.hasOwnProperty('status') && (this.selectedOption === '' || item.department === this.selectedOption)) {
-            this.ProjectAverageScheduleData[item.status] = (this.ProjectAverageScheduleData[item.status] || 0) + 1;
-          }
+        if (item.hasOwnProperty('category') && (this.selectedOption === '' || item.department === this.selectedOption)) {
+          this.ProjectCategoriesProportionData[item.category] = (this.ProjectCategoriesProportionData[item.category] || 0) + 1;
+        }
+        if (item.hasOwnProperty('level') && (this.selectedOption === '' || item.department === this.selectedOption)) {
+          this.ProjectLevelDistributionData[item.level] = (this.ProjectLevelDistributionData[item.level] || 0) + 1;
+        }
+        if (item.hasOwnProperty('status') && (this.selectedOption === '' || item.department === this.selectedOption)) {
+          this.ProjectAverageScheduleData[item.status] = (this.ProjectAverageScheduleData[item.status] || 0) + 1;
+        }
 
-          if (!this.ProjectDevelopmentStatusData.hasOwnProperty(item.level)) {
-              this.ProjectDevelopmentStatusData[item.level] = [];
-          }
-          // 将数据存入对应级别的数组中
-          this.ProjectDevelopmentStatusData[item.level].push(item.progressAlloverProgress);
-            
+        if (!this.ProjectDevelopmentStatusData.hasOwnProperty(item.level)) {
+          this.ProjectDevelopmentStatusData[item.level] = [];
+        }
+        // 将数据存入对应级别的数组中
+        this.ProjectDevelopmentStatusData[item.level].push(item.progressAlloverProgress);
 
 
-          if (item.hasOwnProperty('department')) {
-            // 更新已出现的部门项目数量
-            if (this.DepartmentProjectStatisticsData.hasOwnProperty(item.department)) {
-                this.DepartmentProjectStatisticsData[item.department]++;
-            }
-          }
 
-        });
+        // if (item.hasOwnProperty('department')) {
+        //   // 更新已出现的部门项目数量
+        //   if (this.DepartmentProjectStatisticsData.hasOwnProperty(item.department)) {
+        //       this.DepartmentProjectStatisticsData[item.department]++;
+        //   }
+        // }
+
+      });
 
       // 判断数据是否全部为零
 
@@ -421,22 +396,22 @@ export default {
 
       // 当数据全部为零时，手动构造一个灰色的数据项
       if (this.isAllZeroProjectCategoriesProportion) {
-          this.ProjectCategoriesProportionData.push({
-              value: 1, // 给一个任意非零值
-              name: '无数据' // 用于显示的名称
-          });
+        this.ProjectCategoriesProportionData.push({
+          value: 1, // 给一个任意非零值
+          name: '无数据' // 用于显示的名称
+        });
       }
       if (this.isAllZeroProjectLevelDistribution) {
-          this.ProjectLevelDistributionData.push({
-              value: 1, // 给一个任意非零值
-              name: '无数据' // 用于显示的名称
-          });
+        this.ProjectLevelDistributionData.push({
+          value: 1, // 给一个任意非零值
+          name: '无数据' // 用于显示的名称
+        });
       }
       if (this.isAllZeroProjectAverageSchedule) {
-          this.ProjectAverageScheduleData.push({
-              value: 1, // 给一个任意非零值
-              name: '无数据' // 用于显示的名称
-          });
+        this.ProjectAverageScheduleData.push({
+          value: 1, // 给一个任意非零值
+          name: '无数据' // 用于显示的名称
+        });
       }
 
       // 初始化饼状图
@@ -450,11 +425,11 @@ export default {
     });
 
 
-    },
+  },
 
   methods: {
 
-    ProjectCategoriesProportionPieChart(){
+    ProjectCategoriesProportionPieChart() {
 
       // 如果数据全部为零，则直接显示一个灰色的饼图
       //重组数据格式
@@ -462,64 +437,99 @@ export default {
         return { value: this.ProjectCategoriesProportionData[key], name: key };
       });
       this.ProjectCategoriesProportionData = [];
-      const option = this.isAllZeroProjectCategoriesProportion ? {
+      const option = {
         title: {
-            text: '项目类别占比',
-            left: 'center'
-        },
-        series: [
-            {
-                type: 'pie',
-                radius: '50%',
-                itemStyle: {
-                    color: '#ccc' // 灰色
-                },
-                label: {
-                    show: false, // 不显示标签
-                },
-                emphasis: {
-                    label: {
-                        show: false // 不显示强调时的标签
-                    }
-                }
-            }
-        ]
-    } : {
-        title: {
-            text: '项目类别占比',
-            left: 'center'
+          text: '项目类别占比',
+          // subtext: 'Fake Data',
+          left: 'center'
         },
         tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          trigger: 'item'
         },
+        // legend: {
+        //   orient: 'vertical',
+        //   left: 'left'
+        // },
         series: [
-            {
-                name: '类别占比',
-                type: 'pie',
-                radius: '50%',
-                data: pieChartData,
-                label: {
-                    show: true, // 不显示标签
-                    formatter: '{b}: {d}%' // 显示名称和数值
-                },
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: '设备改善类' },
+              { value: 735, name: '安全环保类' },
+              { value: 580, name: '质量攻关类' },
+              { value: 484, name: '生产改善类' },
+              { value: 300, name: '工艺技改类' }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
             }
-            
+          }
         ]
-    };
+      };
+      // const option = this.isAllZeroProjectCategoriesProportion ? {
+      //   title: {
+      //     text: '项目类别占比',
+      //     left: 'center'
+      //   },
+      //   series: [
+      //     {
+      //       type: 'pie',
+      //       radius: '50%',
+      //       itemStyle: {
+      //         color: '#ccc' // 灰色
+      //       },
+      //       label: {
+      //         show: false, // 不显示标签
+      //       },
+      //       emphasis: {
+      //         label: {
+      //           show: false // 不显示强调时的标签
+      //         }
+      //       }
+      //     }
+      //   ]
+      // } : {
+      //   title: {
+      //     text: '项目类别占比',
+      //     left: 'center'
+      //   },
+      //   tooltip: {
+      //     trigger: 'item',
+      //     formatter: '{a} <br/>{b}: {c} ({d}%)'
+      //   },
+      //   series: [
+      //     {
+      //       name: '类别占比',
+      //       type: 'pie',
+      //       radius: '50%',
+      //       data: pieChartData,
+      //       label: {
+      //         show: true, // 不显示标签
+      //         formatter: '{b}: {d}%' // 显示名称和数值
+      //       },
+      //     }
 
-    this.isAllZeroProjectCategoriesProportion = false;
-    this.myChart1 = echarts.init(this.$refs.ProjectCategoriesProportion);// 图标初始化
-    this.myChart1.setOption(option);// 渲染页面
+      //   ]
+      // };
 
-    //随着屏幕大小调节图表
-    window.addEventListener("resize", () => {
-      this.myChart1.resize();
-    });
+      this.isAllZeroProjectCategoriesProportion = false;
+      this.myChart1 = echarts.init(this.$refs.ProjectCategoriesProportion);// 图标初始化
+      this.myChart1.setOption(option);// 渲染页面
+
+      //随着屏幕大小调节图表
+      window.addEventListener("resize", () => {
+        this.myChart1.resize();
+      });
 
     },
 
-    ProjectLevelDistributionPieChart(){
+    ProjectLevelDistributionPieChart() {
 
       // 如果数据全部为零，则直接显示一个灰色的饼图
       //重组数据格式
@@ -527,50 +537,83 @@ export default {
         return { value: this.ProjectLevelDistributionData[key], name: key };
       });
       this.ProjectLevelDistributionData = [];
-      const option = this.isAllZeroProjectLevelDistribution ? {
+      const option = {
         title: {
-            text: '项目等级分布',
-            left: 'center'
-        },
-        series: [
-            {
-                type: 'pie',
-                radius: '50%',
-                itemStyle: {
-                    color: '#ccc' // 灰色
-                },
-                label: {
-                    show: false // 不显示标签
-                },
-                emphasis: {
-                    label: {
-                        show: false // 不显示强调时的标签
-                    }
-                }
-            }
-        ]
-      } : {
-        title: {
-            text: '项目等级分布',
-            left: 'center'
+          text: '项目等级分布',
+          // subtext: 'Fake Data',
+          left: 'center'
         },
         tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          trigger: 'item'
         },
+        // legend: {
+        //   orient: 'vertical',
+        //   left: 'left'
+        // },
         series: [
-            {
-                name: '等级分布',
-                type: 'pie',
-                radius: '50%',
-                data: pieChartData,
-                label: {
-                    show: true, // 不显示标签
-                    formatter: '{b}: {d}%' // 显示名称和数值
-                },
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: 'A级' },
+              { value: 735, name: 'B级' },
+              { value: 580, name: 'C级' },
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
             }
+          }
         ]
       };
+      // const option = this.isAllZeroProjectLevelDistribution ? {
+      //   title: {
+      //     text: '项目等级分布',
+      //     left: 'center'
+      //   },
+      //   series: [
+      //     {
+      //       type: 'pie',
+      //       radius: '50%',
+      //       itemStyle: {
+      //         color: '#ccc' // 灰色
+      //       },
+      //       label: {
+      //         show: false // 不显示标签
+      //       },
+      //       emphasis: {
+      //         label: {
+      //           show: false // 不显示强调时的标签
+      //         }
+      //       }
+      //     }
+      //   ]
+      // } : {
+      //   title: {
+      //     text: '项目等级分布',
+      //     left: 'center'
+      //   },
+      //   tooltip: {
+      //     trigger: 'item',
+      //     formatter: '{a} <br/>{b}: {c} ({d}%)'
+      //   },
+      //   series: [
+      //     {
+      //       name: '等级分布',
+      //       type: 'pie',
+      //       radius: '50%',
+      //       data: pieChartData,
+      //       label: {
+      //         show: true, // 不显示标签
+      //         formatter: '{b}: {d}%' // 显示名称和数值
+      //       },
+      //     }
+      //   ]
+      // };
 
       this.isAllZeroProjectLevelDistribution = false;
       this.myChart2 = echarts.init(this.$refs.ProjectLevelDistribution);// 图标初始化
@@ -583,7 +626,7 @@ export default {
 
     },
 
-    ProjectAverageSchedulePieChart(){
+    ProjectAverageSchedulePieChart() {
 
       // 如果数据全部为零，则直接显示一个灰色的饼图
       //重组数据格式
@@ -591,50 +634,83 @@ export default {
         return { value: this.ProjectAverageScheduleData[key], name: key };
       });
       this.ProjectAverageScheduleData = [];
-      const option = this.isAllZeroProjectAverageSchedule ? {
+
+      const option = {
         title: {
-            text: '开展状态占比',
-            left: 'center'
-        },
-        series: [
-            {
-                type: 'pie',
-                radius: '50%',
-                itemStyle: {
-                    color: '#ccc' // 灰色
-                },
-                label: {
-                    show: false // 不显示标签
-                },
-                emphasis: {
-                    label: {
-                        show: false // 不显示强调时的标签
-                    }
-                }
-            }
-        ]
-      } : {
-        title: {
-            text: '开展状态占比',
-            left: 'center'
+          text: '开展状态占比',
+          // subtext: 'Fake Data',
+          left: 'center'
         },
         tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          trigger: 'item'
         },
+        // legend: {
+        //   orient: 'vertical',
+        //   left: 'left'
+        // },
         series: [
-            {
-                name: '开展状态占比',
-                type: 'pie',
-                radius: '50%',
-                data: pieChartData,
-                label: {
-                    show: true, // 不显示标签
-                    formatter: '{b}: {d}%' // 显示名称和数值
-                },
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: '正常 100%' },
+
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
             }
+          }
         ]
       };
+      // const option = this.isAllZeroProjectAverageSchedule ? {
+      //   title: {
+      //     text: '开展状态占比',
+      //     left: 'center'
+      //   },
+      //   series: [
+      //     {
+      //       type: 'pie',
+      //       radius: '50%',
+      //       itemStyle: {
+      //         color: '#ccc' // 灰色
+      //       },
+      //       label: {
+      //         show: false // 不显示标签
+      //       },
+      //       emphasis: {
+      //         label: {
+      //           show: false // 不显示强调时的标签
+      //         }
+      //       }
+      //     }
+      //   ]
+      // } : {
+      //   title: {
+      //     text: '开展状态占比',
+      //     left: 'center'
+      //   },
+      //   tooltip: {
+      //     trigger: 'item',
+      //     formatter: '{a} <br/>{b}: {c} ({d}%)'
+      //   },
+      //   series: [
+      //     {
+      //       name: '开展状态占比',
+      //       type: 'pie',
+      //       radius: '50%',
+      //       data: pieChartData,
+      //       label: {
+      //         show: true, // 不显示标签
+      //         formatter: '{b}: {d}%' // 显示名称和数值
+      //       },
+      //     }
+      //   ]
+      // };
 
       this.myChart3 = echarts.init(this.$refs.ProjectAverageSchedule);// 图标初始化
       this.myChart3.setOption(option);// 渲染页面
@@ -646,7 +722,7 @@ export default {
 
     },
 
-    ProjectDevelopmentStatusChart(){
+    ProjectDevelopmentStatusChart() {
       const ChartData = Object.keys(this.ProjectDevelopmentStatusData).map(key => {
         return { value: this.ProjectDevelopmentStatusData[key], name: key };
       });
@@ -658,44 +734,51 @@ export default {
         total += sum; // 将每个对象的值累加到总和中
         const averageValue = total / item.value.length; // 计算平均值
         item.value = averageValue; // 直接将平均值赋值给 item.value
-    });
+      });
 
-    const option = {
-      title: {
-        text: '平均进度统计',
-        left: 'center'
-      },
-      xAxis: {
-        type: 'category',
-        data: ChartData.map(item => item.name)
-      },
-      yAxis: {
-        type: 'value'
-      },
-      tooltip: {
-        trigger: 'axis', // 设置触发类型为坐标轴
-        formatter: '{b}: {c}', // 设置提示框内容格式，{b} 表示类目轴的值，{c} 表示数据值
-        axisPointer: { // 设置坐标轴指示器
-          type: 'shadow' // 阴影指示器
-        }
-      },
-      series: [{
-        name: '得分',
-        data: ChartData.map(item => item.value),
-        type: 'bar'
-      }]
-    };
+      const option = {
+        title: {
+          text: '平均进度统计',
+          left: 'center'
+        },
+        xAxis: {
+          type: 'category',
+          // data: ChartData.map(item => item.name)
+          data: ['A', 'B', 'C']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        tooltip: {
+          trigger: 'axis', // 设置触发类型为坐标轴
+          formatter: '{b}: {c}', // 设置提示框内容格式，{b} 表示类目轴的值，{c} 表示数据值
+          axisPointer: { // 设置坐标轴指示器
+            type: 'shadow' // 阴影指示器
+          }
+        },
+        series: [{
+          name: '得分',
+          // data: ChartData.map(item => item.value),
+          data: [
+            { value: 48, name: "A" },
+            { value: 73, name: 'B' },
+            { value: 58, name: 'C' },
+
+          ],
+          type: 'bar'
+        }]
+      };
 
 
-    this.chart4 = echarts.init(this.$refs.ProjectDevelopmentStatus);
-    this.chart4.setOption(option);
+      this.chart4 = echarts.init(this.$refs.ProjectDevelopmentStatus);
+      this.chart4.setOption(option);
 
       window.addEventListener("resize", () => {
         this.chart4.resize();
       });
     },
 
-    DepartmentProjectStatisticsChart(){
+    DepartmentProjectStatisticsChart() {
       const ChartData = Object.keys(this.DepartmentProjectStatisticsData).map(key => {
         return { value: this.DepartmentProjectStatisticsData[key], name: key };
       });
@@ -709,13 +792,13 @@ export default {
           type: 'category',
           data: ChartData.map(item => item.name),
           axisLabel: {
-        interval: 0, // 默认为0，表示显示所有标签。可以设置为1，表示隔一个标签显示一个，或者设置其他值。
-        rotate: 45, // 标签旋转的角度，根据需要调整
-        margin: 10, // 标签与横轴之间的距离
-        // formatter: function(value) {
-        //   return value.substring(0, 10) + '...'; // 截取前10个字符，根据需要调整
-        // }
-      }
+            interval: 0, // 默认为0，表示显示所有标签。可以设置为1，表示隔一个标签显示一个，或者设置其他值。
+            rotate: 45, // 标签旋转的角度，根据需要调整
+            margin: 10, // 标签与横轴之间的距离
+            // formatter: function(value) {
+            //   return value.substring(0, 10) + '...'; // 截取前10个字符，根据需要调整
+            // }
+          }
         },
         yAxis: {
           type: 'value'
@@ -738,9 +821,9 @@ export default {
       this.chart5 = echarts.init(this.$refs.DepartmentProjectStatistics);
       this.chart5.setOption(option);
 
-        window.addEventListener("resize", () => {
-          this.chart5.resize();
-        });
+      window.addEventListener("resize", () => {
+        this.chart5.resize();
+      });
     },
 
     /** 查询项目基本信息列表 */
@@ -803,7 +886,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.projectId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -845,12 +928,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const projectIds = row.projectId || this.ids;
-      this.$modal.confirm('是否确认删除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除项目基本信息编号为"' + projectIds + '"的数据项？').then(function () {
         return delInfo(projectIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => { });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -864,20 +947,20 @@ export default {
       this.selectedOption = value;
 
       listInfo(this.queryParams).then(response => {
-      // 将后端返回的数据赋值给 reportList
-      this.InfoList = response.rows;
-      this.total = response.total;
+        // 将后端返回的数据赋值给 reportList
+        this.InfoList = response.rows;
+        this.total = response.total;
 
-      // const filteredInfoList = this.InfoList.filter(item => {
-      //   return this.selectedTime.length > 0 &&
-      //         item.startDate >= this.selectedTime[0] &&
-      //         item.plannedCompletionTime <= this.selectedTime[1];
-      // });
+        // const filteredInfoList = this.InfoList.filter(item => {
+        //   return this.selectedTime.length > 0 &&
+        //         item.startDate >= this.selectedTime[0] &&
+        //         item.plannedCompletionTime <= this.selectedTime[1];
+        // });
 
-      // this.InfoList = filteredInfoList; // 更新 InfoList 数据
+        // this.InfoList = filteredInfoList; // 更新 InfoList 数据
 
 
-      this.InfoList.forEach(item => {
+        this.InfoList.forEach(item => {
           if (item.hasOwnProperty('category') && (this.selectedOption === '' || item.department === this.selectedOption)) {
             this.ProjectCategoriesProportionData[item.category] = (this.ProjectCategoriesProportionData[item.category] || 0) + 1;
           }
@@ -889,191 +972,234 @@ export default {
           }
         });
 
-      // this.InfoList = [];
-      // 判断数据是否全部为零
+        // this.InfoList = [];
+        // 判断数据是否全部为零
 
-      this.isAllZeroProjectCategoriesProportion = Object.values(this.ProjectCategoriesProportionData).every(count => count === 0);
-      this.isAllZeroProjectLevelDistribution = Object.values(this.ProjectLevelDistributionData).every(count => count === 0);
-      this.isAllZeroProjectAverageSchedule = Object.values(this.ProjectAverageScheduleData).every(count => count === 0);
+        this.isAllZeroProjectCategoriesProportion = Object.values(this.ProjectCategoriesProportionData).every(count => count === 0);
+        this.isAllZeroProjectLevelDistribution = Object.values(this.ProjectLevelDistributionData).every(count => count === 0);
+        this.isAllZeroProjectAverageSchedule = Object.values(this.ProjectAverageScheduleData).every(count => count === 0);
 
-      // 当数据全部为零时，手动构造一个灰色的数据项
-      if (this.isAllZeroProjectCategoriesProportion) {
+        // 当数据全部为零时，手动构造一个灰色的数据项
+        if (this.isAllZeroProjectCategoriesProportion) {
           this.ProjectCategoriesProportionData.push({
-              value: 1, // 给一个任意非零值
-              name: '无数据' // 用于显示的名称
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
           });
-      }
-      if (this.isAllZeroProjectLevelDistribution) {
+        }
+        if (this.isAllZeroProjectLevelDistribution) {
           this.ProjectLevelDistributionData.push({
-              value: 1, // 给一个任意非零值
-              name: '无数据' // 用于显示的名称
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
           });
-      }
-      if (this.isAllZeroProjectAverageSchedule) {
+        }
+        if (this.isAllZeroProjectAverageSchedule) {
           this.ProjectAverageScheduleData.push({
-              value: 1, // 给一个任意非零值
-              name: '无数据' // 用于显示的名称
+            value: 1, // 给一个任意非零值
+            name: '无数据' // 用于显示的名称
           });
-      }
+        }
 
-      //拼装新数据
-      const pieChartData1 = Object.keys(this.ProjectCategoriesProportionData).map(key => {
-        return { value: this.ProjectCategoriesProportionData[key], name: key };
-      });
-      this.ProjectCategoriesProportionData = [];
-      const option1 = this.isAllZeroProjectCategoriesProportion ? {
-        title: {
-            text: '项目类别占比',
-            left: 'center'
-        },
-        series: [
-            {
-                type: 'pie',
-                radius: '50%',
-                itemStyle: {
-                    color: '#ccc' // 灰色
-                },
-                label: {
-                    show: false, // 不显示标签
-                },
-                emphasis: {
-                    label: {
-                        show: false // 不显示强调时的标签
-                    }
-                }
-            }
-        ]
-      } : {
+        //拼装新数据
+        const pieChartData1 = Object.keys(this.ProjectCategoriesProportionData).map(key => {
+          return { value: this.ProjectCategoriesProportionData[key], name: key };
+        });
+        this.ProjectCategoriesProportionData = [];
+        option1 = {
           title: {
-              text: '项目类别占比',
-              left: 'center'
+            text: 'Referer of a Website',
+            subtext: 'Fake Data',
+            left: 'center'
           },
           tooltip: {
-              trigger: 'item',
-              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            trigger: 'item'
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'left'
           },
           series: [
-              {
-                  name: '类别占比',
-                  type: 'pie',
-                  radius: '50%',
-                  data: pieChartData1,
-                  label: {
-                      show: true, // 不显示标签
-                      formatter: '{b}: {d}%' // 显示名称和数值
-                  },
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: '50%',
+              data: [
+                { value: 1048, name: 'Search Engine' },
+                { value: 735, name: 'Direct' },
+                { value: 580, name: 'Email' },
+                { value: 484, name: 'Union Ads' },
+                { value: 300, name: 'Video Ads' }
+              ],
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
               }
-              
+            }
           ]
-      };
+        };
+        // const option1 = this.isAllZeroProjectCategoriesProportion ? {
+        //   title: {
+        //     text: '项目类别占比',
+        //     left: 'center'
+        //   },
+        //   series: [
+        //     {
+        //       type: 'pie',
+        //       radius: '50%',
+        //       itemStyle: {
+        //         color: '#ccc' // 灰色
+        //       },
+        //       label: {
+        //         show: false, // 不显示标签
+        //       },
+        //       data: [
+        //         { value: 1048, name: 'Search Engine' },
+        //         { value: 735, name: 'Direct' },
+        //         { value: 580, name: 'Email' },
+        //         { value: 484, name: 'Union Ads' },
+        //         { value: 300, name: 'Video Ads' }
+        //       ],
+        //       emphasis: {
+        //         label: {
+        //           show: false // 不显示强调时的标签
+        //         }
+        //       }
+        //     }
+        //   ]
+        // } ;
+        // : {
+        //   // title: {
+        //   //   text: '项目类别占比',
+        //   //   left: 'center'
+        //   // },
+        //   tooltip: {
+        //     trigger: 'item',
+        //     formatter: '{a} <br/>{b}: {c} ({d}%)'
+        //   },
+        //   series: [
+        //     {
+        //       name: '类别占比',
+        //       type: 'pie',
+        //       radius: '50%',
+        //       // data: pieChartData1,
+        //       label: {
+        //         show: true, // 不显示标签
+        //         formatter: '{b}: {d}%' // 显示名称和数值
+        //       },
+        //     }
 
-    const pieChartDat2 = Object.keys(this.ProjectLevelDistributionData).map(key => {
-        return { value: this.ProjectLevelDistributionData[key], name: key };
-      });
-      this.ProjectLevelDistributionData = [];
-      const option2 = this.isAllZeroProjectLevelDistribution ? {
-        title: {
+        //   ]
+        // };
+
+        const pieChartDat2 = Object.keys(this.ProjectLevelDistributionData).map(key => {
+          return { value: this.ProjectLevelDistributionData[key], name: key };
+        });
+        this.ProjectLevelDistributionData = [];
+        const option2 = this.isAllZeroProjectLevelDistribution ? {
+          title: {
             text: '项目等级分布',
             left: 'center'
-        },
-        series: [
+          },
+          series: [
             {
-                type: 'pie',
-                radius: '50%',
-                itemStyle: {
-                    color: '#ccc' // 灰色
-                },
+              type: 'pie',
+              radius: '50%',
+              itemStyle: {
+                color: '#ccc' // 灰色
+              },
+              label: {
+                show: false // 不显示标签
+              },
+              emphasis: {
                 label: {
-                    show: false // 不显示标签
-                },
-                emphasis: {
-                    label: {
-                        show: false // 不显示强调时的标签
-                    }
+                  show: false // 不显示强调时的标签
                 }
+              }
             }
-        ]
-      } : {
-        title: {
+          ]
+        } : {
+          title: {
             text: '项目等级分布',
             left: 'center'
-        },
-        tooltip: {
+          },
+          tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        series: [
+          },
+          series: [
             {
-                name: '等级分布',
-                type: 'pie',
-                radius: '50%',
-                data: pieChartDat2,
-                label: {
-                    show: true, // 不显示标签
-                    formatter: '{b}: {d}%' // 显示名称和数值
-                },
+              name: '等级分布',
+              type: 'pie',
+              radius: '50%',
+              data: pieChartDat2,
+              label: {
+                show: true, // 不显示标签
+                formatter: '{b}: {d}%' // 显示名称和数值
+              },
             }
-        ]
-      };
+          ]
+        };
 
-      const pieChartData3 = Object.keys(this.ProjectAverageScheduleData).map(key => {
-        return { value: this.ProjectAverageScheduleData[key], name: key };
-      });
-      this.ProjectAverageScheduleData = [];
-      const option3 = this.isAllZeroProjectAverageSchedule ? {
-        title: {
+        const pieChartData3 = Object.keys(this.ProjectAverageScheduleData).map(key => {
+          return { value: this.ProjectAverageScheduleData[key], name: key };
+        });
+        this.ProjectAverageScheduleData = [];
+        const option3 = this.isAllZeroProjectAverageSchedule ? {
+          title: {
             text: '开展状态占比',
             left: 'center'
-        },
-        series: [
+          },
+          series: [
             {
-                type: 'pie',
-                radius: '50%',
-                itemStyle: {
-                    color: '#ccc' // 灰色
-                },
+              type: 'pie',
+              radius: '50%',
+              itemStyle: {
+                color: '#ccc' // 灰色
+              },
+              label: {
+                show: false // 不显示标签
+              },
+              emphasis: {
                 label: {
-                    show: false // 不显示标签
-                },
-                emphasis: {
-                    label: {
-                        show: false // 不显示强调时的标签
-                    }
+                  show: false // 不显示强调时的标签
                 }
+              }
             }
-        ]
-      } : {
-        title: {
+          ]
+        } : {
+          title: {
             text: '开展状态占比',
             left: 'center'
-        },
-        tooltip: {
+          },
+          tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        series: [
+          },
+          series: [
             {
-                name: '开展状态占比',
-                type: 'pie',
-                radius: '50%',
-                data: pieChartData3,
-                label: {
-                    show: true, // 不显示标签
-                    formatter: '{b}: {d}%' // 显示名称和数值
-                },
+              name: '开展状态占比',
+              type: 'pie',
+              radius: '50%',
+              data: pieChartData3,
+              label: {
+                show: true, // 不显示标签
+                formatter: '{b}: {d}%' // 显示名称和数值
+              },
             }
-        ]
-      };
+          ]
+        };
 
-      this.isAllZeroProjectCategoriesProportion = false;
-      this.isAllZeroProjectLevelDistribution = false;
-      this.isAllZeroProjectAverageSchedule = false;
+        this.isAllZeroProjectCategoriesProportion = false;
+        this.isAllZeroProjectLevelDistribution = false;
+        this.isAllZeroProjectAverageSchedule = false;
 
-      this.myChart1.setOption(option1);
-      this.myChart2.setOption(option2);
-      this.myChart3.setOption(option3);
+        this.myChart1.setOption(option1);
+        this.myChart2.setOption(option2);
+        this.myChart3.setOption(option3);
 
-    });
+      });
     },
 
 
@@ -1083,11 +1209,12 @@ export default {
 </script>
 
 <style>
-
 .operation {
   /* 添加底部边距 */
-  margin-bottom: 20px; /* 调整这个值来改变两个 div 之间的距离 */
+  margin-bottom: 20px;
+  /* 调整这个值来改变两个 div 之间的距离 */
 }
+
 .echarts-wrapper {
   white-space: nowrap;
 }
@@ -1097,11 +1224,12 @@ export default {
 }
 
 .charts-container {
-    display: flex;
-  }
-.charts-container > div {
-    flex: 1;
-    margin-right: 20px; /* 可以调整两个图表之间的间距 */
+  display: flex;
 }
 
+.charts-container>div {
+  flex: 1;
+  margin-right: 20px;
+  /* 可以调整两个图表之间的间距 */
+}
 </style>

@@ -39,9 +39,16 @@
         AND (Employee_Group = "合同制" OR Employee_Group = "劳务派遣")
         AND Employee_sub_Group = "生产类"
     </select>
+
     <select id="selectInternNumbers" resultType="int">
         SELECT count(*) FROM Enterprise_Management_Personnel_roster
         WHERE Third_tissue = "生产管理科" AND Employee_Group = "实习生"
+    </select>
+
+    <!--统计当月从业人数-->
+    <select id="selectAllEmployeeNumbers" resultType="java.lang.Integer">
+        select count(*) from Enterprise_Management_Personnel_roster
+        where Employee_Group = "劳务派遣" or Employee_Group = "合同制"
     </select>
 
     <!-- 统计当年月度数据条数，截止当月  -->
@@ -127,8 +134,8 @@
     <!-- 当月职能人均收入 56-->
     <select id="selectMonthlyFunctionalAverageIncome" resultType="decimal">
         SELECT SUM(Total_Salary) / COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN (
-	        SELECT Salary_Table_index
+        WHERE Employee_Id NOT IN (
+	        SELECT Employee_Id
 	        FROM Enterprise_Management_Salary_Table
 	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
 		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
@@ -139,8 +146,8 @@
     <!-- 当月职能人均加班费 76-->
     <select id="selectMonthlyFunctionalAverageOvertimeCost" resultType="decimal">
         SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN (
-	        SELECT Salary_Table_index
+        WHERE Employee_Id NOT IN (
+	        SELECT Employee_Id
 	        FROM Enterprise_Management_Salary_Table
 	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
 		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
@@ -151,8 +158,8 @@
     <!-- 当月职能其他奖金 76-->
     <select id="selectMonthlyFunctionalAverageOtherBonuses" resultType="decimal">
         SELECT SUM(Other_Bonuses)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN (
-	        SELECT Salary_Table_index
+        WHERE Employee_Id NOT IN (
+	        SELECT Employee_Id
 	        FROM Enterprise_Management_Salary_Table
 	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
 		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
@@ -370,8 +377,8 @@
 --                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
 --         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
         SELECT SUM(Total_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN (
-	        SELECT Salary_Table_index
+        WHERE Employee_Id NOT IN (
+	        SELECT Employee_Id
 	        FROM Enterprise_Management_Salary_Table
 	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
 		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
@@ -390,8 +397,8 @@
 --                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
 --         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
         SELECT SUM(Overtime_Salary)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN (
-	        SELECT Salary_Table_index
+        WHERE Employee_Id NOT IN (
+	        SELECT Employee_Id
 	        FROM Enterprise_Management_Salary_Table
 	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
 		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
@@ -410,8 +417,8 @@
 --                 OR (Department IN("生产管理科") AND Subgroup_Code IN("生产类"))
 --         ) and Salary_Calculation_Year_Month=#{yearAndMonth}
         SELECT SUM(Other_Bonuses)/COUNT(*) FROM Enterprise_Management_Salary_Table
-        WHERE Salary_Table_index NOT IN (
-	        SELECT Salary_Table_index
+        WHERE Employee_Id NOT IN (
+	        SELECT Employee_Id
 	        FROM Enterprise_Management_Salary_Table
 	        WHERE Position LIKE '%董事%' OR Position LIKE '%书记%' OR Position LIKE '%主任%' OR Position LIKE '%科长%'
 		          OR Position LIKE '%经理%' OR Position LIKE '%党委委员%' OR Position LIKE '%工会主席%' OR Group_Code IN ( "实习生" )
@@ -519,9 +526,7 @@
         where ES_ID = #{esId}
     </select>
 
-    <select id="selectAllEmployeeNumbers" resultType="java.lang.Integer">
-        select count(*) from Enterprise_Management_Personnel_roster
-    </select>
+
 
 
     <insert id="insertEnterpriseManagementMonthlyData" parameterType="EnterpriseManagementMonthlyData" useGeneratedKeys="true" keyProperty="esId">

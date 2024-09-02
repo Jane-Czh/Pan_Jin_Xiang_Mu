@@ -519,6 +519,7 @@
             <if test="functionalAvgIncome != null "> and Functional_AVG_Income = #{functionalAvgIncome}</if>
             <if test="functionalDeptOvertimeCost != null "> and Functional_Dept_Overtime_Cost = #{functionalDeptOvertimeCost}</if>
         </where>
+        order by Year_And_Month desc
     </select>
 
     <select id="selectEnterpriseManagementMonthlyDataByEsId" parameterType="Long" resultMap="EnterpriseManagementMonthlyDataResult">

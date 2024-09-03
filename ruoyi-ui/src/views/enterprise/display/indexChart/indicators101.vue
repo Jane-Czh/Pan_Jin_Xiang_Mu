@@ -156,11 +156,18 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
-                fontSize: 16,
-                rich: {
-                    name: {}
-                }
+                formatter: function (params) {
+                    let value = params.value;
+                    if (params.seriesName.includes('%')) {
+                        value += '%';
+                    }
+                    return value;
+                },
+              fontSize: 16,
+              rich: {
+                name: {}
+              }
+
             };
             this.option = {
                 title: {
@@ -169,8 +176,9 @@ export default {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
-                        type: 'shadow'
-                    }
+                        type: 'shadow',
+                    },
+
                 },
                 legend: {
                     type: 'scroll',
@@ -366,7 +374,7 @@ export default {
     position: absolute;
     left: 28%;
     /* 水平位置，基于容器的% */
-    // top: 50%; 
+    // top: 50%;
     /* 垂直位置，基于容器的% */
     transform: translate(-50%, -50%);
     /* 使用transform来真正居中文本 */
@@ -379,7 +387,7 @@ export default {
     position: absolute;
     left: 50%;
     /* 水平位置，基于容器的% */
-    // top: 50%; 
+    // top: 50%;
     /* 垂直位置，基于容器的% */
     transform: translate(-50%, -50%);
     /* 使用transform来真正居中文本 */

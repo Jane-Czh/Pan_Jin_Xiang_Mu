@@ -157,7 +157,7 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
+                formatter: '{c}%',
                 fontSize: 16,
                 rich: {
                     name: {}
@@ -171,7 +171,7 @@ export default {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'shadow'
-                    }
+                    },
                 },
                 legend: {
                     data: ['销售订单录入不及时比例(%)', '销售订单不及时发货比例(%)', '生产订单不及时报工比例(%)', '成品检验业务不及时率(%)', '销售发票过账不及时率(%)', '客户未清账比例(%)'],
@@ -315,7 +315,7 @@ export default {
     position: absolute;
     left: 27%;
     /* 水平位置，基于容器的% */
-    // top: 50%; 
+    // top: 50%;
     /* 垂直位置，基于容器的% */
     transform: translate(-50%, -50%);
     /* 使用transform来真正居中文本 */
@@ -330,7 +330,7 @@ export default {
     position: absolute;
     left: 50%;
     /* 水平位置，基于容器的% */
-    // top: 50%; 
+    // top: 50%;
     /* 垂直位置，基于容器的% */
     transform: translate(-50%, -50%);
     /* 使用transform来真正居中文本 */

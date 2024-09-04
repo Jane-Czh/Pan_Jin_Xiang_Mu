@@ -92,3 +92,13 @@ export function delYearData(emasId) {
 }
 
 
+// 同步数据
+export function calculation() {
+  return request({
+    url: '/enterprise/data/calculation',
+    method: 'post'
+  })
+}
+
+
+

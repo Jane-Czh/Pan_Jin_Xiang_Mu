@@ -35,7 +35,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
         :sort-orders="['descending', 'ascending']" sortable="custom">
@@ -45,7 +45,7 @@
       </el-table-column>
 
       <el-table-column label="党建分数" align="center" prop="score" />
-      <el-table-column label="党建排名" align="center" prop="ranking" />
+      <!-- <el-table-column label="党建排名" align="center" prop="ranking" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -70,9 +70,9 @@
         <el-form-item label="党建分数" prop="score">
           <el-input v-model="form.score" placeholder="请输入党建分数" />
         </el-form-item>
-        <el-form-item label="党建排名" prop="ranking">
+        <!-- <el-form-item label="党建排名" prop="ranking">
           <el-input v-model="form.ranking" placeholder="请输入党建排名" />
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -85,7 +85,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/partybuilding/data";
-import { numValidator, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { numValidator, partyValidator } from '@/api/financial/numValidator.js';
 
 export default {
   name: "Data",
@@ -132,17 +132,17 @@ export default {
         score: [
           {
             required: true,
-            validator: numValidator,
+            validator: partyValidator,
             trigger: "blur",
           }
         ],
-        ranking: [
-          {
-            required: true,
-            validator: numValidatorNonZeroNature,
-            trigger: "blur",
-          }
-        ],
+        // ranking: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
       }
     };
   },

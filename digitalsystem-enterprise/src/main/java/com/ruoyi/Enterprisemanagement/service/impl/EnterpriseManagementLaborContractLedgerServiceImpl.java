@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementFunctionLaborReminder;
+import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementPersonnelRoster;
 import com.ruoyi.Enterprisemanagement.utils.EMExcelUtils;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.utils.GenerateId;
@@ -105,20 +106,27 @@ public class EnterpriseManagementLaborContractLedgerServiceImpl implements IEnte
         InputStream is = null;
         try {
             List<EnterpriseManagementLaborContractLedger> enterpriseManagementLaborContractLedgers = EMExcelUtils.LRparseExcel(excelFile);
-            int i = 0;
-            while (i < enterpriseManagementLaborContractLedgers.size()){
-                enterpriseManagementLaborContractLedger = enterpriseManagementLaborContractLedgers.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
+            // 批量获取并删除原来的数据
+            List<EnterpriseManagementLaborContractLedger> existingRosters = enterpriseManagementLaborContractLedgerMapper.selectEnterpriseManagementLaborContractLedgerList(new EnterpriseManagementLaborContractLedger());
+            if (!existingRosters.isEmpty()) {
+                Long[] emlcIds = existingRosters.stream().map(EnterpriseManagementLaborContractLedger::getEmlcId).toArray(Long[]::new);
+                enterpriseManagementLaborContractLedgerMapper.deleteEnterpriseManagementLaborContractLedgerByEmlcIds(emlcIds);
+            }
+
+            // 分批处理数据，每批2000条
+            int batchSize = 4000;
+            int totalSize = enterpriseManagementLaborContractLedgers.size();
+            for (int i = 0; i < totalSize; i += batchSize) {
+                int end = Math.min(i + batchSize, totalSize);
+                List<EnterpriseManagementLaborContractLedger> batchLedgers = enterpriseManagementLaborContractLedgers.subList(i, end);
+
+                // 过滤掉name为null的数据
+                batchLedgers.removeIf(ledger -> ledger.getName() == null);
+
+                // 批量插入数据
+                if (!batchLedgers.isEmpty()) {
+                    enterpriseManagementLaborContractLedgerMapper.insertBatch(batchLedgers);
                 }
-                Long EMLC_id = GenerateId.getNextId(lastid);
-                enterpriseManagementLaborContractLedger.setEmlcId(EMLC_id);
-                if (enterpriseManagementLaborContractLedger.getName() == null){
-                    continue;
-                }
-                enterpriseManagementLaborContractLedgerMapper.insertEnterpriseManagementLaborContractLedger(enterpriseManagementLaborContractLedger);
-                i++;
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,12 +2,13 @@ package com.heli.supply.mapper;
 
 import java.util.List;
 import com.heli.supply.domain.SupplyPurchaseorderTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 采购订单导入Mapper接口
  * 
- * @author ruoyi
- * @date 2024-04-23
+ * @author Teandron
+ * @date 2024-07-30
  */
 public interface SupplyPurchaseorderTableMapper 
 {
@@ -27,9 +28,6 @@ public interface SupplyPurchaseorderTableMapper
      */
     public List<SupplyPurchaseorderTable> selectSupplyPurchaseorderTableList(SupplyPurchaseorderTable supplyPurchaseorderTable);
 
-
-    //查询数据库最后一条数据id
-    public Long selectLastId();
     /**
      * 新增采购订单导入
      * 
@@ -61,4 +59,13 @@ public interface SupplyPurchaseorderTableMapper
      * @return 结果
      */
     public int deleteSupplyPurchaseorderTableBySpIds(Long[] spIds);
+
+    public void batchInsert(@Param("list") List<SupplyPurchaseorderTable> supplyPurchaseorderTable);
+
+
+    public Double calculateSupplierRatioByQuantity(@Param("materialClass") String materialClass, @Param("supplierCode") String supplierCode);
+
+    public Double calculateSupplierRatioByNetValueOrder(@Param("materialClass") String materialClass, @Param("supplierCode") String supplierCode);
+
+    public void deleteAll();
 }

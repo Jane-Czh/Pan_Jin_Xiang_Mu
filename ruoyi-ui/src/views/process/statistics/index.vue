@@ -36,15 +36,15 @@
         >
       </el-form-item>
 
+      <!-- v-hasPermi="['process:ef:export']" -->
       <el-form-item class="export-button">
         <el-button
           type="primary"
           plain
           icon="el-icon-download"
           size="mini"
-          v-hasPermi="['process:ef:export']"
           @click="exportAll"
-          >总台账导出</el-button
+          >流程台账导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -107,7 +107,10 @@ import {
 // // 表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
 
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
 
 import ShowPanel from "@/views/process/ef/show_panel";
 import EditPanel from "@/views/process/ef/edit_panel";
@@ -117,6 +120,11 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 //加载效果
 import { Loading } from "element-ui";
+
+//获取用户信息-用户名
+import { getUserProfile } from "@/api/system/user";
+//获取用户信息-部门
+import { getDept } from "@/api/system/project";
 
 export default {
   name: "Project",
@@ -228,6 +236,23 @@ export default {
   },
 
   methods: {
+    //用户信息
+    async getUserInfo() {
+      try {
+        const response = await getUserProfile();
+        const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        console.log("成功获取用户信息=======", userInfo);
+        this.uploadUsername = userInfo.userName;
+
+        const deptResponse = await getDept(userInfo.deptId);
+        const deptInfo = deptResponse.data;
+        this.departmentCategory = deptInfo.deptName;
+        console.log("成功获取部门信息=======", deptInfo);
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+      }
+    },
+
     getFileNamesByIds(project) {
       return new Promise((resolve, reject) => {
         // 初始化
@@ -315,16 +340,17 @@ export default {
         return this.getFileNamesByIds(project).then((fileNames) => {
           return {
             流程名称: project.name,
-           
+            流程等级: project.level,
+            主责部门: project.department,
+            流程编号: project.number,
+
             创建日期: project.createDate,
             创建人: project.createBy,
-            更新日期: project.updateDate,
-            更新人: project.updateBy,
-            // 流程绑定的制度文件: fileNames.selectedFileNames,
-            // 流程绑定的表单文件: fileNames.selectedFormsNames,
+            制度文件: fileNames.selectedFileNames,
+            表单文件: fileNames.selectedFormsNames,
             // 节点绑定的文件s???
 
-            最近一次更新内容描述: this.formattedContent(project.file),
+            // 最近一次更新内容描述: this.formattedContent(project.file),
           };
         });
       });
@@ -359,19 +385,37 @@ export default {
       let id = item.id;
       this.$router.push("/process/statistics/indicators/" + id);
     },
- //-----------------------------------------------------------------------
-  
+    //-----------------------------------------------------------------------
+
     /** 查询流程列表 */
-    getList() {
+    async getList() {
       this.projectList = [];
       this.rowList = [];
+
+      await this.getUserInfo();
 
       this.loading = true;
       listProject2(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+
+        //从projectList 获取 createBy 属性 , 与departmentCategory进行对比
+        //createBy : "admin/研发" 比对 departmentCategory: "研发"
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
+
+        // 不做过滤
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
 
         // 按照updateDate字段进行排序
         this.projectList.sort((a, b) => {
@@ -413,8 +457,20 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+        // for (var i = 0; i < response.length; i++) {
+        //   this.projectList.push(response[i]);
+        // }
+
         for (var i = 0; i < response.length; i++) {
-          this.projectList.push(response[i]);
+          console.log("response[i].createBy===>", response[i].createBy);
+
+          if (
+            this.departmentCategory == response[i].createBy.split("/")[1] ||
+            this.departmentCategory == "研发" ||
+            this.departmentCategory == "总部"
+          ) {
+            this.projectList.push(response[i]);
+          }
         }
 
         // // 按照updateDate字段进行排序
@@ -474,7 +530,7 @@ export default {
         this.title = "修改流程名称";
       });
     },
-   
+
     /** 导出按钮操作 */
     handleExport() {
       this.download(
@@ -490,7 +546,6 @@ export default {
 </script>
 
 <style>
-
 .query-form {
   display: flex;
   align-items: center;
@@ -499,5 +554,4 @@ export default {
 .query-form .el-form-item.export-button {
   margin-left: auto;
 }
-
 </style>

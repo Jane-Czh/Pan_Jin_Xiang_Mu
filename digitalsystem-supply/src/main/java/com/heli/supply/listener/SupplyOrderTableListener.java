@@ -20,7 +20,7 @@ import java.util.List;
 public class SupplyOrderTableListener implements ReadListener<SupplyIndicatorsPurchaseOrderTable> {
 
     private static final Logger log = LoggerFactory.getLogger(SupplyOrderTableListener.class);
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 500;
 
     @Autowired
     private SupplyIndicatorsPurchaseOrderTableMapper supplyIndicatorsPurchaseOrderTableMapper;

@@ -1,5 +1,6 @@
 package com.ruoyi.market.service.impl;
 
+import com.alibaba.excel.util.ListUtils;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.domain.MarketSalesTable;
 import com.ruoyi.market.domain.MarketSalesTableStorage;
@@ -33,6 +34,9 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
     @Autowired
     private MarketSalesTableStorageMapper marketSalesTableStorageMapper;
 
+    private static final int BATCH_COUNT = 5000; // 批处理数量
+    //缓存一批数据
+    private List<MarketSalesTable> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**
      * @description: 利润表导入
      * @author: hong
@@ -47,20 +51,47 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
         InputStream is = null;
         try {
             List<MarketSalesTable> marketSalesTables = ExcelUtils.parseExcel(excelFile);
+
+            //删除
+            marketSalesTableMapper.deleteAll();
+
             int i = 0;
             while (i < marketSalesTables.size()){
                 marketSalesTable = marketSalesTables.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
-                }
-                Long MS_id = GenerateId.getNextId(lastid);
-                marketSalesTable.setMsId(MS_id);
-                marketSalesTable.setCreatedTime(getTime.getCurrentDate());
-                if (marketSalesTable.getBranch() == null){
+                if (    marketSalesTable.getBranch() == null ||
+                        marketSalesTable.getContractNumber() == null ||
+                        marketSalesTable.getOrderNumber() == null ||
+                        marketSalesTable.getOrderAcceptanceTime() == null ||
+                        marketSalesTable.getVehicleModel() == null ||
+                        marketSalesTable.getValveBlock() == null ||
+                        marketSalesTable.getFork() == null ||
+                        marketSalesTable.getDoorFrame() == null ||
+                        marketSalesTable.getTyre() == null ||
+                        marketSalesTable.getConfiguration() == null ||
+                        marketSalesTable.getDeliveryForm() == null ||
+                        marketSalesTable.getDeliveryLocation() == null ||
+                        marketSalesTable.getContacts() == null ||
+                        marketSalesTable.getOrderSystemDeliveryTime() == null ||
+                        marketSalesTable.getOrderOverdueWarning() == null
+                ){
+                    i++;
                     continue;
                 }
-                marketSalesTableMapper.insertMarketSalesTable(marketSalesTable);
+//                Long lastid = selectLastId();
+//                if(lastid == null){
+//                    lastid = 0L;
+//                }
+//                Long MS_id = GenerateId.getNextId(lastid);
+//                marketSalesTable.setMsId(MS_id);
+                marketSalesTable.setCreatedTime(getTime.getCurrentDate());
+
+//                marketSalesTableMapper.insertMarketSalesTable(marketSalesTable);
+                cachedDataList.add(marketSalesTable);
+                if (cachedDataList.size() >= BATCH_COUNT) {
+                    marketSalesTableMapper.batchInsert(cachedDataList);
+                    cachedDataList.clear();
+                    System.out.println("插入一轮");
+                }
                 //查看当天的台账信息，单独存储
                 if (getTime.isSameDay(marketSalesTable.getOrderAcceptanceTime(),getTime.getCurrentDate())) {
                     //接单日期为今日，进行存储
@@ -90,6 +121,11 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
                     marketSalesTableStorageMapper.insertMarketSalesTableStorage(marketSalesTableStorage);
                 }
                 i++;
+            }
+
+            if (cachedDataList.size() > 0){
+                marketSalesTableMapper.batchInsert(cachedDataList);
+                cachedDataList.clear();
             }
 
             //查看当天的台账信息，单独存储

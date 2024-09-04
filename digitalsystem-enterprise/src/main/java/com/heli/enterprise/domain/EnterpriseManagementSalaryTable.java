@@ -29,14 +29,15 @@ public class EnterpriseManagementSalaryTable extends BaseEntity{
     private Long esId;
 
     /** 薪资核算年月 */
-    @ExcelProperty(value = "薪资核算年月")
+//    @ExcelProperty(value = "薪资核算年月")
     @DateTimeFormat("yyyyMM")
+    @ExcelIgnore
     private Date salaryCalculationYearMonth;
 
     /**
-     * 员工编号
+     * 人员编号
      */
-    @ExcelProperty(value = "员工编号")
+    @ExcelProperty(value = "人员编号")
     private String employeeId;
 
     /**
@@ -52,10 +53,16 @@ public class EnterpriseManagementSalaryTable extends BaseEntity{
     private String position;
 
     /**
-     * 三级组织
+     * 三级部门
      */
-    @ExcelProperty(value = "三级组织")
+    @ExcelProperty(value = "三级部门")
     private String department;
+
+    /**
+     * 四级部门
+     */
+    @ExcelProperty(value = "四级部门")
+    private String fourthLevelOrgName;
 
     /**
      * 员工组
@@ -68,6 +75,11 @@ public class EnterpriseManagementSalaryTable extends BaseEntity{
      */
     @ExcelProperty(value = "员工子组")
     private String subgroupCode;
+    /**
+     * 其他奖金
+     */
+    @ExcelProperty(value = "其他奖金")
+    private BigDecimal otherBonuses;
 
     /**
      * 加班合计

@@ -56,7 +56,7 @@ export function delForm(pcifId) {
 // 新的 API 函数
 export function updateWorkTime(workTimeData) {
   return request({
-    url: '/product/form/updatetime',
+    url: '/product/time/updatetime',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',

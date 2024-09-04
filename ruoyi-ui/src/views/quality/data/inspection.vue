@@ -53,18 +53,21 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
       </el-col>
-
-
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
+      </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="inspectionList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="" align="center" prop="qiId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="100"
@@ -75,12 +78,32 @@
       </el-table-column>
       <el-table-column label="电车的问题数量" align="center" prop="electricCarProductionQuantity" width="150" />
       <el-table-column label="K2型号中小于5吨的问题数量" align="center" prop="k2lessthan5tonProductionQuantity" width="190" />
-      <el-table-column label="K2型号中大吨位的问题数量" align="center" prop="k2largetonnageProductionQuantity" width="180" />
+      <el-table-column label="K2型号中大吨位的问题数量" align="center" prop="k2largetonnageProductionQuantity" width="190" />
       <el-table-column label="电车的问题车数量" align="center" prop="electricCarProblemVehicles" width="180" />
-      <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="200" />
+      <el-table-column label="K2型号中小于5吨的问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="210" />
       <el-table-column label="K2型号中大吨位的问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
-      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" />
-
+      <!-- <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" /> -->
+      <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="200">
+        <template slot-scope="scope">
+          <span v-if="scope.row.electricCarPassRate || scope.row.electricCarPassRate === 0">{{
+      scope.row.electricCarPassRate }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="大吨位一次交检合格率(%)" align="center" prop="largeTonPassRate" width="200">
+        <template slot-scope="scope">
+          <span v-if="scope.row.largeTonPassRate || scope.row.largeTonPassRate === 0">{{ scope.row.largeTonPassRate
+            }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210">
+        <template slot-scope="scope">
+          <span v-if="scope.row.singleInspectionPassRate || scope.row.singleInspectionPassRate === 0">{{
+      scope.row.singleInspectionPassRate }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -95,7 +118,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改质检部分字段对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="230px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM" placeholder="请选择日期">
@@ -119,9 +142,9 @@
         <el-form-item label="K2型号中大吨位的问题车数量" prop="k2largetonnageProblemVehicles">
           <el-input v-model="form.k2largetonnageProblemVehicles" placeholder="请输入K2型号中大吨位的问题车数量" />
         </el-form-item>
-        <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
+        <!-- <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
           <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -133,8 +156,8 @@
 
 <script>
 import { listInspection, getInspection, delInspection, addInspection, updateInspection } from "@/api/quality/inspection";
-import { uploadFile } from '@/api/financial/excelImport';
-import { numValidatorPercentage, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
+import { numValidatorPercentage, numValidatorNonZeroNature, numValidator } from '@/api/financial/numValidator.js';
 export default {
 
   name: "Inspection",
@@ -151,7 +174,7 @@ export default {
       progress: 0,
       selectedType: '',
 
-
+      isLoading: false,
 
       // 非多个禁用
       multiple: true,
@@ -177,6 +200,8 @@ export default {
         k2lessthan5tonProblemVehicles: null,
         k2largetonnageProblemVehicles: null,
         singleInspectionPassRate: null,
+        electricCarPassRate: null,
+        largeTonPassRate: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -195,49 +220,49 @@ export default {
         electricCarProductionQuantity: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2lessthan5tonProductionQuantity: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2largetonnageProductionQuantity: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         electricCarProblemVehicles: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2lessthan5tonProblemVehicles: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         k2largetonnageProblemVehicles: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         singleInspectionPassRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -248,6 +273,20 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      const url = "/profile/excel_templates/整机质检记录样表.xlsx";
+      handleTrueDownload(url);
+    },
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -280,6 +319,8 @@ export default {
         k2lessthan5tonProblemVehicles: null,
         k2largetonnageProblemVehicles: null,
         singleInspectionPassRate: null,
+        electricCarPassRate: null,
+        largeTonPassRate: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -387,6 +428,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
         const aimUrl = `/quality/data/inspection/read`;
@@ -395,15 +437,14 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+            // this.$message.error("上传失败，请重试");
+            this.isLoading = false;
           });
       }
     },

@@ -46,8 +46,7 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
     private static final Logger log = LoggerFactory.getLogger(FinancialDataServiceImpl.class);
 
 
-
-    public int batchUpdateFinancialData(Date yearAndMonth){
+    public int batchUpdateFinancialData(Date yearAndMonth) {
         Date fillingMaxMonth = financialIndicatorsHandfillTableService.selectMaxYearAndMonth();
         Date interestsMaxMonth = financialInterestsTableService.selectMaxYearAndMonth();
         Date balanceMaxMonth = financialBalanceTableService.selectMaxYearAndMonth();
@@ -60,12 +59,12 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         dates.add(balanceMaxMonth);
 
         Date minDate = Collections.min(dates);
-        System.out.println("最小的时间是：" + minDate);
+        System.out.println("三个数据中最小的时间是：" + minDate);
 
 
         int i = 1;
-        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(minDate)) ; date = DateUtils.getNextMonth(date)) {
-            if (checkDataUploadedForCurrentMonth(date)){
+        for (Date date = yearAndMonth; date.before(DateUtils.getNextMonth(minDate)); date = DateUtils.getNextMonth(date)) {
+            if (checkDataUploadedForCurrentMonth(date) && checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(date))) {
                 calculateCurrentMonthFinancialData(date);
                 i++;
             }
@@ -170,7 +169,7 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
     public int calculateCurrentMonthFinancialData(Date yearAndMonth) {
 
 //        System.out.println(yearAndMonth);
-        log.info("当前计算的月份为："+ DateUtils.parseDateToStr("yyyy-MM",yearAndMonth));
+        log.info("当前计算的月份为：" + DateUtils.parseDateToStr("yyyy-MM", yearAndMonth));
 
         FinancialIndicatorsHandfillTable handFillDate = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
         FinancialInterestsTable interestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
@@ -186,11 +185,10 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
          * 当月库存商品存货额 = 库存商品-整车 + 产品成本差异-产成品 - 储备车金额（填报)
          * monthAmountInStock =（资产负债表） inventoryVehicles + pcvFinished - reserveCarAmount
          **/
-        balanceTable.setMonthAmountInStock(
-                balanceTable.getInventoryVehicles()
-                        .add(balanceTable.getPcvFinished()
-                                .subtract(handFillDate.getReserveCarAmount()))
-        );
+        BigDecimal monthAmountInStock = balanceTable.getInventoryVehicles().add(balanceTable.getPcvFinished()
+                .subtract(handFillDate.getReserveCarAmount()));
+        log.info("当月库存商品存货额为：" + monthAmountInStock);
+        balanceTable.setMonthAmountInStock(monthAmountInStock);
 
 
         /**
@@ -199,16 +197,19 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
          * turnoverRateReceivable =（利润表） operatingRevenue / (资产负债表) receivables
          * 由于计算比率，所以保留2位小数，并四舍五入
          **/
-        balanceTable.setTurnoverRateReceivable(
-                (interestsTable.getOperatingRevenue()
-                        .divide(balanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
-        );
+
+        double turnoverRateReceivable = interestsTable.getOperatingRevenue()
+                .divide(balanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue();
+        log.info("应收帐款周转率为：" + turnoverRateReceivable);
+        balanceTable.setTurnoverRateReceivable(turnoverRateReceivable);
 
         // 计算
 //        balanceTable.setGrowthRateInventorySales(countGrowthRateInventorySales(yearAndMonth));
 
+        FinancialBalanceTable financialBalanceTable = countGrowthRateInventoryAndSales(balanceTable);
+        log.info("计算结果为：" + financialBalanceTable);
 
-        return financialBalanceTableService.updateFinancialBalanceTable(countGrowthRateInventoryAndSales(balanceTable));
+        return financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
     }
 
 
@@ -240,14 +241,27 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 //        );
 
         //分别计算比率
-        BigDecimal monthlyInventoryTotalAmountRate = monthlyInventoryTotalAmount.divide(monthlyInventoryTotalAmountLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
-        BigDecimal operatingRevenueRate = operatingRevenue.divide(operatingRevenueLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
+//        BigDecimal monthlyInventoryTotalAmountRate = monthlyInventoryTotalAmount.divide(monthlyInventoryTotalAmountLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
+//        BigDecimal operatingRevenueRate = operatingRevenue.divide(operatingRevenueLastMonth, 2, RoundingMode.HALF_UP).subtract(BigDecimal.valueOf(1));
+
+        //新计算方式
+        BigDecimal totalAmountSubtract = monthlyInventoryTotalAmount.subtract(monthlyInventoryTotalAmountLastMonth);
+        BigDecimal operatingRevenueSubtract = operatingRevenue.subtract(operatingRevenueLastMonth);
+        log.info("totalAmountSubtract" + totalAmountSubtract + "----operatingRevenueSubtract" + operatingRevenueSubtract);
+        log.info(totalAmountSubtract.equals(BigDecimal.ZERO) + "---"+operatingRevenueSubtract.equals(BigDecimal.ZERO));
+        //如果上面两个值一个为0，则直接返回0
+        if (!totalAmountSubtract.equals(BigDecimal.ZERO) || !operatingRevenueSubtract.equals(BigDecimal.ZERO)) {
+            balanceTable.setGrowthRateInventory(0.0);
+        } else {
+            log.info("jinru");
+            balanceTable.setGrowthRateInventory(totalAmountSubtract.divide(operatingRevenueSubtract, 2, RoundingMode.HALF_UP).doubleValue());
+        }
 
 //        System.out.println("monthlyInventoryTotalAmountRate" + monthlyInventoryTotalAmountRate);
 //        System.out.println("operatingRevenueRate" + operatingRevenueRate);
 
-        balanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
-        balanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
+//        balanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
+//        balanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
 
 
         //计算总比率

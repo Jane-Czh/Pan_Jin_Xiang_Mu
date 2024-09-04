@@ -17,6 +17,10 @@
     </div>
     <div v-if="loading"
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
+    <!-- <div v-if="!loading && ifData.length === 0"
+      style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">
+      当前选择时间段暂无数据
+    </div> -->
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
       :yAxisData="yAxisData"></indicator-chart>
   </div>
@@ -34,6 +38,9 @@ export default {
       radioDate: '月',
       loading: false,
       data: [],
+      ifData: [
+        '1'
+      ],
       timeData: {
         startTime: new Date(),
         endTime: new Date(),
@@ -61,13 +68,15 @@ export default {
       this.timeData.startTime = this.selectedDate[0]
       this.timeData.endTime = this.selectedDate[1]
 
-
+      this.data = [];
       try {
         this.loading = true
         const res = await chartAPI[this.option.apiName](this.timeData);
         this.data = res.rows
         this.xAxisData = res.rows.map(item => moment(item.yearAndMonth).format('YY-MM'))
         this.yAxisData = res.rows.map(item => item[this.option.yDataName])
+        const allUndefined = yAxisData.every(item => item === undefined);
+        this.ifData = allUndefined ? [] : yAxisData
         this.loading = false
       } catch (error) {
         this.loading = false

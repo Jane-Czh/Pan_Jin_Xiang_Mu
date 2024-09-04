@@ -24,7 +24,7 @@ import com.ruoyi.system.service.ISysDeptService;
 
 /**
  * 部门信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -44,6 +44,7 @@ public class SysDeptController extends BaseController
         List<SysDept> depts = deptService.selectDeptList(dept);
         return success(depts);
     }
+
 
     /**
      * 获取部门列表（无权限）
@@ -79,7 +80,12 @@ public class SysDeptController extends BaseController
     }
 
 
-
+    /**
+     * 无权限用
+     * 通过用户deptId 获取部门
+     * @param deptId
+     * @return
+     */
     @GetMapping(value = "/dept/{deptId}")
     public AjaxResult getInfo2(@PathVariable Long deptId)
     {

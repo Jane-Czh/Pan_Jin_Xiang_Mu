@@ -56,8 +56,8 @@ public class EMExcelUtils {
                     enterpriseManagementSpecialOperationsManagementLedger.setDepartment(getStringCellValue(row.getCell(count++)));
 
                     //2、姓名
-                    if(getStringCellValue(row.getCell(count++))!=null) {
-                        enterpriseManagementSpecialOperationsManagementLedger.setName(getStringCellValue(row.getCell(count)));
+                    if(getStringCellValue(row.getCell(count))!=null) {
+                        enterpriseManagementSpecialOperationsManagementLedger.setName(getStringCellValue(row.getCell(count++)));
                     }
                     else {
                         continue;
@@ -451,11 +451,11 @@ public class EMExcelUtils {
 
             enterpriseManagementPersonnelRoster.setTheHighestTechnicalLevel(getStringCellValue(row.getCell(count++)));
 
-            enterpriseManagementPersonnelRoster.setRank(getStringCellValue(row.getCell(count++)));
+            enterpriseManagementPersonnelRoster.setRankked(getStringCellValue(row.getCell(count++)));
 
             enterpriseManagementPersonnelRoster.setPositionId(getStringCellValue(row.getCell(count++)));
 
-            enterpriseManagementPersonnelRoster.setPosition(getStringCellValue(row.getCell(count++)));
+            enterpriseManagementPersonnelRoster.setPositionno(getStringCellValue(row.getCell(count++)));
 
             enterpriseManagementPersonnelRoster.setJobbTitle(getStringCellValue(row.getCell(count++)));
 

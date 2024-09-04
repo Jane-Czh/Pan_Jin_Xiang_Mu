@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.service.IFinancialDataService;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,27 @@ public class FinancialInterestsTableController extends BaseController {
 //        System.out.println(financialInterestsTable);
 //    }
 
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:interests:sum')")
+    @PostMapping("/sum")
+    public AjaxResult selectInterestsSumInfoByYear(@RequestBody DisplayRequestParam time) {
+        FinancialInterestsTable sumInfoByYear = financialInterestsTableService.selectInterestsSumInfoByYear(time.getStartTime());
+        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+
+    @PreAuthorize("@ss.hasPermi('financial:interests:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectInterestsSumInfoByYear() {
+        FinancialInterestsTable sumInfoByYear = financialInterestsTableService.selectMaxMonthInterests();
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+
 
     /**
      * 查询财务-利润列表
@@ -100,22 +123,17 @@ public class FinancialInterestsTableController extends BaseController {
 //        return toAjax(financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable));
 
 
-
-
-        Date lastMonth = DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth());
-
-
-        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth) && financialInterestsTableService.checkDataExists()) {
-            return AjaxResult.error("上月利润表数据未填报");
-        }
+//        Date lastMonth = DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth());
+//        if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth) && financialInterestsTableService.checkDataExists()) {
+//            return AjaxResult.error("上月利润表数据未填报");
+//        }
 
         if (financialInterestsTableService.checkInterestsDataIsExisted(financialInterestsTable.getYearAndMonth())) {
             return AjaxResult.error("当月利润表已上传");
         }
+
         int status = 0;
-
         status = financialInterestsTableService.insertFinancialInterestsTable(financialInterestsTable);
-
         if (status == 0) {
             return AjaxResult.error("利润表填报数据有误");
         }
@@ -124,10 +142,10 @@ public class FinancialInterestsTableController extends BaseController {
         if (financialDataService.checkDataUploadedForCurrentMonth(financialInterestsTable.getYearAndMonth())
                 && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(financialInterestsTable.getYearAndMonth()))) {
             // 开始计算
-            financialDataService.calculateCurrentMonthFinancialData(financialInterestsTable.getYearAndMonth());
+            status = financialDataService.calculateCurrentMonthFinancialData(financialInterestsTable.getYearAndMonth());
         }
 
-        return AjaxResult.success();
+        return toAjax(status);
 
 
     }

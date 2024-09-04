@@ -2,7 +2,9 @@ package com.ruoyi.Enterprisemanagement.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementLaborContractLedger;
 import com.ruoyi.Enterprisemanagement.utils.EMExcelUtils;
@@ -105,20 +107,41 @@ public class EnterpriseManagementPersonnelRosterServiceImpl implements IEnterpri
         InputStream is = null;
         try {
             List<EnterpriseManagementPersonnelRoster> enterpriseManagementPersonnelRosters = EMExcelUtils.PRparseExcel(excelFile);
-            int i = 0;
-            while (i < enterpriseManagementPersonnelRosters.size()){
-                enterpriseManagementPersonnelRoster = enterpriseManagementPersonnelRosters.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
+            // 批量获取并删除原来的数据
+            List<EnterpriseManagementPersonnelRoster> existingRosters = enterpriseManagementPersonnelRosterMapper.selectEnterpriseManagementPersonnelRosterList(new EnterpriseManagementPersonnelRoster());
+            if (!existingRosters.isEmpty()) {
+                Long[] emprIds = existingRosters.stream().map(EnterpriseManagementPersonnelRoster::getEmprId).toArray(Long[]::new);
+                enterpriseManagementPersonnelRosterMapper.deleteEnterpriseManagementPersonnelRosterByEmprIds(emprIds);
+            }
+//            int i = 0;
+//            while (i < enterpriseManagementPersonnelRosters.size()){
+//                enterpriseManagementPersonnelRoster = enterpriseManagementPersonnelRosters.get(i);
+//                Long lastid = selectLastId();
+//                if(lastid == null){
+//                    lastid = 0L;
+//                }
+//                Long EMPR_id = GenerateId.getNextId(lastid);
+//                enterpriseManagementPersonnelRoster.setEmprId(EMPR_id);
+//                if (enterpriseManagementPersonnelRoster.getName() == null){
+//                    continue;
+//                }
+//                enterpriseManagementPersonnelRosterMapper.insertEnterpriseManagementPersonnelRoster(enterpriseManagementPersonnelRoster);
+//                i++;
+//            }
+            // 分批处理数据，每批4000条
+            int batchSize = 4000;
+            int totalSize = enterpriseManagementPersonnelRosters.size();
+            for (int i = 0; i < totalSize; i += batchSize) {
+                int end = Math.min(i + batchSize, totalSize);
+                List<EnterpriseManagementPersonnelRoster> batchRosters = enterpriseManagementPersonnelRosters.subList(i, end);
+
+                // 过滤掉name为null的数据
+                batchRosters.removeIf(roster -> roster.getName() == null);
+
+                // 批量插入数据
+                if (!batchRosters.isEmpty()) {
+                    enterpriseManagementPersonnelRosterMapper.insertBatch(batchRosters);
                 }
-                Long EMPR_id = GenerateId.getNextId(lastid);
-                enterpriseManagementPersonnelRoster.setEmprId(EMPR_id);
-                if (enterpriseManagementPersonnelRoster.getName() == null){
-                    continue;
-                }
-                enterpriseManagementPersonnelRosterMapper.insertEnterpriseManagementPersonnelRoster(enterpriseManagementPersonnelRoster);
-                i++;
             }
         } catch (IOException e) {
             e.printStackTrace();

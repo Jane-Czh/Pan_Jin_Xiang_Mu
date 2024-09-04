@@ -20,6 +20,8 @@ import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.excel.ReadExcelCellUtils;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.STSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ruoyi
  * @date 2024-04-03
  */
+@Slf4j
 @Service
 public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableService {
     @Autowired
@@ -44,6 +47,20 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     private FinancialInterestsTableMapper financialInterestsTableMapper;
     @Autowired
     private IFinancialInterestsTableService iFinancialInterestsTableService;
+
+    @Override
+    public FinancialBalanceTable selectBalanceSumInfoByYear() {
+
+        FinancialBalanceTable financialBalanceTable = financialBalanceTableMapper.selectMaxMonthBalance();
+        log.info("资产负债表最新数据："+financialBalanceTable);
+
+        return financialBalanceTable;
+//        return financialBalanceTableMapper.selectBalanceSumInfoByYear(yearAndMonth);
+    }
+    @Override
+    public FinancialBalanceTable selectBalanceSumRateByYear() {
+        return financialBalanceTableMapper.selectBalanceSumRateByYear();
+    }
 
     @Override
     public Date selectMaxYearAndMonth() {
@@ -88,6 +105,58 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
                 is.close();
             }
         }
+
+//        System.out.println("111000----"+financialBalanceTable);
+        /**
+         * @description: 将单位修改为万元
+         * @author: hong
+         * @date: 2024/7/28 10:58
+         */
+        financialBalanceTable.setInTransitInventory(
+                financialBalanceTable.getInTransitInventory()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setMaterials(
+                financialBalanceTable.getMaterials()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setMaterialCostVariance(
+                financialBalanceTable.getMaterialCostVariance()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setMaterialCostVarianceUnallocated(
+                financialBalanceTable.getMaterialCostVarianceUnallocated()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setWorkInProgressSemiFinishedGoods(
+                financialBalanceTable.getWorkInProgressSemiFinishedGoods()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setProductCostVarianceSemiFinishedGoods(
+                financialBalanceTable.getProductCostVarianceSemiFinishedGoods()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setWorkInProgressEndOfMonth(
+                financialBalanceTable.getWorkInProgressEndOfMonth()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setInventoryVehicles(
+                financialBalanceTable.getInventoryVehicles()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setPcvFinished(
+                financialBalanceTable.getPcvFinished()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setMonthlyInventoryTotalAmount(
+                financialBalanceTable.getMonthlyInventoryTotalAmount()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+        financialBalanceTable.setReceivables(
+                financialBalanceTable.getReceivables()
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP)
+        );
+
 
         /**
          * @description: 导入时间和导入者

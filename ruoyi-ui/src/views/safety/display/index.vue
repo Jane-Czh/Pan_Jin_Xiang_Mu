@@ -36,7 +36,7 @@ export default {
         { id: '46', apiName: 'getCurEquipmentFailuresTotaltimeData', yDataName: 'curEquipmentFailuresTotaltime', dataName: '停产时间', icon: 'el-icon-s-data', title: '当月设备故障累计停产时间', content: '当月设备故障累计停产时间' },
         { id: '67', apiName: 'getKeyEquipmentTotalFailureCountData', yDataName: 'keyEquipmentTotalFailureCount', dataName: '总次数', icon: 'el-icon-s-data', title: '主要设备故障总次数', content: '主要设备故障总次数' },
         { id: '68', apiName: 'getOutputPercapitavalueData', yDataName: 'resultData', dataName: '次数', icon: 'el-icon-s-data', title: '设备故障类别次数分布图', content: '设备故障类别次数分布图', path: '/safety/indicators68' },
-        { id: '69', apiName: 'getCurEquipmentReplacementCostData', yDataName: 'curEquipmentReplacementCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月设备维修成本', content: '当月设备维修成本' },
+        { id: '69', apiName: 'getCurEquipmentReplacementCostData', yDataName: 'curEquipmentReplacementCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月设备维修易损件成本', content: '当月设备维修易损件成本' },
       ],
       formData: {},
       rules: {},

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import com.heli.financial.domain.FinancialBalanceTable;
+import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
 import org.apache.ibatis.annotations.Param;
@@ -16,6 +17,12 @@ import org.apache.ibatis.annotations.Param;
  */
 //@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialBalanceTableMapper {
+
+    FinancialBalanceTable selectMaxMonthBalance();
+
+
+//    FinancialBalanceTable selectBalanceSumInfoByYear();
+    FinancialBalanceTable selectBalanceSumRateByYear();
 
     Date selectMaxYearAndMonth();
 

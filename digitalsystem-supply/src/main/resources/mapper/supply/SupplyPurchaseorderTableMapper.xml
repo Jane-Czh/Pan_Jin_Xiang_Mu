@@ -6,37 +6,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="SupplyPurchaseorderTable" id="SupplyPurchaseorderTableResult">
         <result property="spId"    column="SP_ID"    />
-        <result property="createdBy"    column="CREATED_BY"    />
-        <result property="createdTime"    column="CREATED_TIME"    />
-        <result property="documentDate"    column="Document_Date"    />
-        <result property="purchasingDocuments"    column="Purchasing_Documents"    />
         <result property="materialNumber"    column="Material_Number"    />
-        <result property="collectiveProcurement"    column="Collective_Procurement"    />
-        <result property="ShortText"    column="ShortText"    />
-        <result property="Unit"    column="Unit"    />
-        <result property="Quantity"    column="Quantity"    />
-        <result property="orderNetvalue"    column="Order_NetValue"    />
+        <result property="purchaseQuantity"    column="Purchase_Quantity"    />
+        <result property="netPrice"    column="Net_Price"    />
+        <result property="netValueOrder"    column="Net_Value_Order"    />
+        <result property="documentDate"    column="Document_Date"    />
         <result property="Supplier"    column="Supplier"    />
+        <result property="supplierName"    column="Supplier_Name"    />
     </resultMap>
 
     <sql id="selectSupplyPurchaseorderTableVo">
-        select SP_ID, CREATED_BY, CREATED_TIME, Document_Date, Purchasing_Documents, Material_Number, Collective_Procurement, ShortText, Unit, Quantity, Order_NetValue, Supplier from Supply_PurchaseOrder_table
+        select SP_ID, Material_Number, Purchase_Quantity, Net_Price, Net_Value_Order, Document_Date, Supplier, Supplier_Name from Supply_Purchaseorder_table
     </sql>
 
     <select id="selectSupplyPurchaseorderTableList" parameterType="SupplyPurchaseorderTable" resultMap="SupplyPurchaseorderTableResult">
         <include refid="selectSupplyPurchaseorderTableVo"/>
         <where>  
-            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
-            <if test="createdTime != null "> and CREATED_TIME = #{createdTime}</if>
-            <if test="documentDate != null "> and Document_Date = #{documentDate}</if>
-            <if test="purchasingDocuments != null  and purchasingDocuments != ''"> and Purchasing_Documents = #{purchasingDocuments}</if>
             <if test="materialNumber != null  and materialNumber != ''"> and Material_Number = #{materialNumber}</if>
-            <if test="collectiveProcurement != null "> and Collective_Procurement = #{collectiveProcurement}</if>
-            <if test="ShortText != null  and ShortText != ''"> and ShortText = #{ShortText}</if>
-            <if test="Unit != null  and Unit != ''"> and Unit = #{Unit}</if>
-            <if test="Quantity != null "> and Quantity = #{Quantity}</if>
-            <if test="orderNetvalue != null "> and Order_NetValue = #{orderNetvalue}</if>
+            <if test="purchaseQuantity != null "> and Purchase_Quantity = #{purchaseQuantity}</if>
+            <if test="netPrice != null "> and Net_Price = #{netPrice}</if>
+            <if test="netValueOrder != null "> and Net_Value_Order = #{netValueOrder}</if>
+            <if test="documentDate != null "> and Document_Date = #{documentDate}</if>
             <if test="Supplier != null  and Supplier != ''"> and Supplier = #{Supplier}</if>
+            <if test="supplierName != null  and supplierName != ''"> and Supplier_Name like concat('%', #{supplierName}, '%')</if>
         </where>
     </select>
     
@@ -44,67 +36,121 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSupplyPurchaseorderTableVo"/>
         where SP_ID = #{spId}
     </select>
-
-    <select id="selectLastId" resultType="java.lang.Long"> SELECT SP_ID FROM Supply_PurchaseOrder_table WHERE SP_ID = (SELECT MAX(SP_ID) FROM Supply_PurchaseOrder_table); </select>
-
-    <insert id="insertSupplyPurchaseorderTable" parameterType="SupplyPurchaseorderTable">
-        insert into Supply_PurchaseOrder_table
+        
+    <insert id="insertSupplyPurchaseorderTable" parameterType="SupplyPurchaseorderTable" useGeneratedKeys="true" keyProperty="spId">
+        insert into Supply_Purchaseorder_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="spId != null">SP_ID,</if>
-            <if test="createdBy != null">CREATED_BY,</if>
-            <if test="createdTime != null">CREATED_TIME,</if>
-            <if test="documentDate != null">Document_Date,</if>
-            <if test="purchasingDocuments != null">Purchasing_Documents,</if>
             <if test="materialNumber != null and materialNumber != ''">Material_Number,</if>
-            <if test="collectiveProcurement != null">Collective_Procurement,</if>
-            <if test="ShortText != null">ShortText,</if>
-            <if test="Unit != null">Unit,</if>
-            <if test="Quantity != null">Quantity,</if>
-            <if test="orderNetvalue != null">Order_NetValue,</if>
+            <if test="purchaseQuantity != null">Purchase_Quantity,</if>
+            <if test="netPrice != null">Net_Price,</if>
+            <if test="netValueOrder != null">Net_Value_Order,</if>
+            <if test="documentDate != null">Document_Date,</if>
             <if test="Supplier != null and Supplier != ''">Supplier,</if>
+            <if test="supplierName != null and supplierName != ''">Supplier_Name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="spId != null">#{spId},</if>
-            <if test="createdBy != null">#{createdBy},</if>
-            <if test="createdTime != null">#{createdTime},</if>
-            <if test="documentDate != null">#{documentDate},</if>
-            <if test="purchasingDocuments != null">#{purchasingDocuments},</if>
             <if test="materialNumber != null and materialNumber != ''">#{materialNumber},</if>
-            <if test="collectiveProcurement != null">#{collectiveProcurement},</if>
-            <if test="ShortText != null">#{ShortText},</if>
-            <if test="Unit != null">#{Unit},</if>
-            <if test="Quantity != null">#{Quantity},</if>
-            <if test="orderNetvalue != null">#{orderNetvalue},</if>
+            <if test="purchaseQuantity != null">#{purchaseQuantity},</if>
+            <if test="netPrice != null">#{netPrice},</if>
+            <if test="netValueOrder != null">#{netValueOrder},</if>
+            <if test="documentDate != null">#{documentDate},</if>
             <if test="Supplier != null and Supplier != ''">#{Supplier},</if>
+            <if test="supplierName != null and supplierName != ''">#{supplierName},</if>
          </trim>
     </insert>
 
+
+    <!--  批量插入的 SQL 语句  -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO Supply_Purchaseorder_table (SP_ID, Material_Number, Purchase_Quantity, Net_Price, Net_Value_Order, Document_Date, Supplier, Supplier_Name)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=","> ( #{item.spId}, #{item.materialNumber}, #{item.purchaseQuantity}, #{item.netPrice}, #{item.netValueOrder}, #{item.documentDate}, #{item.Supplier}, #{item.supplierName}) </foreach>
+    </insert>
+
     <update id="updateSupplyPurchaseorderTable" parameterType="SupplyPurchaseorderTable">
-        update Supply_PurchaseOrder_table
+        update Supply_Purchaseorder_table
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
-            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
-            <if test="documentDate != null">Document_Date = #{documentDate},</if>
-            <if test="purchasingDocuments != null">Purchasing_Documents = #{purchasingDocuments},</if>
             <if test="materialNumber != null and materialNumber != ''">Material_Number = #{materialNumber},</if>
-            <if test="collectiveProcurement != null">Collective_Procurement = #{collectiveProcurement},</if>
-            <if test="ShortText != null">ShortText = #{ShortText},</if>
-            <if test="Unit != null">Unit = #{Unit},</if>
-            <if test="Quantity != null">Quantity = #{Quantity},</if>
-            <if test="orderNetvalue != null">Order_NetValue = #{orderNetvalue},</if>
+            <if test="purchaseQuantity != null">Purchase_Quantity = #{purchaseQuantity},</if>
+            <if test="netPrice != null">Net_Price = #{netPrice},</if>
+            <if test="netValueOrder != null">Net_Value_Order = #{netValueOrder},</if>
+            <if test="documentDate != null">Document_Date = #{documentDate},</if>
             <if test="Supplier != null and Supplier != ''">Supplier = #{Supplier},</if>
+            <if test="supplierName != null and supplierName != ''">Supplier_Name = #{supplierName},</if>
         </trim>
         where SP_ID = #{spId}
     </update>
 
     <delete id="deleteSupplyPurchaseorderTableBySpId" parameterType="Long">
-        delete from Supply_PurchaseOrder_table where SP_ID = #{spId}
+        delete from Supply_Purchaseorder_table where SP_ID = #{spId}
     </delete>
 
     <delete id="deleteSupplyPurchaseorderTableBySpIds" parameterType="String">
-        delete from Supply_PurchaseOrder_table where SP_ID in 
+        delete from Supply_Purchaseorder_table where SP_ID in 
         <foreach item="spId" collection="array" open="(" separator="," close=")">
             #{spId}
         </foreach>
+    </delete>
+
+    <select id="calculateSupplierRatioByQuantity" resultType="java.lang.Double">
+        WITH TotalPurchaseQuantities AS (
+            SELECT
+                SUM(sp.Purchase_Quantity) AS TotalQuantity
+            FROM
+                Supply_Purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+        ), SupplierPurchaseQuantities AS (
+            SELECT
+                SUM(sp.Purchase_Quantity) AS SupplierTotalQuantity
+            FROM
+                Supply_Purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+            AND sp.Supplier = #{supplierCode}
+        )
+        SELECT
+            (COALESCE(SupplierTotalQuantity, 0) / TotalQuantity) * 100 AS RatioPercentage
+        FROM
+            TotalPurchaseQuantities, SupplierPurchaseQuantities;
+    </select>
+
+    <select id="calculateSupplierRatioByNetValueOrder" resultType="java.lang.Double">
+        WITH TotalNetValue AS (
+            SELECT
+                SUM(sp.Net_Value_Order) AS TotalNetValue
+            FROM
+                Supply_Purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+        ), SupplierNetValue AS (
+            SELECT
+                SUM(sp.Net_Value_Order) AS SupplierNetValue
+            FROM
+                Supply_Purchaseorder_table sp
+            INNER JOIN
+                supply_material_category_dictionary_table smcd
+                ON sp.Material_Number = smcd.Material_Number
+            WHERE
+                smcd.Material_Class = #{materialClass}
+            AND sp.Supplier = #{supplierCode}
+        )
+        SELECT
+            (COALESCE(SupplierNetValue, 0) / TotalNetValue) * 100 AS RatioPercentage
+        FROM
+            TotalNetValue, SupplierNetValue;
+    </select>
+
+    <delete id="deleteAll">
+        truncate table Supply_Purchaseorder_table
     </delete>
 </mapper>

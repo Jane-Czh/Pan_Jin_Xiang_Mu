@@ -88,7 +88,7 @@ public class MarketFunctionComparisonDeliverydaysServiceImpl implements IMarketF
             MarketCommercialVehicleTable marketCommercialVehicleTable = vehiclesweek.get(count);
             Date acceptanceDate = marketCommercialVehicleTable.getLaunchDate();//上线日期，对应A列
             Date OrderAcceptanceTime = marketCommercialVehicleTable.getAcceptanceDate(); //接单日期，对应表格B列
-            String VehicleModel = extractVehicleType(marketCommercialVehicleTable.getVehicleModel()); //车型，对应表格F列
+            String VehicleModel = marketCommercialVehicleTable.getVehicleModel(); //车型，对应表格F列
             Date PrecisionCompletionPeriod = marketCommercialVehicleTable.getPrecisionCompletionPeriod(); //精整玩工期，对应表格R列
             Calendar lacunchDate = Calendar.getInstance();
             lacunchDate.setTime(acceptanceDate);

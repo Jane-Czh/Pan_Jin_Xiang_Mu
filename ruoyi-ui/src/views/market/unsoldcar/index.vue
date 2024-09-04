@@ -82,7 +82,17 @@
     <el-table v-loading="loading" :data="unsoldcarList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="ucId" /> -->
-      <el-table-column label="车型" align="center" prop="vehicleModel" />
+      <!-- <el-table-column label="车型" align="center" prop="vehicleModel" /> -->
+      <el-table-column label="车型" align="center">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            style="color: #409EFF; cursor: pointer;" 
+            @click="showDialog(scope.row)"
+          >{{ scope.row.vehicleModel }}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="数量" align="center" prop="number" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -112,6 +122,32 @@
       @pagination="getList"
     />
 
+
+    <el-dialog
+      title="车型详情"
+      :visible.sync="dialogVisible"
+      width="75%"
+    >
+      <p>车型：{{ selectedRow.vehicleModel }}</p>
+      <el-table v-loading="loading" :data="marketInventoryCarDetail" >
+
+        <el-table-column label="车号" align="center" prop="wagonNumber" />
+        <el-table-column label="车型" align="center" prop="vehicleModel" />
+        <el-table-column label="门架" align="center" prop="doorFrame" />
+        <el-table-column label="属具" align="center" prop="accessory" />
+        <el-table-column label="阀片数" align="center" prop="valveBlockNumber" />
+        <el-table-column label="配置" align="center" prop="configuration" />
+        <el-table-column label="计划完工期" align="center" prop="planndeCompletionTime" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.planndeCompletionTime, '{y}-{m}-{d}') }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">关闭</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 添加或修改统计库存车数量对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -131,7 +167,7 @@
 </template>
 
 <script>
-import { listUnsoldcar, getUnsoldcar, delUnsoldcar, addUnsoldcar, updateUnsoldcar, synchronization } from "@/api/market/unsoldcar";
+import { listUnsoldcar, getUnsoldcar, delUnsoldcar, addUnsoldcar, updateUnsoldcar, synchronization, vehicleTypequery } from "@/api/market/unsoldcar";
 
 export default {
   name: "Unsoldcar",
@@ -149,8 +185,10 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      marketInventoryCarDetailtotal: 0,
       // 统计库存车数量表格数据
       unsoldcarList: [],
+      marketInventoryCarDetail: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -172,13 +210,46 @@ export default {
       },
       pageIndex:1,
       pagesize: 10,
-      totalPage:0
+      totalPage:0,
+
+      dialogVisible: false, // 控制对话框的显示与隐藏
+      selectedRow: {}, // 存储被点击的行数据
     };
   },
   created() {
     this.getList();
   },
   methods: {
+
+    showDialog(row) {
+      this.selectedRow = row; // 将被点击的行数据赋值给selectedRow
+      this.dialogVisible = true; // 显示对话框
+      
+      this.marketInventoryCarDetail = [];
+      vehicleTypequery(row.vehicleModel).then(response => {
+
+        response.rows.forEach(item => {
+      // 创建一个新的对象，只包含需要的字段
+          const carDetail = {
+            micdId: item.micdId,
+            wagonNumber: item.wagonNumber,
+            vehicleModel: item.vehicleModel,
+            doorFrame: item.doorFrame,
+            valveBlockNumber: item.valveBlockNumber,
+            planndeCompletionTime: item.planndeCompletionTime,
+            configuration: item.configuration,
+            accessory: item.accessory
+          };
+          // 将新的对象添加到 this.marketInventoryCarDetail 中
+          this.marketInventoryCarDetail.push(carDetail);
+        });
+        console.log(this.marketInventoryCarDetail);
+
+      }).catch(error => {
+      console.error("Error calling vehicleTypequery:", error);
+      // 这里可以添加错误处理逻辑，比如显示错误消息给用户
+    });
+    },
     /** 查询统计库存车数量列表 */
     getList() {
       this.unsoldcarList = [];
@@ -186,9 +257,8 @@ export default {
       listUnsoldcar(this.queryParams).then(response => {
         this.unsoldcarList = response.rows;
         this.total = response.total;
-      
-
-      });  this.loading = false;
+      });  
+      this.loading = false;
       //数据分页
       this.unsoldcarList = this.unsoldcarList.slice(
       (this.pageIndex - 1) * this.pageSize,

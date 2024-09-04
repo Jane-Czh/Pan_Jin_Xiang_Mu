@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.service.*;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -69,6 +71,30 @@ public class FinancialBalanceTableController extends BaseController {
 //    }
 
     /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:balance:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectBalanceSumInfoByYear() {
+        FinancialBalanceTable sumInfoByYear = financialBalanceTableService.selectBalanceSumInfoByYear();
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:balance:sum')")
+    @PostMapping("/newRate")
+    public AjaxResult selectBalanceSumRateByYear() {
+        FinancialBalanceTable sumInfoByYear = financialBalanceTableService.selectBalanceSumRateByYear();
+        return AjaxResult.success(sumInfoByYear);
+    }
+
+    /**
      * 查询财务-资产负债列表
      */
     @PreAuthorize("@ss.hasPermi('financial:balance:list')")
@@ -96,11 +122,11 @@ public class FinancialBalanceTableController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody FinancialBalanceTable financialBalanceTable) {
 //        return toAjax(financialBalanceTableService.insertFinancialBalanceTable(financialBalanceTable));
-        Date lastMonth = DateUtils.getLastMonth(financialBalanceTable.getYearAndMonth());
-        if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)
-                && financialBalanceTableService.checkDataExists()) {
-            return AjaxResult.error("上月资产负债信息未填报");
-        }
+//        Date lastMonth = DateUtils.getLastMonth(financialBalanceTable.getYearAndMonth());
+//        if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)
+//                && financialBalanceTableService.checkDataExists()) {
+//            return AjaxResult.error("上月资产负债信息未填报");
+//        }
 //        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
 //            return AjaxResult.error("上月资产负债表未上传");
 //        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
@@ -108,26 +134,25 @@ public class FinancialBalanceTableController extends BaseController {
 //        }
 
         if (financialBalanceTableService.checkBalanceDataIsExisted(financialBalanceTable.getYearAndMonth())) {
-            return AjaxResult.error("当月资产负债表已上传");
+            return AjaxResult.error("当月资产负债表已填报");
         }
 
-        financialBalanceTableService.insertFinancialBalanceTable(financialBalanceTable);
-
-
+        int status = 0;
+        status = financialBalanceTableService.insertFinancialBalanceTable(financialBalanceTable);
+        if (status == 0){
+            return AjaxResult.error("当月资产负债表填报数据有误");
+        }
 
 
         // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
         if (financialDataService.checkDataUploadedForCurrentMonth(financialBalanceTable.getYearAndMonth())
                 && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(financialBalanceTable.getYearAndMonth()))) {
             // 开始计算
-            financialDataService.calculateCurrentMonthFinancialData(financialBalanceTable.getYearAndMonth());
+            status = financialDataService.calculateCurrentMonthFinancialData(financialBalanceTable.getYearAndMonth());
         }
 
-
-
-        return AjaxResult.success();
+        return toAjax(status);
     }
-
 
 
     /**

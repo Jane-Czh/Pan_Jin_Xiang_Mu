@@ -9,10 +9,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 采购订单导入对象 Supply_PurchaseOrder_table
+ * 采购订单导入对象 Supply_Purchaseorder_table
  * 
- * @author ruoyi
- * @date 2024-04-23
+ * @author Teandron
+ * @date 2024-07-30
  */
 public class SupplyPurchaseorderTable extends BaseEntity
 {
@@ -21,51 +21,34 @@ public class SupplyPurchaseorderTable extends BaseEntity
     /** 主键 */
     private Long spId;
 
-    /** 导入人 */
-    @Excel(name = "导入人")
-    private String createdBy;
+    /** 物料号 */
+    @Excel(name = "物料号")
+    private String materialNumber;
 
-    /** 导入时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "导入时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createdTime;
+    /** 采购数量 */
+    @Excel(name = "采购数量")
+    private Long purchaseQuantity;
+
+    /** 净价 */
+    @Excel(name = "净价")
+    private BigDecimal netPrice;
+
+    /** 订单净值 */
+    @Excel(name = "订单净值")
+    private BigDecimal netValueOrder;
 
     /** 凭证日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "凭证日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date documentDate;
 
-    /** 采购凭证 */
-    @Excel(name = "采购凭证")
-    private String purchasingDocuments;
-
-    /** 物料号 */
-    @Excel(name = "物料号")
-    private String materialNumber;
-
-    /** 是否为集采(0/1) */
-    @Excel(name = "是否为集采(0/1)")
-    private Integer collectiveProcurement;
-
-    /** 短文本 */
-    @Excel(name = "短文本")
-    private String ShortText;
-
-    /** 单位 */
-    @Excel(name = "单位")
-    private String Unit;
-
-    /** 数量 */
-    @Excel(name = "数量")
-    private Long Quantity;
-
-    /** 订单净值 */
-    @Excel(name = "订单净值")
-    private BigDecimal orderNetvalue;
-
     /** 供应商 */
     @Excel(name = "供应商")
     private String Supplier;
+
+    /** 供应商名称 */
+    @Excel(name = "供应商名称")
+    private String supplierName;
 
     public void setSpId(Long spId) 
     {
@@ -76,23 +59,41 @@ public class SupplyPurchaseorderTable extends BaseEntity
     {
         return spId;
     }
-    public void setCreatedBy(String createdBy) 
+    public void setMaterialNumber(String materialNumber) 
     {
-        this.createdBy = createdBy;
+        this.materialNumber = materialNumber;
     }
 
-    public String getCreatedBy() 
+    public String getMaterialNumber() 
     {
-        return createdBy;
+        return materialNumber;
     }
-    public void setCreatedTime(Date createdTime) 
+    public void setPurchaseQuantity(Long purchaseQuantity) 
     {
-        this.createdTime = createdTime;
+        this.purchaseQuantity = purchaseQuantity;
     }
 
-    public Date getCreatedTime() 
+    public Long getPurchaseQuantity() 
     {
-        return createdTime;
+        return purchaseQuantity;
+    }
+    public void setNetPrice(BigDecimal netPrice) 
+    {
+        this.netPrice = netPrice;
+    }
+
+    public BigDecimal getNetPrice() 
+    {
+        return netPrice;
+    }
+    public void setNetValueOrder(BigDecimal netValueOrder) 
+    {
+        this.netValueOrder = netValueOrder;
+    }
+
+    public BigDecimal getNetValueOrder() 
+    {
+        return netValueOrder;
     }
     public void setDocumentDate(Date documentDate) 
     {
@@ -103,69 +104,6 @@ public class SupplyPurchaseorderTable extends BaseEntity
     {
         return documentDate;
     }
-    public void setPurchasingDocuments(String purchasingDocuments) 
-    {
-        this.purchasingDocuments = purchasingDocuments;
-    }
-
-    public String getPurchasingDocuments() 
-    {
-        return purchasingDocuments;
-    }
-    public void setMaterialNumber(String materialNumber) 
-    {
-        this.materialNumber = materialNumber;
-    }
-
-    public String getMaterialNumber() 
-    {
-        return materialNumber;
-    }
-    public void setCollectiveProcurement(Integer collectiveProcurement) 
-    {
-        this.collectiveProcurement = collectiveProcurement;
-    }
-
-    public Integer getCollectiveProcurement() 
-    {
-        return collectiveProcurement;
-    }
-    public void setShortText(String ShortText) 
-    {
-        this.ShortText = ShortText;
-    }
-
-    public String getShortText() 
-    {
-        return ShortText;
-    }
-    public void setUnit(String Unit) 
-    {
-        this.Unit = Unit;
-    }
-
-    public String getUnit() 
-    {
-        return Unit;
-    }
-    public void setQuantity(Long Quantity) 
-    {
-        this.Quantity = Quantity;
-    }
-
-    public Long getQuantity() 
-    {
-        return Quantity;
-    }
-    public void setOrderNetvalue(BigDecimal orderNetvalue) 
-    {
-        this.orderNetvalue = orderNetvalue;
-    }
-
-    public BigDecimal getOrderNetvalue() 
-    {
-        return orderNetvalue;
-    }
     public void setSupplier(String Supplier) 
     {
         this.Supplier = Supplier;
@@ -175,22 +113,27 @@ public class SupplyPurchaseorderTable extends BaseEntity
     {
         return Supplier;
     }
+    public void setSupplierName(String supplierName) 
+    {
+        this.supplierName = supplierName;
+    }
+
+    public String getSupplierName() 
+    {
+        return supplierName;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("spId", getSpId())
-            .append("createdBy", getCreatedBy())
-            .append("createdTime", getCreatedTime())
-            .append("documentDate", getDocumentDate())
-            .append("purchasingDocuments", getPurchasingDocuments())
             .append("materialNumber", getMaterialNumber())
-            .append("collectiveProcurement", getCollectiveProcurement())
-            .append("ShortText", getShortText())
-            .append("Unit", getUnit())
-            .append("Quantity", getQuantity())
-            .append("orderNetvalue", getOrderNetvalue())
+            .append("purchaseQuantity", getPurchaseQuantity())
+            .append("netPrice", getNetPrice())
+            .append("netValueOrder", getNetValueOrder())
+            .append("documentDate", getDocumentDate())
             .append("Supplier", getSupplier())
+            .append("supplierName", getSupplierName())
             .toString();
     }
 }

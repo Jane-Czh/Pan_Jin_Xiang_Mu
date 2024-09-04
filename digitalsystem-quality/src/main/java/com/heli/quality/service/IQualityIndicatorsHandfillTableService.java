@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.quality.domain.QualityIndicatorsHandfillTable;
+import com.heli.quality.domain.QualityInspectionRecord;
 
 /**
  * [质量]指标填报Service接口
@@ -16,6 +17,7 @@ public interface IQualityIndicatorsHandfillTableService {
 
     Boolean checkQualityFillingDataIsExisted(Date yearAndMonth);
 
+    QualityIndicatorsHandfillTable selectMaxMonthHandfill();
 
 
 

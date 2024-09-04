@@ -3,6 +3,7 @@ package com.heli.quality.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.heli.quality.domain.QualityInspectionRecord;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,12 @@ public class QualityIndicatorsHandfillTableServiceImpl implements IQualityIndica
     public Boolean checkQualityFillingDataIsExisted(Date yearAndMonth) {
         return qualityIndicatorsHandfillTableMapper.checkQualityFillingDataIsExisted(yearAndMonth);
     }
+
+    @Override
+    public QualityIndicatorsHandfillTable selectMaxMonthHandfill() {
+        return qualityIndicatorsHandfillTableMapper.selectMaxMonthHandfill();
+    }
+
 
     /**
      * 查询[质量]指标填报

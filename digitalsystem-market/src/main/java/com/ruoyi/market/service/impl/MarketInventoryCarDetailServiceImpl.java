@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import com.alibaba.excel.util.ListUtils;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.domain.MarketFunctionQuickReport;
 import com.ruoyi.market.domain.MarketSalesTable;
@@ -32,6 +33,10 @@ public class MarketInventoryCarDetailServiceImpl implements IMarketInventoryCarD
     @Autowired
     private MarketInventoryCarDetailMapper marketInventoryCarDetailMapper;
 
+
+    private static final int BATCH_COUNT = 500; // 批处理数量
+    //缓存一批数据
+    private List<MarketInventoryCarDetail> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**
      * 导入excel
      *
@@ -44,35 +49,27 @@ public class MarketInventoryCarDetailServiceImpl implements IMarketInventoryCarD
         InputStream is = null;
         try {
 
-            System.out.println(excelFile);
             //获取表格数据
             List<MarketInventoryCarDetail> marketInventoryCarDetails = ExcelUtils.parseExcel2MarketInventoryCarDetail(excelFile);
-
-            //先删除数据库中所有数据
-            List<MarketInventoryCarDetail> need_delete = selectMarketInventoryCarDetailList(marketInventoryCarDetail);
-            if (need_delete.size() > 0){
-                //有需要删除的内容
-                int x = 0;
-                Long[] deleteId = new Long[need_delete.size()];
-                while (x < need_delete.size()){
-                    MarketInventoryCarDetail value = need_delete.get(x);
-                    deleteId[x] = value.getMicdId();
-                    x++;
-                }
-                deleteMarketInventoryCarDetailByMicdIds(deleteId);
-                System.out.println("删除成功");
-            }
+            marketInventoryCarDetailMapper.deleteAll();
+            System.out.println("删除成功");
 
             //插入
             int i = 0;
-            Long id = 0L;
             while (i < marketInventoryCarDetails.size()){
                 marketInventoryCarDetail = marketInventoryCarDetails.get(i);
-                Long MicdId = GenerateId.getNextId(id);
-                marketInventoryCarDetail.setMicdId(MicdId);
-                marketInventoryCarDetailMapper.insertMarketInventoryCarDetail(marketInventoryCarDetail);
-                id++;
+                cachedDataList.add(marketInventoryCarDetail);
+                if (cachedDataList.size() >= BATCH_COUNT) {
+                    marketInventoryCarDetailMapper.batchInsert(cachedDataList);
+                    cachedDataList.clear();
+                    System.out.println("插入一轮");
+                }
+//                marketInventoryCarDetailMapper.insertMarketInventoryCarDetail(marketInventoryCarDetail);
                 i++;
+            }
+            if (cachedDataList.size() > 0){
+                marketInventoryCarDetailMapper.batchInsert(cachedDataList);
+                cachedDataList.clear();
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.heli.financial.service;
 
 import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
  */
 public interface IFinancialIndicatorsHandfillTableService {
 
+    FinancialIndicatorsHandfillTable selectMaxMonthHandfill();
+
     Date selectMaxYearAndMonth();
 
     boolean checkDataExists();
@@ -26,6 +29,10 @@ public interface IFinancialIndicatorsHandfillTableService {
 
 
     FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(Date yearAndMonth);
+
+    FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(Date yearAndMonth);
+    FinancialIndicatorsHandfillTable selectHandfillRateByYear(Date yearAndMonth);
+
 
     /**
      * 查询[财务]手动填报指标

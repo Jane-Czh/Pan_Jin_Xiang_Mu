@@ -28,7 +28,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="tapcId" /> -->
       <el-table-column label="年份" align="center" prop="naturalYear" :sort-orders="['descending', 'ascending']"
@@ -50,6 +50,11 @@
     <!-- 添加或修改【技术】总计划年初填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <!-- <el-form-item label="年份" prop="naturalYear">
+          <el-date-picker clearable v-model="form.naturalYear" type="year" value-format="yyyy-MM-dd"
+            placeholder="请选择年份">
+          </el-date-picker>
+        </el-form-item> -->
         <el-form-item label="年份" prop="naturalYear">
           <el-input v-model="form.naturalYear" placeholder="请输入年份" />
         </el-form-item>
@@ -67,7 +72,7 @@
 
 <script>
 import { listData2, getData2, delData2, addData2, updateData2 } from "@/api/tech/data";
-import { numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
+import { numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
   data() {
@@ -108,7 +113,7 @@ export default {
         annualPlancounts: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur"
           }
         ],

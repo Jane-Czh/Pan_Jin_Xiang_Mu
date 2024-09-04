@@ -54,6 +54,14 @@ public class RegulationsInfoTable extends BaseEntity
     @Excel(name = "文件路径")
     private String filePath;
 
+    /** pdf路径 */
+    @Excel(name = "pdf路径")
+    private String pdfPath;
+
+    /** word路径 */
+    @Excel(name = "word路径")
+    private String wordPath;
+
     /** 文件类型（word/pdf） */
     @Excel(name = "文件类型", readConverterExp = "w=ord/pdf")
     private String fileType;
@@ -61,6 +69,18 @@ public class RegulationsInfoTable extends BaseEntity
     /** 文件大小 */
     @Excel(name = "文件大小")
     private BigDecimal fileSize;
+
+    /** pdf文件大小 */
+    @Excel(name = "pdf文件大小")
+    private BigDecimal pdfSize;
+
+    /** word文件大小 */
+    @Excel(name = "word文件大小")
+    private BigDecimal wordSize;
+
+    /** 文件内容 */
+    @Excel(name = "文件内容")
+    private String fileContent;
 
     /** 制度创建日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -78,6 +98,22 @@ public class RegulationsInfoTable extends BaseEntity
     /** 制度所属科室 */
     @Excel(name = "制度所属科室")
     private String departmentCategory;
+
+    /** 制度主责部门 */
+    @Excel(name = "制度主责部门")
+    private String mainResponsibleDepartment;
+
+    /** 制度专业分类 */
+    @Excel(name = "制度专业分类")
+    private String classificationOfSpecialties;
+
+    /** 制度等级 */
+    @Excel(name = "制度等级")
+    private String regulationLeval;
+
+    /** 制度编号 */
+    @Excel(name = "制度编号")
+    private String regulationNumber;
 
     /** 制度标签名称 */
     @Excel(name = "制度标签名称")
@@ -100,6 +136,10 @@ public class RegulationsInfoTable extends BaseEntity
     @Excel(name = "修订人")
     private String reviser;
 
+    /** 绑定的流程ids */
+    @Excel(name = "绑定的流程ids")
+    private String projectIds;
+
     /** 标志位(是否为最新文件) */
     @Excel(name = "标志位(是否为最新文件)")
     private Integer newFlag;
@@ -107,6 +147,14 @@ public class RegulationsInfoTable extends BaseEntity
     /** 标志位(本文件上一旧文件id) */
     @Excel(name = "标志位(本文件上一旧文件id)")
     private Long newRegulationsId;
+
+    /** 业务模块 */
+    @Excel(name = "业务模块")
+    private String businesses;
+
+    /** 细分业务 */
+    @Excel(name = "细分业务")
+    private String subBusinesses;
 
     // startTime和endTime的getter和setter
     public Date getStartTime() {
@@ -306,6 +354,102 @@ public class RegulationsInfoTable extends BaseEntity
         return newRegulationsId;
     }
 
+    public String getPdfPath() {
+        return pdfPath;
+    }
+
+    public void setPdfPath(String pdfPath) {
+        this.pdfPath = pdfPath;
+    }
+
+    public String getWordPath() {
+        return wordPath;
+    }
+
+    public void setWordPath(String wordPath) {
+        this.wordPath = wordPath;
+    }
+
+    public BigDecimal getPdfSize() {
+        return pdfSize;
+    }
+
+    public void setPdfSize(BigDecimal pdfSize) {
+        this.pdfSize = pdfSize;
+    }
+
+    public BigDecimal getWordSize() {
+        return wordSize;
+    }
+
+    public void setWordSize(BigDecimal wordSize) {
+        this.wordSize = wordSize;
+    }
+
+    public String getMainResponsibleDepartment() {
+        return mainResponsibleDepartment;
+    }
+
+    public void setMainResponsibleDepartment(String mainResponsibleDepartment) {
+        this.mainResponsibleDepartment = mainResponsibleDepartment;
+    }
+
+    public String getClassificationOfSpecialties() {
+        return classificationOfSpecialties;
+    }
+
+    public void setClassificationOfSpecialties(String classificationOfSpecialties) {
+        this.classificationOfSpecialties = classificationOfSpecialties;
+    }
+
+    public String getRegulationLeval() {
+        return regulationLeval;
+    }
+
+    public void setRegulationLeval(String regulationLeval) {
+        this.regulationLeval = regulationLeval;
+    }
+
+    public String getRegulationNumber() {
+        return regulationNumber;
+    }
+
+    public void setRegulationNumber(String regulationNumber) {
+        this.regulationNumber = regulationNumber;
+    }
+
+    public String getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(String projectIds) {
+        this.projectIds = projectIds;
+    }
+
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
+    }
+
+    public String getBusinesses() {
+        return businesses;
+    }
+
+    public void setBusinesses(String businesses) {
+        this.businesses = businesses;
+    }
+
+    public String getSubBusinesses() {
+        return subBusinesses;
+    }
+
+    public void setSubBusinesses(String subBusinesses) {
+        this.subBusinesses = subBusinesses;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -316,19 +460,31 @@ public class RegulationsInfoTable extends BaseEntity
                 .append("effectiveDate", getEffectiveDate())
                 .append("fileName", getFileName())
                 .append("filePath", getFilePath())
+                .append("pdfPath", getPdfPath())
+                .append("wordPath", getWordPath())
                 .append("fileType", getFileType())
                 .append("fileSize", getFileSize())
+                .append("pdfSize", getPdfSize())
+                .append("wordSize", getWordSize())
+                .append("fileContent", getFileContent())
                 .append("createDate", getCreateDate())
                 .append("uploadUsername", getUploadUsername())
                 .append("useState", getUseState())
                 .append("departmentCategory", getDepartmentCategory())
+                .append("mainResponsibleDepartment", getMainResponsibleDepartment())
+                .append("classificationOfSpecialties", getClassificationOfSpecialties())
+                .append("regulationLeval", getRegulationLeval())
+                .append("regulationNumber", getRegulationNumber())
                 .append("fileTag", getFileTag())
                 .append("oldRegulationsId", getOldRegulationsId())
                 .append("revisionDate", getRevisionDate())
                 .append("revisionContent", getRevisionContent())
                 .append("reviser", getReviser())
+                .append("projectIds", getProjectIds())
                 .append("newFlag", getNewFlag())
                 .append("newRegulationsId", getNewRegulationsId())
+                .append("businesses", getBusinesses())
+                .append("subBusinesses", getSubBusinesses())
                 .toString();
     }
 }

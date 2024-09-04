@@ -31,6 +31,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT EXISTS(SELECT 1 FROM Quality_Indicators_HandFill_table WHERE Year_And_Month=#{yearAndMonth})
     </select>
 
+    <!--  获取年月最大的数据  -->
+    <select id="selectMaxMonthHandfill" resultMap="QualityIndicatorsHandfillTableResult">
+        <include refid="selectQualityIndicatorsHandfillTableVo"/>
+        where Year_And_Month IN (
+            SELECT MAX(Year_And_Month)
+            FROM Quality_Indicators_HandFill_table
+        )
+    </select>
+
 
 
     <select id="selectQualityIndicatorsHandfillTableList" parameterType="QualityIndicatorsHandfillTable" resultMap="QualityIndicatorsHandfillTableResult">

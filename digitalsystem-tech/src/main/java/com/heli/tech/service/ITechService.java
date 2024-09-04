@@ -13,13 +13,19 @@ import com.ruoyi.common.core.domain.DisplayEntity;
  * @date 2024-04-27
  */
 public interface ITechService {
+ public int updateCompletionRate();
+
+   int calculateCompletionRate(Date yearAndMonth);
+
+    int insertOrUpdateTech(Tech tech);
+
 
     Boolean checkTechMonthlyDataIsExisted(Date date);
 
     Boolean checkDataExist();
 
 
-    public Tech calculateCompletionRate(Tech tech);
+//    public Tech calculateCompletionRate(Tech tech);
 
     public int batchUpdateTech(Date date);
 

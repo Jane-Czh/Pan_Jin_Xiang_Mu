@@ -84,11 +84,74 @@
         where Year_And_Month=#{yearAndMonth}
     </select>
 
+    <!--  首页数据展示  -->
+    <select id="selectHandfillSumInfoByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialIndicatorsHandfillTable">
+        SELECT MAX(FIHF_id)                      fihfId,
+               MAX(Year_And_Month)               yearAndMonth,
+               sum(Total_Sales_Revenue)          totalSalesRevenue,
+               sum(External_Group_Sales_Revenue) externalGroupSalesRevenue,
+               sum(Total_Vehicle_Production)     totalVehicleProduction,
+               sum(Total_Vehicle_Sales)          totalVehicleSales,
+               sum(New_Product_Sales_Revenue)    newProductSalesRevenue,
+               sum(Specialty_Product_Revenue)    specialtyProductRevenue,
+               sum(Total_Sales_Cost)             totalSalesCost,
+               sum(Manufacturing_Expenses_Month) manufacturingExpensesMonth,
+               sum(Reserve_Car_Amount)           reserveCarAmount,
+               sum(Capital_Turnover_Rate)        capitalTurnoverRate,
+               sum(Inventory_Turnover_Rate)      inventoryTurnoverRate,
+               sum(Raw_Material_Turnover_Rate)   rawMaterialTurnoverRate,
+               sum(InProgress_Turnover_Rate)     inprogressTurnoverRate,
+               sum(Long_Estimated_Items)         longEstimatedItems,
+               sum(InProgress_DayRevenue)        inprogressDayrevenue,
+               sum(Added_Value_Monthly)          addedValueMonthly
+        FROM Financial_Indicators_HandFill_table
+        WHERE date_format(Year_And_Month,'%Y') = date_format(#{yearAndMonth},'%Y')
+    </select>
+    <!--  首页数据展示  -->
+    <select id="selectHandfillRateByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialIndicatorsHandfillTable">
+        SELECT FIHF_id                      fihfId,
+               Year_And_Month               yearAndMonth,
+               Capital_Turnover_Rate        capitalTurnoverRate,
+               Inventory_Turnover_Rate      inventoryTurnoverRate,
+               Raw_Material_Turnover_Rate   rawMaterialTurnoverRate,
+               InProgress_Turnover_Rate     inprogressTurnoverRate
+        FROM Financial_Indicators_HandFill_table
+        WHERE Year_And_Month IN (
+            SELECT MAX(Year_And_Month)
+            FROM Financial_Indicators_HandFill_table
+            WHERE YEAR(Year_And_Month) = YEAR(#{yearAndMonth}) and Inventory_Turnover_Rate is not null
+        )
+    </select>
+
+
+    <!--  获取年月最大的其他数据  -->
+    <select id="selectMaxMonthHandfill" resultMap="FinancialIndicatorsHandfillTableResult">
+        <include refid="selectFinancialIndicatorsHandfillTableVo"/>
+        where Year_And_Month IN (
+        SELECT MAX(Year_And_Month)
+        FROM Financial_Indicators_HandFill_table
+        )
+    </select>
+
+
+    <!--  获取年月最大的数据  -->
+    <!--  获取年月最大的数据  -->
+    <select id="selectMaxMonthFilling" parameterType="Date" resultType="map">
+        select * from (
+                          select Year_And_Month from Financial_Balance_table
+                          order by Year_And_Month DESC
+                      ) as t
+        order by Year_And_Month
+    </select>
+
+
+
 
     <select id="selectFinancialIndicatorsHandfillTableList" parameterType="FinancialIndicatorsHandfillTable"
             resultMap="FinancialIndicatorsHandfillTableResult">
         <include refid="selectFinancialIndicatorsHandfillTableVo"/>
         <where>
+            <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>
             <if test="totalSalesRevenue != null ">and Total_Sales_Revenue = #{totalSalesRevenue}</if>
             <if test="externalGroupSalesRevenue != null ">and External_Group_Sales_Revenue = #{externalGroupSalesRevenue}</if>
             <if test="totalVehicleProduction != null ">and Total_Vehicle_Production = #{totalVehicleProduction}</if>

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.Enterprisemanagement.domain.EnterpriseManagementLaborContractLedger;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.market.domain.MarketFunctionQuickReport;
 import com.ruoyi.market.utils.GenerateId;
@@ -168,14 +169,29 @@ public class ProductionFunctionStatisticsOfPlanCompletionStatusServiceImpl imple
             System.out.println("删除成功");
         }
         //依次插入新生成的快报
-        Long id = 0L;
-        for (Map.Entry<String, ProductionFunctionStatisticsOfPlanCompletionStatus> entry : result.entrySet()){
-            System.out.println("-------------------");
-            ProductionFunctionStatisticsOfPlanCompletionStatus insertValue = entry.getValue();
-            insertValue.setMpcId(GenerateId.getNextId(id));
-            insertProductionFunctionStatisticsOfPlanCompletionStatus(insertValue);
-            id++;
-            System.out.println("插入成功");
+//        Long id = 0L;
+//        for (Map.Entry<String, ProductionFunctionStatisticsOfPlanCompletionStatus> entry : result.entrySet()){
+//            System.out.println("-------------------");
+//            ProductionFunctionStatisticsOfPlanCompletionStatus insertValue = entry.getValue();
+//            insertValue.setMpcId(GenerateId.getNextId(id));
+//            insertProductionFunctionStatisticsOfPlanCompletionStatus(insertValue);
+//            id++;
+//            System.out.println("插入成功");
+//        }
+        // 分批处理数据，每批2000条
+        int batchSize = 4000;
+        int totalSize = list1.size();
+        for (int i = 0; i < totalSize; i += batchSize) {
+            int end = Math.min(i + batchSize, totalSize);
+            List<ProductionFunctionStatisticsOfPlanCompletionStatus> batchLedgers = list1.subList(i, end);
+
+            // 过滤掉车号为null的数据
+            batchLedgers.removeIf(ledger -> ledger.getCarNumber() == null);
+
+            // 批量插入数据
+            if (!batchLedgers.isEmpty()) {
+                productionFunctionStatisticsOfPlanCompletionStatusMapper.insertBatch(batchLedgers);
+            }
         }
 
 

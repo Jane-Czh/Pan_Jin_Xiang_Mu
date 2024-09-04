@@ -33,7 +33,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="id" /> -->
       <el-table-column label="日期" align="center" prop="dataTime" width="180" :sort-orders="['descending', 'ascending']"
@@ -42,8 +42,12 @@
           <span>{{ parseTime(scope.row.dataTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="当日在制品金额" align="center" prop="inProgressDayRevenue" />
-
+      <!-- <el-table-column label="当日在制品金额(元)" align="center" prop="inProgressDayRevenue" /> -->
+      <el-table-column label="当日在制品金额(元)" align="center" prop="inProgressDayRevenue">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.inProgressDayRevenue) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -59,14 +63,15 @@
 
     <!-- 添加或修改[财务]每日填报指标[当日再制品金额]对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
         <el-form-item label="日期" prop="dataTime">
           <el-date-picker clearable v-model="form.dataTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="当日在制品金额" prop="inProgressDayRevenue">
-          <el-input v-model="form.inProgressDayRevenue" placeholder="请输入当日在制品金额" />
+        <el-form-item label="当日在制品金额(元)" prop="inProgressDayRevenue">
+          <el-input v-model="form.inProgressDayRevenue" placeholder="请输入当日在制品金额(元)" />
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -81,6 +86,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/financial
 import { numValidator } from '@/api/financial/numValidator.js';
 
 export default {
+
   name: "Data",
   data() {
     return {
@@ -131,6 +137,10 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -176,7 +186,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.dates = selection.map(item => item.yearAndMonth)
+      this.dates = selection.map(item => item.dataTime)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -219,7 +229,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      const date = row.yearAndMonth || this.dates;
+      const date = row.dataTime || this.dates;
       this.$modal.confirm('是否删除日期为"' + date + '"的数据？').then(function () {
         return delData(ids);
       }).then(() => {

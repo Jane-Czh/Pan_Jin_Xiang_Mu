@@ -5,24 +5,19 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
 import com.ruoyi.market.utils.GenerateId;
 import com.ruoyi.market.utils.SplitDate;
 import com.ruoyi.market.utils.getTime;
-import com.ruoyi.product.domain.ProductionOvertimeStatisticsTable;
-import com.ruoyi.product.domain.ProuctionFunctionQualifiedRate;
-import com.ruoyi.product.domain.WorkTimeData;
+import com.ruoyi.product.domain.*;
+import com.ruoyi.product.mapper.ProductionCommuteTimeMapper;
 import com.ruoyi.product.utils.ExcelUtilsPro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.product.mapper.ProductionClockInFormMapper;
-import com.ruoyi.product.domain.ProductionClockInForm;
 import com.ruoyi.product.service.IProductionClockInFormService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -118,25 +113,56 @@ public class ProductionClockInFormServiceImpl implements IProductionClockInFormS
     }
 
     @Override
-    public int importInterests(MultipartFile excelFile) throws IOException {
-        ProductionClockInForm productionClockInForm;
+    public int importInterests(MultipartFile excelFile,ProductionCommuteTime productionCommuteTime) throws IOException {
+//        ProductionClockInForm productionClockInForm;
         InputStream is = null;
         try {
             List<ProductionClockInForm> productionClockInForms = ExcelUtilsPro.parseExcelform(excelFile);
-            int i = 0;
-            while (i < productionClockInForms.size()){
-                productionClockInForm = productionClockInForms.get(i);
-                Long lastid = selectLastId();
-                if(lastid == null){
-                    lastid = 0L;
-                }
-                long PQR_id = GenerateId.getNextId(lastid);
-                productionClockInForm.setPcifId(PQR_id);
-                if (productionClockInForm.getIdNumber() == null){
+            List<ProductionClockInForm> batchInsertList = new ArrayList<>();
+
+            System.out.println("============" + productionCommuteTime + "=========");
+            for (ProductionClockInForm productionClockInForm : productionClockInForms) {
+                Date Firststart = productionClockInForm.getFirstTimeClockingInAtWork();
+                // 获取 Firststart 的年月日
+                LocalDate firstStartDate = Firststart.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                Date Firstend = productionClockInForm.getFirstTimeClockingInAfterWork();
+                // 获取 Firstend 的年月日
+                LocalDate firstEndDate = Firstend.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                // 获取 workTimeData.getStartTime() 的时分秒
+                LocalDateTime workStartDateTime = Instant.ofEpochMilli(productionCommuteTime.getWorkingHours().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                // 获取 workTimeData.getEndTime() 的时分秒
+                LocalDateTime workEndTime = Instant.ofEpochMilli(productionCommuteTime.getOffHours().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                // 使用 LocalDate 的年月日和 LocalTime 的时分秒创建新的 LocalDateTime 对象
+                LocalDateTime combinedStartDateTime = workStartDateTime.with(firstStartDate);
+                // 使用 LocalDate 的年月日和 LocalTime 的时分秒创建新的 LocalDateTime 对象
+                LocalDateTime combinedDateTime = workEndTime.with(firstEndDate);
+                // 将新的 LocalDateTime 对象转换为带有时区的 ZonedDateTime 对象
+                ZonedDateTime zonedStartDateTime = combinedStartDateTime.atZone(ZoneId.systemDefault());
+                // 将新的 LocalDateTime 对象转换为带有时区的 ZonedDateTime 对象
+                ZonedDateTime zonedDateTime = combinedDateTime.atZone(ZoneId.systemDefault());
+                // 将 ZonedDateTime 对象转换为 Instant，然后将其转换为 Date 类型的 Normalstartstr
+                Date newNormalstartstr = Date.from(zonedStartDateTime.toInstant());
+                // 将 ZonedDateTime 对象转换为 Instant，然后将其转换为 Date 类型的 Normalend
+                Date newNormalend = Date.from(zonedDateTime.toInstant());
+                System.out.println("------------" + newNormalend + "-------------");
+                productionClockInForm.setNormalWorkingHours(newNormalstartstr);
+                productionClockInForm.setNormalClosingTime(newNormalend);
+
+                if (productionClockInForm.getIdNumber() == null) {
                     continue;
                 }
-                productionClockInFormMapper.insertProductionClockInForm(productionClockInForm);
-                i++;
+                batchInsertList.add(productionClockInForm);
+
+                // 每4000条数据进行一次批量插入
+                if (batchInsertList.size() >= 4000) {
+                    productionClockInFormMapper.insertBatch(batchInsertList);
+                    batchInsertList.clear();
+                }
+            }
+
+            // 插入剩余的数据
+            if (!batchInsertList.isEmpty()) {
+                productionClockInFormMapper.insertBatch(batchInsertList);
             }
         } catch (IOException e) {
             e.printStackTrace();

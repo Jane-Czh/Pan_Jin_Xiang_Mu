@@ -30,7 +30,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="ManagementList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column label="SD 销售订单有效性考核" align="center" prop="sdSalesordervalidity" width="170" />
       <el-table-column label="PP 手工创建生产订单比例(%)" align="center" prop="ppManualpocreationratio" width="200" />
-      <el-table-column label="PP 生产订单已收货未报工的比例(%)" align="center" prop="ppDeliveredunreportedratio" width="230" />
+      <el-table-column label="PP 生产订单已收货未报工的比例(%)" align="center" prop="ppDeliveredunreportedratio" width="250" />
       <el-table-column label="MES 报工不及时率比率(%)" align="center" prop="mesLateworkreportingrate" width="190" />
       <el-table-column label="QM 外检业务不及时率(%)" align="center" prop="qmExternalinspectiondelay" width="180" />
       <el-table-column label="MM 采购订单交货不及时的比例(%)" align="center" prop="mmPurchaseorderlatedelivery" width="230" />
@@ -50,7 +50,7 @@
         width="310" />
       <el-table-column label="跨月生产订单比例(%)" align="center" prop="crossMonthProductionOrders" width="160" />
       <el-table-column label="PM 维修订单完工不及时率(%)" align="center" prop="pmLatemaintenanceordercompletion" width="200" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['enterprise:management:edit']">修改</el-button>
@@ -64,7 +64,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改十一项管理指标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="250px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -173,41 +173,41 @@ export default {
         ppManualpocreationratio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         ppDeliveredunreportedratio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         mesLateworkreportingrate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         qmExternalinspectiondelay: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         mmPurchaseorderlatedelivery: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ], mmManualpocreation: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -221,7 +221,7 @@ export default {
         ficoMonthlystandardpricevariation: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -235,7 +235,7 @@ export default {
         pmLatemaintenanceordercompletion: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -246,6 +246,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(sort) {
       // sort.order: 排序的顺序，'ascending' 或 'descending'
       if (sort.column && sort.prop === 'yearAndMonth') {

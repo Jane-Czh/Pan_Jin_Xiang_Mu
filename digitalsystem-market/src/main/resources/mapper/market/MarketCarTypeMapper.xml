@@ -71,4 +71,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{mctId}
         </foreach>
     </delete>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO Market_Car_Type (
+        MCT_ID,
+        Category,
+        Vehicle_Model,
+        Relation
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.mctId},
+            #{item.Category},
+            #{item.vehicleModel},
+            #{item.Relation}
+            )
+        </foreach>
+    </insert>
 </mapper>

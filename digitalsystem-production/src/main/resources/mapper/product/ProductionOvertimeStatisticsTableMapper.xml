@@ -12,13 +12,15 @@
         <result property="Gender"    column="Gender"    />
         <result property="attendanceSituation"    column="Attendance_situation"    />
         <result property="overtimeDuration"    column="Overtime_duration"    />
+        <result property="overtimeDurationWeek"    column="Overtime_duration_week"    />
+        <result property="overtimeDurationFes"    column="Overtime_duration_fes"    />
         <result property="abnormalSituation"    column="Abnormal_situation"    />
         <result property="isExist"    column="IS_exist"    />
         <result property="createTime"    column="Create_time"    />
     </resultMap>
 
     <sql id="selectProductionOvertimeStatisticsTableVo">
-        select POST_ID, Number, ID_number, Name, Gender, Attendance_situation, Overtime_duration, Abnormal_situation, Create_time from Production_Overtime_Statistics_Table
+        select POST_ID, Number, ID_number, Name, Gender, Attendance_situation, Overtime_duration, Overtime_duration_week, Overtime_duration_fes, Abnormal_situation, IS_exist, Create_time from Production_Overtime_Statistics_Table
     </sql>
 
     <select id="selectProductionOvertimeStatisticsTableList" parameterType="ProductionOvertimeStatisticsTable" resultMap="ProductionOvertimeStatisticsTableResult">
@@ -30,6 +32,8 @@
             <if test="Gender != null  and Gender != ''"> and Gender = #{Gender}</if>
             <if test="attendanceSituation != null "> and Attendance_situation = #{attendanceSituation}</if>
             <if test="overtimeDuration != null "> and Overtime_duration = #{overtimeDuration}</if>
+            <if test="overtimeDurationWeek != null "> and Overtime_duration_week = #{overtimeDurationWeek}</if>
+            <if test="overtimeDurationFes != null "> and Overtime_duration_fes = #{overtimeDurationFes}</if>
             <if test="abnormalSituation != null  and abnormalSituation != ''"> and Abnormal_situation = #{abnormalSituation}</if>
             <if test="isExist != null "> and IS_exist = #{isExist}</if>
             <if test="createTime != null "> and Create_time = #{createTime}</if>
@@ -56,6 +60,8 @@
             <if test="Gender != null">Gender,</if>
             <if test="attendanceSituation != null">Attendance_situation,</if>
             <if test="overtimeDuration != null">Overtime_duration,</if>
+            <if test="overtimeDurationWeek != null">Overtime_duration_week,</if>
+            <if test="overtimeDurationFes != null">Overtime_duration_fes,</if>
             <if test="abnormalSituation != null">Abnormal_situation,</if>
             <if test="isExist != null">IS_exist,</if>
             <if test="createTime != null">Create_time,</if>
@@ -68,6 +74,8 @@
             <if test="Gender != null">#{Gender},</if>
             <if test="attendanceSituation != null">#{attendanceSituation},</if>
             <if test="overtimeDuration != null">#{overtimeDuration},</if>
+            <if test="overtimeDurationWeek != null">#{overtimeDurationWeek},</if>
+            <if test="overtimeDurationFes != null">#{overtimeDurationFes},</if>
             <if test="abnormalSituation != null">#{abnormalSituation},</if>
             <if test="isExist != null">#{isExist},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -83,6 +91,8 @@
             <if test="Gender != null">Gender = #{Gender},</if>
             <if test="attendanceSituation != null">Attendance_situation = #{attendanceSituation},</if>
             <if test="overtimeDuration != null">Overtime_duration = #{overtimeDuration},</if>
+            <if test="overtimeDurationWeek != null">Overtime_duration_week = #{overtimeDurationWeek},</if>
+            <if test="overtimeDurationFes != null">Overtime_duration_fes = #{overtimeDurationFes},</if>
             <if test="abnormalSituation != null">Abnormal_situation = #{abnormalSituation},</if>
             <if test="isExist != null">IS_exist = #{isExist},</if>
             <if test="createTime != null">Create_time = #{createTime},</if>

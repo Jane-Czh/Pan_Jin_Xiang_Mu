@@ -29,6 +29,11 @@ public class EnterpriseManagementSalaryTableServiceImpl implements IEnterpriseMa
     private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementSalaryTableServiceImpl.class);
 
 
+    @Override
+    public void clearSalaryTableAllInfo() {
+        enterpriseManagementSalaryTableMapper.clearSalaryTableAllInfo();
+    }
+
     /**
      * 从Excel文件中读取薪资数据并将其存储到数据库中。
      *
@@ -39,9 +44,12 @@ public class EnterpriseManagementSalaryTableServiceImpl implements IEnterpriseMa
     @Override
     public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream,String username) {
         try {
+            // 读取文件前清空数据库
+            log.info("开始清空数据库");
+            enterpriseManagementSalaryTableMapper.clearSalaryTableAllInfo();
             // 读取文件内容
             log.info("开始读取文件: {}", fileName);
-            EasyExcel.read(inputStream, EnterpriseManagementSalaryTable.class, new SalaryTableListener(enterpriseManagementSalaryTableMapper,username)).sheet("Sheet1").doRead();
+            EasyExcel.read(inputStream, EnterpriseManagementSalaryTable.class, new SalaryTableListener(enterpriseManagementSalaryTableMapper,username)).sheet().doRead();
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
             e.printStackTrace();

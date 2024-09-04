@@ -15,15 +15,15 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['quality:data:add']">新增</el-button>
+          v-hasPermi="['quality:metrics:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['quality:data:edit']">修改</el-button>
+          v-hasPermi="['quality:metrics:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['quality:data:remove']">删除</el-button>
+          v-hasPermi="['quality:metrics:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
@@ -37,9 +37,9 @@
             <el-form-item label="上传表类：">
               <span style="color: rgb(68, 140, 39);">售后表</span>
               <br>
-              <div>
+              <!-- <div>
                 注：售后表时间格式请保持一致（例：2023/1/3）
-              </div>
+              </div> -->
               <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
                 placeholder="请选择日期">
               </el-date-picker>
@@ -55,9 +55,14 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
 
 
@@ -65,7 +70,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="MetricsList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="qcId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
@@ -75,17 +80,39 @@
         </template>
       </el-table-column>
       <el-table-column label="当月反馈新车病车数" align="center" prop="newCarDefects" />
-      <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" />
+      <!-- <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate" /> -->
+      <el-table-column label="三包期内新车返修率(%)" align="center" prop="warrantyRepairRate">
+        <template slot-scope="scope">
+          <span v-if="scope.row.warrantyRepairRate || scope.row.warrantyRepairRate === 0">{{
+      scope.row.warrantyRepairRate
+    }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="月度售后质量问题总数" align="center" prop="monthlyAfterSalesIssues" />
-      <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate" />
-      <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" />
+      <!-- <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate" /> -->
+      <el-table-column label="三包期内整车月度返修率(%)" align="center" prop="warrantyVehicleRepairRate">
+        <template slot-scope="scope">
+          <span v-if="scope.row.warrantyVehicleRepairRate || scope.row.warrantyVehicleRepairRate === 0">{{
+      scope.row.warrantyVehicleRepairRate }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" /> -->
+      <el-table-column label="外部质量损失率(‰)" align="center" prop="externalLossRate">
+        <template slot-scope="scope">
+          <span v-if="scope.row.externalLossRate || scope.row.externalLossRate === 0">{{ scope.row.externalLossRate
+            }}%</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['quality:data:edit']">修改</el-button>
+            v-hasPermi="['quality:metrics:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['quality:data:remove']">删除</el-button>
+            v-hasPermi="['quality:metrics:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,8 +121,8 @@
       @pagination="getList" />
 
     <!-- 添加或修改质量指标-统计对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
+      <el-form ref="form" :model="form" :rules="rules" label-width="200px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -104,17 +131,17 @@
         <el-form-item label="当月反馈新车病车数" prop="newCarDefects">
           <el-input v-model="form.newCarDefects" placeholder="请输入当月反馈新车病车数" />
         </el-form-item>
-        <el-form-item label="三包期内新车返修率" prop="warrantyRepairRate">
-          <el-input v-model="form.warrantyRepairRate" placeholder="请输入三包期内新车返修率" />
+        <el-form-item label="三包期内新车返修率(%)" prop="warrantyRepairRate">
+          <el-input v-model="form.warrantyRepairRate" placeholder="请输入三包期内新车返修率(%)" />
         </el-form-item>
         <el-form-item label="月度售后质量问题总数" prop="monthlyAfterSalesIssues">
           <el-input v-model="form.monthlyAfterSalesIssues" placeholder="请输入月度售后质量问题总数" />
         </el-form-item>
-        <el-form-item label="三包期内整车月度返修率" prop="warrantyVehicleRepairRate">
-          <el-input v-model="form.warrantyVehicleRepairRate" placeholder="请输入三包期内整车月度返修率" />
+        <el-form-item label="三包期内整车月度返修率(%)" prop="warrantyVehicleRepairRate">
+          <el-input v-model="form.warrantyVehicleRepairRate" placeholder="请输入三包期内整车月度返修率(%)" />
         </el-form-item>
-        <el-form-item label="外部质量损失率" prop="externalLossRate">
-          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率" />
+        <el-form-item label="外部质量损失率(‰)" prop="externalLossRate">
+          <el-input v-model="form.externalLossRate" placeholder="请输入外部质量损失率(‰)" />
         </el-form-item>
         <el-form-item label="售后问题生产责任次数" prop="productionLiabilityIssues">
           <el-input v-model="form.productionLiabilityIssues" placeholder="请输入售后问题生产责任次数" />
@@ -130,8 +157,8 @@
 
 <script>
 import { listMetrics, getMetrics, delMetrics, addMetrics, updateMetrics } from "@/api/quality/afterSales";
-import { uploadFile } from '@/api/financial/excelImport';
-import { numValidatorPercentage, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
+import { numValidatorPercentage, numValidatorNonZeroNature, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Metrics",
 
@@ -148,7 +175,7 @@ export default {
       progress: 0,
       selectedType: '',
 
-
+      isLoading: false,
 
       // 非单个禁用
       single: true,
@@ -187,42 +214,42 @@ export default {
         newCarDefects: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         warrantyRepairRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         monthlyAfterSalesIssues: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         warrantyVehicleRepairRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         externalLossRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         productionLiabilityIssues: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -233,6 +260,20 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      const url = "/profile/excel_templates/售后台账样表.xlsx";
+      handleTrueDownload(url);
+    },
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -366,6 +407,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         const aimUrl = `/quality/data/after-sales/read`
@@ -374,15 +416,14 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+            // this.$message.error("上传失败，请重试");
+            this.isLoading = false;
           });
       }
     },

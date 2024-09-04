@@ -15,6 +15,8 @@ import org.apache.ibatis.annotations.Param;
 public interface QualityInspectionRecordMapper {
 
 
+    QualityInspectionRecord selectMaxMonthInspection();
+
     Boolean checkQualityInspectionTableIsExisted(@Param("yearAndMonth") Date date);
 
 

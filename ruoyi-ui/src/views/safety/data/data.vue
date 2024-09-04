@@ -44,23 +44,25 @@
           </el-form>
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
-          <!-- 进度动画条 -->
-          <div v-if="progress > 0">
-            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div>
+
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="Safety_EP_ID" align="center" prop="safetyEpId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
@@ -71,7 +73,7 @@
       </el-table-column>
       <el-table-column label="当月设备维修总费用" align="center" prop="curEquipmentMaintenanceCost" />
       <el-table-column label="当月设备故障累计停产时间(小时)" align="center" prop="curEquipmentFailuresTotaltime" />
-      <el-table-column label="当月设备维修替换件成本(小时)" align="center" prop="curEquipmentReplacementCost" />
+      <el-table-column label="当月设备维修易损件成本" align="center" prop="curEquipmentReplacementCost" />
       <el-table-column label="重点设备故障率(%)" align="center" prop="keyEquipmentFailureRate" />
       <el-table-column label="主要设备故障总次数" align="center" prop="keyEquipmentTotalFailureCount" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -88,7 +90,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改[安全环保]指标填报对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -102,13 +104,15 @@
         <el-form-item label="当月设备故障累计停产时间" prop="curEquipmentFailuresTotaltime">
           <el-input v-model="form.curEquipmentFailuresTotaltime" placeholder="请输入当月设备故障累计停产时间" />
         </el-form-item>
-        <el-form-item label="当月设备维修替换件成本" prop="curEquipmentReplacementCost">
-          <el-input v-model="form.curEquipmentReplacementCost" placeholder="请输入当月设备维修替换件成本" />
+        <el-form-item label="当月设备维修易损件成本" prop="curEquipmentReplacementCost">
+          <el-input v-model="form.curEquipmentReplacementCost" placeholder="请输入当月设备维修易损件成本" />
         </el-form-item>
-
-        <!-- <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
+        <el-form-item label="重点设备故障率(%)" prop="keyEquipmentFailureRate">
+          <el-input v-model="form.keyEquipmentFailureRate" placeholder="请输入重点设备故障率(%)" />
+        </el-form-item>
+        <el-form-item label="主要设备故障总次数" prop="keyEquipmentTotalFailureCount">
           <el-input v-model="form.keyEquipmentTotalFailureCount" placeholder="请输入主要设备故障总次数" />
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -120,7 +124,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/safety/data";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
 export default {
   name: "Data",
@@ -137,7 +141,7 @@ export default {
       showDialog: false,
       progress: 0,
       selectedType: '',
-
+      isLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -183,14 +187,14 @@ export default {
         curEquipmentFailuresTotaltime: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         curEquipmentReplacementCost: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -204,6 +208,20 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      const url = "/profile/excel_templates/维修数据样表.xlsx";
+      handleTrueDownload(url);
+    },
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -341,24 +359,32 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         const aimUrl = `/safety/data/import`
         uploadFile(formData, aimUrl)
           .then(data => {
             // 处理上传成功的情况
-            this.$message.success("上传成功");
+            this.$message({
+              message: "上传成功",
+              type: "success",
+              duration: 3000 // 设置消息停留时间为5秒
+            });
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
+            this.isLoading = false;
           })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
-          });
+        // .finally(() => {
+        //   // 无论成功或失败，都关闭上传面板
+        //   this.showDialog = false;
+        //   this.isLoading = false;
+        // });
       }
     },
 

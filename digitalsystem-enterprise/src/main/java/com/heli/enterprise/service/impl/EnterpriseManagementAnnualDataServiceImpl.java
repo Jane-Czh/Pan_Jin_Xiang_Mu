@@ -31,7 +31,6 @@ public class EnterpriseManagementAnnualDataServiceImpl implements IEnterpriseMan
     @Autowired
     private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
 
-
     private static final Logger log = LoggerFactory.getLogger(EnterpriseManagementAnnualDataServiceImpl.class);
 
 
@@ -70,8 +69,32 @@ public class EnterpriseManagementAnnualDataServiceImpl implements IEnterpriseMan
      */
     @Override
     public int insertEnterpriseManagementAnnualData(EnterpriseManagementAnnualData enterpriseManagementAnnualData) {
+
         enterpriseManagementAnnualData.setCreateTime(DateUtils.getNowDate());
-        return enterpriseManagementAnnualDataMapper.insertEnterpriseManagementAnnualData(enterpriseManagementAnnualData);
+        enterpriseManagementAnnualDataMapper.insertEnterpriseManagementAnnualData(enterpriseManagementAnnualData);
+        Date nowYearDate = new Date(enterpriseManagementAnnualData.getNaturalYear() -1900, 0, 1);
+
+
+        Date minMonth = enterpriseManagementMonthlyDataMapper.selectMinMonthByYear(nowYearDate);
+        Date maxMonth = enterpriseManagementMonthlyDataMapper.selectMaxMonthByYear(nowYearDate);
+        log.info("最小月份："+minMonth);
+        log.info("最大月份："+maxMonth);
+
+        if (minMonth == null || maxMonth == null){
+            return 1;
+        }
+
+
+        int i = 0;
+        //更新
+
+        //从当前月份更新到最大月份
+        for (Date date = minMonth; date.before(DateUtils.getNextMonth(maxMonth)) ; date = DateUtils.getNextMonth(date),i++) {
+            log.info("当前更新的月份为："+ date);
+            enterpriseManagementMonthlyDataService.calculateHandFillIndicators(date);
+        }
+
+        return i;
     }
 
     /**

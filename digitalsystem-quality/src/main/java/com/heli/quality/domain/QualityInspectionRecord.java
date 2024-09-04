@@ -30,7 +30,7 @@ public class QualityInspectionRecord extends BaseEntity {
     /**
      * 质检月份
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
     @Excel(name = "质检月份", width = 30, dateFormat = "yyyy-MM-dd")
     private Date yearAndMonth;
 
@@ -75,6 +75,18 @@ public class QualityInspectionRecord extends BaseEntity {
     @Excel(name = "K2型号中大吨位的问题车数量")
     @RecordTemplate(rowNo = 5, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题车数量")
     private Long k2largetonnageProblemVehicles;
+
+    /**
+     * 电车一次交检合格率
+     */
+    @Excel(name = "电车一次交检合格率")
+    private BigDecimal electricCarPassRate;
+
+    /**
+     * 大吨位一次交检合格率
+     */
+    @Excel(name = "大吨位一次交检合格率")
+    private BigDecimal largeTonPassRate;
 
     /**
      * 电车、大吨位一次交检合格率

@@ -1,5 +1,6 @@
 package com.heli.tech.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,6 +8,7 @@ import com.heli.tech.service.ITechAnnualPlanCountService;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date: 2024/5/29 19:32
  * @version: 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping("/tech")
 public class TechController extends BaseController {
@@ -38,6 +41,13 @@ public class TechController extends BaseController {
     private ITechService techService;
     @Autowired
     private ITechAnnualPlanCountService techAnnualPlanCountService;
+
+    @PreAuthorize("@ss.hasPermi('tech:monthly:update')")
+    @Log(title = "[技术]计算", businessType = BusinessType.UPDATE)
+    @PostMapping("/data/update")
+    public AjaxResult test() {
+        return toAjax(techService.updateCompletionRate());
+    }
 
     /**
      * 新增[技术]指标填报
@@ -49,15 +59,16 @@ public class TechController extends BaseController {
         if (!techAnnualPlanCountService.checkTechAnnualDataIsExisted(DateUtils.getYear(tech.getYearAndMonth()))) {
             return AjaxResult.error("年度总计划未上传");
         }
-        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))
-            && techService.checkDataExist()) {
-            return AjaxResult.error("上月数据未填报");
-        }
+//        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))
+//            && techService.checkDataExist()) {
+//            return AjaxResult.error("上月数据未填报");
+//        }
         if (techService.checkTechMonthlyDataIsExisted(tech.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
         }
         tech.setCreateBy(getUsername());
-        return toAjax(techService.insertTech(techService.calculateCompletionRate(tech)));
+//        return toAjax(techService.insertTech(techService.calculateCompletionRate(tech)));
+        return toAjax(techService.insertTech(tech));
     }
 
     @PreAuthorize("@ss.hasPermi('tech:display:employeesAVGMonthlyNumber')")

@@ -107,8 +107,8 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="maspcId" /> -->
       <el-table-column label="车型" align="center" prop="vehicleModel" />
-      <el-table-column label="相同问题复发率" align="center" prop="problemRecurrenceRate" />
-      <el-table-column label="不同问题出现率" align="center" prop="differentProblemOccurrenceRate" />
+      <el-table-column label="相同问题复发率" align="center" prop="problemRecurrenceRate" :formatter="formatPercentage" />
+      <el-table-column label="不同问题出现率" align="center" prop="differentProblemOccurrenceRate" :formatter="formatPercentage" />
       <el-table-column label="一级网点" align="center" prop="branch" />
       <el-table-column label="周数" align="center" prop="week" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -215,6 +215,11 @@ export default {
     this.getList();
   },
   methods: {
+
+    formatPercentage(row, column, cellValue) {
+      // 假设cellValue是一个0到1之间的数字，乘以100并保留两位小数
+      return (cellValue * 100).toFixed(2) + '%';
+    },
     /** 查询售后问题分类列表 */
     getList() {
       this.loading = true;

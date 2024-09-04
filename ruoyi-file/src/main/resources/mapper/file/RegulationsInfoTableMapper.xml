@@ -12,47 +12,107 @@
         <result property="effectiveDate"    column="effective_date"    />
         <result property="fileName"    column="file_name"    />
         <result property="filePath"    column="file_path"    />
+        <result property="pdfPath"    column="pdf_path"    />
+        <result property="wordPath"    column="word_path"    />
         <result property="fileType"    column="file_type"    />
         <result property="fileSize"    column="file_size"    />
+        <result property="pdfSize"    column="pdf_size"    />
+        <result property="wordSize"    column="word_size"    />
+        <result property="fileContent"    column="file_content"    />
         <result property="createDate"    column="create_date"    />
         <result property="uploadUsername"    column="upload_username"    />
         <result property="useState"    column="use_state"    />
         <result property="departmentCategory"    column="department_category"    />
+        <result property="mainResponsibleDepartment"    column="main_responsible_department"    />
+        <result property="classificationOfSpecialties"    column="classification_of_specialties"    />
+        <result property="regulationLeval"    column="regulation_leval"    />
+        <result property="regulationNumber"    column="regulation_number"    />
         <result property="fileTag"    column="file_tag"    />
         <result property="oldRegulationsId"    column="old_regulations_id"    />
         <result property="revisionDate"    column="revision_date"    />
         <result property="revisionContent"    column="revision_content"    />
         <result property="reviser"    column="reviser"    />
+        <result property="projectIds"    column="project_ids"    />
         <result property="newFlag"    column="new_flag"    />
         <result property="newRegulationsId"    column="new_regulations_id"    />
+        <result property="businesses"    column="businesses"    />
+        <result property="subBusinesses"    column="sub_businesses"    />
+
     </resultMap>
 
     <sql id="selectRegulationsInfoTableVo">
-        select regulations_id, regulations_title, use_scope, upload_date, effective_date,  file_name, file_path, file_type, file_size, create_date, upload_username, use_state, department_category, file_tag, old_regulations_id, revision_date, revision_content, reviser, new_flag, new_regulations_id from Regulations_Info_table
+        select regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, pdf_path, word_path, file_type, file_size, pdf_size, word_size, file_content, create_date, upload_username, use_state, department_category, main_responsible_department, classification_of_specialties, regulation_leval, regulation_number, file_tag, old_regulations_id, revision_date, revision_content, reviser, project_ids, new_flag, new_regulations_id, businesses, sub_businesses from Regulations_Info_table
     </sql>
 
     <select id="selectRegulationsInfoTableList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
         <include refid="selectRegulationsInfoTableVo"/>
         <where>
-            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title = #{regulationsTitle}</if>
-            <if test="useScope != null  and useScope != ''"> and use_scope = #{useScope}</if>
+            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title like concat('%', #{regulationsTitle}, '%')</if>
+            <if test="useScope != null  and useScope != ''"> and use_scope like concat('%', #{useScope}, '%')</if>
             <if test="uploadDate != null "> and upload_date = #{uploadDate}</if>
             <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
             <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="pdfPath != null  and pdfPath != ''"> and pdf_path = #{pdfPath}</if>
+            <if test="wordPath != null  and wordPath != ''"> and word_path = #{wordPath}</if>
             <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
             <if test="fileSize != null "> and file_size = #{fileSize}</if>
+            <if test="pdfSize != null "> and pdf_size = #{pdfSize}</if>
+            <if test="wordSize != null "> and word_size = #{wordSize}</if>
             <if test="createDate != null "> and create_date = #{createDate}</if>
             <if test="uploadUsername != null  and uploadUsername != ''"> and upload_username like concat('%', #{uploadUsername}, '%')</if>
             <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
             <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
-            <if test="fileTag != null  and fileTag != ''"> and file_tag = #{fileTag}</if>
+            <if test="mainResponsibleDepartment != null  and mainResponsibleDepartment != ''"> and main_responsible_department like concat('%', #{mainResponsibleDepartment}, '%')</if>
+            <if test="classificationOfSpecialties != null  and classificationOfSpecialties != ''"> and classification_of_specialties like concat('%', #{classificationOfSpecialties}, '%')</if>
+            <if test="regulationLeval != null  and regulationLeval != ''"> and regulation_leval = #{regulationLeval}</if>
+            <if test="regulationNumber != null "> and regulation_number like concat('%', #{regulationNumber}, '%')</if>
+            <if test="fileTag != null  and fileTag != ''"> and file_tag like concat('%', #{fileTag}, '%')</if>
             <if test="oldRegulationsId != null "> and old_regulations_id = #{oldRegulationsId}</if>
             <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
             <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="projectIds != null  and projectIds != ''"> and project_ids = #{projectIds}</if>
             <if test="newFlag = 1 "> and new_flag = #{newFlag}</if>
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
+             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
+              <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+        </where>
+    </select>
+
+    <select id="selectAllRegulationsList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
+        <include refid="selectRegulationsInfoTableVo"/>
+        <where>
+            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title like concat('%', #{regulationsTitle}, '%')</if>
+            <if test="useScope != null  and useScope != ''"> and use_scope like concat('%', #{useScope}, '%')</if>
+            <if test="uploadDate != null "> and upload_date = #{uploadDate}</if>
+            <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="pdfPath != null  and pdfPath != ''"> and pdf_path = #{pdfPath}</if>
+            <if test="wordPath != null  and wordPath != ''"> and word_path = #{wordPath}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileSize != null "> and file_size = #{fileSize}</if>
+            <if test="pdfSize != null "> and pdf_size = #{pdfSize}</if>
+            <if test="wordSize != null "> and word_size = #{wordSize}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="uploadUsername != null  and uploadUsername != ''"> and upload_username like concat('%', #{uploadUsername}, '%')</if>
+            <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
+            <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
+            <if test="mainResponsibleDepartment != null  and mainResponsibleDepartment != ''"> and main_responsible_department like concat('%', #{mainResponsibleDepartment}, '%')</if>
+            <if test="classificationOfSpecialties != null  and classificationOfSpecialties != ''"> and classification_of_specialties like concat('%', #{classificationOfSpecialties}, '%')</if>
+            <if test="regulationLeval != null  and regulationLeval != ''"> and regulation_leval = #{regulationLeval}</if>
+            <if test="regulationNumber != null "> and regulation_number like concat('%', #{regulationNumber}, '%')</if>
+            <if test="fileTag != null  and fileTag != ''"> and file_tag like concat('%', #{fileTag}, '%')</if>
+            <if test="oldRegulationsId != null "> and old_regulations_id = #{oldRegulationsId}</if>
+            <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
+            <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
+            <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="projectIds != null  and projectIds != ''"> and project_ids = #{projectIds}</if>
+            <if test="newFlag !=null and newFlag != '' "> and new_flag = #{newFlag}</if>
+            <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
+            <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
+            <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
         </where>
     </select>
 
@@ -73,19 +133,31 @@
             <if test="effectiveDate != null">effective_date,</if>
             <if test="fileName != null">file_name,</if>
             <if test="filePath != null">file_path,</if>
+            <if test="pdfPath != null">pdf_path,</if>
+            <if test="wordPath != null">word_path,</if>
             <if test="fileType != null">file_type,</if>
             <if test="fileSize != null">file_size,</if>
+            <if test="pdfSize != null">pdf_size,</if>
+            <if test="wordSize != null">word_size,</if>
+            <if test="fileContent != null">file_content,</if>
             <if test="createDate != null">create_date,</if>
             <if test="uploadUsername != null and uploadUsername != ''">upload_username,</if>
             <if test="useState != null and useState != ''">use_state,</if>
             <if test="departmentCategory != null and departmentCategory != ''">department_category,</if>
+            <if test="mainResponsibleDepartment != null">main_responsible_department,</if>
+            <if test="classificationOfSpecialties != null">classification_of_specialties,</if>
+            <if test="regulationLeval != null">regulation_leval,</if>
+            <if test="regulationNumber != null">regulation_number,</if>
             <if test="fileTag != null">file_tag,</if>
             <if test="oldRegulationsId != null">old_regulations_id,</if>
             <if test="revisionDate != null">revision_date,</if>
             <if test="revisionContent != null">revision_content,</if>
             <if test="reviser != null">reviser,</if>
+            <if test="projectIds != null">project_ids,</if>
             <if test="newFlag != null">new_flag,</if>
             <if test="newRegulationsId != null">new_regulations_id,</if>
+            <if test="businesses != null">businesses,</if>
+            <if test="subBusinesses != null">sub_businesses,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="regulationsTitle != null and regulationsTitle != ''">#{regulationsTitle},</if>
@@ -94,19 +166,31 @@
             <if test="effectiveDate != null">#{effectiveDate},</if>
             <if test="fileName != null">#{fileName},</if>
             <if test="filePath != null">#{filePath},</if>
+            <if test="pdfPath != null">#{pdfPath},</if>
+            <if test="wordPath != null">#{wordPath},</if>
             <if test="fileType != null">#{fileType},</if>
             <if test="fileSize != null">#{fileSize},</if>
+            <if test="pdfSize != null">#{pdfSize},</if>
+            <if test="wordSize != null">#{wordSize},</if>
+            <if test="fileContent != null">#{fileContent},</if>
             <if test="createDate != null">#{createDate},</if>
             <if test="uploadUsername != null and uploadUsername != ''">#{uploadUsername},</if>
             <if test="useState != null and useState != ''">#{useState},</if>
             <if test="departmentCategory != null and departmentCategory != ''">#{departmentCategory},</if>
+            <if test="mainResponsibleDepartment != null">#{mainResponsibleDepartment},</if>
+            <if test="classificationOfSpecialties != null">#{classificationOfSpecialties},</if>
+            <if test="regulationLeval != null">#{regulationLeval},</if>
+            <if test="regulationNumber != null">#{regulationNumber},</if>
             <if test="fileTag != null">#{fileTag},</if>
             <if test="oldRegulationsId != null">#{oldRegulationsId},</if>
             <if test="revisionDate != null">#{revisionDate},</if>
             <if test="revisionContent != null">#{revisionContent},</if>
             <if test="reviser != null">#{reviser},</if>
+            <if test="projectIds != null">#{projectIds},</if>
             <if test="newFlag != null">#{newFlag},</if>
             <if test="newRegulationsId != null">#{newRegulationsId},</if>
+            <if test="businesses != null and businesses != ''">#{businesses},</if>
+            <if test="subBusinesses != null and subBusinesses != ''">#{subBusinesses},</if>
         </trim>
     </insert>
 
@@ -119,22 +203,35 @@
             <if test="effectiveDate != null">effective_date = #{effectiveDate},</if>
             <if test="fileName != null">file_name = #{fileName},</if>
             <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="pdfPath != null">pdf_path = #{pdfPath},</if>
+            <if test="wordPath != null">word_path = #{wordPath},</if>
             <if test="fileType != null">file_type = #{fileType},</if>
             <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="pdfSize != null">pdf_size = #{pdfSize},</if>
+            <if test="wordSize != null">word_size = #{wordSize},</if>
+            <if test="fileContent != null">file_content = #{fileContent},</if>
             <if test="createDate != null">create_date = #{createDate},</if>
             <if test="uploadUsername != null and uploadUsername != ''">upload_username = #{uploadUsername},</if>
             <if test="useState != null and useState != ''">use_state = #{useState},</if>
             <if test="departmentCategory != null and departmentCategory != ''">department_category = #{departmentCategory},</if>
+            <if test="mainResponsibleDepartment != null">main_responsible_department = #{mainResponsibleDepartment},</if>
+            <if test="classificationOfSpecialties != null">classification_of_specialties = #{classificationOfSpecialties},</if>
+            <if test="regulationLeval != null">regulation_leval = #{regulationLeval},</if>
+            <if test="regulationNumber != null">regulation_number = #{regulationNumber},</if>
             <if test="fileTag != null">file_tag = #{fileTag},</if>
             <if test="oldRegulationsId != null">old_regulations_id = #{oldRegulationsId},</if>
             <if test="revisionDate != null">revision_date = #{revisionDate},</if>
             <if test="revisionContent != null">revision_content = #{revisionContent},</if>
             <if test="reviser != null">reviser = #{reviser},</if>
+            <if test="projectIds != null">project_ids = #{projectIds},</if>
             <if test="newFlag != null">new_flag = #{newFlag},</if>
             <if test="newRegulationsId != null">new_regulations_id = #{newRegulationsId},</if>
+            <if test="businesses != null and businesses != ''">businesses = #{businesses},</if>
+            <if test="subBusinesses != null and subBusinesses != ''">sub_businesses = #{subBusinesses},</if>
         </trim>
         where regulations_id = #{regulationsId}
     </update>
+
 
     <delete id="deleteRegulationsInfoTableByRegulationsId" parameterType="Long">
         delete from Regulations_Info_table where regulations_id = #{regulationsId}

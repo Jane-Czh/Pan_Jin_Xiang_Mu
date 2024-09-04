@@ -49,8 +49,8 @@ public class SupplyIndicatorsPurchaseOrderTableServiceImpl implements ISupplyInd
         List<SupplyIndicatorsControlledMaterialPurchases> controlledMaterialPurchasesList = new ArrayList<SupplyIndicatorsControlledMaterialPurchases>();
         for (int i = 0; i < controlledMaterialPurchases.size(); i++) {
             SupplyIndicatorsControlledMaterialPurchases cmp = new SupplyIndicatorsControlledMaterialPurchases();
-            cmp.setTotalPurchaseAmount(totalPurchaseAmount.get(i).getData());
-            cmp.setControlledMaterialPurchases(controlledMaterialPurchases.get(i).getData());
+            cmp.setTotalPurchaseAmount(totalPurchaseAmount.get(i).getData().divide(BigDecimal.valueOf(10000),6, RoundingMode.HALF_UP));
+            cmp.setControlledMaterialPurchases(controlledMaterialPurchases.get(i).getData().divide(BigDecimal.valueOf(10000),6, RoundingMode.HALF_UP));
             cmp.setControlledPurchaseAmountRatio(controlledMaterialPurchases.get(i).getData().multiply(BigDecimal.valueOf(100)).divide(totalPurchaseAmount.get(i).getData(),2, RoundingMode.HALF_UP));
             cmp.setYearAndMonth(totalPurchaseAmount.get(i).getYearAndMonth());
             cmp.setCreateBy(username);
@@ -70,7 +70,9 @@ public class SupplyIndicatorsPurchaseOrderTableServiceImpl implements ISupplyInd
         try {
 
             // 清空表格
-//            supplyIndicatorsPurchaseOrderTableMapper.truncatePurchaseOrderTable();
+            //此行代码不允许、不允许屏蔽！！！
+            //屏蔽会导致统计错误！！！！！
+            supplyIndicatorsPurchaseOrderTableMapper.truncatePurchaseOrderTable();
             // 读取文件内容
             EasyExcel.read(inputStream, SupplyIndicatorsPurchaseOrderTable.class, new SupplyOrderTableListener(supplyIndicatorsPurchaseOrderTableMapper)).sheet().doRead();
 

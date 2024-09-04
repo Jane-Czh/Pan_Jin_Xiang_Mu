@@ -6,13 +6,6 @@
         <div class="ef-tooltar">
           <el-link type="primary" :underline="false">{{ data.name }}</el-link>
           <el-divider direction="vertical"></el-divider>
-          <el-button
-            type="text"
-            icon="el-icon-delete"
-            size="large"
-            @click="deleteElement"
-            :disabled="!this.activeElement.type"
-          ></el-button>
 
           <!-- 流程json下载 -->
           <!-- <el-divider direction="vertical"></el-divider>
@@ -23,7 +16,7 @@
             @click="downloadData"
           ></el-button>  -->
 
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider> -->
           <!-- <el-button
             type="text"
             icon="el-icon-plus"
@@ -38,13 +31,7 @@
             @click="zoomSub"
           ></el-button>
           <el-divider direction="vertical"></el-divider> -->
-          <el-button
-            type="text"
-            icon="el-icon-document"
-            @click="openHelp"
-            size="mini"
-            >帮助</el-button
-          >
+
           <!-- <el-divider direction="vertical"></el-divider> -->
 
           <!-- <el-button
@@ -75,7 +62,7 @@
             size="mini"
             >流程模板B</el-button
           > -->
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider> -->
 
           <el-button type="primary" plain size="mini" @click="toggleDialog"
             >自定义模板库</el-button
@@ -151,6 +138,26 @@
 
           <!-- 右侧button -->
           <div style="float: right; margin-right: 5px">
+            <el-divider direction="vertical"></el-divider>
+
+            <el-button
+              type="text"
+              icon="el-icon-document"
+              @click="openHelp"
+              size="mini"
+              >使用说明</el-button
+            >
+            <el-divider direction="vertical"></el-divider>
+            <!-- 删除节点、连线等 -->
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              size="large"
+              @click="deleteElement"
+              :disabled="!this.activeElement.type"
+            ></el-button>
+            <el-divider direction="vertical"></el-divider>
+
             <!-- <el-button type="primary" plain round @click="dataReloadC" icon="el-icon-refresh" size="mini">切换流程C</el-button> -->
             <el-button
               type="primary"
@@ -161,6 +168,7 @@
               size="mini"
               >自定义样式</el-button
             >
+            <el-divider direction="vertical"></el-divider>
             <!-- <el-button type="primary" plain round @click="dataReloadE" icon="el-icon-refresh" size="mini">力导图</el-button> -->
 
             <!-- 弹出面板 设置流程绑定文件(制度&表单) -->
@@ -174,7 +182,7 @@
               icon="el-icon-folder-add"
               @click="bandFiles()"
               size="mini"
-              >绑定文件</el-button
+              >支撑文件绑定</el-button
             >
             <el-button
               v-else
@@ -185,6 +193,7 @@
               size="mini"
               >更改已绑定文件</el-button
             >
+            <el-divider direction="vertical"></el-divider>
             <!-- 对流程进行保存 v-hasPermi="['process:ef:add']" -->
             <el-button
               type="success"
@@ -198,7 +207,7 @@
             >
           </div>
           <!-- 弹出对话框提示填写项目流程名称 绑定文件 -->
-          <el-dialog
+          <!-- <el-dialog
             title="填写流程名称"
             :visible.sync="dialogVisible"
             width="30%"
@@ -220,7 +229,122 @@
               <el-button @click="dialogVisible = false">取消</el-button>
               <el-button type="primary" @click="save">保存</el-button>
             </div>
+          </el-dialog> -->
+
+          <el-dialog
+            title="填写流程名称"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :close-on-click-modal="false"
+            destroy-on-close="true"
+          >
+            <el-form ref="form" :model="formData" label-width="80px">
+              <el-form-item label="流程名称" required>
+                <el-input
+                  v-model="formData.project_Name"
+                  @input="validateSB1"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="流程编号" required>
+                <el-input
+                  v-model="formData.number"
+                  @input="validateNumber"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+
+              <!-- 1\部门 -->
+              <el-form-item label="主责部门" required="true">
+                <el-select
+                  v-model="formData.department"
+                  placeholder="请选择部门"
+                  clearable
+                  @change="handleDepartmentChange"
+                >
+                  <el-option
+                    v-for="item in departments"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="流程等级" required>
+                <el-select
+                  v-model="formData.level"
+                  placeholder="请选择流程等级"
+                >
+                  <el-option
+                    v-for="level in levels"
+                    :key="level"
+                    :label="level"
+                    :value="level"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <!-- -------------------------------------------------- -->
+              <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+              <el-form-item label="业务模块">
+                <el-select
+                  v-model="formData.businessesModules"
+                  placeholder="请选择业务模块"
+                  clearable
+                  :disabled="!formData.department"
+                  @change="handleModuleChange"
+                >
+                  <el-option
+                    v-for="item in modules"
+                    :key="item.bm_id"
+                    :label="item.moduleName"
+                    :value="item.moduleName"
+                  />
+                </el-select>
+              </el-form-item>
+
+              <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+              <el-form-item label="细分业务">
+                <el-select
+                  v-model="formData.subBusinesses"
+                  placeholder="请选择细分业务"
+                  clearable
+                  :disabled="!formData.businessesModules"
+                >
+                  <el-option
+                    v-for="item in subBusinesses"
+                    :key="item.subb_id"
+                    :label="item.subBusinessesName"
+                    :value="item.subBusinessesName"
+                  />
+                </el-select>
+              </el-form-item>
+              <!-- -------------------------------------------------- -->
+
+              <el-form-item label="流程目的">
+                <el-input
+                  v-model="formData.purpose"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="适用范围">
+                <el-input
+                  v-model="formData.applicationScope"
+                  maxlength="20"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+            </el-form>
+
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="save">保存</el-button>
+            </div>
           </el-dialog>
+
           <!--  -------------------------------------------  -->
           <!-- 弹出对话框提示填写项目流程模板sbsbsb-->
           <el-dialog
@@ -394,12 +518,66 @@ import {
   saveNode,
   saveLine,
 } from "@/api/system/project";
-
+//业务模块api，
+import { listModuless } from "@/api/function/modules";
+//细分业务api
+import { listBusinessess } from "@/api/function/businesses";
+import { listDept } from "@/api/system/project";
 export default {
   name: "Project",
   inject: ["reload"],
   data() {
     return {
+      subBusinessesList: [],
+      subBusinesses: [], //过滤后的细分业务列表
+
+      // 业务模块 module 查询参数
+      moduleQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        moduleName: null,
+        parentDepartment: null,
+        isDeleted: null,
+        description: null,
+      },
+      // 细分业务 查询参数
+      xifenQueryParams: {
+        pageNum: 1,
+        pageSize: 5000,
+        subBusinessesName: null,
+        parentDepartment: null,
+        parentModule: null,
+        isDeleted: null,
+        description: null,
+      },
+
+      // 表单参数
+      // form: {
+      //   parentDepartment: "", //上级部门
+      //   parentModule: "", //上级业务模块
+      // },
+      modules: [], //过滤后的上级 业务模块
+      modulesList: [],
+      //部门
+      // departments: [
+      //   "安环设备科",
+      //   "财务科",
+      //   "党群办公室",
+      //   "供应科",
+      //   "技术科",
+      //   "企业管理科",
+      //   "生产管理科",
+      //   "市场科",
+      //   "执纪监督室",
+      //   "质量科",
+      // ],
+      departments: [],
+      // 查询参数
+      queryDeptParams: {
+        deptName: undefined,
+        status: undefined,
+      },
+      levels: ["A级", "B级", "C级"],
       //用户名
       uploadUsername: null,
       //所属部门
@@ -433,6 +611,21 @@ export default {
         project_Name: "",
         //备注
         formData: "",
+        //流程编号
+        number: "",
+        //主责部门
+        department: "",
+        //流程等级
+        level: "",
+        //流程目的
+        purpose: "",
+        //适用范围
+        applicationScope: "",
+
+        //业务模块
+        businessesModules: "",
+        //细分业务
+        subBusinesses: "",
       },
 
       // 流程表格数据
@@ -526,9 +719,80 @@ export default {
     this.getUserInfo();
     //获取现有流程名称
     this.getList();
+    this.getDeptList();
   },
 
   methods: {
+    /** 查询部门列表 */
+    getDeptList() {
+      listDept(this.queryDeptParams).then((response) => {
+        // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
+        const filteredData = response.data.filter(
+          (department) =>
+            department.deptName !== "产品研发" &&
+            department.deptName !== "研发" &&
+            department.deptName !== "测试" &&
+            department.deptName !== "总部" &&
+            department.deptName !== "合力（盘锦）"
+        );
+
+        // 将每个过滤后的部门的 deptName 放入 departments 数组
+        this.departments = filteredData.map(
+          (department) => department.deptName
+        );
+      });
+    },
+    // 通过 department部门 限制选择:  业务模块内容 this.modules
+    async handleDepartmentChange(department) {
+      this.formData.businessesModules = ""; // 重置上级业务模块选择
+      this.modules = []; // 清空之前的模块
+      if (department) {
+        try {
+          await listModuless(this.moduleQueryParams).then((response) => {
+            this.modulesList = response.rows;
+          });
+
+          for (let i = 0; i < this.modulesList.length; i++) {
+            console.log("123===" + this.modulesList[i].parentDepartment);
+            // 根据部门字段进行筛选
+            if (this.modulesList[i].parentDepartment === department) {
+              this.modules.push(this.modulesList[i]);
+            }
+          }
+
+          console.log("this.modules===", this.modules);
+        } catch (error) {
+          console.error("Failed to fetch modules:", error);
+        }
+      }
+    },
+    //通过 业务模块内容 限制选择: 细分业务内容
+    async handleModuleChange(module) {
+      this.formData.subBusinesses = ""; // 重置细分业务选择
+      this.subBusinesses = []; // 清空之前的细分业务
+      if (module) {
+        try {
+          // 获取所有细分业务
+          await listBusinessess(this.xifenQueryParams).then((response) => {
+            this.subBusinessesList = response.rows;
+          });
+
+          for (let i = 0; i < this.subBusinessesList.length; i++) {
+            console.log("12321===" + this.subBusinessesList[i]);
+            // 根据业务模块字段进行筛选
+            if (this.subBusinessesList[i].parentModule === module) {
+              this.subBusinesses.push(this.subBusinessesList[i]);
+            }
+          }
+
+          console.log("this.subBusinesses===", this.subBusinesses);
+        } catch (error) {
+          console.error("Failed to fetch sub-businesses:", error);
+        }
+      }
+    },
+
+    // ---------------------------------------
     validateSB1() {
       const regex = /^[\u4e00-\u9fa5\dA-Za-z.\(\)\-（）]*$/;
       this.formData.project_Name = this.formData.project_Name
@@ -1317,7 +1581,7 @@ export default {
         this.data,
         this.project_Id
       );
-      console.log("projectData =======", projectData);
+      console.log("projectData ======= 08010801 ====", projectData);
 
       // 发送项目数据到后端
       saveProject(projectData)
@@ -1382,6 +1646,17 @@ export default {
             ? JSON.stringify(this.idsRegulation)
             : null, //制度文件ids
         type: this.idsForm != null ? JSON.stringify(this.idsForm) : null, //表单文件ids
+        //0731新增
+        number: this.formData.number,
+        department: this.formData.department,
+        level: this.formData.level,
+        purpose: this.formData.purpose,
+        applicationScope: this.formData.applicationScope,
+
+        //业务模块
+        businessesModules: this.formData.businessesModules,
+        //细分业务
+        subBusinesses: this.formData.subBusinesses,
       };
 
       const nodeData = data.nodeList.map((node) => ({
@@ -1394,6 +1669,12 @@ export default {
         ico: node.ico,
         // state: node.state,
         state: node.state != "no" ? JSON.stringify(node.state) : node.state,
+
+        //0727新增字段
+        department: node.department,
+        description: node.description,
+        operationalStaff: node.operationalStaff,
+        date: node.date,
       }));
 
       const lineData = data.lineList.map((line) => ({

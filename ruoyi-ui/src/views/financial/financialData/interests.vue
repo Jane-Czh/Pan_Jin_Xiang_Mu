@@ -54,15 +54,20 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
@@ -70,17 +75,58 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="集团内主营业务收入" align="center" prop="internalMainRevenue" width="140" />
-      <el-table-column label="集团外主营业务收入" align="center" prop="externalMainRevenue" width="140" />
-      <el-table-column label="主营业务收入" align="center" prop="mainRevenue" />
-      <el-table-column label="主营业务成本-产品销售SD" align="center" prop="cogsProductSalesSd" width="180" />
-      <el-table-column label="主营业务成本-运费" align="center" prop="cogsFreight" width="170" />
-      <el-table-column label="主营业务成本-运费变化" align="center" prop="cogsVariation" width="190" />
-      <el-table-column label="主营业务成本" align="center" prop="cogs" />
-      <el-table-column label="净利润" align="center" prop="netProfit" />
-      <el-table-column label="管理费用" align="center" prop="managementExpense" />
-      <el-table-column label="研发费用" align="center" prop="rdExpense" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="集团内主营业务收入(万元)" align="center" prop="internalMainRevenue" width="180" /> -->
+      <el-table-column label="集团内主营业务收入(万元)" align="center" prop="internalMainRevenue" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.internalMainRevenue) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="集团外主营业务收入(万元)" align="center" prop="externalMainRevenue" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.externalMainRevenue) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务收入(万元)" align="center" prop="mainRevenue" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.mainRevenue) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本-产品销售SD(万元)" align="center" prop="cogsProductSalesSd" width="210">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogsProductSalesSd) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本-运费(万元)" align="center" prop="cogsFreight" width="170">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogsFreight) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本-运费变化(万元)" align="center" prop="cogsVariation" width="190">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogsVariation) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="主营业务成本(万元)" align="center" prop="cogs" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.cogs) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="净利润(万元)" align="center" prop="netProfit" width="120">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.netProfit) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="管理费用(万元)" align="center" prop="managementExpense" width="130">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.managementExpense) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="研发费用(万元)" align="center" prop="rdExpense" width="130">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.rdExpense) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['financial:interests:edit']">修改</el-button>
@@ -94,42 +140,42 @@
       @pagination="getList" />
 
     <!-- 添加或修改财务-利润对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body :before-close="handleClose">
+      <el-form ref="form" :model="form" :rules="rules" label-width="230px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="集团内主营业务收入" prop="internalMainRevenue">
-          <el-input v-model="form.internalMainRevenue" placeholder="请输入集团内主营业务收入" />
+        <el-form-item label="集团内主营业务收入(万元)" prop="internalMainRevenue">
+          <el-input v-model="form.internalMainRevenue" placeholder="请输入集团内主营业务收入(万元)" />
         </el-form-item>
-        <el-form-item label="集团外主营业务收入" prop="externalMainRevenue">
-          <el-input v-model="form.externalMainRevenue" placeholder="请输入集团外主营业务收入" />
+        <el-form-item label="集团外主营业务收入(万元)" prop="externalMainRevenue">
+          <el-input v-model="form.externalMainRevenue" placeholder="请输入集团外主营业务收入(万元)" />
         </el-form-item>
-        <el-form-item label="主营业务收入" prop="mainRevenue">
-          <el-input v-model="form.mainRevenue" placeholder="请输入主营业务收入" />
+        <el-form-item label="主营业务收入(万元)" prop="mainRevenue">
+          <el-input v-model="form.mainRevenue" placeholder="请输入主营业务收入(万元)" />
         </el-form-item>
-        <el-form-item label="主营业务成本-产品销售SD" prop="cogsProductSalesSd">
-          <el-input v-model="form.cogsProductSalesSd" placeholder="请输入主营业务成本-产品销售SD" />
+        <el-form-item label="主营业务成本-产品销售SD(万元)" prop="cogsProductSalesSd">
+          <el-input v-model="form.cogsProductSalesSd" placeholder="请输入主营业务成本-产品销售SD(万元)" />
         </el-form-item>
-        <el-form-item label="主营业务成本-运费" prop="cogsFreight">
-          <el-input v-model="form.cogsFreight" placeholder="请输入主营业务成本-运费" />
+        <el-form-item label="主营业务成本-运费(万元)" prop="cogsFreight">
+          <el-input v-model="form.cogsFreight" placeholder="请输入主营业务成本-运费(万元)" />
         </el-form-item>
-        <el-form-item label="主营业务成本-运费变化" prop="cogsVariation">
-          <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-运费变化" />
+        <el-form-item label="主营业务成本-差异(万元)" prop="cogsVariation">
+          <el-input v-model="form.cogsVariation" placeholder="请输入主营业务成本-差异(万元)" />
         </el-form-item>
-        <el-form-item label="主营业务成本" prop="cogs">
-          <el-input v-model="form.cogs" placeholder="请输入主营业务成本" />
+        <el-form-item label="主营业务成本(万元)" prop="cogs">
+          <el-input v-model="form.cogs" placeholder="请输入主营业务成本(万元)" />
         </el-form-item>
-        <el-form-item label="净利润" prop="netProfit">
-          <el-input v-model="form.netProfit" placeholder="请输入净利润" />
+        <el-form-item label="净利润(万元)" prop="netProfit">
+          <el-input v-model="form.netProfit" placeholder="请输入净利润(万元)" />
         </el-form-item>
-        <el-form-item label="管理费用" prop="managementExpense">
-          <el-input v-model="form.managementExpense" placeholder="请输入管理费用" />
+        <el-form-item label="管理费用(万元)" prop="managementExpense">
+          <el-input v-model="form.managementExpense" placeholder="请输入管理费用(万元)" />
         </el-form-item>
-        <el-form-item label="研发费用" prop="rdExpense">
-          <el-input v-model="form.rdExpense" placeholder="请输入研发费用" />
+        <el-form-item label="研发费用(万元)" prop="rdExpense">
+          <el-input v-model="form.rdExpense" placeholder="请输入研发费用(万元)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -142,7 +188,7 @@
 
 <script>
 import { listInterests, getInterests, delInterests, addInterests, updateInterests } from "@/api/financial/interestsData";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator } from '@/api/financial/numValidator.js';
 
 export default {
@@ -161,8 +207,7 @@ export default {
       // 导入Excel弹出层
       selectedType: '',
       progress: 0,
-
-
+      isLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -171,6 +216,7 @@ export default {
       total: 0,
       // 财务-利润表格数据
       interestsList: [],
+      threeList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -283,6 +329,15 @@ export default {
 
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
+    handleDownload() {
+      const url = "/profile/excel_templates/利润表样表.xlsx";
+      handleTrueDownload(url);
+    },
+
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -295,7 +350,6 @@ export default {
         this.interestsList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮
@@ -394,6 +448,16 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     // 导入excel，检查文件类型
     checkFile() {
       const file = this.$refs.fileInput.files[0];
@@ -423,6 +487,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("excelFile", file);
         const aimUrl = `/financial/data/interests/import`
@@ -431,15 +496,14 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+            // this.$message.error("上传失败，请重试");
+            this.isLoading = false;
           });
       }
     },
@@ -476,7 +540,7 @@ export default {
     //     // 将日期数据添加到一个对象中
     //     // const dataToSend = {
     //     //   InterestsFile: file,
-    //     //   yearAndMonth: this.form.yearAndMonth 
+    //     //   yearAndMonth: this.form.yearAndMonth
     //     // };
 
     //     axios({

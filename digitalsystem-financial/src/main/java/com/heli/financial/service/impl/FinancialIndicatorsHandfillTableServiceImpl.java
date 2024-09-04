@@ -24,6 +24,11 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
     private FinancialIndicatorsHandfillTableMapper financialIndicatorsHandfillTableMapper;
 
     @Override
+    public FinancialIndicatorsHandfillTable selectMaxMonthHandfill() {
+        return financialIndicatorsHandfillTableMapper.selectMaxMonthHandfill();
+    }
+
+    @Override
     public Date selectMaxYearAndMonth() {
         return financialIndicatorsHandfillTableMapper.selectMaxYearAndMonth();
     }
@@ -59,6 +64,16 @@ public class FinancialIndicatorsHandfillTableServiceImpl implements IFinancialIn
     @Override
     public FinancialIndicatorsHandfillTable selectFinancialIndicatorsHandfillTableByYearAndMonth(Date yearAndMonth) {
         return financialIndicatorsHandfillTableMapper.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
+    }
+
+    @Override
+    public FinancialIndicatorsHandfillTable selectHandfillSumInfoByYear(Date yearAndMonth) {
+        return financialIndicatorsHandfillTableMapper.selectHandfillSumInfoByYear(yearAndMonth);
+    }
+
+    @Override
+    public FinancialIndicatorsHandfillTable selectHandfillRateByYear(Date yearAndMonth) {
+        return financialIndicatorsHandfillTableMapper.selectHandfillRateByYear(yearAndMonth);
     }
 
     /**

@@ -337,3 +337,90 @@ export function getGrowthRateInventorySalesData(data) {
     }
   })
 }
+
+
+// 财务指标资产负债总计
+// export function getBalanceSumData(data) {
+//   return request({
+//     url: `/financial/data/balance/sum`,
+//     method: 'post',
+//     data: {
+//       startTime: data.startTime,
+//       endTime: data.endTime
+//     }
+//   })
+// }
+
+// 月度数据求和展示
+export function getMonthSumData(data) {
+  return request({
+    url: `/financial/data/fill/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+// 月度数据最新展示
+export function getMonthNewData() {
+  return request({
+    url: `/financial/data/fill/newData`,
+    method: 'post',
+  })
+}
+
+// 利润表求和展示
+export function getInterestSumData(data) {
+  return request({
+    url: `/financial/data/interests/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+
+// 利润表最新展示
+export function getInterestNewData() {
+  return request({
+    url: `/financial/data/interests/newData`,
+    method: 'post',
+  })
+}
+
+
+// 资产负债表比率展示
+export function getBalanceNewRateData() {
+  return request({
+    url: `/financial/data/balance/newRate`,
+    method: 'post',
+  })
+}
+
+
+// 资产负债表最新展示
+export function getBalanceNewData() {
+  return request({
+    url: `/financial/data/balance/newData`,
+    method: 'post',
+  })
+}
+
+
+
+// 当日在制品展示
+export function getDaySumData(data) {
+  return request({
+    url: `/financial/data/dailyInProgress/sum`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+

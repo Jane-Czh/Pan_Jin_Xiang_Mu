@@ -29,8 +29,8 @@
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
-        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['supply:data:read']">导入Excel文件
+        <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain
+          v-if="true">导入Excel文件
         </el-button>
 
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
@@ -53,9 +53,14 @@
 
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
       </el-col>
 
 
@@ -63,7 +68,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="controlledAmountList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="scpId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
@@ -72,8 +77,8 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="当月采购总金额" align="center" prop="totalPurchaseAmount" />
-      <el-table-column label="当月管控物资采购金额" align="center" prop="controlledMaterialPurchases" />
+      <el-table-column label="当月采购总金额(万元)" align="center" prop="totalPurchaseAmount" />
+      <el-table-column label="当月管控物资采购金额(万元)" align="center" prop="controlledMaterialPurchases" />
       <el-table-column label="比例(%)" align="center" prop="controlledPurchaseAmountRatio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -89,21 +94,21 @@
       @pagination="getList" />
 
     <!-- 添加或修改供应-指标-集团管控物资占比对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="170px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="210px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="当月采购总金额" prop="totalPurchaseAmount">
-          <el-input v-model="form.totalPurchaseAmount" placeholder="请输入当月采购总金额" />
+        <el-form-item label="当月采购总金额(万元)" prop="totalPurchaseAmount">
+          <el-input v-model="form.totalPurchaseAmount" placeholder="请输入当月采购总金额(万元)" />
         </el-form-item>
-        <el-form-item label="当月管控物资采购金额" prop="controlledMaterialPurchases">
-          <el-input v-model="form.controlledMaterialPurchases" placeholder="请输入当月管控物资采购金额" />
+        <el-form-item label="当月管控物资采购金额(万元)" prop="controlledMaterialPurchases">
+          <el-input v-model="form.controlledMaterialPurchases" placeholder="请输入当月管控物资采购金额(万元)" />
         </el-form-item>
         <el-form-item label="比例(%)" prop="controlledPurchaseAmountRatio">
-          <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例" />
+          <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -116,7 +121,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/supply/data";
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 import { numValidator, numValidatorOnlyNature, numValidatorPercentage } from '@/api/financial/numValidator.js';
 
 export default {
@@ -137,7 +142,7 @@ export default {
       progress: 0,
       selectedType: '',
 
-
+      isLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -146,6 +151,7 @@ export default {
       total: 0,
       // 供应-指标-集团管控物资占比表格数据
       controlledAmountList: [],
+      afterList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -185,7 +191,7 @@ export default {
         controlledPurchaseAmountRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
@@ -195,8 +201,13 @@ export default {
   },
   created() {
     this.getList();
+
   },
   methods: {
+    handleDownload() {
+      const url = "/profile/excel_templates/采购订单汇总表样表.xlsx"
+      handleTrueDownload(url);
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -209,7 +220,6 @@ export default {
         this.controlledAmountList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮
@@ -325,6 +335,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
         const aimUrl = `/supply/data/readPurchaseOrderTable`
@@ -333,16 +344,17 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
+            // this.$message.error("上传失败，请重试");
+            this.isLoading = false;
           })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
-          });
+          ;
+
         // .then(response => {
         //   // 处理请求成功的情况
         //   this.$message.success("上传成功");

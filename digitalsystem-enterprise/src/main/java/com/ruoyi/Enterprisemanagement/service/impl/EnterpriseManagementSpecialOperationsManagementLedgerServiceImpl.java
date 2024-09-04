@@ -107,21 +107,32 @@ public class EnterpriseManagementSpecialOperationsManagementLedgerServiceImpl im
             InputStream is = null;
             try {
                 List<EnterpriseManagementSpecialOperationsManagementLedger> enterpriseManagementSpecialOperationsManagementLedgers = EMExcelUtils.SOparseExcel(excelFile);
-                int i = 0;
-                while (i < enterpriseManagementSpecialOperationsManagementLedgers.size()){
-                    enterpriseManagementSpecialOperationsManagementLedger = enterpriseManagementSpecialOperationsManagementLedgers.get(i);
-                    Long lastid = selectLastId();
-                    if(lastid == null){
-                        lastid = 0L;
+                // 批量获取并删除原来的数据
+                List<EnterpriseManagementSpecialOperationsManagementLedger> existingRosters = enterpriseManagementSpecialOperationsManagementLedgerMapper.selectEnterpriseManagementSpecialOperationsManagementLedgerList(new EnterpriseManagementSpecialOperationsManagementLedger());
+                if (!existingRosters.isEmpty()) {
+                    Long[] emsiIds = existingRosters.stream().map(EnterpriseManagementSpecialOperationsManagementLedger::getEmsiId).toArray(Long[]::new);
+                    enterpriseManagementSpecialOperationsManagementLedgerMapper.deleteEnterpriseManagementSpecialOperationsManagementLedgerByEmsiIds(emsiIds);
+                }
+
+                // 分批处理数据，每批2000条
+                int batchSize = 2000;
+                int totalSize = enterpriseManagementSpecialOperationsManagementLedgers.size();
+                for (int i = 0; i < totalSize; i += batchSize) {
+                    int end = Math.min(i + batchSize, totalSize);
+                    List<EnterpriseManagementSpecialOperationsManagementLedger> batchLedgers = enterpriseManagementSpecialOperationsManagementLedgers.subList(i, end);
+
+                    // 设置创建时间
+                    for (EnterpriseManagementSpecialOperationsManagementLedger ledger : batchLedgers) {
+                        ledger.setCreatedTime(getTime.getCurrentDate());
                     }
-                    Long EMSI_id = GenerateId.getNextId(lastid);
-                    enterpriseManagementSpecialOperationsManagementLedger.setEmsiId(EMSI_id);
-                    enterpriseManagementSpecialOperationsManagementLedger.setCreatedTime(getTime.getCurrentDate());
-                    if (enterpriseManagementSpecialOperationsManagementLedger.getName() == null){
-                        continue;
+
+                    // 过滤掉name为null的数据
+                    batchLedgers.removeIf(ledger -> ledger.getName() == null);
+
+                    // 批量插入数据
+                    if (!batchLedgers.isEmpty()) {
+                        enterpriseManagementSpecialOperationsManagementLedgerMapper.insertBatch(batchLedgers);
                     }
-                    enterpriseManagementSpecialOperationsManagementLedgerMapper.insertEnterpriseManagementSpecialOperationsManagementLedger(enterpriseManagementSpecialOperationsManagementLedger);
-                    i++;
                 }
             } catch (IOException e) {
                 e.printStackTrace();

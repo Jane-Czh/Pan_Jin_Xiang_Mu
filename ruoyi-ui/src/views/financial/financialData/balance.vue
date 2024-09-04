@@ -49,48 +49,125 @@
           <i class="el-icon-upload"></i>
           <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
 
-          <!-- 进度动画条 -->
-          <!-- <div v-if="progress > 0">
-            <el-progress :percentage="progress" color="rgb(19, 194, 194)"></el-progress>
-          </div> -->
-
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="fileSend()">确 定</el-button>
+            <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+            <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
           </span>
         </el-dialog>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        </el-button>
+        <!-- <el-button size="mini" type="text" icon="el-icon-edit" @click="handleDownload()">下载</el-button> -->
+
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="balanceList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id(主键)" align="center" prop="fbId" /> -->
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="100"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="在途物资" align="center" prop="inTransitInventory" />
-      <el-table-column label="原材料" align="center" prop="materials" width="150" />
-      <el-table-column label="材料成本差异" align="center" prop="materialCostVariance" width="120" />
-      <el-table-column label="材料成本差异-差异待分摊" align="center" prop="materialCostVarianceUnallocated" width="170" />
-      <el-table-column label="当月原材料存货额" align="center" prop="monthlyRawMaterialInventory" width="140" />
-      <el-table-column label="库存商品-半成品" align="center" prop="workInProgressSemiFinishedGoods" width="140" />
-      <el-table-column label="产品成本差异-半成品" align="center" prop="productCostVarianceSemiFinishedGoods" width="160" />
-      <el-table-column label="月末在制品" align="center" prop="workInProgressEndOfMonth" width="120" />
-      <el-table-column label="当月在制品存货额" align="center" prop="monthlyWorkInProgressInventory" width="140" />
-      <el-table-column label="库存商品-整车" align="center" prop="inventoryVehicles" width="120" />
-      <el-table-column label="产品成本差异-产成品" align="center" prop="pcvFinished" width="160" />
-      <el-table-column label="当月库存商品存货额" align="center" prop="monthAmountInStock" width="160" />
-      <el-table-column label="月度存货总金额" align="center" prop="monthlyInventoryTotalAmount" width="120" />
-      <el-table-column label="存货增长率(%)" align="center" prop="growthRateInventory" width="160" />
-      <el-table-column label="销售增长率(%)" align="center" prop="growthRateSales" width="160" />
-      <el-table-column label="应收账款" align="center" prop="receivables" width="120" />
-      <el-table-column label="应收帐款周转率(%)" align="center" prop="turnoverRateReceivable" width="140" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="在途物资(万元)" align="center" prop="inTransitInventory" width="140" /> -->
+      <el-table-column label="在途物资(万元)" align="center" prop="inTransitInventory" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.inTransitInventory) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="原材料(万元)" align="center" prop="materials" width="130" /> -->
+      <el-table-column label="原材料(万元)" align="center" prop="materials" width="130">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.materials) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="材料成本差异(万元)" align="center" prop="materialCostVariance" width="140" /> -->
+      <el-table-column label="材料成本差异(万元)" align="center" prop="materialCostVariance" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.materialCostVariance) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="材料成本差异-差异待分摊(万元)" align="center" prop="materialCostVarianceUnallocated" width="210" /> -->
+      <el-table-column label="材料成本差异-差异待分摊(万元)" align="center" prop="materialCostVarianceUnallocated" width="210">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.materialCostVarianceUnallocated) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="当月原材料存货额(万元)" align="center" prop="monthlyRawMaterialInventory" width="170" /> -->
+      <el-table-column label="当月原材料存货额(万元)" align="center" prop="monthlyRawMaterialInventory" width="170">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.monthlyRawMaterialInventory) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="库存商品-半成品(万元)" align="center" prop="workInProgressSemiFinishedGoods" width="160" /> -->
+      <el-table-column label="库存商品-半成品(万元)" align="center" prop="workInProgressSemiFinishedGoods" width="160">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.workInProgressSemiFinishedGoods) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="产品成本差异-半成品(万元)" align="center" prop="productCostVarianceSemiFinishedGoods" width="180" /> -->
+      <el-table-column label="产品成本差异-半成品(万元)" align="center" prop="productCostVarianceSemiFinishedGoods" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.productCostVarianceSemiFinishedGoods) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="月末在制品(万元)" align="center" prop="workInProgressEndOfMonth" width="120" /> -->
+      <el-table-column label="月末在制品(万元)" align="center" prop="workInProgressEndOfMonth" width="150">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.workInProgressEndOfMonth) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="当月在制品存货额(万元)" align="center" prop="monthlyWorkInProgressInventory" width="160" /> -->
+      <el-table-column label="当月在制品存货额(万元)" align="center" prop="monthlyWorkInProgressInventory" width="160">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.monthlyWorkInProgressInventory) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="库存商品-整车(万元)" align="center" prop="inventoryVehicles" width="140" /> -->
+      <el-table-column label="库存商品-整车(万元)" align="center" prop="inventoryVehicles" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.inventoryVehicles) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="产品成本差异-产成品(万元)" align="center" prop="pcvFinished" width="180" /> -->
+      <el-table-column label="产品成本差异-产成品(万元)" align="center" prop="pcvFinished" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.pcvFinished) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="当月库存商品存货额(万元)" align="center" prop="monthAmountInStock" width="180" /> -->
+      <el-table-column label="当月库存商品存货额(万元)" align="center" prop="monthAmountInStock" width="180">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.monthAmountInStock) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="月度存货总金额(万元)" align="center" prop="monthlyInventoryTotalAmount" width="150" /> -->
+      <el-table-column label="月度存货总金额(万元)" align="center" prop="monthlyInventoryTotalAmount" width="150">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.monthlyInventoryTotalAmount) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="存货增长率/销售增长率" align="center" prop="growthRateInventory" width="160" />
+      <!-- <el-table-column label="销售增长率" align="center" prop="growthRateSales" width="160" /> -->
+      <!-- <el-table-column label="应收账款(万元)" align="center" prop="receivables" width="120" /> -->
+      <el-table-column label="应收账款(万元)" align="center" prop="receivables" width="120">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.receivables) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="应收帐款周转率(次)" align="center" prop="turnoverRateReceivable" width="140" /> -->
+      <el-table-column label="应收帐款周转率(次)" align="center" prop="turnoverRateReceivable" width="140">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.turnoverRateReceivable) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['financial:balance:edit']">修改</el-button>
@@ -104,51 +181,51 @@
       @pagination="getList" />
 
     <!-- 添加或修改财务-资产负债对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body :before-close="handleClose">
+      <el-form ref="form" :model="form" :rules="rules" label-width="240px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="在途物资" prop="inTransitInventory">
-          <el-input v-model="form.inTransitInventory" placeholder="请输入在途物资" />
+        <el-form-item label="在途物资(万元)" prop="inTransitInventory">
+          <el-input v-model="form.inTransitInventory" placeholder="请输入在途物资(万元)" />
         </el-form-item>
-        <el-form-item label="原材料" prop="materials">
-          <el-input v-model="form.materials" placeholder="请输入原材料" />
+        <el-form-item label="原材料(万元)" prop="materials">
+          <el-input v-model="form.materials" placeholder="请输入原材料(万元)" />
         </el-form-item>
-        <el-form-item label="材料成本差异" prop="materialCostVariance">
-          <el-input v-model="form.materialCostVariance" placeholder="请输入材料成本差异" />
+        <el-form-item label="材料成本差异(万元)" prop="materialCostVariance">
+          <el-input v-model="form.materialCostVariance" placeholder="请输入材料成本差异(万元)" />
         </el-form-item>
-        <el-form-item label="材料成本差异-差异待分摊" prop="materialCostVarianceUnallocated">
-          <el-input v-model="form.materialCostVarianceUnallocated" placeholder="请输入材料成本差异-差异待分摊" />
+        <el-form-item label="材料成本差异-差异待分摊(万元)" prop="materialCostVarianceUnallocated">
+          <el-input v-model="form.materialCostVarianceUnallocated" placeholder="请输入材料成本差异-差异待分摊(万元)" />
         </el-form-item>
-        <el-form-item label="当月原材料存货额" prop="monthlyRawMaterialInventory">
-          <el-input v-model="form.monthlyRawMaterialInventory" placeholder="请输入当月原材料存货额" />
+        <el-form-item label="当月原材料存货额(万元)" prop="monthlyRawMaterialInventory">
+          <el-input v-model="form.monthlyRawMaterialInventory" placeholder="请输入当月原材料存货额(万元)" />
         </el-form-item>
-        <el-form-item label="库存商品-半成品" prop="workInProgressSemiFinishedGoods">
-          <el-input v-model="form.workInProgressSemiFinishedGoods" placeholder="请输入库存商品-半成品" />
+        <el-form-item label="库存商品-半成品(万元)" prop="workInProgressSemiFinishedGoods">
+          <el-input v-model="form.workInProgressSemiFinishedGoods" placeholder="请输入库存商品-半成品(万元)" />
         </el-form-item>
-        <el-form-item label="产品成本差异-半成品" prop="productCostVarianceSemiFinishedGoods">
-          <el-input v-model="form.productCostVarianceSemiFinishedGoods" placeholder="请输入产品成本差异-半成品" />
+        <el-form-item label="产品成本差异-半成品(万元)" prop="productCostVarianceSemiFinishedGoods">
+          <el-input v-model="form.productCostVarianceSemiFinishedGoods" placeholder="请输入产品成本差异-半成品(万元)" />
         </el-form-item>
-        <el-form-item label="月末在制品" prop="workInProgressEndOfMonth">
-          <el-input v-model="form.workInProgressEndOfMonth" placeholder="请输入月末在制品" />
+        <el-form-item label="月末在制品(万元)" prop="workInProgressEndOfMonth">
+          <el-input v-model="form.workInProgressEndOfMonth" placeholder="请输入月末在制品(万元)" />
         </el-form-item>
-        <el-form-item label="当月在制品存货额" prop="monthlyWorkInProgressInventory">
-          <el-input v-model="form.monthlyWorkInProgressInventory" placeholder="请输入当月在制品存货额" />
+        <el-form-item label="当月在制品存货额(万元)" prop="monthlyWorkInProgressInventory">
+          <el-input v-model="form.monthlyWorkInProgressInventory" placeholder="请输入当月在制品存货额(万元)" />
         </el-form-item>
-        <el-form-item label="库存商品-整车" prop="inventoryVehicles">
-          <el-input v-model="form.inventoryVehicles" placeholder="请输入库存商品-整车" />
+        <el-form-item label="库存商品-整车(万元)" prop="inventoryVehicles">
+          <el-input v-model="form.inventoryVehicles" placeholder="请输入库存商品-整车(万元)" />
         </el-form-item>
-        <el-form-item label="产品成本差异-产成品" prop="pcvFinished">
-          <el-input v-model="form.pcvFinished" placeholder="请输入产品成本差异-产成品" />
+        <el-form-item label="产品成本差异-产成品(万元)" prop="pcvFinished">
+          <el-input v-model="form.pcvFinished" placeholder="请输入产品成本差异-产成品(万元)" />
         </el-form-item>
         <!-- <el-form-item label="当月库存商品存货额" prop="monthAmountInStock">
           <el-input v-model="form.monthAmountInStock" placeholder="请输入当月库存商品存货额" />
         </el-form-item> -->
-        <el-form-item label="月度存货总金额" prop="monthlyInventoryTotalAmount">
-          <el-input v-model="form.monthlyInventoryTotalAmount" placeholder="请输入月度存货总金额" />
+        <el-form-item label="当月存货总额(万元)" prop="monthlyInventoryTotalAmount">
+          <el-input v-model="form.monthlyInventoryTotalAmount" placeholder="请输入当月存货总额(万元)" />
         </el-form-item>
         <!-- <el-form-item label="存货增长率" prop="growthRateInventory">
           <el-input v-model="form.growthRateInventory" placeholder="请输入存货增长率/销售增长率" />
@@ -156,8 +233,8 @@
         <!-- <el-form-item label="销售增长率" prop="growthRateSales">
           <el-input v-model="form.growthRateSales" placeholder="请输入存货增长率/销售增长率" />
         </el-form-item> -->
-        <el-form-item label="应收账款" prop="receivables">
-          <el-input v-model="form.receivables" placeholder="请输入应收账款" />
+        <el-form-item label="应收账款(万元)" prop="receivables">
+          <el-input v-model="form.receivables" placeholder="请输入应收账款(万元)" />
         </el-form-item>
         <!-- <el-form-item label="应收帐款周转率" prop="turnoverRateReceivable">
           <el-input v-model="form.turnoverRateReceivable" placeholder="请输入应收帐款周转率" />
@@ -174,7 +251,7 @@
 <script>
 import { listBalance, getBalance, delBalance, addBalance, updateBalance } from "@/api/financial/balance";
 import { numValidator } from '@/api/financial/numValidator.js';
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 
 export default {
   name: "Balance",
@@ -190,7 +267,7 @@ export default {
       selectedType: '',
       progress: 0,
       showDialog: false,
-
+      isLoading: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -354,6 +431,16 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
+
+    handleDownload() {
+      const url = "/profile/excel_templates/资产负债表样表.xlsx";
+      handleTrueDownload(url);
+    },
+
 
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
@@ -401,6 +488,16 @@ export default {
         turnoverRateReceivable: null
       };
       this.resetForm("form");
+    },
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -504,6 +601,7 @@ export default {
           return;
         }
       } else {
+        this.isLoading = true;
         formData.append("yearAndMonth", yearAndMonth);
         formData.append("BalanceFile", file);
         const aimUrl = `/financial/data/balance/import`
@@ -512,15 +610,14 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
+            this.isLoading = false;
             // this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
           });
 
       }

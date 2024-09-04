@@ -10,6 +10,9 @@ import com.heli.financial.domain.FinancialIndicatorsHandfillTable;
 import com.heli.financial.service.IFinancialBalanceTableService;
 import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
 import com.heli.financial.service.IFinancialInterestsTableService;
+import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.DisplayRequestParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author loophong
  * @date 2024-03-29
  */
+@Slf4j
 @RestController
 @RequestMapping("/financial/data/fill")
 public class FinancialIndicatorsHandfillTableController extends BaseController {
@@ -106,12 +110,31 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //
 //}
 
-
-
-
-
-
-
+    /**
+     * @description: 统计财务截至当年数据
+     * @author: hong
+     * @date: 2024/7/26 15:24
+     */
+    @PreAuthorize("@ss.hasPermi('financial:fill:sum')")
+    @PostMapping("/sum")
+    public AjaxResult selectHandfillSumInfoByYear(@RequestBody DisplayRequestParam time) {
+        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillSumInfoByYear(time.getStartTime());
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+    @PreAuthorize("@ss.hasPermi('financial:fill:sum')")
+    @PostMapping("/rate")
+    public AjaxResult selectHandfillRateByYear(@RequestBody DisplayRequestParam time) {
+        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillRateByYear(time.getStartTime());
+//        logger.info("sumInfoByYear: " + sumInfoByYear);
+        return AjaxResult.success(sumInfoByYear);
+    }
+    @PreAuthorize("@ss.hasPermi('financial:fill:sum')")
+    @PostMapping("/newData")
+    public AjaxResult selectMaxMonthHandfill() {
+        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectMaxMonthHandfill();
+        return AjaxResult.success(sumInfoByYear);
+    }
 
 
     /**
@@ -120,8 +143,11 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
     @PreAuthorize("@ss.hasPermi('financial:fill:list')")
     @GetMapping("/list")
     public TableDataInfo list(FinancialIndicatorsHandfillTable financialIndicatorsHandfillTable) {
+
+        log.info("list: " + financialIndicatorsHandfillTable);
         System.out.println("-------------test___________________");
         startPage();
+
         List<FinancialIndicatorsHandfillTable> list = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableList(financialIndicatorsHandfillTable);
         return getDataTable(list);
     }
@@ -146,7 +172,6 @@ public class FinancialIndicatorsHandfillTableController extends BaseController {
 //        System.out.println(financialIndicatorsHandfillTable);
 //        return toAjax(financialIndicatorsHandfillTableService.insertFinancialIndicatorsHandfillTable(financialIndicatorsHandfillTable));
 //    }
-
 
 
     /**

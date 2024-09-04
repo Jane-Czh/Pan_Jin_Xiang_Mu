@@ -1,102 +1,89 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item>-->
-<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item>-->
+      <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+      <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+      <!--      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['Enterprisemanagement:reminder:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['Enterprisemanagement:reminder:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleAdd"-->
+      <!--          v-hasPermi="['Enterprisemanagement:reminder:add']"-->
+      <!--        >新增</el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          plain-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['Enterprisemanagement:reminder:edit']"-->
+      <!--        >修改</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['Enterprisemanagement:reminder:remove']"
-        >删除</el-button>
+        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
+          v-hasPermi="['Enterprisemanagement:reminder:remove']">删除</el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['Enterprisemanagement:reminder:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="warning"-->
+      <!--          plain-->
+      <!--          icon="el-icon-download"-->
+      <!--          size="mini"-->
+      <!--          @click="handleExport"-->
+      <!--          v-hasPermi="['Enterprisemanagement:reminder:export']"-->
+      <!--        >导出</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="syncReport"
-        >同步数据</el-button>
+        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="syncReport">同步数据</el-button>
       </el-col>
-<!--      <el-col>-->
-<!--        &lt;!&ndash;Excel 参数导入 &ndash;&gt;-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          @click="showDialog = true"-->
-<!--        ><i class="fa fa-download"></i>导入Excel文件-->
-<!--        </el-button>-->
-<!--        <el-dialog-->
-<!--          title="导入Excel文件"-->
-<!--          :visible.sync="showDialog"-->
-<!--          width="30%"-->
-<!--          :before-close="handleClose"-->
-<!--          @close="resetFileInput"-->
-<!--        >-->
-<!--          <i class="el-icon-upload"></i>-->
-<!--          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />-->
+      <!--      <el-col>-->
+      <!--        &lt;!&ndash;Excel 参数导入 &ndash;&gt;-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          @click="showDialog = true"-->
+      <!--        ><i class="fa fa-download"></i>导入Excel文件-->
+      <!--        </el-button>-->
+      <!--        <el-dialog-->
+      <!--          title="导入Excel文件"-->
+      <!--          :visible.sync="showDialog"-->
+      <!--          width="30%"-->
+      <!--          :before-close="handleClose"-->
+      <!--          @close="resetFileInput"-->
+      <!--        >-->
+      <!--          <i class="el-icon-upload"></i>-->
+      <!--          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />-->
 
-<!--          &lt;!&ndash; 进度动画条 &ndash;&gt;-->
-<!--          <div v-if="progress > 0">-->
-<!--            <el-progress-->
-<!--              :percentage="progress"-->
-<!--              color="rgb(19, 194, 194)"-->
-<!--            ></el-progress>-->
-<!--          </div>-->
+      <!--          &lt;!&ndash; 进度动画条 &ndash;&gt;-->
+      <!--          <div v-if="progress > 0">-->
+      <!--            <el-progress-->
+      <!--              :percentage="progress"-->
+      <!--              color="rgb(19, 194, 194)"-->
+      <!--            ></el-progress>-->
+      <!--          </div>-->
 
-<!--          <span slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="showDialog = false">取 消</el-button>-->
-<!--          <el-button type="primary" @click="fileSend()">确 定</el-button>-->
-<!--        </span>-->
-<!--        </el-dialog>-->
-<!--      </el-col>-->
+      <!--          <span slot="footer" class="dialog-footer">-->
+      <!--          <el-button @click="showDialog = false">取 消</el-button>-->
+      <!--          <el-button type="primary" @click="fileSend()">确 定</el-button>-->
+      <!--        </span>-->
+      <!--        </el-dialog>-->
+      <!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="reminderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="主键" align="center" prop="emlwId" />-->
-<!--      <el-table-column label="编号" align="center" prop="number" />-->
+      <!--      <el-table-column label="主键" align="center" prop="emlwId" />-->
+      <!--      <el-table-column label="编号" align="center" prop="number" />-->
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="科室" align="center" prop="document" />
       <el-table-column label="就职状态" align="center" prop="employmentStatus" />
@@ -136,33 +123,28 @@
       </el-table-column>
       <el-table-column label="第三次合同状况" align="center" prop="contractStatusThirdly" />
       <el-table-column label="是否预警" align="center" prop="warn" />
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['Enterprisemanagement:reminder:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['Enterprisemanagement:reminder:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <el-button-->
+      <!--            size="mini"-->
+      <!--            type="text"-->
+      <!--            icon="el-icon-edit"-->
+      <!--            @click="handleUpdate(scope.row)"-->
+      <!--            v-hasPermi="['Enterprisemanagement:reminder:edit']"-->
+      <!--          >修改</el-button>-->
+      <!--          <el-button-->
+      <!--            size="mini"-->
+      <!--            type="text"-->
+      <!--            icon="el-icon-delete"-->
+      <!--            @click="handleDelete(scope.row)"-->
+      <!--            v-hasPermi="['Enterprisemanagement:reminder:remove']"-->
+      <!--          >删除</el-button>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改企管劳动合同到期提醒对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -183,18 +165,12 @@
           <el-input v-model="form.phoneNumber" placeholder="请输入电话号码" />
         </el-form-item>
         <el-form-item label="第一次合同起始" prop="firstContractPeriodStart">
-          <el-date-picker clearable
-            v-model="form.firstContractPeriodStart"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.firstContractPeriodStart" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择第一次合同起始">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第一次合同结束" prop="firstContractPeriodEnd">
-          <el-date-picker clearable
-            v-model="form.firstContractPeriodEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.firstContractPeriodEnd" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择第一次合同结束">
           </el-date-picker>
         </el-form-item>
@@ -202,18 +178,12 @@
           <el-input v-model="form.contractStatusFirstly" placeholder="请输入第一次合同状况" />
         </el-form-item>
         <el-form-item label="第二次合同起始" prop="secondContractPeriodStart">
-          <el-date-picker clearable
-            v-model="form.secondContractPeriodStart"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.secondContractPeriodStart" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择第二次合同起始">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第二次合同结束" prop="secondContractPeriodEnd">
-          <el-date-picker clearable
-            v-model="form.secondContractPeriodEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.secondContractPeriodEnd" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择第二次合同结束">
           </el-date-picker>
         </el-form-item>
@@ -221,18 +191,12 @@
           <el-input v-model="form.contractStatusSecondly" placeholder="请输入第二次合同状况" />
         </el-form-item>
         <el-form-item label="第三次合同起始" prop="thirdContractPeriodStart">
-          <el-date-picker clearable
-            v-model="form.thirdContractPeriodStart"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.thirdContractPeriodStart" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择第三次合同起始">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="第三次合同结束" prop="thirdContractPeriodEnd">
-          <el-date-picker clearable
-            v-model="form.thirdContractPeriodEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
+          <el-date-picker clearable v-model="form.thirdContractPeriodEnd" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择第三次合同结束">
           </el-date-picker>
         </el-form-item>
@@ -383,7 +347,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.emlwId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -425,12 +389,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const emlwIds = row.emlwId || this.ids;
-      this.$modal.confirm('是否确认删除企管劳动合同到期提醒编号为"' + emlwIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除企管劳动合同到期提醒编号为"' + emlwIds + '"的数据项？').then(function () {
         return delReminder(emlwIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => { });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -479,7 +443,7 @@ export default {
         .then(_ => {
           done();
         })
-        .catch(_ => {});
+        .catch(_ => { });
     },
     //导入excel，取消按钮绑定取消所选的xlsx
     resetFileInput() {

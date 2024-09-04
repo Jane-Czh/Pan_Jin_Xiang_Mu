@@ -1,7 +1,9 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">盘锦合力管理系统</h3>
+      <h2 class="title">合力工业车辆（盘锦）有限公司
+        <br>
+        数字化运营系统</h2>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -36,7 +38,13 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.</span>
+      <span>合力工业车辆（盘锦）有限公司</span>
+      <br>
+      <span>中国 辽宁 盘锦 辽东湾新区 滨海大道与中华路交口合力叉车</span>
+      <br>
+      <span>Copyright © 2023 Anhui Heli Co., Ltd. All Rights Reserved.</span>
+      <!-- <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.</span> -->
+
     </div>
   </div>
 </template>
@@ -143,19 +151,29 @@ export default {
   height: 100%;
   background-image: url("../assets/images/login-background.jpg");
   background-size: cover;
+  backdrop-filter: blur(5px); /* 磨砂效果 */
 }
 
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
-  color: #707070;
+  color: #000; /* 改为黑色 */
+  font-family: "KaiTi", "楷体", serif; /* 设置为楷体字体 */
+  // font-style: italic; /* 如果需要斜体，可以添加这一行 */
 }
+
+
+
+
 
 .login-form {
   border-radius: 6px;
-  background: #ffffff;
-  width: 400px;
+  background: rgba(233, 231, 231, 0.6); /* 白色半透明背景 */
+  backdrop-filter: blur(3px); /* 磨砂效果 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  width: 389px;
   padding: 25px 25px 5px 25px;
+
 
   .el-input {
     height: 38px;
@@ -190,8 +208,9 @@ export default {
 }
 
 .el-login-footer {
-  height: 40px;
-  line-height: 40px;
+  height: auto; /* 自动调整高度 */
+  line-height: normal; /* 让每一行的高度正常显示 */
+  padding: 10px 0; /* 增加内边距 */
   position: fixed;
   bottom: 0;
   width: 100%;

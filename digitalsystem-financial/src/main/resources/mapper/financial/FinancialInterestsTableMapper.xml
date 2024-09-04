@@ -30,6 +30,34 @@
         SELECT EXISTS(SELECT 1 FROM Financial_Interests_table)
     </select>
 
+    <!--  首页数据展示  -->
+    <select id="selectInterestsSumInfoByYear" parameterType="Date" resultType="com.heli.financial.domain.FinancialInterestsTable">
+        SELECT MAX(FI_ID)                fiId,
+               MAX(Year_And_Month)       yearAndMonth,
+               sum(Operating_Revenue)    operatingRevenue,
+               sum(Internal_MainRevenue) internalMainRevenue,
+               sum(External_MainRevenue) externalMainRevenue,
+               sum(MainRevenue)          mainRevenue,
+               sum(COGS_ProductSales_SD) cogsProductSalesSd,
+               sum(COGS_Freight)         cogsFreight,
+               sum(COGS_Variation)       cogsVariation,
+               sum(COGS)                 COGS,
+               sum(NetProfit)            netProfit,
+               sum(ManagementExpense)    managementExpense,
+               sum(RD_Expense)           rdExpense
+        FROM Financial_Interests_table
+        WHERE date_format(Year_And_Month, '%Y') = date_format(#{yearAndMonth}, '%Y')
+    </select>
+
+    <!--  获取年月最大的其他数据  -->
+    <select id="selectMaxMonthInterests" resultMap="FinancialInterestsTableResult">
+        <include refid="selectFinancialInterestsTableVo"/>
+        where Year_And_Month IN (
+        SELECT MAX(Year_And_Month)
+        FROM Financial_Interests_table
+        )
+    </select>
+
 
     <!-- 按年查询利润指标的全部数据 -->
     <select id="selectFinancialInterestsTableByYear" resultMap="FinancialInterestsTableResult">
@@ -90,6 +118,7 @@
             <if test="managementExpense != null "> and ManagementExpense = #{managementExpense}</if>
             <if test="rdExpense != null "> and RD_Expense = #{rdExpense}</if>
         </where>
+        order by Year_And_Month DESC
     </select>
 
     <select id="selectFinancialInterestsTableByFiId" parameterType="Long" resultMap="FinancialInterestsTableResult">

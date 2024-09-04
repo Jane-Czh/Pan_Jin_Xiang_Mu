@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.ef.dao.NodeDao">
-    
+
     <resultMap type="com.ruoyi.ef.entity.NodeEntity" id="NodeResult">
         <result property="id"    column="id"    />
         <result property="projectId"    column="project_id"    />
@@ -13,6 +13,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="top"    column="top"    />
         <result property="ico"    column="ico"    />
         <result property="state"    column="state"    />
+
+        <result property="description"    column="description"    />
+        <result property="department"    column="department"    />
+        <result property="operationalStaff"    column="operational_staff"    />
+        <result property="date"    column="date"    />
     </resultMap>
 
 <!--    <sql id="selectFlowNodeVo">-->

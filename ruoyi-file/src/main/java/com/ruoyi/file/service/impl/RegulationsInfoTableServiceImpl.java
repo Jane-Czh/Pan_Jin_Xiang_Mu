@@ -65,6 +65,17 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
         return regulationsInfoTableMapper.selectRegulationsInfoTableList(regulationsInfoTable);
     }
 
+    /**
+     * 查询文件管理列表(全部)
+     *
+     * @param regulationsInfoTable 文件管理
+     * @return 文件管理
+     */
+    @Override
+    public List<RegulationsInfoTable> selectAllRegulationsList(RegulationsInfoTable regulationsInfoTable)
+    {
+        return regulationsInfoTableMapper.selectAllRegulationsList(regulationsInfoTable);
+    }
 
     /**
      * 查询历史版本文件列表

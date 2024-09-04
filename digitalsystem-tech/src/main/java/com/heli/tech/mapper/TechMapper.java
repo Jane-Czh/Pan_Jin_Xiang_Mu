@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface TechMapper {
 
+    int insertOrUpdateTech(Tech tech);
+
     /**
      * @description: 统计当年已经研发完成的数目
      * @author: hong
@@ -118,4 +120,13 @@ public interface TechMapper {
     boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
 
     boolean checkDataExist();
+
+    boolean checkCompletionIsExisted(@Param("yearAndMonth") Date yearAndMonth);
+
+    Integer selectCompletionDataNumByYear(@Param("yearAndMonth") Date yearAndMonth);
+
+    Tech selectTechByDate(@Param("yearAndMonth") Date date);
+
+    Date selectMaxMonth();
+    Date selectMinMonth();
 }

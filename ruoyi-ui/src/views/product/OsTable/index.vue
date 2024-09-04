@@ -1,62 +1,62 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="序号" prop="Number">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Number"-->
-<!--          placeholder="请输入序号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="员工编号" prop="idNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.idNumber"-->
-<!--          placeholder="请输入员工编号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="姓名" prop="Name">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Name"-->
-<!--          placeholder="请输入姓名"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="性别" prop="Gender">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.Gender"-->
-<!--          placeholder="请输入性别"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="出勤次数" prop="attendanceSituation">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.attendanceSituation"-->
-<!--          placeholder="请输入出勤次数"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="加班时长(单位:小时)" prop="overtimeDuration">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.overtimeDuration"-->
-<!--          placeholder="请输入加班时长(单位:小时)"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="异常情况" prop="abnormalSituation">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.abnormalSituation"-->
-<!--          placeholder="请输入异常情况"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="序号" prop="Number">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Number"-->
+      <!--          placeholder="请输入序号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="员工编号" prop="idNumber">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.idNumber"-->
+      <!--          placeholder="请输入员工编号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="姓名" prop="Name">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Name"-->
+      <!--          placeholder="请输入姓名"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="性别" prop="Gender">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.Gender"-->
+      <!--          placeholder="请输入性别"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="出勤次数" prop="attendanceSituation">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.attendanceSituation"-->
+      <!--          placeholder="请输入出勤次数"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="加班时长(单位:小时)" prop="overtimeDuration">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.overtimeDuration"-->
+      <!--          placeholder="请输入加班时长(单位:小时)"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="异常情况" prop="abnormalSituation">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.abnormalSituation"-->
+      <!--          placeholder="请输入异常情况"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="创建时间" prop="createTime">
         <el-date-picker clearable
                         v-model="queryParams.createTime"
@@ -72,27 +72,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['product:OsTable:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['product:OsTable:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleAdd"-->
+      <!--          v-hasPermi="['product:OsTable:add']"-->
+      <!--        >新增</el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          plain-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['product:OsTable:edit']"-->
+      <!--        >修改</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -104,16 +104,16 @@
           v-hasPermi="['product:OsTable:remove']"
         >删除</el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['product:OsTable:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
+            <el-col :span="1.5">
+              <el-button
+                type="warning"
+                plain
+                icon="el-icon-download"
+                size="mini"
+                @click="handleExport"
+                v-hasPermi="['product:OsTable:export']"
+              >导出</el-button>
+            </el-col>
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -128,37 +128,39 @@
 
     <el-table v-loading="loading" :data="OsTableList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="主键" align="center" prop="postId" />-->
-<!--      <el-table-column label="序号" align="center" prop="Number" />-->
+      <!--      <el-table-column label="主键" align="center" prop="postId" />-->
+      <!--      <el-table-column label="序号" align="center" prop="Number" />-->
       <el-table-column label="员工编号" align="center" prop="idNumber" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender" />
       <el-table-column label="出勤次数" align="center" prop="attendanceSituation" />
       <el-table-column label="加班时长(单位:分钟)" align="center" prop="overtimeDuration" />
+      <el-table-column label="周末加班时长(单位:分钟)" align="center" prop="overtimeDurationWeek" />
+      <el-table-column label="节假日加班时长(单位:分钟)" align="center" prop="overtimeDurationFes" />
       <el-table-column label="异常情况" align="center" prop="abnormalSituation" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['product:OsTable:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['product:OsTable:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <el-button-->
+      <!--            size="mini"-->
+      <!--            type="text"-->
+      <!--            icon="el-icon-edit"-->
+      <!--            @click="handleUpdate(scope.row)"-->
+      <!--            v-hasPermi="['product:OsTable:edit']"-->
+      <!--          >修改</el-button>-->
+      <!--          <el-button-->
+      <!--            size="mini"-->
+      <!--            type="text"-->
+      <!--            icon="el-icon-delete"-->
+      <!--            @click="handleDelete(scope.row)"-->
+      <!--            v-hasPermi="['product:OsTable:remove']"-->
+      <!--          >删除</el-button>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -240,6 +242,8 @@ export default {
         Gender: null,
         attendanceSituation: null,
         overtimeDuration: null,
+        overtimeDurationWeek: null,
+        overtimeDurationFes: null,
         abnormalSituation: null,
         createTime: null
       },
@@ -255,26 +259,26 @@ export default {
   },
   methods: {
 
-  /*同步*/
-  // syncReport() {
-  //   // 使用 Fetch API 发送 POST 请求到后端
-  //   fetch('http://localhost:8080/product/OsTable/synchronization', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       // 如果请求成功，可以进行下一步操作
-  //     })
-  //     .catch(error => {
-  //       console.error('There was an error!', error);
-  //     });
-  //   this.reload();
-  // },
+    /*同步*/
+    // syncReport() {
+    //   // 使用 Fetch API 发送 POST 请求到后端
+    //   fetch('http://localhost:8080/product/OsTable/synchronization', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       // 如果请求成功，可以进行下一步操作
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    //   this.reload();
+    // },
     async syncReport() {
       try {
         await syncReport();
@@ -285,8 +289,8 @@ export default {
       }
       this.reload();
     },
-  /** 查
-    /** 查询加班统计列表 */
+    /** 查
+     /** 查询加班统计列表 */
     getList() {
       this.loading = true;
       listOsTable(this.queryParams).then(response => {
@@ -309,6 +313,8 @@ export default {
         Name: null,
         Gender: null,
         attendanceSituation: null,
+        overtimeDurationWeek: null,
+        overtimeDurationFes: null,
         overtimeDuration: null,
         abnormalSituation: null,
         createTime: null
@@ -386,3 +392,4 @@ export default {
   }
 };
 </script>
+

@@ -1,5 +1,6 @@
 package com.heli.enterprise.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +34,27 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class EnterpriseManagementMonthlyDataController extends BaseController {
     @Autowired
     private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
+
+
+    @PostMapping("/test")
+    public void test(Date yearAndMonth) {
+//        enterpriseManagementMonthlyDataService.countEmployeesNumber(yearAndMonth);
+//        enterpriseManagementMonthlyDataService.calculateEmployeesNumber(yearAndMonth);
+        enterpriseManagementMonthlyDataService.calculateSalaryFillNumber(yearAndMonth);
+    }
+
+    /**
+     * 导出[企业管理]指标月度数据列表
+     */
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:export')")
+    @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+        List<EnterpriseManagementMonthlyData> list = enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataList(enterpriseManagementMonthlyData);
+        ExcelUtil<EnterpriseManagementMonthlyData> util = new ExcelUtil<EnterpriseManagementMonthlyData>(EnterpriseManagementMonthlyData.class);
+        util.exportExcel(response, list, "企管月度数据");
+    }
+
 
     /**
      * 查询[企业管理]指标月度数据列表

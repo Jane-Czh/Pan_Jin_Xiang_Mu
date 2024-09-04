@@ -14,6 +14,8 @@ import com.ruoyi.common.core.domain.R;
  */
 public interface IEnterpriseManagementSalaryTableService {
 
+    void clearSalaryTableAllInfo();
+
     public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream, String username);
 
     /**

@@ -10,7 +10,7 @@ export function listInfo(query) {
 }
 
 // 查询项目基本信息详细
-export function getInfo(projectId) {
+export function getProjectInfo(projectId) {
   return request({
     url: '/project/Info/' + projectId,
     method: 'get'
@@ -48,6 +48,14 @@ export function updateInfoHistory(data) {
 export function delInfo(projectId) {
   return request({
     url: '/project/Info/' + projectId,
+    method: 'delete'
+  })
+}
+
+// 移入回收站
+export function recycleInfo(projectId) {
+  return request({
+    url: '/project/Info/recycle' + projectId,
     method: 'delete'
   })
 }

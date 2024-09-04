@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,6 +100,7 @@ public class ProjectInfoTableController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('project:Info:relevance')")
     @PutMapping("/updataHistory")
+    @Log(title = "项目基本信息", businessType = BusinessType.UPDATE)
     public AjaxResult updataHistory(@RequestBody ProjectInfoTable projectInfoTable)
     {
         System.out.println("-----test------"+projectInfoTable);
@@ -125,4 +128,17 @@ public class ProjectInfoTableController extends BaseController
     {
         return toAjax(projectInfoTableService.deleteProjectInfoTableByProjectIds(projectIds));
     }
+
+    /**
+     * 移入回收站
+     */
+//    @PreAuthorize("@ss.hasPermi('project:Info:recycle')")
+//    @Log(title = "项目基本信息", businessType = BusinessType.DELETE)
+//    @DeleteMapping("recycle/{projectIds}")
+//    public AjaxResult recycle(@PathVariable Long[] projectIds)
+//    {
+//        System.out.println(projectIds);
+////        return toAjax(projectInfoTableService.deleteProjectInfoTableByProjectIds(projectIds));
+//        return toAjax(1);
+//    }
 }

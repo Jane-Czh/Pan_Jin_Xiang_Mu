@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.product.domain.ProductionClockInForm;
+import com.ruoyi.product.domain.ProductionCommuteTime;
 
 /**
  * 员工打卡表Mapper接口
@@ -20,6 +21,10 @@ public interface ProductionClockInFormMapper
      * @return 员工打卡表
      */
     public ProductionClockInForm selectProductionClockInFormByPcifId(Long pcifId);
+
+    public long selectProductionCommuteTimeByCommuteTimeMAXId();
+
+    public ProductionCommuteTime selectProductionCommuteTimeByCommuteTimeId(Long commuteTimeId);
 
     /**
      * 查询员工打卡表列表
@@ -64,4 +69,6 @@ public interface ProductionClockInFormMapper
     public Long selectLastId();
 
     public List<ProductionClockInForm> selectProductionClockInFormList1();
+
+    void insertBatch(List<ProductionClockInForm> formList);
 }

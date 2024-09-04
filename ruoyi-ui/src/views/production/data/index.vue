@@ -48,9 +48,14 @@
 
             <span slot="footer" class="dialog-footer">
               <el-button @click="showDialog = false">取 消</el-button>
-              <el-button type="primary" @click="fileSend()">确 定</el-button>
+              <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
+              <el-button type="primary" v-if="isLoading" :loading="true">上传中</el-button>
             </span>
           </el-dialog>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+          </el-button>
         </el-col>
 
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -58,7 +63,7 @@
     </div>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column sortable="custom" :sort-orders="['descending', 'ascending']" label="日期" align="center"
         prop="yearAndMonth" width="150">
@@ -88,7 +93,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改[生产]手动填报指标对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -133,7 +138,7 @@ import { listData, getData, delData, addData, updateData } from "@/api/productio
 //引入font-awesome
 // import "font-awesome/css/font-awesome.css";
 import { numValidator, numValidatorOnlyNature, numValidatorPercentage, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
-import { uploadFile } from '@/api/financial/excelImport';
+import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 
 
 export default {
@@ -149,7 +154,7 @@ export default {
       showDialog: false,
       progress: 0,
       selectedType: '',
-
+      isLoading: false,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -205,7 +210,7 @@ export default {
         inventoryTurnoverdays: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -226,7 +231,7 @@ export default {
         onlineOntimerate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -244,6 +249,20 @@ export default {
     this.getList();
   },
   methods: {
+    handleDownload() {
+      const url = "/profile/excel_templates/商品车台账样表.xlsx";
+      handleTrueDownload(url);
+    },
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -384,6 +403,7 @@ export default {
         this.$message.error("请选择文件!");
         return;
       } else {
+        this.isLoading = true;
         // const yearAndMonth = this.form3.yearAndMonth;
         // formData.append("yearAndMonth", yearAndMonth);
         formData.append("multipartFile", file);
@@ -393,15 +413,14 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+            // this.$message.error("上传失败，请重试");
+            this.isLoading = false;
           });
       }
     },

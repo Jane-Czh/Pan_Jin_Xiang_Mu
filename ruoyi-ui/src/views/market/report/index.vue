@@ -362,6 +362,7 @@
 import { listReport, getReport, delReport, addReport, updateReport, synchronization } from "@/api/market/report";
 import PieChart from '@/components/PieChart.vue'; // 导入饼状图组件
 import * as echarts from "echarts";
+import { subtract } from "lodash";
 
 export default {
   name: "Report",
@@ -410,7 +411,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 50,
         lastMonthBalanceOrder: null,
         commercialNetworks: null,
         orderReceivedToday: null,
@@ -622,10 +623,14 @@ export default {
     /** 今日接单 */
     orderReceivedTodayPieChart(){
 
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
+
       // 如果数据全部为零，则直接显示一个灰色的饼图
         const option = this.isAllZeroReceivedDay ? {
           title: {
-              text: '网点今日接单',
+              text: '网点本日接单',
+              subtext: dateString, // 在这里添加副标题显示日期
               left: 'center'
           },
           series: [
@@ -647,7 +652,8 @@ export default {
           ]
       } : {
           title: {
-              text: '网点今日接单',
+              text: '网点本日接单',
+              subtext: dateString, // 在这里添加副标题显示日期
               left: 'center'
           },
           tooltip: {
@@ -659,7 +665,11 @@ export default {
                   name: '接单情况',
                   type: 'pie',
                   radius: '50%',
-                  data: this.orderReceivedTodayData
+                  data: this.orderReceivedTodayData,
+                  label: {
+                    show: true,
+                    formatter: '{b}: {d}%' // 显示名称和百分比
+                  }
               }
           ]
       };
@@ -675,10 +685,14 @@ export default {
     },
     /** 本月累计接单 */
     ordersReceivedThisMonthPieChart(){
+
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZeroReceivedMonth ? {
         title: {
               text: '网点本月累计接单',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -701,6 +715,7 @@ export default {
       } : {
         title: {
           text: '网点本月累计接单',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -712,7 +727,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.ordersReceivedThisMonthData
+            data: this.ordersReceivedThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -726,11 +745,13 @@ export default {
     },
     /** 本年累计接单 */
     orderAccumulationThisYearPieChart(){
-
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZeroReceivedYear ? {
         title: {
               text: '网点本年累计接单',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -753,6 +774,7 @@ export default {
       } : {
         title: {
           text: '网点本年累计接单',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -764,7 +786,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.orderAccumulationThisYearData
+            data: this.orderAccumulationThisYearData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -778,10 +804,13 @@ export default {
     },
     /** 本日交货 */
     deliveryTodayPieChart(){
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZerodeliverydDay ? {
         title: {
               text: '网点本日交货',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -804,6 +833,7 @@ export default {
       } : {
         title: {
           text: '网点本日交货',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -815,7 +845,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.deliveryTodayData
+            data: this.deliveryTodayData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -829,10 +863,13 @@ export default {
     },
     /** 本月系统内交货 */
     deliveryWithinTheSystemThisMonthPieChart(){
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZerodeliverydMonth ? {
         title: {
               text: '网点本月交货',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -855,6 +892,7 @@ export default {
       } : {
         title: {
           text: '网点本月交货',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -866,7 +904,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.deliveryWithinTheSystemThisMonthData
+            data: this.deliveryWithinTheSystemThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -880,10 +922,13 @@ export default {
     },
     /** 本年累计系统交货数 */
     cumulativeSystemDeliveriesForTheYearPieChart(){
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZerodeliverydYear ? {
         title: {
               text: '网点本年交货',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -906,6 +951,7 @@ export default {
       } : {
         title: {
           text: '网点本年交货',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -917,7 +963,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.cumulativeSystemDeliveriesForTheYearData
+            data: this.cumulativeSystemDeliveriesForTheYearData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -931,10 +981,13 @@ export default {
     },
     /** 今日实发 */
     issuedThisDayPieChart(){
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZeroissuedDay ? {
         title: {
-              text: '网点今日实发',
+              text: '网点本日实发',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -956,7 +1009,8 @@ export default {
           ]
       } : {
         title: {
-          text: '网点今日实发',
+          text: '网点本日实发',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -968,7 +1022,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.issuedThisDayData
+            data: this.issuedThisDayData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -982,10 +1040,13 @@ export default {
     },
     /** 本月实发 */
     issuedThisMonthPieChart(){
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZeroissuedMonth ? {
         title: {
               text: '网点本月实发',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -1008,6 +1069,7 @@ export default {
       } : {
         title: {
           text: '网点本月实发',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -1019,7 +1081,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.issuedThisMonthData
+            data: this.issuedThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -1033,10 +1099,13 @@ export default {
     },
     /** 本年累计实发 */
     cumulativeIssuedThisMonthPieChart(){
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // 格式为 "YYYY-MM-DD"
       // 饼状图配置项
       const option = this.isAllZeroissuedYear ? {
         title: {
               text: '网点本年实发',
+              subtext: dateString,
               left: 'center'
           },
           series: [
@@ -1059,6 +1128,7 @@ export default {
       } : {
         title: {
           text: '网点本年实发',
+          subtext: dateString,
           left: 'center'
         },
         tooltip: {
@@ -1070,7 +1140,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.cumulativeIssuedThisMonthData
+            data: this.cumulativeIssuedThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };

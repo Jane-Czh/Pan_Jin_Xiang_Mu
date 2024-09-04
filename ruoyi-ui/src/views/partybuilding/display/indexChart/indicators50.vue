@@ -157,7 +157,7 @@ export default {
       };
       this.option = {
         title: {
-          text: '党建月度考核排名',
+          text: '党建月度考核分数',
         },
         tooltip: {
           trigger: 'axis',
@@ -166,7 +166,7 @@ export default {
           }
         },
         legend: {
-          data: ['分数', '排名']
+          data: ['分数']
         },
         toolbox: {
           show: true,
@@ -212,16 +212,17 @@ export default {
           },
           data: this.data.map(item => item.score),
         },
-        {
-          name: '排名',
-          type: 'line',
-          label: labelOption,
-          yAxisIndex: 1,
-          emphasis: {
-            focus: 'series'
-          },
-          data: this.data.map(item => item.rank),
-        }]
+          // {
+          //   name: '排名',
+          //   type: 'line',
+          //   label: labelOption,
+          //   yAxisIndex: 1,
+          //   emphasis: {
+          //     focus: 'series'
+          //   },
+          //   data: this.data.map(item => item.rank),
+          // }
+        ]
       };
 
       this.option && this.myChart.setOption(this.option);

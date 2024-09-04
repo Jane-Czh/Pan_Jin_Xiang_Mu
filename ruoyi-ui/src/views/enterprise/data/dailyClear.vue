@@ -30,7 +30,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="SettlementList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="edId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180" sortable="custom">
@@ -44,7 +44,7 @@
       <el-table-column label="成品检验业务不及时率(%)" align="center" prop="inspectionDelayRate" />
       <el-table-column label="销售发票过账不及时率(%)" align="center" prop="invoicePostingDelayRate" />
       <el-table-column label="客户未清账比例(%)" align="center" prop="unsettledAccountsRatio" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
@@ -58,7 +58,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改日清日结对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="210px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
@@ -94,7 +94,7 @@
 
 <script>
 import { listDailyClearData, getDailyClearData, addDailyClearData, updateDailyClearData, delDailyClearData } from "@/api/enterprise/dailyClearData";
-import { numValidatorPercentage } from '@/api/financial/numValidator.js';
+import { numValidatorPercentage, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Settlement",
   data() {
@@ -140,42 +140,42 @@ export default {
         orderEntryDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         shipmentDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         productionReportDelayRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         inspectionDelayRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         invoicePostingDelayRate: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
         unsettledAccountsRatio: [
           {
             required: true,
-            validator: numValidatorPercentage,
+            validator: numValidator,
             trigger: "blur",
           }
         ],
@@ -186,6 +186,16 @@ export default {
     this.getList();
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确定关闭吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        done();
+      }).catch(() => {
+      });
+    },
     handleSortChange(sort) {
       // sort.order: 排序的顺序，'ascending' 或 'descending'
       if (sort.column && sort.prop === 'yearAndMonth') {

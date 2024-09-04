@@ -13,9 +13,20 @@
       <i :class="nodeIcoClass"></i>
     </div>
     <!-- 节点名称 -->
-    <div class="ef-node-text" :show-overflow-tooltip="true">
+    <!-- <div class="ef-node-text" :show-overflow-tooltip="true">
       {{ node.name }}
-    </div>
+    </div> -->
+
+    <el-tooltip
+      class="item"
+      effect="dark"
+      :content="nodeInfoContent"
+      placement="top"
+    >
+      <div class="ef-node-text" :show-overflow-tooltip="true">
+        {{ node.name }}
+      </div>
+    </el-tooltip>
 
     <!--功能开发: 节点状态state & 类型type -> 改为文件绑定(制度、表单)  -->
 
@@ -48,13 +59,17 @@
               <!-- {{ this.fileHyperLinks[index] }} -->
               <el-divider direction="vertical"></el-divider>
               <!-- 下载文件  -->
-              <!-- <i class="el-icon-download download-icon">
-                <a :href="baseUrl + fileHyperLinks[index]" download>点击下载</a>
-              </i> -->
               <a @click.prevent="downloadFile(fileHyperLinks[index])"
-                >点击下载</a
+                >点击下载pdf</a
               >
               <el-divider direction="vertical"></el-divider>
+              <!-- 2、word  -->
+
+              <a @click.prevent="downloadFile(wordHyperLinks[index])"
+                >点击下载word</a
+              >
+              <el-divider direction="vertical"></el-divider>
+
               <!-- 预览文件 -->
               <i
                 class="el-icon-view preview-icon"
@@ -133,6 +148,8 @@ import { word2Pdf } from "@/api/file/filemanagement";
 import {
   listFilemanagement,
   listFormfilemanagement,
+  listFilemanagementAll,
+  listFormfilemanagementAll
 } from "@/api/system/project";
 export default {
   props: {
@@ -152,6 +169,8 @@ export default {
       nodeFileNames: [],
       // 制度文件下载链接
       fileHyperLinks: [],
+      //word
+      wordHyperLinks: [],
 
       // <!-- ---------------------------------------------- -->
       //表单文件悬浮面板
@@ -217,12 +236,34 @@ export default {
       nodeIcoClass["flow-node-drag"] = this.node.viewOnly ? false : true;
       return nodeIcoClass;
     },
+
+    // nodeInfoContent() {
+    //   return `节点名称: ${this.node.name}<br> 描述: ${this.node.description}<br> 执行人员: ${this.node.operationalStaff}<br> 部门: ${this.node.department}<br> 日期: ${this.node.date}`;
+    // },
+    nodeInfoContent() {
+      const formatValue = (value) => (value ? value : "无");
+
+      return `【部门: ${formatValue(this.node.department)}\n  】、
+      【描述: ${formatValue(this.node.description)}\n 】、
+            【执行人员: ${formatValue(this.node.operationalStaff)}\n 】、
+            
+            【日期: ${this.formatDate(this.node.date)}】`;
+    },
   },
   created() {
     this.getRegularFileData();
     this.getFormFileData();
   },
   methods: {
+    formatDate(date) {
+      if (!date) return "";
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0"); // 月份从 0 开始，所以要加 1
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    },
+
     /** 文件下载 */
     downloadFile(url) {
       fetch(url)
@@ -309,8 +350,10 @@ export default {
       this.nodeFileNames = [];
       //存储相应的下载地址
       this.fileHyperLinks = [];
+      // -- word
+      this.wordHyperLinks = [];
 
-      listFilemanagement(this.queryParams)
+      listFilemanagementAll(this.queryParams)
         .then((response) => {
           this.filemanagementList = response.rows;
         })
@@ -325,7 +368,9 @@ export default {
               if (row != null) {
                 //将匹配的记录的文件名、链接保存 (nodeFileNames、fileHyperLinks)
                 this.nodeFileNames.push(row.fileName);
-                this.fileHyperLinks.push(row.filePath);
+                // this.fileHyperLinks.push(row.filePath);
+                this.fileHyperLinks.push(row.pdfPath);
+                this.wordHyperLinks.push(row.wordPath);
               }
             });
           }
@@ -344,11 +389,12 @@ export default {
     /** 查询表单文件列表 */
     getFormFileData() {
       //存储表单文件名称
+      //存储表单文件名称
       this.nodeFormNames = [];
       //存储相应的下载地址
       this.formHyperLinks = [];
 
-      listFormfilemanagement(this.queryParams)
+      listFormfilemanagementAll(this.queryParams)
         .then((response) => {
           this.formList = response.rows;
         })

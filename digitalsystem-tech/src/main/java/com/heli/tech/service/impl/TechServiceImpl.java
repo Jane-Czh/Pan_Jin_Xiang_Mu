@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.heli.tech.controller.TechController;
 import com.heli.tech.mapper.TechAnnualPlanCountMapper;
+import com.heli.tech.service.ITechAnnualPlanCountService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.utils.DateUtils;
@@ -31,6 +33,8 @@ public class TechServiceImpl implements ITechService {
     private TechMapper techMapper;
     @Autowired
     private TechAnnualPlanCountMapper techAnnualPlanCountMapper;
+    @Autowired
+    private ITechAnnualPlanCountService techAnnualPlanCountService;
 
     private static final Logger log = LoggerFactory.getLogger(TechServiceImpl.class);
 
@@ -55,7 +59,7 @@ public class TechServiceImpl implements ITechService {
 
             teches.add(tech);
 
-            log.info("当前更新的数据为"+tech);
+            log.info("当前更新的数据为" + tech);
         }
 
         return techMapper.batchUpdateTech(teches);
@@ -74,22 +78,97 @@ public class TechServiceImpl implements ITechService {
     }
 
 
-    /**
-     * @description: 计算研发项目计划进度完成率
-     * @author: hong
-     * @date: 2024/4/27 11:25
-     **/
-    public Tech calculateCompletionRate(Tech tech) {
-        Long annualCompletionNumber;
-        if(checkDataExist()){
+//    /**
+//     * @description: 计算研发项目计划进度完成率
+//     * @author: hong
+//     * @date: 2024/4/27 11:25
+//     **/
+//    public Tech calculateCompletionRate(Tech tech) {
+//        Long annualCompletionNumber;
+//        if(checkDataExist()){
+//
+//            annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
+//            log.info("当前计算的数据为"+tech);
+//        }else {
+//            annualCompletionNumber = tech.getCompletedmonthlyPlancounts();
+//        }
+//        Long annualNumber = techAnnualPlanCountMapper.selectTechAnnualNumberByYear(DateUtils.getYear(tech.getYearAndMonth()));
+//        tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
+//        return tech;
+//    }
 
-            annualCompletionNumber = techMapper.countAnnualCompletionNumber(tech.getYearAndMonth()) + tech.getCompletedmonthlyPlancounts();
-        }else {
-            annualCompletionNumber = tech.getCompletedmonthlyPlancounts();
+    /**
+     * @description: 更新完成率
+     * @author: hong
+     * @date: 2024/8/16 13:37
+     */
+    @Override
+    public int updateCompletionRate() {
+        Date minMonth = techMapper.selectMinMonth();
+        Date maxMonth = techMapper.selectMaxMonth();
+
+        int i = 0;
+        //循环从start Time，到endTime
+        for (Date date = minMonth; date.before(DateUtils.getNextMonth(maxMonth)); date = DateUtils.getNextMonth(date),i++) {
+            log.info("当前计算的月份为：" + date);
+
+            calculateCompletionRate(date);
+
+
         }
-        Long annualNumber = techAnnualPlanCountMapper.selectTechAnnualNumberByYear(DateUtils.getYear(tech.getYearAndMonth()));
-        tech.setPrdscheduleCompletionrate(BigDecimal.valueOf((annualCompletionNumber.doubleValue() / annualNumber.doubleValue()) * 100));
-        return tech;
+        return i;
+    }
+
+    /**
+     * @description: 计算完成率
+     * @author: hong
+     * @date: 2024/8/16 10:33
+     */
+    @Override
+    public int calculateCompletionRate(Date yearAndMonth) {
+        log.info("时间" + yearAndMonth);
+        //检查本月数据是否存在
+        if (!techMapper.checkCompletionIsExisted(yearAndMonth)) {
+            log.info("计算的当月数据不存在");
+            return 0;
+        }
+        Tech tech = techMapper.selectTechByDate(yearAndMonth);
+
+        //检查从1月到当月数据是否齐全
+        if (techMapper.selectCompletionDataNumByYear(yearAndMonth) != DateUtils.getMonth(yearAndMonth)) {
+            log.info("当年数据数据不全");
+            tech.setCompletedmonthlyPlancounts(null);
+            tech.setPrdscheduleCompletionrate(null);
+        } else {
+
+            //检查年度计划数是否上传
+            if (!techAnnualPlanCountMapper.checkTechAnnualDataIsExisted(DateUtils.getYear(yearAndMonth))) {
+                log.info("年度计划数未上传");
+                tech.setPrdscheduleCompletionrate(null);
+            } else {
+
+                if (DateUtils.getMonth(yearAndMonth) == 1) {
+                    log.info("当前月份为1月，当月完成数 = 当月完成总数");
+                    tech.setCompletedmonthlyPlancounts(tech.getCompletedPlanCount());
+                } else {
+
+                    Tech techLastMonth = techMapper.selectTechByDate(DateUtils.getLastMonth(yearAndMonth));
+
+                    log.info("统计结果：截至本月完成总数：" + tech.getCompletedPlanCount());
+                    log.info("统计结果：截至上月完成总数：" + techLastMonth.getCompletedPlanCount());
+                    long temp = tech.getCompletedPlanCount() - techLastMonth.getCompletedPlanCount();
+                    tech.setCompletedmonthlyPlancounts(temp);
+                }
+
+                //开始计算
+                Long annualNumber = techAnnualPlanCountService.selectTechAnnualNumberByYear(DateUtils.getYear(yearAndMonth));
+                tech.setPrdscheduleCompletionrate(BigDecimal.valueOf(tech.getCompletedPlanCount() * 100.0 / annualNumber));
+
+            }
+
+        }
+
+        return techMapper.insertOrUpdateTech(tech);
     }
 
     /**
@@ -110,6 +189,11 @@ public class TechServiceImpl implements ITechService {
     @Override
     public List<DisplayEntity> selectPRDScheduleCompletionRate(Date startTime, Date endTime) {
         return techMapper.selectPRDScheduleCompletionRate(startTime, endTime);
+    }
+
+    @Override
+    public int insertOrUpdateTech(Tech tech) {
+        return techMapper.insertOrUpdateTech(tech);
     }
 
     /**

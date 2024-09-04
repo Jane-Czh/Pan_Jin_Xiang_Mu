@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AugustSubBusinessesMapper">
+    
+    <resultMap type="AugustSubBusinesses" id="AugustSubBusinessesResult">
+        <result property="subbId"    column="subb_id"    />
+        <result property="subBusinessesName"    column="sub_businesses_name"    />
+        <result property="parentDepartment"    column="parent_department"    />
+        <result property="parentModule"    column="parent_module"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+
+    <sql id="selectAugustSubBusinessesVo">
+        select subb_id, sub_businesses_name, parent_department, parent_module, is_deleted, description from August_sub_businesses
+    </sql>
+
+    <select id="selectAugustSubBusinessesList" parameterType="AugustSubBusinesses" resultMap="AugustSubBusinessesResult">
+        <include refid="selectAugustSubBusinessesVo"/>
+        <where>  
+            <if test="subBusinessesName != null  and subBusinessesName != ''"> and sub_businesses_name like concat('%', #{subBusinessesName}, '%')</if>
+            <if test="parentDepartment != null  and parentDepartment != ''"> and parent_department = #{parentDepartment}</if>
+            <if test="parentModule != null  and parentModule != ''"> and parent_module = #{parentModule}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectAugustSubBusinessesBySubbId" parameterType="Long" resultMap="AugustSubBusinessesResult">
+        <include refid="selectAugustSubBusinessesVo"/>
+        where subb_id = #{subbId}
+    </select>
+        
+    <insert id="insertAugustSubBusinesses" parameterType="AugustSubBusinesses">
+        insert into August_sub_businesses
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subbId != null">subb_id,</if>
+            <if test="subBusinessesName != null">sub_businesses_name,</if>
+            <if test="parentDepartment != null">parent_department,</if>
+            <if test="parentModule != null">parent_module,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="description != null">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subbId != null">#{subbId},</if>
+            <if test="subBusinessesName != null">#{subBusinessesName},</if>
+            <if test="parentDepartment != null">#{parentDepartment},</if>
+            <if test="parentModule != null">#{parentModule},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="description != null">#{description},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAugustSubBusinesses" parameterType="AugustSubBusinesses">
+        update August_sub_businesses
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subBusinessesName != null">sub_businesses_name = #{subBusinessesName},</if>
+            <if test="parentDepartment != null">parent_department = #{parentDepartment},</if>
+            <if test="parentModule != null">parent_module = #{parentModule},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="description != null">description = #{description},</if>
+        </trim>
+        where subb_id = #{subbId}
+    </update>
+
+    <delete id="deleteAugustSubBusinessesBySubbId" parameterType="Long">
+        delete from August_sub_businesses where subb_id = #{subbId}
+    </delete>
+
+    <delete id="deleteAugustSubBusinessesBySubbIds" parameterType="String">
+        delete from August_sub_businesses where subb_id in 
+        <foreach item="subbId" collection="array" open="(" separator="," close=")">
+            #{subbId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,6 +1,7 @@
 package com.heli.quality.service;
 
 import java.util.List;
+
 import com.heli.quality.domain.QualityIndicatorsMetrics;
 
 /**
@@ -9,8 +10,11 @@ import com.heli.quality.domain.QualityIndicatorsMetrics;
  * @author hong
  * @date 2024-05-21
  */
-public interface IQualityIndicatorsMetricsService
-{
+public interface IQualityIndicatorsMetricsService {
+
+    QualityIndicatorsMetrics selectMaxMonthMetrics();
+
+
     /**
      * 查询质量指标-统计
      *

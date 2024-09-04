@@ -15,31 +15,54 @@
           <el-form-item label="名称">
             <el-input v-model="node.name"></el-input>
           </el-form-item>
-          <el-form-item label="left坐标">
+          <!-- <el-form-item label="left坐标">
             <el-input v-model="node.left" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="top坐标">
             <el-input v-model="node.top" :disabled="true"></el-input>
+          </el-form-item> -->
+
+          <!-- <el-form-item label="部门">
+            <el-input v-model="node.department"></el-input>
+          </el-form-item> -->
+         
+
+          <el-form-item label="执行人员">
+            <el-input v-model="node.operationalStaff"></el-input>
           </el-form-item>
-          <!-- <el-form-item label="ico图标">
-                        <el-input v-model="node.ico"></el-input>
-                    </el-form-item> -->
-          <!-- <el-form-item label="绑定表单">
-                        <el-input v-model="node.state" :disabled="true"></el-input> -->
 
-          <!-- <el-select v-model="node.state" placeholder="请选择">
-                            <el-option
-                                    v-for="item in stateList"
-                                    :key="item.state"
-                                    :label="item.label"
-                                    :value="item.state">
-                            </el-option>
-                        </el-select> -->
-          <!-- </el-form-item> -->
+          <el-form-item label="描述">
+            <el-input v-model="node.description"></el-input>
+          </el-form-item>
 
-          <!-- <el-form-item label="绑定表单">
-                        <el-input v-model="node.file" :disabled="true"></el-input>
-                    </el-form-item> -->
+          <el-form-item label="部门">
+            <el-select
+              v-model="node.department"
+              placeholder="请选择或填入"
+              allow-create
+              filterable
+            >
+              <el-option
+                v-for="item in departments"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="时间">
+            <el-date-picker
+              v-model="node.date"
+              type="date"
+              placeholder="选择日期"
+              style="width: 160px;"
+            >
+            </el-date-picker>
+          </el-form-item>
+
+
 
           <el-form-item>
             <el-button icon="el-icon-close">取消</el-button>
@@ -67,7 +90,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <!--            <div class="el-node-form-tag"></div>-->
+
     </div>
   </div>
 </template>
@@ -81,7 +104,10 @@ export default {
       visible: true,
       // node 或 line
       type: "node",
+      // 存储node节点的相关信息
       node: {},
+      departments: ['财务', '市场', '安环', '生产', '供应', '技术', '企管', '党群', '质量'] ,// 可以根据需要修改这些部门名称
+
       line: {},
       data: {},
       stateList: [
@@ -140,11 +166,18 @@ export default {
           node.left = this.node.left;
           node.top = this.node.top;
           node.ico = this.node.ico;
+
+          //0727新增
+          node.department = this.node.department;
+          node.description = this.node.description;
+          node.operationalStaff = this.node.operationalStaff;
+          node.date = this.node.date;
+
           //->制度文件
           node.state = this.node.state;
           //->表单文件
           node.type = this.node.type;
-          
+
           // node.state = JSON.parse(this.node.state);
           this.$emit("repaintEverything");
         }
@@ -154,16 +187,4 @@ export default {
 };
 </script>
 
-<style>
-.el-node-form-tag {
-  position: absolute;
-  top: 50%;
-  margin-left: -15px;
-  height: 40px;
-  width: 15px;
-  background-color: #fbfbfb;
-  border: 1px solid rgb(220, 227, 232);
-  border-right: none;
-  z-index: 0;
-}
-</style>
+

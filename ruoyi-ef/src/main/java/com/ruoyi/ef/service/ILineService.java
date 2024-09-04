@@ -48,4 +48,5 @@ public interface ILineService extends IService<LineEntity> {
      * @param label
      */
     void changeLabel(String from, String to, String label);
+
 }

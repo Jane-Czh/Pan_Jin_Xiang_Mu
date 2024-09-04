@@ -26,12 +26,17 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['tech:monthly:remove']">删除</el-button>
       </el-col>
-
+      <el-col :span="1.5">
+        <el-button v-if="updateLoading" type="primary" plain icon="el-icon-loading" size="mini"
+          v-hasPermi="['tech:monthly:update']" disable>更新中</el-button>
+        <el-button v-else type="primary" plain icon="el-icon-refresh" size="mini" @click="handleUpdateListWithDate"
+          v-hasPermi="['tech:monthly:update']">更新</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange">
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="Tech_ID" align="center" prop="techId" /> -->
       <el-table-column label="日期" align="center" prop="yearAndMonth" width="180"
@@ -40,9 +45,31 @@
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays" />
-      <el-table-column label="当月完成的计划" align="center" prop="completedmonthlyPlancounts" />
-      <el-table-column label="研发项目计划进度完成率(%)" align="center" prop="prdscheduleCompletionrate" />
+      <el-table-column label="非标准单平均技术准备天数" align="center" prop="nonStandardAvgPreparationDays">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.nonStandardAvgPreparationDays) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="非标准单超时数" align="center" prop="nonStandardOvertimeNum">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.nonStandardOvertimeNum) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="当月完成的计划" align="center" prop="completedmonthlyPlancounts">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.completedmonthlyPlancounts) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="计划完成总数" align="center" prop="completedPlanCount">
+        <template slot-scope="scope">
+          <span>{{ formatNumber(scope.row.completedPlanCount) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="研发项目计划进度完成率(%)" align="center" prop="prdscheduleCompletionrate">
+        <template slot-scope="scope">
+          <span>{{ formatNumberOne(scope.row.prdscheduleCompletionrate) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -58,7 +85,7 @@
 
     <!-- 添加或修改[技术]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="190px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="200px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
@@ -67,8 +94,17 @@
         <el-form-item label="非标准单平均技术准备天数" prop="nonStandardAvgPreparationDays">
           <el-input v-model="form.nonStandardAvgPreparationDays" placeholder="请输入非标准单平均技术准备天数" />
         </el-form-item>
+        <el-form-item label="非标订单超时数" prop="nonStandardOvertimeNum">
+          <el-input v-model="form.nonStandardOvertimeNum" placeholder="请输入非标订单超时数" />
+        </el-form-item>
         <el-form-item label="当月完成的计划" prop="completedmonthlyPlancounts">
           <el-input v-model="form.completedmonthlyPlancounts" placeholder="请输入当月完成的计划" />
+        </el-form-item>
+        <el-form-item label="计划完成总数" prop="completedPlanCount">
+          <el-input v-model="form.completedPlanCount" placeholder="请输入计划完成总数" />
+        </el-form-item>
+        <el-form-item label="研发项目计划进度完成率(%)" prop="prdscheduleCompletionrate">
+          <el-input v-model="form.prdscheduleCompletionrate" placeholder="请输入研发项目计划进度完成率(%)" />
         </el-form-item>
 
       </el-form>
@@ -81,19 +117,24 @@
 </template>
 
 <script>
-import { listData, getData, delData, addData, updateData } from "@/api/tech/data";
+import { listData, getData, delData, addData, updateData, updateList } from "@/api/tech/data";
 import { numValidator, numValidatorOnlyPositive } from '@/api/financial/numValidator.js';
+
+
 export default {
   name: "Data",
   data() {
     return {
       // 遮罩层
       loading: true,
+
       // 选中数组
       ids: [],
       dates: [],
       // 非单个禁用
+      showDialog: false,
       single: true,
+      updateLoading: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -102,16 +143,21 @@ export default {
       total: 0,
       // [技术]指标填报表格数据
       dataList: [],
+      techList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      selectedType: '',
+      form3: { yearAndMonth: null },
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         yearAndMonth: null,
         nonStandardAvgPreparationDays: null,
+        completedPlanCount: null,
+        nonStandardOvertimeNum: null,
         completedmonthlyPlancounts: null,
 
 
@@ -126,11 +172,32 @@ export default {
         nonStandardAvgPreparationDays: [
           {
             required: true,
-            validator: numValidatorOnlyPositive,
+            validator: numValidator,
             trigger: "blur"
           }
         ],
         completedmonthlyPlancounts: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        nonStandardOvertimeNum: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        completedPlanCount: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        prdscheduleCompletionrate: [
           {
             required: true,
             validator: numValidator,
@@ -145,7 +212,6 @@ export default {
       // 获取年份和月份
       const year = date.getFullYear();
       const month = date.getMonth() + 1; // 月份要加1，因为getMonth返回的是0-11
-
       // 返回格式化后的字符串，例如："2024年6月"
       return `${year}-${month}`;
     }
@@ -154,6 +220,14 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
+    formatNumberOne(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+    },
     handleSortChange(column) {
       this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
       this.queryParams.isAsc = column.order;//动态取值排序顺序
@@ -181,6 +255,8 @@ export default {
         yearAndMonth: null,
         nonStandardAvgPreparationDays: null,
         completedmonthlyPlancounts: null,
+        nonStandardOvertimeNum: null,
+        completedPlanCount: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -262,7 +338,18 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-
+    handleUpdateListWithDate() {
+      this.updateLoading = true
+      const timeData = {
+        startTime: new Date(),
+        endTime: new Date(),
+      }
+      updateList(timeData).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("更新成功");
+      });
+      this.updateLoading = false
+    }
 
   }
 };

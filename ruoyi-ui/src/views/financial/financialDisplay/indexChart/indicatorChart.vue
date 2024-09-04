@@ -11,14 +11,19 @@ export default {
     dataName: { type: String, default: '金额' },
     xAxisData: { type: Array, default: () => [] },
     yAxisData: { type: Array, default: () => [] },
-    legendData: { type: String, default: null }
+    legendData: { type: String, default: null },
+    targetValue: { type: Number, default: 0 },
+    targetValueDate: { type: String, default: null },
+    showTarget: { type: Boolean, default: false },
   },
   data() {
     return {
       loading: false,
       data: [],
       option: {},
-      myChart: {}
+      shouldShowTargetValue: false,
+      myChart: {},
+      targetValueArray: [],
     }
   },
   watch: {
@@ -36,6 +41,8 @@ export default {
     },
   },
   mounted() {
+    const yAxisDataLength = this.yAxisData.length;
+    this.targetValueArray = Array(yAxisDataLength).fill(this.targetValue);
     this.myChart = echarts.init(document.getElementById('main'))
     this.updateChart()
   },
@@ -126,7 +133,9 @@ export default {
         align: app.config.align,
         verticalAlign: app.config.verticalAlign,
         rotate: app.config.rotate,
-        formatter: '{c}',
+        formatter: function (params) {
+          return params.value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        },
         fontSize: 16,
         rich: {
           name: {}
@@ -142,9 +151,9 @@ export default {
             type: 'shadow'
           }
         },
-        // legend: {
-        //   data: [this.legendData]
-        // },
+        legend: {
+          data: [this.dataName, this.showTarget ? '目标值' : null].filter(item => item !== null),
+        },
         toolbox: {
           show: true,
           orient: 'vertical',
@@ -172,13 +181,23 @@ export default {
         ],
         series: [{
           name: this.dataName,
-          type: 'line',
+          type: 'bar',
           label: labelOption,
           emphasis: {
             focus: 'series'
           },
           data: this.yAxisData,
-        }]
+        },
+        {
+          name: '目标值',
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.showTarget ? this.targetValueArray : [],
+        }
+        ]
       };
 
       this.option && this.myChart.setOption(this.option);
@@ -194,7 +213,12 @@ export default {
           this.myChart.setOption(this.option);
         }
       });
-    }
+
+    },
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    },
   },
 }
 

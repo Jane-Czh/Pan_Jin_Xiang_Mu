@@ -22,17 +22,19 @@
         <result property="reviser"    column="reviser"    />
         <result property="newFlag"    column="new_flag"    />
         <result property="newFormId"    column="new_form_id"    />
+        <result property="businesses"    column="businesses"    />
+        <result property="subBusinesses"    column="sub_businesses"    />
     </resultMap>
 
     <sql id="selectFormInfoTableVo">
-        select form_id, form_title, scope, effective_date, form_name, form_type, form_path, form_size, create_username, department_category, remark, old_form_id, revision_time, revision_content, reviser, new_flag, new_form_id from Form_Info_table
+        select form_id, form_title, scope, effective_date, form_name, form_type, form_path, form_size, create_username, department_category, remark, old_form_id, revision_time, revision_content, reviser, new_flag, new_form_id, businesses, sub_businesses from Form_Info_table
     </sql>
 
     <select id="selectFormInfoTableList" parameterType="FormInfoTable" resultMap="FormInfoTableResult">
         <include refid="selectFormInfoTableVo"/>
         <where>
-            <if test="formTitle != null  and formTitle != ''"> and form_title = #{formTitle}</if>
-            <if test="scope != null  and scope != ''"> and scope = #{scope}</if>
+            <if test="formTitle != null  and formTitle != ''"> and form_title like concat('%', #{formTitle}, '%')</if>
+            <if test="scope != null  and scope != ''"> and scope like concat('%', #{scope}, '%')</if>
             <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
             <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
             <if test="formType != null  and formType != ''"> and form_type = #{formType}</if>
@@ -40,12 +42,39 @@
             <if test="formSize != null "> and form_size = #{formSize}</if>
             <if test="createUsername != null  and createUsername != ''"> and create_username like concat('%', #{createUsername}, '%')</if>
             <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
             <if test="oldFormId != null "> and old_form_id = #{oldFormId}</if>
             <if test="revisionTime != null "> and revision_time = #{revisionTime}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
             <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
             <if test="newFlag = 1 "> and new_flag = #{newFlag}</if>
             <if test="newFormId != null "> and new_form_id = #{newFormId}</if>
+            <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
+            <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+        </where>
+    </select>
+
+    <select id="selectAllFormList" parameterType="FormInfoTable" resultMap="FormInfoTableResult">
+        <include refid="selectFormInfoTableVo"/>
+        <where>
+            <if test="formTitle != null  and formTitle != ''"> and form_title like concat('%', #{formTitle}, '%')</if>
+            <if test="scope != null  and scope != ''"> and scope like concat('%', #{scope}, '%')</if>
+            <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
+            <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
+            <if test="formType != null  and formType != ''"> and form_type = #{formType}</if>
+            <if test="formPath != null  and formPath != ''"> and form_path = #{formPath}</if>
+            <if test="formSize != null "> and form_size = #{formSize}</if>
+            <if test="createUsername != null  and createUsername != ''"> and create_username like concat('%', #{createUsername}, '%')</if>
+            <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
+            <if test="oldFormId != null "> and old_form_id = #{oldFormId}</if>
+            <if test="revisionTime != null "> and revision_time = #{revisionTime}</if>
+            <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
+            <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="newFlag != null and newFlag != '' "> and new_flag = #{newFlag}</if>
+            <if test="newFormId != null "> and new_form_id = #{newFormId}</if>
+            <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
+            <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
         </where>
     </select>
 
@@ -73,6 +102,8 @@
             <if test="reviser != null">reviser,</if>
             <if test="newFlag != null">new_flag,</if>
             <if test="newFormId != null">new_form_id,</if>
+            <if test="businesses != null">businesses,</if>
+            <if test="subBusinesses != null">sub_businesses,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="formTitle != null and formTitle != ''">#{formTitle},</if>
@@ -91,6 +122,8 @@
             <if test="reviser != null">#{reviser},</if>
             <if test="newFlag != null">#{newFlag},</if>
             <if test="newFormId != null">#{newFormId},</if>
+            <if test="businesses != null">#{businesses},</if>
+            <if test="subBusinesses != null">#{subBusinesses},</if>
         </trim>
     </insert>
 
@@ -113,6 +146,8 @@
             <if test="reviser != null">reviser = #{reviser},</if>
             <if test="newFlag != null">new_flag = #{newFlag},</if>
             <if test="newFormId != null">new_form_id = #{newFormId},</if>
+            <if test="businesses != null">businesses = #{businesses},</if>
+            <if test="subBusinesses != null">sub_businesses = #{subBusinesses},</if>
         </trim>
         where form_id = #{formId}
     </update>

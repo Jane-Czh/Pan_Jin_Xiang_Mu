@@ -6,27 +6,28 @@ spring:
         druid:
             # 主库数据源
             master:
-              # docker
-              url: jdbc:mysql://172.19.11.41:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-              username: root
-              password: 123456
+              # 实验室小主机 docker
+#              url: jdbc:mysql://124.222.36.192:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#              username: root
+#              password: 0bv1Ud7tywl4XiIL
 
               # localhsot本机测试
 #                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
 #                password: root
-              # 实验室测试
-#                url: jdbc:mysql://172.17.101.85:3307/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-#                username: root
-#                password: helipanjin
+
+              # 实验室堡垒机
+                url: jdbc:mysql://172.19.6.245:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: 123456
 
             # 从库数据源
             slave:
               # 从数据源开关/默认关闭
                 enabled: true
 
-              # docker
-                url: jdbc:mysql://172.19.11.41:3306/panjin_project?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+              # 实验室小主机 docker
+                url: jdbc:mysql://172.19.6.245:3306/panjin_project?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: 123456
             # 公网部署
@@ -34,7 +35,7 @@ spring:
 #                username: root
 #                password: pijHeWhH7nKvNRW
 
-            # 实验室测试
+            # 实验室堡垒机
 #                url: jdbc:mysql://172.17.101.85:3307/panjin_project?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                username: root
 #                password: helipanjin
@@ -61,7 +62,7 @@ spring:
             testWhileIdle: true
             testOnBorrow: false
             testOnReturn: false
-            webStatFilter: 
+            webStatFilter:
                 enabled: true
             statViewServlet:
                 enabled: true
@@ -81,3 +82,4 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+

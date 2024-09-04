@@ -3,8 +3,8 @@ package com.ruoyi.market.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.market.domain.MarketAfterSaleLedger;
 import com.ruoyi.market.domain.MarketAfterSaleRegionalClassification;
+import com.ruoyi.market.domain.MarketInventoryCarDetail;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +44,8 @@ public class MarketUnsoldCarController extends BaseController
         marketUnsoldCarService.Synchronization();
     }
 
+
+
     /**
      * 查询统计库存车数量列表
      */
@@ -77,6 +79,19 @@ public class MarketUnsoldCarController extends BaseController
     public AjaxResult getInfo(@PathVariable("ucId") Long ucId)
     {
         return success(marketUnsoldCarService.selectMarketUnsoldCarByUcId(ucId));
+    }
+
+    /**
+     *
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('market:unsoldcar:type')")
+    @GetMapping("/vehicleTypequery/{type}")
+    public TableDataInfo getVehicleType(@PathVariable("type") String type)
+    {
+        List<MarketInventoryCarDetail> list = marketUnsoldCarService.selectMarketInventoryCarDetailByType(type);
+        System.out.println(list);
+        return getDataTable(list);
     }
 
     /**

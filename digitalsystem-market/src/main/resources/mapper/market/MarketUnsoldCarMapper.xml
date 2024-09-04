@@ -65,7 +65,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteAllMarketUnsoldCar" >
-        delete from Market_Unsold_Car
+        truncate table Market_Unsold_Car
     </delete>
+
+
+    <resultMap id="MarketInventoryCarDetailResultMap" type="com.ruoyi.market.domain.MarketInventoryCarDetail">
+        <result column="MICD_ID" property="micdId" />
+        <result column="Online_Time" property="onlineTime" />
+        <result column="Wagon_Number" property="wagonNumber" />
+        <result column="Vehicle_Model" property="vehicleModel" />
+        <result column="Door_Frame" property="doorFrame" />
+        <result column="Accessory" property="Accessory" />
+        <result column="Valve_Block_Number" property="valveBlockNumber" />
+        <result column="Configuration" property="Configuration" />
+        <result column="Plannde_Completion_Time" property="planndeCompletionTime" />
+
+    </resultMap>
+
+    <select id="selectMarketInventoryCarDetailByType" parameterType="String" resultMap="MarketInventoryCarDetailResultMap">
+        SELECT * FROM market_inventory_car_detail WHERE Vehicle_Model = #{type};
+    </select>
 
 </mapper>

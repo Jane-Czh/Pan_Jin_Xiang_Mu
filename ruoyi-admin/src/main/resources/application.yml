@@ -10,7 +10,7 @@ ruoyi:
 #  profile: D:/ruoyi/uploadPath # 文件保存路径：D:\ruoyi\uploadPath\upload\2024\05\06
 
   #Linux服务器的文件模块配置路径
-  profile: /home/ruoyi/uploadPath
+  profile: /mydata/heliDS/file
 
 #  profile: /home/ruoyi/uploadPath # 文件保存路径：/home/ruoyi/uploadPath
   # 获取ip地址开关
@@ -74,13 +74,13 @@ spring:
   # redis 配置
   redis:
     # docker
-#    host: 172.19.11.41
+#    host: 124.222.36.192
 #    port: 6379
-#    password:
+#    password: suRCEu#ZxNT#%Pga
 
-    # 实验室 地址、端口，默认为6379
-    host: 172.17.101.85
-    port: 6378
+    # 实验室堡垒机 地址、端口，默认为6379
+    host: 172.19.6.245
+    port: 6379
     password:
 
     # 本地测试

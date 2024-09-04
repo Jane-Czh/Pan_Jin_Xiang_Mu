@@ -3,6 +3,7 @@ package com.heli.financial.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,6 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     @Autowired
     private FinancialInterestsTableMapper financialInterestsTableMapper;
 
-
     @Override
     public boolean checkDataExists() {
         return financialInterestsTableMapper.checkDataExists();
@@ -37,6 +37,16 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     @Override
     public Date selectMaxYearAndMonth() {
         return financialInterestsTableMapper.selectMaxYearAndMonth();
+    }
+
+    @Override
+    public FinancialInterestsTable selectInterestsSumInfoByYear(Date yearAndMonth) {
+        return financialInterestsTableMapper.selectInterestsSumInfoByYear(yearAndMonth);
+    }
+
+    @Override
+    public FinancialInterestsTable selectMaxMonthInterests() {
+        return financialInterestsTableMapper.selectMaxMonthInterests();
     }
 
     /**
@@ -62,6 +72,42 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
                 is.close();
             }
         }
+
+        System.out.println(financialInterestsTable);
+        /**
+         * @description: 利润表数据单位修改为万元
+         * @author: hong
+         * @date: 2024/7/28 11:17
+         */
+        financialInterestsTable.setOperatingRevenue(
+                financialInterestsTable.getOperatingRevenue()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setInternalMainRevenue(
+                financialInterestsTable.getInternalMainRevenue()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setExternalMainRevenue(
+                financialInterestsTable.getExternalMainRevenue()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setCogsProductSalesSd(
+                financialInterestsTable.getCogsProductSalesSd()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setCogsFreight(
+                financialInterestsTable.getCogsFreight()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setCogsVariation(
+                financialInterestsTable.getCogsVariation()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setNetProfit(
+                financialInterestsTable.getNetProfit()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setManagementExpense(
+                financialInterestsTable.getManagementExpense()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+        financialInterestsTable.setRdExpense(
+                financialInterestsTable.getRdExpense()
+                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+
+
 
         // 设置导入时间、导入人、年月
         financialInterestsTable.setCreateBy(createdBy);

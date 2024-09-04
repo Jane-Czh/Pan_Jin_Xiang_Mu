@@ -91,7 +91,7 @@
               <!-- ref 组件 -->
               <div v-if="this.dialogFilesVisible">
                 <custom-files
-                  ref="customFiles"
+                  ref="CustomFiles"
                   :selectedFormNames="this.selectedFormsTemp"
                   :selectedRegulationNames="this.selectedRegulationTemp"
                 ></custom-files>
@@ -116,7 +116,7 @@
               <!-- ref 组件 el-table 显示制度文件的数据   v-on:backShow="backShow" -->
               <div v-if="this.dialogMoreFilesVisible">
                 <custom-files
-                  ref="customFiles"
+                  ref="CustomFiles"
                   :selectedFormNames="this.selectedFormsTemp"
                   :selectedRegulationNames="this.selectedRegulationTemp"
                 ></custom-files>
@@ -202,7 +202,10 @@ import CustomFiles from "./CustomFiles.vue";
 // import { listFilemanagement } from "@/api/file/filemanagement";
 // // 表单文件api
 // import { listFormfilemanagement } from "@/api/file/formfilemanagement";
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
 
 import { compareProjects } from "@/api/system/project";
 //更新数据api
@@ -298,7 +301,7 @@ export default {
     FlowNodeForm,
     FlowHelp,
     //绑定文件
-    CustomFiles,
+    CustomFiles
   },
   directives: {
     flowDrag: {
@@ -426,7 +429,7 @@ export default {
           /**处理制度文件 */
           // 调用 CustomFiles 组件的方法来获取 选中的 [制度文件] 的 [idsRegulation] 和 [namesRegulation] 数据
           let { idsRegulation, namesRegulation } =
-            this.$refs.customFiles.getSelectedRegulationIdsAndNames();
+            this.$refs.CustomFiles.getSelectedRegulationIdsAndNames();
           // 将获取到的filenames给本地的展示变量：this.regulationFiles
           this.regulationFiles = namesRegulation;
           this.selectedRegulationTemp = this.regulationFiles;
@@ -434,7 +437,7 @@ export default {
 
           /**处理表单文件 */
           let { idsForm, namesForm } =
-            this.$refs.customFiles.getSelectedFormIdsAndNames();
+            this.$refs.CustomFiles.getSelectedFormIdsAndNames();
           // 将获取到的filenames给本地的展示变量：this.formFiles
           this.formFiles = namesForm;
           this.selectedFormsTemp = this.formFiles;
@@ -1024,7 +1027,6 @@ export default {
         //   projectData
         // );
 
-        
         // 创建保存节点和连线的请求数组
         const nodePromises = nodeData.map((node) => saveNode(node));
         const linePromises = lineData.map((line) => saveLine(line));
@@ -1082,6 +1084,18 @@ export default {
             : JSON.stringify(this.idsRegulation), //制度文件ids
         type:
           this.idsForm == null ? this.idsForm : JSON.stringify(this.idsForm), //表单文件ids
+
+        //0731新增
+        number: this.oriData.number,
+        department: this.oriData.department,
+        level: this.oriData.level,
+        purpose: this.oriData.purpose,
+        applicationScope: this.oriData.applicationScope,
+
+        //业务模块
+        businessesModules: this.oriData.businessesModules,
+        //细分业务
+        subBusinesses: this.oriData.subBusinesses,
       };
 
       const nodeData = data.nodeList.map((node) => ({
@@ -1093,6 +1107,12 @@ export default {
         top: node.top,
         ico: node.ico,
         state: node.state != "no" ? JSON.stringify(node.state) : node.state,
+
+        //0727新增字段
+        department: node.department,
+        description: node.description,
+        operationalStaff: node.operationalStaff,
+        date: node.date,
       }));
 
       const lineData = data.lineList.map((line) => ({

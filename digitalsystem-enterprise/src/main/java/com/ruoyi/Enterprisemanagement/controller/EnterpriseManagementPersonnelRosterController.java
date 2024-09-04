@@ -1,10 +1,13 @@
 package com.ruoyi.Enterprisemanagement.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.enterprise.service.IEnterpriseManagementMonthlyDataService;
 import com.ruoyi.common.exception.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,22 +27,31 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ruoyi
  * @date 2024-05-06
  */
+@Slf4j
 @RestController
 @RequestMapping("/Enterprisemanagement/roster")
 public class EnterpriseManagementPersonnelRosterController extends BaseController
 {
     @Autowired
     private IEnterpriseManagementPersonnelRosterService enterpriseManagementPersonnelRosterService;
+    @Autowired
+    private IEnterpriseManagementMonthlyDataService enterpriseManagementMonthlyDataService;
+
     /*表单导入功能*/
-    @Log(title = "[市场]员工花名册", businessType = BusinessType.INSERT)
+//    @Log(title = "[市场]员工花名册", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('Enterprisemanagement:roster:import')")
     @PostMapping("/PRimport")
-    public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
+//    public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
+    public AjaxResult importTable(Date yearAndMonth, MultipartFile file) {
         System.out.println("------------import-------import------------");
-        System.out.println("excelFile" + excelFile);
+        System.out.println("excelFile" + file);
+        log.info("花名册时间："+yearAndMonth);
+        log.info("文件名："+file.getOriginalFilename());
         try {
+            enterpriseManagementPersonnelRosterService.PRimportInterests(file);
+            log.info("花名册导入完毕，开始统计");
+            enterpriseManagementMonthlyDataService.countEmployeesNumber(yearAndMonth);
 
-            enterpriseManagementPersonnelRosterService.PRimportInterests(excelFile);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ServiceException("excel上传失败");

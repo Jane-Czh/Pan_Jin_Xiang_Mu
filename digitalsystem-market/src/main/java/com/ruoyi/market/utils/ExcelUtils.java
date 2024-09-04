@@ -2,9 +2,11 @@ package com.ruoyi.market.utils;
 
 import com.ruoyi.market.domain.*;
 
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +17,8 @@ public class ExcelUtils {
 
     public static List<MarketSalesTable> parseExcel(MultipartFile file) throws IOException {
         List<MarketSalesTable> dataList = new ArrayList<>();
-
+        DataFormatter formatter = new DataFormatter();
+        ZipSecureFile.setMinInflateRatio(0);
         Workbook workbook = WorkbookFactory.create(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.rowIterator();
@@ -92,25 +95,60 @@ public class ExcelUtils {
                 count++;
             }
             //23、实际发车日期
-            if (getNumericCellValue(row.getCell(count)) != 0.0){
-                marketSalesTable.setActualDepartureDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            if (DateUtil.isCellDateFormatted(row.getCell(count))){
+//                System.out.println("实际发车日期"+row.getCell(count).getDateCellValue());
+                Date dateCellValue = row.getCell(count).getDateCellValue();
+//                Data dateValue =  row.getCell(count).getDateCellValue();
+                marketSalesTable.setActualDepartureDate( dateCellValue);
+                count++;
+//                System.out.println("实际发车======"+getNumericCellValue(row.getCell(count)));
+//                System.out.println("实际发车======"+formatter.formatCellValue(row.getCell(count)));
+//                System.out.println("This cell is formatted as a date."+DateUtil.isCellDateFormatted(row.getCell(count)));
+//                marketSalesTable.setActualDepartureDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
             }else {
                 count++;
             }
             //24、系统交货期
-            if (getNumericCellValue(row.getCell(count)) != 0.0){
-                marketSalesTable.setSystemDeliveryTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//            System.out.println("系统交货期"+(row.getCell(count++)));
+
+//            row.getCell(count++).setDate(new Date())
+            Cell cell = row.getCell(count++);
+//            System.out.println("测试");
+//            System.out.println(cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue() :
+//                    cell.getCellType() == CellType.NUMERIC ? cell.getNumericCellValue() :
+//                            cell.getCellType() == CellType.STRING ? cell.getStringCellValue() :
+//                                    "Unknown type: " + cell.getCellType());
+
+
+
+            if (DateUtil.isCellDateFormatted(row.getCell(count))){
+//                System.out.println("系统交货期"+row.getCell(count).getDateCellValue());
+                Date dateCellValue = row.getCell(count).getDateCellValue();
+                marketSalesTable.setSystemDeliveryTime( dateCellValue);
+                count++;
+//                System.out.println("系统交货======"+getNumericCellValue(row.getCell(count)));
+//                System.out.println("系统交货======"+formatter.formatCellValue(row.getCell(count)));
+//                System.out.println("This cell is formatted as a date."+DateUtil.isCellDateFormatted(row.getCell(count)));
+//                marketSalesTable.setSystemDeliveryTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+
             }else {
                 count++;
             }
             //25、交货单号
             marketSalesTable.setDeliveryNoteNumber(getStringCellValue(row.getCell(count++)));
-            //26、技术准备完成时间
+//            26、技术准备完成时间
             if (getNumericCellValue(row.getCell(count)) != 0.0){
+
                 marketSalesTable.setTechnicalPreparationCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+//                System.out.println("当前日期"+getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            }
+            if (DateUtil.isCellDateFormatted(row.getCell(count))) {
+                Date dateValue =  row.getCell(count).getDateCellValue();
+                marketSalesTable.setTechnicalPreparationCompletionTime(dateValue);
             }
 
 
+//            System.out.println(marketSalesTable);
 
             dataList.add(marketSalesTable);
         }
@@ -142,24 +180,24 @@ public class ExcelUtils {
              * 将excel设置的字段，写入到数据库对应字段
              */
 
-            int count = 0;
+//            int count = 0;
 
 
-            count++;
+//            count++;
             //2、车号
-            marketInventoryCarDetail.setWagonNumber(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setWagonNumber(getStringCellValue(row.getCell(3)));
             //3、车型
-            marketInventoryCarDetail.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setVehicleModel(getStringCellValue(row.getCell(4)));
             //4、门架
-            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(5)));
             //5、属具
-            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(6)));
             //6、阀片数
-            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(7)));
             //7、配置
-            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(count++)));
+            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(8)));
             //8、计划完工期
-            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(9)))));
 
             dataList.add(marketInventoryCarDetail);
         }
@@ -246,11 +284,11 @@ public class ExcelUtils {
             int count = 0;
 
             //1、类别
-            marketCarType.setCategory(getStringCellValue(row.getCell(count++)));
+            marketCarType.setCategory(getStringCellValue(row.getCell(1)));
             //2、车型
-            marketCarType.setVehicleModel(getStringCellValue(row.getCell(count++)));
+            marketCarType.setVehicleModel(getStringCellValue(row.getCell(0)));
             //3、关系
-            marketCarType.setRelation(getStringCellValue(row.getCell(count++)));
+            marketCarType.setRelation(getStringCellValue(row.getCell(1)) + "=" + getStringCellValue(row.getCell(0)) );
 
 
             dataList.add(marketCarType);
@@ -338,12 +376,12 @@ public class ExcelUtils {
                 // 如果单元格数据为空，则跳过设置 Java 对象的属性值
                 count++;
             }
-            //3、订单号
-            String value = getStringCellValue(row.getCell(count++));
-            if (value == null){
+           //3、订单号
+            if(getStringCellValue(row.getCell(count))!=null){
+                MarketCommercialVehicleTable.setOrderNumber(getStringCellValue(row.getCell(count++)));
+            }
+            else {
                 continue;
-            }else {
-                MarketCommercialVehicleTable.setOrderNumber(value);
             }
             //4、合同号
             MarketCommercialVehicleTable.setContractNumber(getStringCellValue(row.getCell(count++)));
@@ -416,12 +454,15 @@ public class ExcelUtils {
             MarketCommercialVehicleTable.setProcurementOfOnSiteAbnormalIssues(getStringCellValue(row.getCell(count++)));
             //21、现场异常问题质量
             MarketCommercialVehicleTable.setQualityOfOnSiteAbnormalIssues(getStringCellValue(row.getCell(count++)));
-            //22、上线
-            MarketCommercialVehicleTable.setGoLive(getStringCellValue(row.getCell(count++)));
             //23、入库
             MarketCommercialVehicleTable.setWarehousing(getStringCellValue(row.getCell(count++)));
             //24、生产周期
             MarketCommercialVehicleTable.setProductionCycle(getStringCellValue(row.getCell(count++)));
+            //25、未报工原因
+//            if(getStringCellValue(row.getCell(count)).length() > 255){
+//                System.out.println("==>"+getStringCellValue(row.getCell(count)));
+//            }
+            MarketCommercialVehicleTable.setGoLive(getStringCellValue(row.getCell(count++)));
 
 
             CVdataList.add(MarketCommercialVehicleTable);

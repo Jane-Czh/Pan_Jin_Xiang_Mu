@@ -3,7 +3,7 @@
     <div class="overlay">
       <el-row :gutter="20">
         <el-col :sm="24" :lg="12" style="padding-left: 20px">
-          <h2>盘锦合力管理系统</h2>
+          <h2>盘锦合力运营业务数字化系统</h2>
         </el-col>
       </el-row>
     </div>

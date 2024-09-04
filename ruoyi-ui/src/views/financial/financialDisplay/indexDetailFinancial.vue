@@ -7,12 +7,16 @@
       </el-date-picker>
     </div>
     <div>
-
+      <br>
+      <div class="centered-value">
+        当前累计值：{{ this.currentSum }} (万元)
+      </div>
     </div>
     <div v-if="loading"
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
-      :yAxisData="yAxisData"></indicator-chart>
+      :yAxisData="yAxisData" :targetValue="option.targetValue" :targetValueDate="option.targetValueDate"
+      :showTarget="option.showTarget"></indicator-chart>
   </div>
 </template>
 
@@ -41,14 +45,15 @@ export default {
       pickerOptions: [],
       xAxisData: [],
       yAxisData: [],
-      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '' },
+      currentSum: [],
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false },
       name: '',
     }
 
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false }
     this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
     this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()
@@ -65,13 +70,12 @@ export default {
 
       try {
         this.loading = true;
-        if (this.$auth.hasPermi("financial:display")) {
-          const res = await chartAPI[this.option.apiName](this.timeData);
-          this.data = res.rows;
-          this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
-          this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
-
-        }
+        const res = await chartAPI[this.option.apiName](this.timeData);
+        this.data = res.rows;
+        this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
+        this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
+        this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
+        this.currentSum = this.formatNumber(this.currentSum)
         this.loading = false;
       } catch (error) {
         this.$modal.msgError("数据加载失败")
@@ -94,6 +98,10 @@ export default {
       const startDate = new Date(currentYear, 0, 1);
       const endDate = new Date(currentYear, currentMonth, 0);
       this.selectedDate = [startDate, endDate];
+    },
+    formatNumber(value) {
+      if (value === null || value === undefined) return '';
+      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
   },
 }
@@ -119,5 +127,15 @@ export default {
 .block {
   margin-top: 50px;
   text-align: center;
+}
+
+.centered-value {
+  display: flex;
+  justify-content: center;
+
+  align-items: center;
+
+  margin-top: 10px;
+
 }
 </style>

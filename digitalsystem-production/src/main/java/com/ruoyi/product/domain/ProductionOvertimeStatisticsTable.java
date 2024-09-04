@@ -38,9 +38,17 @@ public class ProductionOvertimeStatisticsTable extends BaseEntity
     @Excel(name = "出勤次数")
     private Long attendanceSituation;
 
-    /** 加班时长(单位:小时) */
-    @Excel(name = "加班时长(单位:小时)")
+    /** 工作日加班时长(单位:小时) */
+    @Excel(name = "工作日加班时长(单位:小时)")
     private Long overtimeDuration;
+
+    /** 周末加班时长(单位:小时) */
+    @Excel(name = "周末加班时长(单位:小时)")
+    private Long overtimeDurationWeek;
+
+    /** 节假日加班时长(单位:小时) */
+    @Excel(name = "节假日加班时长(单位:小时)")
+    private Long overtimeDurationFes;
 
     /** 异常情况 */
     @Excel(name = "异常情况")
@@ -118,6 +126,25 @@ public class ProductionOvertimeStatisticsTable extends BaseEntity
         this.abnormalSituation = abnormalSituation;
     }
 
+    public void setOvertimeDurationWeek(Long overtimeDurationWeek)
+    {
+        this.overtimeDurationWeek = overtimeDurationWeek;
+    }
+
+    public Long getOvertimeDurationWeek()
+    {
+        return overtimeDurationWeek;
+    }
+    public void setOvertimeDurationFes(Long overtimeDurationFes)
+    {
+        this.overtimeDurationFes = overtimeDurationFes;
+    }
+
+    public Long getOvertimeDurationFes()
+    {
+        return overtimeDurationFes;
+    }
+
     public String getAbnormalSituation()
     {
         return abnormalSituation;
@@ -143,6 +170,8 @@ public class ProductionOvertimeStatisticsTable extends BaseEntity
                 .append("Gender", getGender())
                 .append("attendanceSituation", getAttendanceSituation())
                 .append("overtimeDuration", getOvertimeDuration())
+                .append("overtimeDurationWeek", getOvertimeDurationWeek())
+                .append("overtimeDurationFes", getOvertimeDurationFes())
                 .append("abnormalSituation", getAbnormalSituation())
                 .append("isExist", getIsExist())
                 .append("createTime", getCreateTime())

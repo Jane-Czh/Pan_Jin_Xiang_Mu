@@ -259,7 +259,10 @@ app.config = {
       align: app.config.align,
       verticalAlign: app.config.verticalAlign,
       position: app.config.position,
-      distance: app.config.distance
+      distance: app.config.distance,
+       formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
+  },
     };
     myChart.setOption({
       series: [
@@ -404,8 +407,11 @@ option = {
     }
   ],
   yAxis: [
-    {
-      type: 'value'
+     {
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}%' // 在Y轴标签上显示百分比
+      }
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {

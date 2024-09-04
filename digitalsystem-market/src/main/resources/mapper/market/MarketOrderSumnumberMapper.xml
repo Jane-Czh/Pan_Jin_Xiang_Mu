@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketOrderSumnumberMapper">
+    
+    <resultMap type="MarketOrderSumnumber" id="MarketOrderSumnumberResult">
+        <result property="id"    column="id"    />
+        <result property="marketLedger"    column="Market_Ledger"    />
+        <result property="marketOrderSumnumber"    column="Market_order_sumNumber"    />
+        <result property="marketTime"    column="Market_Time"    />
+        <result property="creatTime"    column="creat_time"    />
+        <result property="creatPeople"    column="creat_people"    />
+    </resultMap>
+
+    <sql id="selectMarketOrderSumnumberVo">
+        select id, Market_Ledger, Market_order_sumNumber, Market_Time, creat_time, creat_people from Market_order_sumNumber
+    </sql>
+
+    <select id="selectMarketOrderSumnumberList" parameterType="MarketOrderSumnumber" resultMap="MarketOrderSumnumberResult">
+        <include refid="selectMarketOrderSumnumberVo"/>
+        <where>  
+            <if test="marketLedger != null  and marketLedger != ''"> and Market_Ledger = #{marketLedger}</if>
+            <if test="marketOrderSumnumber != null "> and Market_order_sumNumber = #{marketOrderSumnumber}</if>
+            <if test="marketTime != null "> and Market_Time = #{marketTime}</if>
+            <if test="creatTime != null "> and creat_time = #{creatTime}</if>
+            <if test="creatPeople != null  and creatPeople != ''"> and creat_people = #{creatPeople}</if>
+        </where>
+    </select>
+
+    <select id="selectMarketOrderSumnumberList1" parameterType="MarketOrderSumnumber" resultMap="MarketOrderSumnumberResult">
+        <include refid="selectMarketOrderSumnumberVo"/>
+        <where>
+            <if test="marketLedger != null  and marketLedger != ''"> and Market_Ledger = #{marketLedger}</if>
+            <if test="marketOrderSumnumber != null "> and Market_order_sumNumber = #{marketOrderSumnumber}</if>
+            <if test="marketTime != null "> and Market_Time = #{marketTime}</if>
+            <if test="creatTime != null "> and creat_time = #{creatTime}</if>
+            <if test="creatPeople != null  and creatPeople != ''"> and creat_people = #{creatPeople}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarketOrderSumnumberById" parameterType="Long" resultMap="MarketOrderSumnumberResult">
+        <include refid="selectMarketOrderSumnumberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMarketOrderSumnumber" parameterType="MarketOrderSumnumber" useGeneratedKeys="true" keyProperty="id">
+        insert into Market_order_sumNumber
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marketLedger != null">Market_Ledger,</if>
+            <if test="marketOrderSumnumber != null">Market_order_sumNumber,</if>
+            <if test="marketTime != null">Market_Time,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="creatPeople != null">creat_people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marketLedger != null">#{marketLedger},</if>
+            <if test="marketOrderSumnumber != null">#{marketOrderSumnumber},</if>
+            <if test="marketTime != null">#{marketTime},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="creatPeople != null">#{creatPeople},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketOrderSumnumber" parameterType="MarketOrderSumnumber">
+        update Market_order_sumNumber
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="marketLedger != null">Market_Ledger = #{marketLedger},</if>
+            <if test="marketOrderSumnumber != null">Market_order_sumNumber = #{marketOrderSumnumber},</if>
+            <if test="marketTime != null">Market_Time = #{marketTime},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="creatPeople != null">creat_people = #{creatPeople},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarketOrderSumnumberById" parameterType="Long">
+        delete from Market_order_sumNumber where id = #{id}
+    </delete>
+
+    <delete id="deleteMarketOrderSumnumberByIds" parameterType="String">
+        delete from Market_order_sumNumber where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

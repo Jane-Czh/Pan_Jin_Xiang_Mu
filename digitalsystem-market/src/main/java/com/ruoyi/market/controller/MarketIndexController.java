@@ -10,6 +10,7 @@ import com.ruoyi.common.core.controller.BaseController;
 
 import com.ruoyi.market.domain.*;
 
+import com.ruoyi.market.mapper.MarketOrderSumnumberMapper;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import com.ruoyi.market.service.IMarketCommercialVehicleTableService;
 import com.ruoyi.market.service.IMarketSalesTableService;
@@ -41,6 +42,10 @@ public class MarketIndexController extends BaseController {
     private IMarketAfterSaleLedgerService iMarketAfterSaleLedgerService;
     @Autowired
     private IMarketCommercialVehicleTableService iMarketCommercialVehicleTableService;
+
+    //用来获取订单总数的列表
+    @Autowired
+    private MarketOrderSumnumberMapper marketOrderSumnumberMapper;
     @PostMapping("/IClassProportion")
     public  List<VoEntity>  ProportionOfClassITrams(@RequestBody MarketSalesTable marketSalesTable){
         System.out.println("获取到的实体类"+marketSalesTable);
@@ -55,16 +60,16 @@ public class MarketIndexController extends BaseController {
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
         int numberInput=0;
         //获取订单总台数做为分母
-       if(marketSalesTable.getNumberInput()==null||marketSalesTable.getNumberInput()==0)
-       {
-           numberInput=1;
-       }else
-
-           numberInput= marketSalesTable.getNumberInput();
+//       if(marketSalesTable.getNumberInput()==null||marketSalesTable.getNumberInput()==0)
+//       {
+//           numberInput=1;
+//       }else
+//
+//           numberInput= marketSalesTable.getNumberInput();
 //        long allSum = marketSalesTables.stream().mapToLong(MarketSalesTable::getNumber).sum();
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        int finalNumberInput = numberInput;
+        int finalNumberInput = 1;
         Map<String, Map<String, Double>> cpd = marketSalesTables.stream()
                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
                 .filter((MarketSalesTable a) ->
@@ -90,14 +95,64 @@ public class MarketIndexController extends BaseController {
 
         System.out.println("收集到的list"+cpd);
 
+        //ToDo 按照地区和日期统计地区的订单总数。
+         List<MarketOrderSumnumber> marketOrderSumnumbers = marketOrderSumnumberMapper.selectMarketOrderSumnumberList1();
+        System.out.println("测试查询"+marketOrderSumnumbers);
+        Map<String, Map<String, Long>> result = marketOrderSumnumbers.stream()
+                // 根据时间分组
+                .collect(Collectors.groupingBy(
+                        a -> a.getMarketTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+                        // 根据地区分组并求和
+                        Collectors.groupingBy(
+                                MarketOrderSumnumber::getMarketLedger,
+                                Collectors.summingLong(MarketOrderSumnumber::getMarketOrderSumnumber)
+                        )
+                ));
+        System.out.println("测试订单结果"+result);
 
-         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(cpd);
         MarketIndexResult marketIndexResult = new MarketIndexResult();
 //        marketIndexResult.setMapMap(cpd);
 //
-
+         Map<String, Map<String, Double>> stringMapMap = calculateOrderRatios(cpd, result);
+//        System.out.println(stringMapMap);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(stringMapMap);
         return voEntities;
-//
+//收集到的list{2024-02={山东=1.0, 长春=2.0, 哈尔滨=2.0, 辽宁=16.0, 天津=55.0, 江苏=1.0},
+// 2024-01={山东=13.0, 内蒙古=4.0, 长春=6.0, 辽宁=20.0, 哈尔滨=19.0, 天津=28.0, 浙江=5.0, 江苏=1.0}, 2024-04={山东=16.0, 内蒙古=2.0, 长春=3.0, 哈尔滨=13.0, 辽宁=34.0, 天津=84.0, 浙江=9.0, 江苏=2.0}, 2024-03={山东=61.0, 内蒙古=2.0, 长春=26.0, 辽宁=37.0, 哈尔滨=31.0, 天津=44.0, 浙江=5.0}, 2024-06={山东=14.0, 内蒙古=3.0, 长春=6.0, 福建=1.0, 辽宁=33.0, 哈尔滨=20.0, 天津=30.0, 浙江=2.0}, 2024-05={山东=17.0, 内蒙古=2.0, 永恒力=6.0, 长春=5.0, 辽宁=25.0, 哈尔滨=39.0, 天津=34.0, 浙江=1.0}, 2024-08={山东=16.0, 内蒙古=2.0, 长春=5.0, 辽宁=36.0, 哈尔滨=41.0, 天津=18.0, 河北=34.0, 北京=4.0}, 2024-07={山东=24.0, 内蒙古=3.0, 长春=10.0, 哈尔滨=42.0, 辽宁=27.0, 天津=26.0, 河北=11.0, 浙江=5.0, 江苏=2.0, 北京=1.0}}
+    }
+
+    public static Map<String, Map<String, Double>> calculateOrderRatios(
+            Map<String, Map<String, Double>> cpd,
+            Map<String, Map<String, Long>> ordersum) {
+
+        Map<String, Map<String, Double>> orderRatios = new TreeMap<>();
+
+        // 遍历订单数Map
+        for (Map.Entry<String, Map<String, Double>> entryCpd : cpd.entrySet()) {
+            String month = entryCpd.getKey();
+            Map<String, Double> regionsCpd = entryCpd.getValue();
+
+            // 确保在订单比例Map中存在该月份的条目
+            orderRatios.putIfAbsent(month, new HashMap<>());
+
+            // 获取该月份的订单总数Map
+            Map<String, Long> regionsOrdersum = ordersum.get(month);
+
+            // 计算每个地区的订单比例
+            for (Map.Entry<String, Double> regionCpd : regionsCpd.entrySet()) {
+                String region = regionCpd.getKey();
+                Double cpdValue = regionCpd.getValue();
+
+                // 确保订单总数Map中存在该地区
+                if (regionsOrdersum != null && regionsOrdersum.containsKey(region)) {
+                    Long ordersumValue = regionsOrdersum.get(region);
+                    Double ratio = cpdValue / ordersumValue; // 计算比例
+                    orderRatios.get(month).put(region, ratio);
+                }
+            }
+        }
+
+        return orderRatios;
     }
     /*
     *指标12   TODO CPCD是否也算CPC的车型？
@@ -272,7 +327,8 @@ public class MarketIndexController extends BaseController {
                     //筛选2024年满足起止时间的数据，在选出年份为2024，且月份是开始那个月的数据
                      return (acceptanceTime.isAfter(startTime) || acceptanceTime.isEqual(startTime))
                              && (acceptanceTime.isBefore(endTime) || acceptanceTime.isEqual(endTime))
-                             && (acceptanceTime.getYear() == current)&&(acceptanceTime.getMonthValue() ==startTime.getMonthValue());// 添加当前年份的过滤条件
+                             && (acceptanceTime.getYear() == current);
+//                             && (acceptanceTime.getYear() == current)&&(acceptanceTime.getMonthValue() ==startTime.getMonthValue());// 添加当前年份的过滤条件
                  }).collect(Collectors.groupingBy(
         m -> getVehicleModelPrefix(m.getVehicleModel()),
         Collectors.groupingBy(
@@ -292,10 +348,10 @@ public class MarketIndexController extends BaseController {
                     LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     int current = LocalDate.now().getYear(); // 获取当前年份
                     int previousYear = current - 1; // 获取当前年份的前一年
-
+                    System.out.println("去年的"+previousYear);
                     // 筛选出时间为前一年的数据，且月份与当前年份相同
-                    return acceptanceTime.getYear() == previousYear
-                            && (acceptanceTime.getMonthValue() == startTime.getMonthValue() );
+                    return acceptanceTime.getYear() == previousYear;
+//                            && (acceptanceTime.getMonthValue() == startTime.getMonthValue() );
 
                 }).collect(Collectors.groupingBy(
                         m -> getVehicleModelPrefix(m.getVehicleModel()),
@@ -306,23 +362,66 @@ public class MarketIndexController extends BaseController {
                 ));
         System.out.println("取出当前年份前一年对应月份的数据：" + before);
 //
-        // 初始化结果Map
-        Map<String, Map<String, Long>> res = new HashMap<>(curMonth);
-
-// 遍历before中的每一个条目
-        before.forEach((prefix, beforeMap) ->
-                // 对于beforeMap中的每一项，将其合并到res中的对应prefix下
-                beforeMap.forEach((date, value) ->
-                        // 使用merge方法合并对应的值
-                        res.computeIfAbsent(prefix, k -> new HashMap<>()).merge(date, value, Long::sum)
-                )
-        );
-        System.out.println(res);
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(res);
+//        // 初始化结果Map
+//        Map<String, Map<String, Long>> res = new HashMap<>(curMonth);
+//
+//// 遍历before中的每一个条目
+//        before.forEach((prefix, beforeMap) ->
+//                // 对于beforeMap中的每一项，将其合并到res中的对应prefix下
+//                beforeMap.forEach((date, value) ->
+//                        // 使用merge方法合并对应的值
+//                        res.computeIfAbsent(prefix, k -> new HashMap<>()).merge(date, value, Long::sum)
+//                )
+//        );
+         Map<String, Map<String, Double>> stringMapMap = divideMaps(curMonth, before);
+        System.out.println("比值"+stringMapMap);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(stringMapMap);
 
         return voEntities;
 
     }
+    //计算指标14的比值
+    public static Map<String, Map<String, Double>> divideMaps(
+            Map<String, Map<String, Long>> curMonth,
+            Map<String, Map<String, Long>> before) {
+
+        Map<String, Map<String, Double>> result = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Long>> curMonthEntry : curMonth.entrySet()) {
+            String vehicleModel = curMonthEntry.getKey();
+            Map<String, Long> curMonthValues = curMonthEntry.getValue();
+
+            if (before.containsKey(vehicleModel)) {
+                Map<String, Long> beforeValues = before.get(vehicleModel);
+                Map<String, Double> resultValues = new HashMap<>();
+
+                for (Map.Entry<String, Long> curMonthValueEntry : curMonthValues.entrySet()) {
+                    String curMonthDate = curMonthValueEntry.getKey();
+                    Long curMonthValue = curMonthValueEntry.getValue();
+
+                    // Parse the year from the date string
+                    String[] parts = curMonthDate.split("-");
+                    int curYear = Integer.parseInt(parts[0]);
+                    int beforeYear = curYear - 1;
+                    String beforeDate = beforeYear + "-" + parts[1];
+
+                    if (beforeValues.containsKey(beforeDate)) {
+                        Long beforeValue = beforeValues.get(beforeDate);
+                        if (beforeValue != 0) { // Check for division by zero
+                            resultValues.put(curMonthDate, (double) curMonthValue / beforeValue);
+                        } else {
+                            resultValues.put(curMonthDate, 0.0); // Or handle division by zero as you see fit
+                        }
+                    }
+                }
+
+                result.put(vehicleModel, resultValues);
+            }
+        }
+
+        return result;
+    }
+
     // 获取 VehicleModel 的前缀方法
     private static String getVehicleModelPrefix(String vehicleModel) {
         // 这里根据你的业务逻辑来提取前缀，比如提取第一个单词或者特定的前缀D

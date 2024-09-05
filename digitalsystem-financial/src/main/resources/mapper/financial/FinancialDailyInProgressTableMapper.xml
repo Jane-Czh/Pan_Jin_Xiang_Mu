@@ -45,6 +45,15 @@
         where id = #{id}
     </select>
 
+    <!-- 查询最新日期 Financial_Daily_InProgress_table  -->
+    <select id="selectNewDateDailyInProgress" resultType="com.heli.financial.domain.FinancialDailyInProgressTable">
+        SELECT id, Data_Time dataTime, InProgress_DayRevenue inProgressDayRevenue
+        FROM Financial_Daily_InProgress_table
+        WHERE id in (
+            select max(id) from Financial_Daily_InProgress_table
+        )
+    </select>
+
 
     <insert id="insertFinancialDailyInProgressTable" parameterType="FinancialDailyInProgressTable">
         insert into Financial_Daily_InProgress_table

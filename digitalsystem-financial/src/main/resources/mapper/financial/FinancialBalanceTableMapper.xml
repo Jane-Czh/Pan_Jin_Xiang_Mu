@@ -235,4 +235,7 @@
         <include refid="selectFinancialBalanceTableVo"/>
         where FB_ID = #{fbId}
     </select>
+    <select id="selectMinYearAndMonth" resultType="java.util.Date">
+        select min(Year_And_Month) from Financial_Balance_table
+    </select>
 </mapper>

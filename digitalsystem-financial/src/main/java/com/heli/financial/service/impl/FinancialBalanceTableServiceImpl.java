@@ -470,4 +470,9 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     public int deleteFinancialBalanceTableByFbId(Long fbId) {
         return financialBalanceTableMapper.deleteFinancialBalanceTableByFbId(fbId);
     }
+
+    @Override
+    public Date selectMinYearAndMonth() {
+        return financialBalanceTableMapper.selectMinYearAndMonth();
+    }
 }

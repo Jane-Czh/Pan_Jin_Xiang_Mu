@@ -111,4 +111,5 @@ public interface IFinancialBalanceTableService {
     public int deleteFinancialBalanceTableByFbId(Long fbId);
 
 
+    Date selectMinYearAndMonth();
 }

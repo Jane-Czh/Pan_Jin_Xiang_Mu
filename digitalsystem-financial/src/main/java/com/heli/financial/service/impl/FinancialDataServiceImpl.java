@@ -45,6 +45,30 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 
     private static final Logger log = LoggerFactory.getLogger(FinancialDataServiceImpl.class);
 
+    /**
+     * @description: 更新按钮，重新计算全部数据
+     * @author: hong
+     * @date: 2024/9/5 17:47
+     * @version: 1.0
+     */
+    @Override
+    public int batchCalculateBalanceIndicator() {
+        // 查询利润表最小月份
+        Date minYearAndMonth = financialBalanceTableService.selectMinYearAndMonth();
+        Date maxYearAndMonth = financialBalanceTableService.selectMaxYearAndMonth();
+        int i = 0;
+        //从最小时间遍历到最大时间
+        for (Date date = minYearAndMonth; date.before(DateUtils.getNextMonth(maxYearAndMonth)); date = DateUtils.getNextMonth(date)) {
+            if (checkDataUploadedForCurrentMonth(date) && checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(date))) {
+                calculateCurrentMonthFinancialData(date);
+                i++;
+            }
+        }
+
+        // 获取当前时间
+        return i;
+    }
+
 
     public int batchUpdateFinancialData(Date yearAndMonth) {
         Date fillingMaxMonth = financialIndicatorsHandfillTableService.selectMaxYearAndMonth();
@@ -211,6 +235,8 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 
         return financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
     }
+
+
 
 
     /**

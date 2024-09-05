@@ -102,4 +102,6 @@ public interface FinancialBalanceTableMapper {
      * @return 结果
      */
     public int deleteFinancialBalanceTableByFbIds(Long[] fbIds);
+
+    Date selectMinYearAndMonth();
 }

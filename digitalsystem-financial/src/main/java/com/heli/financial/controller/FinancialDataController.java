@@ -6,7 +6,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
@@ -14,18 +13,13 @@ import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,6 +44,12 @@ public class FinancialDataController extends BaseController {
     @Autowired
     private IFinancialTempTableService financialTempTableService;
     private static final Logger log = LoggerFactory.getLogger(FinancialDataController.class);
+
+    @Log(title = "[财务]资产负债表数据批量计算", businessType = BusinessType.INSERT)
+    @GetMapping("/calculate")
+    public AjaxResult batchCalculateBalanceIndicator() {
+        return AjaxResult.success(financialDataService.batchCalculateBalanceIndicator());
+    }
 
 
     @Log(title = "[财务]数据填报", businessType = BusinessType.INSERT)
@@ -342,11 +342,10 @@ public class FinancialDataController extends BaseController {
     @PreAuthorize("@ss.hasPermi('financial:dailyInProgress:sum')")
     @PostMapping("/dailyInProgress/sum")
     public AjaxResult selectHandfillRateByYear(@RequestBody DisplayRequestParam time) {
-//        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillSumInfoByYear(time.getStartTime());
-//        FinancialIndicatorsHandfillTable sumInfoByYear = financialIndicatorsHandfillTableService.selectHandfillRateByYear(time.getStartTime());
-        FinancialDailyInProgressTable sumInfoByYear = financialDailyInProgressTableService.selectDailyInProgressSumInfoByMonth(time.getStartTime());
-//        logger.info("sumInfoByYear: " + sumInfoByYear);
-        return AjaxResult.success(sumInfoByYear);
+
+        FinancialDailyInProgressTable newDailyInProgressTable =  financialDailyInProgressTableService.selectNewDateDailyInProgress();
+
+        return AjaxResult.success(newDailyInProgressTable);
     }
 
     /**

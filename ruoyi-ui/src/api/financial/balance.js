@@ -42,3 +42,12 @@ export function delBalance(fbId) {
     method: 'delete'
   })
 }
+
+
+// 资产负债更新按钮
+export function refreshBalance() {
+  return request({
+    url: '/financial/data/calculate',
+    method: 'get'
+  })
+}

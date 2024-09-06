@@ -69,7 +69,7 @@
     <el-table v-loading="loading" :data="interestsList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120"
+      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="120"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>

@@ -32,7 +32,7 @@
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="emasId" /> -->
-      <el-table-column label="年份" align="center" prop="naturalYear" sortable="custom" />
+      <el-table-column fixed label="年份" align="center" prop="naturalYear" sortable="custom" />
       <el-table-column label="工资总额年度值" align="center" prop="annualTotalSalary" />
       <el-table-column label="日清日结-股份目标值" align="center" prop="stockTargetValue" />
       <el-table-column label="日清日结-盘锦目标值" align="center" prop="panjinTargetValue" />

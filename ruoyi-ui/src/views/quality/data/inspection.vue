@@ -120,7 +120,7 @@
     <!-- 添加或修改质检部分字段对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="230px">
-        <el-form-item label="日期" prop="yearAndMonth">
+        <el-form-item fixed label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM" placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>

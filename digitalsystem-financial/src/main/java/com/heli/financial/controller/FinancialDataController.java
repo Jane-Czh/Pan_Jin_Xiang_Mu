@@ -13,6 +13,7 @@ import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,15 @@ public class FinancialDataController extends BaseController {
     private IFinancialTempTableService financialTempTableService;
     private static final Logger log = LoggerFactory.getLogger(FinancialDataController.class);
 
-    @Log(title = "[财务]资产负债表数据批量计算", businessType = BusinessType.INSERT)
+
+    @PostMapping("/test")
+    public AjaxResult test( Date yearAndMonth) {
+        log.info(String.valueOf(yearAndMonth));
+        financialDataService.countTurnoverRateReceivable(yearAndMonth);
+        return AjaxResult.success();
+    }
+
+    @Log(title = "[财务]资产负债表数据批量计算", businessType = BusinessType.UPDATE)
     @GetMapping("/calculate")
     public AjaxResult batchCalculateBalanceIndicator() {
         return AjaxResult.success(financialDataService.batchCalculateBalanceIndicator());

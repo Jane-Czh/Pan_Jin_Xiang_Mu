@@ -8,8 +8,6 @@ import com.heli.financial.service.IFinancialBalanceTableService;
 import com.heli.financial.service.IFinancialIndicatorsHandfillTableService;
 import com.heli.financial.service.IFinancialInterestsTableService;
 import com.ruoyi.common.utils.DateUtils;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -75,7 +70,6 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         Date interestsMaxMonth = financialInterestsTableService.selectMaxYearAndMonth();
         Date balanceMaxMonth = financialBalanceTableService.selectMaxYearAndMonth();
 
-
         List<Date> dates = new ArrayList<>();
         dates.add(fillingMaxMonth);
         // 假设这里添加了更多的日期
@@ -95,7 +89,6 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         }
 
         return i;
-
     }
 
     /**
@@ -109,78 +102,6 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
                 && financialInterestsTableService.checkInterestsDataIsExisted(yearAndMonth)
                 && financialBalanceTableService.checkBalanceDataIsExisted(yearAndMonth);
     }
-
-
-    /**
-     * @description: 财务当月数据上传完成后，计算
-     * @author: hong
-     * @date: 2024/4/23 10:56
-     **/
-
-//    @Override
-////    @After(
-////            value = "execution(* com.heli.financial.controller.FinancialDataController.importBalanceTable(..)) || " +
-////                    "execution(* com.heli.financial.controller.FinancialDataController.importIndicatorsTable(..)) || " +
-////                    "execution(* com.heli.financial.controller.FinancialDataController.handFillData(..))")
-//    public int calculateCurrentMonthFinancialData(JoinPoint joinPoint) {
-//        System.out.println(Arrays.toString(joinPoint.getArgs()));
-//
-////        System.out.println(joinPoint.getArgs()[2].toString());
-//
-//        Date yearAndMonth = (Date) joinPoint.getArgs()[0];
-//
-//        System.out.println("当前月份为：" + yearAndMonth);
-//
-//        // 检查当月文件是否上传完成，全部上传后开始计算
-//        if (!checkDataUploadedForCurrentMonth(yearAndMonth)) {
-//            System.out.println("当月数据不全");
-//            return 0;
-//        }
-//
-//        FinancialIndicatorsHandfillTable handFillDate = financialIndicatorsHandfillTableService.selectFinancialIndicatorsHandfillTableByYearAndMonth(yearAndMonth);
-//        FinancialInterestsTable interestsTable = financialInterestsTableService.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
-//        FinancialBalanceTable balanceTable = financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth);
-//
-//        System.out.println(handFillDate);
-//        System.out.println(interestsTable);
-//        System.out.println(balanceTable);
-//
-//
-//        /**
-//         * @description: 计算当月库存商品存货额
-//         * 当月库存商品存货额 = 库存商品-整车 + 产品成本差异-产成品 - 储备车金额（填报)
-//         * monthAmountInStock =（资产负债表） inventoryVehicles + pcvFinished - reserveCarAmount
-//         **/
-//        balanceTable.setMonthAmountInStock(
-//                balanceTable.getInventoryVehicles()
-//                        .add(balanceTable.getPcvFinished()
-//                                .subtract(handFillDate.getReserveCarAmount()))
-//        );
-//
-//
-//
-//        /**
-//         * @description: 计算应收帐款周转率
-//         * 应收帐款周转率 = （利润表）营业收入 / (资产负债表) 应收账款
-//         * turnoverRateReceivable =（利润表） operatingRevenue / (资产负债表) receivables
-//         * 由于计算比率，所以保留2位小数，并四舍五入
-//         **/
-//        balanceTable.setTurnoverRateReceivable(
-//                (interestsTable.getOperatingRevenue()
-//                        .divide(balanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue())
-//        );
-//
-//        // 计算
-////        balanceTable.setGrowthRateInventorySales(countGrowthRateInventorySales(yearAndMonth));
-//
-//
-////        return financialBalanceTableService.updateFinancialBalanceTable(countGrowthRateInventoryAndSales(balanceTable));
-//
-//
-//
-//        return financialBalanceTableService.updateFinancialBalanceTable(countGrowthRateInventoryAndSales(balanceTable));
-//
-//    }
 
 
     /**
@@ -215,28 +136,72 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         balanceTable.setMonthAmountInStock(monthAmountInStock);
 
 
-        /**
-         * @description: 计算应收帐款周转率
-         * 应收帐款周转率 = （利润表）营业收入 / (资产负债表) 应收账款
-         * turnoverRateReceivable =（利润表） operatingRevenue / (资产负债表) receivables
-         * 由于计算比率，所以保留2位小数，并四舍五入
-         **/
-
-        double turnoverRateReceivable = interestsTable.getOperatingRevenue()
-                .divide(balanceTable.getReceivables(), 2, RoundingMode.HALF_UP).doubleValue();
-        log.info("应收帐款周转率为：" + turnoverRateReceivable);
-        balanceTable.setTurnoverRateReceivable(turnoverRateReceivable);
-
-        // 计算
-//        balanceTable.setGrowthRateInventorySales(countGrowthRateInventorySales(yearAndMonth));
-
+        // 计算存货增长率/销售增长率
         FinancialBalanceTable financialBalanceTable = countGrowthRateInventoryAndSales(balanceTable);
         log.info("计算结果为：" + financialBalanceTable);
 
-        return financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
+        int i = financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
+
+        countTurnoverRateReceivable(yearAndMonth);
+
+        return i;
+
     }
 
 
+    /**
+     * @description: 计算应收帐款周转率
+     * <p>
+     * turnoverRateReceivable （利润表） operatingRevenue  (资产负债表) receivables
+     * 第N月应收账款周转率=（SUM本年各月营业收入/N）/（（年初应收账款+SUM本年各月应收账款）/（N+1））
+     * @author: hong
+     * @date: 2024/9/6 14:02
+     * @version: 1.0
+     */
+    public void countTurnoverRateReceivable(Date yearAndMonth) {
+        FinancialBalanceTable balanceTable = financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth);
+        if (balanceTable == null){
+            log.info("当月资产负债表数据不存在，无法计算");
+            return;
+        }
+        log.info("资产负债表" + balanceTable);
+
+        // 根据yearAndMonth ,获取去年十二月的date
+        int lastYear = DateUtils.getYear(yearAndMonth) - 1;
+        Date lastYearAndMonth = new Date(lastYear - 1900, 11, 1);
+
+        log.info("lastYearAndMonth:" + DateUtils.parseDateToStr("yyyy-MM-dd", lastYearAndMonth));
+
+        if (!financialBalanceTableService.checkReceivablesDataIsExisted(lastYearAndMonth)) {
+            log.info("年初应收账款不存在，无法计算");        // 检查年初应收账款数据是否存在
+            balanceTable.setTurnoverRateReceivable(null);
+        } else if (financialInterestsTableService.countMonthDataNumber(yearAndMonth) != DateUtils.getMonth(yearAndMonth)) {
+            log.info("截至当月营业收入数据不全,无法计算");// 统计当年营业收入数据条数，截止当月
+            balanceTable.setTurnoverRateReceivable(null);
+        } else if (financialBalanceTableService.countMonthDataNumber(yearAndMonth) != DateUtils.getMonth(yearAndMonth)) {
+            log.info("截至当月应收账款数据不全,无法计算");// 统计当年资产负债表条数，截止当月
+            balanceTable.setTurnoverRateReceivable(null);
+        } else {
+            // 数据齐全，开始计算
+            log.info("数据齐全，开始计算");
+            double receivable = financialBalanceTableService.selectReceivablesByDate(lastYearAndMonth);
+            log.info("年初应收账款为：" + receivable);
+            double operatingRevenue = financialInterestsTableService.countOperatingRevenueByYear(yearAndMonth);
+            log.info("截至当月营业收入为：" + operatingRevenue);
+            double receivables = financialBalanceTableService.countReceivablesByYear(yearAndMonth);
+            log.info("截至当月应收账款为：" + receivables);
+
+            // 第N月应收账款周转率=（SUM本年各月营业收入/N）/（（年初应收账款+SUM本年各月应收账款）/（N+1））
+            double v = (operatingRevenue / DateUtils.getMonth(yearAndMonth)) / ((receivable + receivables) / (DateUtils.getMonth(yearAndMonth) + 1));
+            // 保留两位小数
+//            v = new BigDecimal(v).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+            balanceTable.setTurnoverRateReceivable(v);
+        }
+        financialBalanceTableService.updateBalanceTableTurnoverRateReceivable(balanceTable);
+
+
+    }
 
 
     /**
@@ -274,7 +239,7 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
         BigDecimal totalAmountSubtract = monthlyInventoryTotalAmount.subtract(monthlyInventoryTotalAmountLastMonth);
         BigDecimal operatingRevenueSubtract = operatingRevenue.subtract(operatingRevenueLastMonth);
         log.info("totalAmountSubtract" + totalAmountSubtract + "----operatingRevenueSubtract" + operatingRevenueSubtract);
-        log.info(totalAmountSubtract.equals(BigDecimal.ZERO) + "---"+operatingRevenueSubtract.equals(BigDecimal.ZERO));
+        log.info(totalAmountSubtract.equals(BigDecimal.ZERO) + "---" + operatingRevenueSubtract.equals(BigDecimal.ZERO));
         //如果上面两个值一个为0，则直接返回0
         if (!totalAmountSubtract.equals(BigDecimal.ZERO) || !operatingRevenueSubtract.equals(BigDecimal.ZERO)) {
             balanceTable.setGrowthRateInventory(0.0);

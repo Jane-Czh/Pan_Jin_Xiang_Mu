@@ -112,4 +112,15 @@ public interface IFinancialBalanceTableService {
 
 
     Date selectMinYearAndMonth();
+
+    boolean checkReceivablesDataIsExisted(Date lastYearAndMonth);
+
+    double selectReceivablesByDate(Date lastYearAndMonth);
+
+
+    int countMonthDataNumber(Date yearAndMonth);
+
+    double countReceivablesByYear(Date yearAndMonth);
+
+    int updateBalanceTableTurnoverRateReceivable(FinancialBalanceTable balanceTable);
 }

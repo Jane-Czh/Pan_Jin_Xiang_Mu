@@ -105,5 +105,9 @@ public interface IFinancialInterestsTableService {
      * @return 结果
      */
     public int deleteFinancialInterestsTableByFiId(Long fiId);
+
+    Integer countMonthDataNumber(Date yearAndMonth);
+
+    double countOperatingRevenueByYear(Date yearAndMonth);
 }
 

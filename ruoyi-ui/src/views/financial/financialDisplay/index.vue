@@ -228,9 +228,6 @@ export default {
           growthRateInventory: resBalanceRate && resBalanceRate.data ? resBalanceRate.data.growthRateInventory : '',
           turnoverRateReceivable: resBalanceRate && resBalanceRate.data ? resBalanceRate.data.turnoverRateReceivable : ''
         };
-        console.log('++++++++++++++++++++++++++')
-        console.log(resBalanceRateDataNeededFields)
-
 
         //截至日期展示
         this.allIndex.forEach(item => {

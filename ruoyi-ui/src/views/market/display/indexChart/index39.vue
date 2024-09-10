@@ -347,7 +347,7 @@ option = {
       data: xAxisData
     }
   ],
-  yAxis: [
+   yAxis: [
     {
       type: 'value',
       axisLabel: {

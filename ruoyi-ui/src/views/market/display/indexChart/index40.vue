@@ -52,11 +52,11 @@ export default {
                 numberInput:null
     
             },
-            // selectedDate: [new Date('2024-01-01'),new Date('2024-10-01')],
- selectedDate: [  
-        `${currentYear}-01`, // 设置默认开始月份为今年的1月  
-        `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}`, // 设置默认结束月份为当前月份  
-      ],  
+            selectedDate: [new Date('2024-01-01'),new Date('2024-10-01')],
+//  selectedDate: [  
+//         `${currentYear}-01`, // 设置默认开始月份为今年的1月  
+//         `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}`, // 设置默认结束月份为当前月份  
+//       ],  
             pickerOptions: [],
             option: {},
             myChart: {}

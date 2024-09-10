@@ -76,6 +76,19 @@ public class MarketCommercialVehicleTableServiceImpl implements IMarketCommercia
 //    }
 @Override
 public int CVimportInterests(MultipartFile excelFile) throws IOException {
+
+    //        先删除数据库中的所有数据
+//    List<MarketCommercialVehicleTable> list1 = selectMarketCommercialVehicleTableList1();
+//    if (list1 != null&& list1.size()>0){
+//        int x = 0;
+//        Long[] deleteId = new Long[list1.size()];
+//        while (x < list1.size()){
+//            MarketCommercialVehicleTable value = list1.get(x);
+//                deleteId[x] = value.getMcvId();
+//            x++;
+//        }
+//        deleteMarketCommercialVehicleTableByMcvIds(deleteId);
+//    }
     try (InputStream is = excelFile.getInputStream()) {
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = ExcelUtils.CVparseExcel(excelFile);
         List<MarketCommercialVehicleTable> batchInsertList = new ArrayList<>();

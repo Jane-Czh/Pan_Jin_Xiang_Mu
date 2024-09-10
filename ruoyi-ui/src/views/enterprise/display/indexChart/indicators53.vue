@@ -184,7 +184,7 @@ export default {
                     top: 'center',
                     feature: {
                         mark: { show: true, },
-                        // dataView: { show: true, readOnly: false, title: '数据视图' },
+                        dataView: { show: true, readOnly: false, title: '数据视图' },
                         magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
                         restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
@@ -205,16 +205,17 @@ export default {
                 series: [
                     {
                         name: '销售订单录入不及时比例(%)',
-                        type: 'stack',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
                         data: this.data.map(item => item.orderEntryDelayRatio),
+                        barGap: '30%'
                     },
                     {
                         name: '销售订单不及时发货比例(%)',
-                        type: 'stack',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -223,7 +224,7 @@ export default {
                     },
                     {
                         name: '生产订单不及时报工比例(%)',
-                        type: 'stack',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -232,7 +233,7 @@ export default {
                     },
                     {
                         name: '成品检验业务不及时率(%)',
-                        type: 'stack',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -241,7 +242,7 @@ export default {
                     },
                     {
                         name: '销售发票过账不及时率(%)',
-                        type: 'stack',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -250,7 +251,7 @@ export default {
                     },
                     {
                         name: '客户未清账比例(%)',
-                        type: 'stack',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'

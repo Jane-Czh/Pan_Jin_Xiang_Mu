@@ -26,6 +26,9 @@ import { getIndex40 } from '@/api/market/index'
 
 export default {
     data() {
+    const currentYear = new Date().getFullYear(); // 获取当前年份  
+    const currentMonth = new Date().getMonth() + 1; // 获取当前月份，注意月份从0开始  
+
         return {
           transposedSeriesData:[],
             branchmonthIdx:[],
@@ -49,7 +52,11 @@ export default {
                 numberInput:null
     
             },
-            selectedDate: [new Date('2024-01-01'),new Date('2024-10-01')],
+            // selectedDate: [new Date('2024-01-01'),new Date('2024-10-01')],
+ selectedDate: [  
+        `${currentYear}-01`, // 设置默认开始月份为今年的1月  
+        `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}`, // 设置默认结束月份为当前月份  
+      ],  
             pickerOptions: [],
             option: {},
             myChart: {}
@@ -59,9 +66,9 @@ export default {
         this.financialId = this.$route.query.id;
         this.myChart = echarts.init(document.getElementById('main'));
         this.initData();
-        this.getCurrentMonth();
-        this.getCurrentYear();
-        const currentDate = new Date();
+        // this.getCurrentMonth();
+        // this.getCurrentYear();
+        // const currentDate = new Date();
         //
 //   const currentYear = currentDate.getFullYear();
 //   const firstMonthOfYear = new Date(currentYear, 0, 1); // 设置为每一年的第一个月的第一天
@@ -234,6 +241,9 @@ const labelOption = {
   rotate: app.config.rotate,
   formatter: '{c}  {name|{a}}',
   fontSize: 16,
+       formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
+  },
   rich: {
     name: {}
   }
@@ -346,7 +356,10 @@ option = {
   ],
   yAxis: [
     {
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}%' // 在Y轴标签上显示百分比
+      }
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {
@@ -367,16 +380,16 @@ option && myChart.setOption(option);
 
 },
 
-        getCurrentMonth() {
-            const currentDate = new Date();
-            const currentMonth = currentDate.getMonth() + 1;
-            this.timeData.currentMonth = currentMonth;
-        },
-        getCurrentYear() {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            this.timeData.currentYear = currentYear;
-        }
+        // getCurrentMonth() {
+        //     const currentDate = new Date();
+        //     const currentMonth = currentDate.getMonth() + 1;
+        //     this.timeData.currentMonth = currentMonth;
+        // },
+        // getCurrentYear() {
+        //     const currentDate = new Date();
+        //     const currentYear = currentDate.getFullYear();
+        //     this.timeData.currentYear = currentYear;
+        // }
     },
 
 

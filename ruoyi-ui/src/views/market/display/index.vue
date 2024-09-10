@@ -113,7 +113,7 @@ export default {
         { id: '19', icon: 'el-icon-s-data', title: '各网点已到期未完工订单数', content: '各网点已到期未完工订单数', path: '/market/index19' },
         { id: '39', icon: 'el-icon-s-data', title: '商品车计划兑现率', content: '商品车计划兑现率', path: '/market/index39' },
         { id: '40', icon: 'el-icon-s-data', title: '订单兑现率', content: '订单兑现率', path: '/market/index40' },
-        { id: '42', icon: 'el-icon-s-data', title: '大叉位叉车整机交货天数平均数', content: '大叉位叉车整机交货天数平均数', path: '/market/index42' },
+        { id: '42', icon: 'el-icon-s-data', title: '大吨位叉车整机交货天数平均数', content: '大吨位叉车整机交货天数平均数', path: '/market/index42' },
         { id: '43', icon: 'el-icon-s-data', title: '电动车整机交货天数', content: '电动车整机交货天数', path: '/market/index43' },
         { id: '44', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机交货天数', content: '小吨位内燃叉车整机交货天数', path: '/market/index44' },
         { id: '72', icon: 'el-icon-s-data', title: '日/月/年接单数', content: '日/月/年接单数', path: '/market/index72' },
@@ -134,7 +134,7 @@ export default {
       OperatingEfficiencyIndex: [
         { id: '39', icon: 'el-icon-s-data', title: '商品车计划兑现率', content: '商品车计划兑现率', path: '/market/index39' },
         { id: '40', icon: 'el-icon-s-data', title: '订单兑现率', content: '订单兑现率', path: '/market/index40' },
-        { id: '42', icon: 'el-icon-s-data', title: '大叉位叉车整机交货天数平均数', content: '大叉位叉车整机交货天数平均数', path: '/market/index42' },
+        { id: '42', icon: 'el-icon-s-data', title: '大吨位叉车整机交货天数平均数', content: '大吨位叉车整机交货天数平均数', path: '/market/index42' },
         { id: '43', icon: 'el-icon-s-data', title: '电动车整机交货天数', content: '电动车整机交货天数', path: '/market/index43' },
         { id: '44', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机交货天数', content: '小吨位内燃叉车整机交货天数', path: '/market/index44' },
         { id: '72', icon: 'el-icon-s-data', title: '日/月/年接单数', content: '日/月/年接单数', path: '/market/index72' },

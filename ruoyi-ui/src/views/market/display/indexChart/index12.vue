@@ -16,8 +16,8 @@
                 @change="handleDateChange" >
             </el-date-picker>
 
-            <el-input v-model.number="numberInput" placeholder="请输入订单总台数" style="width: 200px;"></el-input>
-            <el-button type="primary" @click="handleConfirm">确定</el-button>
+            <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数" style="width: 200px;"></el-input>
+            <el-button type="primary" @click="handleConfirm">确定</el-button> -->
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
         <div id="main" ref="main"></div>

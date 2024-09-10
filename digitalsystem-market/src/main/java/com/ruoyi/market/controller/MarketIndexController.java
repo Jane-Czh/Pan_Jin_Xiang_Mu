@@ -1332,7 +1332,9 @@ public class MarketIndexController extends BaseController {
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM-dd");
+//        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM-dd");
+        //TODO 修改了时间格式，后续可能要改
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
         DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("YYYY");
 
 
@@ -1342,7 +1344,18 @@ public class MarketIndexController extends BaseController {
                     LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    // 获取结束时间前一个月的 LocalDate
+                    //For example, 2007-03-31 minus one month would result in the invalid date 2007-02-31.
+                    // Instead of returning an invalid result,
+                    // the last valid day of the month, 2007-02-28, is selected instead.
 
+                    LocalDate oneMonthBefore = endTime.minusMonths(1);
+                    //TODO 把startTime时间改为了oneMonthBefore
+//                    return !acceptanceTime.isBefore(oneMonthBefore) && !acceptanceTime.isAfter(endTime)
+//                            || acceptanceTime.isEqual(oneMonthBefore) || acceptanceTime.isEqual(endTime);
+                    // 打印结果
+//                    System.out.println("结束时间: " + endTime);
+//                    System.out.println("结束时间前一个月: " + oneMonthBefore);
                     // 检查日期是否在起止时间范围内，包括等于起止时间的情况
                     return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
                             || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
@@ -1399,7 +1412,8 @@ public class MarketIndexController extends BaseController {
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
         DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
 
 

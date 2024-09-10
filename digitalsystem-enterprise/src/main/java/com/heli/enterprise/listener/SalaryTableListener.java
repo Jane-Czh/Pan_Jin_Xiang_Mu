@@ -38,10 +38,10 @@ public class SalaryTableListener implements ReadListener<EnterpriseManagementSal
     @Override
     public void invoke(EnterpriseManagementSalaryTable registerInfoExcel, AnalysisContext analysisContext) {
         // 将监听到的数据存入缓存集合中
-        if (registerInfoExcel.getSalaryCalculationYearMonth() != null) {
-            registerInfoExcel.setSalaryTableIndex(registerInfoExcel.getSalaryCalculationYearMonth().getTime() +"-"+registerInfoExcel.getEmployeeId());
-            registerInfoExcel.setCreateTime(DateUtils.getNowDate());
-            registerInfoExcel.setCreateBy(username);
+        if (registerInfoExcel.getEmployeeId() != null) {
+//            registerInfoExcel.setSalaryTableIndex(registerInfoExcel.getSalaryCalculationYearMonth().getTime() +"-"+registerInfoExcel.getEmployeeId());
+//            registerInfoExcel.setCreateTime(DateUtils.getNowDate());
+//            registerInfoExcel.setCreateBy(username);
             cacheDataList.add(registerInfoExcel);
         }
         log.info("当前读取的数据为:" + registerInfoExcel);

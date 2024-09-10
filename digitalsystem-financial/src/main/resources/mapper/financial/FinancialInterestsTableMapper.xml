@@ -139,6 +139,18 @@
         select max(Year_And_Month) from Financial_Interests_table
     </select>
 
+    <select id="countMonthDataNumber" resultType="java.lang.Integer">
+        select count(*) from Financial_Interests_table
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+          AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+          AND Operating_Revenue is not null
+    </select>
+    <select id="countOperatingRevenueByYear" resultType="java.lang.Double">
+        select sum(Operating_Revenue) from Financial_Interests_table
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+          AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
     <insert id="insertFinancialInterestsTable" parameterType="FinancialInterestsTable">
         insert into Financial_Interests_table
         <trim prefix="(" suffix=")" suffixOverrides=",">

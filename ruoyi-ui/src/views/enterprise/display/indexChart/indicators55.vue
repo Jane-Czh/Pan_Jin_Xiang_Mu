@@ -10,25 +10,28 @@
         <div v-if="loading" class="loading-indicator">
             <br><br>加载中...
         </div>
-        <div class="chart-title">
+        <!-- <div class="chart-title">
             <br>
             <br>
-            <h2>SAP管理指标</h2>
+            <h2>月度累计生产人均收入</h2>
+        </div> -->
+        <div>
+            <div id="main" ref="main"></div>
         </div>
-        <div id="main" ref="main"></div>
     </div>
 </template>
 
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment';
-import { getManagementData } from '@/api/enterprise/chartAPI'
+import { getMonthlyProductionAVGIncomeData } from '@/api/enterprise/chartAPI'
 
 export default {
     data() {
         return {
             loading: false,
             data: [],
+            dataBefore: [],
             timeData: {
                 startTime: new Date(),
                 endTime: new Date(),
@@ -46,6 +49,7 @@ export default {
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
 
+
     },
     methods: {
         async initData() {
@@ -53,19 +57,36 @@ export default {
                 this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
-                const res = await getManagementData(this.timeData);
+                const res = await getMonthlyProductionAVGIncomeData(this.timeData);
                 this.data = res.rows
+                const timeDataBefore = this.timeData
+                timeDataBefore.startTime.setFullYear(timeDataBefore.startTime.getFullYear() - 1)
+                timeDataBefore.endTime.setFullYear(timeDataBefore.endTime.getFullYear() - 1)
+                const res2 = await getMonthlyProductionAVGIncomeData(timeDataBefore);
+                this.dataBefore = res2.rows
+                this.data.forEach(row => {
+                    this.$set(row, 'monthlyProductionAVGIncomeBefore', '');
+                });
+                this.data.forEach((item, index) => {
+                    let date1 = new Date(item.yearAndMonth)
+                    this.dataBefore.forEach((itemBefore, indexBefore) => {
+                        let newDateBefore = new Date(itemBefore.yearAndMonth)
+                        if (date1.getFullYear() - 1 === newDateBefore.getFullYear() && date1.getMonth() === newDateBefore.getMonth()) {
+                            this.data[index].monthlyProductionAVGIncomeBefore = this.dataBefore[indexBefore].monthlyProductionAVGIncome
+                        }
+                    })
+                });
                 this.loading = false
                 this.updateChart()
             } catch (error) {
                 this.loading = false
+                console.log(error)
             }
         },
         handleDateChange(value) {
             if (value && value[1]) {
                 let endDate = new Date(value[1]);
-                endDate.setMonth(endDate.getMonth() + 1);
-                endDate.setDate(0);
+                endDate.setHours(endDate.getHours() + 13);
                 this.selectedDate[1] = endDate;
             }
             this.initData()
@@ -156,33 +177,24 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: function (params) {
-                    let value = params.value;
-                    if (params.seriesName.includes('%')) {
-                        value += '%';
-                    }
-                    return value;
-                },
-                fontSize: 16,
+                formatter: '{c}',
+                fontSize: 12,
                 rich: {
                     name: {}
                 }
-
             };
             this.option = {
                 title: {
-                    text: '',
+                    text: '月度累计生产人均收入',
                 },
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
-                        type: 'shadow',
+                        type: 'shadow'
                     },
-
                 },
                 legend: {
-                    type: 'scroll',
-                    data: ['SD销售订单有效性考核', 'PP手工创建生产订单比例(%)', 'PP生产订单已收货未报工的比例(%)', 'MES报工不及时率比率(%)', 'QM外检业务不及时率(%)', 'MM采购订单交货不及时的比例(%)', 'MM手工创建采购订单比例(%)', 'MM未清采购申请', 'FICO月度标准价格与周期单位价格综合差异率(%)', '跨月生产订单比例(%)', 'PM维修订单完工不及时率(%)']
+                    data: ['收入', '同期收入'],
                 },
                 toolbox: {
                     show: true,
@@ -191,7 +203,7 @@ export default {
                     top: 'center',
                     feature: {
                         mark: { show: true, },
-                        // dataView: { show: true, readOnly: false, title: '数据视图' },
+                        dataView: { show: true, readOnly: false, title: '数据视图' },
                         magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
                         restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
@@ -211,107 +223,26 @@ export default {
                 ],
                 series: [
                     {
-                        name: 'SD销售订单有效性考核',
-                        type: 'stack',
+                        name: '收入',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        data: this.data.map(item => item.sdSalesordervalidity),
+                        data: this.data.map(item => item.monthlyProductionAVGIncome),
                     },
                     {
-                        name: 'PP手工创建生产订单比例(%)',
-                        type: 'stack',
+                        name: '同期收入',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        data: this.data.map(item => item.ppManualpocreationratio),
-                    },
-                    {
-                        name: 'PP生产订单已收货未报工的比例(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.ppDeliveredunreportedratio),
-                    },
-                    {
-                        name: 'MES报工不及时率比率(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.mesLateworkreportingrate),
-                    },
-                    {
-                        name: 'QM外检业务不及时率(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.qmExternalinspectiondelay),
-                    },
-                    {
-                        name: 'MM采购订单交货不及时的比例(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.mmPurchaseorderlatedelivery),
-                    },
-                    {
-                        name: 'MM手工创建采购订单比例(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.mmManualpocreation),
-                    },
-                    {
-                        name: 'MM未清采购申请',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.mmUnsettledpurchaserequests),
-                    },
-                    {
-                        name: 'FICO月度标准价格与周期单位价格综合差异率(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.ficoMonthlystandardpricevariation),
-                    },
-                    {
-                        name: '跨月生产订单比例(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.crossMonthProductionOrders),
-                    },
-                    {
-                        name: 'PM维修订单完工不及时率(%)',
-                        type: 'stack',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.pmLatemaintenanceordercompletion),
+                        data: this.data.map(item => item.monthlyProductionAVGIncomeBefore),
                     }]
             };
-
             this.option && this.myChart.setOption(this.option);
+
             this.myChart.on('magictypechanged', (params) => {
                 var magicType = params.currentType;
                 if (magicType == 'line') {
@@ -323,30 +254,22 @@ export default {
                 }
             });
         },
+        // defaultMonth() {
+        //     const currentDate = new Date();
+        //     const currentYear = currentDate.getFullYear();
+        //     const currentMonth = currentDate.getMonth() + 1;
+        //     const startDate = new Date(currentYear, 0, 1);
+        //     const endDate = new Date(currentYear, currentMonth, 0);
+        //     this.selectedDate = [startDate, endDate];
+        // },
         defaultMonth() {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth();
-            const startDate = new Date(currentYear, currentMonth - 1, 1);
+            const currentMonth = currentDate.getMonth() + 1;
+            const startDate = new Date(currentYear, 0, 1);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
-            console.log(this.selectedDate)
         },
-        // formatData() {
-        //     this.chartData = this.data.rows.map(rows => {
-        //         const month = rows.Year_And_Month;
-        //         const resultData = rows.resultData.split(',');
-        //         return {
-        //             month,
-        //             mechanical: parseInt(resultData[0].split(':')[1]),
-        //             pneumatic: parseInt(resultData[1].split(':')[1]),
-        //             hydraulic: parseInt(resultData[2].split(':')[1]),
-        //             electrical: parseInt(resultData[3].split(':')[1]),
-        //         };
-
-        //     });
-        // }
-
     },
 
 
@@ -373,7 +296,7 @@ export default {
 
 .chart-title {
     position: absolute;
-    left: 28%;
+    left: 27%;
     /* 水平位置，基于容器的% */
     // top: 50%;
     /* 垂直位置，基于容器的% */
@@ -382,6 +305,8 @@ export default {
     margin-bottom: 10px;
     /* 为标题添加底部边距 */
     font-size: 14px;
+    font-weight: 900;
+    /* 或者使用 font-weight: 700; */
 }
 
 .loading-indicator {

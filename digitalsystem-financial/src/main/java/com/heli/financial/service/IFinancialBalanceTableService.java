@@ -111,4 +111,16 @@ public interface IFinancialBalanceTableService {
     public int deleteFinancialBalanceTableByFbId(Long fbId);
 
 
+    Date selectMinYearAndMonth();
+
+    boolean checkReceivablesDataIsExisted(Date lastYearAndMonth);
+
+    double selectReceivablesByDate(Date lastYearAndMonth);
+
+
+    int countMonthDataNumber(Date yearAndMonth);
+
+    double countReceivablesByYear(Date yearAndMonth);
+
+    int updateBalanceTableTurnoverRateReceivable(FinancialBalanceTable balanceTable);
 }

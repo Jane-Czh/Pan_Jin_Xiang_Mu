@@ -22,6 +22,11 @@ public class FinancialDailyInProgressTableServiceImpl implements IFinancialDaily
     private FinancialDailyInProgressTableMapper financialDailyInProgressTableMapper;
 
     @Override
+    public FinancialDailyInProgressTable selectNewDateDailyInProgress() {
+        return financialDailyInProgressTableMapper.selectNewDateDailyInProgress();
+    }
+
+    @Override
     public FinancialDailyInProgressTable selectDailyInProgressSumInfoByMonth(Date yearAndMonth) {
         System.out.println("111"+financialDailyInProgressTableMapper.selectDailyInProgressSumInfoByMonth(yearAndMonth));
         return financialDailyInProgressTableMapper.selectDailyInProgressSumInfoByMonth(yearAndMonth);
@@ -100,4 +105,6 @@ public class FinancialDailyInProgressTableServiceImpl implements IFinancialDaily
     public int deleteFinancialDailyInProgressTableById(Long id) {
         return financialDailyInProgressTableMapper.deleteFinancialDailyInProgressTableById(id);
     }
+
+
 }

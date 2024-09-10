@@ -27,6 +27,9 @@
           v-hasPermi="['financial:balance:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-button type="warning" plain icon="el-icon-refresh" size="mini" @click="handleRefresh">更新</el-button>
+      </el-col>
+      <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" size="mini" plain @click="showDialog = true" v-if="true"
           v-hasPermi="['financial:balance:import']">导入Excel
@@ -69,7 +72,7 @@
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id(主键)" align="center" prop="fbId" /> -->
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="100"
+      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="100"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
@@ -249,7 +252,7 @@
 </template>
 
 <script>
-import { listBalance, getBalance, delBalance, addBalance, updateBalance } from "@/api/financial/balance";
+import { listBalance, getBalance, delBalance, addBalance, updateBalance, refreshBalance } from "@/api/financial/balance";
 import { numValidator } from '@/api/financial/numValidator.js';
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
 
@@ -522,6 +525,13 @@ export default {
       this.open = true;
       this.title = "新增";
     },
+    //更新按钮
+    handleRefresh() {
+      refreshBalance().then(response => {
+        this.$modal.msgSuccess("更新成功");
+        this.getList();
+      });
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -610,16 +620,14 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            // this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
             this.isLoading = false;
+            // this.$message.error("上传失败，请重试");
           });
 
       }

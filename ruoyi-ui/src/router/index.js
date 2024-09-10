@@ -196,6 +196,24 @@ export const constantRoutes = [
         meta: { title: '指标53：日清日洁考核得分' }
       },
       {
+        path: 'indicators54',
+        component: () => import('@/views/enterprise/display/indexChart/indicators54'),
+        name: 'Indicators54',
+        meta: { title: '指标54：累计人均收入' }
+      },
+      {
+        path: 'indicators55',
+        component: () => import('@/views/enterprise/display/indexChart/indicators55'),
+        name: 'Indicators55',
+        meta: { title: '指标55：月度累计生产人均收入' }
+      },
+      {
+        path: 'indicators56',
+        component: () => import('@/views/enterprise/display/indexChart/indicators56'),
+        name: 'Indicators56',
+        meta: { title: '指标56：月度累计职能人均收入' }
+      },
+      {
         path: 'indicators101',
         component: () => import('@/views/enterprise/display/indexChart/indicators101'),
         name: 'Indicators101',

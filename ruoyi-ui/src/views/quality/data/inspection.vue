@@ -120,7 +120,7 @@
     <!-- 添加或修改质检部分字段对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="230px">
-        <el-form-item label="日期" prop="yearAndMonth">
+        <el-form-item fixed label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM" placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
@@ -437,15 +437,13 @@ export default {
             // 处理上传成功的情况
             this.$message.success("上传成功");
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
+            // this.$message.error("上传失败，请重试");
             this.isLoading = false;
           });
       }

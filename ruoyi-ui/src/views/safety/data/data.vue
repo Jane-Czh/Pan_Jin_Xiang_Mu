@@ -92,7 +92,7 @@
     <!-- 添加或修改[安全环保]指标填报对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="190px">
-        <el-form-item label="日期" prop="yearAndMonth">
+        <el-form-item fixed label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
@@ -366,19 +366,25 @@ export default {
         uploadFile(formData, aimUrl)
           .then(data => {
             // 处理上传成功的情况
-            this.$message.success("上传成功");
+            this.$message({
+              message: "上传成功",
+              type: "success",
+              duration: 3000 // 设置消息停留时间为5秒
+            });
             this.getList();
+            this.showDialog = false;
+            this.isLoading = false;
           })
           .catch(error => {
             // 处理上传失败的情况
             console.error('上传失败：', error);
-            this.$message.error("上传失败，请重试");
-          })
-          .finally(() => {
-            // 无论成功或失败，都关闭上传面板
-            this.showDialog = false;
             this.isLoading = false;
-          });
+          })
+        // .finally(() => {
+        //   // 无论成功或失败，都关闭上传面板
+        //   this.showDialog = false;
+        //   this.isLoading = false;
+        // });
       }
     },
 

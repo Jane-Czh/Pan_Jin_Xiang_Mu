@@ -228,30 +228,27 @@ export default {
           growthRateInventory: resBalanceRate && resBalanceRate.data ? resBalanceRate.data.growthRateInventory : '',
           turnoverRateReceivable: resBalanceRate && resBalanceRate.data ? resBalanceRate.data.turnoverRateReceivable : ''
         };
-        console.log('++++++++++++++++++++++++++')
-        console.log(resBalanceRateDataNeededFields)
-
 
         //截至日期展示
         this.allIndex.forEach(item => {
           if (item.kind === 'balanceRate') {
-            item.date = resBalanceRate && resBalanceRate.data ? moment(resBalanceRate.data.yearAndMonth).format('YYYY-MM') : '';
+            item.date = resBalanceRate && resBalanceRate.data ? moment(resBalanceRate.data.yearAndMonth).format('YYYY-MM') : '-';
           }
           else if (item.kind === 'interestNew') {
-            item.date = resInterestNew && resInterestNew.data ? moment(resInterestNew.data.yearAndMonth).format('YYYY-MM') : '';
+            item.date = resInterestNew && resInterestNew.data ? moment(resInterestNew.data.yearAndMonth).format('YYYY-MM') : '-';
           }
 
           else if (item.kind === 'monthNew') {
-            item.date = resMonthNew && resMonthNew.data ? moment(resMonthNew.data.yearAndMonth).format('YYYY-MM') : '';
+            item.date = resMonthNew && resMonthNew.data ? moment(resMonthNew.data.yearAndMonth).format('YYYY-MM') : '-';
           }
           else if (item.kind === 'balance') {
-            item.date = resBalanceNew && resBalanceNew.data ? moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') : '';
+            item.date = resBalanceNew && resBalanceNew.data ? moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') : '-';
           } else if (item.kind === 'interests') {
-            item.date = resInterestSum && resInterestSum.data ? moment(resInterestSum.data.yearAndMonth).format('YYYY-MM') : '';
+            item.date = resInterestSum && resInterestSum.data ? moment(resInterestSum.data.yearAndMonth).format('YYYY-MM') : '-';
           } else if (item.kind === 'day') {
-            item.date = resDaySum && resDaySum.data ? resDaySum.data.dataTime : '';
+            item.date = resDaySum && resDaySum.data ? resDaySum.data.dataTime : '-';
           } else {
-            item.date = resMonthSum && resMonthSum.data ? moment(resMonthSum.data.yearAndMonth).format('YYYY-MM') : '';
+            item.date = resMonthSum && resMonthSum.data ? moment(resMonthSum.data.yearAndMonth).format('YYYY-MM') : '-';
           }
         });
 
@@ -283,27 +280,27 @@ export default {
         // 更新 allIndex 数组中每个元素的 content 字段
         this.allIndex.forEach(item => {
           if (item.id === '30') {
-            item.content = `最新一月：${allNewData[item.sum] !== undefined ? allNewData[item.sum] : ''}`;
+            item.content = `最新一月：${allNewData[item.sum] !== undefined ? allNewData[item.sum] : '-'}`;
           }
           else if (item.id === '70') {
-            item.content = `当月总计：${allData[item.sum] || ''}\t(元)`;
+            item.content = `最近一日：${allData[item.sum] || '-'}\t(元)`;
           }
           else {
             const key = item.sum;
             if (item.id === '4' || item.id === '5') {
-              item.content = `全年总计：${allData[key] || ''}\t(台)`;
+              item.content = `全年总计：${allData[key] || '-'}\t(台)`;
             }
             else if (allData[key] !== undefined && item.showType == "SUM") {
-              item.content = `全年总计：${allData[key] || ''}\t(万元)`;
+              item.content = `全年总计：${allData[key] || '-'}\t(万元)`;
             }
             else if (allNewData[key] !== undefined && item.showType == "NEW") {
               if (item.id === '32' || item.id === '33' || item.id === '34' || item.id === '35' || item.id === '36') {
-                item.content = `最新一月：${allNewData[key] || ''}\t(次)`;
+                item.content = `最新一月：${allNewData[key] || '-'}\t(次)`;
               } else if (item.id === '66') {
-                item.content = `最新一月：${allNewData[key] || ''}\t(项)`;
+                item.content = `最新一月：${allNewData[key] || '-'}\t(项)`;
               }
               else {
-                item.content = `最新一月：${allNewData[key] || ''}\t(万元)`;
+                item.content = `最新一月：${allNewData[key] || '-'}\t(万元)`;
               }
             }
             // else if (item.id === '32' || item.id === '33' || item.id === '34' || item.id === '35' || item.id === '36') {

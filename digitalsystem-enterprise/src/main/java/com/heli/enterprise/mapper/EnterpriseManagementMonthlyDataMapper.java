@@ -144,4 +144,6 @@ public interface EnterpriseManagementMonthlyDataMapper {
     boolean checkEMSalaryFillDataIsExisted(Date yearAndMonth);
 
     boolean checkEMMonthlyDataSalaryIsExisted(Date yearAndMonth);
+
+    int selectAllEmployeeNumbers();
 }

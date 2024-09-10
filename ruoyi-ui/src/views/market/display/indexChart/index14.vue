@@ -205,7 +205,10 @@ app.config = {
       align: app.config.align,
       verticalAlign: app.config.verticalAlign,
       position: app.config.position,
-      distance: app.config.distance
+      distance: app.config.distance,
+        formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
+  }
     };
     myChart.setOption({
       series: [
@@ -232,7 +235,10 @@ const labelOption = {
   align: app.config.align,
   verticalAlign: app.config.verticalAlign,
   rotate: app.config.rotate,
-  formatter: '{c}  {name|{a}}',
+  // formatter: '{c}  {name|{a}}',
+   formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
+  },
   fontSize: 16,
   rich: {
     name: {}
@@ -277,7 +283,7 @@ this.result.forEach(function (item) {
         item.minEntity.forEach(function (minEntity) {
             if (minEntity.branch === legendItem) {
                 // 找到了匹配的 branch，则将其对应的 number 添加到 data 数组中
-                data.push(minEntity.number);
+                data.push(minEntity.proportion);
                 found = true;
             }
         });
@@ -339,9 +345,12 @@ option = {
       data: xAxisData
     }
   ],
-  yAxis: [
+ yAxis: [
     {
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}%' // 在Y轴标签上显示百分比
+      }
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {

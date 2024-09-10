@@ -234,6 +234,9 @@ const labelOption = {
   rotate: app.config.rotate,
   formatter: '{c}  {name|{a}}',
   fontSize: 16,
+     formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
+  },
   rich: {
     name: {}
   }
@@ -344,9 +347,12 @@ option = {
       data: xAxisData
     }
   ],
-  yAxis: [
+   yAxis: [
     {
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}%' // 在Y轴标签上显示百分比
+      }
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {

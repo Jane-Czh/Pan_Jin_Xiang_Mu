@@ -14,19 +14,23 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:monthly:add']">新增</el-button>
+          v-hasPermi="['enterprise:monthly:add']">新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:monthly:edit']">修改</el-button>
+          v-hasPermi="['enterprise:monthly:edit']">修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:monthly:remove']">删除</el-button>
+          v-hasPermi="['enterprise:monthly:remove']">删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-refresh" v-if="!updateLoading" size="mini"
-          @click="handleCacluation" v-hasPermi="['enterprise:monthly:calculation']">更新</el-button>
+          @click="handleCacluation" v-hasPermi="['enterprise:monthly:calculation']">更新
+        </el-button>
         <el-button type="primary" v-if="updateLoading" :loading="true">更新中</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -61,6 +65,12 @@
         </el-button>
       </el-col>
 
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
+          v-hasPermi="['enterprise:monthly:export']">导出
+        </el-button>
+      </el-col>
+
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -69,7 +79,7 @@
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="esId" /> -->
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
+      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
@@ -97,9 +107,11 @@
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:monthly:edit']">修改</el-button>
+            v-hasPermi="['enterprise:monthly:edit']">修改
+          </el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:monthly:remove']">删除</el-button>
+            v-hasPermi="['enterprise:monthly:remove']">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -168,10 +180,23 @@
 </template>
 
 <script>
-import { listMonthData, getMonthData, addMonthData, delMonthData, updateMonthData, calculation } from "@/api/enterprise/data";
+import {
+  listMonthData,
+  getMonthData,
+  addMonthData,
+  delMonthData,
+  updateMonthData,
+  calculation
+} from "@/api/enterprise/data";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorEnableEmpty, numValidator } from '@/api/financial/numValidator.js';
+import {
+  numValidatorEnableEmpty,
+  numValidator,
+  numValidatorEnableEmptyNature,
+  numValidatorOnlyNature
+} from '@/api/financial/numValidator.js';
 import moment from 'moment';
+
 export default {
   name: "Data",
 
@@ -235,13 +260,12 @@ export default {
             required: true, message: "日期不能为空", trigger: "blur"
           }
         ],
-        // employeesNumber: [
-        //   {
-        //     required: true,
-        //     validator: numValidator,
-        //     trigger: "blur",
-        //   }
-        // ],
+        employeesNumber: [
+          {
+            validator: numValidatorEnableEmptyNature,
+            trigger: "blur",
+          }
+        ],
         // employeesAvgMonthlyNumber: [
         //   {
         //     required: true,
@@ -266,8 +290,8 @@ export default {
         ],
         employeesNumberCurrentMonth: [
           {
-            required: true,
-            validator: numValidator,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur",
           }
         ],
@@ -295,7 +319,7 @@ export default {
         ],
         productionInternNumbers: [
           {
-            validator: numValidatorEnableEmpty,
+            validator: numValidatorEnableEmptyNature,
             trigger: "blur",
           }
         ],
@@ -484,7 +508,8 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => { });
+      }).catch(() => {
+      });
     },
     /** 导入按钮 */
 
@@ -564,17 +589,16 @@ export default {
               // 处理上传成功的情况0.
               this.$message.success("上传成功");
               this.getList();
+              this.showDialog = false;
+              this.isLoading = false;
             })
             .catch(error => {
               // 处理上传失败的情况
               console.error('上传失败：', error);
-              this.$message.error("上传失败，请重试");
-            })
-            .finally(() => {
-              // 无论成功或失败，都关闭上传面板
-              this.showDialog = false;
+              // this.$message.error("上传失败，请重试");
               this.isLoading = false;
-            });
+            })
+            ;
         } else {
           let nowDate = moment(yearAndMonth).format("YYYY-MM");
 
@@ -587,21 +611,25 @@ export default {
                 // 处理上传成功的情况0.
                 this.$message.success("上传成功");
                 this.getList();
+                this.showDialog = false;
+                this.isLoading = false;
               })
               .catch(error => {
                 // 处理上传失败的情况
                 console.error('上传失败：', error);
-                this.$message.error("上传失败，请重试");
-              })
-              .finally(() => {
-                // 无论成功或失败，都关闭上传面板
-                this.showDialog = false;
+                // this.$message.error("上传失败，请重试");
                 this.isLoading = false;
-              });
+              })
           });
         }
 
       }
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('enterprise/data/monthly/export', {
+        ...this.queryParams
+      }, `企业管理月度数据_${new Date().getTime()}.xlsx`)
     },
   }
 };

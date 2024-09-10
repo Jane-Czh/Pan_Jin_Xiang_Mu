@@ -100,4 +100,7 @@ public interface FinancialInterestsTableMapper {
     public int deleteFinancialInterestsTableByFiIds(Long[] fiIds);
 
 
+    Integer countMonthDataNumber(Date yearAndMonth);
+
+    double countOperatingRevenueByYear(Date yearAndMonth);
 }

@@ -11,13 +11,17 @@
   
 
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
+            <!-- <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
+                start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
+                @change="handleDateChange" >
+            </el-date-picker> -->
+              <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange" >
             </el-date-picker>
-
+<!-- 
             <el-input v-model.number="numberInput" placeholder="请输入订单总台数" style="width: 200px;"></el-input>
-            <el-button type="primary" @click="handleConfirm">确定</el-button>
+            <el-button type="primary" @click="handleConfirm">确定</el-button> -->
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
         <div id="main" ref="main"></div>
@@ -183,12 +187,6 @@ export default {
         },
         handleDateChange(val) {
             console.log(val, 'val')
-        //     if (value && value[1]) {
-        // let endDate = new Date(value[1]);
-        // endDate.setMonth(endDate.getMonth() + 1);
-        // endDate.setDate(0);
-        // this.selectedDate[1] = endDate;
-      // }
             this.initData()
         },
       updateChart() {
@@ -292,10 +290,12 @@ const labelOption = {
   align: app.config.align,
   verticalAlign: app.config.verticalAlign,
   rotate: app.config.rotate,
-  formatter: '{c}  {name|{a}}',
   fontSize: 16,
   rich: {
     name: {}
+  },
+   formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
   }
 };
 
@@ -411,7 +411,10 @@ option = {
   ],
   yAxis: [
     {
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}%' // 在Y轴标签上显示百分比
+      }
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {
@@ -424,6 +427,9 @@ series : this.transposedSeriesData.map( (item,index) => {
           focus: 'series'
       },
       data: item
+      // data: item.map(value => {
+      //    return `${(value * 100).toFixed(2)}%`; // 将每个值转换为百分比并格式化
+      //  })
      }
   })
 };

@@ -665,7 +665,11 @@ export default {
                   name: '接单情况',
                   type: 'pie',
                   radius: '50%',
-                  data: this.orderReceivedTodayData
+                  data: this.orderReceivedTodayData,
+                  label: {
+                    show: true,
+                    formatter: '{b}: {d}%' // 显示名称和百分比
+                  }
               }
           ]
       };
@@ -723,7 +727,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.ordersReceivedThisMonthData
+            data: this.ordersReceivedThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -778,7 +786,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.orderAccumulationThisYearData
+            data: this.orderAccumulationThisYearData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -833,7 +845,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.deliveryTodayData
+            data: this.deliveryTodayData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -888,7 +904,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.deliveryWithinTheSystemThisMonthData
+            data: this.deliveryWithinTheSystemThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -943,7 +963,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.cumulativeSystemDeliveriesForTheYearData
+            data: this.cumulativeSystemDeliveriesForTheYearData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -998,7 +1022,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.issuedThisDayData
+            data: this.issuedThisDayData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -1053,7 +1081,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.issuedThisMonthData
+            data: this.issuedThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };
@@ -1108,7 +1140,11 @@ export default {
             name: '接单情况',
             type: 'pie',
             radius: '50%',
-            data: this.cumulativeIssuedThisMonthData
+            data: this.cumulativeIssuedThisMonthData,
+            label: {
+              show: true,
+              formatter: '{b}: {d}%' // 显示名称和百分比
+            }
           }
         ]
       };

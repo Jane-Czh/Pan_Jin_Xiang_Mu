@@ -40,6 +40,11 @@ public class MarketUnsoldCarServiceImpl implements IMarketUnsoldCarService
         return marketUnsoldCarMapper.selectMarketUnsoldCarByUcId(ucId);
     }
 
+    @Override
+    public List<MarketInventoryCarDetail> selectMarketInventoryCarDetailByType(String type){
+        return marketUnsoldCarMapper.selectMarketInventoryCarDetailByType(type);
+    }
+
     /**
      * 查询统计库存车数量列表
      * 

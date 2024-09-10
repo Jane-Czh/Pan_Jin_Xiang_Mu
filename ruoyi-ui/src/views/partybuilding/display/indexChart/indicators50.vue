@@ -157,7 +157,7 @@ export default {
       };
       this.option = {
         title: {
-          text: '党建月度考核排名',
+          text: '党建月度考核分数',
         },
         tooltip: {
           trigger: 'axis',

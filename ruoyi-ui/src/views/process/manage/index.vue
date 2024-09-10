@@ -575,13 +575,15 @@ import { saveAs } from "file-saver";
 import { Loading } from "element-ui";
 import { listDept } from "@/api/system/project";
 
-import { computerExcel } from  "@/views/file/filemanagement"
+import { Filemanagement } from  "@/views/file/filemanagement"
+import { mapState } from 'vuex';
 
 export default {
   name: "Project",
   inject: ["reload"],
   data() {
     return {
+      exportedData: [], // 用于存储从制度页面获取的数据
       modules: [], //过滤后 业务模块 数据
       modulesList: [], //全部的 业务模块 数据
       subBusinessesList: [], //获取的全部的业务列表
@@ -758,16 +760,18 @@ export default {
   components: {
     ShowPanel,
     EditPanel,
-    computerExcel,
+    Filemanagement,
   },
 
   mounted() {
+    console.log("Setting up EventBus listener for exportAllResult");
+    this.exportedData = this.$store.state.exportData.exportedData;
+    console.log("Received exported data:", this.exportedData);
     //获取当前用户信息
     this.getList();
     this.getDeptList();
   },
   created() {
-
   },
 
   methods: {
@@ -792,9 +796,8 @@ export default {
     },
     //流程信息导出
     exportAll() {
-
       // computerExcel.exportAllCombined();
-
+      // Filemanagement.exportAll();
       const loadingInstance = Loading.service({
         lock: true,
         text: "正在导出，请稍后...",

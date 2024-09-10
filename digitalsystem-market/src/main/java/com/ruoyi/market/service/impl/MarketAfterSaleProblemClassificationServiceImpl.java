@@ -46,7 +46,9 @@ public class MarketAfterSaleProblemClassificationServiceImpl implements IMarketA
 //        HashMap<String, HashMap<String,List<MarketAfterSaleLedger>>> hashMap = new HashMap<>();
         i = 0;
         while (i < marketAfterSaleLedgers.size()){
-            String Vehicle_Model = StringUtils.getPrefix(marketAfterSaleLedgers.get(i).getVehicleModel());
+//            String Vehicle_Model = StringUtils.getPrefix(marketAfterSaleLedgers.get(i).getVehicleModel());
+            String Vehicle_Model = marketAfterSaleLedgers.get(i).getVehicleModel();
+
             if (!hashMap.containsKey(Vehicle_Model)){
                 //hashmap中不存在当前车型
                 List<MarketAfterSaleLedger> marketAfterSaleLedgers1 = new ArrayList<>();

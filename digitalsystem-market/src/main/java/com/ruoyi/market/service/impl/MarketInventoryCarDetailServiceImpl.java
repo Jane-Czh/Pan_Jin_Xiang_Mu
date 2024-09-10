@@ -51,21 +51,6 @@ public class MarketInventoryCarDetailServiceImpl implements IMarketInventoryCarD
 
             //获取表格数据
             List<MarketInventoryCarDetail> marketInventoryCarDetails = ExcelUtils.parseExcel2MarketInventoryCarDetail(excelFile);
-
-            //先删除数据库中所有数据
-//            List<MarketInventoryCarDetail> need_delete = selectMarketInventoryCarDetailList(marketInventoryCarDetail);
-//            if (need_delete.size() > 0){
-//                //有需要删除的内容
-//                int x = 0;
-//                Long[] deleteId = new Long[need_delete.size()];
-//                while (x < need_delete.size()){
-//                    MarketInventoryCarDetail value = need_delete.get(x);
-//                    deleteId[x] = value.getMicdId();
-//                    x++;
-//                }
-//                deleteMarketInventoryCarDetailByMicdIds(deleteId);
-//
-//            }
             marketInventoryCarDetailMapper.deleteAll();
             System.out.println("删除成功");
 

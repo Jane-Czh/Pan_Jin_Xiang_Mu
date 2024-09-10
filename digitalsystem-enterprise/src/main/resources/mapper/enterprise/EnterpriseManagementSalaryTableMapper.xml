@@ -93,21 +93,35 @@
 
     <!--  批量插入数据库  -->
     <insert id="batchInsertSalaryTable" parameterType="java.util.List">
-        insert into Enterprise_Management_Salary_Table(Salary_Calculation_Year_Month,Employee_Id,Name,Position,Department,Fourth_Level_Org_Name,
-        Group_Code,Subgroup_Code,Other_Bonuses,Overtime_Salary,Total_Salary,Salary_Table_Index,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
+        insert into Enterprise_Management_Salary_Table(Employee_Id,Name,Position,Department,Fourth_Level_Org_Name,
+        Group_Code,Subgroup_Code,Other_Bonuses,Overtime_Salary,Total_Salary)
         VALUES
         <foreach collection="salaryTableList" item="item" separator=",">
-            (#{item.salaryCalculationYearMonth},#{item.employeeId},#{item.name},#{item.position},#{item.department},#{item.fourthLevelOrgName},
-             #{item.groupCode},#{item.subgroupCode},#{item.otherBonuses},#{item.overtimeSalary},#{item.totalSalary},#{item.salaryTableIndex},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+            (#{item.employeeId},#{item.name},#{item.position},#{item.department},#{item.fourthLevelOrgName},
+             #{item.groupCode},#{item.subgroupCode},#{item.otherBonuses},#{item.overtimeSalary},#{item.totalSalary})
         </foreach>
         ON DUPLICATE KEY UPDATE
-        Salary_Calculation_Year_Month = values(Salary_Calculation_Year_Month),Employee_Id = values(Employee_Id),
+        Employee_Id = values(Employee_Id),
         Name = values(Name),Position = values(Position),Department = values(Department),Fourth_Level_Org_Name = values(Fourth_Level_Org_Name),Group_Code = values(Group_Code),
-        Subgroup_Code = values(Subgroup_Code),Other_Bonuses = values(Other_Bonuses),Overtime_Salary = values(Overtime_Salary),Total_Salary = values(Total_Salary),
-        Salary_Table_Index = values(Salary_Table_Index),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),
-        UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)
-
+        Subgroup_Code = values(Subgroup_Code),Other_Bonuses = values(Other_Bonuses),Overtime_Salary = values(Overtime_Salary),Total_Salary = values(Total_Salary)
     </insert>
+
+<!--    <insert id="batchInsertSalaryTable" parameterType="java.util.List">-->
+<!--        insert into Enterprise_Management_Salary_Table(Salary_Calculation_Year_Month,Employee_Id,Name,Position,Department,Fourth_Level_Org_Name,-->
+<!--        Group_Code,Subgroup_Code,Other_Bonuses,Overtime_Salary,Total_Salary,Salary_Table_Index,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)-->
+<!--        VALUES-->
+<!--        <foreach collection="salaryTableList" item="item" separator=",">-->
+<!--            (#{item.salaryCalculationYearMonth},#{item.employeeId},#{item.name},#{item.position},#{item.department},#{item.fourthLevelOrgName},-->
+<!--            #{item.groupCode},#{item.subgroupCode},#{item.otherBonuses},#{item.overtimeSalary},#{item.totalSalary},#{item.salaryTableIndex},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})-->
+<!--        </foreach>-->
+<!--        ON DUPLICATE KEY UPDATE-->
+<!--        Salary_Calculation_Year_Month = values(Salary_Calculation_Year_Month),Employee_Id = values(Employee_Id),-->
+<!--        Name = values(Name),Position = values(Position),Department = values(Department),Fourth_Level_Org_Name = values(Fourth_Level_Org_Name),Group_Code = values(Group_Code),-->
+<!--        Subgroup_Code = values(Subgroup_Code),Other_Bonuses = values(Other_Bonuses),Overtime_Salary = values(Overtime_Salary),Total_Salary = values(Total_Salary),-->
+<!--        Salary_Table_Index = values(Salary_Table_Index),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),-->
+<!--        UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)-->
+
+<!--    </insert>-->
 
 
     <!--  清空数据库  -->

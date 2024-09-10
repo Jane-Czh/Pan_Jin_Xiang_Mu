@@ -44,6 +44,19 @@ public class EnterpriseManagementMonthlyDataController extends BaseController {
     }
 
     /**
+     * 导出[企业管理]指标月度数据列表
+     */
+    @PreAuthorize("@ss.hasPermi('enterprise:monthly:export')")
+    @Log(title = "[企业管理]指标月度数据", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, EnterpriseManagementMonthlyData enterpriseManagementMonthlyData) {
+        List<EnterpriseManagementMonthlyData> list = enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataList(enterpriseManagementMonthlyData);
+        ExcelUtil<EnterpriseManagementMonthlyData> util = new ExcelUtil<EnterpriseManagementMonthlyData>(EnterpriseManagementMonthlyData.class);
+        util.exportExcel(response, list, "企管月度数据");
+    }
+
+
+    /**
      * 查询[企业管理]指标月度数据列表
      */
     @PreAuthorize("@ss.hasPermi('enterprise:monthly:list')")

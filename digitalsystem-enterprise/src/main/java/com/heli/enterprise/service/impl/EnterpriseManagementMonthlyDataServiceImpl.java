@@ -65,12 +65,15 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
     public int countEmployeesNumber(Date yearAndMonth) {
         int internNumbers = enterpriseManagementMonthlyDataMapper.selectInternNumbers();
         int employeeNumbers = enterpriseManagementMonthlyDataMapper.selectFrontLineEmployeeNumbers();
+        int allNumbers = enterpriseManagementMonthlyDataMapper.selectAllEmployeeNumbers();
         EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
         monthlyData.setEmployeesNumber((long) employeeNumbers);
         monthlyData.setProductionInternNumbers((long) internNumbers);
+        monthlyData.setEmployeesNumberCurrentMonth((long) allNumbers);
         monthlyData.setYearAndMonth(yearAndMonth);
-        log.info("当月一线员工总数："+employeeNumbers);
-        log.info("当月生产实习生人数："+internNumbers);
+        log.info("当月一线员工总数：" + employeeNumbers);
+        log.info("当月生产实习生人数：" + internNumbers);
+        log.info("当月从业人数：" + allNumbers);
         return enterpriseManagementMonthlyDataMapper.insertOrUpdateEmployeesData(monthlyData);
     }
 
@@ -81,7 +84,7 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      **/
     @Override
     public int calculateEmployeesNumber(Date yearAndMonth) {
-        if (!enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(yearAndMonth)){
+        if (!enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(yearAndMonth)) {
             return 0;
         }
         EnterpriseManagementMonthlyData enterpriseManagementMonthlyData = enterpriseManagementMonthlyDataMapper.selectMonthDateByDate(yearAndMonth);
@@ -116,7 +119,7 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      * @date: 2024/8/6 0:27
      **/
     public int calculateSalaryFillNumber(Date yearAndMonth) {
-        if (!enterpriseManagementMonthlyDataMapper.checkEMSalaryFillDataIsExisted(yearAndMonth)){
+        if (!enterpriseManagementMonthlyDataMapper.checkEMSalaryFillDataIsExisted(yearAndMonth)) {
             return 0;
         }
         EnterpriseManagementMonthlyData enterpriseManagementMonthlyData = enterpriseManagementMonthlyDataMapper.selectMonthDateByDate(yearAndMonth);
@@ -131,14 +134,14 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
 
             if (monthlySalary != null) {
                 enterpriseManagementMonthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
-            }else {
+            } else {
                 enterpriseManagementMonthlyData.setMonthlySalaryRatio(null);
             }
 
             if (enterpriseManagementMonthlyDataMapper.countMonthSalaryFillDataNumber(yearAndMonth) == DateUtils.getMonth(yearAndMonth)) {
                 BigDecimal salaryFillNumberByYear = enterpriseManagementMonthlyDataMapper.countSalaryFillNumberByYear(yearAndMonth);
                 enterpriseManagementMonthlyData.setAnnualSalaryRatio(salaryFillNumberByYear.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
-            }else {
+            } else {
                 enterpriseManagementMonthlyData.setAnnualSalaryRatio(null);
             }
 
@@ -159,12 +162,12 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
 
         // 统计当月人均收入
         BigDecimal monthlyAvgIncome = enterpriseManagementMonthlyDataMapper.selectMonthlyCumulativeAverageIncome();
-        log.info("当月人均收入"+monthlyAvgIncome);
+        log.info("当月人均收入" + monthlyAvgIncome);
         monthlyData.setMonthlyCumulativeAverageIncome(monthlyAvgIncome);
 
         // 统计当月生产人均收入
         BigDecimal monthlyProductionAverageIncome = enterpriseManagementMonthlyDataMapper.selectMonthlyProductionAverageIncome();
-        log.info("当月生产人均收入"+monthlyProductionAverageIncome);
+        log.info("当月生产人均收入" + monthlyProductionAverageIncome);
         monthlyData.setMonthlyProductionAvgIncome(monthlyProductionAverageIncome);
 
         // 统计当月职能人均收入
@@ -175,10 +178,10 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         // 统计当月职能人均加班费o
         BigDecimal overtimeCost = enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOvertimeCost();
         BigDecimal otherBonuses = enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOtherBonuses();
-        log.info("当月职能人均加班费" + overtimeCost +"其他奖金"+ otherBonuses);
+        log.info("当月职能人均加班费" + overtimeCost + "其他奖金" + otherBonuses);
         monthlyData.setFunctionalDeptOvertimeCost(overtimeCost.add(otherBonuses));
 
-        log.info("统计-"+DateUtils.getMonth(date)+"月工资表中相关数据：" + monthlyData);
+        log.info("统计-" + DateUtils.getMonth(date) + "月工资表中相关数据：" + monthlyData);
 
         enterpriseManagementMonthlyDataMapper.updateCalculateSalaryDataByMonth(monthlyData);
     }
@@ -190,7 +193,7 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      **/
     @Override
     public int calculateMonthlyDataSalary(Date yearAndMonth) {
-        if (!enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataSalaryIsExisted(yearAndMonth)){
+        if (!enterpriseManagementMonthlyDataMapper.checkEMMonthlyDataSalaryIsExisted(yearAndMonth)) {
             return 0;
         }
 
@@ -204,15 +207,15 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         if (monthDataNumber == DateUtils.getMonth(yearAndMonth)) {
 
             BigDecimal cumulativeAverageIncome = enterpriseManagementMonthlyDataMapper.selectCumulativeAverageIncome(yearAndMonth);
-            log.info("累计人均收入"+cumulativeAverageIncome);
+            log.info("累计人均收入" + cumulativeAverageIncome);
             enterpriseManagementMonthlyData.setCumulativeAverageIncome(cumulativeAverageIncome);
 
             BigDecimal productionAVGIncome = enterpriseManagementMonthlyDataMapper.selectProductionAVGIncome(yearAndMonth);
-            log.info("累计生产人均收入"+productionAVGIncome);
+            log.info("累计生产人均收入" + productionAVGIncome);
             enterpriseManagementMonthlyData.setProductionAvgIncome(productionAVGIncome);
 
             BigDecimal functionalAVGIncome = enterpriseManagementMonthlyDataMapper.selectFunctionalAVGIncome(yearAndMonth);
-            log.info("累计职能人均收入"+functionalAVGIncome);
+            log.info("累计职能人均收入" + functionalAVGIncome);
             enterpriseManagementMonthlyData.setFunctionalAvgIncome(functionalAVGIncome);
         } else {
             enterpriseManagementMonthlyData.setCumulativeAverageIncome(null);
@@ -231,10 +234,10 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
      * @date: 2024/8/7 0:27
      **/
     @Override
-    public int calculationAllData(){
+    public int calculationAllData() {
         Date maxMonth = enterpriseManagementMonthlyDataMapper.selectMaxMonthFromMonthData();
         Date minMonth = enterpriseManagementMonthlyDataMapper.selectMinMonthFromMonthData();
-        int i=0;
+        int i = 0;
         //循环从start Time，到endTime
         for (Date date = minMonth; date.before(DateUtils.getNextMonth(maxMonth)); date = DateUtils.getNextMonth(date)) {
             log.info("当前计算的月份为：" + date);
@@ -250,8 +253,6 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         }
         return i;
     }
-
-
 
 
     @Override
@@ -270,14 +271,13 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         }
 
 
-
         if (!enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(yearAndMonth) || !enterpriseManagementMonthlyDataMapper.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(yearAndMonth))) {
             return 0;
         }
 
         EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
         if (!enterpriseManagementAnnualDataService.checkEMAnnualDataIsExisted(DateUtils.getYear(yearAndMonth))) {
-            System.out.println("year"+DateUtils.getYear(yearAndMonth));
+            System.out.println("year" + DateUtils.getYear(yearAndMonth));
             return 0;
         }
 
@@ -323,14 +323,14 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         BigDecimal allIncome = enterpriseManagementMonthlyDataMapper.selectAnnualAllIncome(date);
         int countEmployeesNumberByYear = enterpriseManagementMonthlyDataMapper.selectCountEmployeesNumberByYear(date);
         int monthsByYear = enterpriseManagementMonthlyDataMapper.selectCountMonthsByYear(date);
-        log.info("当年工资总额"+allIncome +"年度总人工数");
+        log.info("当年工资总额" + allIncome + "年度总人工数");
         monthlyData.setCumulativeAverageIncome(allIncome.divide(BigDecimal.valueOf(countEmployeesNumberByYear), 2, ROUND_HALF_UP)
                 .divide(BigDecimal.valueOf(monthsByYear), 2, ROUND_HALF_UP));
-        System.out.println("当前月份："+BigDecimal.valueOf(DateUtils.getMonth(date)));
+        System.out.println("当前月份：" + BigDecimal.valueOf(DateUtils.getMonth(date)));
 
         // 当月生产人均收入
         BigDecimal monthlyProductionAverageIncome = enterpriseManagementMonthlyDataMapper.selectMonthlyProductionAverageIncome(date);
-        log.info("当月生产人均收入"+monthlyProductionAverageIncome);
+        log.info("当月生产人均收入" + monthlyProductionAverageIncome);
         monthlyData.setMonthlyProductionAvgIncome(monthlyProductionAverageIncome);
 
         //当月职能人均收入
@@ -342,14 +342,13 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         //当月职能人均加班费
         BigDecimal monthlyFunctionalAverageOvertimeCost = enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOvertimeCost(date);
         BigDecimal monthlyFunctionalAverageOtherBonuses = enterpriseManagementMonthlyDataMapper.selectMonthlyFunctionalAverageOtherBonuses(date);
-        log.info("当月职能人均加班费" + monthlyFunctionalAverageOvertimeCost +"其他奖金"+ monthlyFunctionalAverageOtherBonuses);
+        log.info("当月职能人均加班费" + monthlyFunctionalAverageOvertimeCost + "其他奖金" + monthlyFunctionalAverageOtherBonuses);
         monthlyData.setFunctionalDeptOvertimeCost(monthlyFunctionalAverageOvertimeCost.add(monthlyFunctionalAverageOtherBonuses));
 
         log.info("计算工资表中相关数据：" + monthlyData);
 
         enterpriseManagementMonthlyDataMapper.updateCalculateSalaryDataByMonth(monthlyData);
     }
-
 
 
     /**

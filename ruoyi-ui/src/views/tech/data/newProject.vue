@@ -126,7 +126,7 @@
     <el-table v-loading="loading" :data="TechNewProjectDesignList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="tdId" /> -->
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120">
+      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
@@ -707,16 +707,16 @@ export default {
                 // 处理上传成功的情况0.
                 this.$message.success("上传成功");
                 this.getList();
+                this.showDialog = false;
+                this.isLoading = false;
               })
               .catch(error => {
                 // 处理上传失败的情况
-                this.$message.error("上传失败，请重试");
-              })
-              .finally(() => {
-                // 无论成功或失败，都关闭上传面板
-                this.showDialog = false;
+                // this.$message.error("上传失败，请重试");
                 this.isLoading = false;
-              });
+
+              })
+              ;
           })
         } else {
           this.isLoading = true;
@@ -725,16 +725,15 @@ export default {
               // 处理上传成功的情况
               this.$message.success("上传成功");
               this.getList();
+              this.showDialog = false;
+              this.isLoading = false;
             })
             .catch(error => {
               // 处理上传失败的情况
-              this.$message.error("上传失败");
-            })
-            .finally(() => {
-              // 无论成功或失败，都关闭上传面板
-              this.showDialog = false;
+              // this.$message.error("上传失败");
               this.isLoading = false;
-            });
+            })
+            ;
         }
       }
     },

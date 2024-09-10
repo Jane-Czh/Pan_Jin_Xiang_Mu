@@ -52,7 +52,9 @@ public class MarketAfterSalesRecurrenceRateServiceImpl implements IMarketAfterSa
         int currentMonth = currentDate.getMonthValue();
 
         //对选出的当月数据进行分类（按照车型）
-        Map<String, List<MarketAfterSaleLedger>> collect = marketAfterSaleLedgers.stream().collect(Collectors.groupingBy(a -> StringUtils.getPrefix(a.getVehicleModel())));
+//        Map<String, List<MarketAfterSaleLedger>> collect = marketAfterSaleLedgers.stream().collect(Collectors.groupingBy(a -> StringUtils.getPrefix(a.getVehicleModel())));
+        Map<String, List<MarketAfterSaleLedger>> collect = marketAfterSaleLedgers.stream().collect(Collectors.groupingBy(MarketAfterSaleLedger::getVehicleModel));
+
         System.out.println(collect);
         System.out.println("=====--------------=====");
 
@@ -84,7 +86,7 @@ public class MarketAfterSalesRecurrenceRateServiceImpl implements IMarketAfterSa
                 System.out.println("当前车型为空");
                 continue;
             }
-            System.out.println("车型为=====>"+ Vehicle_Model);
+//            System.out.println("车型为=====>"+ Vehicle_Model);
             List<MarketAfterSaleLedger> problem = entry.getValue();
             HashMap<String, Integer> hashmap = new HashMap<>();
             int j = 0;
@@ -145,9 +147,9 @@ public class MarketAfterSalesRecurrenceRateServiceImpl implements IMarketAfterSa
             marketAfterSalesRecurrenceRate1.setProblemRecurrenceRate(BigDecimal.valueOf(Recurrence_Rate));
             marketAfterSalesRecurrenceRate1.setDifferentProblemOccurrenceRate(BigDecimal.valueOf(Different_Problem_Occurrence_Rate));
             marketAfterSalesRecurrenceRate1.setMonth(currentMonth);
-            System.out.println(marketAfterSalesRecurrenceRate1);
+//            System.out.println("插入的信息"+ marketAfterSalesRecurrenceRate1);
             marketAfterSalesRecurrenceRateMapper.insertMarketAfterSalesRecurrenceRate(marketAfterSalesRecurrenceRate1);
-            System.out.println("插入-------成功");
+//            System.out.println("插入-------成功");
         }
 
     }

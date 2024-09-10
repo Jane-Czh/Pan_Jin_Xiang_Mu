@@ -4,36 +4,54 @@
              label-width="68px">
 
       <!-- 部门 进行搜索  -->
-      <el-form-item label="主责部门" prop="mainResponsibleDepartment">
+      <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
         <el-select
           v-model="queryParams.mainResponsibleDepartment"
           placeholder="请选择主责部门"
           clearable
+          @change="handleDepartmentChange"
         >
           <el-option
             v-for="item in departments"
             :key="item"
             :label="item"
             :value="item"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
-      <!--      <el-form-item label="业务模块" prop="businesses">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.businesses"-->
-      <!--          placeholder="请输入业务模块"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="细分业务" prop="subBusinesses">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.subBusinesses"-->
-      <!--          placeholder="请输入细分业务"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
+      <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
+      <el-form-item label="业务模块" prop="businesses">
+        <el-select
+          v-model="queryParams.businesses"
+          placeholder="请选择业务模块"
+          clearable
+          :disabled="!queryParams.mainResponsibleDepartment"
+          @change="handleModuleChange"
+        >
+          <el-option
+            v-for="item in modules"
+            :key="item.bmId"
+            :label="item.moduleName"
+            :value="item.moduleName"
+          />
+        </el-select>
+      </el-form-item>
+      <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
+      <el-form-item label="细分业务" prop="subBusinesses">
+        <el-select
+          v-model="queryParams.subBusinesses"
+          placeholder="请选择细分业务"
+          clearable
+          :disabled="!queryParams.businesses"
+        >
+          <el-option
+            v-for="item in subBusinesses"
+            :key="item.subbId"
+            :label="item.subBusinessesName"
+            :value="item.subBusinessesName"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="专业分类" prop="classificationOfSpecialties">
         <el-select
           v-model="queryParams.classificationOfSpecialties"
@@ -47,14 +65,6 @@
             :value="item"
           ></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="制度范围" prop="useScope">
-        <el-input
-          v-model="queryParams.useScope"
-          placeholder="请选择制度范围"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item label="制度等级" prop="regulationLeval">
         <el-select
@@ -147,7 +157,6 @@
         </template>
       </el-table-column>
       <el-table-column label="专业分类" align="center" prop="classificationOfSpecialties" />
-      <el-table-column label="制度范围" align="center" prop="useScope"/>
       <el-table-column label="制度编号" align="center" prop="regulationNumber" />
       <el-table-column label="发布日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
@@ -308,13 +317,8 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="制度范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入制度范围"/>
-            </el-form-item>
-          </el-col>
           <el-col :span='12'>
-            <el-form-item label="主责部门" prop="mainResponsibleDepartment" required="true">
+            <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
               <el-select
                 v-model="form.mainResponsibleDepartment"
                 placeholder="请选择主责部门"
@@ -331,8 +335,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
             <el-form-item label="业务模块">
@@ -352,6 +354,9 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+
           <el-col  :span="12">
             <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
             <el-form-item label="细分业务">
@@ -370,18 +375,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <!--        <el-row>-->
-        <!--          <el-col :span='12'>-->
-        <!--            <el-form-item label="所属科室" prop="departmentCategory">-->
-        <!--              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">-->
-        <!--                &lt;!&ndash; 循环遍历this.deptList中的部门数据 &ndash;&gt;-->
-        <!--                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>-->
-        <!--              </el-select>-->
-        <!--            </el-form-item>-->
-        <!--          </el-col>-->
-        <!--        </el-row>-->
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度等级" prop="regulationLeval">
               <el-select
@@ -398,6 +391,8 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
               <el-select
@@ -414,8 +409,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度发布日期" prop="createDate">
               <el-date-picker clearable
@@ -426,6 +419,8 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度实施日期" prop="effectiveDate">
               <el-date-picker clearable
@@ -540,6 +535,15 @@
           "公司级",
           "部门级"
         ],
+        //表单展示数据
+        formData: {
+          //主责部门
+          department: "",
+          //业务模块
+          businessesModules: "",
+          //细分业务
+          subBusinesses: "",
+        },
         projectNames:[],  //关联流程名称列表
         projectNamesString : "",  //关联流程名称列表（用”，“拼接）
         //部门列表

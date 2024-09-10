@@ -13,7 +13,7 @@
         <div class="chart-title">
             <br>
             <br>
-            <h2>十一项指标管理-单个指标得分</h2>
+            <h2>SAP管理指标</h2>
         </div>
         <div id="main" ref="main"></div>
     </div>
@@ -156,11 +156,18 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
+                formatter: function (params) {
+                    let value = params.value;
+                    if (params.seriesName.includes('%')) {
+                        value += '%';
+                    }
+                    return value;
+                },
                 fontSize: 16,
                 rich: {
                     name: {}
                 }
+
             };
             this.option = {
                 title: {
@@ -169,8 +176,9 @@ export default {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
-                        type: 'shadow'
-                    }
+                        type: 'shadow',
+                    },
+
                 },
                 legend: {
                     type: 'scroll',
@@ -183,7 +191,7 @@ export default {
                     top: 'center',
                     feature: {
                         mark: { show: true, },
-                        dataView: { show: true, readOnly: false, title: '数据视图' },
+                        // dataView: { show: true, readOnly: false, title: '数据视图' },
                         magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
                         restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
@@ -204,7 +212,7 @@ export default {
                 series: [
                     {
                         name: 'SD销售订单有效性考核',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -213,7 +221,7 @@ export default {
                     },
                     {
                         name: 'PP手工创建生产订单比例(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -222,7 +230,7 @@ export default {
                     },
                     {
                         name: 'PP生产订单已收货未报工的比例(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -231,7 +239,7 @@ export default {
                     },
                     {
                         name: 'MES报工不及时率比率(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -240,7 +248,7 @@ export default {
                     },
                     {
                         name: 'QM外检业务不及时率(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -249,7 +257,7 @@ export default {
                     },
                     {
                         name: 'MM采购订单交货不及时的比例(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -258,7 +266,7 @@ export default {
                     },
                     {
                         name: 'MM手工创建采购订单比例(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -267,7 +275,7 @@ export default {
                     },
                     {
                         name: 'MM未清采购申请',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -276,7 +284,7 @@ export default {
                     },
                     {
                         name: 'FICO月度标准价格与周期单位价格综合差异率(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -285,7 +293,7 @@ export default {
                     },
                     {
                         name: '跨月生产订单比例(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -294,7 +302,7 @@ export default {
                     },
                     {
                         name: 'PM维修订单完工不及时率(%)',
-                        type: 'bar',
+                        type: 'stack',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
@@ -318,10 +326,11 @@ export default {
         defaultMonth() {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
-            const startDate = new Date(currentYear, 0, 1);
+            const currentMonth = currentDate.getMonth();
+            const startDate = new Date(currentYear, currentMonth - 1, 1);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
+            console.log(this.selectedDate)
         },
         // formatData() {
         //     this.chartData = this.data.rows.map(rows => {
@@ -366,7 +375,7 @@ export default {
     position: absolute;
     left: 28%;
     /* 水平位置，基于容器的% */
-    // top: 50%; 
+    // top: 50%;
     /* 垂直位置，基于容器的% */
     transform: translate(-50%, -50%);
     /* 使用transform来真正居中文本 */
@@ -379,7 +388,7 @@ export default {
     position: absolute;
     left: 50%;
     /* 水平位置，基于容器的% */
-    // top: 50%; 
+    // top: 50%;
     /* 垂直位置，基于容器的% */
     transform: translate(-50%, -50%);
     /* 使用transform来真正居中文本 */

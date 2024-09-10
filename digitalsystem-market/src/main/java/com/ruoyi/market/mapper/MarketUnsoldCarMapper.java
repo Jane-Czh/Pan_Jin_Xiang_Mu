@@ -1,6 +1,8 @@
 package com.ruoyi.market.mapper;
 
 import java.util.List;
+
+import com.ruoyi.market.domain.MarketInventoryCarDetail;
 import com.ruoyi.market.domain.MarketUnsoldCar;
 
 /**
@@ -27,6 +29,7 @@ public interface MarketUnsoldCarMapper
      */
     public List<MarketUnsoldCar> selectMarketUnsoldCarList(MarketUnsoldCar marketUnsoldCar);
 
+    public List<MarketInventoryCarDetail> selectMarketInventoryCarDetailByType(String type);
     /**
      * 查询统计全部库存车数量列表
      *

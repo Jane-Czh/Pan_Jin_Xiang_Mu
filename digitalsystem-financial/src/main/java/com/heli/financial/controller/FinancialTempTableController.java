@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.financial.service.IFinancialDataService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FinancialTempTableController extends BaseController {
     @Autowired
     private IFinancialTempTableService financialTempTableService;
+    @Autowired
+    private IFinancialDataService financialDataService;
 
 
     /**
@@ -63,7 +67,14 @@ public class FinancialTempTableController extends BaseController {
             //资产负债表信息转换
             financialTempTableService.tempTableToBalanceTable(yearAndMonth);
             log.info("清空数据库");
-//            financialTempTableService.clearTempTable();
+            financialTempTableService.clearTempTable();
+
+            // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+            if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
+                    && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
+                // 开始计算
+                financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
+            }
 
             return R.ok("上传成功");
         } catch (Exception e) {
@@ -86,7 +97,14 @@ public class FinancialTempTableController extends BaseController {
             //资产负债表信息转换
             financialTempTableService.tempTableToInterestsTable(yearAndMonth);
             log.info("清空数据库");
-//            financialTempTableService.clearTempTable();
+            financialTempTableService.clearTempTable();
+
+            // 检查当月 和 上月文件是否上传完成，全部上传后开始计算
+            if (financialDataService.checkDataUploadedForCurrentMonth(yearAndMonth)
+                    && financialDataService.checkDataUploadedForCurrentMonth(DateUtils.getLastMonth(yearAndMonth))) {
+                // 开始计算
+                financialDataService.calculateCurrentMonthFinancialData(yearAndMonth);
+            }
 
             return R.ok("上传成功");
         } catch (Exception e) {

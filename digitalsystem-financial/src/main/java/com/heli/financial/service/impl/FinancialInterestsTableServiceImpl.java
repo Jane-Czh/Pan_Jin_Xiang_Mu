@@ -81,32 +81,31 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
          */
         financialInterestsTable.setOperatingRevenue(
                 financialInterestsTable.getOperatingRevenue()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setInternalMainRevenue(
                 financialInterestsTable.getInternalMainRevenue()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setExternalMainRevenue(
                 financialInterestsTable.getExternalMainRevenue()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setCogsProductSalesSd(
                 financialInterestsTable.getCogsProductSalesSd()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setCogsFreight(
                 financialInterestsTable.getCogsFreight()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setCogsVariation(
                 financialInterestsTable.getCogsVariation()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setNetProfit(
                 financialInterestsTable.getNetProfit()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setManagementExpense(
                 financialInterestsTable.getManagementExpense()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
         financialInterestsTable.setRdExpense(
                 financialInterestsTable.getRdExpense()
-                        .divide(new BigDecimal(10000),6, RoundingMode.HALF_UP));
-
+                        .divide(new BigDecimal(10000), 6, RoundingMode.HALF_UP));
 
 
         // 设置导入时间、导入人、年月
@@ -120,9 +119,6 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
         financialInterestsTable.setCOGS(financialInterestsTable.getCogsProductSalesSd().add(financialInterestsTable.getCogsFreight()).add(financialInterestsTable.getCogsVariation()));
         return financialInterestsTableMapper.insertFinancialInterestsTable(financialInterestsTable);
     }
-
-
-
 
 
     /**
@@ -161,7 +157,7 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
      **/
     @Override
     public FinancialInterestsTable selectFinancialInterestsTableByYearAndMonth(Date yearAndMonth) {
-        System.out.println("service"+yearAndMonth);
+        System.out.println("service" + yearAndMonth);
         return financialInterestsTableMapper.selectFinancialInterestsTableByYearAndMonth(yearAndMonth);
     }
 
@@ -172,7 +168,7 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
 
     @Override
     public List<FinancialInterestsTable> selectFinancialInterestsTableByTime(Date beginTime, Date endTime) {
-        return financialInterestsTableMapper.selectFinancialInterestsTableByTime(beginTime,endTime);
+        return financialInterestsTableMapper.selectFinancialInterestsTableByTime(beginTime, endTime);
     }
 
 
@@ -194,10 +190,11 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
 
     /**
      * 查询营业收入
-     * @author: hong
-     * @date: 2024/4/7 20:34
+     *
      * @param date 月份
      * @return 营业收入
+     * @author: hong
+     * @date: 2024/4/7 20:34
      */
     public BigDecimal selectOperatingRevenueByMonth(Date date) {
         return financialInterestsTableMapper.selectOperatingRevenueByMonth(date);
@@ -273,5 +270,15 @@ public class FinancialInterestsTableServiceImpl implements IFinancialInterestsTa
     @Override
     public int deleteFinancialInterestsTableByFiId(Long fiId) {
         return financialInterestsTableMapper.deleteFinancialInterestsTableByFiId(fiId);
+    }
+
+    @Override
+    public Integer countMonthDataNumber(Date yearAndMonth) {
+        return financialInterestsTableMapper.countMonthDataNumber(yearAndMonth);
+    }
+
+    @Override
+    public double countOperatingRevenueByYear(Date yearAndMonth) {
+        return financialInterestsTableMapper.countOperatingRevenueByYear(yearAndMonth);
     }
 }

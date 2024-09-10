@@ -152,7 +152,7 @@ export default {
           }
         },
         legend: {
-          data: [this.dataName, this.showTarget ? '目标值' : null].filter(item => item !== null),
+          data: [this.dataName, this.showTarget && this.targetValue != '' ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,

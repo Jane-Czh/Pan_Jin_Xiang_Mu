@@ -137,7 +137,7 @@ export default {
         { id: '70', showTarget: true, showType: 'SUM', showWarning: false, targetValue: '', targetValueDate: '', kind: 'day', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sum: 'inProgressDayRevenue' },
         { id: '77', showTarget: true, showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'balance', apiName: 'getMonthlyInventoryTotalAmountData', date: '', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '当月存货总额', dataName: '金额', content: '', sum: 'monthlyInventoryTotalAmount' },
         { id: '78', showTarget: true, showType: 'NEW', showWarning: false, targetValue: '', targetValueDate: '', kind: 'monthNew', apiName: 'getAddedValueMonthlyData', date: '', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '', sum: 'addedValueMonthly' },
-      ]
+      ],
     }
   },
   computed: {},
@@ -150,9 +150,34 @@ export default {
   methods: {
     async initData() {
       try {
+
+        if (!this.$auth.hasPermi("financial:index")) {
+          this.activeName = '0';
+          if (this.$auth.hasPermi("financial:market")) {
+            this.allIndex = this.allIndex.filter(item => {
+              return ['4', '5', '6', '7', '28', '34'].includes(item.id);
+            });
+          } else if (this.$auth.hasPermi("financial:tech")) {
+            this.allIndex = this.allIndex = this.allIndex.filter(item => {
+              return ['4', '5', '6', '7'].includes(item.id);
+            });
+          } else if (this.$auth.hasPermi("financial:supply")) {
+            this.allIndex = this.allIndex = this.allIndex = this.allIndex.filter(item => {
+              return ['4', '5', '26', '35', '66'].includes(item.id);
+            });
+          } else if (this.$auth.hasPermi("financial:production")) {
+            this.allIndex = this.allIndex = this.allIndex = this.allIndex = this.allIndex.filter(item => {
+              return ['4', '5', '27', '36', '70'].includes(item.id);
+            });
+          } else {
+            this.allIndex = this.allIndex = this.allIndex = this.allIndex = this.allIndex = this.allIndex.filter(item => {
+              return ['4', '5'].includes(item.id);
+            });
+          }
+        }
+
         let target = {
           date: new Date(),
-          // endTime: new Date(),
           deptName: 'financial',
         }
         // 定义一个空对象来存储所有数据
@@ -308,10 +333,10 @@ export default {
             // }
           }
         });
-
         //目标值赋予及上下限预警
         this.allIndex.forEach(item => {
           resTarget.rows.forEach(row => {
+            console.log(item.targetValue)
             if (item.sum === row.indicatorName) {
               item.targetValue = row.targetValue;
               item.targetValueDate = row.natureYear;
@@ -321,7 +346,8 @@ export default {
             }
           });
         });
-        // 返回整合后的数据对象
+
+
       } catch (error) {
         console.error('初始化数据失败:', error);
       }

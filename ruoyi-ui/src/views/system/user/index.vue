@@ -39,6 +39,15 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+          <el-form-item label="用户昵称" prop="nickName">
+            <el-input
+              v-model="queryParams.nickName"
+              placeholder="请输入用户昵称"
+              clearable
+              style="width: 240px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
           <el-form-item label="手机号码" prop="phonenumber">
             <el-input
               v-model="queryParams.phonenumber"
@@ -408,6 +417,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userName: undefined,
+        nickName: undefined,
         phonenumber: undefined,
         status: undefined,
         deptId: undefined

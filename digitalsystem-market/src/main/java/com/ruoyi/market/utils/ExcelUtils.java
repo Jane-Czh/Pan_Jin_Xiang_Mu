@@ -180,24 +180,42 @@ public class ExcelUtils {
              * 将excel设置的字段，写入到数据库对应字段
              */
 
-//            int count = 0;
-
+            int count = 0;
 
 //            count++;
-            //2、车号
-            marketInventoryCarDetail.setWagonNumber(getStringCellValue(row.getCell(3)));
+            //1、上线时间
+            marketInventoryCarDetail.setOnlineTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+
+            // 2、车号
+            String wagonNumber = getStringCellValue(row.getCell(count));
+            if (wagonNumber == null || wagonNumber.trim().isEmpty()) {
+                continue;
+            } else {
+//                System.out.println("===" + wagonNumber + "===");
+                marketInventoryCarDetail.setWagonNumber(wagonNumber);
+                count++; // 移动计数器到下一个单元格
+            }
+
             //3、车型
-            marketInventoryCarDetail.setVehicleModel(getStringCellValue(row.getCell(4)));
+            String vehicleModel = getStringCellValue(row.getCell(count));
+            if (vehicleModel == null || vehicleModel.trim().isEmpty()) {
+                continue;
+            } else {
+                marketInventoryCarDetail.setVehicleModel(vehicleModel);
+                count++; // 移动计数器到下一个单元格
+            }
+
+
             //4、门架
-            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(5)));
+            marketInventoryCarDetail.setDoorFrame(getStringCellValue(row.getCell(count++)));
             //5、属具
-            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(6)));
+            marketInventoryCarDetail.setAccessory(getStringCellValue(row.getCell(count++)));
             //6、阀片数
-            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(7)));
+            marketInventoryCarDetail.setValveBlockNumber(getIntegerCellValue(row.getCell(count++)));
             //7、配置
-            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(8)));
+            marketInventoryCarDetail.setConfiguration(getStringCellValue(row.getCell(count++)));
             //8、计划完工期
-            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(9)))));
+            marketInventoryCarDetail.setPlanndeCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
 
             dataList.add(marketInventoryCarDetail);
         }

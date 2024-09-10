@@ -470,4 +470,35 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
     public int deleteFinancialBalanceTableByFbId(Long fbId) {
         return financialBalanceTableMapper.deleteFinancialBalanceTableByFbId(fbId);
     }
+
+    @Override
+    public Date selectMinYearAndMonth() {
+        return financialBalanceTableMapper.selectMinYearAndMonth();
+    }
+
+    @Override
+    public boolean checkReceivablesDataIsExisted(Date lastYearAndMonth) {
+        return financialBalanceTableMapper.checkReceivablesDataIsExisted(lastYearAndMonth);
+    }
+
+    @Override
+    public double selectReceivablesByDate(Date lastYearAndMonth) {
+        return financialBalanceTableMapper.selectReceivablesByDate(lastYearAndMonth);
+    }
+
+    @Override
+    public int countMonthDataNumber(Date yearAndMonth) {
+        return financialBalanceTableMapper.countMonthDataNumber(yearAndMonth);
+    }
+
+    @Override
+    public double countReceivablesByYear(Date yearAndMonth) {
+        return financialBalanceTableMapper.countReceivablesByYear(yearAndMonth);
+    }
+
+    @Override
+    public int updateBalanceTableTurnoverRateReceivable(FinancialBalanceTable balanceTable) {
+        return financialBalanceTableMapper.updateBalanceTableTurnoverRateReceivable(balanceTable);
+    }
+
 }

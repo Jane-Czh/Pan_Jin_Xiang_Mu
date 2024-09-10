@@ -99,7 +99,7 @@
         where Year_And_Month IN (
             SELECT MAX(Year_And_Month)
             FROM Financial_Balance_table
-            where GrowthRate_Sales is not null
+            where TurnoverRate_Receivable is not null
         )
     </select>
     <!--  获取年月最大的其他数据  -->
@@ -219,6 +219,9 @@
         </trim>
         where FB_ID = #{fbId}
     </update>
+    <update id="updateBalanceTableTurnoverRateReceivable">
+        update Financial_Balance_table set TurnoverRate_Receivable = #{turnoverRateReceivable} where FB_ID = #{fbId}
+    </update>
 
     <delete id="deleteFinancialBalanceTableByFbId" parameterType="Long">
         delete from Financial_Balance_table where FB_ID = #{fbId}
@@ -235,4 +238,28 @@
         <include refid="selectFinancialBalanceTableVo"/>
         where FB_ID = #{fbId}
     </select>
+    <select id="selectMinYearAndMonth" resultType="java.util.Date">
+        select min(Year_And_Month) from Financial_Balance_table
+    </select>
+    <select id="checkReceivablesDataIsExisted" resultType="java.lang.Boolean">
+        select count(1) from Financial_Balance_table where Year_And_Month = #{yearAndMonth} and Receivables is not null
+    </select>
+    <select id="selectReceivablesByDate" resultType="java.lang.Double">
+        select Receivables from Financial_Balance_table where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <select id="countMonthDataNumber" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM Financial_Balance_table
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+        AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+        AND Receivables is not null
+    </select>
+    <select id="countReceivablesByYear" resultType="java.lang.Double">
+        SELECT sum(Receivables)
+        FROM Financial_Balance_table
+        WHERE Year_And_Month <![CDATA[ >= ]]> DATE_FORMAT(#{yearAndMonth}, '%Y-01-01')
+          AND Year_And_Month <![CDATA[ <= ]]> #{yearAndMonth}
+    </select>
+
 </mapper>

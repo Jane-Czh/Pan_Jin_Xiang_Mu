@@ -18,6 +18,8 @@ import org.apache.ibatis.annotations.Param;
 //@DataSource(value = DataSourceType.SLAVE)
 public interface FinancialBalanceTableMapper {
 
+    double selectReceivablesByDate(@Param("yearAndMonth") Date yearAndMonth) ;
+
     FinancialBalanceTable selectMaxMonthBalance();
 
 
@@ -102,4 +104,14 @@ public interface FinancialBalanceTableMapper {
      * @return 结果
      */
     public int deleteFinancialBalanceTableByFbIds(Long[] fbIds);
+
+    Date selectMinYearAndMonth();
+
+    boolean checkReceivablesDataIsExisted(Date lastYearAndMonth);
+
+    int countMonthDataNumber(Date yearAndMonth);
+
+    double countReceivablesByYear(Date yearAndMonth);
+
+    int updateBalanceTableTurnoverRateReceivable(FinancialBalanceTable balanceTable);
 }

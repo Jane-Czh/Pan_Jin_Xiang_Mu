@@ -65,4 +65,6 @@ public interface IFinancialDailyInProgressTableService {
      * @return 结果
      */
     public int deleteFinancialDailyInProgressTableById(Long id);
+
+    FinancialDailyInProgressTable selectNewDateDailyInProgress();
 }

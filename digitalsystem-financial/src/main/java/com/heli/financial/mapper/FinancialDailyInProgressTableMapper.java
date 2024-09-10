@@ -17,6 +17,8 @@ public interface FinancialDailyInProgressTableMapper {
 
     FinancialDailyInProgressTable selectDailyInProgressSumInfoByMonth(@Param("yearAndMonth") Date yearAndMonth);
 
+    FinancialDailyInProgressTable selectNewDateDailyInProgress();
+
 
     //检查指定时间当日在制造品金额是否存在
     boolean checkDailyInProgressTableIsExist(Date yearAndMonth);
@@ -68,4 +70,6 @@ public interface FinancialDailyInProgressTableMapper {
      * @return 结果
      */
     public int deleteFinancialDailyInProgressTableByIds(Long[] ids);
+
+
 }

@@ -53,41 +53,7 @@ const api = {
   },
 
 
-  // 累计人均收入 指标54
-  getCumulativeAverageIncomeData(data) {
-    return request({
-      url: `/enterprise/display/cumulativeAverageIncome`,
-      method: 'post',
-      data: {
-        startTime: data.startTime,
-        endTime: data.endTime
-      }
-    })
-  },
 
-  // 月度累计生产人均收入 指标55
-  getMonthlyProductionAVGIncomeData(data) {
-    return request({
-      url: `/enterprise/display/monthlyProductionAVGIncome`,
-      method: 'post',
-      data: {
-        startTime: data.startTime,
-        endTime: data.endTime
-      }
-    })
-  },
-
-  // 月度累计职能人均收入 指标56
-  getMonthlyFunctionalAVGIncomeData(data) {
-    return request({
-      url: `/enterprise/display/monthlyFunctionalAVGIncome`,
-      method: 'post',
-      data: {
-        startTime: data.startTime,
-        endTime: data.endTime
-      }
-    })
-  },
 
   // 职能部门人均加班费用 指标76
   getFunctionalDeptOvertimeCostData(data) {
@@ -124,6 +90,42 @@ export function getDailyClearingSettlementData(data) {
 export function getManagementData(data) {
   return request({
     url: `/enterprise/display/management`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 累计人均收入 指标54
+export function getCumulativeAverageIncomeData(data) {
+  return request({
+    url: `/enterprise/display/cumulativeAverageIncome`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 月度累计生产人均收入 指标55
+export function getMonthlyProductionAVGIncomeData(data) {
+  return request({
+    url: `/enterprise/display/monthlyProductionAVGIncome`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 月度累计职能人均收入 指标56
+export function getMonthlyFunctionalAVGIncomeData(data) {
+  return request({
+    url: `/enterprise/display/monthlyFunctionalAVGIncome`,
     method: 'post',
     data: {
       startTime: data.startTime,

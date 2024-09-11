@@ -250,7 +250,7 @@ export const constantRoutes = [
         path: 'indicators101',
         component: () => import('@/views/enterprise/display/indexChart/indicators101'),
         name: 'Indicators101',
-        meta: { title: '指标101：11项管理指标' }
+        meta: { title: '指标101：SAP管理指标' }
       },
       {
         path: 'index-detail-enterprise',
@@ -289,6 +289,14 @@ export const constantRoutes = [
         name: 'Indicators102',
         meta: {
           title: '电车、大吨位一次交检合格率',
+        }
+      },
+      {
+        path: 'indicators103',
+        component: () => import('@/views/quality/display/indexChart/indicators103'),
+        name: 'Indicators103',
+        meta: {
+          title: '供应商不合格件返厂及时率',
         }
       },
       {

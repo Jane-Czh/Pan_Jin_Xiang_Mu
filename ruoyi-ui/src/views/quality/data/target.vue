@@ -171,14 +171,12 @@ export default {
         ],
         targetLowerLimit: [
           {
-            required: true,
             validator: numValidatorEnableEmpty,
             trigger: "blur",
           }
         ],
         targetUpperLimit: [
           {
-            required: true,
             validator: numValidatorEnableEmpty,
             trigger: "blur",
           }

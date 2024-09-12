@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -1229,30 +1230,65 @@ public class MarketIndexController extends BaseController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
         DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
+
+
+// 计算所有记录的精准完工日期与接单日期之间的天数差值
+         List<Long> days = marketCommercialVehicleTables.stream()
+                .map(a -> {
+                    LocalDate precisionCompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                            .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                            .orElse(null);
+                    LocalDate acceptanceDate = a.getAcceptanceDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    return precisionCompletion != null ? ChronoUnit.DAYS.between(acceptanceDate, precisionCompletion) : 0L;
+                })
+                .collect(Collectors.toList());
+
+        // 计算平均天数差值
+        double averageDuration = days.stream()
+                .mapToLong(Long::longValue)
+                .average()
+                .orElse(0);
+
+
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
         Map<String, Map<String, Long>> collect = marketCommercialVehicleTables.stream()
                 .filter(a -> a.getPrecisionCompletionPeriod() != null) // 过滤掉 getPrecisionCompletionPeriod 为空的元素
-                .filter(a -> a.getPlannedCompletionPeriod() != null) // 过滤掉 getPlannedCompletionPeriod 为空的元素
+                .filter(a -> a.getAcceptanceDate()!= null) // 过滤掉 getAcceptanceDate 为空的元素
 
                 .filter(a ->
         {
             LocalDate precisioncompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
                     .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                     .orElse(null);
-            LocalDate plancompletion = a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate AcceptanceDate = a.getAcceptanceDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate startTime = marketCommercialVehicleTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endTime = marketCommercialVehicleTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
             // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
-            //并且精准完工期要早于计划完工期
+            //接单日和精准完工都在开始和结束时间内
             return
-                    (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
-                            || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
-                            &&
-                            precisioncompletion != null && precisioncompletion.isBefore(plancompletion);
+
+                  (!AcceptanceDate.isBefore(startTime) && !AcceptanceDate.isAfter(endTime)
+                            || AcceptanceDate.isEqual(startTime) || AcceptanceDate.isEqual(endTime))
+                          &&
+                    (!precisioncompletion.isBefore(startTime) && !precisioncompletion.isAfter(endTime)
+                            || precisioncompletion.isEqual(startTime) || precisioncompletion.isEqual(endTime));
 //            precisioncompletion.isBefore(plancompletion);
 
-        }).collect(Collectors.groupingBy(
+        })          //再筛选出R-A的天数>平均天数20%的数据
+                .filter(a -> {
+                    LocalDate precisionCompletion = Optional.ofNullable(a.getPrecisionCompletionPeriod())
+                            .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                            .orElse(null);
+                    LocalDate acceptanceDate = a.getAcceptanceDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    //计算差值：
+                    long durationDifference = ChronoUnit.DAYS.between(acceptanceDate, precisionCompletion);
+                    //计算差值大于平均天数的20%
+                    return durationDifference > averageDuration * 1.2; // 大于平均天数的20%
+                })
+                //TODO统计小吨位叉车
+                .collect(Collectors.groupingBy(
                 a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                 Collectors.groupingBy(
                         a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
@@ -1260,7 +1296,7 @@ public class MarketIndexController extends BaseController {
                 )
         ));
 
-        System.out.println("计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期"+collect);
+        System.out.println("计划完工日期在起止时间内的数据，并且精准完工期要也在"+collect);
 
         //筛选出计划完工日期在起止时间内的数据，
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量

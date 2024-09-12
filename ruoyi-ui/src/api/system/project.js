@@ -283,3 +283,12 @@ export function listDept(query) {
   })
 }
 
+
+//0912 sbi玩意 --获取总台账信息
+export function getAllShowEntity() {
+  return request({
+    url: '/project/getAll',
+    method: 'get',
+  })
+}
+

@@ -1140,7 +1140,7 @@
       handleProjectDetails(row) {
         return listProject(this.projecQueryParams).then(response => {
           console.log("response111:", response);
-          const projectList = response;cd
+          const projectList = response;
           this.projectNames = [];
 
           projectList.forEach(process => {

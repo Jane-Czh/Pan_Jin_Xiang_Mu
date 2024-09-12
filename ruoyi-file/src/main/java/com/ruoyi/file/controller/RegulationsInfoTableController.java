@@ -13,11 +13,13 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.file.Word2PdfAsposeUtil;
 import com.ruoyi.file.domain.RegulationsInfoTable;
 import com.ruoyi.file.entity.regulationRespondEntity;
+import com.ruoyi.file.entity.regulationCountsRespondEntity;
 import com.ruoyi.file.service.IRegulationsInfoTableService;
 import com.ruoyi.file.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -167,6 +170,13 @@ public class RegulationsInfoTableController extends BaseController {
         }
     }
 
+    /**
+     *  查询各部门制度总数
+     */
+    @PostMapping("/regulationcounts")
+    public List<regulationCountsRespondEntity> getRegulationCounts(@RequestBody RegulationsInfoTable regulationsInfoTable) {
+        return regulationsInfoTableService.selectRegulationsCounts(regulationsInfoTable.getStartTime(), regulationsInfoTable.getEndTime());
+    }
 
 
 //

@@ -150,6 +150,17 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleModify"
+          v-hasPermi="['file:filemanagement:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -260,10 +271,18 @@
       </el-table-column>
       <el-table-column label="word下载" align="center" prop="wordPath">
         <template v-slot:default="scope">
-          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
+          <a
+            v-if="scope.row.wordPath"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企管' && thisDept !== '总部'"
+            @click.prevent="downloadFile(scope.row.wordPath)"
+            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? 'auto' : 'none' }"
+          >
+            点击下载
+          </a>
         </template>
       </el-table-column>
-<!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
+
+      <!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
 <!--      <el-table-column label="文件大小" align="center" prop="fileSize"/>-->
 <!--      <el-table-column label="pdf文件大小" align="center" prop="pdfSize"/>-->
 <!--      <el-table-column label="word文件大小" align="center" prop="wordSize"/>-->
@@ -285,26 +304,17 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 
-<!--          <template v-if="this.thisDept == '研发' || this.thisDept == this.form.departmentCategory">-->
-<!--          :disabled="this.thisDept !== scope.row.departmentCategory"-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-upload"-->
-<!--              @click="handleUpdate(scope.row)"-->
-<!--              v-hasPermi="['file:filemanagement:edit']"-->
-<!--              :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"-->
-<!--            >-->
-<!--              更新-->
-<!--            </el-button>-->
+<!--          <template v-if="this.thisDept == '研发' || this.thisDept == this.form.mainResponsibleDepartment">-->
+<!--          :disabled="this.thisDept !== scope.row.mainResponsibleDepartment-->
             <el-button
               size="mini"
               type="text"
-              icon="el-icon-edit"
+              icon="el-icon-upload"
               @click="handleModify(scope.row)"
               v-hasPermi="['file:filemanagement:edit']"
+              :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
             >
-             更新
+              更新
             </el-button>
             <el-button
               size="mini"
@@ -312,10 +322,29 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['file:filemanagement:remove']"
+              :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
             >
               删除
             </el-button>
 <!--          </template>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              @click="handleModify(scope.row)"-->
+<!--              v-hasPermi="['file:filemanagement:edit']"-->
+<!--            >-->
+<!--             更新-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-delete"-->
+<!--              @click="handleDelete(scope.row)"-->
+<!--              v-hasPermi="['file:filemanagement:remove']"-->
+<!--            >-->
+<!--              删除-->
+<!--            </el-button>-->
         </template>
       </el-table-column>
 
@@ -1110,9 +1139,9 @@
         this.loading = true;
         console.log("刷新页面");
         // 如果部门是研发或总部，则不添加departmentCategory到queryParams
-        if (!['研发', '总部'].includes(this.thisDept)) {
-          this.queryParams.departmentCategory = this.thisDept;
-        }
+        // if (!['研发', '总部'].includes(this.thisDept)) {
+        //   this.queryParams.departmentCategory = this.thisDept;
+        // }
         listFilemanagement(this.queryParams).then(response => {
           console.log("response:：", response);
           this.filemanagementList = response.rows;
@@ -1140,7 +1169,7 @@
       handleProjectDetails(row) {
         return listProject(this.projecQueryParams).then(response => {
           console.log("response111:", response);
-          const projectList = response;cd
+          const projectList = response;
           this.projectNames = [];
 
           projectList.forEach(process => {

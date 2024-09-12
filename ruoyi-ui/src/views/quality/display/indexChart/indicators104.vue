@@ -214,6 +214,18 @@ export default {
             };
 
             this.option && this.myChart.setOption(this.option);
+
+            //折线图切换
+            this.myChart.on('magictypechanged', (params) => {
+                var magicType = params.currentType;
+                if (magicType == 'line') {
+                    this.option.xAxis[0].boundaryGap = true;
+                    for (let i = 0; i < this.option.series.length; i++) {
+                        this.option.series[i].type = magicType;
+                    }
+                    this.myChart.setOption(this.option);
+                }
+            });
         },
         defaultMonth() {
             const currentDate = new Date();

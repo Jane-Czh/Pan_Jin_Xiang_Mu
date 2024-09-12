@@ -14,7 +14,7 @@ export default {
     legendData: { type: String, default: null },
     targetValue: { type: Number, default: 0 },
     targetValueDate: { type: String, default: null },
-    showTarget: { type: Boolean, default: false },
+    showTarget: { type: String, default: false },
   },
   data() {
     return {
@@ -133,8 +133,12 @@ export default {
         align: app.config.align,
         verticalAlign: app.config.verticalAlign,
         rotate: app.config.rotate,
-        formatter: function (params) {
-          return params.value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        formatter: (params) => {
+          if (this.showTarget === 'financial') {
+            return params.value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+          } else {
+            return params.value;
+          }
         },
         fontSize: 16,
         rich: {
@@ -152,7 +156,7 @@ export default {
           }
         },
         legend: {
-          data: [this.dataName, this.showTarget ? '目标值' : null].filter(item => item !== null),
+          data: [this.dataName, this.showTarget && this.targetValue != '' ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,

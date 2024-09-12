@@ -94,7 +94,40 @@ export const constantRoutes = [
 
 
 
+  //财务指标
+  {
+    path: '/financial',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'indicators30',
+        component: () => import('@/views/financial/financialDisplay/indexChart/indicators30'),
+        name: 'Indicators30',
+        meta: { title: '指标30：存货增长率/销售增长率' }
+      },
 
+      {
+        path: 'indicators70',
+        component: () => import('@/views/financial/financialDisplay/indexChart/indicators70'),
+        name: 'Indicators70',
+        meta: { title: '指标70：当日在制品金额' }
+      },
+
+      {
+        path: 'index-detail-financial',
+        component: () => import('@/views/financial/financialDisplay/indexDetailFinancial'),
+        name: 'IndexDetailFinancial',
+        props: true,
+
+        meta: {
+          title: '指标详情',
+
+        }
+      }
+    ]
+  },
   {
     path: '/safety',
     component: Layout,
@@ -217,7 +250,7 @@ export const constantRoutes = [
         path: 'indicators101',
         component: () => import('@/views/enterprise/display/indexChart/indicators101'),
         name: 'Indicators101',
-        meta: { title: '指标101：11项管理指标' }
+        meta: { title: '指标101：SAP管理指标' }
       },
       {
         path: 'index-detail-enterprise',
@@ -256,6 +289,14 @@ export const constantRoutes = [
         name: 'Indicators102',
         meta: {
           title: '电车、大吨位一次交检合格率',
+        }
+      },
+      {
+        path: 'indicators103',
+        component: () => import('@/views/quality/display/indexChart/indicators103'),
+        name: 'Indicators103',
+        meta: {
+          title: '供应商不合格件返厂及时率',
         }
       },
       {

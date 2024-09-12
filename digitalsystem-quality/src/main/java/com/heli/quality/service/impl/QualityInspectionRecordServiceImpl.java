@@ -65,7 +65,8 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
         long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
         qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
         qualityInspectionRecord.setElectricCarPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getElectricCarProblemVehicles() / (double) qualityInspectionRecord.getElectricCarProductionQuantity()) * 100));
-        qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getK2largetonnageProblemVehicles() / (double) qualityInspectionRecord.getK2largetonnageProductionQuantity()) * 100));
+        qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) (qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getK2lessthan5tonProblemVehicles())
+                / (double) (qualityInspectionRecord.getK2largetonnageProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity())) * 100));
 
         log.info(String.valueOf("读取质检表并计算" + qualityInspectionRecord));
         qualityInspectionRecordMapper.insertQualityInspectionRecord(qualityInspectionRecord);

@@ -51,16 +51,16 @@ export default {
       },
       activeName: 'first',
       allIndex: [
-        { id: '57', showTarget: true, kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getWarrantyRepairRateData', sum: 'warrantyRepairRate', yDataName: 'warrantyRepairRate', dataName: '返修率', icon: 'el-icon-s-data', title: '三包期内新车返修率', content: '' },
-        { id: '58', showTarget: true, kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getWarrantyVehicleRepairRateData', sum: 'warrantyVehicleRepairRate', yDataName: 'warrantyVehicleRepairRate', dataName: '返修率', icon: 'el-icon-s-data', title: '三包期内整车月度返修率', content: '' },
-        { id: '59', showTarget: true, kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getExternalLossRateData', sum: 'externalLossRate', yDataName: 'externalLossRate', dataName: '损失率', icon: 'el-icon-s-data', title: '外部质量损失率', content: '' },
-        { id: '61', showTarget: true, kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getMonthlyAfterSalesIssuesData', sum: 'monthlyAfterSalesIssues', yDataName: 'monthlyAfterSalesIssues', dataName: '总数', icon: 'el-icon-s-data', title: '月度售后质量问题总数', content: '' },
-        { id: '62', showTarget: true, kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getProductionLiabilityIssuesData', sum: 'productionLiabilityIssues', yDataName: 'productionLiabilityIssues', dataName: '次数', icon: 'el-icon-s-data', title: '售后问题生产责任次数', content: '' },
-        { id: '63', showTarget: true, kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getQuarterlyRankData', sum: 'quarterlyRank', yDataName: 'quarterlyRank', dataName: '排名', icon: 'el-icon-s-data', title: '质量考核季度排名', content: '' },
-        { id: '64', showTarget: true, kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getMeantimeWithoutFailureData', sum: 'meantimeWithoutFailure', yDataName: 'meantimeWithoutFailure', dataName: '时间', icon: 'el-icon-s-data', title: '平均无故障时间', content: '' },
-        { id: '102', showTarget: true, kind: 'inspection', date: '', showWarning: false, targetValue: '', apiName: 'getSingleInspectionPassRateData', sum: 'singleInspectionPassRate', yDataName: 'singleInspectionPassRate', dataName: '合格率', con: 'el-icon-s-data', title: '电车、大吨位一次交检合格率', content: '' },
-        { id: '103', showTarget: true, kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getInTimeReturnRateData', sum: 'intimeReturnrate', yDataName: 'inTimeReturnRate', dataName: '及时率', icon: 'el-icon-s-data', title: '供应商不合格件返厂及时率', content: '' },
-        { id: '104', showTarget: true, kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getPartQualificationRateData', sum: 'selfcheckPassrate', sum2: 'nextprocessFeedbackPassrate', yDataName: 'partQualificationRate', dataName: '合格率', icon: 'el-icon-s-data', title: '班组自查合格率与下道工序反馈合格率', content: '' },
+        { id: '57', showTarget: 'quality', kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getWarrantyRepairRateData', sum: 'warrantyRepairRate', yDataName: 'warrantyRepairRate', dataName: '返修率', icon: 'el-icon-s-data', title: '三包期内新车返修率', content: '' },
+        { id: '58', showTarget: 'quality', kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getWarrantyVehicleRepairRateData', sum: 'warrantyVehicleRepairRate', yDataName: 'warrantyVehicleRepairRate', dataName: '返修率', icon: 'el-icon-s-data', title: '三包期内整车月度返修率', content: '' },
+        { id: '59', showTarget: 'quality', kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getExternalLossRateData', sum: 'externalLossRate', yDataName: 'externalLossRate', dataName: '损失率', icon: 'el-icon-s-data', title: '外部质量损失率', content: '' },
+        { id: '61', showTarget: 'quality', kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getMonthlyAfterSalesIssuesData', sum: 'monthlyAfterSalesIssues', yDataName: 'monthlyAfterSalesIssues', dataName: '总数', icon: 'el-icon-s-data', title: '月度售后质量问题总数', content: '' },
+        { id: '62', showTarget: 'quality', kind: 'after', date: '', showWarning: false, targetValue: '', apiName: 'getProductionLiabilityIssuesData', sum: 'productionLiabilityIssues', yDataName: 'productionLiabilityIssues', dataName: '次数', icon: 'el-icon-s-data', title: '售后问题生产责任次数', content: '' },
+        { id: '63', showTarget: 'quality', kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getQuarterlyRankData', sum: 'quarterlyRank', yDataName: 'quarterlyRank', dataName: '排名', icon: 'el-icon-s-data', title: '质量考核季度排名', content: '' },
+        { id: '64', showTarget: 'quality', kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getMeantimeWithoutFailureData', sum: 'meantimeWithoutFailure', yDataName: 'meantimeWithoutFailure', dataName: '时间', icon: 'el-icon-s-data', title: '平均无故障时间', content: '' },
+        { id: '102', showTarget: 'quality', kind: 'inspection', date: '', showWarning: false, targetValue: '', apiName: 'getSingleInspectionPassRateData', sum: 'singleInspectionPassRate', yDataName: 'singleInspectionPassRate', dataName: '合格率', con: 'el-icon-s-data', title: '电车、大吨位一次交检合格率', content: '' },
+        { id: '103', showTarget: 'quality', kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getInTimeReturnRateData', sum: 'intimeReturnrate', yDataName: 'inTimeReturnRate', dataName: '及时率', icon: 'el-icon-s-data', title: '供应商不合格件返厂及时率', content: '' },
+        { id: '104', showTarget: 'quality', kind: 'month', date: '', showWarning: false, targetValue: '', apiName: 'getPartQualificationRateData', sum: 'selfcheckPassrate', sum2: 'nextprocessFeedbackPassrate', yDataName: 'partQualificationRate', dataName: '合格率', icon: 'el-icon-s-data', title: '班组自查合格率与下道工序反馈合格率', content: '' },
         // 与上个指标合并
         // { id: '105', apiName: 'getcurNonBomMaterialCostData', yDataName: 'curNonBomMaterialCost', dataName: '合格率', icon: 'el-icon-s-data', title: '下道工序反馈合格率', content: '企业主要营业产品财务收入' },
       ],
@@ -175,10 +175,13 @@ export default {
 
     toDetail(item) {
       //指标104+105同一个页面
-      if (item.id === '104') {
-        this.$router.push('/quality/indicators104')
-      } else if (item.id === '102') {
+      if (item.id === '102') {
         this.$router.push('/quality/indicators102')
+      }
+      else if (item.id === '103') {
+        this.$router.push('/quality/indicators103')
+      } else if (item.id === '104') {
+        this.$router.push('/quality/indicators104')
       }
       else {
         this.$router.push({

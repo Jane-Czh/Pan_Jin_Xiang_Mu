@@ -220,7 +220,14 @@
       </el-table-column>
       <el-table-column label="word下载" align="center" prop="wordPath">
         <template v-slot:default="scope">
-          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
+          <a
+            v-if="scope.row.wordPath"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企管' && thisDept !== '总部'"
+            @click.prevent="downloadFile(scope.row.wordPath)"
+            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? 'auto' : 'none' }"
+          >
+            点击下载
+          </a>
         </template>
       </el-table-column>
       <!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
@@ -265,6 +272,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:filemanagement:edit']"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
           >
             修改
           </el-button>
@@ -274,6 +282,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
           >
             删除
           </el-button>

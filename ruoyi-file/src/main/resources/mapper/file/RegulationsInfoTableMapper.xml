@@ -269,4 +269,11 @@
     </select>
 
 
+    <select id="selectRegulationsCounts" resultType="com.ruoyi.file.entity.regulationCountsRespondEntity">
+        select main_responsible_department as mainResponsibleDepartment ,count(1) as times
+        from Regulations_Info_table
+        where upload_date BETWEEN #{startTime} AND #{endTime}
+        group by main_responsible_department
+    </select>
+
 </mapper>

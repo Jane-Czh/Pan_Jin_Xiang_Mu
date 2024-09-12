@@ -66,14 +66,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="制度范围" prop="useScope">
-        <el-input
-          v-model="queryParams.useScope"
-          placeholder="请选择制度范围"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="制度范围" prop="useScope">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.useScope"-->
+<!--          placeholder="请选择制度范围"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="制度等级" prop="regulationLeval">
         <el-select
           v-model="queryParams.regulationLeval"
@@ -150,6 +150,17 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleModify"
+          v-hasPermi="['file:filemanagement:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -196,7 +207,6 @@
         </template>
       </el-table-column>
       <el-table-column label="专业分类" align="center" prop="classificationOfSpecialties" />
-      <el-table-column label="制度范围" align="center" prop="useScope"/>
       <el-table-column label="制度编号" align="center" prop="regulationNumber" />
       <el-table-column label="制度等级" align="center" prop="regulationLeval" />
       <el-table-column label="发布日期" align="center" prop="createDate" width="180">
@@ -261,10 +271,18 @@
       </el-table-column>
       <el-table-column label="word下载" align="center" prop="wordPath">
         <template v-slot:default="scope">
-          <a v-if="scope.row.wordPath" @click.prevent="downloadFile(scope.row.wordPath)" style="color: #6495ED;">点击下载</a>
+          <a
+            v-if="scope.row.wordPath"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企管' && thisDept !== '总部'"
+            @click.prevent="downloadFile(scope.row.wordPath)"
+            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? 'auto' : 'none' }"
+          >
+            点击下载
+          </a>
         </template>
       </el-table-column>
-<!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
+
+      <!--      <el-table-column label="文件类型" align="center" prop="fileType"/>-->
 <!--      <el-table-column label="文件大小" align="center" prop="fileSize"/>-->
 <!--      <el-table-column label="pdf文件大小" align="center" prop="pdfSize"/>-->
 <!--      <el-table-column label="word文件大小" align="center" prop="wordSize"/>-->
@@ -286,26 +304,17 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 
-<!--          <template v-if="this.thisDept == '研发' || this.thisDept == this.form.departmentCategory">-->
-<!--          :disabled="this.thisDept !== scope.row.departmentCategory"-->
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              type="text"-->
-<!--              icon="el-icon-upload"-->
-<!--              @click="handleUpdate(scope.row)"-->
-<!--              v-hasPermi="['file:filemanagement:edit']"-->
-<!--              :disabled="thisDept !== scope.row.departmentCategory && thisDept !== '研发'"-->
-<!--            >-->
-<!--              更新-->
-<!--            </el-button>-->
+<!--          <template v-if="this.thisDept == '研发' || this.thisDept == this.form.mainResponsibleDepartment">-->
+<!--          :disabled="this.thisDept !== scope.row.mainResponsibleDepartment-->
             <el-button
               size="mini"
               type="text"
-              icon="el-icon-edit"
+              icon="el-icon-upload"
               @click="handleModify(scope.row)"
               v-hasPermi="['file:filemanagement:edit']"
+              :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
             >
-             更新
+              更新
             </el-button>
             <el-button
               size="mini"
@@ -313,10 +322,29 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['file:filemanagement:remove']"
+              :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
             >
               删除
             </el-button>
 <!--          </template>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              @click="handleModify(scope.row)"-->
+<!--              v-hasPermi="['file:filemanagement:edit']"-->
+<!--            >-->
+<!--             更新-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-delete"-->
+<!--              @click="handleDelete(scope.row)"-->
+<!--              v-hasPermi="['file:filemanagement:remove']"-->
+<!--            >-->
+<!--              删除-->
+<!--            </el-button>-->
         </template>
       </el-table-column>
 
@@ -414,11 +442,6 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="制度范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入制度范围"/>
-            </el-form-item>
-          </el-col>
           <el-col :span='12'>
             <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
               <el-select
@@ -437,8 +460,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
             <el-form-item label="业务模块">
@@ -458,6 +479,9 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+
           <el-col  :span="12">
             <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
             <el-form-item label="细分业务">
@@ -476,18 +500,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-<!--        <el-row>-->
-<!--          <el-col :span='12'>-->
-<!--            <el-form-item label="所属科室" prop="departmentCategory">-->
-<!--              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">-->
-<!--                &lt;!&ndash; 循环遍历this.deptList中的部门数据 &ndash;&gt;-->
-<!--                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度等级" prop="regulationLeval">
               <el-select
@@ -504,6 +516,8 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
               <el-select
@@ -520,8 +534,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度发布日期" prop="createDate">
               <el-date-picker clearable
@@ -532,6 +544,8 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度实施日期" prop="effectiveDate">
               <el-date-picker clearable
@@ -615,13 +629,8 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="制度范围" prop="useScope">
-              <el-input v-model="form.useScope" placeholder="请输入制度范围"/>
-            </el-form-item>
-          </el-col>
           <el-col :span='12'>
-            <el-form-item label="主责部门" prop="mainResponsibleDepartment">
+            <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
               <el-select
                 v-model="form.mainResponsibleDepartment"
                 placeholder="请选择主责部门"
@@ -638,8 +647,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <!-- 2. 可选, 从已有的业务模块中进行选择 ; 当上级部门被选了, 就只能从对应的业务模块中进行选择 -->
             <el-form-item label="业务模块">
@@ -659,6 +666,9 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+
           <el-col  :span="12">
             <!-- 3. 可选, 从已有的细分业务中进行选择 ; 当上级业务模块被选了, 就只能从对应的细分业务中进行选择 -->
             <el-form-item label="细分业务">
@@ -677,18 +687,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <!--        <el-row>-->
-        <!--          <el-col :span='12'>-->
-        <!--            <el-form-item label="所属科室" prop="departmentCategory">-->
-        <!--              <el-select v-model="form.departmentCategory" placeholder="请输入制度所属科室">-->
-        <!--                &lt;!&ndash; 循环遍历this.deptList中的部门数据 &ndash;&gt;-->
-        <!--                <el-option v-for="dept in deptList" :key="dept.deptId" :label="dept.deptName" :value="dept.deptName"></el-option>-->
-        <!--              </el-select>-->
-        <!--            </el-form-item>-->
-        <!--          </el-col>-->
-        <!--        </el-row>-->
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度等级" prop="regulationLeval">
               <el-select
@@ -705,6 +703,8 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度专业分类" prop="classificationOfSpecialties">
               <el-select
@@ -721,8 +721,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度发布日期" prop="createDate">
               <el-date-picker clearable
@@ -733,6 +731,8 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span='12'>
             <el-form-item label="制度实施日期" prop="effectiveDate">
               <el-date-picker clearable
@@ -1139,9 +1139,9 @@
         this.loading = true;
         console.log("刷新页面");
         // 如果部门是研发或总部，则不添加departmentCategory到queryParams
-        if (!['研发', '总部'].includes(this.thisDept)) {
-          this.queryParams.departmentCategory = this.thisDept;
-        }
+        // if (!['研发', '总部'].includes(this.thisDept)) {
+        //   this.queryParams.departmentCategory = this.thisDept;
+        // }
         listFilemanagement(this.queryParams).then(response => {
           console.log("response:：", response);
           this.filemanagementList = response.rows;
@@ -1693,7 +1693,7 @@
 
         if (isFileNameDuplicate) {
           // 如果文件名重复，弹出警告框
-          this.$modal.msgError('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
+          this.$modal.msgWarning('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
           console.log('同名文件已存在，如需上传该制度新版本，请到“更新”处上传！');
           return false; // 中断上传流程
         }

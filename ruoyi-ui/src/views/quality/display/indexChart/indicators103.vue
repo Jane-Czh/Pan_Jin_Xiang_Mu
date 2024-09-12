@@ -15,7 +15,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getSingleInspectionPassRateData } from '@/api/quality/chartAPI'
+import { getInTimeReturnRateData } from '@/api/quality/chartAPI'
 import { getTargetData } from '@/api/financial/target'
 
 
@@ -45,30 +45,13 @@ export default {
     },
     methods: {
         async initData() {
-            // const datePost = {
-            //     date: new Date(),
-            //     deptName: 'quality'
-            // }
             this.timeData.startTime = this.selectedDate[0],
                 this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
-                const res = await getSingleInspectionPassRateData(this.timeData);
+                const res = await getInTimeReturnRateData(this.timeData);
                 this.data = res.rows
 
-                // let target = await getTargetData(datePost);
-
-                // target.forEach(item => {
-                //     item.rows.forEach(row => {
-                //         if (row.indicatorName === 'singleInspectionPassRate') {
-                //             this.targetValue = row.targetValue;
-                //         }
-                //     });
-                // });
-                // console.log(this.targetValue)
-                // console.log('-------------++++++')
-                // const yAxisDataLength = this.data.length;
-                // this.targetValueArray = Array(yAxisDataLength).fill(this.targetValue);
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -171,7 +154,7 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}%',
+                formatter: '{c}',
                 fontSize: 16,
                 rich: {
                     name: {}
@@ -179,7 +162,7 @@ export default {
             };
             this.option = {
                 title: {
-                    text: '电车、大吨位一次交检合格率'
+                    text: '供应商不合格件返厂及时率'
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -188,7 +171,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['电车', '大吨位', '电车和大吨位']
+                    data: ['及时率']
                 },
                 toolbox: {
                     show: true,
@@ -198,8 +181,8 @@ export default {
                     feature: {
                         mark: { show: true, },
                         dataView: { show: true, readOnly: false, title: '数据视图' },
-                        magicType: { show: true, type: ['line', 'bar', 'stack'], title: { line: '切换为折线图', bar: '切换为柱状图', stack: '切换为堆叠图' } },
-                        // restore: { show: true, title: '还原' },
+                        magicType: { show: true, type: ['line', 'bar'], title: { line: '切换为折线图', bar: '切换为柱状图' } },
+                        restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
                     }
                 },
@@ -218,31 +201,13 @@ export default {
                 ],
                 series: [
                     {
-                        name: '电车',
-                        type: 'bar',
+                        name: '及时率',
+                        type: 'scatter',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        data: this.data.map(item => item.electricCarPassRate),
-                    },
-                    {
-                        name: '大吨位',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.largeTonPassRate),
-                    },
-                    {
-                        name: '电车和大吨位',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.singleInspectionPassRate),
+                        data: this.data.map(item => item.intimeReturnrate),
                     },
                     // {
                     //     name: '目标值',

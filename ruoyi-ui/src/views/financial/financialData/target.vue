@@ -250,7 +250,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加指标-目标值";
+      this.title = "添加目标值";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -259,7 +259,7 @@ export default {
       getTarget(itId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改指标-目标值";
+        this.title = "修改目标值";
       });
     },
     /** 提交按钮 */

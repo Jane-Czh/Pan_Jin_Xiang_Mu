@@ -71,8 +71,8 @@ public class TechController extends BaseController {
         return toAjax(techService.insertTech(tech));
     }
 
-    @PreAuthorize("@ss.hasPermi('tech:display:employeesAVGMonthlyNumber')")
-    @PostMapping("/display/employeesAVGMonthlyNumber")
+    @PreAuthorize("@ss.hasPermi('tech:display:nonStandardAVGPreparationDays')")
+    @PostMapping("/display/nonStandardAVGPreparationDays")
     public TableDataInfo nonStandardAVGPreparationDays(@RequestBody DisplayRequestParam time) {
         List<DisplayEntity> list = techService.selectNonStandardAVGPreparationDays(time.getStartTime(),time.getEndTime());
         return getDataTable(list);

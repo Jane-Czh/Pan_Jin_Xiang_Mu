@@ -118,3 +118,15 @@ export function listDept02(query) {
     params: query
   })
 }
+
+// 获取各部门制度总数信息
+export function getRegulationCounts(data) {
+  return request({
+    url: `/file/filemanagement/regulationcounts`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime,
+    }
+  })
+}

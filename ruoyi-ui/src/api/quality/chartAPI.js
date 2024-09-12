@@ -162,3 +162,17 @@ export function getInspectionNewData() {
   })
 }
 
+
+// 供应商不合格件返厂及时率 指标103
+export function getInTimeReturnRateData(data) {
+  return request({
+    url: `/quality/display/inTimeReturnRate`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+

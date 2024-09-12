@@ -64,11 +64,11 @@ public class TechNonStandardOrderController extends BaseController {
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
-            techNonStandardOrderService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
+            R<String> r = techNonStandardOrderService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
 
             log.info("计算完毕，清空数据库");
 
-            return R.ok("上传成功");
+            return r;
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
             throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");

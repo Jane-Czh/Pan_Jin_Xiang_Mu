@@ -63,16 +63,9 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
                         marketSalesTable.getOrderNumber() == null ||
                         marketSalesTable.getOrderAcceptanceTime() == null ||
                         marketSalesTable.getVehicleModel() == null ||
-                        marketSalesTable.getValveBlock() == null ||
-                        marketSalesTable.getFork() == null ||
-                        marketSalesTable.getDoorFrame() == null ||
-                        marketSalesTable.getTyre() == null ||
-                        marketSalesTable.getConfiguration() == null ||
                         marketSalesTable.getDeliveryForm() == null ||
                         marketSalesTable.getDeliveryLocation() == null ||
-                        marketSalesTable.getContacts() == null ||
-                        marketSalesTable.getOrderSystemDeliveryTime() == null ||
-                        marketSalesTable.getOrderOverdueWarning() == null
+                        marketSalesTable.getOrderSystemDeliveryTime() == null
                 ){
                     i++;
                     continue;

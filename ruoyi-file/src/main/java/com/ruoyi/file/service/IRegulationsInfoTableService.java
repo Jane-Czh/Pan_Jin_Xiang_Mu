@@ -6,6 +6,7 @@ import java.util.List;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.file.domain.RegulationsInfoTable;
 import com.ruoyi.file.entity.regulationRespondEntity;
+import com.ruoyi.file.entity.regulationCountsRespondEntity;
 
 /**
  * 文件管理Service接口
@@ -91,4 +92,6 @@ public interface IRegulationsInfoTableService {
      * 制度修订频率
      */
     List<regulationRespondEntity> selectRevisionFrequency(Date startTime, Date endTime, Long regulationId);
+
+    List<regulationCountsRespondEntity> selectRegulationsCounts(Date startTime, Date endTime);
 }

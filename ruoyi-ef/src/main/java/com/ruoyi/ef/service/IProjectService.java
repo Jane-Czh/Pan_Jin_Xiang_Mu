@@ -37,6 +37,11 @@ public interface IProjectService extends IService<ProjectEntity> {
     List<ProjectEntity> queryDatas();
 
     /**
+     * 根据时间区间查找所有流程数据
+     */
+    List<ProjectEntity> queryDatasByTime(Date startTime, Date endTime);
+
+    /**
      * 获取指定id流程的相关历史流程数据
      * @param projectId
      * @return

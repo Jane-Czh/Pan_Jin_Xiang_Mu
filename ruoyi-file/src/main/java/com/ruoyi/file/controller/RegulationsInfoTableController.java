@@ -14,6 +14,7 @@ import com.ruoyi.file.Word2PdfAsposeUtil;
 import com.ruoyi.file.domain.RegulationsInfoTable;
 import com.ruoyi.file.entity.regulationRespondEntity;
 import com.ruoyi.file.entity.regulationCountsRespondEntity;
+import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
 import com.ruoyi.file.service.IRegulationsInfoTableService;
 import com.ruoyi.file.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -178,41 +179,13 @@ public class RegulationsInfoTableController extends BaseController {
         return regulationsInfoTableService.selectRegulationsCounts(regulationsInfoTable.getStartTime(), regulationsInfoTable.getEndTime());
     }
 
-
-//
-//    @PostMapping("/convert")
-//    public void previewFile(@RequestParam String inPath,@RequestParam String fileName,HttpServletResponse response)throws IOException {
-//
-//        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-//        if("pdf".equalsIgnoreCase(suffix)){
-//            String type = new MimetypesFileTypeMap().getContentType(fileName);
-//            response.setHeader("Content-type",type);
-//            String newFileName = new String(fileName.getBytes("utf-8"), "iso-8859-1");
-//            // 设置扩展头，当Content-Type 的类型为要下载的类型时 , 这个信息头会告诉浏览器这个文件的名字和类型。
-//            response.setHeader("Content-Disposition", "attachment;filename=" + newFileName);
-//            FileUtil.downloadFile(fileName,inPath,response);
-//
-//        }
-//
-//        String filePath = inPath + fileName.substring(0,fileName.lastIndexOf(".")) + ".pdf";
-//        if( FileUtil.checkFileExist(filePath)){
-//            FileUtil.previewFile1(filePath,response);
-//        }else {
-//            String newFilePath=null;
-//
-//                //DOC, DOCX, OOXML, RTF HTML, OpenDocument, PDF, EPUB, XPS, SWF
-//                newFilePath = FileUtil.doc2pdf(fileName, inPath);
-//
-//
-//
-//            if(StringUtils.isNotBlank(newFilePath)){
-//                FileUtil.previewFile1(newFilePath,response);
-//            }
-//        }
-//
-//
-//
-//    }
+    /**
+     *  根据专业分类统计制度总数
+     */
+    @PostMapping("/regulationcountsbyclassification")
+    public List<regulationCountsByClassificationRespondEntity> getRegulationCountsByClassification(@RequestBody RegulationsInfoTable regulationsInfoTable) {
+        return regulationsInfoTableService.selectRegulationsCountsByClassification(regulationsInfoTable.getStartTime(), regulationsInfoTable.getEndTime());
+    }
 
 }
 

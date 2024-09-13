@@ -130,3 +130,16 @@ export function getRegulationCounts(data) {
     }
   })
 }
+
+// 根据专业分类统计制度总数
+export function getRegulationCountsByClassification(data) {
+  return request({
+    url: `/file/filemanagement/regulationcountsbyclassification`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime,
+    }
+  })
+}
+

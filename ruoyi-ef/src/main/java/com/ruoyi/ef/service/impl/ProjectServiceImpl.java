@@ -211,6 +211,39 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         return filteredEntities;
     }
 
+    public List<ProjectEntity> queryDatasByTime(Date startTime, Date endTime) {
+//        System.out.println("hhh startTime==>" + startTime);
+//        System.out.println("hhh endTime==>" + endTime);
+        //hhh startTime==>Mon Jan 01 00:00:00 CST 2024
+        //hhh endTime==>Mon Sep 30 00:00:00 CST 2024
+        List<ProjectEntity> projectEntities = projectDao.selectList(null);
+        List<ProjectEntity> filteredEntities = new ArrayList<>();
+
+
+        for (ProjectEntity entity : projectEntities) {
+            if (entity.getNewest() != null && entity.getNewest() == 1 ) {
+                //添加在时间区间内的数据
+                String createDate = entity.getCreateDate();
+                //2024-08-03 12:32:06
+                //需要将createDate转换为Date类型再比较
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = dateFormat.parse(createDate);
+                    //判断时间是否在时间区间内
+                    if (date.toInstant().isAfter(startTime.toInstant()) && date.toInstant().isBefore(endTime.toInstant())) {
+                        filteredEntities.add(entity);
+                    }
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        }
+        System.out.println("hhhh filteredEntities==>" + filteredEntities);
+        return filteredEntities;
+    }
+
 
     /**
      * 根据id查询流程(单条记录)

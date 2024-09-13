@@ -20,9 +20,9 @@
       >
       </el-date-picker>
     </div>
-    <div id="chart1" class="box">区域 3</div>
+    <div id="regulationchart1" class="box">区域 3</div>
     <div class="box">区域 4</div>
-    <div class="box">区域 5</div>
+    <div id="regulationchart2" class="box"></div>
     <div class="box">区域 6</div>
   </div>
 </template>
@@ -46,7 +46,8 @@ export default {
       selectedDate: [],
       pickerOptions: [],
       option: {},
-      myChart: {},
+      myRegulationChart1: {}, //制度柱状图
+      myRegulationChart2: {}, //制度饼图
       data: [],
       //当前时间期间内统计的制度总次数
       totalCounts: 0,
@@ -60,8 +61,9 @@ export default {
     this.getDeptList();
     this.getRegulationCounts();
     this.defaultMonth();
-    this.myChart = echarts.init(document.getElementById("chart1"));
-    this.initData();
+    this.myRegulationChart1 = echarts.init(document.getElementById("regulationchart1"));
+    this.myRegulationChart2 = echarts.init(document.getElementById("regulationchart2"));
+    this.initRegulationChart1Data();
     // this.getThisProjectName();
   },
   created() {
@@ -73,7 +75,7 @@ export default {
         this.regulationCount = response.total;
       })
     },
-    async initData() {
+    async initRegulationChart1Data() {
       this.timeData.startTime = this.selectedDate[0];
       // 获取该月的最后一天
       const endOfMonth = new Date(this.selectedDate[1].getFullYear(), this.selectedDate[1].getMonth() + 1, 0);
@@ -106,7 +108,7 @@ export default {
         // 处理数据，确保所有部门都有对应的制度数量，不存在的部门设置为 0
         this.processData();
         // 更新图表显示
-        this.updateChart();
+        this.updateRegulationChart1();
       } catch (error) {
         this.loading = false;
       }
@@ -155,10 +157,10 @@ export default {
       });
     },
     handleDateChange() {
-      this.initData();
+      this.initRegulationChart1Data();
     },
 
-    updateChart() {
+    updateRegulationChart1() {
       const formattedData = this.data.map((item) => {
         return {
           mainResponsibleDepartment: item.mainResponsibleDepartment,
@@ -211,7 +213,7 @@ export default {
             position: app.config.position,
             distance: app.config.distance,
           };
-          this.myChart.setOption({
+          this.myRegulationChart1.setOption({
             series: [
               { label: labelOption },
               { label: labelOption },
@@ -301,7 +303,7 @@ export default {
         ],
       };
 
-      this.option && this.myChart.setOption(this.option);
+      this.option && this.myRegulationChart1.setOption(this.option);
     },
     //时间选择器的默认月份设置
     defaultMonth() {

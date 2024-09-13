@@ -269,7 +269,7 @@ public class ExcelUtils {
         return dataList;
     }
 
-    public static List<MarketCarType> parseExcel2MarketCarType(MultipartFile file)throws IOException{
+    public static List<MarketCarType> parseExcel2MarketCarType(MultipartFile file) throws IOException{
         List<MarketCarType> dataList = new ArrayList<>();
 
         Workbook workbook = WorkbookFactory.create(file.getInputStream());
@@ -307,6 +307,39 @@ public class ExcelUtils {
         return dataList;
     }
 
+    public static List<MarketMainType> parseExcel2MarketMainType(MultipartFile file) throws IOException{
+        List<MarketMainType> dataList = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+
+            MarketMainType marketMainType = new MarketMainType();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+
+            //1、类别
+            marketMainType.setMainCarType(getStringCellValue(row.getCell(0)));
+            //2、车型
+            marketMainType.setCarType(getStringCellValue(row.getCell(1)));
+
+            dataList.add(marketMainType);
+        }
+
+        workbook.close();
+
+        return dataList;
+    }
 
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {

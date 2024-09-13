@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketMainTypeMapper">
+    
+    <resultMap type="MarketMainType" id="MarketMainTypeResult">
+        <result property="id"    column="id"    />
+        <result property="mainCarType"    column="main_car_type"    />
+        <result property="carType"    column="car_Type"    />
+        <result property="creatTime"    column="creat_time"    />
+        <result property="creatPeople"    column="creat_people"    />
+    </resultMap>
+
+    <sql id="selectMarketMainTypeVo">
+        select id, main_car_type, car_Type, creat_time, creat_people from market_main_type
+    </sql>
+
+    <select id="selectMarketMainTypeList" parameterType="MarketMainType" resultMap="MarketMainTypeResult">
+        <include refid="selectMarketMainTypeVo"/>
+        <where>  
+            <if test="mainCarType != null  and mainCarType != ''"> and main_car_type = #{mainCarType}</if>
+            <if test="carType != null  and carType != ''"> and car_Type = #{carType}</if>
+            <if test="creatTime != null "> and creat_time = #{creatTime}</if>
+            <if test="creatPeople != null  and creatPeople != ''"> and creat_people = #{creatPeople}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarketMainTypeById" parameterType="Long" resultMap="MarketMainTypeResult">
+        <include refid="selectMarketMainTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarketMainType" parameterType="MarketMainType">
+        insert into market_main_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="mainCarType != null">main_car_type,</if>
+            <if test="carType != null">car_Type,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="creatPeople != null">creat_people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="mainCarType != null">#{mainCarType},</if>
+            <if test="carType != null">#{carType},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="creatPeople != null">#{creatPeople},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketMainType" parameterType="MarketMainType">
+        update market_main_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mainCarType != null">main_car_type = #{mainCarType},</if>
+            <if test="carType != null">car_Type = #{carType},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="creatPeople != null">creat_people = #{creatPeople},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarketMainTypeById" parameterType="Long">
+        delete from market_main_type where id = #{id}
+    </delete>
+
+    <delete id="deleteMarketMainTypeByIds" parameterType="String">
+        delete from market_main_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--  批量插入的 SQL 语句  -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO market_main_type (
+        id,
+        main_car_type,
+        car_type
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.mainCarType},
+            #{item.carType}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteAll">
+        truncate table market_main_type;
+    </delete>
+</mapper>

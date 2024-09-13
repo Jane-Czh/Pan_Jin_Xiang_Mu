@@ -25,21 +25,6 @@ public class regulationRespondEntity {
         this.updateDates.add(updateDate);
     }
 
-    public Date getYearAndMonth() {
-        return yearAndMonth;
-    }
-
-    public void setYearAndMonth(Date yearAndMonth) {
-        this.yearAndMonth = yearAndMonth;
-    }
-
-    public Integer getTimes() {
-        return times;
-    }
-
-    public void setTimes(Integer times) {
-        this.times = times;
-    }
 
 
 }

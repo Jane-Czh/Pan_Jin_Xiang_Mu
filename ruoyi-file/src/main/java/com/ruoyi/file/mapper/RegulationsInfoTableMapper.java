@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.file.domain.RegulationsInfoTable;
+import com.ruoyi.file.entity.regulationCountsRespondEntity;
 import com.ruoyi.file.entity.regulationRespondEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -78,6 +79,12 @@ public interface RegulationsInfoTableMapper
      * @return 结果
      */
     public int deleteRegulationsInfoTableByRegulationsIds(Long[] regulationsIds);
+
+
+    /**
+    * 查询各部门的制度总数
+    * */
+    public List<regulationCountsRespondEntity> selectRegulationsCounts(@Param("startTime") Date startTime,@Param("endTime") Date endTime);
 
 //    /**
 //     * 制度修订频率

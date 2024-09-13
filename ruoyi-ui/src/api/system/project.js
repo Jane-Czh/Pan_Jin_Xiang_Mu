@@ -292,3 +292,15 @@ export function getAllShowEntity() {
   })
 }
 
+
+//0912 sb 
+export function listProjectWithTime(timeData) {
+  return request({
+    url: '/project/list/time',
+    method: 'post',
+    data: {
+      startTime: timeData.startTime,
+      endTime: timeData.endTime,
+    }
+  })
+}

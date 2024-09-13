@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -306,6 +303,24 @@ public class ProjectController extends SuperController<ProjectEntity> {
         List<ProjectEntity> projectEntitys = projectService.queryDatas();
         return projectEntitys;
     }
+
+    @PostMapping("/list/time")
+    public List<ProjectEntity> listTime(@RequestBody ProjectEntity time) {
+//        System.out.println("listTime projectEntity ==>" + time);
+        //TODO 根据时间区间查找
+        Date startTime = time.getStartTime();
+        Date endTime = time.getEndTime();
+
+        List<ProjectEntity> projectEntitys = projectService.queryDatasByTime(startTime, endTime);
+        return projectEntitys;
+    }
+
+//    @PostMapping("/indicators/updateCounts")
+//    public List<IndicatorRespondEntity> updateCounts(@RequestBody ProjectEntity time) {
+//        System.out.println("time start ==>" + time);
+//        List<IndicatorRespondEntity> list = projectService.selectIndicatorsUpdateTimes(time.getStartTime(), time.getEndTime(), time.getId());
+//        return list;
+//    }
 
     /**
      * 按照name查询流程

@@ -15,41 +15,49 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:dailyclear:add']">新增</el-button>
+          v-hasPermi="['enterprise:Settlement:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
+          v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
+          v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
       </el-col>
-
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
+          v-hasPermi="['enterprise:Settlement:export']">导出</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="SettlementList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="id" align="center" prop="edId" /> -->
-      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="180" sortable="custom">
+      <el-table-column label="日期" fixed align="center" prop="yearAndMonth" sortable="custom" width="130">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="销售订单录入不及时比例(%)" align="center" prop="orderEntryDelayRatio" />
-      <el-table-column label="销售订单不及时发货比例(%)" align="center" prop="shipmentDelayRatio" />
-      <el-table-column label="生产订单不及时报工比例(%)" align="center" prop="productionReportDelayRatio" />
-      <el-table-column label="成品检验业务不及时率(%)" align="center" prop="inspectionDelayRate" />
-      <el-table-column label="销售发票过账不及时率(%)" align="center" prop="invoicePostingDelayRate" />
-      <el-table-column label="客户未清账比例(%)" align="center" prop="unsettledAccountsRatio" />
-      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="销售订单录入不及时得分" align="center" prop="orderEntryDelayScore" width="180" />
+      <el-table-column label="销售订单录入不及时比例(%)" align="center" prop="orderEntryDelayRatio" width="200" />
+      <el-table-column label="销售订单不及时发货得分" align="center" prop="shipmentDelayScore" width="180" />
+      <el-table-column label="销售订单不及时发货比例(%)" align="center" prop="shipmentDelayRatio" width="200" />
+      <el-table-column label="生产订单不及时报工得分" align="center" prop="productionReportDelayScore" width="180" />
+      <el-table-column label="生产订单不及时报工比例(%)" align="center" prop="productionReportDelayRatio" width="200" />
+      <el-table-column label="成品检验业务不及时得分" align="center" prop="inspectionDelayScore" width="180" />
+      <el-table-column label="成品检验业务不及时率(%)" align="center" prop="inspectionDelayRate" width="180" />
+      <el-table-column label="销售发票过账不及得分" align="center" prop="invoicePostingDelayScore" width="180" />
+      <el-table-column label="销售发票过账不及时率(%)" align="center" prop="invoicePostingDelayRate" width="180" />
+      <el-table-column label="客户未清账得分" align="center" prop="unsettledAccountsScore" width="180" />
+      <el-table-column label="客户未清账比例(%)" align="center" prop="unsettledAccountsRatio" width="180" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="120">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
+            v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
+            v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -58,30 +66,48 @@
       @pagination="getList" />
 
     <!-- 添加或修改日清日结对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
-      <el-form ref="form" :model="form" :rules="rules" label-width="210px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="date" value-format="yyyy-MM-dd"
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="销售订单录入不及时比例(%)" prop="orderEntryDelayRatio">
-          <el-input v-model="form.orderEntryDelayRatio" placeholder="请输入销售订单录入不及时比例(%)" />
+        <el-form-item label="销售订单录入不及时得分" prop="orderEntryDelayScore">
+          <el-input v-model="form.orderEntryDelayScore" placeholder="请输入销售订单录入不及时得分" />
         </el-form-item>
-        <el-form-item label="销售订单不及时发货比例(%)" prop="shipmentDelayRatio">
-          <el-input v-model="form.shipmentDelayRatio" placeholder="请输入销售订单不及时发货比例(%)" />
+        <el-form-item label="销售订单录入不及时比例" prop="orderEntryDelayRatio">
+          <el-input v-model="form.orderEntryDelayRatio" placeholder="请输入销售订单录入不及时比例" />
         </el-form-item>
-        <el-form-item label="生产订单不及时报工比例(%)" prop="productionReportDelayRatio">
-          <el-input v-model="form.productionReportDelayRatio" placeholder="请输入生产订单不及时报工比例(%)" />
+        <el-form-item label="销售订单不及时发货得分" prop="shipmentDelayScore">
+          <el-input v-model="form.shipmentDelayScore" placeholder="请输入销售订单不及时发货得分" />
         </el-form-item>
-        <el-form-item label="成品检验业务不及时率(%)" prop="inspectionDelayRate">
-          <el-input v-model="form.inspectionDelayRate" placeholder="请输入成品检验业务不及时率(%)" />
+        <el-form-item label="销售订单不及时发货比例" prop="shipmentDelayRatio">
+          <el-input v-model="form.shipmentDelayRatio" placeholder="请输入销售订单不及时发货比例" />
         </el-form-item>
-        <el-form-item label="销售发票过账不及时率(%)" prop="invoicePostingDelayRate">
-          <el-input v-model="form.invoicePostingDelayRate" placeholder="请输入销售发票过账不及时率(%)" />
+        <el-form-item label="生产订单不及时报工得分" prop="productionReportDelayScore">
+          <el-input v-model="form.productionReportDelayScore" placeholder="请输入生产订单不及时报工得分" />
         </el-form-item>
-        <el-form-item label="客户未清账比例(%)" prop="unsettledAccountsRatio">
-          <el-input v-model="form.unsettledAccountsRatio" placeholder="请输入客户未清账比例(%)" />
+        <el-form-item label="生产订单不及时报工比例" prop="productionReportDelayRatio">
+          <el-input v-model="form.productionReportDelayRatio" placeholder="请输入生产订单不及时报工比例" />
+        </el-form-item>
+        <el-form-item label="成品检验业务不及时得分" prop="inspectionDelayScore">
+          <el-input v-model="form.inspectionDelayScore" placeholder="请输入成品检验业务不及时得分" />
+        </el-form-item>
+        <el-form-item label="成品检验业务不及时率" prop="inspectionDelayRate">
+          <el-input v-model="form.inspectionDelayRate" placeholder="请输入成品检验业务不及时率" />
+        </el-form-item>
+        <el-form-item label="销售发票过账不及得分" prop="invoicePostingDelayScore">
+          <el-input v-model="form.invoicePostingDelayScore" placeholder="请输入销售发票过账不及得分" />
+        </el-form-item>
+        <el-form-item label="销售发票过账不及时率" prop="invoicePostingDelayRate">
+          <el-input v-model="form.invoicePostingDelayRate" placeholder="请输入销售发票过账不及时率" />
+        </el-form-item>
+        <el-form-item label="客户未清账得分" prop="unsettledAccountsScore">
+          <el-input v-model="form.unsettledAccountsScore" placeholder="请输入客户未清账得分" />
+        </el-form-item>
+        <el-form-item label="客户未清账比例" prop="unsettledAccountsRatio">
+          <el-input v-model="form.unsettledAccountsRatio" placeholder="请输入客户未清账比例" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -93,7 +119,7 @@
 </template>
 
 <script>
-import { listDailyClearData, getDailyClearData, addDailyClearData, updateDailyClearData, delDailyClearData } from "@/api/enterprise/dailyClearData";
+import { listDailyClearData, getDailyClearData, delDailyClearData, addDailyClearData, updateDailyClearData } from "@/api/enterprise/dailyClearData";
 import { numValidatorPercentage, numValidator } from '@/api/financial/numValidator.js';
 export default {
   name: "Settlement",
@@ -103,7 +129,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -123,11 +148,17 @@ export default {
         pageNum: 1,
         pageSize: 10,
         yearAndMonth: null,
+        orderEntryDelayScore: null,
         orderEntryDelayRatio: null,
+        shipmentDelayScore: null,
         shipmentDelayRatio: null,
+        productionReportDelayScore: null,
         productionReportDelayRatio: null,
+        inspectionDelayScore: null,
         inspectionDelayRate: null,
+        invoicePostingDelayScore: null,
         invoicePostingDelayRate: null,
+        unsettledAccountsScore: null,
         unsettledAccountsRatio: null,
       },
       // 表单参数
@@ -144,7 +175,21 @@ export default {
             trigger: "blur",
           }
         ],
+        orderEntryDelayScore: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
         shipmentDelayRatio: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        shipmentDelayScore: [
           {
             required: true,
             validator: numValidator,
@@ -158,7 +203,21 @@ export default {
             trigger: "blur",
           }
         ],
+        productionReportDelayScore: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
         inspectionDelayRate: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        inspectionDelayScore: [
           {
             required: true,
             validator: numValidator,
@@ -172,7 +231,21 @@ export default {
             trigger: "blur",
           }
         ],
+        invoicePostingDelayScore: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
         unsettledAccountsRatio: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        unsettledAccountsScore: [
           {
             required: true,
             validator: numValidator,
@@ -186,15 +259,24 @@ export default {
     this.getList();
   },
   methods: {
-    handleClose(done) {
-      this.$confirm('确定关闭吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        done();
-      }).catch(() => {
+    /** 查询日清日结列表 */
+    getList() {
+      this.loading = true;
+      listDailyClearData(this.queryParams).then(response => {
+        this.SettlementList = response.rows;
+        this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 默认降序
+        });
+        this.loading = false;
       });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
     },
     handleSortChange(sort) {
       // sort.order: 排序的顺序，'ascending' 或 'descending'
@@ -206,35 +288,22 @@ export default {
         }
       }
     },
-    /** 查询日清日结列表 */
-    getList() {
-      this.loading = true;
-      listDailyClearData(this.queryParams).then(response => {
-        this.SettlementList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-        this.handleSortChange({
-          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
-          prop: 'yearAndMonth',
-          order: 'descending' // 或'descending'
-        });
-      });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
     // 表单重置
     reset() {
       this.form = {
         edId: null,
         yearAndMonth: null,
+        orderEntryDelayScore: null,
         orderEntryDelayRatio: null,
+        shipmentDelayScore: null,
         shipmentDelayRatio: null,
+        productionReportDelayScore: null,
         productionReportDelayRatio: null,
+        inspectionDelayScore: null,
         inspectionDelayRate: null,
+        invoicePostingDelayScore: null,
         invoicePostingDelayRate: null,
+        unsettledAccountsScore: null,
         unsettledAccountsRatio: null,
         createBy: null,
         createTime: null,
@@ -264,7 +333,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "新增";
+      this.title = "添加日清日结";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -273,7 +342,7 @@ export default {
       getDailyClearData(edId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改";
+        this.title = "修改日清日结";
       });
     },
     /** 提交按钮 */
@@ -307,7 +376,12 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => { });
     },
-
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('enterprise/Settlement/export', {
+        ...this.queryParams
+      }, `Settlement_${new Date().getTime()}.xlsx`)
+    }
   }
 };
 </script>

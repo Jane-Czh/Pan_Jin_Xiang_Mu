@@ -36,8 +36,7 @@
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="主键" align="center" prop="id" /> -->
-      <el-table-column label="日期" align="center" prop="dataTime" width="180" :sort-orders="['descending', 'ascending']"
-        sortable="custom">
+      <el-table-column label="日期" align="center" prop="dataTime" width="180" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.dataTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -141,10 +140,15 @@ export default {
       if (value === null || value === undefined) return '';
       return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'dataTime') {
+        if (sort.order === 'ascending') {
+          this.dataList.sort((a, b) => new Date(a.dataTime) - new Date(b.dataTime));
+        } else if (sort.order === 'descending') {
+          this.dataList.sort((a, b) => new Date(b.dataTime) - new Date(a.dataTime));
+        }
+      }
     },
     /** 查询[财务]每日填报指标[当日再制品金额]列表 */
     getList() {
@@ -152,6 +156,11 @@ export default {
       listData(this.queryParams).then(response => {
         this.dataList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'dataTime',
+          order: 'descending' // 默认降序
+        });
         this.loading = false;
       });
     },

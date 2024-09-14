@@ -25,7 +25,7 @@
 </template>
 
 <script>
-
+import { getTargetData } from '@/api/financial/target'
 export default {
   components: {},
   props: [],
@@ -33,10 +33,9 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '47', icon: 'el-icon-s-data', title: '非标订单平均技术准备天数', content: '非标订单平均技术准备天数', path: '/tech/indicators47' },
-        { id: '71', icon: 'el-icon-s-data', title: '研发项目计划进度完成率', content: '研发项目计划进度完成率', path: '/tech/indicators71' },
+        { id: '47', showTarget: 'tech', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'nonStandardAVGPreparationDays', icon: 'el-icon-s-data', title: '非标订单平均技术准备天数', content: '非标订单平均技术准备天数', path: '/tech/indicators47' },
+        { id: '71', showTarget: 'tech', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'prdScheduleCompletionRate', icon: 'el-icon-s-data', title: '研发项目计划进度完成率', content: '研发项目计划进度完成率', path: '/tech/indicators71' },
       ],
-
       formData: {},
       rules: {},
     }
@@ -45,10 +44,36 @@ export default {
   watch: {},
   created() {
   },
-  mounted() { },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      let target = {
+        date: new Date(),
+        deptName: 'tech',
+      }
+      const resTarget = await getTargetData(target)
+      //目标值赋予及上下限预警
+      this.allIndex.forEach(item => {
+        resTarget.rows.forEach(row => {
+          if (item.sum === row.indicatorName) {
+            item.targetValue = row.targetValue;
+            item.targetValueDate = row.natureYear;
+            // if (allTargetData[item.sum] < row.targetLowerLimit || allTargetData[item.sum] > row.targetUpperLimit) {
+            //   item.showWarning = true;
+            // }
+          }
+        });
+      });
+    },
     toDetail(item) {
-      this.$router.push(item.path)
+      this.$router.push({
+        path: item.path,
+        query: {
+          data: JSON.stringify(item),
+        }
+      })
     }
   }
 }

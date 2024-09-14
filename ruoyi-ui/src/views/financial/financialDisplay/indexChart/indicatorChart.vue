@@ -14,7 +14,7 @@ export default {
     legendData: { type: String, default: null },
     targetValue: { type: Number, default: 0 },
     targetValueDate: { type: String, default: null },
-    showTarget: { type: String, default: false },
+    showTarget: { type: String, default: null },
   },
   data() {
     return {
@@ -137,7 +137,7 @@ export default {
           if (this.showTarget === 'financial') {
             return params.value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
           } else {
-            return params.value;
+            return params.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 3, useGrouping: false });
           }
         },
         fontSize: 16,
@@ -145,6 +145,29 @@ export default {
           name: {}
         }
       };
+
+      // 根据条件决定是否添加目标值系列
+      let series = [{
+        name: this.dataName,
+        type: 'bar',
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: this.yAxisData,
+      }];
+
+      if (this.showTarget && (this.targetValue != 0 && this.targetValue != '')) {
+        series.push({
+          name: '目标值',
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.targetValueArray,
+        });
+      }
       this.option = {
         title: {
           text: this.title
@@ -156,7 +179,7 @@ export default {
           }
         },
         legend: {
-          data: [this.dataName, this.showTarget && this.targetValue != '' ? '目标值' : null].filter(item => item !== null),
+          data: [this.dataName, this.showTarget && this.targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,
@@ -183,25 +206,7 @@ export default {
             type: 'value'
           }
         ],
-        series: [{
-          name: this.dataName,
-          type: 'bar',
-          label: labelOption,
-          emphasis: {
-            focus: 'series'
-          },
-          data: this.yAxisData,
-        },
-        {
-          name: '目标值',
-          type: 'line',
-          label: labelOption,
-          emphasis: {
-            focus: 'series'
-          },
-          data: this.showTarget ? this.targetValueArray : [],
-        }
-        ]
+        series: series
       };
 
       this.option && this.myChart.setOption(this.option);

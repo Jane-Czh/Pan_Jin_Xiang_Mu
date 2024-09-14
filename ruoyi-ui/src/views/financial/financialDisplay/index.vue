@@ -292,7 +292,6 @@ export default {
         };
         const allTargetData = allData
         Object.keys(allData).forEach(key => {
-
           allData[key] = this.formatNumber(allData[key]);
         });
         allNewData = {
@@ -336,11 +335,9 @@ export default {
                 item.content = `最新一月：${allNewData[key] || '-'}\t(万元)`;
               }
             }
-            // else if (item.id === '32' || item.id === '33' || item.id === '34' || item.id === '35' || item.id === '36') {
-            //   item.content = `当月总计：${allData[item.sum] || ''}\t(元)`;
-            // }
           }
         });
+
         //目标值赋予及上下限预警
         this.allIndex.forEach(item => {
           resTarget.rows.forEach(row => {
@@ -355,17 +352,27 @@ export default {
           });
         });
 
-
       } catch (error) {
         console.error('初始化数据失败:', error);
       }
     },
+
     toDetail(item) {
       if (item.id === '30') {
-        this.$router.push('/financial/indicators30')
+        this.$router.push({
+          path: '/financial/indicators30',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
       }
       else if (item.id === '70') {
-        this.$router.push('/financial/indicators70')
+        this.$router.push({
+          path: '/financial/indicators70',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
       }
       else {
         this.$router.push({

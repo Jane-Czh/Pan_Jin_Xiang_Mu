@@ -31,8 +31,7 @@
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="tapcId" /> -->
-      <el-table-column label="年份" align="center" prop="naturalYear" :sort-orders="['descending', 'ascending']"
-        sortable="custom" />
+      <el-table-column label="年份" align="center" prop="naturalYear" sortable="custom" />
       <el-table-column label="年度计划总数" align="center" prop="annualPlancounts" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -124,10 +123,15 @@ export default {
     this.getList();
   },
   methods: {
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'naturalYear') {
+        if (sort.order === 'ascending') {
+          this.dataList.sort((a, b) => new Date(a.naturalYear) - new Date(b.naturalYear));
+        } else if (sort.order === 'descending') {
+          this.dataList.sort((a, b) => new Date(b.naturalYear) - new Date(a.naturalYear));
+        }
+      }
     },
     /** 查询【技术】总计划年初填报列表 */
     getList() {
@@ -135,6 +139,11 @@ export default {
       listData2(this.queryParams).then(response => {
         this.dataList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'naturalYear',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
 
       });

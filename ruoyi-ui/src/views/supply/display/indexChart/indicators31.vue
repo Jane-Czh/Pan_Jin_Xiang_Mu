@@ -14,6 +14,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getControlledPurchaseAmountRatioData } from '@/api/supply/chartData'
+import { getTargetData } from '@/api/financial/target'
 
 export default {
   data() {
@@ -27,7 +28,10 @@ export default {
       selectedDate: [],
       pickerOptions: [],
       option: {},
-      myChart: {}
+      myChart: {},
+      routerData: [
+        { id: '31', showTarget: 'supply', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'controlledPurchaseAmountRatio', icon: 'el-icon-s-data', title: '集团管控物资采购金额占比', content: '集团管控物资采购金额占比', path: '/supply/indicators31' },
+      ],
     }
   },
   computed: {},
@@ -38,12 +42,31 @@ export default {
   },
   methods: {
     async initData() {
+      let target = {
+        date: new Date(),
+        deptName: 'supply',
+      }
+      const resTarget = await getTargetData(target)
+      //目标值赋予及上下限预警
+      this.routerData.forEach(item => {
+        resTarget.rows.forEach(row => {
+          if (item.sum === row.indicatorName) {
+            item.targetValue = row.targetValue;
+            item.targetValueDate = row.natureYear;
+            // if (allTargetData[item.sum] < row.targetLowerLimit || allTargetData[item.sum] > row.targetUpperLimit) {
+            //   item.showWarning = true;
+            // }
+          }
+        });
+      });
       this.timeData.startTime = this.selectedDate[0],
         this.timeData.endTime = this.selectedDate[1]
       try {
         this.loading = true
         const res = await getControlledPurchaseAmountRatioData(this.timeData);
         this.data = res.rows
+        const yAxisDataLength = this.data.length;
+        this.targetValueArray = Array(yAxisDataLength).fill(this.routerData[0].targetValue);
         this.loading = false
         this.updateChart()
       } catch (error) {
@@ -151,6 +174,67 @@ export default {
           name: {}
         }
       };
+      // 根据条件决定是否添加目标值系列
+      let series = [
+        {
+          name: '采购金额',
+          type: 'bar',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.data.map(item => item.controlledMaterialPurchases),
+        },
+        {
+          name: '总金额',
+          type: 'bar',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.data.map(item => item.totalPurchaseAmount),
+        },
+        {
+          name: '占比',
+          type: 'line',
+          label: {
+            show: true,
+            position: app.config.position,
+            distance: app.config.distance,
+            align: app.config.align,
+            verticalAlign: app.config.verticalAlign,
+            rotate: app.config.rotate,
+            formatter: '{c} %',
+            fontSize: 16,
+            rich: {
+              name: {}
+            }
+          },
+          emphasis: {
+            focus: 'series'
+          },
+
+          yAxisIndex: 1,
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + '%';
+            }
+          },
+          data: this.data.map(item => item.controlledPurchaseAmountRatio),
+        }
+      ];
+
+      if (this.routerData[0].showTarget && (this.routerData[0].targetValue != 0 || '')) {
+        series.push({
+          name: '目标值',
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.targetValueArray,
+        });
+      }
       this.option = {
         title: {
           text: '集团管控物资采购金额占比',
@@ -162,7 +246,7 @@ export default {
           }
         },
         legend: {
-          data: ['采购金额', '总金额', '占比']
+          data: ['采购金额', '总金额', '占比', this.routerData[0].targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,
@@ -185,7 +269,6 @@ export default {
           }
         ],
         yAxis: [
-
           {
             type: 'value'
           },
@@ -200,54 +283,7 @@ export default {
           }
 
         ],
-        series: [
-          {
-            name: '采购金额',
-            type: 'bar',
-            label: labelOption,
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.data.map(item => item.controlledMaterialPurchases),
-          },
-          {
-            name: '总金额',
-            type: 'bar',
-            label: labelOption,
-            emphasis: {
-              focus: 'series'
-            },
-            data: this.data.map(item => item.totalPurchaseAmount),
-          },
-          {
-            name: '占比',
-            type: 'line',
-            label: {
-              show: true,
-              position: app.config.position,
-              distance: app.config.distance,
-              align: app.config.align,
-              verticalAlign: app.config.verticalAlign,
-              rotate: app.config.rotate,
-              formatter: '{c} %',
-              fontSize: 16,
-              rich: {
-                name: {}
-              }
-            },
-            emphasis: {
-              focus: 'series'
-            },
-
-            yAxisIndex: 1,
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + '%';
-              }
-            },
-            data: this.data.map(item => item.controlledPurchaseAmountRatio),
-          }
-        ]
+        series: series
       };
 
       this.option && this.myChart.setOption(this.option);

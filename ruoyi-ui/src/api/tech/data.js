@@ -94,9 +94,9 @@ export function delData2(tapcId) {
 
 
 // 非标订单平均技术准备天数 指标47
-export function getEmployeesAVGMonthlyNumberData(data) {
+export function getNonStandardAVGPreparationDaysData(data) {
   return request({
-    url: `/tech/display/employeesAVGMonthlyNumber`,
+    url: `/tech/display/nonStandardAVGPreparationDays`,
     method: 'post',
     data: {
       startTime: data.startTime,

@@ -1,12 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <!-- <el-form-item label="指标名" prop="indicatorDept">
-        <el-select v-model="queryParams.indicatorDept" placeholder="请选择指标名" clearable>
-          <el-option v-for="dict in dict.type.indicators_financial" :key="dict.value" :label="dict.label"
-            :value="dict.value" />
-        </el-select>
-      </el-form-item> -->
       <el-form-item label="指标名" prop="indicatorNameCn">
         <el-input v-model="queryParams.indicatorNameCn" placeholder="请输入指标名" clearable
           @keyup.enter.native="handleQuery" />
@@ -27,7 +21,6 @@
         <el-input v-model="queryParams.targetUpperLimit" placeholder="请输入目标上限" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -56,18 +49,22 @@
 
     <el-table v-loading="loading" :data="targetList" @selection-change="handleSelectionChange" border>
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="指标名" align="center" prop="dictLabel"/> -->
+      <!-- <el-table-column label="id" align="center" prop="itId" /> -->
+      <!-- <el-table-column label="指标所属部门" align="center" prop="indicatorDept">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.indicators_enterprise" :value="scope.row.indicatorDept" />
+        </template>
+</el-table-column> -->
       <el-table-column label="指标名" align="center" prop="indicatorNameCn" />
       <el-table-column label="日期" align="center" prop="natureYear" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.natureYear, '{y}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="目标值" align="center" prop="targetValue" />
 
+      <el-table-column label="目标值" align="center" prop="targetValue" />
       <el-table-column label="目标下限" align="center" prop="targetLowerLimit" />
       <el-table-column label="目标上限" align="center" prop="targetUpperLimit" />
-
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -83,10 +80,10 @@
 
     <!-- 添加或修改指标-目标值对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="指标名" prop="indicatorDept">
           <el-select v-model="form.indicatorDept" placeholder="请选择指标名">
-            <el-option v-for="dict in dict.type.indicators_financial" :key="dict.value" :label="dict.label"
+            <el-option v-for="dict in dict.type.indicators_enterprise" :key="dict.value" :label="dict.label"
               :value="dict.value"></el-option>
           </el-select>
         </el-form-item>
@@ -117,13 +114,9 @@ import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api
 import { numValidator, numValidatorEnableEmpty } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
-  dicts: ['indicators_financial'],
+  dicts: ['indicators_enterprise'],
   data() {
     return {
-      targetData: {
-        date: '',
-        deptName: 'financial'
-      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -149,8 +142,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         indicatorDept: null,
-        indicatorNameCn: null,
         natureYear: null,
+        indicatorNameCn: null,
         targetValue: null,
         targetLowerLimit: null,
         targetUpperLimit: null,
@@ -195,15 +188,13 @@ export default {
     this.getList();
   },
   methods: {
-
     /** 查询指标-目标值列表 */
     getList() {
       this.loading = true;
       listTarget(this.queryParams).then(response => {
-        this.targetList = response.rows.filter(row => row.indicatorDept === 'financial');
+        this.targetList = response.rows.filter(row => row.indicatorDept === 'enterprise');
         this.total = response.total;
         this.loading = false;
-
       });
     },
     // 取消按钮
@@ -233,7 +224,6 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
-
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -292,7 +282,9 @@ export default {
       // 提取年份和月份
       const parsedDate = date ? new Date(date) : null;
       const year = parsedDate ? parsedDate.getFullYear() : '';
+
       const yearMonth = year ? `${year}` : '';
+
       this.$modal.confirm(`是否删除日期为"${yearMonth}"的"${name}"的数据？`).then(() => {
         return delTarget(itIds);
       }).then(() => {

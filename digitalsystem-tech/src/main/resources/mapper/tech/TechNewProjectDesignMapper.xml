@@ -161,11 +161,11 @@
         where TD_id = #{tdId}
     </update>
 
-    <delete id="deleteTechNewProjectDesignByTdId" parameterType="String">
+    <delete id="deleteTechNewProjectDesignByTdId" parameterType="Long">
         delete from Tech_New_Project_Design where TD_id = #{tdId}
     </delete>
 
-    <delete id="deleteTechNewProjectDesignByTdIds" parameterType="String">
+    <delete id="deleteTechNewProjectDesignByTdIds" parameterType="Long">
         delete from Tech_New_Project_Design where TD_id in
         <foreach item="tdId" collection="array" open="(" separator="," close=")">
             #{tdId}

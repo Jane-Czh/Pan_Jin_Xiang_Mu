@@ -23,7 +23,7 @@ public class TechNewProjectDesign extends BaseEntity {
     /**
      *
      */
-    private String tdId;
+    private Long tdId;
 
     /**
      *

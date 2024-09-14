@@ -65,8 +65,7 @@
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange"
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column sortable="custom" :sort-orders="['descending', 'ascending']" label="日期" align="center"
-        prop="yearAndMonth" width="150">
+      <el-table-column sortable="custom" label="日期" align="center" prop="yearAndMonth" width="150">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
@@ -263,21 +262,16 @@ export default {
       }).catch(() => {
       });
     },
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
     },
-    // handleSortChange(sort) {
-    //   if (sort.column && sort.prop === 'yearAndMonth') {
-    //     if (sort.order === 'ascending') {
-    //       this.dataList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
-    //     } else if (sort.order === 'descending') {
-    //       this.dataList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
-    //     }
-    //   }
-    // },
-
     /** 查询[生产]手动填报指标列表 */
     getList() {
       this.loading = true;
@@ -285,6 +279,11 @@ export default {
       listData(this.queryParams).then(response => {
         this.dataList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
       });
     },

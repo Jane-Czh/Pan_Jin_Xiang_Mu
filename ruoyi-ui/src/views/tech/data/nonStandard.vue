@@ -105,10 +105,11 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="Tech_Non_Standard_OrderList" @selection-change="handleSelectionChange" border>
+    <el-table v-loading="loading" :data="Tech_Non_Standard_OrderList" @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="${comment}" align="center" prop="tnId" /> -->
-      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="100">
+      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="100" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
@@ -351,12 +352,27 @@ export default {
       const url = "/profile/excel_templates/非标订单统计样表.xlsx"
       handleTrueDownload(url);
     },
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.Tech_Non_Standard_OrderList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.Tech_Non_Standard_OrderList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
+    },
     /** 查询Tech_Non_Standard_Order列表 */
     getList() {
       this.loading = true;
       listTech_Non_Standard_Order(this.queryParams).then(response => {
         this.Tech_Non_Standard_OrderList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
       });
     },

@@ -43,59 +43,53 @@ public class TechNewProjectListener implements ReadListener<TechNewProjectDesign
     public void invoke(TechNewProjectDesign registerInfoExcel, AnalysisContext analysisContext) {
         // 将监听到的数据存入缓存集合中
 
-        if (registerInfoExcel.getEstablishmentState() == null) {
-            registerInfoExcel.setEstablishmentState("");
-        }
-        if (registerInfoExcel.getDesignPlanState() == null) {
-            registerInfoExcel.setDesignPlanState("");
-        }
-        if (registerInfoExcel.getDrawingDesignState() == null) {
-            registerInfoExcel.setDrawingDesignState("");
-        }
-        if (registerInfoExcel.getPrototypeProductionState() == null) {
-            registerInfoExcel.setPrototypeProductionState("");
-        }
-        if (registerInfoExcel.getPrototypeTestState() == null) {
-            registerInfoExcel.setPrototypeTestState("");
-        }
-        if (registerInfoExcel.getPrototypeReviewState() == null) {
-            registerInfoExcel.setPrototypeReviewState("");
-        }
-        if (registerInfoExcel.getPilotReleaseState() == null) {
-            registerInfoExcel.setPilotReleaseState("");
-        }
-        if (registerInfoExcel.getMassReleaseState() == null) {
-            registerInfoExcel.setMassReleaseState("");
-        }
-        if (registerInfoExcel.getCompletionRate() == null) {
-            registerInfoExcel.setCompletionRate("0");
-        } else {
-            //去掉百分号
-            registerInfoExcel.setCompletionRate(registerInfoExcel.getCompletionRate().replace("%", ""));
-        }
+//        if (registerInfoExcel.getEstablishmentState() == null) {
+//            registerInfoExcel.setEstablishmentState("");
+//        }
+//        if (registerInfoExcel.getDesignPlanState() == null) {
+//            registerInfoExcel.setDesignPlanState("");
+//        }
+//        if (registerInfoExcel.getDrawingDesignState() == null) {
+//            registerInfoExcel.setDrawingDesignState("");
+//        }
+//        if (registerInfoExcel.getPrototypeProductionState() == null) {
+//            registerInfoExcel.setPrototypeProductionState("");
+//        }
+//        if (registerInfoExcel.getPrototypeTestState() == null) {
+//            registerInfoExcel.setPrototypeTestState("");
+//        }
+//        if (registerInfoExcel.getPrototypeReviewState() == null) {
+//            registerInfoExcel.setPrototypeReviewState("");
+//        }
+//        if (registerInfoExcel.getPilotReleaseState() == null) {
+//            registerInfoExcel.setPilotReleaseState("");
+//        }
+//        if (registerInfoExcel.getMassReleaseState() == null) {
+//            registerInfoExcel.setMassReleaseState("");
+//        }
+//        if (registerInfoExcel.getCompletionRate() == null) {
+//            registerInfoExcel.setCompletionRate("0");
+//        } else {
+        //去掉百分号
+//            registerInfoExcel.setCompletionRate(registerInfoExcel.getCompletionRate().replace("%", ""));
+//        }
 
-        if (registerInfoExcel.getCompletionRate().equals("100")){
+        //去掉百分号
+        registerInfoExcel.setCompletionRate(registerInfoExcel.getCompletionRate().replace("%", ""));
+
+        if (registerInfoExcel.getCompletionRate().equals("100")) {
             registerInfoExcel.setIsCompleted(1);
         } else {
             registerInfoExcel.setIsCompleted(0);
         }
-//        if (registerInfoExcel.getCompletionRate().equals("100") ||
-//                (registerInfoExcel.getEstablishmentState().equals("完成") && registerInfoExcel.getDesignPlanState().equals("完成")
-//                 && registerInfoExcel.getDrawingDesignState().equals("完成") && registerInfoExcel.getPrototypeProductionState().equals("完成")
-//                 && registerInfoExcel.getPrototypeTestState().equals("完成") && registerInfoExcel.getPrototypeReviewState().equals("完成")
-//                 && registerInfoExcel.getPilotReleaseState().equals("完成") && registerInfoExcel.getMassReleaseState().equals("完成"))){
-//            registerInfoExcel.setIsCompleted(1);
-//        } else {
-//            registerInfoExcel.setIsCompleted(0);
-//        }
 
 
-        if (registerInfoExcel.getProjectName() != null){
+        if (registerInfoExcel.getProjectName() != null) {
             registerInfoExcel.setYearAndMonth(yearAndMonth);
             cacheDataList.add(registerInfoExcel);
         }
 
-            log.info("当前读取的数据为:" + registerInfoExcel);
+        log.info("当前读取的数据为:" + registerInfoExcel);
 
         // 批量处理缓存的数据
         if (cacheDataList.size() >= BATCH_COUNT) {

@@ -86,7 +86,7 @@
           <span v-if="scope.row.warrantyRepairRate || scope.row.warrantyRepairRate === 0">{{
       scope.row.warrantyRepairRate
     }}%</span>
-          <span v-else>-</span>
+          <span v-else>——</span>
         </template>
       </el-table-column>
       <el-table-column label="月度售后质量问题总数" align="center" prop="monthlyAfterSalesIssues" />
@@ -95,7 +95,7 @@
         <template slot-scope="scope">
           <span v-if="scope.row.warrantyVehicleRepairRate || scope.row.warrantyVehicleRepairRate === 0">{{
       scope.row.warrantyVehicleRepairRate }}%</span>
-          <span v-else>-</span>
+          <span v-else>——</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalLossRate" /> -->
@@ -103,7 +103,7 @@
         <template slot-scope="scope">
           <span v-if="scope.row.externalLossRate || scope.row.externalLossRate === 0">{{ scope.row.externalLossRate
             }}%</span>
-          <span v-else>-</span>
+          <span v-else>——</span>
         </template>
       </el-table-column>
       <el-table-column label="售后问题生产责任次数" align="center" prop="productionLiabilityIssues" />
@@ -228,7 +228,7 @@ export default {
         monthlyAfterSalesIssues: [
           {
             required: true,
-            validator: numValidator,
+            validator: numValidatorNonZeroNature,
             trigger: "blur"
           }
         ],
@@ -249,7 +249,7 @@ export default {
         productionLiabilityIssues: [
           {
             required: true,
-            validator: numValidator,
+            validator: numValidatorNonZeroNature,
             trigger: "blur"
           }
         ],
@@ -274,10 +274,15 @@ export default {
       }).catch(() => {
       });
     },
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.MetricsList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.MetricsList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
     },
     /** 查询质量指标-统计列表 */
     getList() {
@@ -285,6 +290,11 @@ export default {
       listMetrics(this.queryParams).then(response => {
         this.MetricsList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
 
       });

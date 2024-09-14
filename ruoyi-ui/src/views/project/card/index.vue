@@ -52,6 +52,34 @@
           </el-option>
         </el-select>
       </el-form-item>
+
+      <el-form-item label="项目归属" prop="attribute">
+        <el-select
+          v-model="queryParams.attribute"
+          placeholder="请输入项目归属"
+          clearable
+          filterable
+          @change="handleQuery"
+          allow-no-choice
+        >
+          <el-option label="四零活动" value="四零活动"></el-option>
+          <el-option label="三大行动" value="三大行动"></el-option>
+          <el-option label="精益党建项目" value="精益党建项目"></el-option>
+          <el-option label="公司方针目标" value="公司方针目标"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="立项时间" prop="startDate">  
+        <el-date-picker  
+          v-model="queryParams.startDate"  
+          type="date"  
+          value-format="yyyy-MM-dd"  
+          placeholder="请选择立项时间"  
+          clearable  
+          @change="handleQuery"  
+        >  
+        </el-date-picker>  
+      </el-form-item>
       
       <el-form-item label="负责人" prop="manager">
         <el-input
@@ -272,6 +300,7 @@
         <el-form-item label="项目描述" prop="description">
           <el-input v-model="form.description" placeholder="请输入项目描述" />
         </el-form-item>
+
         <el-form-item label="立项时间" prop="startDate">
           <el-date-picker clearable
             v-model="form.startDate"
@@ -280,6 +309,7 @@
             placeholder="请选择立项时间">
           </el-date-picker>
         </el-form-item>
+
         <el-form-item label="项目总进度" prop="progressAlloverProgress">
           <el-input v-model="form.progressAlloverProgress" placeholder="请输入一个百分数（例如80.25%）" />
         </el-form-item>
@@ -351,26 +381,28 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog> -->
-        <!-- 添加或修改项目基本信息对话框 -->
+        <!-- 进度上报对话框 -->
         <el-dialog :title="title" :visible.sync="reportingopen" width="500px" append-to-body>
           <el-form ref="form" :model="form" label-width="80px">
 
-            <el-form-item label="立项评审时间" prop="startDate">
+            <el-form-item label="开始时间" prop="importDate">
               <el-date-picker clearable
-                v-model="form.startDate"
+                v-model="form.importDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择立项时间">
+                placeholder="请选择开始时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="计划结项时间" prop="plannedCompletionTime">
+            <el-form-item label="结束时间" prop="associationDate">
               <el-date-picker clearable
-                v-model="form.plannedCompletionTime"
+                v-model="form.associationDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择计划结项时间">
+                placeholder="请选择结束时间">
               </el-date-picker>
             </el-form-item>
+
+
             <el-form-item label="项目总进度" prop="progressAlloverProgress">
               <el-select v-model="form.progressAlloverProgress" placeholder="请选择进度">
                 <el-option
@@ -401,15 +433,15 @@
             </el-form-item>
 
             <el-form-item label="完成工作事项" prop="completionSummary">
-              <el-input v-model="form.completionSummary" placeholder="请输入" />
+              <el-input type="textarea" :rows="2" v-model="form.completionSummary" placeholder="请输入" />
             </el-form-item>
 
             <el-form-item label="交付物" prop="progress">
-              <el-input v-model="form.progress" placeholder="请输入交付物" />
+              <el-input type="textarea" :rows="2" v-model="form.progress" placeholder="请输入交付物" />
             </el-form-item>
 
             <el-form-item label="关键事项说明" prop="description">
-              <el-input v-model="form.description" placeholder="请输入关键事项说明" />
+              <el-input  type="textarea" :rows="2" v-model="form.description" placeholder="请输入关键事项说明" />
             </el-form-item>
 
             <!-- <el-form-item label="导入时间" prop="importDate">
@@ -430,10 +462,6 @@
                 placeholder="请选择关联时间">
               </el-date-picker>
             </el-form-item> -->
-
-
-
-
 
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -1245,4 +1273,11 @@ export default {
   font-size: 16px;
   font-weight: bold;
 }
+
+.resizable-dialog {  
+  min-width: 600px; /* 设置最小宽度 */  
+  min-height: 400px; /* 设置最小高度 */  
+  resize: both; /* 允许用户调整大小 */  
+  overflow: auto; /* 允许滚动 */  
+} 
 </style>

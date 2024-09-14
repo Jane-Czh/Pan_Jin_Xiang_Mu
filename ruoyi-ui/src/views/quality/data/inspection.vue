@@ -70,7 +70,7 @@
       @sort-change="handleSortChange" border>
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="" align="center" prop="qiId" /> -->
-      <el-table-column label="日期" align="center" prop="yearAndMonth" width="100"
+      <el-table-column label="日期" fixed align="center" prop="yearAndMonth" width="100"
         :sort-orders="['descending', 'ascending']" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
@@ -83,28 +83,28 @@
       <el-table-column label="K2系列4-5t问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="210" />
       <el-table-column label="K2系列5-10t问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
       <!-- <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210" /> -->
-      <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="200">
+      <el-table-column label="电车一次交检合格率(%)" align="center" prop="electricCarPassRate" width="210">
         <template slot-scope="scope">
           <span v-if="scope.row.electricCarPassRate || scope.row.electricCarPassRate === 0">{{
       scope.row.electricCarPassRate }}%</span>
-          <span v-else>-</span>
+          <span v-else>——</span>
         </template>
       </el-table-column>
       <el-table-column label="大吨位一次交检合格率(%)" align="center" prop="largeTonPassRate" width="200">
         <template slot-scope="scope">
           <span v-if="scope.row.largeTonPassRate || scope.row.largeTonPassRate === 0">{{ scope.row.largeTonPassRate
             }}%</span>
-          <span v-else>-</span>
+          <span v-else>——</span>
         </template>
       </el-table-column>
-      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="210">
+      <el-table-column label="电车、大吨位一次交检合格率(%)" align="center" prop="singleInspectionPassRate" width="220">
         <template slot-scope="scope">
           <span v-if="scope.row.singleInspectionPassRate || scope.row.singleInspectionPassRate === 0">{{
       scope.row.singleInspectionPassRate }}%</span>
-          <span v-else>-</span>
+          <span v-else>——</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="120">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['quality:inspection:edit']">修改</el-button>
@@ -287,10 +287,15 @@ export default {
       }).catch(() => {
       });
     },
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.inspectionList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.inspectionList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
     },
     /** 查询质检部分字段列表 */
     getList() {
@@ -298,8 +303,12 @@ export default {
       listInspection(this.queryParams).then(response => {
         this.inspectionList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
-
       });
     },
     // 取消按钮

@@ -23,7 +23,6 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getManagementData } from '@/api/enterprise/chartAPI'
-
 export default {
     data() {
         return {
@@ -37,11 +36,18 @@ export default {
             pickerOptions: [],
             option: {},
             myChart: {},
-            parsedData: {}
+            parsedData: {},
+            targetData: [],
+            target: {
+                date: new Date(),
+                deptName: 'enterprise',
+            },
+            routerData: {},
         }
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
@@ -52,12 +58,14 @@ export default {
             this.timeData.startTime = this.selectedDate[0],
                 this.timeData.endTime = this.selectedDate[1]
             try {
+
                 this.loading = true
                 const res = await getManagementData(this.timeData);
                 this.data = res.rows
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
@@ -121,7 +129,7 @@ export default {
                 rotate: 0,
                 align: 'center',
                 verticalAlign: 'middle',
-                position: 'top',
+                position: 'inside',
                 distance: 15,
                 onChange: function () {
                     const labelOption = {
@@ -158,7 +166,7 @@ export default {
                 rotate: app.config.rotate,
                 formatter: function (params) {
                     let value = params.value;
-                    if (params.seriesName.includes('%')) {
+                    if (params.seriesName.includes('%') && value != 0) {
                         value += '%';
                     }
                     return value;
@@ -182,7 +190,8 @@ export default {
                 },
                 legend: {
                     type: 'scroll',
-                    data: ['SD销售订单有效性考核', 'PP手工创建生产订单比例(%)', 'PP生产订单已收货未报工的比例(%)', 'MES报工不及时率比率(%)', 'QM外检业务不及时率(%)', 'MM采购订单交货不及时的比例(%)', 'MM手工创建采购订单比例(%)', 'MM未清采购申请', 'FICO月度标准价格与周期单位价格综合差异率(%)', '跨月生产订单比例(%)', 'PM维修订单完工不及时率(%)']
+                    animationDurationUpdate: 0,
+                    data: ['SD销售订单有效性考核得分', 'SD销售订单有效性考核', 'PP手工创建生产订单得分', 'PP手工创建生产订单比例(%)', 'PP生产订单已收货未报工得分', 'PP生产订单已收货未报工的比例(%)', 'MES报工不及时得分', 'MES报工不及时率比率(%)', 'QM外检业务不及时得分', 'QM外检业务不及时率(%)', 'MM采购订单交货不及时得分', 'MM采购订单交货不及时的比例(%)', 'MM手工创建采购订单得分', 'MM手工创建采购订单比例(%)', 'MM未清采购申请得分', 'MM未清采购申请', 'FICO月度标准价格与周期单位价格综合差异得分', 'FICO月度标准价格与周期单位价格综合差异率(%)', '跨月生产订单得分', '跨月生产订单比例(%)', 'PM维修订单完工不及时得分', 'PM维修订单完工不及时率(%)']
                 },
                 toolbox: {
                     show: true,
@@ -192,8 +201,8 @@ export default {
                     feature: {
                         mark: { show: true, },
                         dataView: { show: true, readOnly: false, title: '数据视图' },
-                        magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
-                        restore: { show: true, title: '还原' },
+                        // magicType: { show: true, type: ['bar', 'line', 'stack'], title: { bar: '切换为柱状图', line: '切换为折线图', stack: '切换为堆叠图' } },
+                        // restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
                     }
                 },
@@ -207,9 +216,28 @@ export default {
                 yAxis: [
                     {
                         type: 'value'
+                    },
+                    {
+                        type: 'value',
+                        name: '比例',
+                        // interval: 5,
+                        splitLine: { show: false },
+                        axisLabel: {
+                            formatter: '{value} %'
+                        }
                     }
                 ],
                 series: [
+                    {
+                        name: 'SD销售订单有效性考核得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.sdSalesordervalidityscore),
+                    },
                     {
                         name: 'SD销售订单有效性考核',
                         type: 'bar',
@@ -217,8 +245,18 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack1',
                         data: this.data.map(item => item.sdSalesordervalidity),
-                        barGap: '30%'
+                    },
+                    {
+                        name: 'PP手工创建生产订单得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.ppManualpocreationratioscore),
                     },
                     {
                         name: 'PP手工创建生产订单比例(%)',
@@ -227,7 +265,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.ppManualpocreationratio),
+                    },
+                    {
+                        name: 'PP生产订单已收货未报工得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.ppDeliveredunreportedratioscore),
                     },
                     {
                         name: 'PP生产订单已收货未报工的比例(%)',
@@ -236,7 +286,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.ppDeliveredunreportedratio),
+                    },
+                    {
+                        name: 'MES报工不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.mesLateworkreportingscore),
                     },
                     {
                         name: 'MES报工不及时率比率(%)',
@@ -245,7 +307,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.mesLateworkreportingrate),
+                    },
+                    {
+                        name: 'QM外检业务不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.qmExternalinspectiondelayscore),
                     },
                     {
                         name: 'QM外检业务不及时率(%)',
@@ -254,7 +328,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.qmExternalinspectiondelay),
+                    },
+                    {
+                        name: 'MM采购订单交货不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.mmPurchaseorderlatedeliveryscore),
                     },
                     {
                         name: 'MM采购订单交货不及时的比例(%)',
@@ -263,7 +349,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.mmPurchaseorderlatedelivery),
+                    },
+                    {
+                        name: 'MM手工创建采购订单得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.mmManualpocreationscore),
                     },
                     {
                         name: 'MM手工创建采购订单比例(%)',
@@ -272,7 +370,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.mmManualpocreation),
+                    },
+                    {
+                        name: 'MM未清采购申请得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.mmUnsettledpurchaserequestsscore),
                     },
                     {
                         name: 'MM未清采购申请',
@@ -281,7 +391,18 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack1',
                         data: this.data.map(item => item.mmUnsettledpurchaserequests),
+                    },
+                    {
+                        name: 'FICO月度标准价格与周期单位价格综合差异得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.ficoMonthlystandardpricevariationscore),
                     },
                     {
                         name: 'FICO月度标准价格与周期单位价格综合差异率(%)',
@@ -290,7 +411,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.ficoMonthlystandardpricevariation),
+                    },
+                    {
+                        name: '跨月生产订单得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.crossMonthProductionOrdersScore),
                     },
                     {
                         name: '跨月生产订单比例(%)',
@@ -299,7 +432,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.crossMonthProductionOrders),
+                    },
+                    {
+                        name: 'PM维修订单完工不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack1',
+                        data: this.data.map(item => item.pmLatemaintenanceordercompletionscore),
                     },
                     {
                         name: 'PM维修订单完工不及时率(%)',
@@ -308,21 +453,24 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        stack: 'stack2',
+                        yAxisIndex: 1,
                         data: this.data.map(item => item.pmLatemaintenanceordercompletion),
-                    }]
+                    }
+                ]
             };
 
             this.option && this.myChart.setOption(this.option);
-            this.myChart.on('magictypechanged', (params) => {
-                var magicType = params.currentType;
-                if (magicType == 'line') {
-                    this.option.xAxis[0].boundaryGap = true;
-                    for (let i = 0; i < this.option.series.length; i++) {
-                        this.option.series[i].type = magicType;
-                    }
-                    this.myChart.setOption(this.option);
-                }
-            });
+            // this.myChart.on('magictypechanged', (params) => {
+            //     var magicType = params.currentType;
+            //     if (magicType == 'line') {
+            //         this.option.xAxis[0].boundaryGap = true;
+            //         for (let i = 0; i < this.option.series.length; i++) {
+            //             this.option.series[i].type = magicType;
+            //         }
+            //         this.myChart.setOption(this.option);
+            //     }
+            // });
         },
         defaultMonth() {
             const currentDate = new Date();
@@ -331,22 +479,8 @@ export default {
             const startDate = new Date(currentYear, currentMonth - 1, 1);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
-            console.log(this.selectedDate)
         },
-        // formatData() {
-        //     this.chartData = this.data.rows.map(rows => {
-        //         const month = rows.Year_And_Month;
-        //         const resultData = rows.resultData.split(',');
-        //         return {
-        //             month,
-        //             mechanical: parseInt(resultData[0].split(':')[1]),
-        //             pneumatic: parseInt(resultData[1].split(':')[1]),
-        //             hydraulic: parseInt(resultData[2].split(':')[1]),
-        //             electrical: parseInt(resultData[3].split(':')[1]),
-        //         };
 
-        //     });
-        // }
 
     },
 

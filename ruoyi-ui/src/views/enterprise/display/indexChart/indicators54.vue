@@ -40,16 +40,16 @@ export default {
             pickerOptions: [],
             option: {},
             myChart: {},
-            parsedData: {}
+            parsedData: {},
+            routerData: {}
         }
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
-
-
     },
     methods: {
         async initData() {
@@ -195,7 +195,7 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['收入', '同期收入'],
+                    data: ['收入', '同期收入', this.routerData.targetValue != '' ? '目标值' : null],
                 },
                 toolbox: {
                     show: true,

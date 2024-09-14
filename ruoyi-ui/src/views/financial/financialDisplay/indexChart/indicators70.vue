@@ -7,6 +7,12 @@
                 @change="handleDateChange">
             </el-date-picker>
         </div>
+        <div>
+            <br>
+            <div class="centered-value">
+                当前累计值：{{ this.currentSum }} (元)
+            </div>
+        </div>
         <div v-if="loading"
             style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……
         </div>
@@ -30,6 +36,7 @@ export default {
             },
             selectedDate: [],
             pickerOptions: [],
+            currentSum: [],
             option: {},
             myChart: {},
             routerData: {},
@@ -51,9 +58,18 @@ export default {
                 this.data = res.rows
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+                // this.yAxisData = res.rows.map(item => item[this.routerData.yDataName]);
+                this.yAxisData = res.rows
+                    .map(item => item[this.routerData.yDataName])
+                    .map(item => {
+                        return !item || isNaN(item) ? 0 : parseFloat(item);
+                    });
+                this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
+                this.currentSum = this.formatNumber(this.currentSum)
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
@@ -62,6 +78,10 @@ export default {
             endDate.setHours(endDate.getHours() + 13);
             this.selectedDate[1] = endDate;
             this.initData()
+        },
+        formatNumber(value) {
+            if (value === null || value === undefined) return '';
+            return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
         },
         updateChart() {
             var app = {};
@@ -256,5 +276,15 @@ export default {
 .block {
     margin-top: 50px;
     text-align: center;
+}
+
+.centered-value {
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+
+    margin-top: 10px;
+
 }
 </style>

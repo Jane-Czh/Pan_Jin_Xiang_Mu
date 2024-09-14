@@ -162,7 +162,7 @@ export default {
             };
             // 根据条件决定是否添加目标值系列
             let series = [{
-                name: '存货增长率',
+                name: '存货增长率/销售增长率',
                 type: 'line',
                 label: labelOption,
                 emphasis: {
@@ -170,15 +170,7 @@ export default {
                 },
                 data: this.data.map(item => item.GrowthRate_Inventory),
             },
-            {
-                name: '销售增长率',
-                type: 'line',
-                label: labelOption,
-                emphasis: {
-                    focus: 'series'
-                },
-                data: this.data.map(item => item.GrowthRate_Sales),
-            }];
+            ];
 
             if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
                 series.push({
@@ -202,7 +194,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['存货增长率', '销售增长率', this.routerData.targetValue != '' ? '目标值' : null].filter(item => item !== null),
+                    data: ['存货增长率/销售增长率', this.routerData.targetValue != '' ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

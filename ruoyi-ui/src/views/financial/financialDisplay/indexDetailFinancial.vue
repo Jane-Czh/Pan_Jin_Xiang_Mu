@@ -74,6 +74,12 @@ export default {
         this.data = res.rows;
         this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
         this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
+        this.yAxisData = res.rows
+          .map(item => item[this.option.yDataName])
+          .map(item => {
+            return !item || isNaN(item) ? 0 : parseFloat(item);
+          });
+        console.log(this.yAxisData)
         this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
         this.currentSum = this.formatNumber(this.currentSum)
         this.loading = false;

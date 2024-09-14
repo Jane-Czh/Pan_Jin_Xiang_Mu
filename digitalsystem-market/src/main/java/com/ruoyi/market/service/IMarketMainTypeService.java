@@ -1,7 +1,9 @@
 package com.ruoyi.market.service;
 
+import java.io.IOException;
 import java.util.List;
 import com.ruoyi.market.domain.MarketMainType;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 主要车型字典表Service接口
@@ -11,6 +13,8 @@ import com.ruoyi.market.domain.MarketMainType;
  */
 public interface IMarketMainTypeService 
 {
+
+    public int importInterests(MultipartFile excelFile) throws IOException;
     /**
      * 查询主要车型字典表
      * 

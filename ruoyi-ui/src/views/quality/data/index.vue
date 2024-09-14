@@ -55,15 +55,19 @@
       </el-table-column>
       <el-table-column label="外部质量损失金额" align="center" prop="moleculeExternalMassLossRate" />
       <!-- <el-table-column label="外部质量损失率(%)" align="center" prop="externalMassLossRate" width="150" /> -->
-      <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank" />
+      <el-table-column label="质量考核季度排名" align="center" prop="quarterlyRank">
+        <template v-slot="{ row }">
+          {{ row.quarterlyRank || '——' }}
+        </template>
+      </el-table-column>
       <el-table-column label="平均无故障时间(小时)" align="center" prop="meantimeWithoutFailure" width="200">
       </el-table-column>
       <!-- <el-table-column label="供应商不合格件返厂及时率(%)" align="center" prop="intimeReturnrate" width="220" /> -->
       <el-table-column label="供应商不合格件返厂及时情况" align="center" prop="intimeReturnrate" width="220">
         <template slot-scope="scope">
-          <span v-if="scope.row.intimeReturnrate === 0" style="color: #bd3e47;">不及时</span>
+          <span v-if="scope.row.intimeReturnrate === -1" style="color: #bd3e47;">不及时</span>
           <span v-else-if="scope.row.intimeReturnrate === 1">及时</span>
-          <span v-else>-</span> <!-- 处理未知状态 -->
+          <span v-else>——</span>
         </template>
       </el-table-column>
       <el-table-column label="班组自查合格率(%)" align="center" prop="selfcheckPassrate">
@@ -77,7 +81,7 @@
       <el-table-column label="下道工序反馈合格率(%)" align="center" prop="nextprocessFeedbackPassrate" width="220">
         <template slot-scope="scope">
           <span v-if="scope.row.nextprocessFeedbackPassrate || scope.row.nextprocessFeedbackPassrate === 0">{{
-      scope.row.nextprocessFeedbackPassrate }}%</span>
+      formatNumber(scope.row.nextprocessFeedbackPassrate) }} %</span>
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -99,16 +103,13 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="220px">
         <el-form-item fixed label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择日期">
+            placeholder="请选择日期" @change="onMonthChange">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="外部质量损失金额" prop="moleculeExternalMassLossRate">
           <el-input v-model="form.moleculeExternalMassLossRate" placeholder="请输入外部质量损失金额" />
         </el-form-item>
-        <!-- <el-form-item label="外部质量损失率(%)" prop="externalMassLossRate">
-          <el-input v-model="form.externalMassLossRate" placeholder="请输入外部质量损失率(%)" />
-        </el-form-item> -->
-        <el-form-item label="质量考核季度排名" prop="quarterlyRank">
+        <el-form-item label="质量考核季度排名" prop="quarterlyRank" v-show="showRank || title == '修改'">
           <el-input v-model="form.quarterlyRank" placeholder="请输入质量考核季度排名" />
         </el-form-item>
         <el-form-item label="平均无故障时间(小时)" prop="meantimeWithoutFailure">
@@ -117,7 +118,7 @@
         <el-form-item label="供应商不合格件返厂及时情况" prop="intimeReturnrate">
           <el-select v-model="form.intimeReturnrate" placeholder="请选择供应商不合格件返厂及时情况">
             <el-option label="及时" value="1"></el-option>
-            <el-option label="不及时" value="0"></el-option>
+            <el-option label="不及时" value="-1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="班组自查合格率(%)" prop="selfcheckPassrate">
@@ -137,11 +138,12 @@
 
 <script>
 import { listHandFill, getHandFill, delHandFill, addHandFill, updateHandFill, updateList } from "@/api/quality/data";
-import { numValidator, numValidatorOnlyPositive, numValidatorNonZeroNature } from '@/api/financial/numValidator.js';
+import { numValidator, numValidatorOnlyPositive, numValidatorEnableEmptyNature } from '@/api/financial/numValidator.js';
 export default {
   name: "HandFill",
   data() {
     return {
+      showRank: false,
       dialogVisible: false,
       selectedDate: [],
       // 遮罩层
@@ -200,8 +202,7 @@ export default {
         ],
         quarterlyRank: [
           {
-            required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidatorEnableEmptyNature,
             trigger: "blur"
           }
         ],
@@ -215,7 +216,7 @@ export default {
         intimeReturnrate: [
           {
             required: true,
-            validator: numValidator,
+            message: '数据不能为空',
             trigger: "blur"
           }
         ],
@@ -240,6 +241,13 @@ export default {
     this.getList();
   },
   methods: {
+    formatNumber(value) {
+      return value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: false });
+    },
+    onMonthChange(value) {
+      const month = new Date(value).getMonth() + 1;
+      this.showRank = [3, 6, 9, 12].includes(month);
+    },
     handleClose(done) {
       this.$confirm('确定关闭吗？', '提示', {
         confirmButtonText: '确定',
@@ -250,10 +258,15 @@ export default {
       }).catch(() => {
       });
     },
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.handFillList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.handFillList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
     },
     /** 查询[质量]指标填报列表 */
     getList() {
@@ -261,6 +274,11 @@ export default {
       listHandFill(this.queryParams).then(response => {
         this.handFillList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
 
       });
@@ -318,7 +336,7 @@ export default {
       this.reset();
       const qihfId = row.qihfId || this.ids
       getHandFill(qihfId).then(response => {
-        if (response.data.intimeReturnrate === 0) {
+        if (response.data.intimeReturnrate === -1) {
           response.data.intimeReturnrate = '不及时';
         } else if (response.data.intimeReturnrate === 1) {
           response.data.intimeReturnrate = '及时';
@@ -326,6 +344,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改";
+        this.onMonthChange()
       });
     },
     /** 提交按钮 */
@@ -333,6 +352,11 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.qihfId != null) {
+            if (this.form.intimeReturnrate === '不及时') {
+              this.form.intimeReturnrate = -1
+            } else if (this.form.intintimeReturnrate === '及时') {
+              this.form.intimeReturnrate = 1
+            }
             updateHandFill(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;

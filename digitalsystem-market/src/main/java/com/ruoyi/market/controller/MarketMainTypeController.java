@@ -1,5 +1,13 @@
 package com.ruoyi.market.controller;
 
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.exception.ServiceException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +28,7 @@ import com.ruoyi.market.domain.MarketMainType;
 import com.ruoyi.market.service.IMarketMainTypeService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 主要车型字典表Controller
@@ -33,6 +42,21 @@ public class MarketMainTypeController extends BaseController
 {
     @Autowired
     private IMarketMainTypeService marketMainTypeService;
+
+
+    @Log(title = "[市场]主要车型字典表上传", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('market:mainCarType:import')")
+    @PostMapping("/import")
+    public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
+        System.out.println("------------mainCarType-------import------------");
+        try {
+            marketMainTypeService.importInterests(excelFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ServiceException("excel上传失败");
+        }
+        return success();
+    }
 
     /**
      * 查询主要车型字典表列表

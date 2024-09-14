@@ -19,6 +19,7 @@ import * as echarts from 'echarts';
 import moment from 'moment'
 import { getGrowthRateInventorySalesData } from '@/api/financial/chartAPI'
 
+
 export default {
     data() {
         return {
@@ -31,10 +32,12 @@ export default {
             selectedDate: [],
             pickerOptions: [],
             option: {},
-            myChart: {}
+            myChart: {},
+            routerData: {},
         }
     },
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
@@ -47,9 +50,12 @@ export default {
                 this.loading = true
                 const res = await getGrowthRateInventorySalesData(this.timeData);
                 this.data = res.rows
+                const yAxisDataLength = this.data.length;
+                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log('数据初始化失败')
                 this.loading = false
             }
         },
@@ -154,6 +160,29 @@ export default {
                     name: {}
                 }
             };
+            // 根据条件决定是否添加目标值系列
+            let series = [{
+                name: '存货增长率/销售增长率',
+                type: 'line',
+                label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: this.data.map(item => item.GrowthRate_Inventory),
+            },
+            ];
+
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
+                series.push({
+                    name: '目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.targetValueArray,
+                });
+            }
             this.option = {
                 title: {
                     text: '存货增长率/销售增长率'
@@ -165,7 +194,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['存货增长率', '销售增长率']
+                    data: ['存货增长率/销售增长率', this.routerData.targetValue != '' ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -193,24 +222,7 @@ export default {
                         type: 'value'
                     }
                 ],
-                series: [{
-                    name: '存货增长率',
-                    type: 'line',
-                    label: labelOption,
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: this.data.map(item => item.GrowthRate_Inventory),
-                },
-                {
-                    name: '销售增长率',
-                    type: 'line',
-                    label: labelOption,
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: this.data.map(item => item.GrowthRate_Sales),
-                }]
+                series: series
             };
             this.option && this.myChart.setOption(this.option);
 

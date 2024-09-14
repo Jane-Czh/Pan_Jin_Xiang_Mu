@@ -208,10 +208,15 @@ export default {
       const url = "/profile/excel_templates/采购订单汇总表样表.xlsx"
       handleTrueDownload(url);
     },
-    handleSortChange(column) {
-      this.queryParams.orderByColumn = column.prop;//查询字段是表格中字段名字
-      this.queryParams.isAsc = column.order;//动态取值排序顺序
-      this.getList();
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.controlledAmountList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.controlledAmountList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
     },
     /** 查询供应-指标-集团管控物资占比列表 */
     getList() {
@@ -219,6 +224,11 @@ export default {
       listData(this.queryParams).then(response => {
         this.controlledAmountList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
       });
     },

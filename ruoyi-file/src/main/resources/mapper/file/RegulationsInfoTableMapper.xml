@@ -270,10 +270,22 @@
 
 
     <select id="selectRegulationsCounts" resultType="com.ruoyi.file.entity.regulationCountsRespondEntity">
-        select main_responsible_department as mainResponsibleDepartment ,count(1) as times
+        select main_responsible_department as mainResponsibleDepartment ,regulation_leval AS regulationLevel,count(1) as times
         from Regulations_Info_table
         where upload_date BETWEEN #{startTime} AND #{endTime}
-        group by main_responsible_department
+        group by main_responsible_department,regulation_leval
     </select>
+
+    <select id="selectRegulationsCountsByClassification" resultType="com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity">
+        select classification_of_specialties as classificationOfSpecialties,
+        count(1) as times
+        from Regulations_Info_table
+        where upload_date BETWEEN #{startTime} AND #{endTime}
+        <if test="mainResponsibleDepartment != null and mainResponsibleDepartment != ''">
+            and main_responsible_department = #{mainResponsibleDepartment}
+        </if>
+        group by classification_of_specialties
+    </select>
+
 
 </mapper>

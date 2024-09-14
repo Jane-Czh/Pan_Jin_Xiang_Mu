@@ -2,6 +2,8 @@ package com.ruoyi.market.mapper;
 
 import java.util.List;
 import com.ruoyi.market.domain.MarketMainType;
+import com.ruoyi.market.domain.MarketSalesTable;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 主要车型字典表Mapper接口
@@ -60,4 +62,7 @@ public interface MarketMainTypeMapper
     public int deleteMarketMainTypeByIds(Long[] ids);
 
     public List<MarketMainType> selectMarketMainTypeList1();
+    public void batchInsert(@Param("list") List<MarketMainType> marketMainType);
+
+    public void deleteAll();
 }

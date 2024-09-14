@@ -1,68 +1,56 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="日期" prop="yearAndMonth">
+      <el-form-item label="" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择日期">
+          placeholder="请选择">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="序号" prop="projectId">
+      <!-- <el-form-item label="序号" prop="projectId">
         <el-input v-model="queryParams.projectId" placeholder="请输入序号" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="项目名称" prop="projectName">
         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <!-- <el-form-item label="负责人" prop="projectLeader">
-        <el-input v-model="queryParams.projectLeader" placeholder="请输入负责人" clearable
+      <el-form-item label="项目负责人" prop="projectLeader">
+        <el-input v-model="queryParams.projectLeader" placeholder="请输入项目负责人" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="参与人" prop="projectParticipants">
-        <el-input v-model="queryParams.projectParticipants" placeholder="请输入参与人" clearable
+      <el-form-item label="项目来源" prop="projectSource">
+        <el-input v-model="queryParams.projectSource" placeholder="请输入项目来源" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="项目立项" prop="establishmentState">
-        <el-input v-model="queryParams.establishmentState" placeholder="请输入项目立项" clearable
+      <el-form-item label="计划开始时间" prop="plannedStartTime">
+        <el-input v-model="queryParams.plannedStartTime" placeholder="请输入计划开始时间" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="方案设计" prop="designPlanState">
-        <el-input v-model="queryParams.designPlanState" placeholder="请输入方案设计" clearable
+      <el-form-item label="计划完成时间" prop="plannedCompletionTime">
+        <el-input v-model="queryParams.plannedCompletionTime" placeholder="请输入计划完成时间" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="图纸设计" prop="drawingDesignState">
-        <el-input v-model="queryParams.drawingDesignState" placeholder="请输入图纸设计" clearable
+      <el-form-item label="完成度" prop="completionRate">
+        <el-input v-model="queryParams.completionRate" placeholder="请输入完成度" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="样机试制" prop="prototypeProductionState">
-        <el-input v-model="queryParams.prototypeProductionState" placeholder="请输入样机试制" clearable
+      <el-form-item label="当前阶段" prop="currentPhase">
+        <el-input v-model="queryParams.currentPhase" placeholder="请输入当前阶段" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="样机试验" prop="prototypeTestState">
-        <el-input v-model="queryParams.prototypeTestState" placeholder="请输入样机试验" clearable
+      <el-form-item label="上市车型数" prop="numberOfModels">
+        <el-input v-model="queryParams.numberOfModels" placeholder="请输入上市车型数" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="样机评审" prop="prototypeReviewState">
-        <el-input v-model="queryParams.prototypeReviewState" placeholder="请输入样机评审" clearable
+      <el-form-item label="项目积分" prop="projectPoints">
+        <el-input v-model="queryParams.projectPoints" placeholder="请输入项目积分" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="小批量上市" prop="pilotReleaseState">
-        <el-input v-model="queryParams.pilotReleaseState" placeholder="请输入小批量上市" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="批量上市" prop="massReleaseState">
-        <el-input v-model="queryParams.massReleaseState" placeholder="请输入批量上市" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="项目完成率" prop="completionRate">
-        <el-input v-model="queryParams.completionRate" placeholder="请输入项目完成率" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="备注" prop="remarks">
-        <el-input v-model="queryParams.remarks" placeholder="请输入备注" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="项目是否完成" prop="isCompleted">
-        <el-input v-model="queryParams.isCompleted" placeholder="请输入项目是否完成" clearable
+      <el-form-item label="当前积分" prop="currentPoints">
+        <el-input v-model="queryParams.currentPoints" placeholder="请输入当前积分" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item> -->
+      <el-form-item label="备注" prop="Remarks">
+        <el-input v-model="queryParams.Remarks" placeholder="请输入备注" clearable @keyup.enter.native="handleQuery" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -118,143 +106,32 @@
         <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
         </el-button>
       </el-col>
-
-
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="TechNewProjectDesignList" @selection-change="handleSelectionChange" border>
+    <el-table v-loading="loading" :data="TechNewProjectDesignList" @selection-change="handleSelectionChange" border
+      @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="${comment}" align="center" prop="tdId" /> -->
-      <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="120">
+      <!-- <el-table-column label="" align="center" prop="tdId" /> -->
+      <el-table-column label="日期" align="center" prop="yearAndMonth" width="120" fixed sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="序号" align="center" prop="projectId" width="55" />
-      <el-table-column label="项目名称" align="center" prop="projectName" width="200" />
-      <el-table-column label="项目类型" align="center" prop="projectType" width="140" />
-      <el-table-column label="负责人" align="center" prop="projectLeader" />
-      <el-table-column label="参与人" align="center" prop="projectParticipants" width="160" />
-      <el-table-column label="项目完成率(%)" align="center" prop="completionRate" width="120">
-        <template slot-scope="scope">
-          <span>{{ formatNumberOne(scope.row.completionRate) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="项目立项" align="center" prop="establishmentState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.establishmentState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.establishmentState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="方案设计" align="center" prop="designPlanState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.designPlanState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.designPlanState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="图纸设计" align="center" prop="drawingDesignState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.drawingDesignState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.drawingDesignState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="样机试制" align="center" prop="prototypeProductionState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.prototypeProductionState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.prototypeProductionState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="样机试验" align="center" prop="prototypeTestState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.prototypeTestState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.prototypeTestState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="样机评审" align="center" prop="prototypeReviewState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.prototypeReviewState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.prototypeReviewState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="小批量上市" align="center" prop="pilotReleaseState" width="100">
-        <template slot-scope="scope">
-          <span v-if="scope.row.pilotReleaseState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.pilotReleaseState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="批量上市" align="center" prop="massReleaseState">
-        <template slot-scope="scope">
-          <span v-if="scope.row.massReleaseState === '进行中'" class="large-symbol" style="color: green;">
-            ○
-          </span>
-          <span v-else-if="scope.row.massReleaseState === '完成'" style="color: black;">
-            ✔
-          </span>
-          <span v-else style="color: red;">
-            —
-          </span>
-        </template>
-      </el-table-column>
-
-      <!-- <el-table-column label="项目是否完成" align="center" prop="isCompleted">
-        <template slot-scope="scope">
-          <span :style="{ color: scope.row.isCompleted === 1 ? 'green' : 'blue' }">{{ scope.row.isCompleted === 1 ?
-      '完成'
-      : '未完成' }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="备注" align="center" prop="remarks" width="260" />
-      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="序号" align="center" prop="projectId" width="60" />
+      <el-table-column label="项目名称" align="center" prop="projectName" />
+      <el-table-column label="项目负责人" align="center" prop="projectLeader" />
+      <el-table-column label="项目来源" align="center" prop="projectSource" />
+      <el-table-column label="项目类型" align="center" prop="projectType" />
+      <el-table-column label="计划开始时间" align="center" prop="plannedStartTime" />
+      <el-table-column label="计划完成时间" align="center" prop="plannedCompletionTime" />
+      <el-table-column label="完成度(%)" align="center" prop="completionRate" />
+      <el-table-column label="当前阶段" align="center" prop="currentPhase" />
+      <el-table-column label="上市车型数" align="center" prop="numberOfModels" />
+      <el-table-column label="项目积分" align="center" prop="projectPoints" />
+      <el-table-column label="当前积分" align="center" prop="currentPoints" />
+      <el-table-column label="备注" align="center" prop="Remarks" width="200" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['tech:TechNewProjectDesign:edit']">修改</el-button>
@@ -268,7 +145,7 @@
       @pagination="getList" />
 
     <!-- 添加或修改技术-项目计划完成统计对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
@@ -281,82 +158,36 @@
         <el-form-item label="项目名称" prop="projectName">
           <el-input v-model="form.projectName" placeholder="请输入项目名称" />
         </el-form-item>
-        <el-form-item label="负责人" prop="projectLeader">
-          <el-input v-model="form.projectLeader" placeholder="请输入负责人" />
+        <el-form-item label="项目负责人" prop="projectLeader">
+          <el-input v-model="form.projectLeader" placeholder="请输入项目负责人" />
         </el-form-item>
-        <el-form-item label="参与人" prop="projectParticipants">
-          <el-input v-model="form.projectParticipants" placeholder="请输入参与人" />
+        <el-form-item label="项目来源" prop="projectSource">
+          <el-input v-model="form.projectSource" placeholder="请输入项目来源" />
         </el-form-item>
-        <el-form-item label="项目完成率" prop="completionRate">
-          <el-input v-model="form.completionRate" placeholder="请输入项目完成率" />
+        <el-form-item label="计划开始时间" prop="plannedStartTime">
+          <el-input v-model="form.plannedStartTime" placeholder="请输入计划开始时间" />
         </el-form-item>
-        <el-form-item label="项目立项" prop="establishmentState">
-          <el-select v-model="form.establishmentState" placeholder="请选择项目立项">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="计划完成时间" prop="plannedCompletionTime">
+          <el-input v-model="form.plannedCompletionTime" placeholder="请输入计划完成时间" />
         </el-form-item>
-        <el-form-item label="方案设计" prop="designPlanState">
-          <el-select v-model="form.designPlanState" placeholder="请选择方案设计">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="完成度" prop="completionRate">
+          <el-input v-model="form.completionRate" placeholder="请输入完成度" />
         </el-form-item>
-        <el-form-item label="图纸设计" prop="drawingDesignState">
-          <el-select v-model="form.drawingDesignState" placeholder="请选择图纸设计">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="当前阶段" prop="currentPhase">
+          <el-input v-model="form.currentPhase" placeholder="请输入当前阶段" />
         </el-form-item>
-        <el-form-item label="样机试制" prop="prototypeProductionState">
-          <el-select v-model="form.prototypeProductionState" placeholder="请选择样机试制">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="上市车型数" prop="numberOfModels">
+          <el-input v-model="form.numberOfModels" placeholder="请输入上市车型数" />
         </el-form-item>
-        <el-form-item label="样机试验" prop="prototypeTestState">
-          <el-select v-model="form.prototypeTestState" placeholder="请选择样机试验">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="项目积分" prop="projectPoints">
+          <el-input v-model="form.projectPoints" placeholder="请输入项目积分" />
         </el-form-item>
-        <el-form-item label="样机评审" prop="prototypeReviewState">
-          <el-select v-model="form.prototypeReviewState" placeholder="请选择样机评审">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="当前积分" prop="currentPoints">
+          <el-input v-model="form.currentPoints" placeholder="请输入当前积分" />
         </el-form-item>
-        <el-form-item label="小批量上市" prop="pilotReleaseState">
-          <el-select v-model="form.pilotReleaseState" placeholder="请选择小批量上市">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
+        <el-form-item label="备注" prop="Remarks">
+          <el-input v-model="form.Remarks" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="批量上市" prop="massReleaseState">
-          <el-select v-model="form.massReleaseState" placeholder="请选择批量上市">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="进行中" value="进行中"></el-option>
-            <el-option label="未开始" value="未开始"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <!-- <el-form-item label="项目是否完成" prop="isCompleted">
-          <el-select v-model="form.isCompleted" placeholder="请选择项目是否完成">
-            <el-option label="完成" value="完成"></el-option>
-            <el-option label="未完成" value="未完成"></el-option>
-          </el-select>
-        </el-form-item> -->
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="form.remarks" type="textarea" placeholder="请输入备注" />
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -403,20 +234,17 @@ export default {
         yearAndMonth: null,
         projectId: null,
         projectName: null,
-        projectType: null,
         projectLeader: null,
-        projectParticipants: null,
-        establishmentState: null,
-        designPlanState: null,
-        drawingDesignState: null,
-        prototypeProductionState: null,
-        prototypeTestState: null,
-        prototypeReviewState: null,
-        pilotReleaseState: null,
-        massReleaseState: null,
+        projectSource: null,
+        projectType: null,
+        plannedStartTime: null,
+        plannedCompletionTime: null,
         completionRate: null,
-        remarks: null,
-        isCompleted: null,
+        currentPhase: null,
+        numberOfModels: null,
+        projectPoints: null,
+        currentPoints: null,
+        Remarks: null,
       },
       // 表单参数
       form: {},
@@ -530,17 +358,20 @@ export default {
     this.getList();
   },
   methods: {
-    formatNumber(value) {
-      if (value === null || value === undefined) return '';
-      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    },
-    formatNumberOne(value) {
-      if (value === null || value === undefined) return '';
-      return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
-    },
     handleDownload() {
       const url = "/profile/excel_templates/产品开发项目样表.xlsx"
       handleTrueDownload(url);
+    },
+
+    handleSortChange(sort) {
+      // sort.order: 排序的顺序，'ascending' 或 'descending'
+      if (sort.column && sort.prop === 'yearAndMonth') {
+        if (sort.order === 'ascending') {
+          this.TechNewProjectDesignList.sort((a, b) => new Date(a.yearAndMonth) - new Date(b.yearAndMonth));
+        } else if (sort.order === 'descending') {
+          this.TechNewProjectDesignList.sort((a, b) => new Date(b.yearAndMonth) - new Date(a.yearAndMonth));
+        }
+      }
     },
     /** 查询技术-项目计划完成统计列表 */
     getList() {
@@ -548,6 +379,11 @@ export default {
       listTechNewProjectDesign(this.queryParams).then(response => {
         this.TechNewProjectDesignList = response.rows;
         this.total = response.total;
+        this.handleSortChange({
+          column: {}, // 这个对象可以为空，因为在handleSortChange方法中并没有使用
+          prop: 'yearAndMonth',
+          order: 'descending' // 或'descending'
+        });
         this.loading = false;
       });
     },
@@ -563,19 +399,17 @@ export default {
         yearAndMonth: null,
         projectId: null,
         projectName: null,
-        projectType: null,
         projectLeader: null,
-        projectParticipants: null,
-        establishmentState: null,
-        designPlanState: null,
-        drawingDesignState: null,
-        prototypeProductionState: null,
-        prototypeTestState: null,
-        prototypeReviewState: null,
-        pilotReleaseState: null,
-        massReleaseState: null,
+        projectSource: null,
+        projectType: null,
+        plannedStartTime: null,
+        plannedCompletionTime: null,
         completionRate: null,
-        remarks: null,
+        currentPhase: null,
+        numberOfModels: null,
+        projectPoints: null,
+        currentPoints: null,
+        Remarks: null,
         isCompleted: null,
         createBy: null,
         createTime: null,
@@ -584,6 +418,7 @@ export default {
       };
       this.resetForm("form");
     },
+
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -605,7 +440,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "新增项目计划完成统计";
+      this.title = "新增项目计划统计";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -614,7 +449,7 @@ export default {
       getTechNewProjectDesign(tdId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改项目计划完成统计";
+        this.title = "修改项目计划统计";
       });
     },
     /** 提交按钮 */
@@ -639,7 +474,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const techIds = row.tdId || this.ids;
+      const tdIds = row.tdId || this.ids;
       const date = row.yearAndMonth || this.dates;
 
       // 提取年份和月份
@@ -650,7 +485,7 @@ export default {
       const yearMonth = year && month ? `${year}-${month}` : '';
 
       this.$modal.confirm(`是否删除日期为"${yearMonth}"的数据？`).then(() => {
-        return delTechNewProjectDesign(techIds);
+        return delTechNewProjectDesign(tdIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -677,7 +512,7 @@ export default {
     resetFileInput() {
       this.$refs.fileInput.value = "";
     },
-    /** 导入按钮 */
+
     async fileSend() {
       const formData = new FormData();
       const file = document.getElementById("inputFile").files[0]; // 获取文件对象
@@ -740,10 +575,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.large-symbol {
-  font-size: 2em;
-  /* 调整字体大小 */
-}
-</style>

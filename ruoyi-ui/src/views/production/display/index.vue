@@ -25,7 +25,7 @@
 </template>
 
 <script>
-
+import { getTargetData } from '@/api/financial/target'
 export default {
   components: {},
   props: [],
@@ -33,15 +33,15 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '24', apiName: 'getcurNonBomMaterialCostData', yDataName: 'curNonBomMaterialCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月单台非BOM物料费用', content: '当月单台非BOM物料费用' },
-        { id: '25', apiName: 'getcurLowValueConsumablesData', yDataName: 'curLowValueConsumables', dataName: '金额',  icon: 'el-icon-s-data', title: '当月单台低值易耗费用', content: '当月单台低值易耗费用' },
-        { id: '29', apiName: 'getinventoryTurnoverdaysData', yDataName: 'inventoryTurnoverdays', dataName: '天数', icon: 'el-icon-s-data', title: '在制物资年化周转天数', content: '在制物资年化周转天数' },
-        { id: '37', apiName: 'getoutputPercapitacountsData', yDataName: 'outputPercapitacounts', dataName: '台数',  icon: 'el-icon-s-data', title: '人均生产台数', content: '人均生产台数' },
-        { id: '38', apiName: 'getoutputPercapitavalueData', yDataName: 'outputPercapitavalue', dataName: '产值',  icon: 'el-icon-s-data', title: '人均产值', content: '人均产值' },
-        { id: '41', apiName: 'getonlineOntimerateData', yDataName: 'onlineOntimerate', dataName: '及时率',  icon: 'el-icon-s-data', title: '上线及时率', content: '上线及时率' },
-        { id: '48', apiName: 'getOvertimeFrontlinemonthData', yDataName: 'overtimeFrontlinemonth', dataName: '金额',  icon: 'el-icon-s-data', title: '一线当月加班时长', content: '一线当月加班时长' },
-        { id: '74', icon: 'el-icon-s-data', title: '日/月/年上线数', content: '日/月/年上线数', },
-        { id: '75', icon: 'el-icon-s-data', title: '日/月/年完工数', content: '日/月/年完工数', },
+        { id: '24', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'curNonBomMaterialCost', apiName: 'getcurNonBomMaterialCostData', yDataName: 'curNonBomMaterialCost', dataName: '金额', icon: 'el-icon-s-data', title: '当月单台非BOM物料费用', content: '当月单台非BOM物料费用' },
+        { id: '25', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'curLowValueConsumables', apiName: 'getcurLowValueConsumablesData', yDataName: 'curLowValueConsumables', dataName: '金额', icon: 'el-icon-s-data', title: '当月单台低值易耗费用', content: '当月单台低值易耗费用' },
+        { id: '29', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'inventoryTurnoverdays', apiName: 'getinventoryTurnoverdaysData', yDataName: 'inventoryTurnoverdays', dataName: '天数', icon: 'el-icon-s-data', title: '在制物资年化周转天数', content: '在制物资年化周转天数' },
+        { id: '37', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'outputPercapitacounts', apiName: 'getoutputPercapitacountsData', yDataName: 'outputPercapitacounts', dataName: '台数', icon: 'el-icon-s-data', title: '人均生产台数', content: '人均生产台数' },
+        { id: '38', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'outputPercapitavalue', apiName: 'getoutputPercapitavalueData', yDataName: 'outputPercapitavalue', dataName: '产值', icon: 'el-icon-s-data', title: '人均产值', content: '人均产值' },
+        { id: '41', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'onlineOntimerate', apiName: 'getonlineOntimerateData', yDataName: 'onlineOntimerate', dataName: '及时率', icon: 'el-icon-s-data', title: '上线及时率', content: '上线及时率' },
+        { id: '48', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'overtimeFrontlinemonth', apiName: 'getOvertimeFrontlinemonthData', yDataName: 'overtimeFrontlinemonth', dataName: '金额', icon: 'el-icon-s-data', title: '一线当月加班时长', content: '一线当月加班时长' },
+        { id: '74', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'curNonBomMaterialCost', icon: 'el-icon-s-data', title: '日/月/年上线数', content: '日/月/年上线数', },
+        { id: '75', showTarget: 'production', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'curNonBomMaterialCost', icon: 'el-icon-s-data', title: '日/月/年完工数', content: '日/月/年完工数', },
       ],
       formData: {},
       rules: {},
@@ -51,14 +51,45 @@ export default {
   watch: {},
   created() {
   },
-  mounted() { },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      let target = {
+        date: new Date(),
+        deptName: 'production',
+      }
+      const resTarget = await getTargetData(target)
+      //目标值赋予及上下限预警
+      this.allIndex.forEach(item => {
+        resTarget.rows.forEach(row => {
+          if (item.sum === row.indicatorName) {
+            item.targetValue = row.targetValue;
+            item.targetValueDate = row.natureYear;
+            // if (allTargetData[item.sum] < row.targetLowerLimit || allTargetData[item.sum] > row.targetUpperLimit) {
+            //   item.showWarning = true;
+            // }
+          }
+        });
+      });
+    },
     toDetail(item) {
       if (item.id === '74') {
-        this.$router.push('/production/indicators74')
+        this.$router.push({
+          path: '/production/indicators74',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
       }
       else if (item.id === '75') {
-        this.$router.push('/production/indicators75')
+        this.$router.push({
+          path: '/production/indicators75',
+          query: {
+            data: JSON.stringify(item),
+          }
+        })
       }
       else {
         this.$router.push({

@@ -148,7 +148,9 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
+                formatter: (params) => {
+                    return params.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: false });
+                },
                 fontSize: 16,
                 rich: {
                     name: {}
@@ -176,7 +178,7 @@ export default {
                         mark: { show: true, },
                         dataView: { show: true, readOnly: false, title: '数据视图' },
                         magicType: { show: true, type: ['line', 'bar', 'stack'], title: { line: '切换为折线图', bar: '切换为柱状图', stack: '切换为堆叠图' } },
-                        // restore: { show: true, title: '还原' },
+                        restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
                     }
                 },

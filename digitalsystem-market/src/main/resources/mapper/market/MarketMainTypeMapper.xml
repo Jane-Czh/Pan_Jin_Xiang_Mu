@@ -80,4 +80,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <!--  批量插入的 SQL 语句  -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO market_main_type (
+        id,
+        main_car_type,
+        car_type
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.mainCarType},
+            #{item.carType}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteAll">
+        truncate table market_main_type;
+    </delete>
 </mapper>

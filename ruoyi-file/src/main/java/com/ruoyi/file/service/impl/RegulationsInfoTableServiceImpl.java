@@ -287,9 +287,9 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
     }
 
     @Override
-    public List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(Date startTime, Date endTime) {
-        System.out.println("selectRegulationsCounts:==========>"+regulationsInfoTableMapper.selectRegulationsCountsByClassification(startTime, endTime));
-        return regulationsInfoTableMapper.selectRegulationsCountsByClassification(startTime, endTime);
+    public List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(Date startTime, Date endTime,String mainResponsibleDepartment) {
+        System.out.println("selectRegulationsCounts:==========>"+regulationsInfoTableMapper.selectRegulationsCountsByClassification(startTime, endTime, mainResponsibleDepartment));
+        return regulationsInfoTableMapper.selectRegulationsCountsByClassification(startTime, endTime, mainResponsibleDepartment);
     }
 
 }

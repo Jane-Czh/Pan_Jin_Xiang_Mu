@@ -91,7 +91,7 @@ public interface RegulationsInfoTableMapper
     /**
      * 查询各部门的制度总数
      * */
-    public List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    public List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("mainResponsibleDepartment") String mainResponsibleDepartment);
 //    /**
 //     * 制度修订频率
 //     */

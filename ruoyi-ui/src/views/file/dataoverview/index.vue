@@ -17,7 +17,7 @@
         </el-form-item>
         <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
           <el-select
-            v-model="queryParams.mainResponsibleDepartment"
+            v-model="selectedDepartment"
             placeholder="请选择主责部门"
             clearable
             @change="handleDepartmentChange"
@@ -36,14 +36,20 @@
       </el-form>
     </div>
     <div class="box1">
-      制度总数：{{ regulationCount }}
+      制度总数：{{ totalRegulationCount }}
+      <br>
+      公司级数：{{ companyLevelCounts }}
+      <br>
+      部门级数：{{ departmentLevelCounts }}
     </div>
     <div class="box2">
       流程总数：{{ pcount }}
+      <br>
       流程A数：{{ pcountA }}
+      <br>
       流程B数：{{ pcountB }}
-
     </div>
+
     <div id="regulationchart1" class="box"></div>
     <div id="pchart" class="box">区域 4</div>
     <div id="regulationchart2" class="box"></div>
@@ -94,6 +100,7 @@ export default {
         startTime: new Date(),
         endTime: new Date(),
       },
+      selectedDepartment: [],  //选中的部门
       selectedDate: [],
       pickerOptions: [],
       option: {},
@@ -101,12 +108,17 @@ export default {
       myRegulationChart2: {}, //制度饼图
       myProcessChart2: {},    //流程饼图
       regulationChart1data: [],  //制度柱状图查询数据
-      regulationChart2data: [],  //流程饼图查询数据
+      regulationChart2data: [],  //制度饼图查询数据
       data: [],
       //当前时间期间内统计的制度总次数
       totalCounts: 0,
 
       regulationCount: 0,  //制度总数
+
+
+      departmentLevelCounts: 0,  //部门级总数
+      companyLevelCounts: 0,     //公司级总数
+      totalRegulationCount: 0,  //制度总数
       processCount: 0,     //流程总数
       queryParams: {
         timeData: this.timeData,
@@ -117,9 +129,9 @@ export default {
       pChartData: {}, //流程柱状图
       pcount: 0,
       Pdata: [],
-      Pdata2: [],//统计流程A、B
       pcountA: 0,
       pcountB: 0,
+      pcountC: 0,
 
     }
   },
@@ -133,7 +145,6 @@ export default {
 
     //流程
     this.initPData();
-    this.Pdata2();
     this.pChartData = echarts.init(document.getElementById("pchart"));
   },
   created() {
@@ -141,20 +152,16 @@ export default {
   },
   methods: {
     getList() {
-      this.getRegulationCounts();
       this.initRegulationChart1Data();
+      this.initPData();
       this.initRegulationChart2Data();
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
       this.selectedDate = [];
+      this.selectedDepartment = '';
+      this.defaultMonth();
       this.getList();
-    },
-    getRegulationCounts() {
-      listFilemanagement(this.queryParams).then(response => {
-        this.regulationCount = response.total;
-      })
     },
     /** 查询部门列表 */
     getDeptList() {
@@ -180,10 +187,31 @@ export default {
     handleDateChange() {
       this.initRegulationChart1Data();
       this.initRegulationChart2Data();
+      this.initPData();
     },
-    async handleDepartmentChange() {
-      await this.getRegulationCounts();
-      await this.initRegulationChart2Data();
+    handleDepartmentChange() {
+      this.updateCounts();
+      this.initRegulationChart2Data();
+      this.initPData();
+    },
+    updateCounts() {
+      // 过滤数据，若未选择部门，则计算全部
+      const filteredData = this.selectedDepartment
+        ? this.regulationChart1data.filter(item => item.mainResponsibleDepartment === this.selectedDepartment)
+        : this.regulationChart1data;
+
+      // 计算部门级总数
+      this.departmentLevelCounts = filteredData
+        .filter(item => item.regulationLevel === '部门级')
+        .reduce((acc, item) => acc + item.times, 0);
+
+      // 计算公司级总数
+      this.companyLevelCounts = filteredData
+        .filter(item => item.regulationLevel === '公司级')
+        .reduce((acc, item) => acc + item.times, 0);
+
+      // 计算制度总数
+      this.totalRegulationCount = filteredData.reduce((acc, item) => acc + item.times, 0);
     },
     async initRegulationChart1Data() {
       this.timeData.startTime = this.selectedDate[0];
@@ -201,10 +229,6 @@ export default {
         const res = await getRegulationCounts(this.timeData);
         console.log("res===>", res);
         let counts = 0;
-        // res.map((item) => {
-        //   counts += item.times;
-        // });
-        // console.log("counts===>", counts);
         this.totalCounts = counts;
         /**
          * 返回的数据格式
@@ -223,39 +247,71 @@ export default {
         this.loading = false;
       }
     },
-    // 处理数据，确保所有部门都有对应的制度数量，不存在的部门设置为 0
+    // 计算制度总数，公司级总数，部门级总数
     processData() {
-      // 初始化部门制度数量为 0
-      const deptMap = {};
-      this.departments.forEach(dept => {
-        deptMap[dept] = 0;
-      });
 
-      // 将查询结果中存在的部门制度数量添加到映射中
+      // 初始化
+      this.totalRegulationCount = 0;
+      this.departmentLevelCounts = 0;
+      this.companyLevelCounts = 0;
+
       this.regulationChart1data.forEach(item => {
-        const dept = item.mainResponsibleDepartment;
-        if (deptMap.hasOwnProperty(dept)) {
-          deptMap[dept] = item.times; // 假设 item.times 是制度数量
+        this.totalRegulationCount += item.times; // 统计制度总数
+        if (item.regulationLevel === "部门级") {
+          this.departmentLevelCounts += item.times; // 统计部门级制度
+        } else if (item.regulationLevel === "公司级") {
+          this.companyLevelCounts += item.times; // 统计公司级制度
         }
       });
-
-      // 将映射转换为处理后的数据，用于图表显示
-      this.regulationChart1data = Object.keys(deptMap).map(dept => ({
-        mainResponsibleDepartment: dept,
-        times: deptMap[dept],
-      }));
     },
 
 
     updateRegulationChart1() {
-      const formattedData = this.regulationChart1data.map((item) => {
-        return {
-          mainResponsibleDepartment: item.mainResponsibleDepartment,
-          times: item.times,
+      // 如果查询到的数据为空，默认设置为 0
+      if (!this.regulationChart1data || this.regulationChart1data.length === 0) {
+        this.regulationChart1data = [{
+          mainResponsibleDepartment: '未知部门',
+          regulationLevel: '部门级',
+          times: 0
+        }, {
+          mainResponsibleDepartment: '未知部门',
+          regulationLevel: '公司级',
+          times: 0
+        }];
+      }
+      // 按制度等级分组数据
+      const groupedData = this.regulationChart1data.reduce((acc, item) => {
+        const { mainResponsibleDepartment, regulationLevel, times } = item;
+        if (!acc[regulationLevel]) {
+          acc[regulationLevel] = [];
+        }
+        acc[regulationLevel].push({ mainResponsibleDepartment, times });
+        return acc;
+      }, {});
 
-        };
-      });
-
+      console.log("groupedData===>", groupedData);
+      const labelOptionInside = {
+        show: true,
+        position: 'inside',  // 设置数字显示在柱体内部
+        formatter: function (params) {
+          return params.data.times; // 显示各制度等级的数量
+        },
+        fontSize: 12,
+        rich: { name: {} },
+      };
+      const labelOptionTop = {
+        show: true,
+        position: 'top',  // 设置数字显示在柱体顶部
+        formatter: function (params) {
+          const total = Object.values(groupedData).reduce((acc, levelData) => {
+            const item = levelData.find(d => d.mainResponsibleDepartment === params.name);
+            return acc + (item ? item.times : 0);
+          }, 0);
+          return total; // 显示部门总数
+        },
+        fontSize: 14,
+        rich: { name: {} },
+      };
       var app = {};
       const posList = [
         "left",
@@ -323,40 +379,24 @@ export default {
         fontSize: 16,
         rich: { name: {} },
       };
+
+      // // 获取不同制度等级的部门
+      // const departments = [...new Set(this.regulationChart1data.map(item => item.mainResponsibleDepartment))];
+
       this.option = {
         title: {
           text: "各部门制度数量",
-          left: "center", // 居中显示
+          left: "center",
         },
         tooltip: {
           trigger: "axis",
           axisPointer: { type: "shadow" },
-          // formatter: function (params) {
-          //   const data = params[0].data;
-          //   const updateDates =
-          //     data.updateDates.length > 0
-          //       ? data.updateDates.join("<br/>")
-          //       : "无更新记录";
-          //   return `具体更新时间:<br/>${updateDates}`;
-          // },
         },
-        // toolbox: {
-        //   show: true,
-        //   orient: "vertical",
-        //   left: "right",
-        //   top: "center",
-        //   feature: {
-        //     mark: { show: true },
-        //     dataView: { show: true, readOnly: false, title: "数据视图" },
-        //     magicType: {
-        //       show: true,
-        //       type: ["bar"],
-        //       title: { bar: "切换为柱状图" },
-        //     },
-        //     restore: { show: true, title: "还原" },
-        //     saveAsImage: { show: true, title: "保存为图片" },
-        //   },
-        // },
+        legend: {
+          orient: "horizontal",   //水平排列
+          left: "center",
+          top: "10%",
+        },
         xAxis: [
           {
             type: "category",
@@ -378,23 +418,26 @@ export default {
             interval: 1,
           },
         ],
-        series: [
-          {
-            name: "制度总数",
+        series: Object.keys(groupedData).map(level => {
+          return {
+            name: level, // 使用制度等级作为系列名称
             type: "bar",
-            label: labelOption,
+            stack: "总数",  // 设置相同的 stack 名称，表示堆叠
+            label: labelOptionInside,  // 堆叠柱体内部显示制度等级的数量
             emphasis: { focus: "series" },
-            data: formattedData.map((item) => ({
-              value: item.times,
-              times: item.times,
-              // updateDates: item.updateDates,
-            })),
-          },
-        ],
+            data: this.departments.map(department => {
+              const item = groupedData[level].find(d => d.mainResponsibleDepartment === department);
+              return item ? item.times : 0; // 如果没有数据，默认设置为 0
+            }),
+          };
+        }),
+
       };
+
 
       this.option && this.myRegulationChart1.setOption(this.option);
     },
+
     //时间选择器的默认月份设置
     defaultMonth() {
       const currentDate = new Date();
@@ -425,7 +468,7 @@ export default {
         //在选择的时间区间内刷新数据
         // const res = await getMainRevenueData(this.timeData);
 
-        const res = await getRegulationCountsByClassification(this.timeData);
+        const res = await getRegulationCountsByClassification(this.timeData,this.selectedDepartment);
         console.log("res222===>", res);
         /**
          * 返回的数据格式
@@ -656,8 +699,8 @@ export default {
       );
       this.timeData.endTime = endOfMonth;
       // this.timeData.endTime = this.selectedDate[1];
-      console.log("startTime=>", this.timeData.startTime);
-      console.log("endTime=>", this.timeData.endTime);
+      console.log("xxxhhhttt startTime=>", this.timeData.startTime);
+      console.log("xxxhhhttt endTime=>", this.timeData.endTime);
 
       //   console.log("timeData===>", this.timeData);
 
@@ -669,6 +712,7 @@ export default {
         const res = await listProjectWithTime(this.timeData).then(
           (response) => {
             this.Pdata = response;
+            this.Pdata2 = response;
             this.pcount = response.length;
           }
         );
@@ -685,36 +729,6 @@ export default {
 
     // 处理数据，确保所有部门都有对应的制度数量，不存在的部门设置为 0
     processPData() {
-      // 创建一个映射对象来统计每个 department 出现的次数
-      const deptMap = {};
-      this.departments.forEach((dept) => {
-        deptMap[dept] = 0;
-      });
-
-      // 遍历 this.data 数组，统计 department 出现的次数
-      this.Pdata.forEach((item) => {
-        const department = item.department;
-        if (deptMap[department]) {
-          deptMap[department] += 1;
-        } else {
-          deptMap[department] = 1;
-        }
-      });
-
-      // 将映射对象转换为 ECharts 所需的数据格式并保存回 this.data
-      this.Pdata = Object.keys(deptMap).map((department) => {
-        return {
-          department: department,
-          times: deptMap[department],
-        };
-      });
-
-      // console.log("my xht 流程 this.Pdata2===>", this.Pdata);
-      // 更新图表显示
-      this.updatePChart();
-    },
-
-    processPData2() {
       const deptLevelMap = {};
 
       // 初始化每个科室的等级统计
@@ -723,7 +737,7 @@ export default {
       });
 
       // 统计 department 和 level 的数据
-      this.Pdata2.forEach((item) => {
+      this.Pdata.forEach((item) => {
         const department = item.department;
         const level = item.level;
         if (deptLevelMap[department]) {
@@ -732,7 +746,7 @@ export default {
       });
 
       // 转换数据为ECharts需要的格式
-      this.Pdata2 = Object.keys(deptLevelMap).map((department) => {
+      this.Pdata = Object.keys(deptLevelMap).map((department) => {
         return {
           department: department,
           A: deptLevelMap[department]["A级"],
@@ -740,212 +754,127 @@ export default {
           C: deptLevelMap[department]["C级"],
         };
       });
+      //
+      // // 遍历 Pdata 并统计 A级和 B级 的数量
+      // this.Pdata.forEach((item) => {
+      //   this.pcountA += item.A;
+      //   this.pcountB += item.B;
+      // });
 
-      // 遍历 Pdata 并统计 A级和 B级 的数量
-      this.Pdata2.forEach((item) => {
+
+      // ----------------根据部门筛选计算流程总数--------------------
+      let filteredData = this.Pdata;
+
+      // 如果选择了某个部门，过滤数据
+      if (this.selectedDepartment) {
+        filteredData = this.Pdata.filter(
+          (item) => item.department === this.selectedDepartment
+        );
+      }
+
+      // 初始化计数
+      this.pcount = 0;
+      this.pcountA = 0;
+      this.pcountB = 0;
+      this.pcountC = 0;
+
+      // 遍历数据并统计
+      filteredData.forEach((item) => {
         this.pcountA += item.A;
         this.pcountB += item.B;
+        this.pcountC += item.C;
+        this.pcount += item.A + item.B + item.C; // 计算总流程数
       });
 
-      // console.log("my xht 流程 this.Pdata2===>", this.Pdata);
+      console.log("my xht 流程 this.Pdata2===>", this.Pdata);
       this.updatePChart();
     },
 
     //升级版本1
-    // updatePChart() {
-    //   const labelOption = {
-    //     show: true,
-    //     position: "insideBottom",
-    //     distance: 15,
-    //     align: "left",
-    //     verticalAlign: "middle",
-    //     rotate: 0,
-    //     formatter: "{c}",
-    //     fontSize: 16,
-    //   };
-
-    //   const seriesData = [
-    //     {
-    //       name: "A级",
-    //       type: "bar",
-    //       label: labelOption,
-    //       data: this.Pdata.map((item) => item.A),
-    //       itemStyle: {
-    //         // color: "#FF5733", // A级的颜色
-    //       },
-    //       emphasis: {
-    //         focus: "series",
-    //       },
-    //     },
-    //     {
-    //       name: "B级",
-    //       type: "bar",
-    //       label: labelOption,
-    //       data: this.Pdata.map((item) => item.B),
-    //       itemStyle: {
-    //         // color: "#33FF57", // B级的颜色
-    //       },
-
-    //       emphasis: {
-    //         focus: "series",
-    //       },
-    //     },
-    //     {
-    //       name: "C级",
-    //       type: "bar",
-    //       label: labelOption,
-    //       data: this.Pdata.map((item) => item.C),
-    //       itemStyle: {
-    //         // color: "#3357FF", // C级的颜色
-    //       },
-    //       emphasis: {
-    //         focus: "series",
-    //       },
-    //     },
-    //   ];
-
-    //   const option = {
-    //     title: {
-    //       text: "各部门流程数量",
-    //       left: "center",
-    //     },
-    //     tooltip: {
-    //       trigger: "axis",
-    //       axisPointer: { type: "shadow" },
-    //     },
-    //     legend: {
-    //       data: ["A级", "B级", "C级"],
-    //       orient: "horizontal",
-    //       left: "center",
-    //       top: "15%",
-    //     },
-    //     toolbox: {
-    //       show: true,
-    //       feature: {
-    //         mark: { show: true },
-    //         dataView: { show: true, readOnly: false },
-    //         magicType: { show: true, type: ["line", "bar", "stack"] },
-    //         restore: { show: true },
-    //         saveAsImage: { show: true },
-    //       },
-    //     },
-    //     xAxis: [
-    //       {
-    //         // type: "category",
-    //         axisTick: {
-    //           show: false,
-    //         },
-    //         axisLabel: {
-    //           rotate: 60, // 设置标签旋转角度
-    //         },
-    //         data: this.departments,
-    //       },
-    //     ],
-    //     yAxis: [
-    //       {
-    //         type: "value",
-    //         // min: 0, // 设置y轴最小值为0
-    //         axisLabel: {
-    //           show: false, // 隐藏y轴的标签
-    //         },
-    //         interval: 1,
-    //       },
-    //     ],
-    //     series: seriesData,
-    //   };
-
-    //   this.pChartData.setOption(option);
-    // },
-    //原始版本1
+    // 升级版本1 - 堆叠图
     updatePChart() {
-      const formattedData = this.Pdata.map((item) => {
-        return {
-          mainResponsibleDepartment: item.department,
-          times: item.times,
-        };
-      });
-
-      var app = {};
-      const posList = [
-        "left",
-        "right",
-        "top",
-        "bottom",
-        "inside",
-        "insideTop",
-        "insideLeft",
-        "insideRight",
-        "insideBottom",
-        "insideTopLeft",
-        "insideTopRight",
-        "insideBottomLeft",
-        "insideBottomRight",
-      ];
-      app.configParameters = {
-        rotate: { min: -90, max: 90 },
-        align: { options: { left: "left", center: "center", right: "right" } },
-        verticalAlign: {
-          options: { top: "top", middle: "middle", bottom: "bottom" },
-        },
-        position: {
-          options: posList.reduce((map, pos) => {
-            map[pos] = pos;
-            return map;
-          }, {}),
-        },
-        distance: { min: 0, max: 100 },
-      };
-      app.config = {
-        rotate: 0,
-        align: "center",
-        verticalAlign: "middle",
-        position: "top",
-        distance: 15,
-        onChange: function () {
-          const labelOption = {
-            rotate: app.config.rotate,
-            align: app.config.align,
-            verticalAlign: app.config.verticalAlign,
-            position: app.config.position,
-            distance: app.config.distance,
-          };
-          this.pChartData.setOption({
-            series: [
-              { label: labelOption },
-              { label: labelOption },
-              { label: labelOption },
-              { label: labelOption },
-            ],
-          });
-        },
-      };
       const labelOption = {
         show: true,
-        position: app.config.position,
-        distance: app.config.distance,
-        align: app.config.align,
-        verticalAlign: app.config.verticalAlign,
-        rotate: app.config.rotate,
-        formatter: function (params) {
-          return params.data.times;
-        },
+        position: "insideBottom",
+        distance: 15,
+        align: "left",
+        verticalAlign: "middle",
+        rotate: 0,
+        formatter: "{c}",
         fontSize: 16,
+      };
+      const labelOptionInside = {
+        show: true,
+        position: 'inside',  // 设置数字显示在柱体内部
+        fontSize: 12,
         rich: { name: {} },
       };
-      this.option = {
+
+      const seriesData = [
+        {
+          name: "A级",
+          type: "bar",
+          label: labelOptionInside,
+          data: this.Pdata.map((item) => item.A),
+          stack: "总量",  // 堆叠图设置
+          itemStyle: {
+            // color: "#FF5733", // A级的颜色
+          },
+          emphasis: {
+            focus: "series",
+          },
+        },
+        {
+          name: "B级",
+          type: "bar",
+          label: labelOptionInside,
+          data: this.Pdata.map((item) => item.B),
+          stack: "总量",  // 堆叠图设置
+          itemStyle: {
+            // color: "#33FF57", // B级的颜色
+          },
+          emphasis: {
+            focus: "series",
+          },
+        },
+        {
+          name: "C级",
+          type: "bar",
+          label: labelOptionInside,
+          data: this.Pdata.map((item) => item.C),
+          stack: "总量",  // 堆叠图设置
+          itemStyle: {
+            // color: "#3357FF", // C级的颜色
+          },
+          emphasis: {
+            focus: "series",
+          },
+        },
+      ];
+
+      const option = {
         title: {
           text: "各部门流程数量",
-          left: "center", // 居中显示
+          left: "center",
         },
         tooltip: {
           trigger: "axis",
           axisPointer: { type: "shadow" },
         },
-
+        legend: {
+          data: ["A级", "B级", "C级"],
+          orient: "horizontal",
+          left: "center",
+          top: "10%",
+        },
         xAxis: [
           {
-            type: "category",
-            axisTick: { show: false },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              rotate: 60, // 设置标签旋转角度
+            },
             data: this.departments,
           },
         ],
@@ -953,30 +882,141 @@ export default {
           {
             type: "value",
             axisLabel: {
-              formatter: function (value) {
-                return parseInt(value);
-              },
+              show: false, // 隐藏y轴的标签
             },
             interval: 1,
           },
         ],
-        series: [
-          {
-            name: "流程总数",
-            type: "bar",
-            label: labelOption,
-            emphasis: { focus: "series" },
-            data: formattedData.map((item) => ({
-              value: item.times,
-              times: item.times,
-              // updateDates: item.updateDates,
-            })),
-          },
-        ],
+        series: seriesData,
       };
 
-      this.option && this.pChartData.setOption(this.option);
+      this.pChartData.setOption(option);
     },
+
+    //原始版本1
+    // updatePChart() {
+    //   const formattedData = this.Pdata.map((item) => {
+    //     return {
+    //       mainResponsibleDepartment: item.department,
+    //       times: item.times,
+    //     };
+    //   });
+    //
+    //   var app = {};
+    //   const posList = [
+    //     "left",
+    //     "right",
+    //     "top",
+    //     "bottom",
+    //     "inside",
+    //     "insideTop",
+    //     "insideLeft",
+    //     "insideRight",
+    //     "insideBottom",
+    //     "insideTopLeft",
+    //     "insideTopRight",
+    //     "insideBottomLeft",
+    //     "insideBottomRight",
+    //   ];
+    //   app.configParameters = {
+    //     rotate: { min: -90, max: 90 },
+    //     align: { options: { left: "left", center: "center", right: "right" } },
+    //     verticalAlign: {
+    //       options: { top: "top", middle: "middle", bottom: "bottom" },
+    //     },
+    //     position: {
+    //       options: posList.reduce((map, pos) => {
+    //         map[pos] = pos;
+    //         return map;
+    //       }, {}),
+    //     },
+    //     distance: { min: 0, max: 100 },
+    //   };
+    //   app.config = {
+    //     rotate: 0,
+    //     align: "center",
+    //     verticalAlign: "middle",
+    //     position: "top",
+    //     distance: 15,
+    //     onChange: function () {
+    //       const labelOption = {
+    //         rotate: app.config.rotate,
+    //         align: app.config.align,
+    //         verticalAlign: app.config.verticalAlign,
+    //         position: app.config.position,
+    //         distance: app.config.distance,
+    //       };
+    //       this.pChartData.setOption({
+    //         series: [
+    //           { label: labelOption },
+    //           { label: labelOption },
+    //           { label: labelOption },
+    //           { label: labelOption },
+    //         ],
+    //       });
+    //     },
+    //   };
+    //   const labelOption = {
+    //     show: true,
+    //     position: app.config.position,
+    //     distance: app.config.distance,
+    //     align: app.config.align,
+    //     verticalAlign: app.config.verticalAlign,
+    //     rotate: app.config.rotate,
+    //     formatter: function (params) {
+    //       return params.data.times;
+    //     },
+    //     fontSize: 16,
+    //     rich: { name: {} },
+    //   };
+    //   this.option = {
+    //     title: {
+    //       text: "各部门流程数量",
+    //       left: "center", // 居中显示
+    //     },
+    //     tooltip: {
+    //       trigger: "axis",
+    //       axisPointer: { type: "shadow" },
+    //     },
+    //
+    //     xAxis: [
+    //       {
+    //         type: "category",
+    //         axisTick: { show: false },
+    //         data: this.departments,
+    //         axisLabel: {
+    //           rotate: 60, // 设置标签旋转角度
+    //         },
+    //       },
+    //     ],
+    //     yAxis: [
+    //       {
+    //         type: "value",
+    //         axisLabel: {
+    //           formatter: function (value) {
+    //             return parseInt(value);
+    //           },
+    //         },
+    //         interval: 1,
+    //       },
+    //     ],
+    //     series: [
+    //       {
+    //         name: "流程总数",
+    //         type: "bar",
+    //         label: labelOption,
+    //         emphasis: { focus: "series" },
+    //         data: formattedData.map((item) => ({
+    //           value: item.times,
+    //           times: item.times,
+    //           // updateDates: item.updateDates,
+    //         })),
+    //       },
+    //     ],
+    //   };
+    //
+    //   this.option && this.pChartData.setOption(this.option);
+    // },
 
   }
 }

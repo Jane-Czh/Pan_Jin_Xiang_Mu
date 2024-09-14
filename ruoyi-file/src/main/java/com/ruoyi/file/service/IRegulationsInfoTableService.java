@@ -96,5 +96,5 @@ public interface IRegulationsInfoTableService {
 
     List<regulationCountsRespondEntity> selectRegulationsCounts(Date startTime, Date endTime);
 
-    List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(Date startTime, Date endTime);
+    List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(Date startTime, Date endTime, String mainResponsibleDepartment);
 }

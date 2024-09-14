@@ -184,7 +184,7 @@ public class RegulationsInfoTableController extends BaseController {
      */
     @PostMapping("/regulationcountsbyclassification")
     public List<regulationCountsByClassificationRespondEntity> getRegulationCountsByClassification(@RequestBody RegulationsInfoTable regulationsInfoTable) {
-        return regulationsInfoTableService.selectRegulationsCountsByClassification(regulationsInfoTable.getStartTime(), regulationsInfoTable.getEndTime());
+        return regulationsInfoTableService.selectRegulationsCountsByClassification(regulationsInfoTable.getStartTime(), regulationsInfoTable.getEndTime(), regulationsInfoTable.getMainResponsibleDepartment());
     }
 
 }

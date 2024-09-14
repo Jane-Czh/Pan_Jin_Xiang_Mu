@@ -84,7 +84,7 @@
         </where>
     </select>
 
-    <select id="selectTechNewProjectDesignByTdId" parameterType="String" resultMap="TechNewProjectDesignResult">
+    <select id="selectTechNewProjectDesignByTdId" parameterType="Long" resultMap="TechNewProjectDesignResult">
         <include refid="selectTechNewProjectDesignVo"/>
         where TD_id = #{tdId}
     </select>

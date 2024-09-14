@@ -7,6 +7,7 @@ import java.util.*;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.file.entity.regulationCountsRespondEntity;
 import com.ruoyi.file.entity.regulationRespondEntity;
+import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -283,6 +284,12 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
     public List<regulationCountsRespondEntity> selectRegulationsCounts(Date startTime, Date endTime) {
         System.out.println("selectRegulationsCounts:"+regulationsInfoTableMapper.selectRegulationsCounts(startTime, endTime));
         return regulationsInfoTableMapper.selectRegulationsCounts(startTime, endTime);
+    }
+
+    @Override
+    public List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(Date startTime, Date endTime,String mainResponsibleDepartment) {
+        System.out.println("selectRegulationsCounts:==========>"+regulationsInfoTableMapper.selectRegulationsCountsByClassification(startTime, endTime, mainResponsibleDepartment));
+        return regulationsInfoTableMapper.selectRegulationsCountsByClassification(startTime, endTime, mainResponsibleDepartment);
     }
 
 }

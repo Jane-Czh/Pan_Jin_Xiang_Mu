@@ -59,3 +59,11 @@ export function recycleInfo(projectId) {
     method: 'delete'
   })
 }
+
+
+export function Recodingquery(projectName) {
+  return request({
+    url: '/project/Info/recoding/' + projectName,
+    method: 'get'
+  })
+}

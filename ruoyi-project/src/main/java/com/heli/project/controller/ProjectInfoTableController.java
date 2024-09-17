@@ -74,6 +74,19 @@ public class ProjectInfoTableController extends BaseController
     }
 
     /**
+     * 获取项目修改信息
+     */
+    @PreAuthorize("@ss.hasPermi('project:Info:recode')")
+    @GetMapping(value = "/recoding/{projectName}")
+    public TableDataInfo getInfoRecode(@PathVariable("projectName") String projectName)
+    {
+        System.out.println("-------" + "query" + "-------" +projectName+ "recode" +"-------");
+        System.out.println(projectInfoTableService.selectProjectRecodingByProjectName(projectName));
+        return getDataTable(projectInfoTableService.selectProjectRecodingByProjectName(projectName));
+    }
+
+
+    /**
      * 新增项目基本信息
      */
     @PreAuthorize("@ss.hasPermi('project:Info:add')")

@@ -162,7 +162,7 @@ export default {
             };
             this.option = {
                 title: {
-                    text: '供应商不合格件返厂及时率'
+                    text: '供应商不合格件返厂及时情况'
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -171,7 +171,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['及时率']
+                    data: ['及时情况']
                 },
                 toolbox: {
                     show: true,
@@ -201,8 +201,8 @@ export default {
                 ],
                 series: [
                     {
-                        name: '及时率',
-                        type: 'scatter',
+                        name: '及时情况',
+                        type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'

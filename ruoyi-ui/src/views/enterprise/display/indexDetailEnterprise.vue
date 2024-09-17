@@ -22,7 +22,8 @@
       当前选择时间段暂无数据
     </div> -->
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
-      :yAxisData="yAxisData"></indicator-chart>
+      :yAxisData="yAxisData" :showTarget="option.showTarget" :targetValue="option.targetValue"
+      :targetValueDate="option.targetValueDate"></indicator-chart>
   </div>
 </template>
 
@@ -51,16 +52,17 @@ export default {
 
       xAxisData: [],
       yAxisData: [],
-      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', showTarget: '', targetValue: 0, targetValueDate: '', }
     }
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', showTarget: '', targetValue: 0, targetValueDate: '', }
     this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
     this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()
     this.initData()
+    console.log(this.option)
   },
   methods: {
     async initData() {

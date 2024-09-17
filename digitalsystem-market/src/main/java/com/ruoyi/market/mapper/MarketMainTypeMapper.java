@@ -61,6 +61,7 @@ public interface MarketMainTypeMapper
      */
     public int deleteMarketMainTypeByIds(Long[] ids);
 
+    public List<MarketMainType> selectMarketMainTypeList1();
     public void batchInsert(@Param("list") List<MarketMainType> marketMainType);
 
     public void deleteAll();

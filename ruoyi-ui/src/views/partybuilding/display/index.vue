@@ -47,7 +47,12 @@ export default {
   mounted() { },
   methods: {
     toDetail(item) {
-      this.$router.push(item.path)
+      this.$router.push({
+        path: item.path,
+        query: {
+          data: JSON.stringify(item),
+        }
+      })
     }
   }
 }

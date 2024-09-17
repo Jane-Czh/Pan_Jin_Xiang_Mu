@@ -94,6 +94,11 @@ public class MarketMainTypeServiceImpl implements IMarketMainTypeService
         return marketMainTypeMapper.selectMarketMainTypeList(marketMainType);
     }
 
+    @Override
+    public List<MarketMainType> selectMarketMainTypeList1() {
+        return marketMainTypeMapper.selectMarketMainTypeList1();
+    }
+
     /**
      * 新增主要车型字典表
      * 

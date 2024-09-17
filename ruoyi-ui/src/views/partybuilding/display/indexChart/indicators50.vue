@@ -14,7 +14,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getPartyBuildingRankData } from '@/api/partybuilding/data'
-
+import { getTargetData } from '@/api/financial/target'
 export default {
   name: 'Indicators50',
   data() {
@@ -30,7 +30,12 @@ export default {
       selectedDate: [],
       pickerOptions: [],
       option: {},
-      myChart: {}
+      myChart: {},
+      targetValueArray: [],
+      routerData:
+        [
+          { id: '50', showTarget: 'partybuilding', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'partyBuildingRank' },
+        ],
     }
   },
   computed: {},
@@ -42,12 +47,31 @@ export default {
   },
   methods: {
     async initData() {
+      let target = {
+        date: new Date(),
+        deptName: 'partybuilding',
+      }
+      const resTarget = await getTargetData(target)
+      //目标值赋予
+      this.routerData.forEach(item => {
+        resTarget.rows.forEach(row => {
+          if (item.sum === row.indicatorName) {
+            item.targetValue = row.targetValue;
+            item.targetValueDate = row.natureYear;
+
+          }
+        });
+      });
+      console.log(this.routerData)
+      console.log('++++++++++++')
       this.timeData.startTime = this.selectedDate[0],
         this.timeData.endTime = this.selectedDate[1]
       try {
         this.loading = true
         const res = await getPartyBuildingRankData(this.timeData);
         this.data = res.rows
+        const yAxisDataLength = this.data.length;
+        this.targetValueArray = Array(yAxisDataLength).fill(this.routerData[0].targetValue);
         this.loading = false
         this.updateChart()
       } catch (error) {
@@ -155,6 +179,32 @@ export default {
           name: {}
         }
       };
+      // 根据条件决定是否添加目标值系列
+      let series = [{
+        name: '分数',
+        type: 'bar',
+        label: labelOption,
+        emphasis: {
+          focus: 'series'
+        },
+        data: this.data.map(item => item.score),
+      },
+      ];
+      // console.log(this.routerData[0].targetValue)
+      if (this.routerData[0].targetValue != 0 || '') {
+        series.push({
+          name: '目标值',
+          type: 'line',
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.targetValueArray,
+        });
+        console.log('***********')
+        console.log(series)
+
+      }
       this.option = {
         title: {
           text: '党建月度考核分数',
@@ -166,7 +216,7 @@ export default {
           }
         },
         legend: {
-          data: ['分数']
+          data: ['分数', this.routerData[0].targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,
@@ -203,26 +253,7 @@ export default {
             }
           }
         ],
-        series: [{
-          name: '分数',
-          type: 'bar',
-          label: labelOption,
-          emphasis: {
-            focus: 'series'
-          },
-          data: this.data.map(item => item.score),
-        },
-          // {
-          //   name: '排名',
-          //   type: 'line',
-          //   label: labelOption,
-          //   yAxisIndex: 1,
-          //   emphasis: {
-          //     focus: 'series'
-          //   },
-          //   data: this.data.map(item => item.rank),
-          // }
-        ]
+        series: series
       };
 
       this.option && this.myChart.setOption(this.option);

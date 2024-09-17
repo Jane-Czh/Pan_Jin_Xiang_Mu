@@ -3,6 +3,7 @@ package com.ruoyi.market.service;
 import java.io.IOException;
 import java.util.List;
 import com.ruoyi.market.domain.MarketCarType;
+import com.ruoyi.market.domain.MarketSalesTable;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -22,6 +23,8 @@ public interface IMarketCarTypeService
      */
     public int importInterests(MultipartFile excelFile) throws IOException;
 
+
+
     /**
      * 查询主要车型维护
      * 
@@ -29,6 +32,12 @@ public interface IMarketCarTypeService
      * @return 主要车型维护
      */
     public MarketCarType selectMarketCarTypeByMctId(Long mctId);
+
+
+    /**
+     * 无参数查询主要车型维护
+     */
+    public List<MarketCarType> selectMarketCarTypeList1();
 
     /**
      * 查询主要车型维护列表

@@ -104,7 +104,8 @@ export default {
       optionYear: {},
       dayChart: {},
       monthChart: {},
-      yearChart: {}
+      yearChart: {},
+
     }
   },
   computed: {},

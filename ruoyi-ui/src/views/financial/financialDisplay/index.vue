@@ -31,10 +31,11 @@
             <div class="costIndicators-item__body">
               <i :class="item.icon" />
               <div class="main-content">
-                <h3>{{ item.title }}</h3>
-                <span v-if="item.showWarning">
-                  <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
-                </span>
+                <h3>{{ item.title }}
+                  <span v-if="item.showWarning">
+                    <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
+                  </span>
+                </h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
@@ -54,10 +55,11 @@
             <div class="efficiencyIndicators-item__body">
               <i :class="item.icon" />
               <div class="main-content">
-                <h3>{{ item.title }}</h3>
-                <span v-if="item.showWarning">
-                  <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
-                </span>
+                <h3>{{ item.title }}
+                  <span v-if="item.showWarning">
+                    <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
+                  </span>
+                </h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
@@ -76,10 +78,11 @@
             <div class="allIndex-item__body">
               <i :class="item.icon" />
               <div class="main-content">
-                <h3>{{ item.title }}</h3>
-                <span v-if="item.showWarning">
-                  <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
-                </span>
+                <h3>{{ item.title }}
+                  <span v-if="item.showWarning">
+                    <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
+                  </span>
+                </h3>
                 <div>{{ item.content }}</div>
               </div>
             </div>
@@ -123,8 +126,8 @@ export default {
         { id: '1', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'interests', apiName: 'getMainRevenueData', date: '', yDataName: 'MainRevenue', type: '1', icon: 'el-icon-s-data', title: '主营业务收入', dataName: '金额', content: ``, sum: 'mainRevenue' },
         { id: '2', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getTotalSalesRevenueData', date: '', yDataName: 'Total_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '整机销售收入', dataName: '金额', content: '', sum: 'totalSalesRevenue' },
         { id: '3', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getExternalGroupSalesRevenueData', date: '', yDataName: 'External_Group_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '集团外部销售收入', dataName: '金额', content: '', sum: 'externalGroupSalesRevenue' },
-        { id: '4', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getTotalVehicleProductionData', date: '', yDataName: 'Total_Vehicle_Production', type: '1', icon: 'el-icon-s-data', title: '整车产量', dataName: '金额', content: '', sum: 'totalVehicleProduction' },
-        { id: '5', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getTotalVehicleSalesData', date: '', yDataName: 'Total_Vehicle_Sales', type: '1', icon: 'el-icon-s-data', title: '整车销量', dataName: '金额', content: '', sum: 'totalVehicleSales' },
+        { id: '4', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getTotalVehicleProductionData', date: '', yDataName: 'Total_Vehicle_Production', type: '1', icon: 'el-icon-s-data', title: '整车产量', dataName: '台', content: '', sum: 'totalVehicleProduction' },
+        { id: '5', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getTotalVehicleSalesData', date: '', yDataName: 'Total_Vehicle_Sales', type: '1', icon: 'el-icon-s-data', title: '整车销量', dataName: '台', content: '', sum: 'totalVehicleSales' },
         { id: '6', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getNewProductSalesRevenueData', date: '', yDataName: 'New_Product_Sales_Revenue', type: '1', icon: 'el-icon-s-data', title: '新产品销售收入', dataName: '金额', content: '', sum: 'newProductSalesRevenue' },
         { id: '7', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'month', apiName: 'getSpecialtyProductRevenueData', date: '', yDataName: 'Specialty_Product_Revenue', type: '1', icon: 'el-icon-s-data', title: '特色产品收入', dataName: '金额', content: '', sum: 'specialtyProductRevenue' },
         { id: '8', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'interests', apiName: 'getCOGSData', date: '', yDataName: 'COGS', type: '1', icon: 'el-icon-s-data', title: '主营业务成本', dataName: '金额', content: '', sum: 'cogs' },

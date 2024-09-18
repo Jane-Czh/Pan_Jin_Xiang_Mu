@@ -8,7 +8,16 @@
     </div>
     <div>
       <br>
-      <div class="centered-value">
+      <div class="centered-value" v-if="option.dataName == '周转率'">
+        当前累计值：{{ this.currentSum }} (次)
+      </div>
+      <div class="centered-value" v-else-if="option.dataName == '项目'">
+        当前累计值：{{ this.currentSum }} (项)
+      </div>
+      <div class="centered-value" v-else-if="option.dataName == '台'">
+        当前累计值：{{ this.currentSum }} (台)
+      </div>
+      <div class="centered-value" v-else>
         当前累计值：{{ this.currentSum }} (万元)
       </div>
     </div>

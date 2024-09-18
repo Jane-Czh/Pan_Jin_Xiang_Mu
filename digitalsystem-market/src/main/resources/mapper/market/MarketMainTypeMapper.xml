@@ -25,6 +25,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="creatPeople != null  and creatPeople != ''"> and creat_people = #{creatPeople}</if>
         </where>
     </select>
+
+    <select id="selectMarketMainTypeList1" parameterType="MarketMainType" resultMap="MarketMainTypeResult">
+        <include refid="selectMarketMainTypeVo"/>
+        <where>
+            <if test="mainCarType != null  and mainCarType != ''"> and main_car_type = #{mainCarType}</if>
+            <if test="carType != null  and carType != ''"> and car_Type = #{carType}</if>
+            <if test="creatTime != null "> and creat_time = #{creatTime}</if>
+            <if test="creatPeople != null  and creatPeople != ''"> and creat_people = #{creatPeople}</if>
+        </where>
+    </select>
     
     <select id="selectMarketMainTypeById" parameterType="Long" resultMap="MarketMainTypeResult">
         <include refid="selectMarketMainTypeVo"/>

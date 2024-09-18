@@ -87,6 +87,13 @@ public class MarketCarTypeServiceImpl implements IMarketCarTypeService
         return marketCarTypeMapper.selectMarketCarTypeByMctId(mctId);
     }
 
+    @Override
+    public List<MarketCarType> selectMarketCarTypeList1() {
+        return marketCarTypeMapper.selectMarketCarTypeList1();
+    }
+
+
+
     /**
      * 查询主要车型维护列表
      * 

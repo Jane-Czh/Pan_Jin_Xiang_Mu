@@ -31,6 +31,9 @@ public interface IMarketMainTypeService
      */
     public List<MarketMainType> selectMarketMainTypeList(MarketMainType marketMainType);
 
+
+    public List<MarketMainType> selectMarketMainTypeList1();
+
     /**
      * 新增主要车型字典表
      * 

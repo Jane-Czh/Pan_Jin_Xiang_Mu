@@ -80,6 +80,11 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
         return regulationsInfoTableMapper.selectAllRegulationsList(regulationsInfoTable);
     }
 
+    @Override
+    public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable) {
+        return regulationsInfoTableMapper.selectRegulationRecycleList(regulationsInfoTable);
+    }
+
     /**
      * 查询历史版本文件列表
      *

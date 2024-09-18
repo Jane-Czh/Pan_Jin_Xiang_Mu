@@ -202,6 +202,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="状态" align="center" prop="revisionContent"/>
       <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
@@ -955,6 +956,11 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
+        // 检查权限
+        if (this.thisDept !== row.mainResponsibleDepartment) {
+          this.$modal.msgError('没有权限删除该制度!');
+          return; // 中止删除操作
+        }
         const regulationsIds = row.regulationsId || this.ids;
         this.$modal.confirm('是否确认删除？').then(function () {
           return delFilemanagement(regulationsIds);

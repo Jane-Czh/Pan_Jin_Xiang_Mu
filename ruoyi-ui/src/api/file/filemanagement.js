@@ -27,6 +27,15 @@ export function getRegulationsHistory(currentId) {
   });
 }
 
+// 查询回收站列表
+export function getRegulationRecycleList(query) {
+  return request({
+    url: '/file/filemanagement/reclcyelist',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询文件管理详细
 export function getFilemanagement(regulationsId) {
   return request({

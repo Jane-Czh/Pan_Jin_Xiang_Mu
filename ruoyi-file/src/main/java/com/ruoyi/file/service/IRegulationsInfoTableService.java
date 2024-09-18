@@ -48,6 +48,15 @@ public interface IRegulationsInfoTableService {
      */
     public List<RegulationsInfoTable> selectAllRegulationsList(RegulationsInfoTable regulationsInfoTable);
 
+    /**
+     * 查询回收站列表
+     *
+     * @param regulationsInfoTable 文件管理
+     * @return 文件管理集合
+     */
+    public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable);
+
+
 
     /**
      * 查询历史版本文件管理列表

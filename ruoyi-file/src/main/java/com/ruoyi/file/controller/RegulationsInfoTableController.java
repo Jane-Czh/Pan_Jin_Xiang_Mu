@@ -65,6 +65,7 @@ public class RegulationsInfoTableController extends BaseController {
         return getDataTable(list);
     }
 
+
     /**
      * 提供给流程部分使用绑定文件
      * 不需要绑定权限
@@ -87,6 +88,17 @@ public class RegulationsInfoTableController extends BaseController {
         System.out.println("123 currentId" + currentId);
         List<RegulationsInfoTable> list = regulationsInfoTableService.getRegulationsHistory(currentId);
         return list;
+    }
+
+    /**
+     * 查询回收站列表
+     */
+    @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")
+    @GetMapping(value = "/reclcyelist")
+    public TableDataInfo getRegulationRecycle(RegulationsInfoTable regulationsInfoTable) {
+        startPage();
+        List<RegulationsInfoTable> list = regulationsInfoTableService.selectRegulationRecycleList(regulationsInfoTable);
+        return getDataTable(list);
     }
 
     /**

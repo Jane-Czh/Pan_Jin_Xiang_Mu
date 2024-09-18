@@ -292,6 +292,7 @@ export default {
       console.log("groupedData===>", groupedData);
       const labelOptionInside = {
         show: true,
+
         position: 'inside',  // 设置数字显示在柱体内部
         formatter: function (params) {
           return params.data.times; // 显示各制度等级的数量

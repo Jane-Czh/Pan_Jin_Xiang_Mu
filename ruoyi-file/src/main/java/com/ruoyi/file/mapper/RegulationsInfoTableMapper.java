@@ -49,6 +49,8 @@ public interface RegulationsInfoTableMapper
      */
     public List<RegulationsInfoTable> selectAllRegulationsList(RegulationsInfoTable regulationsInfoTable);
 
+    public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable);
+
     /**
      * 新增文件管理
      *

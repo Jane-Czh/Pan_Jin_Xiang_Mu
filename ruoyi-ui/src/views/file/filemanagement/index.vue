@@ -173,6 +173,17 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          @click="handleRecycleBin"
+          v-hasPermi="['file:filemanagement:remove']"
+        >回收站
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -253,6 +264,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="状态" align="center" prop="revisionContent"/>
       <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
@@ -1302,7 +1314,7 @@
         this.fileUploadDialogVisible = true;
         this.title = "上传制度文件";
       },
-      /** 修改制度文件 */
+      /** 修改（更新）制度文件 */
       handleModify(row) {
         this.reset();
         const regulationsId = row.regulationsId || this.ids
@@ -1329,6 +1341,10 @@
         const regulationsId = row.regulationsId;
         this.$router.push("/file/filemanagement/historyVersions/" + regulationsId);
       },
+      /** 回收站路由跳转 */
+      handleRecycleBin(row) {
+        this.$router.push("/file/filemanagement/recycleBin");
+      },
       /** 制度修改频率 */
       handleRevisionFrequency(row) {
         const regulationsId = row.regulationsId;
@@ -1344,6 +1360,7 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             this.form.newFlag = 1;
+            this.form.revisionContent = "新增";
             addFilemanagement(this.form).then(response => {
               this.$modal.msgSuccess("上传成功");
               this.fileUploadDialogVisible = false;
@@ -1355,7 +1372,7 @@
         this.pdfList = [];
         this.wordList = [];
       },
-      /** 修改文件提交按钮 */
+      /** 修改（更新）文件提交按钮 */
       modifySubmitForm(file, fileList) {
         console.log("Before validate - fileList:", this.fileList);
         console.log("file=======>:", file);
@@ -1392,7 +1409,7 @@
               // } else {
               //   this.form.wordPath = wordFilePath;
               // }
-
+              this.form.revisionContent = "更新";
               this.form.oldRegulationsId = this.form.regulationsId;
               console.log("this.form.newRegulationsId=>", this.form.newRegulationsId);
               console.log("(this.form.newRegulationsId == null)", (this.form.newRegulationsId == null));
@@ -1473,42 +1490,110 @@
         this.pdfList = [];
         this.wordList = [];
       },
+      // /** 删除按钮操作 */
+      // handleDelete(row) {
+      //   console.log("当前表单1=>", row);
+      //   //将id或ids统一转换为数组
+      //   const regulationsIds = [].concat(row.regulationsId || this.ids);
+      //   // const regulationsIds = row.regulationsId || this.ids;
+      //   console.log("regulationsIds=>", regulationsIds);
+      //   this.$modal.confirm('是否确认删除？').then(function () {
+      //     regulationsIds.forEach(id => {
+      //       console.log("Processing ID:", id);
+      //       getFilemanagement(id).then(response => {
+      //         const thisForm = response.data;
+      //         console.log("response------>:", response);
+      //         if (thisForm.oldRegulationsId != null) {
+      //           getFilemanagement(thisForm.oldRegulationsId).then(response => {
+      //             const lastForm = response.data;
+      //             console.log("上一表单=>", lastForm);
+      //             lastForm.newFlag = 1;
+      //             console.log("上一表单=>", lastForm);
+      //             updateFilemanagement(lastForm).then(response => {
+      //             });
+      //           });
+      //         }
+      //       });
+      //     });
+      //     return delFilemanagement(regulationsIds);
+      //   }).then(() => {
+      //     this.$modal.msgSuccess("删除成功");
+      //     this.getList();
+      //     console.log("删除文件刷新");
+      //   }).then(() => {
+      //     this.getList();
+      //     console.log("删除文件刷新2");
+      //   }).catch(() => {
+      //   });
+      // },
       /** 删除按钮操作 */
       handleDelete(row) {
         console.log("当前表单1=>", row);
-        //将id或ids统一转换为数组
+        // 将id或ids统一转换为数组
         const regulationsIds = [].concat(row.regulationsId || this.ids);
-        // const regulationsIds = row.regulationsId || this.ids;
         console.log("regulationsIds=>", regulationsIds);
-        this.$modal.confirm('是否确认删除？').then(function () {
-          regulationsIds.forEach(id => {
-            console.log("Processing ID:", id);
-            getFilemanagement(id).then(response => {
-              const thisForm = response.data;
-              console.log("response------>:", response);
-              if (thisForm.oldRegulationsId != null) {
-                getFilemanagement(thisForm.oldRegulationsId).then(response => {
-                  const lastForm = response.data;
-                  console.log("上一表单=>", lastForm);
-                  lastForm.newFlag = 1;
-                  console.log("上一表单=>", lastForm);
-                  updateFilemanagement(lastForm).then(response => {
-                  });
-                });
-              }
-            });
+
+        // 遍历所有需要删除的ID
+        const permissionCheckPromises = regulationsIds.map(id => {
+          return getFilemanagement(id).then(response => {
+            const thisForm = response.data;
+            console.log("response------>:", thisForm);
+
+            // 检查权限，确保 this.thisDept 与表单的 mainResponsibleDepartment 匹配
+            if (this.thisDept !== thisForm.mainResponsibleDepartment) {
+              this.$modal.msgError('没有权限删除该制度!');
+              throw new Error('没有权限删除');
+            }
+
+            return thisForm;
           });
-          return delFilemanagement(regulationsIds);
-        }).then(() => {
-          this.$modal.msgSuccess("删除成功");
-          this.getList();
-          console.log("删除文件刷新");
-        }).then(() => {
-          this.getList();
-          console.log("删除文件刷新2");
-        }).catch(() => {
         });
+
+        // 等待权限检查完成
+        Promise.all(permissionCheckPromises)
+          .then((forms) => {
+            return this.$modal.confirm('是否移入回收站？').then(() => {
+              // 遍历所有需要删除的ID，并处理表单更新逻辑
+              const updatePromises = forms.map(thisForm => {
+                // 将当前表单的 newFlag 设置为 2（表示逻辑删除）
+                thisForm.newFlag = 2;
+                thisForm.revisionContent = "删除";
+                console.log("更新表单 newFlag 为 2 =>", thisForm);
+
+                // 如果存在旧表单，处理旧表单
+                if (thisForm.oldRegulationsId != null) {
+                  return getFilemanagement(thisForm.oldRegulationsId).then(response => {
+                    const lastForm = response.data;
+                    lastForm.newFlag = 1; // 将旧表单标记为未删除的状态
+                    console.log("更新旧表单 newFlag 为 1 =>", lastForm);
+
+                    // 先更新当前表单，再更新旧表单
+                    return updateFilemanagement(thisForm).then(() => {
+                      return updateFilemanagement(lastForm);
+                    });
+                  });
+                } else {
+                  // 如果没有旧表单，直接更新当前表单
+                  return updateFilemanagement(thisForm);
+                }
+              });
+
+              // 等待所有更新操作完成后执行后续逻辑
+              return Promise.all(updatePromises);
+            });
+          })
+          .then(() => {
+            this.$modal.msgSuccess("移除成功");
+            this.getList(); // 刷新列表
+            console.log("删除文件刷新");
+          })
+          .catch((error) => {
+            if (error.message !== '没有权限删除') {
+              console.error("删除操作失败", error);
+            }
+          });
       },
+
       /** 导出按钮操作 */
       handleExport() {
         this.download('file/filemanagement/export', {
@@ -2017,6 +2102,7 @@
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
+              状态 :regulation.revisionContent,
               最新上传日期 : regulation.uploadDate,
             };
           });

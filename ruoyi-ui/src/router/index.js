@@ -296,7 +296,7 @@ export const constantRoutes = [
         component: () => import('@/views/quality/display/indexChart/indicators103'),
         name: 'Indicators103',
         meta: {
-          title: '供应商不合格件返厂及时率',
+          title: '供应商不合格件返厂及时情况',
         }
       },
       {

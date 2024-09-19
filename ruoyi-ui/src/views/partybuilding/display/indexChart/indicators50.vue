@@ -191,7 +191,7 @@ export default {
       },
       ];
       // console.log(this.routerData[0].targetValue)
-      if (this.routerData[0].targetValue != 0 || '') {
+      if (this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '') {
         series.push({
           name: '目标值',
           type: 'line',
@@ -216,7 +216,7 @@ export default {
           }
         },
         legend: {
-          data: ['分数', this.routerData[0].targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
+          data: ['分数', this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '' ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,

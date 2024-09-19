@@ -34,6 +34,7 @@ export default {
             option: {},
             myChart: {},
             routerData: {},
+            targetValueArray: [],
         }
     },
     mounted() {
@@ -172,7 +173,7 @@ export default {
             },
             ];
 
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -194,7 +195,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['存货增长率/销售增长率', this.routerData.targetValue != '' ? '目标值' : null].filter(item => item !== null),
+                    data: ['存货增长率/销售增长率', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

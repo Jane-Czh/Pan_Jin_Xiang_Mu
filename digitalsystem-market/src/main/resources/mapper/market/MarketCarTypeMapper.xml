@@ -24,6 +24,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="selectMarketCarTypeList1" parameterType="MarketCarType" resultMap="MarketCarTypeResult">
+        <include refid="selectMarketCarTypeVo"/>
+        <where>
+            <if test="Category != null  and Category != ''"> and Category = #{Category}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and Vehicle_Model = #{vehicleModel}</if>
+            <if test="Relation != null  and Relation != ''"> and Relation = #{Relation}</if>
+        </where>
+    </select>
+
+
+
     <select id="selectLastId" resultType="java.lang.Long">
     SELECT MCT_ID
     FROM Market_Car_Type

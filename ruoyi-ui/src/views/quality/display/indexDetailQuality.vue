@@ -36,12 +36,12 @@ export default {
       pickerOptions: [],
       xAxisData: [],
       yAxisData: [],
-      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: '', showTarget: false }
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, showTarget: 'quality' }
     }
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: '', showTarget: false }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, showTarget: 'quality' }
     this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
     this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()

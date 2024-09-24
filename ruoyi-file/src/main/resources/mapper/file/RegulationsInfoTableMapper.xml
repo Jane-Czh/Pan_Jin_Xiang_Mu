@@ -270,10 +270,58 @@
 
 
     <select id="selectRegulationsCounts" resultType="com.ruoyi.file.entity.regulationCountsRespondEntity">
-        select main_responsible_department as mainResponsibleDepartment ,count(1) as times
+        select main_responsible_department as mainResponsibleDepartment ,regulation_leval AS regulationLevel,count(1) as times
         from Regulations_Info_table
         where upload_date BETWEEN #{startTime} AND #{endTime}
-        group by main_responsible_department
+        group by main_responsible_department,regulation_leval
     </select>
+
+    <select id="selectRegulationsCountsByClassification" resultType="com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity">
+        select classification_of_specialties as classificationOfSpecialties,
+        count(1) as times
+        from Regulations_Info_table
+        where upload_date BETWEEN #{startTime} AND #{endTime}
+        <if test="mainResponsibleDepartment != null and mainResponsibleDepartment != ''">
+            and main_responsible_department = #{mainResponsibleDepartment}
+        </if>
+        group by classification_of_specialties
+    </select>
+
+    <select id="selectRegulationRecycleList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
+        <include refid="selectRegulationsInfoTableVo"/>
+        <where>
+            <if test="regulationsTitle != null  and regulationsTitle != ''"> and regulations_title like concat('%', #{regulationsTitle}, '%')</if>
+            <if test="useScope != null  and useScope != ''"> and use_scope like concat('%', #{useScope}, '%')</if>
+            <if test="uploadDate != null "> and upload_date = #{uploadDate}</if>
+            <if test="effectiveDate != null "> and effective_date = #{effectiveDate}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="pdfPath != null  and pdfPath != ''"> and pdf_path = #{pdfPath}</if>
+            <if test="wordPath != null  and wordPath != ''"> and word_path = #{wordPath}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileSize != null "> and file_size = #{fileSize}</if>
+            <if test="pdfSize != null "> and pdf_size = #{pdfSize}</if>
+            <if test="wordSize != null "> and word_size = #{wordSize}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="uploadUsername != null  and uploadUsername != ''"> and upload_username like concat('%', #{uploadUsername}, '%')</if>
+            <if test="useState != null  and useState != ''"> and use_state = #{useState}</if>
+            <if test="departmentCategory != null  and departmentCategory != ''"> and department_category = #{departmentCategory}</if>
+            <if test="mainResponsibleDepartment != null  and mainResponsibleDepartment != ''"> and main_responsible_department like concat('%', #{mainResponsibleDepartment}, '%')</if>
+            <if test="classificationOfSpecialties != null  and classificationOfSpecialties != ''"> and classification_of_specialties like concat('%', #{classificationOfSpecialties}, '%')</if>
+            <if test="regulationLeval != null  and regulationLeval != ''"> and regulation_leval = #{regulationLeval}</if>
+            <if test="regulationNumber != null "> and regulation_number like concat('%', #{regulationNumber}, '%')</if>
+            <if test="fileTag != null  and fileTag != ''"> and file_tag like concat('%', #{fileTag}, '%')</if>
+            <if test="oldRegulationsId != null "> and old_regulations_id = #{oldRegulationsId}</if>
+            <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
+            <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
+            <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
+            <if test="projectIds != null  and projectIds != ''"> and project_ids = #{projectIds}</if>
+            <if test="newFlag = 2 "> and new_flag = #{newFlag}</if>
+            <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
+            <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
+            <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+        </where>
+    </select>
+
 
 </mapper>

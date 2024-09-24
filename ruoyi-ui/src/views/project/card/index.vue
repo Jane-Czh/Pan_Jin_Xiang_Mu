@@ -52,6 +52,34 @@
           </el-option>
         </el-select>
       </el-form-item>
+
+      <el-form-item label="项目归属" prop="attribute">
+        <el-select
+          v-model="queryParams.attribute"
+          placeholder="请输入项目归属"
+          clearable
+          filterable
+          @change="handleQuery"
+          allow-no-choice
+        >
+          <el-option label="四零活动" value="四零活动"></el-option>
+          <el-option label="三大行动" value="三大行动"></el-option>
+          <el-option label="精益党建项目" value="精益党建项目"></el-option>
+          <el-option label="公司方针目标" value="公司方针目标"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="立项时间" prop="startDate">  
+        <el-date-picker  
+          v-model="queryParams.startDate"  
+          type="date"  
+          value-format="yyyy-MM-dd"  
+          placeholder="请选择立项时间"  
+          clearable  
+          @change="handleQuery"  
+        >  
+        </el-date-picker>  
+      </el-form-item>
       
       <el-form-item label="负责人" prop="manager">
         <el-input
@@ -133,7 +161,7 @@
               <el-button slot="reference">查看详情</el-button>
             </el-popover> -->
             <el-button @click="ProgressReporting(info)">进度上报</el-button>
-
+            <el-button @click="showDialog(info)">修改记录</el-button>
             <!-- <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
               <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
               <div v-if="loading">加载中...</div>
@@ -229,148 +257,63 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改项目基本信息对话框 -->
-    <!-- <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目名称" prop="projectName">
-          <el-input v-model="form.projectName" placeholder="请输入项目名称" />
-        </el-form-item>
-        <el-form-item label="项目类别" prop="category">
-          <el-select v-model="form.category" placeholder="请选择项目类别">
-            <el-option
-              v-for="item in categoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <!-- 项目修改记录 -->
+        <el-dialog
+          title="修改记录"
+          :visible.sync="dialogVisible"
+          width="85%"
+        >
+          <p>项目名称：{{ selectedInfo.projectName }}</p>
+          <el-table v-loading="loading" :data="recoding" >
 
-        <el-form-item label="项目等级" prop="level">
-          <el-select v-model="form.level" placeholder="请选择项目等级">
-            <el-option
-              v-for="item in levelOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="主责部门" prop="department">
-          <el-select v-model="form.department" placeholder="请选择主责部门">
-            <el-option
-              v-for="item in departmentOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="承接属性" prop="attribute">
-          <el-input v-model="form.attribute" placeholder="请输入承接属性" />
-        </el-form-item>
-        <el-form-item label="项目描述" prop="description">
-          <el-input v-model="form.description" placeholder="请输入项目描述" />
-        </el-form-item>
-        <el-form-item label="立项时间" prop="startDate">
-          <el-date-picker clearable
-            v-model="form.startDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择立项时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="项目总进度" prop="progressAlloverProgress">
-          <el-input v-model="form.progressAlloverProgress" placeholder="请输入一个百分数（例如80.25%）" />
-        </el-form-item>
-        <el-form-item label="导入时间" prop="importDate">
-          <el-date-picker clearable
-            v-model="form.importDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择导入时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="描述" prop="remake">
-          <el-input v-model="form.remake" placeholder="请输入描述" />
-        </el-form-item>
-        <el-form-item label="历史项目" prop="oldProjectId">
-          <el-input v-model="form.oldProjectId" placeholder="请输入历史项目" />
-        </el-form-item>
-        <el-form-item label="关联时间" prop="associationDate">
-          <el-date-picker clearable
-            v-model="form.associationDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择关联时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="负责人" prop="manager">
-          <el-input v-model="form.manager" placeholder="请输入负责人" />
-        </el-form-item>
-        <el-form-item label="组成员" prop="teamMembers">
-          <el-input v-model="form.teamMembers" placeholder="请输入组成员" />
-        </el-form-item>
-        <el-form-item label="项目状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择项目状态">
-            <el-option
-              v-for="item in statusOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="项目进度" prop="progress">
-          <el-input v-model="form.progress" placeholder="请输入项目进度" />
-        </el-form-item>
-        <el-form-item label="项目现状" prop="currentStatus">
-          <el-input v-model="form.currentStatus" placeholder="请输入项目现状" />
-        </el-form-item>
-        <el-form-item label="目标" prop="goal">
-          <el-input v-model="form.goal" placeholder="请输入目标" />
-        </el-form-item>
-        <el-form-item label="范围" prop="scope">
-          <el-input v-model="form.scope" placeholder="请输入范围" />
-        </el-form-item>
-        <el-form-item label="计划结项时间" prop="plannedCompletionTime">
-          <el-date-picker clearable
-            v-model="form.plannedCompletionTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择计划结项时间">
-          </el-date-picker>
-        </el-form-item>
+            <el-table-column label="项目名称" align="center" prop="projectName" />
+            <el-table-column label="主责部门" align="center" prop="department" />
+            <el-table-column label="开始时间" align="center" prop="importDate" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="结束时间" align="center" prop="associationDate" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
+            <el-table-column label="项目状态" align="center" prop="status" />
+            <el-table-column label="是否有相关方案或计划" align="center" prop="remake" />
+            <el-table-column label="完成工作事项" align="center" prop="completionSummary" />
+            <el-table-column label="交付物" align="center" prop="progress" />
+            <el-table-column label="关键事项说明" align="center" prop="description" />
 
-        <el-form-item label="完成内容概述" prop="completionSummary">
-          <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog> -->
-        <!-- 添加或修改项目基本信息对话框 -->
+            
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">关闭</el-button>
+          </span>
+        </el-dialog>
+
+        <!-- 进度上报对话框 -->
         <el-dialog :title="title" :visible.sync="reportingopen" width="500px" append-to-body>
           <el-form ref="form" :model="form" label-width="80px">
 
-            <el-form-item label="立项评审时间" prop="startDate">
+            <el-form-item label="开始时间" prop="importDate">
               <el-date-picker clearable
-                v-model="form.startDate"
+                v-model="form.importDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择立项时间">
+                placeholder="请选择开始时间">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="计划结项时间" prop="plannedCompletionTime">
+            <el-form-item label="结束时间" prop="associationDate">
               <el-date-picker clearable
-                v-model="form.plannedCompletionTime"
+                v-model="form.associationDate"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="请选择计划结项时间">
+                placeholder="请选择结束时间">
               </el-date-picker>
             </el-form-item>
+
+
             <el-form-item label="项目总进度" prop="progressAlloverProgress">
               <el-select v-model="form.progressAlloverProgress" placeholder="请选择进度">
                 <el-option
@@ -401,15 +344,15 @@
             </el-form-item>
 
             <el-form-item label="完成工作事项" prop="completionSummary">
-              <el-input v-model="form.completionSummary" placeholder="请输入" />
+              <el-input type="textarea" :rows="2" v-model="form.completionSummary" placeholder="请输入" />
             </el-form-item>
 
             <el-form-item label="交付物" prop="progress">
-              <el-input v-model="form.progress" placeholder="请输入交付物" />
+              <el-input type="textarea" :rows="2" v-model="form.progress" placeholder="请输入交付物" />
             </el-form-item>
 
             <el-form-item label="关键事项说明" prop="description">
-              <el-input v-model="form.description" placeholder="请输入关键事项说明" />
+              <el-input  type="textarea" :rows="2" v-model="form.description" placeholder="请输入关键事项说明" />
             </el-form-item>
 
             <!-- <el-form-item label="导入时间" prop="importDate">
@@ -430,10 +373,6 @@
                 placeholder="请选择关联时间">
               </el-date-picker>
             </el-form-item> -->
-
-
-
-
 
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -584,7 +523,8 @@
 </template>
 
 <script>
-import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory} from "@/api/project/info";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, Recodingquery} from "@/api/project/info";
+import { listRecode, getRecode, delRecode, addRecode, updateRecode } from "@/api/project/recode";
 import { listHistory } from "@/api/project/history";
 import { getUserProfile } from "@/api/system/user";
 //获取用户信息-部门
@@ -616,13 +556,13 @@ export default {
       Username: null,
       //所属部门
       departmentCategory: null,
-
+      selectedInfo: {}, // 存储被点击的行数据
 
       historyList: [],
       selectedHistoryList: [],
       loading: false,
       isPopoverVisible: false,
-
+      dialogVisible: false, // 控制对话框的显示与隐藏
       // 遮罩层
       loading: true,
       // 选中数组
@@ -635,6 +575,12 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+
+      recodingtotal: 100,
+      // 统计库存车数量表格数据
+
+      recoding: [],
+
       // 项目基本信息表格数据
       InfoList: [],
       rowList: [],
@@ -807,37 +753,49 @@ export default {
 
   methods: {
 
-    // getDeptList() {
-    //   listDept(this.queryDeptParams).then((response) => {
-    //     // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
-    //     const filteredData = response.data.filter(
-    //       (department) =>
-    //         department.deptName !== "产品研发" &&
-    //         department.deptName !== "研发" &&
-    //         department.deptName !== "测试" &&
-    //         department.deptName !== "总部" &&
-    //         department.deptName !== "合力（盘锦）"
-    //     );
+    showDialog(row) {
+      this.selectedInfo = row; // 将被点击的行数据赋值给selectedRow
+      this.dialogVisible = true; // 显示对话框
+      
+      this.recoding = [];
+      Recodingquery(row.projectName).then(response => {
 
-    //     // 将每个过滤后的部门的 deptName 放入 departments 数组
-    //     this.departments = filteredData.map(
-    //       (department) => department.deptName
-    //     );
-    //   });
-    // },
+        response.rows.forEach(item => {
+      // 创建一个新的对象，只包含需要的字段
+          const recode = {
+            projectName: item.projectName,
+            department: item.department,
+            importDate: item.importDate,
+            associationDate: item.associationDate,
+            progressAlloverProgress: item.progressAlloverProgress,
+            status: item.status,
+            remake: item.remake,
+            completionSummary: item.completionSummary,
+            progress: item.progress,
+            description: item.description
+
+          };
+          // 将新的对象添加到 this.recoding 中
+          this.recoding.push(recode);
+        });
+
+
+      }).catch(error => {
+      // console.error("Error calling Recodingquery:", error);
+      // 这里可以添加错误处理逻辑，比如显示错误消息给用户
+    });
+    },
 
     // 调用接口获取用户信息  uploadUsername、departmentCategory
     async getUserInfo() {
       try {
         const response = await getUserProfile();
         const userInfo = response.data; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
-        console.log("成功获取用户信息=======", userInfo);
         this.Username = userInfo.userName;
 
         const deptResponse = await getDept(userInfo.deptId);
         const deptInfo = deptResponse.data;
         this.departmentCategory = deptInfo.deptName;
-        console.log("成功获取部门信息=======", this.departmentCategory);
       } catch (error) {
         console.error("获取用户信息失败:", error);
       }
@@ -845,9 +803,7 @@ export default {
 
     getPercentageValue(progressString) {
       // 移除字符串末尾的 '%'
-      // console.log(progressString);
       const progressValue = progressString.replace('%', '');
-      // console.log(parseInt(progressValue, 10));
       // 将字符串转换为整数
       return parseInt(progressValue, 10);
     },
@@ -898,29 +854,6 @@ export default {
 
     //获取剩余时间的百分比
     progress2(startDate, endDate){
-      // const currentDate = new Date();
-      // const startDateObj = new Date(startDate);
-      // const endDateObj = new Date(endDate);
-
-      // // 计算剩余天数
-      // const daysHas = Math.floor((endDateObj - currentDate) / (1000 * 60 * 60 * 24));
-      // const allDays = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
-
-
-      // let res = 0;
-
-      // if(daysHas >= allDays){
-      //   return 100;
-      // }
-      // if(daysHas <= 0){
-      //   return 0;
-      // }
-      // res = Math.floor(daysHas / allDays * 100);
-      // res = daysHas / allDays * 100;
-
-      // res = Math.max(res, 0);
-
-      // return res;
       const currentDate = new Date();
       const startDateObj = new Date(startDate);
       const endDateObj = new Date(endDate);
@@ -941,7 +874,6 @@ export default {
 
       res = 100 - res;
 
-      console.log(res);
       return res;
      },
 
@@ -983,14 +915,12 @@ export default {
       // 获取当前选中行的项目ID集合
       const selectedIds = new Set(rows.map(row => row.projectId));
       this.selectedHistoryList = Array.from(selectedIds);
-      console.log(JSON.parse(JSON.stringify(this.selectedHistoryList)))
     },
 
 
 
     confirmSelection(info) {
       // 处理确认选项的逻辑，例如将选中的历史项目进行关联操作
-      // console.log("确认选择的历史项目:", this.selectedHistoryList);
       if (this.selectedHistoryList.length === 0) {
         this.$message.error('请选择至少一个历史项目！');
         return;
@@ -1008,9 +938,6 @@ export default {
       this.selectedHistoryList = [];
       this.isPopoverVisible = false; // 关闭弹窗
 
-
-      // console.log("projectId========="+info.projectId);
-      // console.log("history========="+info.oldProjectId)
       // 调用更新数据库的函数
       updateInfoHistory(info).then(response => {
         this.$message.success('关联成功');
@@ -1027,11 +954,9 @@ export default {
 
     cancelSelection() {
       // 处理取消选项的逻辑，例如清空选中的历史项目
-      // console.log("取消选择");
       // 重置状态
       this.selectedHistoryList = [];
       this.isPopoverVisible = false;
-      // console.log("isPopoverVisible after cancel:", this.isPopoverVisible); // 添加日志
       // this.$refs.historyPopover.doClose(); // 手动关闭弹窗
     },
 
@@ -1043,19 +968,7 @@ export default {
 
       await this.getUserInfo();
       listInfo(this.queryParams).then(response => {
-
-        for (var i = 0; i < response.total; i++) {
-
-          if (
-            this.departmentCategory == response.rows[i].department ||
-            this.departmentCategory == "研发" ||
-            this.departmentCategory == "总部"
-          ) {
-            this.InfoList.push(response.rows[i]);
-            
-          }
-        }
-        // this.InfoList = response.rows;
+        this.InfoList = response.rows;
         this.total = response.total;
         this.loading = false;
         
@@ -1070,18 +983,6 @@ export default {
           this.rowList.push(data.slice(i, i + 4));
         }
     }, 
-
-
-    // fetchUserInfo() {
-    //   getInfo().then(response => {
-    //   // 假设返回的数据结构是 { data: { ...用户信息... } }
-    //   this.userInfo = response.data;
-    //   console.log(this.userInfo);
-    // }).catch(error => {
-    //   console.error('获取用户信息失败', error);
-    //   // 这里可以添加更多的错误处理逻辑
-    // });
-    // },
 
     // 取消按钮
     cancel() {
@@ -1171,6 +1072,8 @@ export default {
               this.open = false;
               this.getList();
             });
+            addRecode(this.form);
+
           } else {
             addInfo(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
@@ -1245,4 +1148,11 @@ export default {
   font-size: 16px;
   font-weight: bold;
 }
+
+.resizable-dialog {  
+  min-width: 600px; /* 设置最小宽度 */  
+  min-height: 400px; /* 设置最小高度 */  
+  resize: both; /* 允许用户调整大小 */  
+  overflow: auto; /* 允许滚动 */  
+} 
 </style>

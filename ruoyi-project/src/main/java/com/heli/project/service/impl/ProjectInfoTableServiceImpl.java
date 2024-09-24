@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.heli.project.mapper.ProjectInfoTableMapper;
 import com.heli.project.domain.ProjectInfoTable;
 import com.heli.project.service.IProjectInfoTableService;
-
+import com.ruoyi.project.domain.ProjectInfoRecode;
 /**
  * 项目基本信息Service业务层处理
  * 
@@ -29,6 +29,11 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     public ProjectInfoTable selectProjectInfoTableByProjectId(Long projectId)
     {
         return projectInfoTableMapper.selectProjectInfoTableByProjectId(projectId);
+    }
+
+    @Override
+    public List<ProjectInfoRecode> selectProjectRecodingByProjectName(String projectName){
+        return projectInfoTableMapper.selectProjectRecodingByProjectName(projectName);
     }
 
     /**

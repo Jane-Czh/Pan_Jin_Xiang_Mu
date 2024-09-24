@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.ProjectInfoRecodeMapper">
+    
+    <resultMap type="ProjectInfoRecode" id="ProjectInfoRecodeResult">
+        <result property="recodeId"    column="recode_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="department"    column="department"    />
+        <result property="importDate"    column="import_date"    />
+        <result property="associationDate"    column="association_date"    />
+        <result property="progressAlloverProgress"    column="progress_allover_progress"    />
+        <result property="status"    column="status"    />
+        <result property="remake"    column="remake"    />
+        <result property="completionSummary"    column="completion_summary"    />
+        <result property="progress"    column="progress"    />
+        <result property="description"    column="description"    />
+        <result property="determined1"    column="determined_1"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="determined2"    column="determined_2"    />
+    </resultMap>
+
+    <sql id="selectProjectInfoRecodeVo">
+        select recode_id, project_name, department, import_date, association_date, progress_allover_progress, status, remake, completion_summary, progress, description, determined_1, update_time, determined_2 from project_info_recode
+    </sql>
+
+    <select id="selectProjectInfoRecodeList" parameterType="ProjectInfoRecode" resultMap="ProjectInfoRecodeResult">
+        <include refid="selectProjectInfoRecodeVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="department != null  and department != ''"> and department = #{department}</if>
+            <if test="importDate != null "> and import_date = #{importDate}</if>
+            <if test="associationDate != null "> and association_date = #{associationDate}</if>
+            <if test="progressAlloverProgress != null  and progressAlloverProgress != ''"> and progress_allover_progress = #{progressAlloverProgress}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="remake != null  and remake != ''"> and remake = #{remake}</if>
+            <if test="completionSummary != null  and completionSummary != ''"> and completion_summary = #{completionSummary}</if>
+            <if test="progress != null  and progress != ''"> and progress = #{progress}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="determined1 != null  and determined1 != ''"> and determined_1 = #{determined1}</if>
+            <if test="determined2 != null  and determined2 != ''"> and determined_2 = #{determined2}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectInfoRecodeByRecodeId" parameterType="Long" resultMap="ProjectInfoRecodeResult">
+        <include refid="selectProjectInfoRecodeVo"/>
+        where recode_id = #{recodeId}
+    </select>
+        
+    <insert id="insertProjectInfoRecode" parameterType="ProjectInfoRecode" useGeneratedKeys="true" keyProperty="recodeId">
+        insert into project_info_recode
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="department != null and department != ''">department,</if>
+            <if test="importDate != null">import_date,</if>
+            <if test="associationDate != null">association_date,</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">progress_allover_progress,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remake != null">remake,</if>
+            <if test="completionSummary != null">completion_summary,</if>
+            <if test="progress != null">progress,</if>
+            <if test="description != null">description,</if>
+            <if test="determined1 != null">determined_1,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="determined2 != null">determined_2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="department != null and department != ''">#{department},</if>
+            <if test="importDate != null">#{importDate},</if>
+            <if test="associationDate != null">#{associationDate},</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">#{progressAlloverProgress},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remake != null">#{remake},</if>
+            <if test="completionSummary != null">#{completionSummary},</if>
+            <if test="progress != null">#{progress},</if>
+            <if test="description != null">#{description},</if>
+            <if test="determined1 != null">#{determined1},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="determined2 != null">#{determined2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectInfoRecode" parameterType="ProjectInfoRecode">
+        update project_info_recode
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="department != null and department != ''">department = #{department},</if>
+            <if test="importDate != null">import_date = #{importDate},</if>
+            <if test="associationDate != null">association_date = #{associationDate},</if>
+            <if test="progressAlloverProgress != null and progressAlloverProgress != ''">progress_allover_progress = #{progressAlloverProgress},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remake != null">remake = #{remake},</if>
+            <if test="completionSummary != null">completion_summary = #{completionSummary},</if>
+            <if test="progress != null">progress = #{progress},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="determined1 != null">determined_1 = #{determined1},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="determined2 != null">determined_2 = #{determined2},</if>
+        </trim>
+        where recode_id = #{recodeId}
+    </update>
+
+    <delete id="deleteProjectInfoRecodeByRecodeId" parameterType="Long">
+        delete from project_info_recode where recode_id = #{recodeId}
+    </delete>
+
+    <delete id="deleteProjectInfoRecodeByRecodeIds" parameterType="String">
+        delete from project_info_recode where recode_id in 
+        <foreach item="recodeId" collection="array" open="(" separator="," close=")">
+            #{recodeId}
+        </foreach>
+    </delete>
+</mapper>

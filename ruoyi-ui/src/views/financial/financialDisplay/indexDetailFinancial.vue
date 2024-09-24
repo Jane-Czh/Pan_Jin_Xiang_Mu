@@ -8,7 +8,16 @@
     </div>
     <div>
       <br>
-      <div class="centered-value">
+      <div class="centered-value" v-if="option.dataName == '周转率'">
+        当前累计值：{{ this.currentSum }} (次)
+      </div>
+      <div class="centered-value" v-else-if="option.dataName == '项目'">
+        当前累计值：{{ this.currentSum }} (项)
+      </div>
+      <div class="centered-value" v-else-if="option.dataName == '台'">
+        当前累计值：{{ this.currentSum }} (台)
+      </div>
+      <div class="centered-value" v-else>
         当前累计值：{{ this.currentSum }} (万元)
       </div>
     </div>
@@ -46,14 +55,14 @@ export default {
       xAxisData: [],
       yAxisData: [],
       currentSum: [],
-      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false },
+      option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTarget: '' },
       name: '',
     }
 
   },
   computed: {},
   mounted() {
-    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false }
+    this.option = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTarget: false }
     this.$route.meta.title = `指标${this.option.id}: ${this.option.title}`
     this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()
@@ -74,6 +83,12 @@ export default {
         this.data = res.rows;
         this.xAxisData = res.rows.map(item => moment(item.Year_And_Month).format('YY-MM'));
         this.yAxisData = res.rows.map(item => item[this.option.yDataName]);
+        this.yAxisData = res.rows
+          .map(item => item[this.option.yDataName])
+          .map(item => {
+            return !item || isNaN(item) ? 0 : parseFloat(item);
+          });
+        console.log(this.yAxisData)
         this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
         this.currentSum = this.formatNumber(this.currentSum)
         this.loading = false;

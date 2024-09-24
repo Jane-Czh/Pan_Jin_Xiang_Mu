@@ -5,7 +5,7 @@
     <div class="operation">
 
       <span class="DataSelect" style="margin-right:10px">部门选择</span>
-      <el-select v-model="queryParams.selectedOption" placeholder="请选择部门" size="small" @change="handleDepartmentChange">
+      <el-select v-model="queryParams.selectedOption" placeholder="请选择部门" clearable filterable size="small" @change="handleDepartmentChange">
         <option disabled value="">请选择部门</option>
         <el-option
           v-for="option in departmentOptions"
@@ -27,9 +27,8 @@
         :picker-options="pickerOptions"
         size="small">
       </el-date-picker>
-
     </div>
-
+    
     <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="主责部门" prop="department">
         <el-select

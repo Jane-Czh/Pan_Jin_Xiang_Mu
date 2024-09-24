@@ -39,15 +39,16 @@ export default {
             pickerOptions: [],
             option: {},
             myChart: {},
-            parsedData: {}
+            parsedData: {},
+            routerData: {},
         }
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' };
         this.defaultDay()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
-
     },
     methods: {
         async initData() {
@@ -122,7 +123,7 @@ export default {
                 rotate: 0,
                 align: 'center',
                 verticalAlign: 'middle',
-                position: 'top',
+                position: 'inside',
                 distance: 15,
                 onChange: function () {
                     const labelOption = {
@@ -157,8 +158,14 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}%',
-                fontSize: 16,
+                formatter: function (params) {
+                    let value = params.value;
+                    if (params.seriesName.includes('%') && value != 0) {
+                        value += '%';
+                    }
+                    return value;
+                },
+                fontSize: 14,
                 rich: {
                     name: {}
                 }
@@ -174,7 +181,8 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['销售订单录入不及时比例(%)', '销售订单不及时发货比例(%)', '生产订单不及时报工比例(%)', '成品检验业务不及时率(%)', '销售发票过账不及时率(%)', '客户未清账比例(%)'],
+                    type: 'scroll',
+                    data: ['销售订单录入不及时得分', '销售订单录入不及时比例(%)', '销售订单不及时发货得分', '销售订单不及时发货比例(%)', '生产订单不及时报工得分', '生产订单不及时报工比例(%)', '成品检验业务不及时得分', '成品检验业务不及时率(%)', '销售发票过账不及时得分', '销售发票过账不及时率(%)', '客户未清账得分', '客户未清账比例(%)'],
 
                 },
                 toolbox: {
@@ -200,9 +208,28 @@ export default {
                 yAxis: [
                     {
                         type: 'value'
+                    },
+                    {
+                        type: 'value',
+                        name: '比例',
+                        // interval: 5,
+                        splitLine: { show: false },
+                        axisLabel: {
+                            formatter: '{value} %'
+                        }
                     }
                 ],
                 series: [
+                    {
+                        name: '销售订单录入不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack2',
+                        data: this.data.map(item => item.orderEntryDelayScore),
+                    },
                     {
                         name: '销售订单录入不及时比例(%)',
                         type: 'bar',
@@ -210,8 +237,20 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        yAxisIndex: 1,
+                        stack: 'stack1',
                         data: this.data.map(item => item.orderEntryDelayRatio),
-                        barGap: '30%'
+                    },
+                    {
+                        name: '销售订单不及时发货得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+
+                        stack: 'stack2',
+                        data: this.data.map(item => item.shipmentDelayScore),
                     },
                     {
                         name: '销售订单不及时发货比例(%)',
@@ -220,7 +259,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        yAxisIndex: 1,
+                        stack: 'stack1',
                         data: this.data.map(item => item.shipmentDelayRatio),
+                    },
+                    {
+                        name: '生产订单不及时报工得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack2',
+                        data: this.data.map(item => item.productionReportDelayScore),
                     },
                     {
                         name: '生产订单不及时报工比例(%)',
@@ -229,7 +280,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        yAxisIndex: 1,
+                        stack: 'stack1',
                         data: this.data.map(item => item.productionReportDelayRatio),
+                    },
+                    {
+                        name: '成品检验业务不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack2',
+                        data: this.data.map(item => item.inspectionDelayScore),
                     },
                     {
                         name: '成品检验业务不及时率(%)',
@@ -238,7 +301,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        yAxisIndex: 1,
+                        stack: 'stack1',
                         data: this.data.map(item => item.inspectionDelayRate),
+                    },
+                    {
+                        name: '销售发票过账不及时得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack2',
+                        data: this.data.map(item => item.invoicePostingDelayScore),
                     },
                     {
                         name: '销售发票过账不及时率(%)',
@@ -247,7 +322,19 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        yAxisIndex: 1,
+                        stack: 'stack1',
                         data: this.data.map(item => item.invoicePostingDelayRate),
+                    },
+                    {
+                        name: '客户未清账得分',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        stack: 'stack2',
+                        data: this.data.map(item => item.unsettledAccountsScore),
                     },
                     {
                         name: '客户未清账比例(%)',
@@ -256,8 +343,12 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
+                        yAxisIndex: 1,
+                        stack: 'stack1',
                         data: this.data.map(item => item.unsettledAccountsRatio),
-                    }]
+                    },
+
+                ]
             };
             this.option && this.myChart.setOption(this.option);
 
@@ -272,14 +363,7 @@ export default {
                 }
             });
         },
-        // defaultMonth() {
-        //     const currentDate = new Date();
-        //     const currentYear = currentDate.getFullYear();
-        //     const currentMonth = currentDate.getMonth() + 1;
-        //     const startDate = new Date(currentYear, 0, 1);
-        //     const endDate = new Date(currentYear, currentMonth, 0);
-        //     this.selectedDate = [startDate, endDate];
-        // },
+
         defaultDay() {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
@@ -287,7 +371,6 @@ export default {
             const startDate = new Date(currentYear, currentMonth - 1, 1);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
-            console.log(this.selectedDate)
         },
     },
 

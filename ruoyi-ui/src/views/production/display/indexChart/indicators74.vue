@@ -55,7 +55,7 @@
 
       </el-tab-pane> -->
       <!-- <div>
-      
+
       <div class="DAYandMONTH">
         <div id="main1" ref="main1"></div>
         <div id="main2" ref="main2"></div>
@@ -105,11 +105,15 @@ export default {
       optionYear: {},
       dayChart: {},
       monthChart: {},
-      yearChart: {}
+      yearChart: {},
+      option: {},
+      routerData: {}
     }
   },
   computed: {},
   mounted() {
+    this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '' }
+    console.log(this.option)
     this.defaultDay()
     this.defaultMonth()
     this.defaultYear()

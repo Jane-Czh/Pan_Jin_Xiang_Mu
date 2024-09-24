@@ -7,6 +7,12 @@
                 @change="handleDateChange">
             </el-date-picker>
         </div>
+        <div>
+            <br>
+            <div class="centered-value">
+                当前累计值：{{ this.currentSum }} (元)
+            </div>
+        </div>
         <div v-if="loading"
             style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……
         </div>
@@ -30,11 +36,15 @@ export default {
             },
             selectedDate: [],
             pickerOptions: [],
+            currentSum: [],
             option: {},
-            myChart: {}
+            myChart: {},
+            routerData: {},
+            targetValueArray: [],
         }
     },
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultDay()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
@@ -47,9 +57,20 @@ export default {
                 this.loading = true
                 const res = await getInprogressDayrevenueData(this.timeData);
                 this.data = res.rows
+                const yAxisDataLength = this.data.length;
+                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+                // this.yAxisData = res.rows.map(item => item[this.routerData.yDataName]);
+                this.yAxisData = res.rows
+                    .map(item => item[this.routerData.yDataName])
+                    .map(item => {
+                        return !item || isNaN(item) ? 0 : parseFloat(item);
+                    });
+                this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
+                this.currentSum = this.formatNumber(this.currentSum)
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
@@ -58,6 +79,10 @@ export default {
             endDate.setHours(endDate.getHours() + 13);
             this.selectedDate[1] = endDate;
             this.initData()
+        },
+        formatNumber(value) {
+            if (value === null || value === undefined) return '';
+            return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
         },
         updateChart() {
             var app = {};
@@ -151,6 +176,28 @@ export default {
                     name: {}
                 }
             };
+            // 根据条件决定是否添加目标值系列
+            let series = [{
+                name: '金额',
+                type: 'line',
+                label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: this.data.map(item => item.InProgress_DayRevenue),
+            }];
+
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+                series.push({
+                    name: '目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.targetValueArray,
+                });
+            }
             this.option = {
                 title: {
                     text: '当日在制品金额'
@@ -161,9 +208,9 @@ export default {
                         type: 'shadow'
                     }
                 },
-                // legend: {
-                //     data: ['Forest', 'Steppe', 'Desert', 'Wetland']
-                // },
+                legend: {
+                    data: ['金额', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                },
                 toolbox: {
                     show: true,
                     orient: 'vertical',
@@ -190,15 +237,7 @@ export default {
                         type: 'value'
                     }
                 ],
-                series: [{
-                    name: '金额',
-                    type: 'line',
-                    label: labelOption,
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: this.data.map(item => item.InProgress_DayRevenue),
-                }]
+                series: series
             };
 
             this.option && this.myChart.setOption(this.option);
@@ -238,5 +277,15 @@ export default {
 .block {
     margin-top: 50px;
     text-align: center;
+}
+
+.centered-value {
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+
+    margin-top: 10px;
+
 }
 </style>

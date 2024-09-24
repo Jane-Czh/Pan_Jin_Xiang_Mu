@@ -296,7 +296,7 @@ export const constantRoutes = [
         component: () => import('@/views/quality/display/indexChart/indicators103'),
         name: 'Indicators103',
         meta: {
-          title: '供应商不合格件返厂及时率',
+          title: '供应商不合格件返厂及时情况',
         }
       },
       {
@@ -834,11 +834,19 @@ export const dynamicRoutes = [
     hidden: true,
     permissions: ['file:filemanagement:list'],
     children: [
+      //历史版本
       {
         path: '/file/filemanagement/historyVersions/:regulationsId(\\d+)', // 路由路径
         component: () => import('@/views/file/filemanagement/historyVersions'), // 对应的组件
         name: 'historyVersions', // 路由名称
         meta: { title: '历史版本管理' } // 元信息，用于设置标题等
+      },
+      //回收站
+      {
+        path: '/file/filemanagement/recycleBin', // 路由路径
+        component: () => import('@/views/file/filemanagement/recycleBin'), // 对应的组件
+        name: 'recycleBin', // 路由名称
+        meta: { title: '制度回收站' } // 元信息，用于设置标题等
       }
     ]
   },

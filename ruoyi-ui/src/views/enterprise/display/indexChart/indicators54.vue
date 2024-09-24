@@ -40,16 +40,17 @@ export default {
             pickerOptions: [],
             option: {},
             myChart: {},
-            parsedData: {}
+            parsedData: {},
+            routerData: {},
+            targetValueArray: [],
         }
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
-
-
     },
     methods: {
         async initData() {
@@ -59,6 +60,8 @@ export default {
                 this.loading = true
                 const res = await getCumulativeAverageIncomeData(this.timeData);
                 this.data = res.rows
+                const yAxisDataLength = this.data.length;
+                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 const timeDataBefore = this.timeData
                 timeDataBefore.startTime.setFullYear(timeDataBefore.startTime.getFullYear() - 1)
                 timeDataBefore.endTime.setFullYear(timeDataBefore.endTime.getFullYear() - 1)
@@ -171,6 +174,38 @@ export default {
                     });
                 }
             };
+            // 根据条件决定是否添加目标值系列
+            let series = [
+                {
+                    name: '收入',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.cumulativeAverageIncome),
+                },
+                {
+                    name: '同期收入',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.cumulativeAverageIncomeBefore),
+                }];
+
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+                series.push({
+                    name: '目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.targetValueArray,
+                });
+            }
             const labelOption = {
                 show: true,
                 position: app.config.position,
@@ -195,7 +230,7 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['收入', '同期收入'],
+                    data: ['收入', '同期收入', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -222,25 +257,7 @@ export default {
                         type: 'value'
                     }
                 ],
-                series: [
-                    {
-                        name: '收入',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.cumulativeAverageIncome),
-                    },
-                    {
-                        name: '同期收入',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.cumulativeAverageIncomeBefore),
-                    }]
+                series: series
             };
             this.option && this.myChart.setOption(this.option);
 

@@ -29,11 +29,13 @@ export default {
       option: {},
       myChart: {},
       chartData: [], // 存放格式化后的数据
-      parsedData: {}
+      parsedData: {},
+      routerData: {}
     }
   },
   computed: {},
   mounted() {
+    this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
     this.defaultMonth()
     this.myChart = echarts.init(document.getElementById('main'))
     this.initData()
@@ -47,10 +49,13 @@ export default {
         this.loading = true
         const res = await getOutputPercapitavalueData(this.timeData);
         this.data = res
+        console.log(this.data)
+        console.log('++++++++++++++++')
         this.loading = false
         this.formatData()
         this.updateChart()
       } catch (error) {
+        console.log('初始化失败')
         this.loading = false
       }
     },
@@ -252,19 +257,33 @@ export default {
       const endDate = new Date(currentYear, currentMonth, 0);
       this.selectedDate = [startDate, endDate];
     },
+
     formatData() {
       this.chartData = this.data.rows.map(rows => {
-        const month = rows.Year_And_Month;
-        const resultData = rows.resultData.split(',');
-        return {
-          month,
-          mechanical: parseInt(resultData[0].split(':')[1]),
-          pneumatic: parseInt(resultData[1].split(':')[1]),
-          hydraulic: parseInt(resultData[2].split(':')[1]),
-          electrical: parseInt(resultData[3].split(':')[1]),
-        };
+        const month = rows.Year_And_Month ? rows.Year_And_Month : '';
+        const resultData = rows.resultData ? rows.resultData.split(',') : '';
+        console.log('----------')
+        if (resultData != '') {
+          return {
+            month,
+            mechanical: parseInt(resultData[0].split(':')[1]),
+            pneumatic: parseInt(resultData[1].split(':')[1]),
+            hydraulic: parseInt(resultData[2].split(':')[1]),
+            electrical: parseInt(resultData[3].split(':')[1]),
+          };
+        } else {
+          return {
+            month,
+            mechanical: 0,
+            pneumatic: 0,
+            hydraulic: 0,
+            electrical: 0,
+          };
+        }
 
       });
+      console.log(this.chartData)
+      console.log('+++++++++++++')
     }
 
   },

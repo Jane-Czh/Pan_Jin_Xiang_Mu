@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
+import { getTargetData, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
 import { numValidator, numValidatorEnableEmpty } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
@@ -199,8 +199,12 @@ export default {
     /** 查询指标-目标值列表 */
     getList() {
       this.loading = true;
-      listTarget(this.queryParams).then(response => {
-        this.targetList = response.rows.filter(row => row.indicatorDept === 'financial');
+      let target = {
+        date: new Date(),
+        deptName: 'financial',
+      }
+      getTargetData(target).then(response => {
+        this.targetList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -232,6 +236,7 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -258,6 +263,7 @@ export default {
       const itId = row.itId || this.ids
       getTarget(itId).then(response => {
         this.form = response.data;
+        this.form.indicatorDept = response.data.indicatorNameCn;
         this.open = true;
         this.title = "修改目标值";
       });
@@ -267,6 +273,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.itId != null) {
+            this.form.indicatorDept = 'financial';
             updateTarget(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -290,9 +297,7 @@ export default {
       // 提取年份和月份
       const parsedDate = date ? new Date(date) : null;
       const year = parsedDate ? parsedDate.getFullYear() : '';
-
       const yearMonth = year ? `${year}` : '';
-
       this.$modal.confirm(`是否删除日期为"${yearMonth}"的"${name}"的数据？`).then(() => {
         return delTarget(itIds);
       }).then(() => {

@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { listTarget, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
+import { getTargetData, getTarget, delTarget, addTarget, updateTarget } from "@/api/financial/target";
 import { numValidator, numValidatorEnableEmpty } from '@/api/financial/numValidator.js';
 export default {
   name: "Target",
@@ -191,8 +191,12 @@ export default {
     /** 查询指标-目标值列表 */
     getList() {
       this.loading = true;
-      listTarget(this.queryParams).then(response => {
-        this.targetList = response.rows.filter(row => row.indicatorDept === 'quality');
+      let target = {
+        date: new Date(),
+        deptName: 'quality',
+      }
+      getTargetData(target).then(response => {
+        this.targetList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -242,7 +246,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加指标-目标值";
+      this.title = "添加目标值";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -250,8 +254,9 @@ export default {
       const itId = row.itId || this.ids
       getTarget(itId).then(response => {
         this.form = response.data;
+        this.form.indicatorDept = response.data.indicatorNameCn;
         this.open = true;
-        this.title = "修改指标-目标值";
+        this.title = "修改目标值";
       });
     },
     /** 提交按钮 */
@@ -259,6 +264,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.itId != null) {
+            this.form.indicatorDept = 'quality';
             updateTarget(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;

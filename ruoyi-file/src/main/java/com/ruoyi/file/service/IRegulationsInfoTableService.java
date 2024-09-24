@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.file.domain.RegulationsInfoTable;
 import com.ruoyi.file.entity.regulationRespondEntity;
 import com.ruoyi.file.entity.regulationCountsRespondEntity;
+import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
 
 /**
  * 文件管理Service接口
@@ -46,6 +47,15 @@ public interface IRegulationsInfoTableService {
      * @return 文件管理集合
      */
     public List<RegulationsInfoTable> selectAllRegulationsList(RegulationsInfoTable regulationsInfoTable);
+
+    /**
+     * 查询回收站列表
+     *
+     * @param regulationsInfoTable 文件管理
+     * @return 文件管理集合
+     */
+    public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable);
+
 
 
     /**
@@ -94,4 +104,6 @@ public interface IRegulationsInfoTableService {
     List<regulationRespondEntity> selectRevisionFrequency(Date startTime, Date endTime, Long regulationId);
 
     List<regulationCountsRespondEntity> selectRegulationsCounts(Date startTime, Date endTime);
+
+    List<regulationCountsByClassificationRespondEntity> selectRegulationsCountsByClassification(Date startTime, Date endTime, String mainResponsibleDepartment);
 }

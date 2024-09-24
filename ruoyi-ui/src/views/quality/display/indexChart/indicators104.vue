@@ -30,11 +30,14 @@ export default {
             selectedDate: [],
             pickerOptions: [],
             option: {},
-            myChart: {}
+            myChart: {},
+            routerData: {},
+            targetValueArray: [],
         }
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
@@ -47,6 +50,8 @@ export default {
                 this.loading = true
                 const res = await getPartQualificationRateData(this.timeData);
                 this.data = res.rows
+                const yAxisDataLength = this.data.length;
+                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -141,6 +146,37 @@ export default {
                     });
                 }
             };
+            // 根据条件决定是否添加目标值系列
+            let series = [{
+                name: '班组自查合格率',
+                type: 'line',
+                label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: this.data.map(item => item.selfcheckPassrate),
+            },
+            {
+                name: '下道工序反馈合格率',
+                type: 'line',
+                label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: this.data.map(item => item.nextprocessFeedbackPassrate),
+            }];
+
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+                series.push({
+                    name: '目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.targetValueArray,
+                });
+            }
             const labelOption = {
                 show: true,
                 position: app.config.position,
@@ -148,7 +184,9 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
+                formatter: (params) => {
+                    return params.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: false });
+                },
                 fontSize: 16,
                 rich: {
                     name: {}
@@ -165,7 +203,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['班组自查合格率', '下道工序反馈合格率']
+                    data: ['班组自查合格率', '下道工序反馈合格率', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -176,7 +214,7 @@ export default {
                         mark: { show: true, },
                         dataView: { show: true, readOnly: false, title: '数据视图' },
                         magicType: { show: true, type: ['line', 'bar', 'stack'], title: { line: '切换为折线图', bar: '切换为柱状图', stack: '切换为堆叠图' } },
-                        // restore: { show: true, title: '还原' },
+                        restore: { show: true, title: '还原' },
                         saveAsImage: { show: true, title: '保存为图片' }
                     }
                 },
@@ -193,24 +231,7 @@ export default {
                         type: 'value'
                     }
                 ],
-                series: [{
-                    name: '班组自查合格率',
-                    type: 'line',
-                    label: labelOption,
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: this.data.map(item => item.selfcheckPassrate),
-                },
-                {
-                    name: '下道工序反馈合格率',
-                    type: 'line',
-                    label: labelOption,
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: this.data.map(item => item.nextprocessFeedbackPassrate),
-                }]
+                series: series
             };
 
             this.option && this.myChart.setOption(this.option);

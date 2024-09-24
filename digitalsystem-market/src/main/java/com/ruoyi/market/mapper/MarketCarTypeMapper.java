@@ -65,4 +65,6 @@ public interface MarketCarTypeMapper
     public int deleteMarketCarTypeByMctIds(Long[] mctIds);
 
     public void batchInsert(@Param("list") List<MarketCarType> marketCarTypes);
+
+    public List<MarketCarType> selectMarketCarTypeList1();
 }

@@ -13,6 +13,7 @@ import com.ruoyi.market.domain.*;
 import com.ruoyi.market.mapper.AverageResultMapper;
 import com.ruoyi.market.mapper.MarketCommercialVehicleTableMapper;
 import com.ruoyi.market.mapper.MarketOrderSumnumberMapper;
+import com.ruoyi.market.service.*;
 import com.ruoyi.market.mapper.MarketSalesTableMapper;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import com.ruoyi.market.service.IMarketCommercialVehicleTableService;
@@ -28,6 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,6 +50,13 @@ public class MarketIndexController extends BaseController {
     private IMarketAfterSaleLedgerService iMarketAfterSaleLedgerService;
     @Autowired
     private IMarketCommercialVehicleTableService iMarketCommercialVehicleTableService;
+
+    @Autowired
+    private IMarketCarTypeService iMarketCarTypeService;
+
+    @Autowired
+    private IMarketMainTypeService iMarketMainTypeService;
+
     //用来获取订单总数的列表
     @Autowired
     private MarketOrderSumnumberMapper marketOrderSumnumberMapper;
@@ -57,18 +66,30 @@ public class MarketIndexController extends BaseController {
 
     @Autowired
     private MarketCommercialVehicleTableMapper marketCommercialVehicleTableMapper;
+
+
     @PostMapping("/IClassProportion")
     public  List<VoEntity>  ProportionOfClassITrams(@RequestBody MarketSalesTable marketSalesTable){
-        System.out.println("获取到的实体类"+marketSalesTable);
-        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
-        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+//        System.out.println("获取到的实体类"+marketSalesTable);
+//        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+//        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
         Date orderAcceptanceTime = marketSalesTable.getOrderAcceptanceTime();
          String vehicleModel = marketSalesTable.getVehicleModel();
-        System.out.println("获取到的车型"+vehicleModel);
+//        System.out.println("获取到的车型"+vehicleModel);
 //        String substring = vehicleModel.substring(0, 3);
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        List<String> specifiedBranches = Arrays.asList("天津", "山东", "辽宁", "哈尔滨", "长春", "内蒙古", "北京", "河北");
+
+//        List<MarketCarType> marketCarTables = iMarketCarTypeService.selectMarketCarTypeList1();
+
+//        System.out.println("获取到的车型数据： "+marketSalesTables);
+//        Map<String, String> vehicleCategoryMap = marketCarTables.stream()
+//                .collect(Collectors.toMap(MarketCarType::getVehicleModel, MarketCarType::getCategory));
+
+//        System.out.println("所有的车型数据： "+vehicleCategoryMap);
+
         int numberInput=0;
         //获取订单总台数做为分母
 //       if(marketSalesTable.getNumberInput()==null||marketSalesTable.getNumberInput()==0)
@@ -89,10 +110,14 @@ public class MarketIndexController extends BaseController {
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
            //判段是否超出长度
             String model = a.getVehicleModel();
+            String branch = a.getBranch();
+//            String category = vehicleCategoryMap.get(model);
 
             return  model != null && model.length() >= 3 && model.substring(0, 3).equals("CPD") &&
-                    !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
-                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                    (( !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime))
+                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
+                    && specifiedBranches.contains(branch); // 增加branch筛选条件
+//                    && "I".equals(category); // 增加车型类别筛选条件;
         }).collect(Collectors.groupingBy(
            a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                  Collectors.groupingBy(
@@ -104,7 +129,7 @@ public class MarketIndexController extends BaseController {
                  )                ));
 //        {2024-01={天津={10},上海={2},合肥={4}}}
 
-        System.out.println("收集到的list"+cpd);
+//        System.out.println("收集到的list"+cpd);
 
         //ToDo 按照地区和日期统计地区的订单总数。
          List<MarketOrderSumnumber> marketOrderSumnumbers = marketOrderSumnumberMapper.selectMarketOrderSumnumberList1();
@@ -119,7 +144,7 @@ public class MarketIndexController extends BaseController {
                                 Collectors.summingLong(MarketOrderSumnumber::getMarketOrderSumnumber)
                         )
                 ));
-        System.out.println("测试订单结果"+result);
+//        System.out.println("测试订单结果"+result);
 
         MarketIndexResult marketIndexResult = new MarketIndexResult();
 //        marketIndexResult.setMapMap(cpd);
@@ -171,12 +196,14 @@ public class MarketIndexController extends BaseController {
     @PostMapping("/IVVClassProportion")
     public   List<VoEntity> ProportionOfClassIVVTrams(@RequestBody MarketSalesTable marketSalesTable){
 
-        System.out.println("获取到的实体类"+marketSalesTable);
-        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
-        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+//        System.out.println("获取到的实体类"+marketSalesTable);
+//        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+//        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
 
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        List<String> specifiedBranches = Arrays.asList("天津", "山东", "辽宁", "哈尔滨", "长春", "内蒙古", "北京", "河北");
+
         int numberInput=0;
         //获取订单总台数做为分母
         if(marketSalesTable.getNumberInput()==null||marketSalesTable.getNumberInput()==0)
@@ -197,13 +224,16 @@ public class MarketIndexController extends BaseController {
             LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             //判段是否超出长度
             String model = a.getVehicleModel();
-
-
+            String branch = a.getBranch();
+            System.out.println("网点获取：  "+branch);
 
             return  model != null && model.length() >= 3 && model.substring(0, 3).equals("CPC") &&
-                    !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
-                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
-        }).collect(Collectors.groupingBy(
+                    ( (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime))
+                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
+                    && specifiedBranches.contains(branch);
+        })
+                .peek(filtered -> System.out.println("筛选后的数据: " + filtered))
+                .collect(Collectors.groupingBy(
                 a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                 Collectors.groupingBy(
                         MarketSalesTable::getBranch,
@@ -212,7 +242,7 @@ public class MarketIndexController extends BaseController {
                                 sum -> Math.round((sum / (double) finalNumberInput) * 1000) / 1000.0
                         )
                 )                ));
-        System.out.println("按照地区分类，选出车型为cpc和日期符合的数据"+cpc);
+//        System.out.println("按照地区分类，选出车型为cpc和日期符合的数据"+cpc);
 
 //         List<VoEntity> convert = VoEntity.convert(cpc);
         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(cpc);
@@ -229,6 +259,13 @@ public class MarketIndexController extends BaseController {
     public   List<VoEntity>  ModelMonthlyProduction(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
             //获取到商品车台账表全部数据
          List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        // 获取newtype表中的数据
+        List<MarketMainType> newTypes = iMarketMainTypeService.selectMarketMainTypeList1(); // 假设有一个iNewTypeService来获取newtype表的数据
+
+        // 创建一个Map来存储carmodel到type的映射
+        Map<String, String> carModelToTypeMap = newTypes.stream()
+                .collect(Collectors.toMap(MarketMainType::getCarType, MarketMainType::getMainCarType));
+
         System.out.println("获取所有商品车台账数据"+marketCommercialVehicleTables);
         System.out.println("获取到的实体类"+marketCommercialVehicleTable);
         System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
@@ -284,7 +321,8 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.groupingBy(
                         a -> a.getLaunchDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                         Collectors.groupingBy(
-                                a -> getVehicleModelPrefix(a.getVehicleModel()),
+//                                a -> getVehicleModelPrefix(a.getVehicleModel()),
+                                a -> carModelToTypeMap.getOrDefault(a.getVehicleModel(), "其他"), // 使用newtype中的type属性表示车型
                                 Collectors.summingLong(MarketCommercialVehicleTable::getNumber)
                         )
                 ))
@@ -303,6 +341,8 @@ public class MarketIndexController extends BaseController {
 //        System.out.println(cpd);
 //        System.out.println(cpcd);
 //        listMap.add(cpc);listMap.add(cpd);listMap.add(cpcd);
+        // 过滤掉 "Unknown" 的数据
+//        collect.entrySet().removeIf(entry -> "Unknown".equals(entry.getKey()));
          List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(collect);
 
 
@@ -319,6 +359,15 @@ public class MarketIndexController extends BaseController {
         System.out.println("接收对象的起止时间"+marketSalesTable);
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+
+
+        // 获取newtype表中的数据
+        List<MarketMainType> newTypes = iMarketMainTypeService.selectMarketMainTypeList1(); // 假设有一个iNewTypeService来获取newtype表的数据
+
+        // 创建一个Map来存储carmodel到type的映射
+        Map<String, String> carModelToTypeMap = newTypes.stream()
+                .collect(Collectors.toMap(MarketMainType::getCarType, MarketMainType::getMainCarType));
+
 
         //取出今年，取出当年的，各个主要车型的各个月的总数
         System.out.println(marketSalesTables);
@@ -341,7 +390,8 @@ public class MarketIndexController extends BaseController {
                              && (acceptanceTime.getYear() == current);
 //                             && (acceptanceTime.getYear() == current)&&(acceptanceTime.getMonthValue() ==startTime.getMonthValue());// 添加当前年份的过滤条件
                  }).collect(Collectors.groupingBy(
-        m -> getVehicleModelPrefix(m.getVehicleModel()),
+//        m -> getVehicleModelPrefix(m.getVehicleModel()),
+                         m -> carModelToTypeMap.getOrDefault(m.getVehicleModel(), "其他"), // 使用newtype中的type属性表示车型
         Collectors.groupingBy(
                 a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                 Collectors.summingLong(MarketSalesTable::getNumber)
@@ -365,7 +415,8 @@ public class MarketIndexController extends BaseController {
 //                            && (acceptanceTime.getMonthValue() == startTime.getMonthValue() );
 
                 }).collect(Collectors.groupingBy(
-                        m -> getVehicleModelPrefix(m.getVehicleModel()),
+//                        m -> getVehicleModelPrefix(m.getVehicleModel()),
+                        m -> carModelToTypeMap.getOrDefault(m.getVehicleModel(), "其他"), // 使用newtype中的type属性表示车型
                         Collectors.groupingBy(
                                 a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                                 Collectors.summingLong(MarketSalesTable::getNumber)
@@ -386,6 +437,8 @@ public class MarketIndexController extends BaseController {
 //        );
          Map<String, Map<String, Double>> stringMapMap = divideMaps(curMonth, before);
         System.out.println("比值"+stringMapMap);
+        // 过滤掉 "Unknown" 的数据
+//        stringMapMap.entrySet().removeIf(entry -> "Unknown".equals(entry.getKey()));
         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(stringMapMap);
 
         return voEntities;
@@ -455,11 +508,20 @@ public class MarketIndexController extends BaseController {
 
         //TODO 前端日期选择器的变更；
 
-              int    currentMonth  =1;
+              int currentMonth  =1;
         System.out.println("获取到的开始时间"+marketSalesTable.getStartTime());
         //把开始时间做为查询条件
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+
+        // 获取newtype表中的数据
+        List<MarketMainType> newTypes = iMarketMainTypeService.selectMarketMainTypeList1(); // 假设有一个iNewTypeService来获取newtype表的数据
+
+        // 创建一个Map来存储carmodel到type的映射
+        Map<String, String> carModelToTypeMap = newTypes.stream()
+                .collect(Collectors.toMap(MarketMainType::getCarType, MarketMainType::getMainCarType));
+
+
         marketSalesTables.stream()
                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
                 .filter(a -> {
@@ -483,13 +545,18 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.groupingBy(
                         MarketSalesTable::getBranch, // 按照地区分组
                         Collectors.groupingBy(
-                                a -> getVehicleModelPrefix(a.getVehicleModel()), // 按照车型前缀分组
+//                                a -> getVehicleModelPrefix(a.getVehicleModel()), // 按照车型前缀分组
+                                a -> carModelToTypeMap.getOrDefault(a.getVehicleModel(), "其他"), // 使用newtype中的type属性表示车型
+
                                 Collectors.summingLong(MarketSalesTable::getNumber) // 计算每个分组中 Number 的和
                         )
                 ));
 
 
         System.out.println("按照网点和月份的分组"+collect1);
+
+        // 过滤掉 "Unknown" 的数据
+//        collect1.entrySet().removeIf(entry -> "Unknown".equals(entry.getKey()));
 
          List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect1);
 
@@ -502,107 +569,244 @@ public class MarketIndexController extends BaseController {
     /*
      * 指标16各网点已接单未发车总台数
      * */
-    @PostMapping("/OrderWaitSend")
-    public  List<VoEntity> OrderWaitSend(@RequestBody MarketSalesTable marketSalesTable){
-
-        System.out.println("获取到的实体类"+marketSalesTable);
-        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
-        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
-        //规定年月日的格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        //获取到全部的数据
-        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
-                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
-                 .filter(a -> {
-            LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            // 检查日期是否在起止时间范围内，包括等于起止时间的情况
-            return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
-                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
-        }).collect(Collectors.groupingBy(
-                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
-                , Collectors.groupingBy(
-                        MarketSalesTable::getBranch
-                        , Collectors.summingLong(MarketSalesTable::getNumber))
-        ));
-
-        // 对结果进行排序
-        Map<String, Map<String, Long>> sortedCollect = collect.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
-
-//        marketSalesTables.stream().filter((MarketSalesTable a) ->
-//        {
-//            return a.getActualDepartureDate() == null &&
-//                    marketSalesTable.getStartTime().getMonth() <= a.getOrderAcceptanceTime().getMonth()
-//                    && a.getOrderAcceptanceTime().getMonth() <= marketSalesTable.getEndTime().getMonth();
+//    @PostMapping("/OrderWaitSend")
+//    public  List<VoEntity> OrderWaitSend(@RequestBody MarketSalesTable marketSalesTable){
 //
-//        })
-
-        System.out.println("选出实际发车日期为空的,再按照地区和月份统计为发车的数量"+collect);
-        System.out.println("选出实际发车日期为空的,再按照地区和月份统计为发车的数量"+sortedCollect);
-
-
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(sortedCollect);
-        return voEntities;
-    }
-    /*
-     * 指标17各网点未排产订单台数
-     * */
-    @PostMapping("/BranchWaitProduction")
-    public  List<VoEntity> BranchWaitProduction(@RequestBody MarketSalesTable marketSalesTable){
-
-        System.out.println("获取到的实体类"+marketSalesTable);
-        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
-        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
-        //规定年月日的格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        //获取到全部的数据
-        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
-                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
-                 .filter((MarketSalesTable a) ->
-        {          LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            // 检查日期是否在起止时间范围内，包括等于起止时间的情况,并且满足车型为空或者车型中不包含中文的数据
-            return
-                    (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
-                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
-                    && (a.getCarNumber() == null || containsChinese(a.getCarNumber()));
-//                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
-//                   LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//        System.out.println("获取到的实体类"+marketSalesTable);
+//        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+//        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+//        // 获取当前时间
+//        LocalDate currentDate = LocalDate.now();
+//        //规定年月日的格式
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+//        //获取到全部的数据
+//        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+//         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+//                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+//                 .filter(a -> a.getActualDepartureDate() == null)// 过滤掉 已经发车的 元素
+//                 .filter(a -> {
+//                     System.out.println(a);
+//            LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 //            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 //            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 //
 //            // 检查日期是否在起止时间范围内，包括等于起止时间的情况
-//            return (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+//            return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
 //                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
-//                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
+//        }).collect(Collectors.groupingBy(
+//                a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
+//                , Collectors.groupingBy(
+//                        MarketSalesTable::getBranch
+//                        , Collectors.summingLong(MarketSalesTable::getNumber))
+//        ));
+//
+//        // 对结果进行排序
+//        Map<String, Map<String, Long>> sortedCollect = collect.entrySet().stream()
+//                .sorted(Map.Entry.comparingByKey())
+//                .collect(Collectors.toMap(
+//                        Map.Entry::getKey,
+//                        Map.Entry::getValue,
+//                        (e1, e2) -> e1,
+//                        LinkedHashMap::new
+//                ));
+//
+////        marketSalesTables.stream().filter((MarketSalesTable a) ->
+////        {
+////            return a.getActualDepartureDate() == null &&
+////                    marketSalesTable.getStartTime().getMonth() <= a.getOrderAcceptanceTime().getMonth()
+////                    && a.getOrderAcceptanceTime().getMonth() <= marketSalesTable.getEndTime().getMonth();
+////
+////        })
+//
+//        System.out.println("选出实际发车日期为空的,再按照地区和月份统计为发车的数量"+collect);
+//        System.out.println("选出实际发车日期为空的,再按照地区和月份统计为发车的数量"+sortedCollect);
+//
+//
+//        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(sortedCollect);
+//        return voEntities;
+//    }
 
-        })
-                .collect(Collectors.groupingBy(
-                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
-                        , Collectors.groupingBy(MarketSalesTable::getBranch
-                                , Collectors.summingLong(MarketSalesTable::getNumber))
+    @PostMapping("/OrderWaitSend")
+    public List<VoEntity> OrderWaitSend(@RequestBody MarketSalesTable marketSalesTable) {
+
+        System.out.println("获取到的实体类" + marketSalesTable);
+        System.out.println("获取订单总台数" + marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间" + marketSalesTable.getStartTime() + marketSalesTable.getEndTime());
+
+        // 获取到全部的数据
+        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+
+        // 只过滤实际发车时间为空的记录，并按网点统计
+        Map<String, List<MarketSalesTable>> branchOrderDetails = marketSalesTables.stream()
+                .filter(a -> a.getSystemDeliveryTime() == null) // 只保留实际发车时间为空的记录
+                .collect(Collectors.groupingBy(MarketSalesTable::getBranch));
+
+        // 打印网点为“河北”的记录
+        if (branchOrderDetails.containsKey("北京")) {
+            System.out.println("网点为“北京”的未发车订单详情: ");
+            int index = 1;
+            for (MarketSalesTable table : branchOrderDetails.get("北京")) {
+                System.out.println("订单序号: " + index);
+                System.out.println("订单详情: " + table);
+                System.out.println("订单数量: " + table.getNumber());
+                System.out.println("----------------------------------------"); // 分割线
+                index++;
+            }
+        } else {
+            System.out.println("网点为“北京”的未发车订单数量: 0");
+        }
+
+        // 统计数量
+        Map<String, Long> branchOrderCounts = branchOrderDetails.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().stream().mapToLong(MarketSalesTable::getNumber).sum()
                 ));
 
-        System.out.println("选出车号为空或者为汉字的,再按照地区和月份统计数量"+collect);
+        System.out.println("按照网点统计实际发车时间为空的车型数量" + branchOrderCounts);
 
+        // 将结果转换为 VoEntity 列表
+        Map<String, Map<String, Long>> adjustedBranchOrderCounts = branchOrderCounts.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            Map<String, Long> innerMap = new HashMap<>();
+                            innerMap.put("", entry.getValue());  // 或者用任何合适的键替代
+                            return innerMap;
+                        }
+                ));
 
-         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(adjustedBranchOrderCounts);
         return voEntities;
     }
-    //处理包含中文的车型
+
+
+
+
+    /*
+     * 指标17各网点未排产订单台数
+     * */
+//    @PostMapping("/BranchWaitProduction")
+//    public  List<VoEntity> BranchWaitProduction(@RequestBody MarketSalesTable marketSalesTable){
+//
+//        System.out.println("获取到的实体类"+marketSalesTable);
+//        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+//        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+//        //规定年月日的格式
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+//        //获取到全部的数据
+//        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+//
+//         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+//                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+//                 .filter((MarketSalesTable a) ->
+//        {          LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            // 检查日期是否在起止时间范围内，包括等于起止时间的情况,并且满足车型为空或者车型中不包含中文的数据
+//            return
+//                    (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+//                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
+//                    && (a.getCarNumber() == null || containsChinese(a.getCarNumber()));
+////                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
+////                   LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+////            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+////            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+////
+////            // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+////            return (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+////                    || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+////                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
+//
+//        })
+//                .collect(Collectors.groupingBy(
+//                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
+//                        , Collectors.groupingBy(MarketSalesTable::getBranch
+//                                , Collectors.summingLong(MarketSalesTable::getNumber))
+//                ));
+//
+//        System.out.println("选出车号为空或者为汉字的,再按照地区和月份统计数量"+collect);
+//
+//
+//         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+//        return voEntities;
+//    }
+//    //处理包含中文的车型
+//    private static boolean containsChinese(String str) {
+//        for (char c : str.toCharArray()) {
+//            if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+
+    @PostMapping("/BranchWaitProduction")
+    public List<VoEntity> BranchWaitProduction(@RequestBody MarketSalesTable marketSalesTable) {
+
+        System.out.println("获取到的实体类" + marketSalesTable);
+        System.out.println("获取订单总台数" + marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间" + marketSalesTable.getStartTime() + marketSalesTable.getEndTime());
+
+        // 获取到全部的数据
+        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+
+        // 按网点分类，统计车号为空或者为汉字的数量，并保存符合条件的记录
+        Map<String, Long> branchCounts = new HashMap<>();
+        Map<String, List<MarketSalesTable>> branchDetails = new HashMap<>();
+
+        for (MarketSalesTable table : marketSalesTables) {
+            // 确保首先检查有接单时间且车号为空、为空字符串或为汉字
+            if (table.getOrderAcceptanceTime() != null &&
+                    (table.getCarNumber() == null ||
+                            table.getCarNumber().isEmpty() || // 添加空字符串的检查
+                            containsChinese(table.getCarNumber()))) {
+
+                String branch = table.getBranch();
+                // 统计数量
+                branchCounts.put(branch, branchCounts.getOrDefault(branch, 0L) + table.getNumber());
+
+                // 保存符合条件的记录
+                branchDetails.computeIfAbsent(branch, k -> new ArrayList<>()).add(table);
+            }
+        }
+
+        // 输出河北网点的车号为空或为汉字的订单详情
+        if (branchDetails.containsKey("北京")) {
+            System.out.println("网点为“北京”的车号为空或为汉字的订单详情: ");
+            int index = 1;
+            for (MarketSalesTable table : branchDetails.get("北京")) {
+                System.out.println("订单序号: " + index);
+                System.out.println("订单详情: " + table);
+                System.out.println("订单数量: " + table.getNumber());
+                System.out.println("----------------------------------------"); // 分割线
+                index++;
+            }
+        } else {
+            System.out.println("网点为“河北”的未发车订单数量: 0");
+        }
+
+        System.out.println("按地区统计车号为空或为汉字的数量: " + branchCounts);
+
+        // 将 branchCounts 转换为 Map<String, Map<String, Long>> 类型
+        Map<String, Map<String, Long>> adjustedBranchCounts = new HashMap<>();
+        for (Map.Entry<String, Long> entry : branchCounts.entrySet()) {
+            String branch = entry.getKey();
+            Long count = entry.getValue();
+
+            Map<String, Long> detailMap = new HashMap<>();
+            detailMap.put("", count);
+
+            adjustedBranchCounts.put(branch, detailMap);
+        }
+
+        // 将结果转换为 VoEntity 列表
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(adjustedBranchCounts);
+        return voEntities;
+    }
+
+    // 处理包含中文的车型
     private static boolean containsChinese(String str) {
         for (char c : str.toCharArray()) {
             if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
@@ -612,47 +816,87 @@ public class MarketIndexController extends BaseController {
         return false;
     }
 
+
     /*
      * 指标18各网点已完工未发车订单数
      * */
+//    @PostMapping("/OverWorkWaitDelivery")
+//    public  List<VoEntity> OverWorkWaitDelivery(@RequestBody MarketSalesTable marketSalesTable){
+//
+//        System.out.println("获取到的实体类"+marketSalesTable);
+//        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+//        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+//
+//        //获取到全部的数据
+//        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+//        //规定年月日的格式
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+//
+//         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+//                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+//                 .filter((MarketSalesTable a) ->
+//        {
+//            LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            // 检查日期是否在起止时间范围内，包括等于起止时间的情况,系统交货期有日期且实际发车日期为空
+//            return
+//                    (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+//                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
+//                            && a.getActualDepartureDate() == null && a.getSystemDeliveryTime() != null;
+//
+//
+//        })
+//                .collect(Collectors.groupingBy(
+//                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
+//
+//
+//                        , Collectors.groupingBy(
+//                                MarketSalesTable::getBranch
+//                                , Collectors.summingLong(MarketSalesTable::getNumber))
+//                ));
+//        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照月份和地区统计数量"+collect);
+//
+//         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+//        return voEntities;
+//    }
+
+
+
     @PostMapping("/OverWorkWaitDelivery")
-    public  List<VoEntity> OverWorkWaitDelivery(@RequestBody MarketSalesTable marketSalesTable){
+    public List<VoEntity> OverWorkWaitDelivery(@RequestBody MarketSalesTable marketSalesTable) {
 
-        System.out.println("获取到的实体类"+marketSalesTable);
-        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
-        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+        System.out.println("获取到的实体类" + marketSalesTable);
+        System.out.println("获取订单总台数" + marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间" + marketSalesTable.getStartTime() + marketSalesTable.getEndTime());
 
-        //获取到全部的数据
+        // 获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
-        //规定年月日的格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
 
-         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
-                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
-                 .filter((MarketSalesTable a) ->
-        {
-            LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            // 检查日期是否在起止时间范围内，包括等于起止时间的情况,系统交货期有日期且实际发车日期为空
-            return
-                    (!acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
-                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime))
-                            && a.getActualDepartureDate() == null && a.getSystemDeliveryTime() != null;
-
-
-        })
+        // 按网点分类，筛选出系统交货期有日期且实际发车日期为空的台数
+        Map<String, Long> collect = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter(a -> a.getActualDepartureDate() == null && a.getSystemDeliveryTime() != null) // 筛选符合条件的记录
                 .collect(Collectors.groupingBy(
-                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)
-
-
-                        , Collectors.groupingBy(
-                                MarketSalesTable::getBranch
-                                , Collectors.summingLong(MarketSalesTable::getNumber))
+                        MarketSalesTable::getBranch, // 按网点分组
+                        Collectors.summingLong(MarketSalesTable::getNumber) // 统计数量
                 ));
-        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照月份和地区统计数量"+collect);
 
-         List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+        System.out.println("筛选出系统交货期有日期且实际发车日期为空，再按照网点统计数量: " + collect);
+
+        Map<String, Map<String, Long>> adjustedBranchCounts = new HashMap<>();
+        for (Map.Entry<String, Long> entry : collect.entrySet()) {
+            String branch = entry.getKey();
+            Long count = entry.getValue();
+
+            Map<String, Long> detailMap = new HashMap<>();
+            detailMap.put("", count);
+
+            adjustedBranchCounts.put(branch, detailMap);
+        }
+
+        // 将结果转换为 VoEntity 列表
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(adjustedBranchCounts);
         return voEntities;
     }
 

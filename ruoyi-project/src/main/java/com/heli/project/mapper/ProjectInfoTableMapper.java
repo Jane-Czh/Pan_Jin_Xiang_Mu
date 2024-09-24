@@ -2,6 +2,7 @@ package com.heli.project.mapper;
 
 import java.util.List;
 import com.heli.project.domain.ProjectInfoTable;
+import com.ruoyi.project.domain.ProjectInfoRecode;
 
 /**
  * 项目基本信息Mapper接口
@@ -19,6 +20,7 @@ public interface ProjectInfoTableMapper
      */
     public ProjectInfoTable selectProjectInfoTableByProjectId(Long projectId);
 
+    public List<ProjectInfoRecode> selectProjectRecodingByProjectName(String projectName);
     /**
      * 查询项目基本信息列表
      * 

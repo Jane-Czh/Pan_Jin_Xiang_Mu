@@ -15,7 +15,7 @@
 <script>
 import * as echarts from 'echarts';
 import moment from 'moment'
-import { getEmployeesAVGMonthlyNumberData } from '@/api/tech/data'
+import { getNonStandardAVGPreparationDaysData } from '@/api/tech/data'
 
 export default {
     data() {
@@ -29,11 +29,14 @@ export default {
             selectedDate: [],
             pickerOptions: [],
             option: {},
-            myChart: {}
+            myChart: {},
+            routerData: {},
+            targetValueArray: [],
         }
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', showTarget: '', targetValue: 0, targetValueDate: '', }
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
@@ -44,9 +47,11 @@ export default {
                 this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
-                const res = await getEmployeesAVGMonthlyNumberData(this.timeData);
+                const res = await getNonStandardAVGPreparationDaysData(this.timeData);
                 this.data = res.rows
                 this.loading = false
+                const yAxisDataLength = this.data.length;
+                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 this.updateChart()
             } catch (error) {
                 this.loading = false
@@ -153,6 +158,28 @@ export default {
                     name: {}
                 }
             };
+            // 根据条件决定是否添加目标值系列
+            let series = [{
+                name: '天数',
+                type: 'line',
+                label: labelOption,
+                emphasis: {
+                    focus: 'series'
+                },
+                data: this.data.map(item => item.nonStandardAVGPreparationDays),
+            }];
+
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
+                series.push({
+                    name: '目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.targetValueArray,
+                });
+            }
             this.option = {
                 title: {
                     text: '非标订单平均技术准备天数'
@@ -163,9 +190,9 @@ export default {
                         type: 'shadow'
                     }
                 },
-                // legend: {
-                //     data: ['Forest', 'Steppe', 'Desert', 'Wetland']
-                // },
+                legend: {
+                    data: ['天数', (this.targetValue != 0 && this.targetValue != '') ? '目标值' : null].filter(item => item !== null),
+                },
                 toolbox: {
                     show: true,
                     orient: 'vertical',
@@ -191,15 +218,7 @@ export default {
                         type: 'value'
                     }
                 ],
-                series: [{
-                    name: '天数',
-                    type: 'line',
-                    label: labelOption,
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: this.data.map(item => item.nonStandardAVGPreparationDays),
-                }]
+                series: series
             };
 
             this.option && this.myChart.setOption(this.option);

@@ -11,9 +11,7 @@ import java.util.regex.Pattern;
 
 import com.alibaba.excel.util.ListUtils;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.market.domain.MarketCarType;
-import com.ruoyi.market.domain.MarketFunctionComparisonDeliverydays;
-import com.ruoyi.market.domain.MarketSalesTable;
+import com.ruoyi.market.domain.*;
 import com.ruoyi.market.service.IMarketFunctionComparisonDeliverydaysService;
 import com.ruoyi.market.utils.ExcelUtils;
 import com.ruoyi.market.utils.GenerateId;
@@ -22,7 +20,6 @@ import com.ruoyi.market.utils.getTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.market.mapper.MarketCommercialVehicleTableMapper;
-import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.market.service.IMarketCommercialVehicleTableService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -183,6 +180,11 @@ public int CVimportInterests(MultipartFile excelFile) throws IOException {
     public int deleteMarketCommercialVehicleTableByMcvId(Long mcvId)
     {
         return marketCommercialVehicleTableMapper.deleteMarketCommercialVehicleTableByMcvId(mcvId);
+    }
+
+    @Override
+    public List<AverageResult> selectcountAverage() {
+        return marketCommercialVehicleTableMapper.selectcountAverage();
     }
 
     @Override

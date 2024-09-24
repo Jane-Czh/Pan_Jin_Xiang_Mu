@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.MarketTWeightCarTypeMapper">
+    
+    <resultMap type="MarketTWeightCarType" id="MarketTWeightCarTypeResult">
+        <result property="id"    column="id"    />
+        <result property="series"    column="series"    />
+        <result property="tWeight"    column="T_Weight"    />
+        <result property="carType"    column="car_type"    />
+        <result property="Engines"    column="Engines"    />
+        <result property="configure"    column="configure"    />
+        <result property="creatTime"    column="creat_time"    />
+        <result property="creatPeople"    column="creat_people"    />
+        <result property="tWeightDescribe"    column="T_Weight_describe"    />
+    </resultMap>
+
+    <sql id="selectMarketTWeightCarTypeVo">
+        select id, series, T_Weight, car_type, Engines, configure, creat_time, creat_people, T_Weight_describe from market_t_weight_car_type
+    </sql>
+
+    <select id="selectMarketTWeightCarTypeList" parameterType="MarketTWeightCarType" resultMap="MarketTWeightCarTypeResult">
+        <include refid="selectMarketTWeightCarTypeVo"/>
+        <where>  
+            <if test="series != null  and series != ''"> and series = #{series}</if>
+            <if test="tWeight != null "> and T_Weight = #{tWeight}</if>
+            <if test="carType != null  and carType != ''"> and car_type = #{carType}</if>
+            <if test="Engines != null  and Engines != ''"> and Engines = #{Engines}</if>
+            <if test="configure != null  and configure != ''"> and configure = #{configure}</if>
+            <if test="creatTime != null "> and creat_time = #{creatTime}</if>
+            <if test="creatPeople != null  and creatPeople != ''"> and creat_people = #{creatPeople}</if>
+            <if test="tWeightDescribe != null  and tWeightDescribe != ''"> and T_Weight_describe = #{tWeightDescribe}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarketTWeightCarTypeById" parameterType="Long" resultMap="MarketTWeightCarTypeResult">
+        <include refid="selectMarketTWeightCarTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMarketTWeightCarType" parameterType="MarketTWeightCarType">
+        insert into market_t_weight_car_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="series != null">series,</if>
+            <if test="tWeight != null">T_Weight,</if>
+            <if test="carType != null">car_type,</if>
+            <if test="Engines != null">Engines,</if>
+            <if test="configure != null">configure,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="creatPeople != null">creat_people,</if>
+            <if test="tWeightDescribe != null">T_Weight_describe,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="series != null">#{series},</if>
+            <if test="tWeight != null">#{tWeight},</if>
+            <if test="carType != null">#{carType},</if>
+            <if test="Engines != null">#{Engines},</if>
+            <if test="configure != null">#{configure},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="creatPeople != null">#{creatPeople},</if>
+            <if test="tWeightDescribe != null">#{tWeightDescribe},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarketTWeightCarType" parameterType="MarketTWeightCarType">
+        update market_t_weight_car_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="series != null">series = #{series},</if>
+            <if test="tWeight != null">T_Weight = #{tWeight},</if>
+            <if test="carType != null">car_type = #{carType},</if>
+            <if test="Engines != null">Engines = #{Engines},</if>
+            <if test="configure != null">configure = #{configure},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="creatPeople != null">creat_people = #{creatPeople},</if>
+            <if test="tWeightDescribe != null">T_Weight_describe = #{tWeightDescribe},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarketTWeightCarTypeById" parameterType="Long">
+        delete from market_t_weight_car_type where id = #{id}
+    </delete>
+
+    <delete id="deleteMarketTWeightCarTypeByIds" parameterType="String">
+        delete from market_t_weight_car_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

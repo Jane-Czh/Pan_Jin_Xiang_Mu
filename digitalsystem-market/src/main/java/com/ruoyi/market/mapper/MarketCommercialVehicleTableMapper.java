@@ -76,4 +76,7 @@ public interface MarketCommercialVehicleTableMapper
     public List<AverageResult> selectcount19();
 
 
+    List<AverageResult> selectLightWeight();
+
+    List<AverageResult> selectBigWeight();
 }

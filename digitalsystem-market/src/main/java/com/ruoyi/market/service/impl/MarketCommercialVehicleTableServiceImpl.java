@@ -201,6 +201,18 @@ public int CVimportInterests(MultipartFile excelFile) throws IOException {
     }
 
     @Override
+    public List<AverageResult> selectLightWeight() {
+        return marketCommercialVehicleTableMapper.selectLightWeight();
+
+    }
+
+    @Override
+    public List<AverageResult> selectBigWeight() {
+        return marketCommercialVehicleTableMapper.selectBigWeight();
+
+    }
+
+    @Override
     public List<MarketCommercialVehicleTable> selectMarketCommercialVehicleTableList1() {
         return marketCommercialVehicleTableMapper.selectMarketCommercialVehicleTableList1();
     }

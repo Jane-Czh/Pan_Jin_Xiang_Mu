@@ -1326,10 +1326,60 @@ export default {
       });
     },
 
+    /**
+     *       console.log("0923=====>this bug bug bug =======>"+data)
+      //0923 todo 对data数据的唯一ids进行一个替换
+      let newData = changeDatasIds(data);
+      console.log("0923=====>this bug bug fix new Data =======>"+newData)
+     */
+
     // 模拟载入自定义模板数据
     dataReloadSB(data) {
       this.dialogSBDSVisible = false;
+      //ori ----> this.dataReload(data);
+      //增加对数据的ids转换, 但是保留原始数据间的联系
+     
+
+      // 创建一个 id 映射，用于保存旧 ID 到新 ID 的映射关系
+      let idMapping = {};
+
+      // 遍历 nodeList，生成新的 id 并替换
+      data.nodeList.forEach((node) => {
+        const newId = nanoid(); // 生成新的唯一 id
+        idMapping[node.id] = newId; // 保存旧 id 与新 id 的映射关系
+        node.id = newId; // 替换节点的 id
+      });
+
+      // 遍历 lineList，替换 from 和 to 字段
+      data.lineList.forEach((line) => {
+        if (idMapping[line.from]) {
+          line.from = idMapping[line.from]; // 替换 from 字段
+        }
+        if (idMapping[line.to]) {
+          line.to = idMapping[line.to]; // 替换 to 字段
+        }
+      });
+
+      // 调用 dataReload 方法重新载入修改后的数据
       this.dataReload(data);
+    },
+
+    changeDatasIds(data) {
+      const newDataA = data.nodeList.forEach((node) => {
+        const newId = nanoid();
+        const oriId = node.id;
+        node.id = newId;
+        // Update lineList from/to fields
+        data.lineList.forEach((line) => {
+          if (line.from === oriId) {
+            line.from = newId;
+          }
+          if (line.to === oriId) {
+            line.to = newId;
+          }
+        });
+      });
+      return newDataA;
     },
 
     // 模拟载入数据dataA

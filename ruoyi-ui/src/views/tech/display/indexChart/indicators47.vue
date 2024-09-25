@@ -191,7 +191,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['天数', this.targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
+                    data: ['天数', (this.targetValue != 0 && this.targetValue != '') ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

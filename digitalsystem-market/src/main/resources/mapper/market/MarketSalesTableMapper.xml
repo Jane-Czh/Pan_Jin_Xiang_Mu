@@ -36,6 +36,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="technicalPreparationCompletionTime"    column="Technical_Preparation_Completion_Time"    />
     </resultMap>
 
+    <resultMap id="MarketsalesMap" type="com.ruoyi.market.domain.AverageResult">
+        <result property="Month" jdbcType="INTEGER" column="Month"/>
+        <result property="Average_Days_Difference" jdbcType="DOUBLE" column="Average_Days_Difference"/>
+
+        <result property="Over_20_Percent_Count" jdbcType="LONGNVARCHAR" column="Over_20_Percent_Count"/>
+        <result property="Branch" jdbcType="LONGNVARCHAR" column="Branch"/>
+        <result property="Number" jdbcType="LONGNVARCHAR" column="Number"/>
+        <result property="Order_System_Delivery_Time" jdbcType="LONGNVARCHAR" column="Order_System_Delivery_Time"/>
+        <result property="TotalNumber" jdbcType="LONGNVARCHAR" column="TotalNumber"/>
+
+    </resultMap>
+
     <sql id="selectMarketSalesTableVo">
         select MS_ID, CREATED_BY, CREATED_TIME, Branch, Contract_Number, Order_Number, Order_Acceptance_Time, Vehicle_Model, Number, Valve_Block, Fork, Door_Frame, Air_Filter, Accessory, Tyre, Configuration, Car_Number, Remarks, Delivery_Form, Delivery_Location, Contacts, Telephone, Order_System_Delivery_Time, Order_Overdue_Warning, Planned_Departure_Date, Actual_Departure_Date, System_Delivery_Time, Delivery_Note_Number, Technical_Preparation_Completion_Time from Market_Sales_table
     </sql>
@@ -124,7 +136,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectMarketSalesTableVo"/>
         where MS_ID = #{msId}
     </select>
-        
+
+    <select id="selectcount19" resultMap="MarketsalesMap">
+        SELECT
+            main.Branch as Branch,
+            main.Order_System_Delivery_Time as Order_System_Delivery_Time,
+            main.Number as Number,
+            sub.TotalNumber as TotalNumber
+        FROM
+            Market_Sales_table AS main
+                LEFT JOIN (
+                SELECT
+                    Branch,
+                    SUM(Number) AS TotalNumber
+                FROM
+                    Market_Sales_table
+                WHERE
+                    CURRENT_DATE > Order_System_Delivery_Time
+                  AND (Car_Number IS NULL OR Car_Number = '' OR Car_Number REGEXP '[\\x{4e00}-\\x{9fa5}]')
+                GROUP BY
+                    Branch
+            ) AS sub ON main.Branch = sub.Branch
+        WHERE
+            CURRENT_DATE > main.Order_System_Delivery_Time
+          AND (main.Car_Number IS NULL OR main.Car_Number = '' OR main.Car_Number REGEXP '[\\x{4e00}-\\x{9fa5}]');
+    </select>
+
     <insert id="insertMarketSalesTable" parameterType="MarketSalesTable">
         insert into Market_Sales_table
         <trim prefix="(" suffix=")" suffixOverrides=",">

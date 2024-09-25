@@ -31,6 +31,7 @@ export default {
             },
             targetValue: 0,
             selectedDate: [],
+            routerData: {},
             targetValueArray: [],
             pickerOptions: [],
             option: {},
@@ -39,6 +40,7 @@ export default {
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
@@ -51,7 +53,8 @@ export default {
                 this.loading = true
                 const res = await getInTimeReturnRateData(this.timeData);
                 this.data = res.rows
-
+                // const yAxisDataLength = this.data.length;
+                // this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -147,6 +150,30 @@ export default {
                     });
                 }
             };
+            // // 根据条件决定是否添加目标值系列
+            // let series = [
+            //     {
+            //         name: '及时情况',
+            //         type: 'bar',
+            //         label: labelOption,
+            //         emphasis: {
+            //             focus: 'series'
+            //         },
+            //         data: this.data.map(item => item.intimeReturnrate),
+            //     },
+            // ];
+
+            // if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            //     series.push({
+            //         name: '目标值',
+            //         type: 'line',
+            //         label: labelOption,
+            //         emphasis: {
+            //             focus: 'series'
+            //         },
+            //         data: this.targetValueArray,
+            //     });
+            // }
             const labelOption = {
                 show: true,
                 position: app.config.position,
@@ -154,8 +181,10 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
-                fontSize: 16,
+                formatter: function (params) {
+                    return params.value === 1 ? '及时' : '不及时';
+                },
+                fontSize: 14,
                 rich: {
                     name: {}
                 }
@@ -209,15 +238,6 @@ export default {
                         },
                         data: this.data.map(item => item.intimeReturnrate),
                     },
-                    // {
-                    //     name: '目标值',
-                    //     type: 'line',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     data: this.targetValueArray,
-                    // }
                 ]
             };
 

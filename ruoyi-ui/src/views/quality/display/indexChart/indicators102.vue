@@ -31,6 +31,7 @@ export default {
             },
             targetValue: 0,
             selectedDate: [],
+            routerData: {},
             targetValueArray: [],
             pickerOptions: [],
             option: {},
@@ -39,36 +40,21 @@ export default {
     },
     computed: {},
     mounted() {
+        this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
     },
     methods: {
         async initData() {
-            // const datePost = {
-            //     date: new Date(),
-            //     deptName: 'quality'
-            // }
             this.timeData.startTime = this.selectedDate[0],
                 this.timeData.endTime = this.selectedDate[1]
             try {
                 this.loading = true
                 const res = await getSingleInspectionPassRateData(this.timeData);
                 this.data = res.rows
-
-                // let target = await getTargetData(datePost);
-
-                // target.forEach(item => {
-                //     item.rows.forEach(row => {
-                //         if (row.indicatorName === 'singleInspectionPassRate') {
-                //             this.targetValue = row.targetValue;
-                //         }
-                //     });
-                // });
-                // console.log(this.targetValue)
-                // console.log('-------------++++++')
-                // const yAxisDataLength = this.data.length;
-                // this.targetValueArray = Array(yAxisDataLength).fill(this.targetValue);
+                const yAxisDataLength = this.data.length;
+                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -179,6 +165,48 @@ export default {
                     name: {}
                 }
             };
+            // 根据条件决定是否添加目标值系列
+            let series = [
+                {
+                    name: '电车',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.electricCarPassRate),
+                },
+                {
+                    name: '大吨位',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.largeTonPassRate),
+                },
+                {
+                    name: '电车和大吨位',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.singleInspectionPassRate),
+                },
+            ];
+
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+                series.push({
+                    name: '目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.targetValueArray,
+                });
+            }
             this.option = {
                 title: {
                     text: '电车、大吨位一次交检合格率'
@@ -190,7 +218,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['电车', '大吨位', '电车和大吨位']
+                    data: ['电车', '大吨位', '电车和大吨位', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -218,44 +246,7 @@ export default {
                         type: 'value'
                     }
                 ],
-                series: [
-                    {
-                        name: '电车',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.electricCarPassRate),
-                    },
-                    {
-                        name: '大吨位',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.largeTonPassRate),
-                    },
-                    {
-                        name: '电车和大吨位',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: this.data.map(item => item.singleInspectionPassRate),
-                    },
-                    // {
-                    //     name: '目标值',
-                    //     type: 'line',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     data: this.targetValueArray,
-                    // }
-                ]
+                series: series
             };
 
             this.option && this.myChart.setOption(this.option);

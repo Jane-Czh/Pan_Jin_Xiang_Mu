@@ -39,7 +39,6 @@ export default {
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
-        console.log(this.routerData.showTarget && (this.routerData.targetValue != 0 || ''))
     },
     methods: {
         async initData() {
@@ -173,7 +172,7 @@ export default {
                 data: this.data.map(item => item.prdScheduleCompletionRate),
             }];
             // 根据条件决定是否添加目标值
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || this.routerData.targetValue != '')) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -196,7 +195,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['完成率', this.routerData.targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
+                    data: ['完成率', (this.routerData.targetValue != 0 && this.routerData.targetValue != '') ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

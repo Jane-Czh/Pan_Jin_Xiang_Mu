@@ -40,6 +40,7 @@ export default {
             option: {},
             myChart: {},
             routerData: {},
+            targetValueArray: [],
         }
     },
     mounted() {
@@ -186,7 +187,7 @@ export default {
                 data: this.data.map(item => item.InProgress_DayRevenue),
             }];
 
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -208,7 +209,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['金额', this.routerData.targetValue != '' ? '目标值' : null].filter(item => item !== null),
+                    data: ['金额', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

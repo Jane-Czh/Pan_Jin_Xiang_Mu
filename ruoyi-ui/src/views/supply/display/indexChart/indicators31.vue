@@ -224,7 +224,7 @@ export default {
         }
       ];
 
-      if (this.routerData[0].showTarget && (this.routerData[0].targetValue != 0 || '')) {
+      if (this.routerData[0].showTarget && (this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '')) {
         series.push({
           name: '目标值',
           type: 'line',

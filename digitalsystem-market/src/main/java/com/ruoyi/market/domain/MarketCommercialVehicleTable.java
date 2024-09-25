@@ -17,7 +17,6 @@ import java.util.Date;
  * @date 2024-04-12
  */
 @Data
-
 public class MarketCommercialVehicleTable {
     private static final long serialVersionUID = 1L;
     /*
@@ -25,6 +24,12 @@ public class MarketCommercialVehicleTable {
      * */
     @Transient
     private Date startTime;
+
+    private String Month;
+
+    private Double Average_Days_Difference;
+
+    private Long Over_20_Percent_Count;
     @Transient
     private Date endTime;
     @Transient

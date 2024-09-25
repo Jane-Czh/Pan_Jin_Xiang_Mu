@@ -68,16 +68,16 @@
       <!-- 123 over -->
 
       <!-- 搜索 制度文件名称进行搜索 -->
-      <!-- <el-form-item prop="regularName">
+      <el-form-item prop="regularName">
         <el-input
           v-model="queryParams.regularName"
           placeholder="请输入制度文件名称"
           clearable
         />
-      </el-form-item> -->
+      </el-form-item>
 
       <!--  搜索 制度等级进行搜索-->
-      <!-- <el-form-item prop="regularLevel">
+      <el-form-item prop="regularLevel">
         <el-select
           v-model="queryParams.regularLevel"
           placeholder="请选择制度等级"
@@ -90,19 +90,19 @@
           >
           </el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item> 
 
       <!-- 搜索 表单文件名称进行搜索 -->
-      <!-- <el-form-item prop="formName">
+     <el-form-item prop="formName">
         <el-input
           v-model="queryParams.formName"
           placeholder="请输入表单文件名称"
           clearable
         />
-      </el-form-item> -->
+      </el-form-item> 
 
       <!-- 搜索 流程等级进行搜索-->
-      <!-- <el-form-item prop="processLevel">
+    <el-form-item prop="processLevel">
         <el-select
           v-model="queryParams.processLevel"
           placeholder="请选择流程等级"
@@ -115,7 +115,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
 
       <el-form-item>
         <el-button

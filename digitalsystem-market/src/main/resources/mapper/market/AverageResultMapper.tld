@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.market.mapper.AverageResultMapper">
+    <resultMap id="MarketCommercialVehicleMap" type="com.ruoyi.market.domain.AverageResult">
+        <result property="Month" column="Month"/>
+        <result property="Average_Days_Difference" column="Average_Days_Difference"/>
+        <result property="Over_20_Percent_Count" column="Over_20_Percent_Count"/>
+    </resultMap>
+    <select id="selectcountAverage" resultMap="MarketCommercialVehicleMap">
+        SELECT
+            Threshold.Month as Month,
+            Threshold.Average_Days_Difference as Average_Days_Difference,
+            COUNT(*) OVER (PARTITION BY MONTH(mv.Precision_Completion_Period)) AS Over_20_Percent_Count
+        FROM
+            Market_Commercial_Vehicle_table mv
+                JOIN (
+                SELECT
+                    Month,
+                    Average_Days_Difference,
+                    Average_Days_Difference * 1.2 AS Threshold
+                FROM (
+                         SELECT
+                             MONTH(Precision_Completion_Period) AS Month,
+                             AVG(DATEDIFF(Precision_Completion_Period, Acceptance_Date)) AS Average_Days_Difference
+                         FROM
+                             Market_Commercial_Vehicle_table
+                         WHERE
+                             Vehicle_Model LIKE 'cpd%'
+                         GROUP BY
+                             MONTH(Precision_Completion_Period)
+                     ) AS AvgDaysDifference
+            ) AS Threshold ON MONTH(mv.Precision_Completion_Period) = Threshold.Month
+        WHERE
+            mv.Vehicle_Model LIKE 'cpd%'
+          AND DATEDIFF(mv.Precision_Completion_Period, mv.Acceptance_Date) > Threshold.Threshold
+        ORDER BY
+            MONTH(mv.Precision_Completion_Period) ASC;
+    </select>
+
+
+</mapper>

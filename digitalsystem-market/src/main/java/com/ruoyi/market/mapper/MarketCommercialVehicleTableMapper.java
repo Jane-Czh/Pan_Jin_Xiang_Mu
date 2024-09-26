@@ -1,6 +1,8 @@
 package com.ruoyi.market.mapper;
 
 import java.util.List;
+
+import com.ruoyi.market.domain.AverageResult;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import com.ruoyi.market.domain.MarketSalesTable;
 
@@ -68,4 +70,13 @@ public interface MarketCommercialVehicleTableMapper
      * @return 结果
      */
     public int deleteMarketCommercialVehicleTableByMcvIds(Long[] mcvIds);
+
+    public List<AverageResult> selectcountAverage();
+
+    public List<AverageResult> selectcount19();
+
+
+    List<AverageResult> selectLightWeight();
+
+    List<AverageResult> selectBigWeight();
 }

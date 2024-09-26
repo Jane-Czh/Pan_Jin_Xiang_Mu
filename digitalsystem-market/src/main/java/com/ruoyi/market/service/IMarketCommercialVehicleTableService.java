@@ -2,6 +2,8 @@ package com.ruoyi.market.service;
 
 import java.io.IOException;
 import java.util.List;
+
+import com.ruoyi.market.domain.AverageResult;
 import com.ruoyi.market.domain.MarketCommercialVehicleTable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,4 +65,9 @@ public interface IMarketCommercialVehicleTableService
      */
     public int deleteMarketCommercialVehicleTableByMcvId(Long mcvId);
 
+    List<AverageResult> selectcountAverage();
+
+    List<AverageResult> selectLightWeight();
+
+    List<AverageResult> selectBigWeight();
 }

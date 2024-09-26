@@ -1,6 +1,8 @@
 package com.ruoyi.market.mapper;
 
 import java.util.List;
+
+import com.ruoyi.market.domain.AverageResult;
 import com.ruoyi.market.domain.MarketSalesTable;
 import org.apache.ibatis.annotations.Param;
 
@@ -68,4 +70,6 @@ public interface MarketSalesTableMapper
     public void batchInsert(@Param("list") List<MarketSalesTable> marketSalesTable);
 
     public void deleteAll();
+
+    public List<AverageResult> selectcount19();
 }

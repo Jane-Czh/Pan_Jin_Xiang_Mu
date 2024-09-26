@@ -169,6 +169,20 @@ export default {
                     });
                 }
             };
+
+            const labelOption = {
+                show: true,
+                position: app.config.position,
+                distance: app.config.distance,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                rotate: app.config.rotate,
+                formatter: '{c}',
+                fontSize: 12,
+                rich: {
+                    name: {}
+                }
+            };
             // 根据条件决定是否添加目标值系列
             let series = [
                 {
@@ -201,19 +215,6 @@ export default {
                     data: this.targetValueArray,
                 });
             }
-            const labelOption = {
-                show: true,
-                position: app.config.position,
-                distance: app.config.distance,
-                align: app.config.align,
-                verticalAlign: app.config.verticalAlign,
-                rotate: app.config.rotate,
-                formatter: '{c}',
-                fontSize: 12,
-                rich: {
-                    name: {}
-                }
-            };
             this.option = {
                 title: {
                     text: '月度累计职能人均收入',

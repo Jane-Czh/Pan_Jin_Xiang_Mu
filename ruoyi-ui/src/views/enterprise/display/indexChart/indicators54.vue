@@ -183,7 +183,7 @@ export default {
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
                 formatter: '{c}',
-                fontSize: 12,
+                fontSize: 14,
             };
             // 根据条件决定是否添加目标值系列
             let series = [

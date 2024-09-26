@@ -171,7 +171,7 @@ export default {
                     }
                     return value;
                 },
-                fontSize: 12,
+                fontSize: 14,
                 rich: {
                     name: {}
                 }

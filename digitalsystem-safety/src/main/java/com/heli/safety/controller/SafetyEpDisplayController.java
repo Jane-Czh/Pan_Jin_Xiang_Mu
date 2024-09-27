@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +27,19 @@ public class SafetyEpDisplayController extends BaseController {
 
     @Autowired
     private ISafetyEpDisplayService safetyEpDisplayService;
+
+    /**
+     * @description: 指标概览页面数据展示,设备故障次数分布图
+     * @author: hong
+     * @date: 2024/9/27 18:27
+     * @version: 1.0
+     */
+    @GetMapping("/newOutputPercapitavalue")
+    public TableDataInfo selectNewOutputPercapitavalue() {
+        Date time = safetyEpDisplayService.selectMaxDateFromFailureCategoryDistribution();
+        List<DisplayEntity> list = safetyEpDisplayService.selectOutputPercapitavalue(time, time);
+        return getDataTable(list);
+    }
 
     /**
      * @description: 指标概览页面数据展示，获取最新一期数据

@@ -48,4 +48,6 @@ public interface SafetyEpDisplayMapper {
                                                           @Param("endTime") Date endTime);
 
     SafetyEp selectNewData();
+
+    Date selectMaxDateFromFailureCategoryDistribution();
 }

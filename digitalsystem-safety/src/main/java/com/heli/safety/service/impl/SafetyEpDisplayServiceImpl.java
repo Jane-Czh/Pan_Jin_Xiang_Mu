@@ -77,4 +77,9 @@ public class SafetyEpDisplayServiceImpl implements ISafetyEpDisplayService {
     public SafetyEp selectNewData() {
         return safetyEpDisplayMapper.selectNewData();
     }
+
+    @Override
+    public Date selectMaxDateFromFailureCategoryDistribution() {
+        return safetyEpDisplayMapper.selectMaxDateFromFailureCategoryDistribution();
+    }
 }

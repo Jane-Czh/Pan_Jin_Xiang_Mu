@@ -76,5 +76,9 @@
         where Year_And_Month = (select max(Year_And_Month) from Safety_EP)
     </select>
 
+    <select id="selectMaxDateFromFailureCategoryDistribution" resultType="java.util.Date">
+        select max(Year_And_Month) from Safety_EP_Equipment_Failure_Category_Distribution
+    </select>
+
 
 </mapper>

@@ -41,4 +41,6 @@ public interface ISafetyEpDisplayService {
     List<DisplayEntity> selectCurEquipmentReplacementCost(Date startTime, Date endTime);
 
     SafetyEp selectNewData();
+
+    Date selectMaxDateFromFailureCategoryDistribution();
 }

@@ -2,6 +2,7 @@ package com.heli.enterprise.service.impl;
 
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsDailyClearingSettlement;
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
+import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.heli.enterprise.mapper.EnterpriseManagementDisplayMapper;
 import com.heli.enterprise.service.IEnterpriseManagementDisplayService;
 import com.ruoyi.common.core.domain.DisplayEntity;
@@ -74,6 +75,16 @@ public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManage
     @Override
     public List<EnterpriseManagementIndicatorsManagement> selectManagement(Date startTime, Date endTime) {
         return enterpriseManagementDisplayMapper.selectManagement(startTime,endTime);
+    }
+
+    @Override
+    public EnterpriseManagementMonthlyData selectSalaryNewData() {
+        return enterpriseManagementDisplayMapper.selectSalaryNewData();
+    }
+
+    @Override
+    public EnterpriseManagementMonthlyData selectMonthlyNewData() {
+        return enterpriseManagementDisplayMapper.selectMonthlyNewData();
     }
 
 }

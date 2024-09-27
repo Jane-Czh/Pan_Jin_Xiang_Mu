@@ -2,6 +2,7 @@ package com.heli.enterprise.mapper;
 
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsDailyClearingSettlement;
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
+import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,4 +41,8 @@ public interface EnterpriseManagementDisplayMapper {
 
     List<EnterpriseManagementIndicatorsManagement> selectManagement(@Param("startTime") Date startTime,
                                                                     @Param("endTime") Date endTime);
+
+    EnterpriseManagementMonthlyData selectSalaryNewData();
+
+    EnterpriseManagementMonthlyData selectMonthlyNewData();
 }

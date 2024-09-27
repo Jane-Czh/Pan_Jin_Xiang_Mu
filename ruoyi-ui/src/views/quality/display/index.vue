@@ -149,11 +149,18 @@ export default {
 
         this.allIndex.forEach(item => {
           const key = item.sum;
-          if (allData[key] !== undefined) {
-            item.content = `最新一月：${allData[key] || ''}`;
+          if (item.id != '103') {
+            if (allData[key] !== undefined) {
+              item.content = `最新一月：${allData[key] || '——'}`;
+            } else {
+              console.warn(`Key ${key} not found in response data.`);
+            }
           } else {
-            console.warn(`Key ${key} not found in response data.`);
+            const result = allData[key] === 1 ? '及时' : '不及时';
+            item.content = `最新一月：${result || ''}`;
           }
+
+
         });
 
         //警告图标

@@ -1,16 +1,15 @@
 package com.heli.safety.controller;
 
+import com.heli.safety.domain.SafetyEp;
 import com.heli.safety.service.ISafetyEpDisplayService;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +26,18 @@ public class SafetyEpDisplayController extends BaseController {
 
     @Autowired
     private ISafetyEpDisplayService safetyEpDisplayService;
+
+    /**
+     * @description: 指标概览页面数据展示，获取最新一期数据
+     * @author: hong
+     * @date: 2024/9/27 11:05
+     * @version: 1.0
+     */
+    @GetMapping("/newData")
+    public AjaxResult selectNewData() {
+        SafetyEp data = safetyEpDisplayService.selectNewData();
+        return AjaxResult.success(data);
+    }
 
     /**
      * 当月度设备维修总费用 指标23

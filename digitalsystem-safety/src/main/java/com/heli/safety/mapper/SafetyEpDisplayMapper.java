@@ -1,5 +1,6 @@
 package com.heli.safety.mapper;
 
+import com.heli.safety.domain.SafetyEp;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -46,4 +47,5 @@ public interface SafetyEpDisplayMapper {
     List<DisplayEntity> selectCurEquipmentReplacementCost(@Param("startTime") Date startTime,
                                                           @Param("endTime") Date endTime);
 
+    SafetyEp selectNewData();
 }

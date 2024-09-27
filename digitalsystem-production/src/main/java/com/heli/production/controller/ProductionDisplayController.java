@@ -33,7 +33,7 @@ public class ProductionDisplayController extends BaseController {
      * @date: 2024/9/27 9:12
      * @version: 1.0
      */
-    @PreAuthorize("@ss.hasPermi('production:display:newFillingData')")
+//    @PreAuthorize("@ss.hasPermi('production:display:newFillingData')")
     @GetMapping("/newFillingData")
     public AjaxResult newFillingData() {
         ProductionFilling fillingData = productionDisplayService.selectNewFillingData();
@@ -46,7 +46,7 @@ public class ProductionDisplayController extends BaseController {
      * @date: 2024/9/27 9:12
      * @version: 1.0Production_Launch_Completion_Daily_Number
      */
-    @PreAuthorize("@ss.hasPermi('production:display:newLaunchData')")
+//    @PreAuthorize("@ss.hasPermi('production:display:newLaunchData')")
     @GetMapping("/newLaunchData")
     public AjaxResult newLaunchData() {
         DisplayEntity data = productionDisplayService.selectNewLaunchData();
@@ -59,7 +59,7 @@ public class ProductionDisplayController extends BaseController {
      * @date: 2024/9/27 9:12
      * @version: 1.0Production_Launch_Completion_Daily_Number
      */
-    @PreAuthorize("@ss.hasPermi('production:display:newCompletionData')")
+//    @PreAuthorize("@ss.hasPermi('production:display:newCompletionData')")
     @GetMapping("/newCompletionData")
     public AjaxResult newCompletionData() {
         DisplayEntity data = productionDisplayService.selectNewCompletionData();

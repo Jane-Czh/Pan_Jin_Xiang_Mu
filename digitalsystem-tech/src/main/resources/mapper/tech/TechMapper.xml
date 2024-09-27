@@ -8,6 +8,7 @@
         <result property="techId" column="Tech_ID"/>
         <result property="yearAndMonth" column="Year_And_Month"/>
         <result property="nonStandardAvgPreparationDays" column="Non_Standard_AVG_Preparation_Days"/>
+        <result property="nonStandardNum" column="Non_Standard_Num"/>
         <result property="nonStandardOvertimeNum" column="Non_Standard_Overtime_Num"/>
         <result property="completedmonthlyPlancounts" column="CompletedMonthly_PlanCounts"/>
         <result property="completedPlanCount" column="Completed_Plan_Count"/>
@@ -22,6 +23,7 @@
         select Tech_ID,
                Year_And_Month,
                Non_Standard_AVG_Preparation_Days,
+               Non_Standard_Num,
                Non_Standard_Overtime_Num,
                CompletedMonthly_PlanCounts,
                Completed_Plan_Count,
@@ -35,11 +37,11 @@
 
     <!--  数据存在则更新，不存在则插入  -->
     <insert id="insertOrUpdateTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
-        insert into Tech(Year_And_Month,Non_Standard_AVG_Preparation_Days,Non_Standard_Overtime_Num,CompletedMonthly_PlanCounts,Completed_Plan_Count,PRDSchedule_CompletionRate,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
-        values(#{yearAndMonth},#{nonStandardAvgPreparationDays},#{nonStandardOvertimeNum},#{completedmonthlyPlancounts},#{completedPlanCount},#{prdscheduleCompletionrate},#{createBy},#{createTime},#{updateBy},#{updateTime})
+        insert into Tech(Year_And_Month,Non_Standard_AVG_Preparation_Days,Non_Standard_Num,Non_Standard_Overtime_Num,CompletedMonthly_PlanCounts,Completed_Plan_Count,PRDSchedule_CompletionRate,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
+        values(#{yearAndMonth},#{nonStandardAvgPreparationDays},#{nonStandardNum},#{nonStandardOvertimeNum},#{completedmonthlyPlancounts},#{completedPlanCount},#{prdscheduleCompletionrate},#{createBy},#{createTime},#{updateBy},#{updateTime})
         on duplicate key update
         Year_And_Month = values(Year_And_Month),Non_Standard_AVG_Preparation_Days = values(Non_Standard_AVG_Preparation_Days),
-        Non_Standard_Overtime_Num = values(Non_Standard_Overtime_Num),CompletedMonthly_PlanCounts = values(CompletedMonthly_PlanCounts),Completed_Plan_Count = values(Completed_Plan_Count),
+        Non_Standard_Num = values(Non_Standard_Num),Non_Standard_Overtime_Num = values(Non_Standard_Overtime_Num),CompletedMonthly_PlanCounts = values(CompletedMonthly_PlanCounts),Completed_Plan_Count = values(Completed_Plan_Count),
         PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)
     </insert>
 
@@ -151,6 +153,7 @@
         <where>
             <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>
             <if test="nonStandardAvgPreparationDays != null ">and Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays}</if>
+            <if test="nonStandardNum != null ">and Non_Standard_Num = #{nonStandardNum}</if>
             <if test="nonStandardOvertimeNum != null ">and Non_Standard_Overtime_Num = #{nonStandardOvertimeNum}</if>
             <if test="completedmonthlyPlancounts != null ">and CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts}</if>
             <if test="completedPlanCount != null ">and Completed_Plan_Count = #{completedPlanCount}</if>
@@ -167,12 +170,23 @@
         where Year_And_Month = #{yearAndMonth}
     </select>
 
+    <select id="selectNonStandardAVGDaysAndNum" resultType="com.heli.tech.domain.TechNonStandardDisplayDTO">
+        select *
+        from (select Year_And_Month as yearAndMonth, Non_Standard_Num as nonStandardNum, Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays
+              from Tech
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC
+             ) as t
+        order by yearAndMonth ASC
+    </select>
+
 
     <insert id="insertTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
         insert into Tech
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
             <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days,</if>
+            <if test="nonStandardNum != null">Non_Standard_Num,</if>
             <if test="nonStandardOvertimeNum != null">Non_Standard_Overtime_Num,</if>
             <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts,</if>
             <if test="completedPlanCount != null">Completed_Plan_Count,</if>
@@ -185,6 +199,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
             <if test="nonStandardAvgPreparationDays != null">#{nonStandardAvgPreparationDays},</if>
+            <if test="nonStandardNum != null">#{nonStandardNum},</if>
             <if test="nonStandardOvertimeNum != null">#{nonStandardOvertimeNum},</if>
             <if test="completedmonthlyPlancounts != null">#{completedmonthlyPlancounts},</if>
             <if test="completedPlanCount != null">#{completedPlanCount},</if>
@@ -201,6 +216,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
             <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays},</if>
+            <if test="nonStandardNum != null">Non_Standard_Num = #{nonStandardNum},</if>
             <if test="nonStandardOvertimeNum != null">Non_Standard_Overtime_Num = #{nonStandardOvertimeNum},</if>
             <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts},</if>
             <if test="completedPlanCount != null">Completed_Plan_Count = #{completedPlanCount},</if>

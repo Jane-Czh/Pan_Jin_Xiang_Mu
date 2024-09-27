@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.Tech;
+import com.heli.tech.domain.TechNonStandardDisplayDTO;
 import com.ruoyi.common.core.domain.DisplayEntity;
 
 /**
@@ -83,6 +84,8 @@ public interface ITechService {
     public int deleteTechByTechId(Long techId);
 
     boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
+
+ List<TechNonStandardDisplayDTO> selectNonStandardAVGDaysAndNum(Date startTime, Date endTime);
 }
 
 

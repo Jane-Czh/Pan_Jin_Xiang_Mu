@@ -63,15 +63,18 @@ public class TechNonStandardOrderServiceImpl implements ITechNonStandardOrderSer
 
             int nonStandardOrderOvertimeNum = techNonStandardOrderMapper.countNonStandardOrderOvertimeNum(yearAndMonth);
 
+            int nonStandardOrderNum = techNonStandardOrderMapper.countNonStandardOrderNum(yearAndMonth);
+
             BigDecimal nonStandardOrderAvgDays = techNonStandardOrderMapper.countNonStandardOrderAvgDays(yearAndMonth);
 
             Tech tech = new Tech();
             tech.setYearAndMonth(yearAndMonth);
             tech.setNonStandardAvgPreparationDays(nonStandardOrderAvgDays);
+            tech.setNonStandardNum(nonStandardOrderNum);
             tech.setNonStandardOvertimeNum(nonStandardOrderOvertimeNum);
             techService.insertOrUpdateTech(tech);
 
-            log.info("统计结果：超时单数："+nonStandardOrderOvertimeNum+"，平均时长："+nonStandardOrderAvgDays);
+            log.info("统计结果：非标总单数："+ nonStandardOrderNum +" 超时单数："+nonStandardOrderOvertimeNum+"，平均时长："+nonStandardOrderAvgDays);
 
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {

@@ -38,6 +38,14 @@ public class Tech extends BaseEntity {
     @Excel(name = "非标准单平均技术准备天数")
     private BigDecimal nonStandardAvgPreparationDays;
 
+    /**
+     * 非标准单条数
+     */
+    private Integer nonStandardNum;
+
+    /**
+     * 非标准单超时条数
+     */
     private Integer nonStandardOvertimeNum;
 
     /**

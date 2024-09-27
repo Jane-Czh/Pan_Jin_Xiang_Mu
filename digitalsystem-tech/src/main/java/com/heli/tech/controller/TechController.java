@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.heli.tech.domain.TechNonStandardDisplayDTO;
 import com.heli.tech.service.ITechAnnualPlanCountService;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
@@ -71,16 +72,24 @@ public class TechController extends BaseController {
         return toAjax(techService.insertTech(tech));
     }
 
+//    @PreAuthorize("@ss.hasPermi('tech:display:nonStandardAVGPreparationDays')")
+//    @PostMapping("/display/nonStandardAVGPreparationDays")
+//    public TableDataInfo nonStandardAVGPreparationDays(@RequestBody DisplayRequestParam time) {
+//        List<DisplayEntity> list = techService.selectNonStandardAVGPreparationDays(time.getStartTime(), time.getEndTime());
+//        return getDataTable(list);
+//    }
+
     @PreAuthorize("@ss.hasPermi('tech:display:nonStandardAVGPreparationDays')")
     @PostMapping("/display/nonStandardAVGPreparationDays")
     public TableDataInfo nonStandardAVGPreparationDays(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = techService.selectNonStandardAVGPreparationDays(time.getStartTime(),time.getEndTime());
+        List<TechNonStandardDisplayDTO> list = techService.selectNonStandardAVGDaysAndNum(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
     }
+
     @PreAuthorize("@ss.hasPermi('tech:display:prdScheduleCompletionRate')")
     @PostMapping("/display/prdScheduleCompletionRate")
     public TableDataInfo prdScheduleCompletionRate(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = techService.selectPRDScheduleCompletionRate(time.getStartTime(),time.getEndTime());
+        List<DisplayEntity> list = techService.selectPRDScheduleCompletionRate(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
     }
 

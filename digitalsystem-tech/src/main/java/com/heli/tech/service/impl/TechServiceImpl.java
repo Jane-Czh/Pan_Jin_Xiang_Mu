@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.heli.tech.controller.TechController;
+import com.heli.tech.domain.TechNonStandardDisplayDTO;
 import com.heli.tech.mapper.TechAnnualPlanCountMapper;
 import com.heli.tech.service.ITechAnnualPlanCountService;
 import com.ruoyi.common.annotation.Log;
@@ -272,5 +273,11 @@ public class TechServiceImpl implements ITechService {
     @Override
     public boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear) {
         return techMapper.checkTechMonthlyDataIsExistedByYear(naturalYear);
+    }
+
+    @Override
+    public List<TechNonStandardDisplayDTO> selectNonStandardAVGDaysAndNum(Date startTime, Date endTime) {
+        return techMapper.selectNonStandardAVGDaysAndNum(startTime, endTime);
+
     }
 }

@@ -104,4 +104,31 @@
         order by realTime ASC
     </select>
 
+    <!--  查询最新一期数据  -->
+    <select id="selectNewFillingData" resultType="com.heli.production.domain.ProductionFilling">
+        select * from Production
+        where Year_And_Month = (select max(Year_And_Month) from Production)
+    </select>
+
+    <!--  查询最新一期上线数  -->
+    <select id="selectNewLaunchData" resultType="com.ruoyi.common.core.domain.DisplayEntity">
+        select  Real_Time as yearAndMonth,Launch_Number as data from Production_Launch_Completion_Daily_Number
+        where Real_Time = (
+            select max(Real_Time)
+            from Production_Launch_Completion_Daily_Number
+            where Launch_Number is not null
+        )
+    </select>
+
+    <!--  查询最新一期完工数  -->
+    <select id="selectNewCompletionData" resultType="com.ruoyi.common.core.domain.DisplayEntity">
+        select  Real_Time as yearAndMonth,Completion_Number as data from Production_Launch_Completion_Daily_Number
+        where Real_Time = (
+            select max(Real_Time)
+            from Production_Launch_Completion_Daily_Number
+            where Completion_Number is not null
+        )
+    </select>
+
+
 </mapper>

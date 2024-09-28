@@ -254,6 +254,16 @@ public class TechServiceImpl implements ITechService {
     }
 
     @Override
+    public Date selectMaxMonth() {
+        return techMapper.selectMaxMonth();
+    }
+
+    @Override
+    public Tech selectTechByDate(Date date) {
+        return techMapper.selectTechByDate(date);
+    }
+
+    @Override
     public boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear) {
         return techMapper.checkTechMonthlyDataIsExistedByYear(naturalYear);
     }

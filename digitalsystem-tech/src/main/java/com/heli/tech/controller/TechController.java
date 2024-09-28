@@ -1,5 +1,6 @@
 package com.heli.tech.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.TechNewProjectCompletionDTO;
@@ -43,6 +44,19 @@ public class TechController extends BaseController {
     @PostMapping("/data/update")
     public AjaxResult test() {
         return toAjax(techService.updateTechAllData());
+    }
+
+
+    /**
+     * 概览页面
+     */
+//    @PreAuthorize("@ss.hasPermi('tech:monthly:add')")
+    @Log(title = "[技术]指标填报", businessType = BusinessType.INSERT)
+    @GetMapping("/display/newData")
+    public AjaxResult newData() {
+        Date date = techService.selectMaxMonth();
+//        return toAjax(techService.insertTech(tech));
+        return success(techService.selectTechByDate(date));
     }
 
     /**

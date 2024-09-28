@@ -147,6 +147,11 @@
         select max(Year_And_Month)
         from Tech
     </select>
+    <select id="selectTechByDate" resultType="com.heli.tech.domain.Tech">
+        select *
+        from Tech
+        where Year_And_Month = #{yearAndMonth}
+    </select>
 
 
     <insert id="insertTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">

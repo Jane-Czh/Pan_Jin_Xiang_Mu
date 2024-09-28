@@ -94,7 +94,9 @@ public interface ITechService {
     public int deleteTechByTechId(Long techId);
 
 
+    Date selectMaxMonth();
 
+    Tech selectTechByDate(Date date);
 }
 
 

@@ -10,4 +10,5 @@ public class TechNonStandardDisplayDTO {
     private Date yearAndMonth;
     private String nonStandardNum;
     private String nonStandardAvgPreparationDays;
+    private String nonStandardOrderGrowthRate;
 }

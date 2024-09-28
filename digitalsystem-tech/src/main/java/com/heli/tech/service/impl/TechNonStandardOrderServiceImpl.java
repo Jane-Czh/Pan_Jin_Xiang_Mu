@@ -1,7 +1,6 @@
 package com.heli.tech.service.impl;
 
 
-
 import com.alibaba.excel.EasyExcel;
 import com.heli.tech.domain.Tech;
 import com.heli.tech.domain.TechNonStandardOrder;
@@ -45,7 +44,7 @@ public class TechNonStandardOrderServiceImpl implements ITechNonStandardOrderSer
     }
 
     @Override
-    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream , Date yearAndMonth) {
+    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream, Date yearAndMonth) {
         try {
             //若数据存在，删除当月数据
             if (techNonStandardOrderMapper.checkNonStandardOrderUploadStatus(yearAndMonth)) {
@@ -54,27 +53,10 @@ public class TechNonStandardOrderServiceImpl implements ITechNonStandardOrderSer
 
             // 读取文件内容
             log.info("开始读取文件: {}", fileName);
-            EasyExcel.read(inputStream, TechNonStandardOrder.class, new TechNonStandardOrderListener(techNonStandardOrderMapper,yearAndMonth)).sheet().doRead();
-//            return R.ok("读取" + fileName + "文件成功");
+            EasyExcel.read(inputStream, TechNonStandardOrder.class, new TechNonStandardOrderListener(techNonStandardOrderMapper, yearAndMonth)).sheet().doRead();
 
             log.info("读取文件: {} 成功", fileName);
 
-            log.info("开始统计，时间："+yearAndMonth);
-
-            int nonStandardOrderOvertimeNum = techNonStandardOrderMapper.countNonStandardOrderOvertimeNum(yearAndMonth);
-
-            int nonStandardOrderNum = techNonStandardOrderMapper.countNonStandardOrderNum(yearAndMonth);
-
-            BigDecimal nonStandardOrderAvgDays = techNonStandardOrderMapper.countNonStandardOrderAvgDays(yearAndMonth);
-
-            Tech tech = new Tech();
-            tech.setYearAndMonth(yearAndMonth);
-            tech.setNonStandardAvgPreparationDays(nonStandardOrderAvgDays);
-            tech.setNonStandardNum(nonStandardOrderNum);
-            tech.setNonStandardOvertimeNum(nonStandardOrderOvertimeNum);
-            techService.insertOrUpdateTech(tech);
-
-            log.info("统计结果：非标总单数："+ nonStandardOrderNum +" 超时单数："+nonStandardOrderOvertimeNum+"，平均时长："+nonStandardOrderAvgDays);
 
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
@@ -82,6 +64,44 @@ public class TechNonStandardOrderServiceImpl implements ITechNonStandardOrderSer
             log.error("读取 " + fileName + " 文件失败, 原因: {}", e.getMessage());
             return R.fail("读取文件失败,当前上传的文件为：" + fileName);
         }
+    }
+
+    /**
+     * @description: 非标订单统计
+     * @author: hong
+     * @date: 2024/9/28 15:53
+     * @version: 1.0
+     */
+    @Override
+    public void calculateNonStandardOrder(Date yearAndMonth) {
+        log.info("开始统计非标订单统计，时间：" + yearAndMonth);
+
+        Integer nonStandardOrderOvertimeNum = techNonStandardOrderMapper.countNonStandardOrderOvertimeNum(yearAndMonth);
+
+        Integer nonStandardOrderNum = techNonStandardOrderMapper.countNonStandardOrderNum(yearAndMonth);
+
+        BigDecimal nonStandardOrderAvgDays = techNonStandardOrderMapper.countNonStandardOrderAvgDays(yearAndMonth);
+
+        // 获取上月非标订单数
+        Integer nonStandardOrderNumLastMonth = techNonStandardOrderMapper.countNonStandardOrderNum(DateUtils.getLastMonth(yearAndMonth));
+
+        // 计算非标订单同比增幅情况
+        Tech tech = new Tech();
+        if (nonStandardOrderNumLastMonth > 0) {
+            tech.setNonStandardOrderGrowthRate(BigDecimal.valueOf((nonStandardOrderNum - nonStandardOrderNumLastMonth) * 1.0 / nonStandardOrderNumLastMonth * 100));
+        } else {
+            tech.setNonStandardOrderGrowthRate(null);
+        }
+
+        tech.setYearAndMonth(yearAndMonth);
+        tech.setNonStandardAvgPreparationDays(nonStandardOrderAvgDays);
+        tech.setNonStandardNum((long) nonStandardOrderNum);
+        tech.setNonStandardOvertimeNum((long) nonStandardOrderOvertimeNum);
+        techService.insertOrUpdateNonStandardData(tech);
+
+        log.info("统计结果：非标总单数：" + nonStandardOrderNum + " 超时单数：" + nonStandardOrderOvertimeNum
+                + "，平均时长：" + nonStandardOrderAvgDays + "，同比增幅：" + tech.getNonStandardOrderGrowthRate());
+
     }
 
 

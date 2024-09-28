@@ -10,9 +10,14 @@
         <result property="nonStandardAvgPreparationDays" column="Non_Standard_AVG_Preparation_Days"/>
         <result property="nonStandardNum" column="Non_Standard_Num"/>
         <result property="nonStandardOvertimeNum" column="Non_Standard_Overtime_Num"/>
-        <result property="completedmonthlyPlancounts" column="CompletedMonthly_PlanCounts"/>
-        <result property="completedPlanCount" column="Completed_Plan_Count"/>
-        <result property="prdscheduleCompletionrate" column="PRDSchedule_CompletionRate"/>
+        <result property="nonStandardOrderGrowthRate" column="Non_Standard_Order_Growth_Rate"/>
+        <result property="totalProjectCount" column="Total_Project_Count"/>
+        <result property="unstartedProjectCount" column="Unstarted_Project_Count"/>
+        <result property="ongoingProjectCount" column="Ongoing_Project_Count"/>
+        <result property="completedProjectCount" column="Completed_Project_Count"/>
+        <result property="totalPoints" column="Total_Points"/>
+        <result property="accumulatedScore" column="Accumulated_Score"/>
+        <result property="projectPointsPercentage" column="Project_Points_Percentage"/>
         <result property="createBy" column="CREATE_BY"/>
         <result property="createTime" column="CREATE_TIME"/>
         <result property="updateBy" column="UPDATE_BY"/>
@@ -25,9 +30,14 @@
                Non_Standard_AVG_Preparation_Days,
                Non_Standard_Num,
                Non_Standard_Overtime_Num,
-               CompletedMonthly_PlanCounts,
-               Completed_Plan_Count,
-               PRDSchedule_CompletionRate,
+               Non_Standard_Order_Growth_Rate,
+               Total_Project_Count,
+               Unstarted_Project_Count,
+               Ongoing_Project_Count,
+               Completed_Project_Count,
+               Total_Points,
+               Accumulated_Score,
+               Project_Points_Percentage,
                CREATE_BY,
                CREATE_TIME,
                UPDATE_BY,
@@ -36,115 +46,69 @@
     </sql>
 
     <!--  数据存在则更新，不存在则插入  -->
-    <insert id="insertOrUpdateTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
-        insert into Tech(Year_And_Month,Non_Standard_AVG_Preparation_Days,Non_Standard_Num,Non_Standard_Overtime_Num,CompletedMonthly_PlanCounts,Completed_Plan_Count,PRDSchedule_CompletionRate,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)
-        values(#{yearAndMonth},#{nonStandardAvgPreparationDays},#{nonStandardNum},#{nonStandardOvertimeNum},#{completedmonthlyPlancounts},#{completedPlanCount},#{prdscheduleCompletionrate},#{createBy},#{createTime},#{updateBy},#{updateTime})
-        on duplicate key update
-        Year_And_Month = values(Year_And_Month),Non_Standard_AVG_Preparation_Days = values(Non_Standard_AVG_Preparation_Days),
-        Non_Standard_Num = values(Non_Standard_Num),Non_Standard_Overtime_Num = values(Non_Standard_Overtime_Num),CompletedMonthly_PlanCounts = values(CompletedMonthly_PlanCounts),Completed_Plan_Count = values(Completed_Plan_Count),
-        PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)
+    <insert id="insertOrUpdateNonStandardData" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
+        insert into Tech(Year_And_Month, Non_Standard_AVG_Preparation_Days, Non_Standard_Num, Non_Standard_Overtime_Num,
+                         Non_Standard_Order_Growth_Rate)
+        values (#{yearAndMonth}, #{nonStandardAvgPreparationDays}, #{nonStandardNum}, #{nonStandardOvertimeNum},
+                #{nonStandardOrderGrowthRate})
+        on duplicate key update Year_And_Month                    = values(Year_And_Month),
+                                Non_Standard_AVG_Preparation_Days = values(Non_Standard_AVG_Preparation_Days),
+                                Non_Standard_Num                  = values(Non_Standard_Num),
+                                Non_Standard_Overtime_Num         = values(Non_Standard_Overtime_Num),
+                                Non_Standard_Order_Growth_Rate    = values(Non_Standard_Order_Growth_Rate)
     </insert>
 
-    <!--  检查数据库是否有数据  -->
-    <select id="checkDataExist" resultType="boolean">
-        select count(*) from Tech
-    </select>
+    <insert id="insertOrUpdateProjectData" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">
+        insert into Tech(Year_And_Month, Total_Project_Count, Unstarted_Project_Count, Ongoing_Project_Count,
+                         Completed_Project_Count, Total_Points, Accumulated_Score, Project_Points_Percentage)
+        values (#{yearAndMonth}, #{totalProjectCount}, #{unstartedProjectCount}, #{ongoingProjectCount},
+                #{completedProjectCount}, #{totalPoints}, #{accumulatedScore}, #{projectPointsPercentage})
+        on duplicate key update Year_And_Month            = values(Year_And_Month),
+                                Total_Project_Count       = values(Total_Project_Count),
+                                Unstarted_Project_Count   = values(Unstarted_Project_Count),
+                                Ongoing_Project_Count     = values(Ongoing_Project_Count),
+                                Completed_Project_Count   = values(Completed_Project_Count),
+                                Total_Points              = values(Total_Points),
+                                Accumulated_Score         = values(Accumulated_Score),
+                                Project_Points_Percentage = values(Project_Points_Percentage)
+    </insert>
 
-    <!--  获取当年已经上传数据的最大月份  -->
-    <select id="selectMaxMonthByYear" resultType="Date">
-        select max(Year_And_Month) as yearAndMonth
-        from Tech
-        where Year_And_Month like concat(#{year}, '%')
-    </select>
-
-    <!--  获取当年已经上传数据的最小月份  -->
-    <select id="selectMinMonthByYear" resultType="Date">
-        select min(Year_And_Month) as yearAndMonth
-        from Tech
-        where Year_And_Month like concat(#{year}, '%')
-    </select>
-
-    <!-- 统计当年已经完成的数量,要求年份相同，月份小于等于传入参数的月份 -->
-    <select id="countAnnualCompletionNumber" parameterType="Date" resultType="long">
-        select sum(CompletedMonthly_PlanCounts) as num
-        from Tech
-        where DATE_FORMAT(Year_And_Month,'%y') like DATE_FORMAT(#{yearAndMonth},'%y')
-        and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth}
-    </select>
-<!--    <select id="countAnnualCompletionNumber" parameterType="int" resultType="long">-->
-<!--        select sum(CompletedMonthly_PlanCounts) as num-->
-<!--        from Tech-->
-<!--        where Year_And_Month like concat('%', #{year}, '%') and Year_And_Month-->
-<!--    </select>-->
-
-    <!--检查当月数据是否上传-->
-    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM Tech WHERE Year_And_Month=#{yearAndMonth})
-    </select>
-
-    <select id="checkCompletionIsExisted" resultType="java.lang.Boolean">
-        select count(*) from Tech
-        where Year_And_Month = #{yearAndMonth} and Completed_Plan_Count is not null
-    </select>
-
-    <select id="selectCompletionDataNumByYear" resultType="int">
-        select count(*) from Tech
-        where DATE_FORMAT(Year_And_Month,'%Y') = DATE_FORMAT(#{yearAndMonth},'%Y') and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth} and Completed_Plan_Count is not null
-    </select>
-
-    <!--  查询最小月份  -->
-    <select id="selectMinMonth" resultType="java.util.Date">
-        select min(Year_And_Month) as yearAndMonth
-        from Tech
-    </select>
-
-    <!--  查询最大月份  -->
-    <select id="selectMaxMonth" resultType="java.util.Date">
-        select max(Year_And_Month) as yearAndMonth
-        from Tech
-    </select>
-
-
-
-    <!-- 非标订单平均技术准备天数 指标47 -->
-    <select id="selectNonStandardAVGPreparationDays" resultType="map">
+    <!--  指标展示，非标订单平均准备天数和数量  -->
+    <select id="selectNonStandardAVGDaysAndNum" resultType="com.heli.tech.domain.TechNonStandardDisplayDTO">
         select *
-        from (select Year_And_Month as yearAndMonth, Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays
+        from (select Year_And_Month                    as yearAndMonth,
+                     Non_Standard_Num                  as nonStandardNum,
+                     Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays,
+                     Non_Standard_Order_Growth_Rate    as nonStandardOrderGrowthRate
               from Tech
               where Year_And_Month between #{startTime} and #{endTime}
-              order by Year_And_Month DESC
-             ) as t
+              order by Year_And_Month DESC) as t
         order by yearAndMonth ASC
     </select>
 
-    <!-- 研发项目计划进度完成率 指标71 -->
-    <select id="selectPRDScheduleCompletionRate" resultType="map">
+    <!--  指标展示，展示项目进度情况  -->
+    <select id="selectProjectProgress" resultType="com.heli.tech.domain.TechNewProjectProgressDTO">
         select *
-        from (select Year_And_Month as yearAndMonth, PRDSchedule_CompletionRate as prdScheduleCompletionRate
+        from (select Year_And_Month          as yearAndMonth,
+                     Completed_Project_Count as completedProjectCount,
+                     Ongoing_Project_Count   as ongoingProjectCount,
+                     Unstarted_Project_Count as unstartedProjectCount
               from Tech
               where Year_And_Month between #{startTime} and #{endTime}
-              order by Year_And_Month DESC
-             ) as t
+              order by Year_And_Month DESC) as t
         order by yearAndMonth ASC
     </select>
 
-
-
-    <!--  批量更新tech表  -->
-    <insert id="batchUpdateTech" parameterType="ArrayList">
-        insert into Tech(Year_And_Month,PRDSchedule_CompletionRate)
-        VALUES
-        <foreach collection="teches" item="item" separator=",">
-            (#{item.yearAndMonth},#{item.prdscheduleCompletionrate})
-        </foreach>
-        on duplicate key update
-        Year_And_Month = values(Year_And_Month),PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate)
-    </insert>
-
-    <!--检查当前年度，是否存在月度数据，存在则更新月度数据-->
-    <select id="checkTechMonthlyDataIsExistedByYear" resultType="boolean">
-        select count(*) from Tech
-        where DATE_FORMAT(Year_And_Month,'%Y') = #{naturalYear}
+    <!--  指标展示，展示项目完成情况  -->
+    <select id="selectProjectCompletion" resultType="com.heli.tech.domain.TechNewProjectCompletionDTO">
+        select *
+        from (select Year_And_Month            as yearAndMonth,
+                     Total_Project_Count       as totalProjectCount,
+                     Project_Points_Percentage as projectPointsPercentage
+              from Tech
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC) as t
+        order by yearAndMonth ASC
     </select>
 
 
@@ -152,12 +116,22 @@
         <include refid="selectTechVo"/>
         <where>
             <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>
-            <if test="nonStandardAvgPreparationDays != null ">and Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays}</if>
+            <if test="nonStandardAvgPreparationDays != null ">and Non_Standard_AVG_Preparation_Days =
+                #{nonStandardAvgPreparationDays}
+            </if>
             <if test="nonStandardNum != null ">and Non_Standard_Num = #{nonStandardNum}</if>
             <if test="nonStandardOvertimeNum != null ">and Non_Standard_Overtime_Num = #{nonStandardOvertimeNum}</if>
-            <if test="completedmonthlyPlancounts != null ">and CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts}</if>
-            <if test="completedPlanCount != null ">and Completed_Plan_Count = #{completedPlanCount}</if>
-            <if test="prdscheduleCompletionrate != null ">and PRDSchedule_CompletionRate = #{prdscheduleCompletionrate}</if>
+            <if test="totalProjectCount != null ">and Total_Project_Count = #{totalProjectCount}</if>
+            <if test="unstartedProjectCount != null ">and Unstarted_Project_Count = #{unstartedProjectCount}</if>
+            <if test="ongoingProjectCount != null ">and Ongoing_Project_Count = #{ongoingProjectCount}</if>
+            <if test="completedProjectCount != null ">and Completed_Project_Count = #{completedProjectCount}</if>
+            <if test="totalPoints != null ">and Total_Points = #{totalPoints}</if>
+            <if test="accumulatedScore != null ">and Accumulated_Score = #{accumulatedScore}</if>
+            <if test="projectPointsPercentage != null ">and Project_Points_Percentage = #{projectPointsPercentage}</if>
+            <if test="createBy != null  and createBy != ''">and CREATE_BY = #{createBy}</if>
+            <if test="createTime != null ">and CREATE_TIME = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and UPDATE_BY = #{updateBy}</if>
+            <if test="updateTime != null ">and UPDATE_TIME = #{updateTime}</if>
         </where>
     </select>
 
@@ -165,19 +139,13 @@
         <include refid="selectTechVo"/>
         where Tech_ID = #{techId}
     </select>
-    <select id="selectTechByDate" resultType="com.heli.tech.domain.Tech">
-        <include refid="selectTechVo"/>
-        where Year_And_Month = #{yearAndMonth}
+    <select id="selectMinMonth" resultType="java.util.Date">
+        select min(Year_And_Month)
+        from Tech
     </select>
-
-    <select id="selectNonStandardAVGDaysAndNum" resultType="com.heli.tech.domain.TechNonStandardDisplayDTO">
-        select *
-        from (select Year_And_Month as yearAndMonth, Non_Standard_Num as nonStandardNum, Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays
-              from Tech
-              where Year_And_Month between #{startTime} and #{endTime}
-              order by Year_And_Month DESC
-             ) as t
-        order by yearAndMonth ASC
+    <select id="selectMaxMonth" resultType="java.util.Date">
+        select max(Year_And_Month)
+        from Tech
     </select>
 
 
@@ -188,9 +156,13 @@
             <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days,</if>
             <if test="nonStandardNum != null">Non_Standard_Num,</if>
             <if test="nonStandardOvertimeNum != null">Non_Standard_Overtime_Num,</if>
-            <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts,</if>
-            <if test="completedPlanCount != null">Completed_Plan_Count,</if>
-            <if test="prdscheduleCompletionrate != null">PRDSchedule_CompletionRate,</if>
+            <if test="totalProjectCount != null">Total_Project_Count,</if>
+            <if test="unstartedProjectCount != null">Unstarted_Project_Count,</if>
+            <if test="ongoingProjectCount != null">Ongoing_Project_Count,</if>
+            <if test="completedProjectCount != null">Completed_Project_Count,</if>
+            <if test="totalPoints != null">Total_Points,</if>
+            <if test="accumulatedScore != null">Accumulated_Score,</if>
+            <if test="projectPointsPercentage != null">Project_Points_Percentage,</if>
             <if test="createBy != null">CREATE_BY,</if>
             <if test="createTime != null">CREATE_TIME,</if>
             <if test="updateBy != null">UPDATE_BY,</if>
@@ -201,9 +173,13 @@
             <if test="nonStandardAvgPreparationDays != null">#{nonStandardAvgPreparationDays},</if>
             <if test="nonStandardNum != null">#{nonStandardNum},</if>
             <if test="nonStandardOvertimeNum != null">#{nonStandardOvertimeNum},</if>
-            <if test="completedmonthlyPlancounts != null">#{completedmonthlyPlancounts},</if>
-            <if test="completedPlanCount != null">#{completedPlanCount},</if>
-            <if test="prdscheduleCompletionrate != null">#{prdscheduleCompletionrate},</if>
+            <if test="totalProjectCount != null">#{totalProjectCount},</if>
+            <if test="unstartedProjectCount != null">#{unstartedProjectCount},</if>
+            <if test="ongoingProjectCount != null">#{ongoingProjectCount},</if>
+            <if test="completedProjectCount != null">#{completedProjectCount},</if>
+            <if test="totalPoints != null">#{totalPoints},</if>
+            <if test="accumulatedScore != null">#{accumulatedScore},</if>
+            <if test="projectPointsPercentage != null">#{projectPointsPercentage},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -215,12 +191,18 @@
         update Tech
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
-            <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays},</if>
+            <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days =
+                #{nonStandardAvgPreparationDays},
+            </if>
             <if test="nonStandardNum != null">Non_Standard_Num = #{nonStandardNum},</if>
             <if test="nonStandardOvertimeNum != null">Non_Standard_Overtime_Num = #{nonStandardOvertimeNum},</if>
-            <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts},</if>
-            <if test="completedPlanCount != null">Completed_Plan_Count = #{completedPlanCount},</if>
-            <if test="prdscheduleCompletionrate != null">PRDSchedule_CompletionRate = #{prdscheduleCompletionrate},</if>
+            <if test="totalProjectCount != null">Total_Project_Count = #{totalProjectCount},</if>
+            <if test="unstartedProjectCount != null">Unstarted_Project_Count = #{unstartedProjectCount},</if>
+            <if test="ongoingProjectCount != null">Ongoing_Project_Count = #{ongoingProjectCount},</if>
+            <if test="completedProjectCount != null">Completed_Project_Count = #{completedProjectCount},</if>
+            <if test="totalPoints != null">Total_Points = #{totalPoints},</if>
+            <if test="accumulatedScore != null">Accumulated_Score = #{accumulatedScore},</if>
+            <if test="projectPointsPercentage != null">Project_Points_Percentage = #{projectPointsPercentage},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
@@ -242,3 +224,247 @@
         </foreach>
     </delete>
 </mapper>
+
+
+        <!--<?xml version="1.0" encoding="UTF-8" ?>-->
+        <!--<!DOCTYPE mapper-->
+        <!--        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+        <!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+        <!--<mapper namespace="com.heli.tech.mapper.TechMapper">-->
+
+        <!--    <resultMap type="Tech" id="TechResult">-->
+        <!--        <result property="techId" column="Tech_ID"/>-->
+        <!--        <result property="yearAndMonth" column="Year_And_Month"/>-->
+        <!--        <result property="nonStandardAvgPreparationDays" column="Non_Standard_AVG_Preparation_Days"/>-->
+        <!--        <result property="nonStandardNum" column="Non_Standard_Num"/>-->
+        <!--        <result property="nonStandardOvertimeNum" column="Non_Standard_Overtime_Num"/>-->
+        <!--        <result property="completedmonthlyPlancounts" column="CompletedMonthly_PlanCounts"/>-->
+        <!--        <result property="completedPlanCount" column="Completed_Plan_Count"/>-->
+        <!--        <result property="prdscheduleCompletionrate" column="PRDSchedule_CompletionRate"/>-->
+        <!--        <result property="createBy" column="CREATE_BY"/>-->
+        <!--        <result property="createTime" column="CREATE_TIME"/>-->
+        <!--        <result property="updateBy" column="UPDATE_BY"/>-->
+        <!--        <result property="updateTime" column="UPDATE_TIME"/>-->
+        <!--    </resultMap>-->
+
+        <!--    <sql id="selectTechVo">-->
+        <!--        select Tech_ID,-->
+        <!--               Year_And_Month,-->
+        <!--               Non_Standard_AVG_Preparation_Days,-->
+        <!--               Non_Standard_Num,-->
+        <!--               Non_Standard_Overtime_Num,-->
+        <!--               CompletedMonthly_PlanCounts,-->
+        <!--               Completed_Plan_Count,-->
+        <!--               PRDSchedule_CompletionRate,-->
+        <!--               CREATE_BY,-->
+        <!--               CREATE_TIME,-->
+        <!--               UPDATE_BY,-->
+        <!--               UPDATE_TIME-->
+        <!--        from Tech-->
+        <!--    </sql>-->
+
+        <!--    &lt;!&ndash;  数据存在则更新，不存在则插入  &ndash;&gt;-->
+        <!--    <insert id="insertOrUpdateTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">-->
+        <!--        insert into Tech(Year_And_Month,Non_Standard_AVG_Preparation_Days,Non_Standard_Num,Non_Standard_Overtime_Num,CompletedMonthly_PlanCounts,Completed_Plan_Count,PRDSchedule_CompletionRate,CREATE_BY,CREATE_TIME,UPDATE_BY,UPDATE_TIME)-->
+        <!--        values(#{yearAndMonth},#{nonStandardAvgPreparationDays},#{nonStandardNum},#{nonStandardOvertimeNum},#{completedmonthlyPlancounts},#{completedPlanCount},#{prdscheduleCompletionrate},#{createBy},#{createTime},#{updateBy},#{updateTime})-->
+        <!--        on duplicate key update-->
+        <!--        Year_And_Month = values(Year_And_Month),Non_Standard_AVG_Preparation_Days = values(Non_Standard_AVG_Preparation_Days),-->
+        <!--        Non_Standard_Num = values(Non_Standard_Num),Non_Standard_Overtime_Num = values(Non_Standard_Overtime_Num),CompletedMonthly_PlanCounts = values(CompletedMonthly_PlanCounts),Completed_Plan_Count = values(Completed_Plan_Count),-->
+        <!--        PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate),CREATE_BY = values(CREATE_BY),CREATE_TIME = values(CREATE_TIME),UPDATE_BY = values(UPDATE_BY),UPDATE_TIME = values(UPDATE_TIME)-->
+        <!--    </insert>-->
+
+        <!--    &lt;!&ndash;  检查数据库是否有数据  &ndash;&gt;-->
+        <!--    <select id="checkDataExist" resultType="boolean">-->
+        <!--        select count(*) from Tech-->
+        <!--    </select>-->
+
+        <!--    &lt;!&ndash;  获取当年已经上传数据的最大月份  &ndash;&gt;-->
+        <!--    <select id="selectMaxMonthByYear" resultType="Date">-->
+        <!--        select max(Year_And_Month) as yearAndMonth-->
+        <!--        from Tech-->
+        <!--        where Year_And_Month like concat(#{year}, '%')-->
+        <!--    </select>-->
+
+        <!--    &lt;!&ndash;  获取当年已经上传数据的最小月份  &ndash;&gt;-->
+        <!--    <select id="selectMinMonthByYear" resultType="Date">-->
+        <!--        select min(Year_And_Month) as yearAndMonth-->
+        <!--        from Tech-->
+        <!--        where Year_And_Month like concat(#{year}, '%')-->
+        <!--    </select>-->
+
+        <!--    &lt;!&ndash; 统计当年已经完成的数量,要求年份相同，月份小于等于传入参数的月份 &ndash;&gt;-->
+        <!--    <select id="countAnnualCompletionNumber" parameterType="Date" resultType="long">-->
+        <!--        select sum(CompletedMonthly_PlanCounts) as num-->
+        <!--        from Tech-->
+        <!--        where DATE_FORMAT(Year_And_Month,'%y') like DATE_FORMAT(#{yearAndMonth},'%y')-->
+        <!--        and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth}-->
+        <!--    </select>-->
+        <!--&lt;!&ndash;    <select id="countAnnualCompletionNumber" parameterType="int" resultType="long">&ndash;&gt;-->
+        <!--&lt;!&ndash;        select sum(CompletedMonthly_PlanCounts) as num&ndash;&gt;-->
+        <!--&lt;!&ndash;        from Tech&ndash;&gt;-->
+        <!--&lt;!&ndash;        where Year_And_Month like concat('%', #{year}, '%') and Year_And_Month&ndash;&gt;-->
+        <!--&lt;!&ndash;    </select>&ndash;&gt;-->
+
+        <!--    &lt;!&ndash;检查当月数据是否上传&ndash;&gt;-->
+        <!--    <select id="checkTechMonthlyDataIsExisted" parameterType="Date" resultType="boolean">-->
+        <!--        SELECT EXISTS(SELECT 1 FROM Tech WHERE Year_And_Month=#{yearAndMonth})-->
+        <!--    </select>-->
+
+        <!--    <select id="checkCompletionIsExisted" resultType="java.lang.Boolean">-->
+        <!--        select count(*) from Tech-->
+        <!--        where Year_And_Month = #{yearAndMonth} and Completed_Plan_Count is not null-->
+        <!--    </select>-->
+
+        <!--    <select id="selectCompletionDataNumByYear" resultType="int">-->
+        <!--        select count(*) from Tech-->
+        <!--        where DATE_FORMAT(Year_And_Month,'%Y') = DATE_FORMAT(#{yearAndMonth},'%Y') and Year_And_Month <![CDATA[<= ]]> #{yearAndMonth} and Completed_Plan_Count is not null-->
+        <!--    </select>-->
+
+        <!--    &lt;!&ndash;  查询最小月份  &ndash;&gt;-->
+        <!--    <select id="selectMinMonth" resultType="java.util.Date">-->
+        <!--        select min(Year_And_Month) as yearAndMonth-->
+        <!--        from Tech-->
+        <!--    </select>-->
+
+        <!--    &lt;!&ndash;  查询最大月份  &ndash;&gt;-->
+        <!--    <select id="selectMaxMonth" resultType="java.util.Date">-->
+        <!--        select max(Year_And_Month) as yearAndMonth-->
+        <!--        from Tech-->
+        <!--    </select>-->
+
+
+        <!--    &lt;!&ndash; 非标订单平均技术准备天数 指标47 &ndash;&gt;-->
+        <!--    <select id="selectNonStandardAVGPreparationDays" resultType="map">-->
+        <!--        select *-->
+        <!--        from (select Year_And_Month as yearAndMonth, Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays-->
+        <!--              from Tech-->
+        <!--              where Year_And_Month between #{startTime} and #{endTime}-->
+        <!--              order by Year_And_Month DESC-->
+        <!--             ) as t-->
+        <!--        order by yearAndMonth ASC-->
+        <!--    </select>-->
+
+        <!--    &lt;!&ndash; 研发项目计划进度完成率 指标71 &ndash;&gt;-->
+        <!--    <select id="selectPRDScheduleCompletionRate" resultType="map">-->
+        <!--        select *-->
+        <!--        from (select Year_And_Month as yearAndMonth, PRDSchedule_CompletionRate as prdScheduleCompletionRate-->
+        <!--              from Tech-->
+        <!--              where Year_And_Month between #{startTime} and #{endTime}-->
+        <!--              order by Year_And_Month DESC-->
+        <!--             ) as t-->
+        <!--        order by yearAndMonth ASC-->
+        <!--    </select>-->
+
+
+        <!--    &lt;!&ndash;  批量更新tech表  &ndash;&gt;-->
+        <!--    <insert id="batchUpdateTech" parameterType="ArrayList">-->
+        <!--        insert into Tech(Year_And_Month,PRDSchedule_CompletionRate)-->
+        <!--        VALUES-->
+        <!--        <foreach collection="teches" item="item" separator=",">-->
+        <!--            (#{item.yearAndMonth},#{item.prdscheduleCompletionrate})-->
+        <!--        </foreach>-->
+        <!--        on duplicate key update-->
+        <!--        Year_And_Month = values(Year_And_Month),PRDSchedule_CompletionRate = values(PRDSchedule_CompletionRate)-->
+        <!--    </insert>-->
+
+        <!--    &lt;!&ndash;检查当前年度，是否存在月度数据，存在则更新月度数据&ndash;&gt;-->
+        <!--    <select id="checkTechMonthlyDataIsExistedByYear" resultType="boolean">-->
+        <!--        select count(*) from Tech-->
+        <!--        where DATE_FORMAT(Year_And_Month,'%Y') = #{naturalYear}-->
+        <!--    </select>-->
+
+
+        <!--    <select id="selectTechList" parameterType="Tech" resultMap="TechResult">-->
+        <!--        <include refid="selectTechVo"/>-->
+        <!--        <where>-->
+        <!--            <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>-->
+        <!--            <if test="nonStandardAvgPreparationDays != null ">and Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays}</if>-->
+        <!--            <if test="nonStandardNum != null ">and Non_Standard_Num = #{nonStandardNum}</if>-->
+        <!--            <if test="nonStandardOvertimeNum != null ">and Non_Standard_Overtime_Num = #{nonStandardOvertimeNum}</if>-->
+        <!--            <if test="completedmonthlyPlancounts != null ">and CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts}</if>-->
+        <!--            <if test="completedPlanCount != null ">and Completed_Plan_Count = #{completedPlanCount}</if>-->
+        <!--            <if test="prdscheduleCompletionrate != null ">and PRDSchedule_CompletionRate = #{prdscheduleCompletionrate}</if>-->
+        <!--        </where>-->
+        <!--    </select>-->
+
+        <!--    <select id="selectTechByTechId" parameterType="Long" resultMap="TechResult">-->
+        <!--        <include refid="selectTechVo"/>-->
+        <!--        where Tech_ID = #{techId}-->
+        <!--    </select>-->
+        <!--    <select id="selectTechByDate" resultType="com.heli.tech.domain.Tech">-->
+        <!--        <include refid="selectTechVo"/>-->
+        <!--        where Year_And_Month = #{yearAndMonth}-->
+        <!--    </select>-->
+
+        <!--    <select id="selectNonStandardAVGDaysAndNum" resultType="com.heli.tech.domain.TechNonStandardDisplayDTO">-->
+        <!--        select *-->
+        <!--        from (select Year_And_Month as yearAndMonth, Non_Standard_Num as nonStandardNum, Non_Standard_AVG_Preparation_Days as nonStandardAVGPreparationDays-->
+        <!--              from Tech-->
+        <!--              where Year_And_Month between #{startTime} and #{endTime}-->
+        <!--              order by Year_And_Month DESC-->
+        <!--             ) as t-->
+        <!--        order by yearAndMonth ASC-->
+        <!--    </select>-->
+
+
+        <!--    <insert id="insertTech" parameterType="Tech" useGeneratedKeys="true" keyProperty="techId">-->
+        <!--        insert into Tech-->
+        <!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+        <!--            <if test="yearAndMonth != null">Year_And_Month,</if>-->
+        <!--            <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days,</if>-->
+        <!--            <if test="nonStandardNum != null">Non_Standard_Num,</if>-->
+        <!--            <if test="nonStandardOvertimeNum != null">Non_Standard_Overtime_Num,</if>-->
+        <!--            <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts,</if>-->
+        <!--            <if test="completedPlanCount != null">Completed_Plan_Count,</if>-->
+        <!--            <if test="prdscheduleCompletionrate != null">PRDSchedule_CompletionRate,</if>-->
+        <!--            <if test="createBy != null">CREATE_BY,</if>-->
+        <!--            <if test="createTime != null">CREATE_TIME,</if>-->
+        <!--            <if test="updateBy != null">UPDATE_BY,</if>-->
+        <!--            <if test="updateTime != null">UPDATE_TIME,</if>-->
+        <!--        </trim>-->
+        <!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+        <!--            <if test="yearAndMonth != null">#{yearAndMonth},</if>-->
+        <!--            <if test="nonStandardAvgPreparationDays != null">#{nonStandardAvgPreparationDays},</if>-->
+        <!--            <if test="nonStandardNum != null">#{nonStandardNum},</if>-->
+        <!--            <if test="nonStandardOvertimeNum != null">#{nonStandardOvertimeNum},</if>-->
+        <!--            <if test="completedmonthlyPlancounts != null">#{completedmonthlyPlancounts},</if>-->
+        <!--            <if test="completedPlanCount != null">#{completedPlanCount},</if>-->
+        <!--            <if test="prdscheduleCompletionrate != null">#{prdscheduleCompletionrate},</if>-->
+        <!--            <if test="createBy != null">#{createBy},</if>-->
+        <!--            <if test="createTime != null">#{createTime},</if>-->
+        <!--            <if test="updateBy != null">#{updateBy},</if>-->
+        <!--            <if test="updateTime != null">#{updateTime},</if>-->
+        <!--        </trim>-->
+        <!--    </insert>-->
+
+        <!--    <update id="updateTech" parameterType="Tech">-->
+        <!--        update Tech-->
+        <!--        <trim prefix="SET" suffixOverrides=",">-->
+        <!--            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>-->
+        <!--            <if test="nonStandardAvgPreparationDays != null">Non_Standard_AVG_Preparation_Days = #{nonStandardAvgPreparationDays},</if>-->
+        <!--            <if test="nonStandardNum != null">Non_Standard_Num = #{nonStandardNum},</if>-->
+        <!--            <if test="nonStandardOvertimeNum != null">Non_Standard_Overtime_Num = #{nonStandardOvertimeNum},</if>-->
+        <!--            <if test="completedmonthlyPlancounts != null">CompletedMonthly_PlanCounts = #{completedmonthlyPlancounts},</if>-->
+        <!--            <if test="completedPlanCount != null">Completed_Plan_Count = #{completedPlanCount},</if>-->
+        <!--            <if test="prdscheduleCompletionrate != null">PRDSchedule_CompletionRate = #{prdscheduleCompletionrate},</if>-->
+        <!--            <if test="createBy != null">CREATE_BY = #{createBy},</if>-->
+        <!--            <if test="createTime != null">CREATE_TIME = #{createTime},</if>-->
+        <!--            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>-->
+        <!--            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>-->
+        <!--        </trim>-->
+        <!--        where Tech_ID = #{techId}-->
+        <!--    </update>-->
+
+        <!--    <delete id="deleteTechByTechId" parameterType="Long">-->
+        <!--        delete-->
+        <!--        from Tech-->
+        <!--        where Tech_ID = #{techId}-->
+        <!--    </delete>-->
+
+        <!--    <delete id="deleteTechByTechIds" parameterType="String">-->
+        <!--        delete from Tech where Tech_ID in-->
+        <!--        <foreach item="techId" collection="array" open="(" separator="," close=")">-->
+        <!--            #{techId}-->
+        <!--        </foreach>-->
+        <!--    </delete>-->
+        <!--</mapper>-->

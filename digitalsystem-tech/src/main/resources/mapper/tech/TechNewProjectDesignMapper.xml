@@ -62,6 +62,31 @@
         where Year_And_Month = #{yearAndMonth}
     </delete>
 
+    <select id="selectTechTotalProjectCount" resultType="java.lang.Integer">
+        select count(*) from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <select id="selectTechUnstartedProjectCount" resultType="java.lang.Integer">
+        select count(*) from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth} and Completion_Rate = '0'
+    </select>
+
+    <select id="selectTechCompletedProjectCount" resultType="java.lang.Integer">
+        select count(*) from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth} and Completion_Rate = '100'
+    </select>
+
+    <select id="selectTechTotalPoints" resultType="java.math.BigDecimal">
+        select sum(Project_Points) from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
+    <select id="selectTechAccumulatedScore" resultType="java.math.BigDecimal">
+        select sum(Current_Points) from Tech_New_Project_Design
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
 
 
     <select id="selectTechNewProjectDesignList" parameterType="TechNewProjectDesign" resultMap="TechNewProjectDesignResult">
@@ -88,6 +113,8 @@
         <include refid="selectTechNewProjectDesignVo"/>
         where TD_id = #{tdId}
     </select>
+
+
 
     <insert id="insertTechNewProjectDesign" parameterType="TechNewProjectDesign" useGeneratedKeys="true" keyProperty="tdId">
         insert into Tech_New_Project_Design

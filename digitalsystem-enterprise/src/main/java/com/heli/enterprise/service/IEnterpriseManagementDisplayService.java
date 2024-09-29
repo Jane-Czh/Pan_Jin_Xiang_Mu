@@ -2,6 +2,7 @@ package com.heli.enterprise.service;
 
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsDailyClearingSettlement;
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
+import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +32,8 @@ public interface IEnterpriseManagementDisplayService {
     List<EnterpriseManagementIndicatorsDailyClearingSettlement> selectDailyClearingSettlement(Date startTime, Date endTime);
 
     List<EnterpriseManagementIndicatorsManagement> selectManagement(Date startTime, Date endTime);
+
+    EnterpriseManagementMonthlyData selectSalaryNewData();
+
+    EnterpriseManagementMonthlyData selectMonthlyNewData();
 }

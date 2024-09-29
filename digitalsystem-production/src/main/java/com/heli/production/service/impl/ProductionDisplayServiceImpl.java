@@ -1,5 +1,6 @@
 package com.heli.production.service.impl;
 
+import com.heli.production.domain.ProductionFilling;
 import com.heli.production.mapper.ProductionDisplayMapper;
 import com.heli.production.service.IProductionDisplayService;
 import com.ruoyi.common.core.domain.DisplayEntity;
@@ -71,6 +72,21 @@ public class ProductionDisplayServiceImpl implements IProductionDisplayService {
     @Override
     public List<DisplayEntity> selectAnnualLaunchAndCompletion(Date startTime, Date endTime) {
         return productionDisplayMapper.selectAnnualLaunchAndCompletion(startTime, endTime);
+    }
+
+    @Override
+    public ProductionFilling selectNewFillingData() {
+        return productionDisplayMapper.selectNewFillingData();
+    }
+
+    @Override
+    public DisplayEntity selectNewLaunchData() {
+        return productionDisplayMapper.selectNewLaunchData();
+    }
+
+    @Override
+    public DisplayEntity selectNewCompletionData() {
+        return productionDisplayMapper.selectNewCompletionData();
     }
 
 }

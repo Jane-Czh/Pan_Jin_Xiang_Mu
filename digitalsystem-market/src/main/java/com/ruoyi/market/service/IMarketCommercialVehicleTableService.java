@@ -66,4 +66,8 @@ public interface IMarketCommercialVehicleTableService
     public int deleteMarketCommercialVehicleTableByMcvId(Long mcvId);
 
     List<AverageResult> selectcountAverage();
+
+    List<AverageResult> selectLightWeight();
+
+    List<AverageResult> selectBigWeight();
 }

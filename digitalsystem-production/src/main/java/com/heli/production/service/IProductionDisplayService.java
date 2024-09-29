@@ -1,5 +1,6 @@
 package com.heli.production.service;
 
+import com.heli.production.domain.ProductionFilling;
 import com.ruoyi.common.core.domain.DisplayEntity;
 
 import java.util.Date;
@@ -61,6 +62,9 @@ public interface IProductionDisplayService {
     List<DisplayEntity> selectAnnualLaunchAndCompletion(Date startTime, Date endTime);
 
 
+    ProductionFilling selectNewFillingData();
 
+    DisplayEntity selectNewLaunchData();
 
+    DisplayEntity selectNewCompletionData();
 }

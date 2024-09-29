@@ -174,6 +174,17 @@ export default {
                     });
                 }
             };
+
+            const labelOption = {
+                show: true,
+                position: app.config.position,
+                distance: app.config.distance,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                rotate: app.config.rotate,
+                formatter: '{c}',
+                fontSize: 14,
+            };
             // 根据条件决定是否添加目标值系列
             let series = [
                 {
@@ -206,19 +217,6 @@ export default {
                     data: this.targetValueArray,
                 });
             }
-            const labelOption = {
-                show: true,
-                position: app.config.position,
-                distance: app.config.distance,
-                align: app.config.align,
-                verticalAlign: app.config.verticalAlign,
-                rotate: app.config.rotate,
-                formatter: '{c}',
-                fontSize: 12,
-                rich: {
-                    name: {}
-                }
-            };
             this.option = {
                 title: {
                     text: '累计人均收入',
@@ -272,14 +270,6 @@ export default {
                 }
             });
         },
-        // defaultMonth() {
-        //     const currentDate = new Date();
-        //     const currentYear = currentDate.getFullYear();
-        //     const currentMonth = currentDate.getMonth() + 1;
-        //     const startDate = new Date(currentYear, 0, 1);
-        //     const endDate = new Date(currentYear, currentMonth, 0);
-        //     this.selectedDate = [startDate, endDate];
-        // },
         defaultMonth() {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();

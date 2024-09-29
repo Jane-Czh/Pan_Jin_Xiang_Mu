@@ -45,9 +45,10 @@ public class ProductionTable {
 
     /**
      * 上线日期
+     * 修改统计为----车体上线日期
      */
     @JsonFormat(pattern = "yyyy/MM/dd")
-    @ExcelProperty(value = "上线日期")
+    @ExcelProperty(value = "车体上线日期")
     @DateTimeFormat("yyyy/MM/dd")
     private Date launchDate;
 
@@ -111,9 +112,10 @@ public class ProductionTable {
 
     /**
      * 计划完工期 <--- !!!
+     * 修改为统计-----精整完工期
      */
     @JsonFormat(pattern = "yyyy/MM/dd")
-    @ExcelProperty(value = "计划完工期")
+    @ExcelProperty(value = "精整完工期")
     @DateTimeFormat("yyyy/MM/dd")
     private Date plannedCompletionPeriod;
 

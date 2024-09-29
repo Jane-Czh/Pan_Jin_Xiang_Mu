@@ -160,7 +160,6 @@ export default {
                 }
             };
 
-
             let series = [{
                 name: '完成率',
                 type: 'line',

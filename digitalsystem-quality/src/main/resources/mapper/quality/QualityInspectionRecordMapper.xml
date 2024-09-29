@@ -7,15 +7,19 @@
     <resultMap type="QualityInspectionRecord" id="QualityInspectionRecordResult">
         <result property="qiId"    column="QI_ID"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
-        <result property="electricCarProductionQuantity"    column="Electric_Car_Production_Quantity"    />
         <result property="k2lessthan5tonProductionQuantity"    column="K2LessThan5Ton_Production_Quantity"    />
-        <result property="k2largetonnageProductionQuantity"    column="K2LargeTonnage_Production_Quantity"    />
-        <result property="electricCarProblemVehicles"    column="Electric_Car_Problem_Vehicles"    />
         <result property="k2lessthan5tonProblemVehicles"    column="K2LessThan5Ton_Problem_Vehicles"    />
+        <result property="k2largetonnageProductionQuantity"    column="K2LargeTonnage_Production_Quantity"    />
         <result property="k2largetonnageProblemVehicles"    column="K2LargeTonnage_Problem_Vehicles"    />
-        <result property="electricCarPassRate"    column="Electric_Car_Pass_Rate"    />
         <result property="largeTonPassRate"    column="LargeTon_Pass_Rate"    />
+        <result property="electricCarProductionQuantity"    column="Electric_Car_Production_Quantity"    />
+        <result property="electricCarProblemVehicles"    column="Electric_Car_Problem_Vehicles"    />
+        <result property="electricCarPassRate"    column="Electric_Car_Pass_Rate"    />
         <result property="singleInspectionPassRate"    column="Single_Inspection_Pass_Rate"    />
+        <result property="icvProductionQuantity"    column="ICV_Production_Quantity"    />
+        <result property="icvProblemVehicles"    column="ICV_Problem_Vehicles"    />
+        <result property="icvPassRate"    column="ICV_Pass_Rate"    />
+        <result property="allPassRate"    column="All_Pass_Rate"    />
         <result property="createBy"    column="CREATE_BY"    />
         <result property="createTime"    column="CREATE_TIME"    />
         <result property="updateBy"    column="UPDATE_BY"    />
@@ -23,7 +27,7 @@
     </resultMap>
 
     <sql id="selectQualityInspectionRecordVo">
-        select QI_ID, Year_And_Month, Electric_Car_Production_Quantity, K2LessThan5Ton_Production_Quantity, K2LargeTonnage_Production_Quantity, Electric_Car_Problem_Vehicles, K2LessThan5Ton_Problem_Vehicles, K2LargeTonnage_Problem_Vehicles, Electric_Car_Pass_Rate, LargeTon_Pass_Rate, Single_Inspection_Pass_Rate, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_Inspection_Record
+        select QI_ID, Year_And_Month, K2LessThan5Ton_Production_Quantity, K2LessThan5Ton_Problem_Vehicles, K2LargeTonnage_Production_Quantity, K2LargeTonnage_Problem_Vehicles, LargeTon_Pass_Rate, Electric_Car_Production_Quantity, Electric_Car_Problem_Vehicles, Electric_Car_Pass_Rate, Single_Inspection_Pass_Rate, ICV_Production_Quantity, ICV_Problem_Vehicles, ICV_Pass_Rate, All_Pass_Rate, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Quality_Inspection_Record
     </sql>
 
     <!--  检查当月数据是否上传，不允许重复上传  -->
@@ -40,20 +44,23 @@
         )
     </select>
 
-
     <select id="selectQualityInspectionRecordList" parameterType="QualityInspectionRecord" resultMap="QualityInspectionRecordResult">
         <include refid="selectQualityInspectionRecordVo"/>
         <where>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
-            <if test="electricCarProductionQuantity != null "> and Electric_Car_Production_Quantity = #{electricCarProductionQuantity}</if>
             <if test="k2lessthan5tonProductionQuantity != null "> and K2LessThan5Ton_Production_Quantity = #{k2lessthan5tonProductionQuantity}</if>
-            <if test="k2largetonnageProductionQuantity != null "> and K2LargeTonnage_Production_Quantity = #{k2largetonnageProductionQuantity}</if>
-            <if test="electricCarProblemVehicles != null "> and Electric_Car_Problem_Vehicles = #{electricCarProblemVehicles}</if>
             <if test="k2lessthan5tonProblemVehicles != null "> and K2LessThan5Ton_Problem_Vehicles = #{k2lessthan5tonProblemVehicles}</if>
+            <if test="k2largetonnageProductionQuantity != null "> and K2LargeTonnage_Production_Quantity = #{k2largetonnageProductionQuantity}</if>
             <if test="k2largetonnageProblemVehicles != null "> and K2LargeTonnage_Problem_Vehicles = #{k2largetonnageProblemVehicles}</if>
-            <if test="electricCarPassRate != null "> and Electric_Car_Pass_Rate = #{electricCarPassRate}</if>
             <if test="largeTonPassRate != null "> and LargeTon_Pass_Rate = #{largeTonPassRate}</if>
+            <if test="electricCarProductionQuantity != null "> and Electric_Car_Production_Quantity = #{electricCarProductionQuantity}</if>
+            <if test="electricCarProblemVehicles != null "> and Electric_Car_Problem_Vehicles = #{electricCarProblemVehicles}</if>
+            <if test="electricCarPassRate != null "> and Electric_Car_Pass_Rate = #{electricCarPassRate}</if>
             <if test="singleInspectionPassRate != null "> and Single_Inspection_Pass_Rate = #{singleInspectionPassRate}</if>
+            <if test="icvProductionQuantity != null "> and ICV_Production_Quantity = #{icvProductionQuantity}</if>
+            <if test="icvProblemVehicles != null "> and ICV_Problem_Vehicles = #{icvProblemVehicles}</if>
+            <if test="icvPassRate != null "> and ICV_Pass_Rate = #{icvPassRate}</if>
+            <if test="allPassRate != null "> and All_Pass_Rate = #{allPassRate}</if>
             <if test="createBy != null  and createBy != ''"> and CREATE_BY = #{createBy}</if>
             <if test="createTime != null "> and CREATE_TIME = #{createTime}</if>
             <if test="updateBy != null  and updateBy != ''"> and UPDATE_BY = #{updateBy}</if>
@@ -71,15 +78,19 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="qiId != null">QI_ID,</if>
             <if test="yearAndMonth != null">Year_And_Month,</if>
-            <if test="electricCarProductionQuantity != null">Electric_Car_Production_Quantity,</if>
             <if test="k2lessthan5tonProductionQuantity != null">K2LessThan5Ton_Production_Quantity,</if>
-            <if test="k2largetonnageProductionQuantity != null">K2LargeTonnage_Production_Quantity,</if>
-            <if test="electricCarProblemVehicles != null">Electric_Car_Problem_Vehicles,</if>
             <if test="k2lessthan5tonProblemVehicles != null">K2LessThan5Ton_Problem_Vehicles,</if>
+            <if test="k2largetonnageProductionQuantity != null">K2LargeTonnage_Production_Quantity,</if>
             <if test="k2largetonnageProblemVehicles != null">K2LargeTonnage_Problem_Vehicles,</if>
-            <if test="electricCarPassRate != null">Electric_Car_Pass_Rate,</if>
             <if test="largeTonPassRate != null">LargeTon_Pass_Rate,</if>
+            <if test="electricCarProductionQuantity != null">Electric_Car_Production_Quantity,</if>
+            <if test="electricCarProblemVehicles != null">Electric_Car_Problem_Vehicles,</if>
+            <if test="electricCarPassRate != null">Electric_Car_Pass_Rate,</if>
             <if test="singleInspectionPassRate != null">Single_Inspection_Pass_Rate,</if>
+            <if test="icvProductionQuantity != null">ICV_Production_Quantity,</if>
+            <if test="icvProblemVehicles != null">ICV_Problem_Vehicles,</if>
+            <if test="icvPassRate != null">ICV_Pass_Rate,</if>
+            <if test="allPassRate != null">All_Pass_Rate,</if>
             <if test="createBy != null">CREATE_BY,</if>
             <if test="createTime != null">CREATE_TIME,</if>
             <if test="updateBy != null">UPDATE_BY,</if>
@@ -88,15 +99,19 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="qiId != null">#{qiId},</if>
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
-            <if test="electricCarProductionQuantity != null">#{electricCarProductionQuantity},</if>
             <if test="k2lessthan5tonProductionQuantity != null">#{k2lessthan5tonProductionQuantity},</if>
-            <if test="k2largetonnageProductionQuantity != null">#{k2largetonnageProductionQuantity},</if>
-            <if test="electricCarProblemVehicles != null">#{electricCarProblemVehicles},</if>
             <if test="k2lessthan5tonProblemVehicles != null">#{k2lessthan5tonProblemVehicles},</if>
+            <if test="k2largetonnageProductionQuantity != null">#{k2largetonnageProductionQuantity},</if>
             <if test="k2largetonnageProblemVehicles != null">#{k2largetonnageProblemVehicles},</if>
-            <if test="electricCarPassRate != null">#{electricCarPassRate},</if>
             <if test="largeTonPassRate != null">#{largeTonPassRate},</if>
+            <if test="electricCarProductionQuantity != null">#{electricCarProductionQuantity},</if>
+            <if test="electricCarProblemVehicles != null">#{electricCarProblemVehicles},</if>
+            <if test="electricCarPassRate != null">#{electricCarPassRate},</if>
             <if test="singleInspectionPassRate != null">#{singleInspectionPassRate},</if>
+            <if test="icvProductionQuantity != null">#{icvProductionQuantity},</if>
+            <if test="icvProblemVehicles != null">#{icvProblemVehicles},</if>
+            <if test="icvPassRate != null">#{icvPassRate},</if>
+            <if test="allPassRate != null">#{allPassRate},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -108,15 +123,19 @@
         update Quality_Inspection_Record
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
-            <if test="electricCarProductionQuantity != null">Electric_Car_Production_Quantity = #{electricCarProductionQuantity},</if>
             <if test="k2lessthan5tonProductionQuantity != null">K2LessThan5Ton_Production_Quantity = #{k2lessthan5tonProductionQuantity},</if>
-            <if test="k2largetonnageProductionQuantity != null">K2LargeTonnage_Production_Quantity = #{k2largetonnageProductionQuantity},</if>
-            <if test="electricCarProblemVehicles != null">Electric_Car_Problem_Vehicles = #{electricCarProblemVehicles},</if>
             <if test="k2lessthan5tonProblemVehicles != null">K2LessThan5Ton_Problem_Vehicles = #{k2lessthan5tonProblemVehicles},</if>
+            <if test="k2largetonnageProductionQuantity != null">K2LargeTonnage_Production_Quantity = #{k2largetonnageProductionQuantity},</if>
             <if test="k2largetonnageProblemVehicles != null">K2LargeTonnage_Problem_Vehicles = #{k2largetonnageProblemVehicles},</if>
-            <if test="electricCarPassRate != null">Electric_Car_Pass_Rate = #{electricCarPassRate},</if>
             <if test="largeTonPassRate != null">LargeTon_Pass_Rate = #{largeTonPassRate},</if>
+            <if test="electricCarProductionQuantity != null">Electric_Car_Production_Quantity = #{electricCarProductionQuantity},</if>
+            <if test="electricCarProblemVehicles != null">Electric_Car_Problem_Vehicles = #{electricCarProblemVehicles},</if>
+            <if test="electricCarPassRate != null">Electric_Car_Pass_Rate = #{electricCarPassRate},</if>
             <if test="singleInspectionPassRate != null">Single_Inspection_Pass_Rate = #{singleInspectionPassRate},</if>
+            <if test="icvProductionQuantity != null">ICV_Production_Quantity = #{icvProductionQuantity},</if>
+            <if test="icvProblemVehicles != null">ICV_Problem_Vehicles = #{icvProblemVehicles},</if>
+            <if test="icvPassRate != null">ICV_Pass_Rate = #{icvPassRate},</if>
+            <if test="allPassRate != null">All_Pass_Rate = #{allPassRate},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>

@@ -57,7 +57,7 @@ public class TechNewProjectDesignController extends BaseController {
     }
 
     /**
-     * @description: 非标订单导入
+     * @description: 研发计划导入
      * @author: hong
      * @date: 2024/8/2 13:58
      * @version: 1.0
@@ -70,6 +70,7 @@ public class TechNewProjectDesignController extends BaseController {
 
             techNewProjectDesignService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
 
+            techNewProjectDesignService.calculateProjectData(yearAndMonth);
             log.info("计算完毕");
 
             return R.ok("上传成功");

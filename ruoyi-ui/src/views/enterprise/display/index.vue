@@ -81,6 +81,7 @@ export default {
       const res2 = await getMonthlyNewData()
       const monthlyRes = res2.data
       // console.log(salaryRes)
+
       //页面截至
       this.allIndex.forEach(item => {
         if (this.$auth.hasPermi("enterprise:index") && item.extra === 'salary') {

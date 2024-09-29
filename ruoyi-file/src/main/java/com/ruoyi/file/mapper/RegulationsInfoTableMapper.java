@@ -51,6 +51,8 @@ public interface RegulationsInfoTableMapper
 
     public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable);
 
+    public List<RegulationsInfoTable> listHistoryFilemanagement(RegulationsInfoTable regulationsInfoTable);
+
     /**
      * 新增文件管理
      *

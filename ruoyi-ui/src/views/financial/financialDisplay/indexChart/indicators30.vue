@@ -18,7 +18,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getGrowthRateInventorySalesData } from '@/api/financial/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 
 export default {
     data() {
@@ -53,6 +53,31 @@ export default {
                 this.data = res.rows
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.timeData.startTime,
+                    endDate: this.timeData.endTime
+                }
+                const tmp = await getNameTarget(newTarget)
+                let nowTarget = tmp.rows
+                let allTarget = []; // 初始化目标数组
+                nowTarget.forEach(item => {
+                    let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+                    let targetValue = item.targetValue; // 目标值可能是数字或null
+                    allTarget.push({ natureYear, targetValue });
+                })
+                this.data.forEach(item => {
+                    const year = moment(item.Year_And_Month).format('YYYY')
+                    allTarget.forEach(row => {
+                        if (year === row.natureYear) {
+                            item.targetValue = row.targetValue
+                        }
+                    })
+                });
+                console.log(this.data)
+
                 this.loading = false
                 this.updateChart()
             } catch (error) {

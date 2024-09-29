@@ -25,7 +25,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getCumulativeAverageIncomeData } from '@/api/enterprise/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -49,6 +49,7 @@ export default {
     mounted() {
         this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' };
         this.defaultMonth()
+        // console.log(this.routerData)
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
     },
@@ -79,6 +80,30 @@ export default {
                         }
                     })
                 });
+
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.timeData.startTime,
+                    endDate: this.timeData.endTime
+                }
+                const res1 = await getNameTarget(newTarget)
+                let nowTarget = res1.rows
+                let allTarget = []; // 初始化目标数组
+                nowTarget.forEach(item => {
+                    let natureYear = row.natureYear = moment(item.natureYear).format('YYYY')
+                    let targetValue = row.targetValue; // 目标值可能是数字或null
+                    allTarget.push({ natureYear, targetValue });
+                })
+                this.data.forEach(item => {
+                    const year = moment(item.yearAndMonth).format('YYYY')
+                    allTarget.forEach(row => {
+                        if (year === row.natureYear) {
+                            item.targetValue = row.targetValue
+                        }
+                    })
+                });
+                console.log(this.data)
+
 
                 this.loading = false
                 this.updateChart()
@@ -214,7 +239,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
             this.option = {
@@ -228,7 +253,7 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['收入', '同期收入', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['收入', '同期收入', (this.routerData.targetValue != '' && this.routerData.targetValue != 0) ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

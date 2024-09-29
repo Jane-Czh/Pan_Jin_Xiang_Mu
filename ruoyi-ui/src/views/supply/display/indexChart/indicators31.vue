@@ -42,10 +42,17 @@ export default {
   },
   methods: {
     async initData() {
+
+
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1;
+      const startDate = new Date(currentYear - 3, currentMonth - 1, 1);
       let target = {
-        date: new Date(),
+        date: startDate,
         deptName: 'supply',
       }
+
       const resTarget = await getTargetData(target)
       //目标值赋予及上下限预警
       this.routerData.forEach(item => {
@@ -67,8 +74,8 @@ export default {
         this.data = res.rows
         const yAxisDataLength = this.data.length;
         this.targetValueArray = Array(yAxisDataLength).fill(this.routerData[0].targetValue);
-        this.loading = false
         this.updateChart()
+        this.loading = false
       } catch (error) {
         this.loading = false
       }
@@ -221,6 +228,33 @@ export default {
             }
           },
           data: this.data.map(item => item.controlledPurchaseAmountRatio),
+        },
+        {
+          name: '月度求和比例',
+          type: 'bar',
+          label: {
+            show: true,
+            position: app.config.position,
+            distance: app.config.distance,
+            align: app.config.align,
+            verticalAlign: app.config.verticalAlign,
+            rotate: app.config.rotate,
+            formatter: '{c} %',
+            fontSize: 16,
+            rich: {
+              name: {}
+            }
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          yAxisIndex: 1,
+          tooltip: {
+            valueFormatter: function (value) {
+              return value + '%';
+            }
+          },
+          data: this.data.map(item => item.yearAmountRatio),
         }
       ];
 
@@ -246,7 +280,7 @@ export default {
           }
         },
         legend: {
-          data: ['采购金额', '总金额', '占比', this.routerData[0].targetValue != 0 || '' ? '目标值' : null].filter(item => item !== null),
+          data: ['采购金额', '总金额', '占比', '月度求和比例', (this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '') ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,

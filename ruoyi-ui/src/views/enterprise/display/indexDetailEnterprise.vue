@@ -78,8 +78,10 @@ export default {
         this.data = res.rows
         this.xAxisData = res.rows.map(item => moment(item.yearAndMonth).format('YY-MM'))
         this.yAxisData = res.rows.map(item => item[this.option.yDataName])
-        const allUndefined = yAxisData.every(item => item === undefined);
-        this.ifData = allUndefined ? [] : yAxisData
+
+        // 判断当前选择的时间段是否有数据
+        // const allUndefined = this.yAxisData.every(item => item === undefined);
+        // this.ifData = allUndefined ? [] : this.yAxisData
 
         //目标值
         let newTarget = {
@@ -108,6 +110,7 @@ export default {
 
         this.loading = false
       } catch (error) {
+        console.log(error)
         this.loading = false
       }
     },

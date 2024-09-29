@@ -40,13 +40,15 @@ export default {
     mounted() {
         this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultMonth()
+        console.log(this.routerData.targetValue)
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]),
+                this.timeData.endTime = new Date(this.selectedDate[1])
+            console.log(this.selectedDate[0])
             try {
                 this.loading = true
                 const res = await getGrowthRateInventorySalesData(this.timeData);
@@ -57,14 +59,14 @@ export default {
                 //目标值
                 let newTarget = {
                     name: this.routerData.sum,
-                    startDate: this.timeData.startTime,
-                    endDate: this.timeData.endTime
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
                 }
                 const tmp = await getNameTarget(newTarget)
                 let nowTarget = tmp.rows
                 let allTarget = []; // 初始化目标数组
                 nowTarget.forEach(item => {
-                    let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+                    let natureYear = moment(item.natureYear).format('YYYY')
                     let targetValue = item.targetValue; // 目标值可能是数字或null
                     allTarget.push({ natureYear, targetValue });
                 })
@@ -206,7 +208,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
             this.option = {

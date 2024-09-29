@@ -46,13 +46,14 @@ export default {
     mounted() {
         this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTargetValue: false };
         this.defaultDay()
+        // console.log(this.routerData)
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0];
-            this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]);
+            this.timeData.endTime = new Date(this.selectedDate[1])
             try {
                 this.loading = true
                 const res = await getInprogressDayrevenueData(this.timeData);
@@ -71,19 +72,19 @@ export default {
                 //目标值
                 let newTarget = {
                     name: this.routerData.sum,
-                    startDate: this.timeData.startTime,
-                    endDate: this.timeData.endTime
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
                 }
                 const tmp = await getNameTarget(newTarget)
                 let nowTarget = tmp.rows
                 let allTarget = []; // 初始化目标数组
                 nowTarget.forEach(item => {
-                    let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+                    let natureYear = moment(item.natureYear).format('YYYY')
                     let targetValue = item.targetValue; // 目标值可能是数字或null
                     allTarget.push({ natureYear, targetValue });
                 })
                 this.data.forEach(item => {
-                    const year = moment(item.Year_And_Month).format('YYYY')
+                    const year = moment(item.Data_Time).format('YYYY')
                     allTarget.forEach(row => {
                         if (year === row.natureYear) {
                             item.targetValue = row.targetValue
@@ -221,7 +222,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.data.map(item.targetValue),
+                    data: this.data.map(item => item.targetValue),
                 });
             }
             this.option = {

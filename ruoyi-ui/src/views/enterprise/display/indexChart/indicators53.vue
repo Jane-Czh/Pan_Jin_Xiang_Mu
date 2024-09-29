@@ -58,8 +58,8 @@ export default {
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]);
+            this.timeData.endTime = new Date(this.selectedDate[1]);
             try {
                 this.loading = true
                 const res = await getDailyClearingSettlementData(this.timeData);

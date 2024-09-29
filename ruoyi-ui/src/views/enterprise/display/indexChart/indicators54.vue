@@ -55,14 +55,17 @@ export default {
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]);
+            this.timeData.endTime = new Date(this.selectedDate[1]);
+            // console.log(this.selectedDate[0])
+            // console.log(this.selectedDate[1])
+            console.log(this.timeData)
             try {
                 this.loading = true
                 const res = await getCumulativeAverageIncomeData(this.timeData);
                 this.data = res.rows
-                const yAxisDataLength = this.data.length;
-                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+                // const yAxisDataLength = this.data.length;
+                // this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 const timeDataBefore = this.timeData
                 timeDataBefore.startTime.setFullYear(timeDataBefore.startTime.getFullYear() - 1)
                 timeDataBefore.endTime.setFullYear(timeDataBefore.endTime.getFullYear() - 1)
@@ -83,17 +86,20 @@ export default {
 
                 let newTarget = {
                     name: this.routerData.sum,
-                    startDate: this.timeData.startTime,
-                    endDate: this.timeData.endTime
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
                 }
+                console.log(newTarget)
                 const res1 = await getNameTarget(newTarget)
                 let nowTarget = res1.rows
+                console.log(res1)
                 let allTarget = []; // 初始化目标数组
                 nowTarget.forEach(item => {
-                    let natureYear = row.natureYear = moment(item.natureYear).format('YYYY')
-                    let targetValue = row.targetValue; // 目标值可能是数字或null
+                    let natureYear = moment(item.natureYear).format('YYYY')
+                    let targetValue = item.targetValue; // 目标值可能是数字或null
                     allTarget.push({ natureYear, targetValue });
                 })
+                console.log(nowTarget)
                 this.data.forEach(item => {
                     const year = moment(item.yearAndMonth).format('YYYY')
                     allTarget.forEach(row => {
@@ -108,8 +114,9 @@ export default {
                 this.loading = false
                 this.updateChart()
             } catch (error) {
-                this.loading = false
                 console.log(error)
+                this.loading = false
+
             }
         },
         handleDateChange(value) {

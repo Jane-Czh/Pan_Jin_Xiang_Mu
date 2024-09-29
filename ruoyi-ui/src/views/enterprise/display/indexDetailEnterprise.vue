@@ -106,6 +106,7 @@ export default {
           })
         });
         console.log(this.data)
+
         this.dataOfTarget = this.data
 
         this.loading = false

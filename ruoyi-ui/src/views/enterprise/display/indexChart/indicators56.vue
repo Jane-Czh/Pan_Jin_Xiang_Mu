@@ -50,8 +50,8 @@ export default {
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]);
+            this.timeData.endTime = new Date(this.selectedDate[1]);
             try {
                 this.loading = true
                 const res = await getMonthlyFunctionalAVGIncomeData(this.timeData);
@@ -79,8 +79,8 @@ export default {
                 //目标值
                 let newTarget = {
                     name: this.routerData.sum,
-                    startDate: this.timeData.startTime,
-                    endDate: this.timeData.endTime
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
                 }
                 const tmp = await getNameTarget(newTarget)
                 let nowTarget = tmp.rows
@@ -91,7 +91,7 @@ export default {
                     allTarget.push({ natureYear, targetValue });
                 })
                 this.data.forEach(item => {
-                    const year = moment(item.Year_And_Month).format('YYYY')
+                    const year = moment(item.yearAndMonth).format('YYYY')
                     allTarget.forEach(row => {
                         if (year === row.natureYear) {
                             item.targetValue = row.targetValue

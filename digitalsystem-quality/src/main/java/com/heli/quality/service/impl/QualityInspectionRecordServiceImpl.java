@@ -68,6 +68,10 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
         qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) (qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getK2lessthan5tonProblemVehicles())
                 / (double) (qualityInspectionRecord.getK2largetonnageProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity())) * 100));
 
+        qualityInspectionRecord.setIcvPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getIcvProblemVehicles() / (double) qualityInspectionRecord.getIcvProductionQuantity()) * 100));
+
+        qualityInspectionRecord.setAllPassRate(BigDecimal.valueOf((1 - (double) (problemNum + qualityInspectionRecord.getIcvProblemVehicles()) / (double) (productionNum + qualityInspectionRecord.getIcvProductionQuantity())) * 100));
+
         log.info(String.valueOf("读取质检表并计算" + qualityInspectionRecord));
         qualityInspectionRecordMapper.insertQualityInspectionRecord(qualityInspectionRecord);
     }

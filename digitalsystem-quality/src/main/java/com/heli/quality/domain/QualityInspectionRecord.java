@@ -34,33 +34,14 @@ public class QualityInspectionRecord extends BaseEntity {
     @Excel(name = "质检月份", width = 30, dateFormat = "yyyy-MM-dd")
     private Date yearAndMonth;
 
-    /**
-     * 电车的问题数量
-     */
-    @Excel(name = "电车生产数量")
-    @RecordTemplate(rowNo = 3, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "电车的问题数量")
-    private Long electricCarProductionQuantity;
+
 
     /**
-     * K2型号中小于5吨的问题数量
+     * K2型号中小于5吨的生产数量
      */
-    @Excel(name = "K2型号中小于5吨电车生产数量")
+    @Excel(name = "K2型号中小于5吨的生产数量")
     @RecordTemplate(rowNo = 4, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "K2型号中小于5吨的问题数量")
     private Long k2lessthan5tonProductionQuantity;
-
-    /**
-     * K2型号中大吨位的问题数量
-     */
-    @Excel(name = "K2型号中大吨位的电车生产数量")
-    @RecordTemplate(rowNo = 5, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题数量")
-    private Long k2largetonnageProductionQuantity;
-
-    /**
-     * 电车的问题车数量
-     */
-    @Excel(name = "电车的问题车数量")
-    @RecordTemplate(rowNo = 3, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "电车的问题车数量")
-    private Long electricCarProblemVehicles;
 
     /**
      * K2型号中小于5吨的问题车数量
@@ -70,17 +51,18 @@ public class QualityInspectionRecord extends BaseEntity {
     private Long k2lessthan5tonProblemVehicles;
 
     /**
+     * K2型号中大吨位的生产数量
+     */
+    @Excel(name = "K2型号中大吨位生产数量")
+    @RecordTemplate(rowNo = 5, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题数量")
+    private Long k2largetonnageProductionQuantity;
+
+    /**
      * K2型号中大吨位的问题车数量
      */
     @Excel(name = "K2型号中大吨位的问题车数量")
     @RecordTemplate(rowNo = 5, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "K2型号中大吨位的问题车数量")
     private Long k2largetonnageProblemVehicles;
-
-    /**
-     * 电车一次交检合格率
-     */
-    @Excel(name = "电车一次交检合格率")
-    private BigDecimal electricCarPassRate;
 
     /**
      * 大吨位一次交检合格率
@@ -89,9 +71,47 @@ public class QualityInspectionRecord extends BaseEntity {
     private BigDecimal largeTonPassRate;
 
     /**
+     * 电车生产数量
+     */
+    @Excel(name = "电车生产数量")
+    @RecordTemplate(rowNo = 3, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "电车的问题数量")
+    private Long electricCarProductionQuantity;
+
+    /**
+     * 电车的问题车数量
+     */
+    @Excel(name = "电车的问题车数量")
+    @RecordTemplate(rowNo = 3, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "电车的问题车数量")
+    private Long electricCarProblemVehicles;
+
+    /**
+     * 电车一次交检合格率
+     */
+    @Excel(name = "电车一次交检合格率")
+    private BigDecimal electricCarPassRate;
+
+    /**
      * 电车、大吨位一次交检合格率
      */
     @Excel(name = "电车、大吨位一次交检合格率")
     private BigDecimal singleInspectionPassRate;
+
+    /** 内燃车生产数量 */
+    @Excel(name = "内燃车生产数量")
+    @RecordTemplate(rowNo = 2, columnNo = 4, comment = FillCommentEnum.EMPTY, name = "内燃车生产数量")
+    private Long icvProductionQuantity;
+
+    /** 内燃车问题车数量 */
+    @Excel(name = "内燃车问题车数量")
+    @RecordTemplate(rowNo = 2, columnNo = 5, comment = FillCommentEnum.EMPTY, name = "内燃车问题车数量")
+    private Long icvProblemVehicles;
+
+    /** 内燃车一次交检合格率 */
+    @Excel(name = "内燃车一次交检合格率")
+    private BigDecimal icvPassRate;
+
+    /** 一次交检合格率 */
+    @Excel(name = "一次交检合格率")
+    private BigDecimal allPassRate;
 
 }

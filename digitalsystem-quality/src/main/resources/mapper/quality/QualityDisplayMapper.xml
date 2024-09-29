@@ -77,12 +77,15 @@
 
     <!-- 电车、大吨位一次交检合格率 -->
     <select id="selectSingleInspectionPassRate" resultType="map">
-        select * from (
-            select Year_And_Month as yearAndMonth,Single_Inspection_Pass_Rate as singleInspectionPassRate,
-                   Electric_Car_Pass_Rate as electricCarPassRate,LargeTon_Pass_Rate as largeTonPassRate from Quality_Inspection_Record
-            where Year_And_Month between #{startTime} and #{endTime}
-            order by Year_And_Month DESC
-        ) as t
+        select *
+        from (select Year_And_Month         as yearAndMonth,
+                     ICV_Pass_Rate          as icvPassRate,
+                     Electric_Car_Pass_Rate as electricCarPassRate,
+                     LargeTon_Pass_Rate     as largeTonPassRate,
+                     All_Pass_Rate          as allPassRate
+              from Quality_Inspection_Record
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC) as t
         order by yearAndMonth ASC
     </select>
 

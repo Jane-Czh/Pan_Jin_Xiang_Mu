@@ -1,7 +1,9 @@
 package com.ruoyi.common.indicator.mapper;
 
 import com.ruoyi.common.indicator.domain.IndicatorsTarget;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,4 +60,6 @@ public interface IndicatorsTargetMapper {
      * @return 结果
      */
     public int deleteIndicatorsTargetByItIds(Long[] itIds);
+
+    List<IndicatorsTarget> selectTargetListByNameAndDate(@Param("name") String name, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

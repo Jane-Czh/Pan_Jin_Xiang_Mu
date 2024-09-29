@@ -44,6 +44,11 @@
         <include refid="selectIndicatorsTargetVo"/>
         where it_id = #{itId}
     </select>
+    <select id="selectTargetListByNameAndDate" resultType="com.ruoyi.common.indicator.domain.IndicatorsTarget">
+        <include refid="selectIndicatorsTargetVo"/>
+        where indicator_name = #{name} and nature_year between #{startDate} and #{endDate}
+        order by nature_year asc
+    </select>
 
     <insert id="insertIndicatorsTarget" parameterType="IndicatorsTarget" useGeneratedKeys="true" keyProperty="itId">
         insert into indicators_target

@@ -4,12 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heli.supply.mapper.SupplyIndicatorsControlledMaterialPurchasesMapper">
 
-    <resultMap type="SupplyIndicatorsControlledMaterialPurchases" id="SupplyIndicatorsControlledMaterialPurchasesResult">
+    <resultMap type="SupplyIndicatorsControlledMaterialPurchases"
+               id="SupplyIndicatorsControlledMaterialPurchasesResult">
         <result property="scpId" column="SCP_id"/>
         <result property="yearAndMonth" column="Year_And_Month"/>
         <result property="totalPurchaseAmount" column="Total_Purchase_Amount"/>
         <result property="controlledMaterialPurchases" column="Controlled_Material_Purchases"/>
         <result property="controlledPurchaseAmountRatio" column="Controlled_Purchase_Amount_Ratio"/>
+        <result property="yearAmountRatio" column="Year_Amount_Ratio"/>
         <result property="createBy" column="CREATE_BY"/>
         <result property="createTime" column="CREATE_TIME"/>
         <result property="updateBy" column="UPDATE_BY"/>
@@ -17,22 +19,33 @@
     </resultMap>
 
     <sql id="selectSupplyIndicatorsControlledMaterialPurchasesVo">
-        select SCP_id, Year_And_Month, Total_Purchase_Amount, Controlled_Material_Purchases, Controlled_Purchase_Amount_Ratio, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Supply_Indicators_Controlled_Material_Purchases
+        select SCP_id,
+               Year_And_Month,
+               Total_Purchase_Amount,
+               Controlled_Material_Purchases,
+               Controlled_Purchase_Amount_Ratio,
+               Year_Amount_Ratio,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME
+        from Supply_Indicators_Controlled_Material_Purchases
     </sql>
 
 
     <!--  安全插入、更新  -->
     <insert id="batchInsertOrUpdateControlledMaterialPurchases">
         insert into Supply_Indicators_Controlled_Material_Purchases(
-        Year_And_Month,Total_Purchase_Amount,Controlled_Material_Purchases,Controlled_Purchase_Amount_Ratio,CREATE_BY,CREATE_TIME)
+        Year_And_Month,Total_Purchase_Amount,Controlled_Material_Purchases,Controlled_Purchase_Amount_Ratio,Year_Amount_Ratio,CREATE_BY,CREATE_TIME)
         VALUES
-            <foreach collection="controlledMaterialPurchasesList" item="e" separator=",">
-                (#{e.yearAndMonth},#{e.totalPurchaseAmount},#{e.controlledMaterialPurchases},#{e.controlledPurchaseAmountRatio},#{e.createBy},#{e.createTime})
-            </foreach>
+        <foreach collection="controlledMaterialPurchasesList" item="e" separator=",">
+            (#{e.yearAndMonth},#{e.totalPurchaseAmount},#{e.controlledMaterialPurchases},#{e.controlledPurchaseAmountRatio},#{e.yearAmountRatio},#{e.createBy},#{e.createTime})
+        </foreach>
         ON DUPLICATE KEY UPDATE
         Total_Purchase_Amount = values(Total_Purchase_Amount),
         Controlled_Material_Purchases = values(Controlled_Material_Purchases),
         Controlled_Purchase_Amount_Ratio = values(Controlled_Purchase_Amount_Ratio),
+        Year_Amount_Ratio = values(Year_Amount_Ratio),
         CREATE_BY = values(CREATE_BY),
         CREATE_TIME = values(CREATE_TIME)
     </insert>
@@ -40,41 +53,57 @@
 
     <!-- 集团管控物资采购金额占比 指标31 -->
     <select id="selectControlledPurchaseAmountRatio" resultType="map">
-        select * from (
-            select Year_And_Month as yearAndMonth,Total_Purchase_Amount as totalPurchaseAmount,Controlled_Material_Purchases as controlledMaterialPurchases,Controlled_Purchase_Amount_Ratio as controlledPurchaseAmountRatio from Supply_Indicators_Controlled_Material_Purchases
-            where Year_And_Month between #{startTime} and #{endTime}
-            order by Year_And_Month DESC
-        ) as t
+        select *
+        from (select Year_And_Month                   as yearAndMonth,
+                     Total_Purchase_Amount            as totalPurchaseAmount,
+                     Controlled_Material_Purchases    as controlledMaterialPurchases,
+                     Controlled_Purchase_Amount_Ratio as controlledPurchaseAmountRatio,
+                     Year_Amount_Ratio                as yearAmountRatio
+              from Supply_Indicators_Controlled_Material_Purchases
+              where Year_And_Month between #{startTime} and #{endTime}
+              order by Year_And_Month DESC) as t
         order by yearAndMonth ASC
     </select>
 
     <!-- 根据月份，检查当月数据是否上传 -->
     <select id="checkControlledPurchaseAmountRatioIsExisted" parameterType="Date" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM Supply_Indicators_Controlled_Material_Purchases WHERE Year_And_Month=#{date})
+        SELECT EXISTS(SELECT 1 FROM Supply_Indicators_Controlled_Material_Purchases WHERE Year_And_Month = #{date})
     </select>
 
-    <select id="selectSupplyIndicatorsControlledMaterialPurchasesList" parameterType="SupplyIndicatorsControlledMaterialPurchases" resultMap="SupplyIndicatorsControlledMaterialPurchasesResult">
+    <select id="selectSupplyIndicatorsControlledMaterialPurchasesList"
+            parameterType="SupplyIndicatorsControlledMaterialPurchases"
+            resultMap="SupplyIndicatorsControlledMaterialPurchasesResult">
         <include refid="selectSupplyIndicatorsControlledMaterialPurchasesVo"/>
         <where>
             <if test="yearAndMonth != null ">and Year_And_Month = #{yearAndMonth}</if>
             <if test="totalPurchaseAmount != null ">and Total_Purchase_Amount = #{totalPurchaseAmount}</if>
-            <if test="controlledMaterialPurchases != null ">and Controlled_Material_Purchases = #{controlledMaterialPurchases}</if>
-            <if test="controlledPurchaseAmountRatio != null ">and Controlled_Purchase_Amount_Ratio = #{controlledPurchaseAmountRatio}</if>
+            <if test="controlledMaterialPurchases != null ">and Controlled_Material_Purchases =
+                #{controlledMaterialPurchases}
+            </if>
+            <if test="controlledPurchaseAmountRatio != null ">and Controlled_Purchase_Amount_Ratio =
+                #{controlledPurchaseAmountRatio}
+            </if>
+            <if test="yearAmountRatio != null ">and Year_Amount_Ratio =
+                #{yearAmountRatio}
+            </if>
         </where>
     </select>
 
-    <select id="selectSupplyIndicatorsControlledMaterialPurchasesByScpId" parameterType="Long" resultMap="SupplyIndicatorsControlledMaterialPurchasesResult">
+    <select id="selectSupplyIndicatorsControlledMaterialPurchasesByScpId" parameterType="Long"
+            resultMap="SupplyIndicatorsControlledMaterialPurchasesResult">
         <include refid="selectSupplyIndicatorsControlledMaterialPurchasesVo"/>
         where SCP_id = #{scpId}
     </select>
 
-    <insert id="insertSupplyIndicatorsControlledMaterialPurchases" parameterType="SupplyIndicatorsControlledMaterialPurchases" useGeneratedKeys="true" keyProperty="scpId">
+    <insert id="insertSupplyIndicatorsControlledMaterialPurchases"
+            parameterType="SupplyIndicatorsControlledMaterialPurchases" useGeneratedKeys="true" keyProperty="scpId">
         insert into Supply_Indicators_Controlled_Material_Purchases
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
             <if test="totalPurchaseAmount != null">Total_Purchase_Amount,</if>
             <if test="controlledMaterialPurchases != null">Controlled_Material_Purchases,</if>
             <if test="controlledPurchaseAmountRatio != null">Controlled_Purchase_Amount_Ratio,</if>
+            <if test="yearAmountRatio != null">Year_Amount_Ratio,</if>
             <if test="createBy != null">CREATE_BY,</if>
             <if test="createTime != null">CREATE_TIME,</if>
             <if test="updateBy != null">UPDATE_BY,</if>
@@ -85,6 +114,7 @@
             <if test="totalPurchaseAmount != null">#{totalPurchaseAmount},</if>
             <if test="controlledMaterialPurchases != null">#{controlledMaterialPurchases},</if>
             <if test="controlledPurchaseAmountRatio != null">#{controlledPurchaseAmountRatio},</if>
+            <if test="yearAmountRatio != null">#{yearAmountRatio},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -92,13 +122,21 @@
         </trim>
     </insert>
 
-    <update id="updateSupplyIndicatorsControlledMaterialPurchases" parameterType="SupplyIndicatorsControlledMaterialPurchases">
+    <update id="updateSupplyIndicatorsControlledMaterialPurchases"
+            parameterType="SupplyIndicatorsControlledMaterialPurchases">
         update Supply_Indicators_Controlled_Material_Purchases
         <trim prefix="SET" suffixOverrides=",">
-<!--            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>-->
+            <!--            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>-->
             <if test="totalPurchaseAmount != null">Total_Purchase_Amount = #{totalPurchaseAmount},</if>
-            <if test="controlledMaterialPurchases != null">Controlled_Material_Purchases = #{controlledMaterialPurchases},</if>
-            <if test="controlledPurchaseAmountRatio != null">Controlled_Purchase_Amount_Ratio = #{controlledPurchaseAmountRatio},</if>
+            <if test="controlledMaterialPurchases != null">Controlled_Material_Purchases =
+                #{controlledMaterialPurchases},
+            </if>
+            <if test="controlledPurchaseAmountRatio != null">Controlled_Purchase_Amount_Ratio =
+                #{controlledPurchaseAmountRatio},
+            </if>
+            <if test="yearAmountRatio != null">Year_Amount_Ratio =
+                #{yearAmountRatio},
+            </if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
@@ -108,7 +146,9 @@
     </update>
 
     <delete id="deleteSupplyIndicatorsControlledMaterialPurchasesByScpId" parameterType="Long">
-        delete from Supply_Indicators_Controlled_Material_Purchases where SCP_id = #{scpId}
+        delete
+        from Supply_Indicators_Controlled_Material_Purchases
+        where SCP_id = #{scpId}
     </delete>
 
     <delete id="deleteSupplyIndicatorsControlledMaterialPurchasesByScpIds" parameterType="String">

@@ -25,14 +25,13 @@
           <!-- <el-form-item label="部门">
             <el-input v-model="node.department"></el-input>
           </el-form-item> -->
-         
 
           <el-form-item label="执行人员">
             <el-input v-model="node.operationalStaff"></el-input>
           </el-form-item>
 
           <el-form-item label="描述">
-            <el-input v-model="node.description"></el-input>
+            <el-input type="textarea" v-model="node.description"></el-input>
           </el-form-item>
 
           <el-form-item label="部门">
@@ -52,7 +51,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="时间">
+          <!-- <el-form-item label="时间">
             <el-date-picker
               v-model="node.date"
               type="date"
@@ -60,9 +59,11 @@
               style="width: 160px;"
             >
             </el-date-picker>
+          </el-form-item> -->
+
+          <el-form-item label="备注">
+            <el-input type="textarea" v-model="node.date"></el-input>
           </el-form-item>
-
-
 
           <el-form-item>
             <el-button icon="el-icon-close">取消</el-button>
@@ -90,7 +91,6 @@
           </el-form-item>
         </el-form>
       </div>
-
     </div>
   </div>
 </template>
@@ -106,7 +106,17 @@ export default {
       type: "node",
       // 存储node节点的相关信息
       node: {},
-      departments: ['财务', '市场', '安环', '生产', '供应', '技术', '企管', '党群', '质量'] ,// 可以根据需要修改这些部门名称
+      departments: [
+        "财务",
+        "市场",
+        "安环",
+        "生产",
+        "供应",
+        "技术",
+        "企管",
+        "党群",
+        "质量",
+      ], // 可以根据需要修改这些部门名称
 
       line: {},
       data: {},

@@ -167,5 +167,24 @@
         order by Year_And_Month ASC
     </select>
 
+    <select id="selectSalaryNewData" resultType="com.heli.enterprise.domain.EnterpriseManagementMonthlyData">
+        select Year_And_Month,Annual_Salary_Ratio,Cumulative_Average_Income,Production_AVG_Income,Functional_AVG_Income,Functional_Dept_Overtime_Cost
+        from Enterprise_Management_Indicators_Monthly_Data
+        where Year_And_Month = (
+            select max(Year_And_Month)
+            from Enterprise_Management_Indicators_Monthly_Data
+            where Cumulative_Average_Income is not null
+        )
+    </select>
+    <select id="selectMonthlyNewData" resultType="com.heli.enterprise.domain.EnterpriseManagementMonthlyData">
+        select Year_And_Month,Employees_Number,Employees_AVG_Monthly_Number,Employees_AVG_Annual_Number
+        from Enterprise_Management_Indicators_Monthly_Data
+        where Year_And_Month = (
+            select max(Year_And_Month)
+            from Enterprise_Management_Indicators_Monthly_Data
+            where Employees_Number is not null
+        )
+    </select>
+
 
 </mapper>

@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.Tech;
+import com.heli.tech.domain.TechNewProjectCompletionDTO;
+import com.heli.tech.domain.TechNewProjectProgressDTO;
+import com.heli.tech.domain.TechNonStandardDisplayDTO;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +19,10 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface TechMapper {
 
-    int insertOrUpdateTech(Tech tech);
+    int insertOrUpdateNonStandardData(Tech tech);
+
+    void insertOrUpdateProjectData(Tech tech);
+
 
     /**
      * @description: 统计当年已经研发完成的数目
@@ -127,6 +133,18 @@ public interface TechMapper {
 
     Tech selectTechByDate(@Param("yearAndMonth") Date date);
 
-    Date selectMaxMonth();
+
+    List<TechNonStandardDisplayDTO> selectNonStandardAVGDaysAndNum(@Param("startTime") Date startTime,
+                                                                   @Param("endTime") Date endTime);
+
+
+    List<TechNewProjectProgressDTO> selectProjectProgress(@Param("startTime") Date startTime,
+                                                          @Param("endTime") Date endTime);
+
+    List<TechNewProjectCompletionDTO> selectProjectCompletion(@Param("startTime") Date startTime,
+                                                              @Param("endTime") Date endTime);
+
     Date selectMinMonth();
+
+    Date selectMaxMonth();
 }

@@ -38,7 +38,8 @@ public class NodeEntity {
     //执行人员
     private String operationalStaff;
     //时间
-    private Date date;
+//    private Date date;  change --> datetime --> string
+    private String date;
 
 
 }

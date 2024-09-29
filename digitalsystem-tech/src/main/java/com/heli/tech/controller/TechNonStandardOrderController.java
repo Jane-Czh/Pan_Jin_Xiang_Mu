@@ -45,7 +45,6 @@ public class TechNonStandardOrderController extends BaseController {
     @PostMapping("/check")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
         public R checkNonStandardOrderUploadStatus(@RequestBody DisplayRequestParam displayRequestParam) {
-        log.info("当前时间:"+displayRequestParam.getStartTime());
         Boolean status = techNonStandardOrderService.checkNonStandardOrderUploadStatus(displayRequestParam.getStartTime());
         log.info("检查当月数据是否上传"+status);
         return R.ok(status);
@@ -65,17 +64,14 @@ public class TechNonStandardOrderController extends BaseController {
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
             R<String> r = techNonStandardOrderService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
-
-            log.info("计算完毕，清空数据库");
-
+            techNonStandardOrderService.calculateNonStandardOrder(yearAndMonth);
+            log.info("非标订单，计算完毕");
             return r;
         } catch (Exception e) {
             log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
             throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
         }
     }
-
-
 
 
     /**

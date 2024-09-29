@@ -51,23 +51,28 @@ public class IndicatorsTargetController extends BaseController {
 
         IndicatorsTarget target = new IndicatorsTarget();
 
-        java.util.Date utilDate = targetByDeptParam.getDate();
+        if (targetByDeptParam.getDate() != null){
 
-        LocalDate currentDate = utilDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        try {
-            // 将当前日期转换为同一年的1月1日
-            LocalDate newDate = currentDate.withMonth(1).withDayOfMonth(1);
-            log.info("newDate: " + newDate);
-            Instant instant = newDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            Date utilDate = targetByDeptParam.getDate();
 
-            target.setNatureYear(Date.from(instant));
-        } catch (DateTimeException e) {
-            // 处理日期时间异常，例如月份天数无效
-            System.err.println("Error setting date: " + e.getMessage());
+            LocalDate currentDate = utilDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            try {
+                // 将当前日期转换为同一年的1月1日
+                LocalDate newDate = currentDate.withMonth(1).withDayOfMonth(1);
+                log.info("newDate: " + newDate);
+                Instant instant = newDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+                target.setNatureYear(Date.from(instant));
+            } catch (DateTimeException e) {
+                // 处理日期时间异常，例如月份天数无效
+                System.err.println("Error setting date: " + e.getMessage());
+            }
+
+        } else {
+            target.setNatureYear(null);
         }
-
 
 
         log.info("根据部门查询指标-目标值全部信息: " + targetByDeptParam);

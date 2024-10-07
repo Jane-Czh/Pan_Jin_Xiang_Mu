@@ -139,14 +139,14 @@ export default {
         { id: '26', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balance', apiName: 'getMonthlyRawMaterialInventoryData', date: '', yDataName: 'MonthlyRawMaterialInventory', type: '2', icon: 'el-icon-s-data', title: '当月原材料存货额', dataName: '金额', content: '', sum: 'monthlyRawMaterialInventory' },
         { id: '27', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balance', apiName: 'getMonthlyWorkInProgressInventoryData', date: '', yDataName: 'MonthlyWorkInProgressInventory', type: '2', icon: 'el-icon-s-data', title: '当月在制品存货额', dataName: '金额', content: '', sum: 'monthlyWorkInProgressInventory' },
         { id: '28', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balance', apiName: 'getMonthAmountInStockData', date: '', yDataName: 'Month_Amount_InStock', type: '2', icon: 'el-icon-s-data', title: '当月库存商品存货额', dataName: '金额', content: '', sum: 'monthAmountInStock' },
-        { id: '30', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balanceRate', apiName: 'getGrowthRateInventoryAndSalesData', date: '', yDataName: 'GrowthRate_Sales', yDataName2: 'GrowthRate_Inventory', type: '2', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', dataName: '增长率', content: '', sum: 'growthRateInventory', sum2: 'growthRateSales' },
+        { id: '30', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balanceRate', apiName: 'getGrowthRateInventoryAndSalesData', date: '', yDataName: 'GrowthRate_Sales', yDataName2: 'GrowthRate_Inventory', type: '2', icon: 'el-icon-s-data', title: '存货增长率/销售增长率', dataName: '增长率', content: '', sum: 'growthRateInventoryAndSales', sum2: 'growthRateSales' },
         { id: '32', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balanceRate', apiName: 'getTurnoverRateReceivableData', date: '', yDataName: 'TurnoverRate_Receivable', type: '3', icon: 'el-icon-s-data', title: '应收账款周转率', dataName: '周转率', content: '', sum: 'turnoverRateReceivable' },
         { id: '33', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'monthNew', apiName: 'getCapitalTurnoverRateData', date: '', yDataName: 'Capital_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月资金周转率', dataName: '周转率', content: '', sum: 'capitalTurnoverRate' },
         { id: '34', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'monthNew', apiName: 'getInventoryTurnoverRateData', date: '', yDataName: 'Inventory_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月库存商品周转率', dataName: '周转率', content: '', sum: 'inventoryTurnoverRate' },
         { id: '35', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'monthNew', apiName: 'getRawMaterialTurnoverRateData', date: '', yDataName: 'Raw_Material_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月原材料周转率', dataName: '周转率', content: '', sum: 'rawMaterialTurnoverRate' },
         { id: '36', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'monthNew', apiName: 'getInprogressTurnoverRateData', date: '', yDataName: 'InProgress_Turnover_Rate', type: '3', icon: 'el-icon-s-data', title: '当月在制品周转率', dataName: '周转率', content: '', sum: 'inprogressTurnoverRate' },
         { id: '66', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'monthNew', apiName: 'getLongEstimatedItemsData', date: '', yDataName: 'Long_Estimated_Items', type: '3', icon: 'el-icon-s-data', title: '一年以上暂估行项目', dataName: '项目', content: '', sum: 'longEstimatedItems' },
-        { id: '70', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'day', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sum: 'inProgressDayRevenue' },
+        { id: '70', showTarget: 'financial', showType: 'SUM', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'day', apiName: 'getInprogressDayrevenueData', date: '', yDataName: 'InProgress_DayRevenue', type: '2', icon: 'el-icon-s-data', title: '当日在制品金额', dataName: '金额', content: '', sum: 'inprogressDayrevenue' },
         { id: '77', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'balance', apiName: 'getMonthlyInventoryTotalAmountData', date: '', yDataName: 'MonthlyInventoryTotalAmount', type: '2', icon: 'el-icon-s-data', title: '当月存货总额', dataName: '金额', content: '', sum: 'monthlyInventoryTotalAmount' },
         { id: '78', showTarget: 'financial', showType: 'NEW', showWarning: false, targetValue: 0, targetValueDate: '', kind: 'monthNew', apiName: 'getAddedValueMonthlyData', date: '', yDataName: 'Added_Value_Monthly', type: '1', icon: 'el-icon-s-data', title: '当月经济增加值', dataName: '金额', content: '', sum: 'addedValueMonthly' },
       ],
@@ -231,7 +231,7 @@ export default {
         //当日在制品总和数据
         const resDaySumDataNeededFields = {
           dataTime: resDaySum && resDaySum.data ? resDaySum.data.dataTime : '',
-          inProgressDayRevenue: resDaySum && resDaySum.data ? resDaySum.data.inProgressDayRevenue : 0
+          inprogressDayrevenue: resDaySum && resDaySum.data ? resDaySum.data.inProgressDayRevenue : 0
         };
 
         //资产负债最新数据
@@ -268,23 +268,23 @@ export default {
         //截至日期展示
         this.allIndex.forEach(item => {
           if (item.kind === 'balanceRate') {
-            item.date = resBalanceRate && resBalanceRate.data ? moment(resBalanceRate.data.yearAndMonth).format('YYYY-MM') : '-';
+            item.date = resBalanceRate && resBalanceRate.data ? moment(resBalanceRate.data.yearAndMonth).format('YYYY-MM') : '—';
           }
           else if (item.kind === 'interestNew') {
-            item.date = resInterestNew && resInterestNew.data ? moment(resInterestNew.data.yearAndMonth).format('YYYY-MM') : '-';
+            item.date = resInterestNew && resInterestNew.data ? moment(resInterestNew.data.yearAndMonth).format('YYYY-MM') : '—';
           }
 
           else if (item.kind === 'monthNew') {
-            item.date = resMonthNew && resMonthNew.data ? moment(resMonthNew.data.yearAndMonth).format('YYYY-MM') : '-';
+            item.date = resMonthNew && resMonthNew.data ? moment(resMonthNew.data.yearAndMonth).format('YYYY-MM') : '—';
           }
           else if (item.kind === 'balance') {
-            item.date = resBalanceNew && resBalanceNew.data ? moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') : '-';
+            item.date = resBalanceNew && resBalanceNew.data ? moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') : '—';
           } else if (item.kind === 'interests') {
-            item.date = resInterestSum && resInterestSum.data ? moment(resInterestSum.data.yearAndMonth).format('YYYY-MM') : '-';
+            item.date = resInterestSum && resInterestSum.data ? moment(resInterestSum.data.yearAndMonth).format('YYYY-MM') : '—';
           } else if (item.kind === 'day') {
-            item.date = resDaySum && resDaySum.data ? resDaySum.data.dataTime : '-';
+            item.date = resDaySum && resDaySum.data ? resDaySum.data.dataTime : '—';
           } else {
-            item.date = resMonthSum && resMonthSum.data ? moment(resMonthSum.data.yearAndMonth).format('YYYY-MM') : '-';
+            item.date = resMonthSum && resMonthSum.data ? moment(resMonthSum.data.yearAndMonth).format('YYYY-MM') : '—';
           }
         });
 
@@ -311,31 +311,31 @@ export default {
         this.balanceData = resBalanceNew.data || '';
         this.interestsData = resInterestSum.data || '';
         this.monthData = resMonthSum.data || '';
-        this.allData.yearAndMonth = moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') || '';
+        this.allData.yearAndMonth = moment(resBalanceNew.data.yearAndMonth).format('YYYY-MM') || '—';
         // 更新 allIndex 数组中每个元素的 content 字段
         this.allIndex.forEach(item => {
           if (item.id === '30') {
-            item.content = `最新一月：${allNewData[item.sum] !== undefined ? allNewData[item.sum] : '-'}`;
+            item.content = `最新一月：${allNewData[item.sum] !== undefined ? allNewData[item.sum] : '—'}`;
           }
           else if (item.id === '70') {
-            item.content = `最近一日：${allData[item.sum] || '-'}\t(元)`;
+            item.content = `最近一日：${allData[item.sum] || '—'}\t(元)`;
           }
           else {
             const key = item.sum;
             if (item.id === '4' || item.id === '5') {
-              item.content = `全年总计：${allData[key] || '-'}\t(台)`;
+              item.content = `全年总计：${allData[key] || '—'}\t(台)`;
             }
             else if (allData[key] !== undefined && item.showType == "SUM") {
-              item.content = `全年总计：${allData[key] || '-'}\t(万元)`;
+              item.content = `全年总计：${allData[key] || '—'}\t(万元)`;
             }
             else if (allNewData[key] !== undefined && item.showType == "NEW") {
               if (item.id === '32' || item.id === '33' || item.id === '34' || item.id === '35' || item.id === '36') {
-                item.content = `最新一月：${allNewData[key] || '-'}\t(次)`;
+                item.content = `最新一月：${allNewData[key] || '—'}\t(次)`;
               } else if (item.id === '66') {
-                item.content = `最新一月：${allNewData[key] || '-'}\t(项)`;
+                item.content = `最新一月：${allNewData[key] || '—'}\t(项)`;
               }
               else {
-                item.content = `最新一月：${allNewData[key] || '-'}\t(万元)`;
+                item.content = `最新一月：${allNewData[key] || '—'}\t(万元)`;
               }
             }
           }
@@ -344,7 +344,6 @@ export default {
         //目标值赋予及上下限预警
         this.allIndex.forEach(item => {
           resTarget.rows.forEach(row => {
-            console.log(item.targetValue)
             if (item.sum === row.indicatorName) {
               item.targetValue = row.targetValue;
               item.targetValueDate = row.natureYear;

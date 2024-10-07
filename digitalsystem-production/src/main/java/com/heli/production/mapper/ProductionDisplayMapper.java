@@ -1,5 +1,6 @@
 package com.heli.production.mapper;
 
+import com.heli.production.domain.ProductionFilling;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -69,4 +70,9 @@ public interface ProductionDisplayMapper {
                                                         @Param("endTime") Date endTime);
 
 
+    ProductionFilling selectNewFillingData();
+
+    DisplayEntity selectNewLaunchData();
+
+    DisplayEntity selectNewCompletionData();
 }

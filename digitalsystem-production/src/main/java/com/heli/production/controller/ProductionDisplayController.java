@@ -1,16 +1,15 @@
 package com.heli.production.controller;
 
+import com.heli.production.domain.ProductionFilling;
 import com.heli.production.service.IProductionDisplayService;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +26,46 @@ public class ProductionDisplayController extends BaseController {
 
     @Autowired
     private IProductionDisplayService productionDisplayService;
+
+    /**
+     * @description: 生产概览页面数据展示，获取最新一期数据
+     * @author: hong
+     * @date: 2024/9/27 9:12
+     * @version: 1.0
+     */
+//    @PreAuthorize("@ss.hasPermi('production:display:newFillingData')")
+    @GetMapping("/newFillingData")
+    public AjaxResult newFillingData() {
+        ProductionFilling fillingData = productionDisplayService.selectNewFillingData();
+        return success(fillingData);
+    }
+
+    /**
+     * @description: 生产概览页面数据展示，获取最新一期统计数据，用于上线数
+     * @author: hong
+     * @date: 2024/9/27 9:12
+     * @version: 1.0Production_Launch_Completion_Daily_Number
+     */
+//    @PreAuthorize("@ss.hasPermi('production:display:newLaunchData')")
+    @GetMapping("/newLaunchData")
+    public AjaxResult newLaunchData() {
+        DisplayEntity data = productionDisplayService.selectNewLaunchData();
+        return success(data);
+    }
+
+    /**
+     * @description: 生产概览页面数据展示，获取最新一期统计数据，用于完工数
+     * @author: hong
+     * @date: 2024/9/27 9:12
+     * @version: 1.0Production_Launch_Completion_Daily_Number
+     */
+//    @PreAuthorize("@ss.hasPermi('production:display:newCompletionData')")
+    @GetMapping("/newCompletionData")
+    public AjaxResult newCompletionData() {
+        DisplayEntity data = productionDisplayService.selectNewCompletionData();
+        return success(data);
+    }
+
 
     /**
      * 当月单台非BOM物料费用 指标24

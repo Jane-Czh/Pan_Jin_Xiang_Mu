@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.heli.tech.domain.Tech;
+import com.heli.tech.domain.TechNewProjectCompletionDTO;
+import com.heli.tech.domain.TechNewProjectProgressDTO;
+import com.heli.tech.domain.TechNonStandardDisplayDTO;
 import com.ruoyi.common.core.domain.DisplayEntity;
 
 /**
@@ -13,11 +16,10 @@ import com.ruoyi.common.core.domain.DisplayEntity;
  * @date 2024-04-27
  */
 public interface ITechService {
- public int updateCompletionRate();
 
-   int calculateCompletionRate(Date yearAndMonth);
+    int insertOrUpdateNonStandardData(Tech tech);
 
-    int insertOrUpdateTech(Tech tech);
+    void insertOrUpdateProjectData(Tech tech);
 
 
     Boolean checkTechMonthlyDataIsExisted(Date date);
@@ -27,11 +29,20 @@ public interface ITechService {
 
 //    public Tech calculateCompletionRate(Tech tech);
 
-    public int batchUpdateTech(Date date);
+//    public int batchUpdateTech(Date date);
+
+    boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
+
+    List<TechNonStandardDisplayDTO> selectNonStandardAVGDaysAndNum(Date startTime, Date endTime);
+
+    List<TechNewProjectProgressDTO> selectProjectProgress(Date startTime, Date endTime);
+
+    List<TechNewProjectCompletionDTO> selectProjectCompletion(Date startTime, Date endTime);
+
+    int updateTechAllData();
 
 
-    List<DisplayEntity> selectNonStandardAVGPreparationDays(Date startTime, Date endTime);
-    List<DisplayEntity> selectPRDScheduleCompletionRate(Date startTime, Date endTime);
+
 
 
     /**
@@ -82,7 +93,10 @@ public interface ITechService {
      */
     public int deleteTechByTechId(Long techId);
 
-    boolean checkTechMonthlyDataIsExistedByYear(Integer naturalYear);
+
+    Date selectMaxMonth();
+
+    Tech selectTechByDate(Date date);
 }
 
 

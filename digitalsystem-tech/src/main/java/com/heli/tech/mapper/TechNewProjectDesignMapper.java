@@ -1,5 +1,6 @@
 package com.heli.tech.mapper;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -71,4 +72,14 @@ public interface TechNewProjectDesignMapper {
     public int deleteTechNewProjectDesignByTdIds(Long[] tdIds);
 
 
+    Integer selectTechTotalProjectCount(@Param("yearAndMonth") Date yearAndMonth);
+
+    Integer selectTechUnstartedProjectCount(@Param("yearAndMonth") Date yearAndMonth);
+
+
+    Integer selectTechCompletedProjectCount(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectTechTotalPoints(@Param("yearAndMonth") Date yearAndMonth);
+
+    BigDecimal selectTechAccumulatedScore(@Param("yearAndMonth") Date yearAndMonth);
 }

@@ -24,10 +24,11 @@
         <result property="newFormId"    column="new_form_id"    />
         <result property="businesses"    column="businesses"    />
         <result property="subBusinesses"    column="sub_businesses"    />
+        <result property="regulationId"    column="regulation_id"    />
     </resultMap>
 
     <sql id="selectFormInfoTableVo">
-        select form_id, form_title, scope, effective_date, form_name, form_type, form_path, form_size, create_username, department_category, remark, old_form_id, revision_time, revision_content, reviser, new_flag, new_form_id, businesses, sub_businesses from Form_Info_table
+        select form_id, form_title, scope, effective_date, form_name, form_type, form_path, form_size, create_username, department_category, remark, old_form_id, revision_time, revision_content, reviser, new_flag, new_form_id, businesses, sub_businesses,regulation_id from Form_Info_table
     </sql>
 
     <select id="selectFormInfoTableList" parameterType="FormInfoTable" resultMap="FormInfoTableResult">
@@ -51,6 +52,7 @@
             <if test="newFormId != null "> and new_form_id = #{newFormId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+            <if test="regulationId != null  and regulationId != ''"> and regulation_id = #{regulationId}</if>
         </where>
     </select>
 
@@ -75,6 +77,7 @@
             <if test="newFormId != null "> and new_form_id = #{newFormId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+            <if test="regulationId != null  and regulationId != ''"> and regulation_id = #{regulationId}</if>
         </where>
     </select>
 
@@ -104,6 +107,7 @@
             <if test="newFormId != null">new_form_id,</if>
             <if test="businesses != null">businesses,</if>
             <if test="subBusinesses != null">sub_businesses,</if>
+            <if test="regulationId != null">regulation_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="formTitle != null and formTitle != ''">#{formTitle},</if>
@@ -124,6 +128,7 @@
             <if test="newFormId != null">#{newFormId},</if>
             <if test="businesses != null">#{businesses},</if>
             <if test="subBusinesses != null">#{subBusinesses},</if>
+            <if test="regulationId != null">#{regulationId},</if>
         </trim>
     </insert>
 
@@ -148,6 +153,7 @@
             <if test="newFormId != null">new_form_id = #{newFormId},</if>
             <if test="businesses != null">businesses = #{businesses},</if>
             <if test="subBusinesses != null">sub_businesses = #{subBusinesses},</if>
+            <if test="regulationId != null">regulation_id = #{regulationId},</if>
         </trim>
         where form_id = #{formId}
     </update>

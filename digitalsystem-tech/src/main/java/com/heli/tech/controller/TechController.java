@@ -2,12 +2,11 @@ package com.heli.tech.controller;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-import com.heli.tech.service.ITechAnnualPlanCountService;
-import com.ruoyi.common.core.domain.DisplayEntity;
+import com.heli.tech.domain.TechNewProjectCompletionDTO;
+import com.heli.tech.domain.TechNewProjectProgressDTO;
+import com.heli.tech.domain.TechNonStandardDisplayDTO;
 import com.ruoyi.common.core.domain.DisplayRequestParam;
-import com.ruoyi.common.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +38,25 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TechController extends BaseController {
     @Autowired
     private ITechService techService;
-    @Autowired
-    private ITechAnnualPlanCountService techAnnualPlanCountService;
 
-    @PreAuthorize("@ss.hasPermi('tech:monthly:update')")
+//    @PreAuthorize("@ss.hasPermi('tech:monthly:update')")
     @Log(title = "[技术]计算", businessType = BusinessType.UPDATE)
     @PostMapping("/data/update")
     public AjaxResult test() {
-        return toAjax(techService.updateCompletionRate());
+        return toAjax(techService.updateTechAllData());
+    }
+
+
+    /**
+     * 概览页面
+     */
+//    @PreAuthorize("@ss.hasPermi('tech:monthly:add')")
+    @Log(title = "[技术]指标填报", businessType = BusinessType.INSERT)
+    @GetMapping("/display/newData")
+    public AjaxResult newData() {
+        Date date = techService.selectMaxMonth();
+//        return toAjax(techService.insertTech(tech));
+        return success(techService.selectTechByDate(date));
     }
 
     /**
@@ -56,31 +66,34 @@ public class TechController extends BaseController {
     @Log(title = "[技术]指标填报", businessType = BusinessType.INSERT)
     @PostMapping("/data/monthly")
     public AjaxResult add(@RequestBody Tech tech) {
-        if (!techAnnualPlanCountService.checkTechAnnualDataIsExisted(DateUtils.getYear(tech.getYearAndMonth()))) {
-            return AjaxResult.error("年度总计划未上传");
-        }
-//        if (!techService.checkTechMonthlyDataIsExisted(DateUtils.getLastMonth(tech.getYearAndMonth()))
-//            && techService.checkDataExist()) {
-//            return AjaxResult.error("上月数据未填报");
-//        }
         if (techService.checkTechMonthlyDataIsExisted(tech.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
         }
         tech.setCreateBy(getUsername());
-//        return toAjax(techService.insertTech(techService.calculateCompletionRate(tech)));
         return toAjax(techService.insertTech(tech));
     }
 
+    // 展示非标准项目平均预计完成天数
     @PreAuthorize("@ss.hasPermi('tech:display:nonStandardAVGPreparationDays')")
     @PostMapping("/display/nonStandardAVGPreparationDays")
     public TableDataInfo nonStandardAVGPreparationDays(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = techService.selectNonStandardAVGPreparationDays(time.getStartTime(),time.getEndTime());
+        List<TechNonStandardDisplayDTO> list = techService.selectNonStandardAVGDaysAndNum(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
     }
-    @PreAuthorize("@ss.hasPermi('tech:display:prdScheduleCompletionRate')")
-    @PostMapping("/display/prdScheduleCompletionRate")
-    public TableDataInfo prdScheduleCompletionRate(@RequestBody DisplayRequestParam time) {
-        List<DisplayEntity> list = techService.selectPRDScheduleCompletionRate(time.getStartTime(),time.getEndTime());
+
+    // 展示项目进度情况
+    @PreAuthorize("@ss.hasPermi('tech:display:projectProgress')")
+    @PostMapping("/display/projectProgress")
+    public TableDataInfo projectProgress(@RequestBody DisplayRequestParam time) {
+        List<TechNewProjectProgressDTO> list = techService.selectProjectProgress(time.getStartTime(), time.getEndTime());
+        return getDataTable(list);
+    }
+
+    // 展示项目完成情况
+    @PreAuthorize("@ss.hasPermi('tech:display:projectCompletion')")
+    @PostMapping("/display/projectCompletion")
+    public TableDataInfo projectCompletion(@RequestBody DisplayRequestParam time) {
+        List<TechNewProjectCompletionDTO> list = techService.selectProjectCompletion(time.getStartTime(), time.getEndTime());
         return getDataTable(list);
     }
 
@@ -112,11 +125,6 @@ public class TechController extends BaseController {
     @PutMapping("/data/monthly")
     public AjaxResult edit(@RequestBody Tech tech) {
         tech.setUpdateBy(getUsername());
-        if (!Objects.equals(techService.selectTechByTechId(tech.getTechId()).getCompletedmonthlyPlancounts(), tech.getCompletedmonthlyPlancounts())) {
-            techService.updateTech(tech);
-            techService.batchUpdateTech(tech.getYearAndMonth());
-            return AjaxResult.success();
-        }
         return toAjax(techService.updateTech(tech));
     }
 

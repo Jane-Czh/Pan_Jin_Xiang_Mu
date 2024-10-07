@@ -70,6 +70,15 @@
         order by yearAndMonth ASC
     </select>
 
+    <!--  概览页面数据展示  -->
+    <select id="selectNewData" resultType="com.heli.safety.domain.SafetyEp">
+        select * from Safety_EP
+        where Year_And_Month = (select max(Year_And_Month) from Safety_EP)
+    </select>
+
+    <select id="selectMaxDateFromFailureCategoryDistribution" resultType="java.util.Date">
+        select max(Year_And_Month) from Safety_EP_Equipment_Failure_Category_Distribution
+    </select>
 
 
 </mapper>

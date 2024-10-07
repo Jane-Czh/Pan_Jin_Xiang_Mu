@@ -80,4 +80,5 @@ public interface TechNonStandardOrderMapper {
     public int deleteTechNonStandardOrderByTnIds(Long[] tnIds);
 
 
+    int countNonStandardOrderNum(Date yearAndMonth);
 }

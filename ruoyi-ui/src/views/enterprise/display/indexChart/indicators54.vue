@@ -25,7 +25,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getCumulativeAverageIncomeData } from '@/api/enterprise/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -49,19 +49,23 @@ export default {
     mounted() {
         this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '' };
         this.defaultMonth()
+        // console.log(this.routerData)
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]);
+            this.timeData.endTime = new Date(this.selectedDate[1]);
+            // console.log(this.selectedDate[0])
+            // console.log(this.selectedDate[1])
+            console.log(this.timeData)
             try {
                 this.loading = true
                 const res = await getCumulativeAverageIncomeData(this.timeData);
                 this.data = res.rows
-                const yAxisDataLength = this.data.length;
-                this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+                // const yAxisDataLength = this.data.length;
+                // this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 const timeDataBefore = this.timeData
                 timeDataBefore.startTime.setFullYear(timeDataBefore.startTime.getFullYear() - 1)
                 timeDataBefore.endTime.setFullYear(timeDataBefore.endTime.getFullYear() - 1)
@@ -80,11 +84,39 @@ export default {
                     })
                 });
 
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                console.log(newTarget)
+                const res1 = await getNameTarget(newTarget)
+                let nowTarget = res1.rows
+                console.log(res1)
+                let allTarget = []; // 初始化目标数组
+                nowTarget.forEach(item => {
+                    let natureYear = moment(item.natureYear).format('YYYY')
+                    let targetValue = item.targetValue; // 目标值可能是数字或null
+                    allTarget.push({ natureYear, targetValue });
+                })
+                console.log(nowTarget)
+                this.data.forEach(item => {
+                    const year = moment(item.yearAndMonth).format('YYYY')
+                    allTarget.forEach(row => {
+                        if (year === row.natureYear) {
+                            item.targetValue = row.targetValue
+                        }
+                    })
+                });
+                console.log(this.data)
+
+
                 this.loading = false
                 this.updateChart()
             } catch (error) {
-                this.loading = false
                 console.log(error)
+                this.loading = false
+
             }
         },
         handleDateChange(value) {
@@ -174,6 +206,17 @@ export default {
                     });
                 }
             };
+
+            const labelOption = {
+                show: true,
+                position: app.config.position,
+                distance: app.config.distance,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                rotate: app.config.rotate,
+                formatter: '{c}',
+                fontSize: 14,
+            };
             // 根据条件决定是否添加目标值系列
             let series = [
                 {
@@ -203,22 +246,9 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
-            const labelOption = {
-                show: true,
-                position: app.config.position,
-                distance: app.config.distance,
-                align: app.config.align,
-                verticalAlign: app.config.verticalAlign,
-                rotate: app.config.rotate,
-                formatter: '{c}',
-                fontSize: 12,
-                rich: {
-                    name: {}
-                }
-            };
             this.option = {
                 title: {
                     text: '累计人均收入',
@@ -230,7 +260,7 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['收入', '同期收入', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['收入', '同期收入', (this.routerData.targetValue != '' && this.routerData.targetValue != 0) ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -272,14 +302,6 @@ export default {
                 }
             });
         },
-        // defaultMonth() {
-        //     const currentDate = new Date();
-        //     const currentYear = currentDate.getFullYear();
-        //     const currentMonth = currentDate.getMonth() + 1;
-        //     const startDate = new Date(currentYear, 0, 1);
-        //     const endDate = new Date(currentYear, currentMonth, 0);
-        //     this.selectedDate = [startDate, endDate];
-        // },
         defaultMonth() {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();

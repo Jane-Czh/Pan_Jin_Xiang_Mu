@@ -79,7 +79,21 @@ export function getOutputPercapitavalueData(data) {
 
 
 
+// 安环指标总览最新展示
+export function getSafetyNewData() {
+  return request({
+    url: `/safetyEp/display/newData`,
+    method: 'get',
+  })
+}
 
+// 故障类别次数分布最新展示
+export function getSafetyTypeNewData() {
+  return request({
+    url: `/safetyEp/display/newOutputPercapitavalue`,
+    method: 'get',
+  })
+}
 
 
 

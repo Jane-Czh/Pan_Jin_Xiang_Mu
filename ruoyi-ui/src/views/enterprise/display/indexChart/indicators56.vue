@@ -21,7 +21,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getMonthlyFunctionalAVGIncomeData } from '@/api/enterprise/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -50,8 +50,8 @@ export default {
     },
     methods: {
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+            this.timeData.startTime = new Date(this.selectedDate[0]);
+            this.timeData.endTime = new Date(this.selectedDate[1]);
             try {
                 this.loading = true
                 const res = await getMonthlyFunctionalAVGIncomeData(this.timeData);
@@ -75,6 +75,31 @@ export default {
                         }
                     })
                 });
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                const tmp = await getNameTarget(newTarget)
+                let nowTarget = tmp.rows
+                let allTarget = []; // 初始化目标数组
+                nowTarget.forEach(item => {
+                    let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+                    let targetValue = item.targetValue; // 目标值可能是数字或null
+                    allTarget.push({ natureYear, targetValue });
+                })
+                this.data.forEach(item => {
+                    const year = moment(item.yearAndMonth).format('YYYY')
+                    allTarget.forEach(row => {
+                        if (year === row.natureYear) {
+                            item.targetValue = row.targetValue
+                        }
+                    })
+                });
+                console.log(this.data)
+
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -169,6 +194,20 @@ export default {
                     });
                 }
             };
+
+            const labelOption = {
+                show: true,
+                position: app.config.position,
+                distance: app.config.distance,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                rotate: app.config.rotate,
+                formatter: '{c}',
+                fontSize: 14,
+                rich: {
+                    name: {}
+                }
+            };
             // 根据条件决定是否添加目标值系列
             let series = [
                 {
@@ -198,22 +237,9 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
-            const labelOption = {
-                show: true,
-                position: app.config.position,
-                distance: app.config.distance,
-                align: app.config.align,
-                verticalAlign: app.config.verticalAlign,
-                rotate: app.config.rotate,
-                formatter: '{c}',
-                fontSize: 12,
-                rich: {
-                    name: {}
-                }
-            };
             this.option = {
                 title: {
                     text: '月度累计职能人均收入',
@@ -225,7 +251,7 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['收入', '同期收入', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['收入', '同期收入', (this.routerData.targetValue != '' && this.routerData.targetValue != 0) ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

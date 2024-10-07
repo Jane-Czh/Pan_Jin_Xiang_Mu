@@ -79,6 +79,17 @@ public class RegulationsInfoTableController extends BaseController {
 
 
     /**
+     * 查询所有历史版本文件列表
+     */
+    @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")
+    @GetMapping(value = "/listhistory")
+    public List<RegulationsInfoTable> listHistoryFilemanagement(RegulationsInfoTable regulationsInfoTable) {
+
+        List<RegulationsInfoTable> list = regulationsInfoTableService.listHistoryFilemanagement(regulationsInfoTable);
+        return list;
+    }
+
+    /**
      * 查询历史版本文件列表
      */
     @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")

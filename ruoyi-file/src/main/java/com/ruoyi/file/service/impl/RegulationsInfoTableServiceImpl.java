@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.file.entity.regulationCountsRespondEntity;
 import com.ruoyi.file.entity.regulationRespondEntity;
 import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
@@ -84,6 +85,13 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
     public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable) {
         return regulationsInfoTableMapper.selectRegulationRecycleList(regulationsInfoTable);
     }
+
+    @Override
+    public List<RegulationsInfoTable> listHistoryFilemanagement(RegulationsInfoTable regulationsInfoTable) {
+        return regulationsInfoTableMapper.listHistoryFilemanagement(regulationsInfoTable);
+    }
+
+
 
     /**
      * 查询历史版本文件列表

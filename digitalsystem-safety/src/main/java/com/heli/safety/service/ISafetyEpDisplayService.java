@@ -1,5 +1,6 @@
 package com.heli.safety.service;
 
+import com.heli.safety.domain.SafetyEp;
 import com.ruoyi.common.core.domain.DisplayEntity;
 
 import java.util.Date;
@@ -38,4 +39,8 @@ public interface ISafetyEpDisplayService {
      * 当月设备维修成本-替换件成本 指标69
      */
     List<DisplayEntity> selectCurEquipmentReplacementCost(Date startTime, Date endTime);
+
+    SafetyEp selectNewData();
+
+    Date selectMaxDateFromFailureCategoryDistribution();
 }

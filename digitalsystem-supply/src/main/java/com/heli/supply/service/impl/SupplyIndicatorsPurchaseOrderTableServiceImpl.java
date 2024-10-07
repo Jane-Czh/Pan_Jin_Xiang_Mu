@@ -52,6 +52,13 @@ public class SupplyIndicatorsPurchaseOrderTableServiceImpl implements ISupplyInd
             cmp.setTotalPurchaseAmount(totalPurchaseAmount.get(i).getData().divide(BigDecimal.valueOf(10000),6, RoundingMode.HALF_UP));
             cmp.setControlledMaterialPurchases(controlledMaterialPurchases.get(i).getData().divide(BigDecimal.valueOf(10000),6, RoundingMode.HALF_UP));
             cmp.setControlledPurchaseAmountRatio(controlledMaterialPurchases.get(i).getData().multiply(BigDecimal.valueOf(100)).divide(totalPurchaseAmount.get(i).getData(),2, RoundingMode.HALF_UP));
+            int sumControlledMaterialPurchases = 0;
+            int sumTotalPurchaseAmount = 0;
+            for (int j = 0; j <= i; j++){
+                sumControlledMaterialPurchases += controlledMaterialPurchases.get(j).getData().intValue();
+                sumTotalPurchaseAmount += totalPurchaseAmount.get(j).getData().intValue();
+            }
+            cmp.setYearAmountRatio(BigDecimal.valueOf(sumControlledMaterialPurchases).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(sumTotalPurchaseAmount),2, RoundingMode.HALF_UP));
             cmp.setYearAndMonth(totalPurchaseAmount.get(i).getYearAndMonth());
             cmp.setCreateBy(username);
             cmp.setCreateTime(DateUtils.getNowDate());

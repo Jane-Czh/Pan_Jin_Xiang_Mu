@@ -146,6 +146,22 @@ export default {
                     });
                 }
             };
+
+            const labelOption = {
+                show: true,
+                position: app.config.position,
+                distance: app.config.distance,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                rotate: app.config.rotate,
+                formatter: (params) => {
+                    return params.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: false });
+                },
+                fontSize: 16,
+                rich: {
+                    name: {}
+                }
+            };
             // 根据条件决定是否添加目标值系列
             let series = [{
                 name: '班组自查合格率',
@@ -177,21 +193,6 @@ export default {
                     data: this.targetValueArray,
                 });
             }
-            const labelOption = {
-                show: true,
-                position: app.config.position,
-                distance: app.config.distance,
-                align: app.config.align,
-                verticalAlign: app.config.verticalAlign,
-                rotate: app.config.rotate,
-                formatter: (params) => {
-                    return params.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: false });
-                },
-                fontSize: 16,
-                rich: {
-                    name: {}
-                }
-            };
             this.option = {
                 title: {
                     text: '班组自查合格率与下道工序反馈合格率'

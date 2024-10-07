@@ -1,6 +1,7 @@
 package com.ruoyi.common.indicator.service;
 
 import com.ruoyi.common.indicator.domain.IndicatorsTarget;
+import com.ruoyi.common.indicator.domain.TargetByNameParam;
 
 import java.util.List;
 
@@ -59,4 +60,6 @@ public interface IIndicatorsTargetService
      * @return 结果
      */
     public int deleteIndicatorsTargetByItId(Long itId);
+
+    List<IndicatorsTarget> selectTargetListByNameAndDate(TargetByNameParam targetByNameParam);
 }

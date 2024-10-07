@@ -146,12 +146,14 @@
     <select id="selectLaunchNumGroupByDate" resultType="com.heli.production.domain.ProductionCountNumberEntity">
         select Launch_Date as realTime,count('Launch_Date') as launch
         from Production_Table
+        where Launch_Date is not null
         group by Launch_Date
     </select>
 
     <select id="selectCompletionNumGroupByDate" resultType="com.heli.production.domain.ProductionCountNumberEntity">
         select Planned_Completion_Period as realTime,count('Planned_Completion_Period') as completion
         from Production_Table
+        where Planned_Completion_Period is not null
         group by Planned_Completion_Period
     </select>
 

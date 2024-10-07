@@ -20,6 +20,9 @@ public interface ITechNonStandardOrderService {
 
     public int deleteTechNonStandardOrderByMonth(@Param("yearAndMonth") Date yearAndMonth);
 
+    void calculateNonStandardOrder(Date yearAndMonth);
+
+
 
     Boolean checkNonStandardOrderUploadStatus(Date yearAndMonth);
 

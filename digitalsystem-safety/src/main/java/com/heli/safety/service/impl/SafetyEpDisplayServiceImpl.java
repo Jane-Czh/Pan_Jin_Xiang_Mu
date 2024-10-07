@@ -1,5 +1,6 @@
 package com.heli.safety.service.impl;
 
+import com.heli.safety.domain.SafetyEp;
 import com.heli.safety.mapper.SafetyEpDisplayMapper;
 import com.heli.safety.service.ISafetyEpDisplayService;
 import com.ruoyi.common.core.domain.DisplayEntity;
@@ -70,5 +71,15 @@ public class SafetyEpDisplayServiceImpl implements ISafetyEpDisplayService {
     @Override
     public List<DisplayEntity> selectCurEquipmentReplacementCost(Date startTime, Date endTime) {
         return safetyEpDisplayMapper.selectCurEquipmentReplacementCost(startTime,endTime);
+    }
+
+    @Override
+    public SafetyEp selectNewData() {
+        return safetyEpDisplayMapper.selectNewData();
+    }
+
+    @Override
+    public Date selectMaxDateFromFailureCategoryDistribution() {
+        return safetyEpDisplayMapper.selectMaxDateFromFailureCategoryDistribution();
     }
 }

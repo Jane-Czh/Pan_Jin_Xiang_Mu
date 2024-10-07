@@ -11,6 +11,7 @@ export default {
     dataName: { type: String, default: '金额' },
     xAxisData: { type: Array, default: () => [] },
     yAxisData: { type: Array, default: () => [] },
+    dataOfTarget: { type: Array, default: () => [] },
     legendData: { type: String, default: null },
     targetValue: { type: Number, default: 0 },
     targetValueDate: { type: String, default: null },
@@ -165,7 +166,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          data: this.targetValueArray,
+          data: this.dataOfTarget.map(item => item.targetValue),
         });
       }
       this.option = {

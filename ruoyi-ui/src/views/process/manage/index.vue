@@ -90,6 +90,15 @@
         <el-button
           type="primary"
           plain
+          icon="el-icon-edit"
+          size="small"
+          @click="toDetail()"
+          >流程新建</el-button
+        >
+
+        <el-button
+          type="primary"
+          plain
           icon="el-icon-download"
           size="small"
           @click="exportAll"
@@ -557,7 +566,7 @@ import {
   listFilemanagement,
   listFormfilemanagement,
   listFilemanagementAll,
-  listFormfilemanagementAll
+  listFormfilemanagementAll,
 } from "@/api/system/project";
 
 import ShowPanel from "@/views/process/ef/show_panel";
@@ -575,8 +584,8 @@ import { saveAs } from "file-saver";
 import { Loading } from "element-ui";
 import { listDept } from "@/api/system/project";
 
-import { Filemanagement } from  "@/views/file/filemanagement"
-import { mapState } from 'vuex';
+import { Filemanagement } from "@/views/file/filemanagement";
+import { mapState } from "vuex";
 
 export default {
   name: "Project",
@@ -771,10 +780,23 @@ export default {
     this.getList();
     this.getDeptList();
   },
-  created() {
-  },
+  created() {},
 
   methods: {
+    //-----------------------------------------------------------------------
+    //路由跳转--转到数据展示部分
+    toDetail() {
+      //item 是当前的最新版本流程A
+      // console.log("item========>",item)
+      //设置id为每个流程都单独指定一个统计数据的页面
+      this.$router.push("/ef/panel");
+      // this.$router.push("/process/statistics/indicators/" + id);
+      // this.$router.push({
+      //     ''
+      //   })
+    },
+    //-----------------------------------------------------------------------
+
     /** 查询部门列表 */
     getDeptList() {
       listDept(this.queryDeptParams).then((response) => {

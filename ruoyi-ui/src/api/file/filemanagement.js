@@ -17,6 +17,14 @@ export function listAllFilemanagement(query) {
     params: query
   })
 }
+// 查询所有历史文件列表
+export function listHistoryFilemanagement(query) {
+  return request({
+    url: '/file/filemanagement/listhistory',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询历史文件列表
 export function getRegulationsHistory(currentId) {

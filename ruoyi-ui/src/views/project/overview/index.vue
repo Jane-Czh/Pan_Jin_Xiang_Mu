@@ -236,7 +236,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10000,
         projectName: null,
         category: null,
         level: null,
@@ -658,7 +658,6 @@ export default {
         const averageValue = total / item.value.length; // 计算平均值
         item.value = averageValue; // 直接将平均值赋值给 item.value
       });
-
       const option = {
         title: {
           text: '平均进度统计',
@@ -681,7 +680,13 @@ export default {
         series: [{
           name: '得分',
           data: ChartData.map(item => item.value),
-          type: 'bar'
+          type: 'bar',
+          label: { // 添加此配置以显示数据标签
+            show: true,
+            position: 'top',
+            formatter: params => params.value.toFixed(2), 
+            color: '#000' // 可以根据需要设置标签颜色
+          }
         }]
       };
 
@@ -729,7 +734,13 @@ export default {
         series: [{
           name: '部门',
           data: ChartData.map(item => item.value),
-          type: 'bar'
+          type: 'bar',
+          label: { // 添加此配置以显示数据标签
+            show: true,
+            position: 'top',
+            formatter: '{c}', // {c} 表示数据值
+            color: '#000' // 可以根据需要设置标签颜色
+          }
         }]
       };
 

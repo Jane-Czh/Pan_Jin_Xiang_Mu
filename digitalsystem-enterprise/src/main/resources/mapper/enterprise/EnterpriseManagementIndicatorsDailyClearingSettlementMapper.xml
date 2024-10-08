@@ -7,49 +7,34 @@
     <resultMap type="EnterpriseManagementIndicatorsDailyClearingSettlement" id="EnterpriseManagementIndicatorsDailyClearingSettlementResult">
         <result property="edId"    column="ED_ID"    />
         <result property="yearAndMonth"    column="Year_And_Month"    />
-        <result property="orderEntryDelayScore"    column="Order_Entry_Delay_Score"    />
         <result property="orderEntryDelayRatio"    column="Order_Entry_Delay_Ratio"    />
-        <result property="shipmentDelayScore"    column="Shipment_Delay_Score"    />
         <result property="shipmentDelayRatio"    column="Shipment_Delay_Ratio"    />
-        <result property="productionReportDelayScore"    column="Production_Report_Delay_Score"    />
         <result property="productionReportDelayRatio"    column="Production_Report_Delay_Ratio"    />
-        <result property="inspectionDelayScore"    column="Inspection_Delay_Score"    />
         <result property="inspectionDelayRate"    column="Inspection_Delay_Rate"    />
-        <result property="invoicePostingDelayScore"    column="Invoice_Posting_Delay_Score"    />
         <result property="invoicePostingDelayRate"    column="Invoice_Posting_Delay_Rate"    />
-        <result property="unsettledAccountsScore"    column="Unsettled_Accounts_Score"    />
         <result property="unsettledAccountsRatio"    column="Unsettled_Accounts_Ratio"    />
         <result property="createBy"    column="CREATE_BY"    />
         <result property="createTime"    column="CREATE_TIME"    />
         <result property="updateBy"    column="UPDATE_BY"    />
         <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="flag"    column="flag"    />
     </resultMap>
 
     <sql id="selectEnterpriseManagementIndicatorsDailyClearingSettlementVo">
-        select ED_ID, Year_And_Month, Order_Entry_Delay_Score, Order_Entry_Delay_Ratio, Shipment_Delay_Score, Shipment_Delay_Ratio, Production_Report_Delay_Score, Production_Report_Delay_Ratio, Inspection_Delay_Score, Inspection_Delay_Rate, Invoice_Posting_Delay_Score, Invoice_Posting_Delay_Rate, Unsettled_Accounts_Score, Unsettled_Accounts_Ratio, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Daily_Clearing_Settlement
+        select ED_ID, Year_And_Month, Order_Entry_Delay_Ratio, Shipment_Delay_Ratio, Production_Report_Delay_Ratio, Inspection_Delay_Rate, Invoice_Posting_Delay_Rate, Unsettled_Accounts_Ratio, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, flag from Enterprise_Management_Indicators_Daily_Clearing_Settlement
     </sql>
-
-        <!--检查当月填报数据是否上传-->
-    <select id="checkDailyClearingDataIsExisted" parameterType="Date" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Daily_Clearing_Settlement WHERE Year_And_Month=#{yearAndMonth})
-    </select>
 
     <select id="selectEnterpriseManagementIndicatorsDailyClearingSettlementList" parameterType="EnterpriseManagementIndicatorsDailyClearingSettlement" resultMap="EnterpriseManagementIndicatorsDailyClearingSettlementResult">
         <include refid="selectEnterpriseManagementIndicatorsDailyClearingSettlementVo"/>
         <where>
             <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>
-            <if test="orderEntryDelayScore != null "> and Order_Entry_Delay_Score = #{orderEntryDelayScore}</if>
             <if test="orderEntryDelayRatio != null "> and Order_Entry_Delay_Ratio = #{orderEntryDelayRatio}</if>
-            <if test="shipmentDelayScore != null "> and Shipment_Delay_Score = #{shipmentDelayScore}</if>
             <if test="shipmentDelayRatio != null "> and Shipment_Delay_Ratio = #{shipmentDelayRatio}</if>
-            <if test="productionReportDelayScore != null "> and Production_Report_Delay_Score = #{productionReportDelayScore}</if>
             <if test="productionReportDelayRatio != null "> and Production_Report_Delay_Ratio = #{productionReportDelayRatio}</if>
-            <if test="inspectionDelayScore != null "> and Inspection_Delay_Score = #{inspectionDelayScore}</if>
             <if test="inspectionDelayRate != null "> and Inspection_Delay_Rate = #{inspectionDelayRate}</if>
-            <if test="invoicePostingDelayScore != null "> and Invoice_Posting_Delay_Score = #{invoicePostingDelayScore}</if>
             <if test="invoicePostingDelayRate != null "> and Invoice_Posting_Delay_Rate = #{invoicePostingDelayRate}</if>
-            <if test="unsettledAccountsScore != null "> and Unsettled_Accounts_Score = #{unsettledAccountsScore}</if>
             <if test="unsettledAccountsRatio != null "> and Unsettled_Accounts_Ratio = #{unsettledAccountsRatio}</if>
+            <if test="flag != null "> and flag = #{flag}</if>
         </where>
     </select>
 
@@ -62,41 +47,31 @@
         insert into Enterprise_Management_Indicators_Daily_Clearing_Settlement
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month,</if>
-            <if test="orderEntryDelayScore != null">Order_Entry_Delay_Score,</if>
             <if test="orderEntryDelayRatio != null">Order_Entry_Delay_Ratio,</if>
-            <if test="shipmentDelayScore != null">Shipment_Delay_Score,</if>
             <if test="shipmentDelayRatio != null">Shipment_Delay_Ratio,</if>
-            <if test="productionReportDelayScore != null">Production_Report_Delay_Score,</if>
             <if test="productionReportDelayRatio != null">Production_Report_Delay_Ratio,</if>
-            <if test="inspectionDelayScore != null">Inspection_Delay_Score,</if>
             <if test="inspectionDelayRate != null">Inspection_Delay_Rate,</if>
-            <if test="invoicePostingDelayScore != null">Invoice_Posting_Delay_Score,</if>
             <if test="invoicePostingDelayRate != null">Invoice_Posting_Delay_Rate,</if>
-            <if test="unsettledAccountsScore != null">Unsettled_Accounts_Score,</if>
             <if test="unsettledAccountsRatio != null">Unsettled_Accounts_Ratio,</if>
             <if test="createBy != null">CREATE_BY,</if>
             <if test="createTime != null">CREATE_TIME,</if>
             <if test="updateBy != null">UPDATE_BY,</if>
             <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="flag != null">flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="yearAndMonth != null">#{yearAndMonth},</if>
-            <if test="orderEntryDelayScore != null">#{orderEntryDelayScore},</if>
             <if test="orderEntryDelayRatio != null">#{orderEntryDelayRatio},</if>
-            <if test="shipmentDelayScore != null">#{shipmentDelayScore},</if>
             <if test="shipmentDelayRatio != null">#{shipmentDelayRatio},</if>
-            <if test="productionReportDelayScore != null">#{productionReportDelayScore},</if>
             <if test="productionReportDelayRatio != null">#{productionReportDelayRatio},</if>
-            <if test="inspectionDelayScore != null">#{inspectionDelayScore},</if>
             <if test="inspectionDelayRate != null">#{inspectionDelayRate},</if>
-            <if test="invoicePostingDelayScore != null">#{invoicePostingDelayScore},</if>
             <if test="invoicePostingDelayRate != null">#{invoicePostingDelayRate},</if>
-            <if test="unsettledAccountsScore != null">#{unsettledAccountsScore},</if>
             <if test="unsettledAccountsRatio != null">#{unsettledAccountsRatio},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="flag != null">#{flag},</if>
         </trim>
     </insert>
 
@@ -104,22 +79,17 @@
         update Enterprise_Management_Indicators_Daily_Clearing_Settlement
         <trim prefix="SET" suffixOverrides=",">
             <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>
-            <if test="orderEntryDelayScore != null">Order_Entry_Delay_Score = #{orderEntryDelayScore},</if>
             <if test="orderEntryDelayRatio != null">Order_Entry_Delay_Ratio = #{orderEntryDelayRatio},</if>
-            <if test="shipmentDelayScore != null">Shipment_Delay_Score = #{shipmentDelayScore},</if>
             <if test="shipmentDelayRatio != null">Shipment_Delay_Ratio = #{shipmentDelayRatio},</if>
-            <if test="productionReportDelayScore != null">Production_Report_Delay_Score = #{productionReportDelayScore},</if>
             <if test="productionReportDelayRatio != null">Production_Report_Delay_Ratio = #{productionReportDelayRatio},</if>
-            <if test="inspectionDelayScore != null">Inspection_Delay_Score = #{inspectionDelayScore},</if>
             <if test="inspectionDelayRate != null">Inspection_Delay_Rate = #{inspectionDelayRate},</if>
-            <if test="invoicePostingDelayScore != null">Invoice_Posting_Delay_Score = #{invoicePostingDelayScore},</if>
             <if test="invoicePostingDelayRate != null">Invoice_Posting_Delay_Rate = #{invoicePostingDelayRate},</if>
-            <if test="unsettledAccountsScore != null">Unsettled_Accounts_Score = #{unsettledAccountsScore},</if>
             <if test="unsettledAccountsRatio != null">Unsettled_Accounts_Ratio = #{unsettledAccountsRatio},</if>
             <if test="createBy != null">CREATE_BY = #{createBy},</if>
             <if test="createTime != null">CREATE_TIME = #{createTime},</if>
             <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
             <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="flag != null">flag = #{flag},</if>
         </trim>
         where ED_ID = #{edId}
     </update>
@@ -135,6 +105,146 @@
         </foreach>
     </delete>
 </mapper>
+
+
+
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper-->
+<!--        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.heli.enterprise.mapper.EnterpriseManagementIndicatorsDailyClearingSettlementMapper">-->
+
+<!--    <resultMap type="EnterpriseManagementIndicatorsDailyClearingSettlement" id="EnterpriseManagementIndicatorsDailyClearingSettlementResult">-->
+<!--        <result property="edId"    column="ED_ID"    />-->
+<!--        <result property="yearAndMonth"    column="Year_And_Month"    />-->
+<!--        <result property="orderEntryDelayScore"    column="Order_Entry_Delay_Score"    />-->
+<!--        <result property="orderEntryDelayRatio"    column="Order_Entry_Delay_Ratio"    />-->
+<!--        <result property="shipmentDelayScore"    column="Shipment_Delay_Score"    />-->
+<!--        <result property="shipmentDelayRatio"    column="Shipment_Delay_Ratio"    />-->
+<!--        <result property="productionReportDelayScore"    column="Production_Report_Delay_Score"    />-->
+<!--        <result property="productionReportDelayRatio"    column="Production_Report_Delay_Ratio"    />-->
+<!--        <result property="inspectionDelayScore"    column="Inspection_Delay_Score"    />-->
+<!--        <result property="inspectionDelayRate"    column="Inspection_Delay_Rate"    />-->
+<!--        <result property="invoicePostingDelayScore"    column="Invoice_Posting_Delay_Score"    />-->
+<!--        <result property="invoicePostingDelayRate"    column="Invoice_Posting_Delay_Rate"    />-->
+<!--        <result property="unsettledAccountsScore"    column="Unsettled_Accounts_Score"    />-->
+<!--        <result property="unsettledAccountsRatio"    column="Unsettled_Accounts_Ratio"    />-->
+<!--        <result property="createBy"    column="CREATE_BY"    />-->
+<!--        <result property="createTime"    column="CREATE_TIME"    />-->
+<!--        <result property="updateBy"    column="UPDATE_BY"    />-->
+<!--        <result property="updateTime"    column="UPDATE_TIME"    />-->
+<!--    </resultMap>-->
+
+<!--    <sql id="selectEnterpriseManagementIndicatorsDailyClearingSettlementVo">-->
+<!--        select ED_ID, Year_And_Month, Order_Entry_Delay_Score, Order_Entry_Delay_Ratio, Shipment_Delay_Score, Shipment_Delay_Ratio, Production_Report_Delay_Score, Production_Report_Delay_Ratio, Inspection_Delay_Score, Inspection_Delay_Rate, Invoice_Posting_Delay_Score, Invoice_Posting_Delay_Rate, Unsettled_Accounts_Score, Unsettled_Accounts_Ratio, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME from Enterprise_Management_Indicators_Daily_Clearing_Settlement-->
+<!--    </sql>-->
+
+<!--        &lt;!&ndash;检查当月填报数据是否上传&ndash;&gt;-->
+<!--    <select id="checkDailyClearingDataIsExisted" parameterType="Date" resultType="boolean">-->
+<!--        SELECT EXISTS(SELECT 1 FROM Enterprise_Management_Indicators_Daily_Clearing_Settlement WHERE Year_And_Month=#{yearAndMonth})-->
+<!--    </select>-->
+
+<!--    <select id="selectEnterpriseManagementIndicatorsDailyClearingSettlementList" parameterType="EnterpriseManagementIndicatorsDailyClearingSettlement" resultMap="EnterpriseManagementIndicatorsDailyClearingSettlementResult">-->
+<!--        <include refid="selectEnterpriseManagementIndicatorsDailyClearingSettlementVo"/>-->
+<!--        <where>-->
+<!--            <if test="yearAndMonth != null "> and Year_And_Month = #{yearAndMonth}</if>-->
+<!--            <if test="orderEntryDelayScore != null "> and Order_Entry_Delay_Score = #{orderEntryDelayScore}</if>-->
+<!--            <if test="orderEntryDelayRatio != null "> and Order_Entry_Delay_Ratio = #{orderEntryDelayRatio}</if>-->
+<!--            <if test="shipmentDelayScore != null "> and Shipment_Delay_Score = #{shipmentDelayScore}</if>-->
+<!--            <if test="shipmentDelayRatio != null "> and Shipment_Delay_Ratio = #{shipmentDelayRatio}</if>-->
+<!--            <if test="productionReportDelayScore != null "> and Production_Report_Delay_Score = #{productionReportDelayScore}</if>-->
+<!--            <if test="productionReportDelayRatio != null "> and Production_Report_Delay_Ratio = #{productionReportDelayRatio}</if>-->
+<!--            <if test="inspectionDelayScore != null "> and Inspection_Delay_Score = #{inspectionDelayScore}</if>-->
+<!--            <if test="inspectionDelayRate != null "> and Inspection_Delay_Rate = #{inspectionDelayRate}</if>-->
+<!--            <if test="invoicePostingDelayScore != null "> and Invoice_Posting_Delay_Score = #{invoicePostingDelayScore}</if>-->
+<!--            <if test="invoicePostingDelayRate != null "> and Invoice_Posting_Delay_Rate = #{invoicePostingDelayRate}</if>-->
+<!--            <if test="unsettledAccountsScore != null "> and Unsettled_Accounts_Score = #{unsettledAccountsScore}</if>-->
+<!--            <if test="unsettledAccountsRatio != null "> and Unsettled_Accounts_Ratio = #{unsettledAccountsRatio}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <select id="selectEnterpriseManagementIndicatorsDailyClearingSettlementByEdId" parameterType="String" resultMap="EnterpriseManagementIndicatorsDailyClearingSettlementResult">-->
+<!--        <include refid="selectEnterpriseManagementIndicatorsDailyClearingSettlementVo"/>-->
+<!--        where ED_ID = #{edId}-->
+<!--    </select>-->
+
+<!--    <insert id="insertEnterpriseManagementIndicatorsDailyClearingSettlement" parameterType="EnterpriseManagementIndicatorsDailyClearingSettlement" useGeneratedKeys="true" keyProperty="edId">-->
+<!--        insert into Enterprise_Management_Indicators_Daily_Clearing_Settlement-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="yearAndMonth != null">Year_And_Month,</if>-->
+<!--            <if test="orderEntryDelayScore != null">Order_Entry_Delay_Score,</if>-->
+<!--            <if test="orderEntryDelayRatio != null">Order_Entry_Delay_Ratio,</if>-->
+<!--            <if test="shipmentDelayScore != null">Shipment_Delay_Score,</if>-->
+<!--            <if test="shipmentDelayRatio != null">Shipment_Delay_Ratio,</if>-->
+<!--            <if test="productionReportDelayScore != null">Production_Report_Delay_Score,</if>-->
+<!--            <if test="productionReportDelayRatio != null">Production_Report_Delay_Ratio,</if>-->
+<!--            <if test="inspectionDelayScore != null">Inspection_Delay_Score,</if>-->
+<!--            <if test="inspectionDelayRate != null">Inspection_Delay_Rate,</if>-->
+<!--            <if test="invoicePostingDelayScore != null">Invoice_Posting_Delay_Score,</if>-->
+<!--            <if test="invoicePostingDelayRate != null">Invoice_Posting_Delay_Rate,</if>-->
+<!--            <if test="unsettledAccountsScore != null">Unsettled_Accounts_Score,</if>-->
+<!--            <if test="unsettledAccountsRatio != null">Unsettled_Accounts_Ratio,</if>-->
+<!--            <if test="createBy != null">CREATE_BY,</if>-->
+<!--            <if test="createTime != null">CREATE_TIME,</if>-->
+<!--            <if test="updateBy != null">UPDATE_BY,</if>-->
+<!--            <if test="updateTime != null">UPDATE_TIME,</if>-->
+<!--        </trim>-->
+<!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+<!--            <if test="yearAndMonth != null">#{yearAndMonth},</if>-->
+<!--            <if test="orderEntryDelayScore != null">#{orderEntryDelayScore},</if>-->
+<!--            <if test="orderEntryDelayRatio != null">#{orderEntryDelayRatio},</if>-->
+<!--            <if test="shipmentDelayScore != null">#{shipmentDelayScore},</if>-->
+<!--            <if test="shipmentDelayRatio != null">#{shipmentDelayRatio},</if>-->
+<!--            <if test="productionReportDelayScore != null">#{productionReportDelayScore},</if>-->
+<!--            <if test="productionReportDelayRatio != null">#{productionReportDelayRatio},</if>-->
+<!--            <if test="inspectionDelayScore != null">#{inspectionDelayScore},</if>-->
+<!--            <if test="inspectionDelayRate != null">#{inspectionDelayRate},</if>-->
+<!--            <if test="invoicePostingDelayScore != null">#{invoicePostingDelayScore},</if>-->
+<!--            <if test="invoicePostingDelayRate != null">#{invoicePostingDelayRate},</if>-->
+<!--            <if test="unsettledAccountsScore != null">#{unsettledAccountsScore},</if>-->
+<!--            <if test="unsettledAccountsRatio != null">#{unsettledAccountsRatio},</if>-->
+<!--            <if test="createBy != null">#{createBy},</if>-->
+<!--            <if test="createTime != null">#{createTime},</if>-->
+<!--            <if test="updateBy != null">#{updateBy},</if>-->
+<!--            <if test="updateTime != null">#{updateTime},</if>-->
+<!--        </trim>-->
+<!--    </insert>-->
+
+<!--    <update id="updateEnterpriseManagementIndicatorsDailyClearingSettlement" parameterType="EnterpriseManagementIndicatorsDailyClearingSettlement">-->
+<!--        update Enterprise_Management_Indicators_Daily_Clearing_Settlement-->
+<!--        <trim prefix="SET" suffixOverrides=",">-->
+<!--            <if test="yearAndMonth != null">Year_And_Month = #{yearAndMonth},</if>-->
+<!--            <if test="orderEntryDelayScore != null">Order_Entry_Delay_Score = #{orderEntryDelayScore},</if>-->
+<!--            <if test="orderEntryDelayRatio != null">Order_Entry_Delay_Ratio = #{orderEntryDelayRatio},</if>-->
+<!--            <if test="shipmentDelayScore != null">Shipment_Delay_Score = #{shipmentDelayScore},</if>-->
+<!--            <if test="shipmentDelayRatio != null">Shipment_Delay_Ratio = #{shipmentDelayRatio},</if>-->
+<!--            <if test="productionReportDelayScore != null">Production_Report_Delay_Score = #{productionReportDelayScore},</if>-->
+<!--            <if test="productionReportDelayRatio != null">Production_Report_Delay_Ratio = #{productionReportDelayRatio},</if>-->
+<!--            <if test="inspectionDelayScore != null">Inspection_Delay_Score = #{inspectionDelayScore},</if>-->
+<!--            <if test="inspectionDelayRate != null">Inspection_Delay_Rate = #{inspectionDelayRate},</if>-->
+<!--            <if test="invoicePostingDelayScore != null">Invoice_Posting_Delay_Score = #{invoicePostingDelayScore},</if>-->
+<!--            <if test="invoicePostingDelayRate != null">Invoice_Posting_Delay_Rate = #{invoicePostingDelayRate},</if>-->
+<!--            <if test="unsettledAccountsScore != null">Unsettled_Accounts_Score = #{unsettledAccountsScore},</if>-->
+<!--            <if test="unsettledAccountsRatio != null">Unsettled_Accounts_Ratio = #{unsettledAccountsRatio},</if>-->
+<!--            <if test="createBy != null">CREATE_BY = #{createBy},</if>-->
+<!--            <if test="createTime != null">CREATE_TIME = #{createTime},</if>-->
+<!--            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>-->
+<!--            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>-->
+<!--        </trim>-->
+<!--        where ED_ID = #{edId}-->
+<!--    </update>-->
+
+<!--    <delete id="deleteEnterpriseManagementIndicatorsDailyClearingSettlementByEdId" parameterType="String">-->
+<!--        delete from Enterprise_Management_Indicators_Daily_Clearing_Settlement where ED_ID = #{edId}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteEnterpriseManagementIndicatorsDailyClearingSettlementByEdIds" parameterType="String">-->
+<!--        delete from Enterprise_Management_Indicators_Daily_Clearing_Settlement where ED_ID in-->
+<!--        <foreach item="edId" collection="array" open="(" separator="," close=")">-->
+<!--            #{edId}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+<!--</mapper>-->
 
 
 

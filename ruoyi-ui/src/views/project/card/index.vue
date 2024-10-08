@@ -120,62 +120,50 @@
             <p>项目类别: {{ info.category }}</p>
             <p>项目等级: {{ info.level }}</p>
 
+            <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
+              <el-button @click="ProgressReporting(info)">进度上报</el-button>
+              <el-button @click="showDialog(info)">修改记录</el-button>
 
-            <!-- 详情查看 -->
-            <!-- <el-popover placement="right" trigger="click" width="750">
+              <!-- 详情查看 -->
+              <el-popover placement="right" trigger="click" width="1000">
 
-              <div class="two-column">
-                <div class="column" style="width: 50%">
-                  <pre>
-                    <pre>项目id: {{ info.projectId }}</pre>
-                    <pre>项目名称: {{ info.projectName }}</pre>
-                    <pre>项目类别: {{ info.category }}</pre>
-                    <pre>项目等级: {{ info.level }}</pre>
-                    <pre>主责部门: {{ info.department }}</pre>
-                    <pre>项目描述: {{ info.description }}</pre>
-                    <pre>立项时间: {{ info.startDate }}</pre>
-                    <pre>项目总进度: {{ info.progressAlloverProgress }}</pre>
-                    <pre>导入时间: {{ info.importDate }}</pre>
-                    <pre>描述: {{ info.remake }}</pre>
-                    <pre>历史项目: {{ info.oldProjectId }}</pre>
-                    <pre>关联时间: {{ info.associationDate }}</pre>
-                  </pre>
+                <div class="two-column">
+                  <div class="column" style="width: 50%; margin-right: 10px;">
+                    <pre style="white-space: pre-wrap;">
+                      <pre style="white-space: pre-wrap;">项目id: {{ info.projectId }}</pre>
+                      <pre style="white-space: pre-wrap;">项目名称: {{ info.projectName }}</pre>
+                      <pre style="white-space: pre-wrap;">项目类别: {{ info.category }}</pre>
+                      <pre style="white-space: pre-wrap;">项目等级: {{ info.level }}</pre>
+                      <pre style="white-space: pre-wrap;">主责部门: {{ info.department }}</pre>
+                      <pre style="white-space: pre-wrap;">项目描述: {{ info.description }}</pre>
+                      <pre style="white-space: pre-wrap;">立项时间: {{ info.startDate }}</pre>
+                      <pre style="white-space: pre-wrap;">项目总进度: {{ info.progressAlloverProgress }}</pre>
+                      <pre style="white-space: pre-wrap;">导入时间: {{ info.importDate }}</pre>
+                      <pre style="white-space: pre-wrap;">描述: {{ info.remake }}</pre>
+                      <pre style="white-space: pre-wrap;">历史项目: {{ info.oldProjectId }}</pre>
+                      <pre style="white-space: pre-wrap;">关联时间: {{ info.associationDate }}</pre>
+                    </pre>
+                  </div>
+                  <div class="column" style="width: 50%; margin-left: 10px;">
+                    <pre style="white-space: pre-wrap;">
+                      <pre style="white-space: pre-wrap;">负责人: {{ info.manager }}</pre>
+                      <pre style="white-space: pre-wrap;">组成员: {{ info.teamMembers }}</pre>
+                      <pre style="white-space: pre-wrap;">项目状态: {{ info.status }}</pre>
+                      <pre style="white-space: pre-wrap;">项目进度: {{ info.progress }}</pre>
+                      <pre style="white-space: pre-wrap;">项目现状: {{ info.currentStatus }}</pre>
+                      <pre style="white-space: pre-wrap;">目标: {{ info.goal }}</pre>
+                      <pre style="white-space: pre-wrap;">范围: {{ info.scope }}</pre>
+                      <pre style="white-space: pre-wrap;">计划结项时间: {{ info.plannedCompletionTime }}</pre>
+                      <pre style="white-space: pre-wrap;">已过天数: {{ formattedDaysPassed(info.startDate) }}</pre>
+                      <pre style="white-space: pre-wrap;">剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</pre>
+                      <pre style="white-space: pre-wrap;">完成内容概述: {{ info.completionSummary }}</pre>
+                    </pre>
+                  </div>
                 </div>
-                <div class="column" style="width: 50%">
-                  <pre>
-                    <pre>负责人: {{ info.manager }}</pre>
-                    <pre>组成员: {{ info.teamMembers }}</pre>
-                    <pre>项目状态: {{ info.status }}</pre>
-                    <pre>项目进度: {{ info.progress }}</pre>
-                    <pre>项目现状: {{ info.currentStatus }}</pre>
-                    <pre>目标: {{ info.goal }}</pre>
-                    <pre>范围: {{ info.scope }}</pre>
-                    <pre>计划结项时间: {{ info.plannedCompletionTime }}</pre>
-                    <pre>已过天数: {{ formattedDaysPassed(info.startDate) }}</pre>
-                    <pre>剩余天数: {{ formattedDaysRemaining(info.plannedCompletionTime) }}</pre>
-                    <pre>完成内容概述: {{ info.completionSummary }}</pre>
-                  </pre>
-                </div>
-              </div>
 
-              <el-button slot="reference">查看详情</el-button>
-            </el-popover> -->
-            <el-button @click="ProgressReporting(info)">进度上报</el-button>
-            <el-button @click="showDialog(info)">修改记录</el-button>
-            <!-- <el-popover ref="historyPopover" :visible.sync="isPopoverVisible" placement="right" trigger="click" width="750">
-              <el-button slot="reference" @click="fetchHistoryList">关联历史项目</el-button>
-              <div v-if="loading">加载中...</div>
-              <div v-else>
-                <h3>历史项目列表</h3>
-                <el-table :data="historyList" @selection-change="handleRowClick" style="width: 100%">
-                  <el-table-column type="selection"  width="55"></el-table-column>
-                  <el-table-column prop="projectName" label="项目名称"></el-table-column>
-                </el-table>
-                <el-button type="primary" @click="confirmSelection(info)">确认</el-button>
-                <el-button @click="cancelSelection">取消</el-button>
-              </div>
-            </el-popover> -->
-
+                <el-button slot="reference">查看详情</el-button>
+              </el-popover>
+            </div>
 
           </el-card>
         </div>
@@ -184,78 +172,14 @@
     </el-col>
 
     </el-row>
-
-    <!-- <el-table v-loading="loading" :data="InfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id(主键)" align="center" prop="projectId" />
-      <el-table-column label="项目名称" align="center" prop="projectName" />
-      <el-table-column label="项目类别" align="center" prop="category" />
-      <el-table-column label="项目等级" align="center" prop="level" />
-      <el-table-column label="主责部门" align="center" prop="department" />
-      <el-table-column label="承接属性" align="center" prop="attribute" />
-      <el-table-column label="项目描述" align="center" prop="description" />
-      <el-table-column label="立项时间" align="center" prop="startDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
-      <el-table-column label="导入时间" align="center" prop="importDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="描述" align="center" prop="remake" />
-      <el-table-column label="历史项目" align="center" prop="oldProjectId" />
-      <el-table-column label="关联时间" align="center" prop="associationDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.associationDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-
-
-      <el-table-column label="负责人" align="center" prop="manager" />
-      <el-table-column label="组成员" align="center" prop="teamMembers" />
-      <el-table-column label="项目状态" align="center" prop="status" />
-      <el-table-column label="项目进度" align="center" prop="progress" />
-      <el-table-column label="项目现状" align="center" prop="currentStatus" />
-      <el-table-column label="目标" align="center" prop="goal" />
-      <el-table-column label="范围" align="center" prop="scope" />
-      <el-table-column label="计划结项时间" align="center" prop="plannedCompletionTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.plannedCompletionTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="已过天数(自动计算)" align="center" prop="daysPassed" />
-      <el-table-column label="剩余天数(自动计算)" align="center" prop="daysRemaining" />
-      <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['project:Info:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['project:Info:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table> -->
     
-    <pagination
+    <!-- <pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
-    />
+    /> -->
 
         <!-- 项目修改记录 -->
         <el-dialog
@@ -293,7 +217,7 @@
         </el-dialog>
 
         <!-- 进度上报对话框 -->
-        <el-dialog :title="title" :visible.sync="reportingopen" width="500px" append-to-body>
+        <el-dialog :title="title" :visible="reportingopen" width="500px" append-to-body :before-close="handleClose">
           <el-form ref="form" :model="form" label-width="80px">
 
             <el-form-item label="开始时间" prop="importDate">
@@ -340,7 +264,6 @@
                 <el-option key="是" label="是" value="是">是</el-option>
                 <el-option key="否" label="否" value="否">否</el-option>
               </el-select>
-              <!-- <el-input v-model="form.remake" placeholder="请输入描述" /> -->
             </el-form-item>
 
             <el-form-item label="完成工作事项" prop="completionSummary">
@@ -355,33 +278,15 @@
               <el-input  type="textarea" :rows="2" v-model="form.description" placeholder="请输入关键事项说明" />
             </el-form-item>
 
-            <!-- <el-form-item label="导入时间" prop="importDate">
-              <el-date-picker clearable
-                v-model="form.importDate"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请选择导入时间">
-              </el-date-picker>
-            </el-form-item> -->
-
-
-            <!-- <el-form-item label="关联时间" prop="associationDate">
-              <el-date-picker clearable
-                v-model="form.associationDate"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请选择关联时间">
-              </el-date-picker>
-            </el-form-item> -->
-
           </el-form>
+
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="submitForm">确 定</el-button>
             <el-button @click="cancel">取 消</el-button>
           </div>
         </el-dialog>
 
-        <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+        <el-dialog :title="title" :visible="open" width="500px" append-to-body :before-close="handleClose">
           <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="项目名称" prop="projectName">
               <el-input v-model="form.projectName" placeholder="请输入项目名称" />
@@ -407,7 +312,6 @@
               </el-select>
             </el-form-item>
             <el-form-item label="主责部门" prop="department">
-              <!-- <el-input v-model="form.department" placeholder="请输入主责部门" /> -->
               <el-select v-model="form.department" placeholder="请选择主责部门">
                 <el-option
                   v-for="item in departmentOptions"
@@ -448,9 +352,6 @@
                 placeholder="请选择计划结项时间">
               </el-date-picker>
             </el-form-item>
-            <!-- <el-form-item label="项目归属" prop="attribute">
-              <el-input v-model="form.attribute" placeholder="请输入承接属性" />
-            </el-form-item> -->
 
             <el-form-item label="项目归属" prop="attribute">
               <el-select v-model="selectedAttributes" multiple placeholder="请选择承接属性" value-key="attribute" allow-no-choice>
@@ -478,40 +379,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="项目描述" prop="description">
-              <el-input v-model="form.description" placeholder="请输入项目描述" />
-            </el-form-item> -->
-
-
-            <!-- <el-form-item label="导入时间" prop="importDate">
-              <el-date-picker clearable
-                v-model="form.importDate"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请选择导入时间">
-              </el-date-picker>
-            </el-form-item> -->
-
-            <!-- <el-form-item label="描述" prop="remake">
-              <el-input v-model="form.remake" placeholder="请输入描述" />
-            </el-form-item> -->
-
-            <!-- <el-form-item label="关联时间" prop="associationDate">
-              <el-date-picker clearable
-                v-model="form.associationDate"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请选择关联时间">
-              </el-date-picker>
-            </el-form-item> -->
-
-            <!-- <el-form-item label="项目进度" prop="progress">
-              <el-input v-model="form.progress" placeholder="请输入项目进度" />
-            </el-form-item> -->
-
-            <!-- <el-form-item label="完成内容概述" prop="completionSummary">
-              <el-input v-model="form.completionSummary" placeholder="请输入完成内容概述" />
-            </el-form-item> -->
 
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -593,7 +460,7 @@ export default {
       queryParams: {
         oldProjectList:null,
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10000,
         projectName: null,
         category: null,
         level: null,
@@ -737,6 +604,8 @@ export default {
         ],
       },
       userInfo: {}, // 存储用户信息
+
+      reportingopen: false,
     };
   },
   watch: {
@@ -988,6 +857,7 @@ export default {
     cancel() {
       this.open = false;
       this.reportingopen = false;
+      this.closeDialog(); // 点击取消关闭对话框
       this.reset();
     },
     // 表单重置
@@ -1083,6 +953,7 @@ export default {
             });
           }
         }
+        this.closeDialog();
       });
     },
 
@@ -1104,6 +975,20 @@ export default {
       }, `Info_${new Date().getTime()}.xlsx`)
     },
 
+    // 打开对话框的方法
+    openDialog() {
+      this.reportingopen = true;
+    },
+    // 关闭对话框的方法
+    closeDialog() {
+      this.reportingopen = false;
+    },
+
+    // 处理对话框关闭前的逻辑
+    handleClose(done) {
+      // 阻止默认的关闭行为
+      done(false);
+    }
 
   }
 };

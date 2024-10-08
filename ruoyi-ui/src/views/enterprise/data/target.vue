@@ -192,7 +192,7 @@ export default {
     getList() {
       this.loading = true;
       let target = {
-        date: new Date(),
+        date: '',
         deptName: 'enterprise',
       }
       getTargetData(target).then(response => {

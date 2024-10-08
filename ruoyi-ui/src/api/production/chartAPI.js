@@ -122,4 +122,31 @@ export function getAnnualLaunchAndCompletionData(data) {
   })
 }
 
+
+// 生产指标总览最新展示
+export function getProductionNewData() {
+  return request({
+    url: `/production/display/newFillingData`,
+    method: 'get',
+  })
+}
+
+// 生产指标总览最新展示
+export function getUpNewData() {
+  return request({
+    url: `/production/display/newLaunchData`,
+    method: 'get',
+  })
+}
+
+// 生产指标总览最新展示
+export function getDownNewData() {
+  return request({
+    url: `/production/display/newCompletionData`,
+    method: 'get',
+  })
+}
+
+
+
 export default api

@@ -151,27 +151,57 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: (params) => {
-                    return params.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2, useGrouping: false }) + '%';
+                formatter: function (params) {
+                    let value = parseFloat(params.value).toFixed(2);
+                    // 移除多余的零
+                    value = value.replace(/\.?0+$/, '');
+                    if (params.seriesName.includes('率')) {
+                        value += '%';
+                    }
+                    return value;
                 },
                 fontSize: 14,
-                rich: {
-                    name: {}
-                }
+                // emphasis: {
+                //     borderWidth: 0,
+                //     borderColor: 'transparent',
+                //     // 其他样式调整
+                // },
+                // borderColor: '#f20012',
+                // rich: {
+                //     name: {
+                //         fontWeight: 'bold',
+                //         color: '#f20012' // 名称部分的样式
+                //     },
+                //     value: {
+                //         color: '#5e58e7' // 数值部分的样式
+                //     }
+                // }
             };
 
-            let series = [{
-                name: '完成率',
-                type: 'line',
-                label: labelOption,
-                emphasis: {
-                    focus: 'series'
-                },
+            let series = [
+                {
+                    name: '项目总数',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
 
-                data: this.data.map(item => item.prdScheduleCompletionRate),
-            }];
+                    data: this.data.map(item => item.totalProjectCount),
+                },
+                {
+                    name: '积分占比率',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    yAxisIndex: 1,
+                    data: this.data.map(item => item.projectPointsPercentage),
+                }
+            ];
             // 根据条件决定是否添加目标值
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || this.routerData.targetValue != '')) {
+            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -185,7 +215,7 @@ export default {
 
             this.option = {
                 title: {
-                    text: '研发项目计划进度完成率'
+                    text: '项目完成情况'
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -194,7 +224,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['完成率', (this.routerData.targetValue != 0 && this.routerData.targetValue != '') ? '目标值' : null].filter(item => item !== null),
+                    data: ['项目总数', '积分占比率', (this.routerData.targetValue != 0 && this.routerData.targetValue != '') ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -219,7 +249,19 @@ export default {
                 yAxis: [
                     {
                         type: 'value'
-                    }
+                    },
+                    {
+                        type: 'value',
+                        name: '率',
+                        min: 0,
+                        max: 100,
+                        position: 'right',
+                        axisLine: {
+                            lineStyle: {
+                                color: '#9b9ca3'
+                            }
+                        }
+                    },
                 ],
                 series: series
             };

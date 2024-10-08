@@ -2,6 +2,7 @@ package com.ruoyi.common.indicator.service.impl;
 
 import com.ruoyi.common.indicator.domain.IndicatorsIndex;
 import com.ruoyi.common.indicator.domain.IndicatorsTarget;
+import com.ruoyi.common.indicator.domain.TargetByNameParam;
 import com.ruoyi.common.indicator.mapper.IndicatorsTargetMapper;
 import com.ruoyi.common.indicator.service.IIndicatorsIndexService;
 import com.ruoyi.common.indicator.service.IIndicatorsTargetService;
@@ -96,5 +97,10 @@ public class IndicatorsTargetServiceImpl implements IIndicatorsTargetService {
     @Override
     public int deleteIndicatorsTargetByItId(Long itId) {
         return indicatorsTargetMapper.deleteIndicatorsTargetByItId(itId);
+    }
+
+    @Override
+    public List<IndicatorsTarget> selectTargetListByNameAndDate(TargetByNameParam targetByNameParam) {
+        return indicatorsTargetMapper.selectTargetListByNameAndDate(targetByNameParam.getName(), targetByNameParam.getStartDate(), targetByNameParam.getEndDate());
     }
 }

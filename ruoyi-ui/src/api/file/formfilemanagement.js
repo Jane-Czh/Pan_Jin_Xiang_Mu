@@ -9,6 +9,15 @@ export function listFormfilemanagement(query) {
   })
 }
 
+// 查询表单文件管理列表（无权限+不分页）
+export function listFormfilemanagement3(query) {
+  return request({
+    url: '/file/formfilemanagement/list3',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询表单文件管理列表（全部+无权限）
 export function listFormfilemanagement1(query) {
   return request({

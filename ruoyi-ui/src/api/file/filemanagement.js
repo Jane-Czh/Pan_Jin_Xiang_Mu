@@ -9,6 +9,15 @@ export function listFilemanagement(query) {
   })
 }
 
+// 查询文件管理列表（无权限）
+export function listFilemanagement2(query) {
+  return request({
+    url: '/file/filemanagement/list4',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询文件管理列表(全部 无权限)
 export function listAllFilemanagement(query) {
   return request({

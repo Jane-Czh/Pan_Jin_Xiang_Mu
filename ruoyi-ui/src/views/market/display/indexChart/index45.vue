@@ -22,7 +22,7 @@
 <script>
 import * as echarts from 'echarts';     
 import moment from 'moment'
-import { getIndex39 } from '@/api/market/index'
+import { getIndex45 } from '@/api/market/index'
 
 export default {
     data() {
@@ -118,7 +118,7 @@ export default {
             try {
                 this.loading = true
                 console.log(this.timeData)
-                this.result = await getIndex39(this.timeData);
+                this.result = await getIndex45(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
                    console.log("后端传过来的数据：", this.result[0].branch);
@@ -234,9 +234,9 @@ const labelOption = {
   rotate: app.config.rotate,
   formatter: '{c}  {name|{a}}',
   fontSize: 16,
-      formatter: function (params) {
+     formatter: function (params) {
     // 当值为0时，返回空字符串，否则转换为百分比
-    return params.value === 0 ? '' : `${(params.value * 100).toFixed(2)}%`;
+    return params.value === 0 ? '' : `${(params.value )}`;
   },
   rich: {
     name: {}
@@ -348,12 +348,9 @@ option = {
       data: xAxisData
     }
   ],
-   yAxis: [
+  yAxis: [
     {
-      type: 'value',
-      axisLabel: {
-        formatter: '{value}%' // 在Y轴标签上显示百分比
-      }
+      type: 'value'
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {

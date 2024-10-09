@@ -101,20 +101,25 @@ export default {
         }
         const tmp = await getNameTarget(newTarget)
         let nowTarget = tmp.rows
-        let allTarget = []; // 初始化目标数组
-        nowTarget.forEach(item => {
-          let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
-          let targetValue = item.targetValue; // 目标值可能是数字或null
-          allTarget.push({ natureYear, targetValue });
-        })
-        this.data.forEach(item => {
-          const year = moment(item.Year_And_Month).format('YYYY')
-          allTarget.forEach(row => {
-            if (year === row.natureYear) {
-              item.targetValue = row.targetValue
-            }
+        this.option.targetValue = tmp.rows.length
+        // console.log(this.option.targetValue)
+        if (this.option.targetValue) {
+          let allTarget = []; // 初始化目标数组
+          nowTarget.forEach(item => {
+            let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+            let targetValue = item.targetValue; // 目标值可能是数字或null
+            allTarget.push({ natureYear, targetValue });
           })
-        });
+          this.data.forEach(item => {
+            const year = moment(item.Year_And_Month).format('YYYY')
+            allTarget.forEach(row => {
+              if (year === row.natureYear) {
+                item.targetValue = row.targetValue
+              }
+            })
+          });
+        }
+
         console.log(this.data)
         this.dataOfTarget = this.data
 

@@ -24,6 +24,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getManagementData } from '@/api/enterprise/chartAPI'
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {

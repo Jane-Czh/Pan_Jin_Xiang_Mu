@@ -14,7 +14,7 @@
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
       :yAxisData="yAxisData" :showTarget="option.showTarget" :targetValue="option.targetValue"
-      :targetValueDate="option.targetValueDate"></indicator-chart>
+      :targetValueDate="option.targetValueDate" :dataOfTarget="dataOfTarget"></indicator-chart>
   </div>
 </template>
 
@@ -22,7 +22,7 @@
 import moment from 'moment'
 import chartAPI from '@/api/production/chartAPI.js'
 import indicatorChart from '@/views/financial/financialDisplay/indexChart/indicatorChart.vue';
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
   components: { indicatorChart },
   data() {
@@ -37,6 +37,7 @@ export default {
       endSelectedDate: null,
       pickerOptions: [],
       xAxisData: [],
+      dataOfTarget: [],
       yAxisData: [],
       option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', showTarget: '', targetValue: 0, targetValueDate: '', }
     }
@@ -48,7 +49,7 @@ export default {
     this.$store.dispatch('tagsView/editVisitedViews', this.$route)
     this.defaultMonth()
     this.initData()
-    console.log(this.option)
+    // console.log(this.option)
   },
   methods: {
     async initData() {
@@ -56,15 +57,47 @@ export default {
       this.timeData.startTime = this.selectedDate[0]
       this.timeData.endTime = this.selectedDate[1]
 
-
       try {
         this.loading = true
         const res = await chartAPI[this.option.apiName](this.timeData);
         this.data = res.rows
         this.xAxisData = res.rows.map(item => moment(item.yearAndMonth).format('YY-MM'))
         this.yAxisData = res.rows.map(item => item[this.option.yDataName])
+
+        //目标值
+        let newTarget = {
+          name: this.option.sum,
+          startDate: this.timeData.startTime,
+          endDate: this.timeData.endTime
+        }
+        const tmp = await getNameTarget(newTarget)
+        let nowTarget = tmp.rows
+        //判断是否有目标值
+        this.option.targetValue = tmp.rows.length
+        if (this.option.targetValue) {
+          let allTarget = []; // 初始化目标数组
+          nowTarget.forEach(item => {
+            let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+            let targetValue = item.targetValue; // 目标值可能是数字或null
+            allTarget.push({ natureYear, targetValue });
+          })
+          this.data.forEach(item => {
+            const year = moment(item.yearAndMonth).format('YYYY')
+            allTarget.forEach(row => {
+              if (year === row.natureYear) {
+                item.targetValue = row.targetValue
+              }
+            })
+          });
+        }
+
+        console.log(this.data)
+
+        this.dataOfTarget = this.data
+
         this.loading = false
       } catch (error) {
+        console.log(error)
         this.loading = false
       }
     },

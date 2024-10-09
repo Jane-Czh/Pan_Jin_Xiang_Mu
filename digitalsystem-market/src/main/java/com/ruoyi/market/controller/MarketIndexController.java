@@ -1063,7 +1063,7 @@ public class MarketIndexController extends BaseController {
 
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
         DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
         //筛选出计划完工日期在起止时间内的数据，并且精准完工期要早于计划完工期
         //然后按照年，分组，再按照月分组，再统计每年的每月的数量
@@ -1086,13 +1086,13 @@ public class MarketIndexController extends BaseController {
                     (!plancompletion.isBefore(startTime) && !plancompletion.isAfter(endTime)
                             || plancompletion.isEqual(startTime) || plancompletion.isEqual(endTime))
                             &&
-            precisioncompletion != null && precisioncompletion.isBefore(plancompletion);
+             precisioncompletion.isBefore(plancompletion)||precisioncompletion.equals(plancompletion);
 //            precisioncompletion.isBefore(plancompletion);
 
         }).collect(Collectors.groupingBy(
-                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                 Collectors.groupingBy(
-                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(month),
                         Collectors.counting()
                 )
         ));
@@ -1122,9 +1122,9 @@ public class MarketIndexController extends BaseController {
 
 
         }).collect(Collectors.groupingBy(
-                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                 Collectors.groupingBy(
-                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1),
+                        a -> a.getPlannedCompletionPeriod().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(month),
                         Collectors.counting()
                 )
         ));
@@ -1139,20 +1139,30 @@ public class MarketIndexController extends BaseController {
 
             Map<String, Double> ratioYearMap = new HashMap<>();
             for (Map.Entry<String, Long> entry : collectData.entrySet()) {
-                String month = entry.getKey();
+                String months = entry.getKey();
                 Long collectCount = entry.getValue();
-                Long totalCount = monthlyTotal.getOrDefault(month, 0L);
+                Long totalCount = monthlyTotal.getOrDefault(months, 0L);
 
                 // 计算比例
                 double ratio = totalCount != 0 ? (double) collectCount / totalCount : 0.0;
-                ratioYearMap.put(month, ratio);
+                ratioYearMap.put(months, ratio);
             }
             ratioMap.put(year, ratioYearMap);
         }
 
-        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照月份和地区统计数量"+collect);
+        System.out.println("按照计划完工期分月，当月R-L（≤0）的数量"+collect);
+        //按照月份排序
+        TreeMap<String, Map<String, Double>> sortedRatioMap = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2); // 默认字符串比较，将按照字典顺序排序
+            }
+        });
 
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(ratioMap);
+        // 将所有元素从HashMap转移到TreeMap
+        sortedRatioMap.putAll(ratioMap);
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(sortedRatioMap);
         return voEntities;
     }
 
@@ -1198,12 +1208,14 @@ public class MarketIndexController extends BaseController {
                                     (xColumn != null && (xColumn.isEqual(tColumn) || xColumn.isBefore(tColumn))));
                 })
                 .collect(Collectors.groupingBy(
-                        a -> Optional.ofNullable(a.getOrderSystemDeliveryTime())
-                                .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                                .filter(date -> !date.isBefore(startTime) && !date.isAfter(endTime)) // 确保T列在起止时间范围内
-                                .map(LocalDate::getYear)
-                                .map(String::valueOf)
-                                .orElse(null), // 年份作为外层Map的Key
+                        a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+
+//                        a -> Optional.ofNullable(a.getOrderSystemDeliveryTime())
+//                                .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+//                                .filter(date -> !date.isBefore(startTime) && !date.isAfter(endTime)) // 确保T列在起止时间范围内
+//                                .map(LocalDate::getYear)
+//                                .map(String::valueOf)
+//                                .orElse(null), // 年份作为外层Map的Key
                         Collectors.groupingBy(
                                 a -> Optional.ofNullable(a.getOrderSystemDeliveryTime())
                                         .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
@@ -1214,54 +1226,6 @@ public class MarketIndexController extends BaseController {
                                 Collectors.summingLong(MarketSalesTable::getNumber) // 按照年月分组后的总数作为Value
                         )
                 ));
-
-//        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
-//                .filter(a -> a.getActualDepartureDate() != null) // 过滤掉 getActualDepartureDate 为空的元素
-//
-//                .filter(a ->
-//        {   //W列
-//            LocalDate actualDepartureDate = Optional.ofNullable(a.getActualDepartureDate())
-//                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-//                    .orElse(null);
-//           //防止空指针异常
-//
-//            //X列
-//            LocalDate systemDeliveryTime = Optional.ofNullable(a.getSystemDeliveryTime())
-//                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-//                    .orElse(null);
-//            //T列
-//            LocalDate orderSystemDeliveryTime = Optional.ofNullable(a.getOrderSystemDeliveryTime())
-//                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-//                    .orElse(null);
-//
-//            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            // 检查计划完工日期是否在起止时间范围内，包括等于起止时间的情况,
-//            //实际发车日期W，系统交货日期X任一列有日期且小于等于订单系统交货期T的数量
-//            return
-////                    (!OrderSystemDeliveryTime.isBefore(startTime) && !OrderSystemDeliveryTime.isAfter(endTime)
-////                            || OrderSystemDeliveryTime.isEqual(startTime) || OrderSystemDeliveryTime.isEqual(endTime))
-////                            && OrderSystemDeliveryTime != null&&
-////                            //实际发车日期W，系统交货日期X任一列有日期且小于等于订单系统交货期T的数量
-////                            (ActualDepartureDate.isBefore(OrderSystemDeliveryTime)||SystemDeliveryTime.isBefore(OrderSystemDeliveryTime)
-////                                    || ActualDepartureDate.isEqual(OrderSystemDeliveryTime) || SystemDeliveryTime.isEqual(OrderSystemDeliveryTime)
-////                            );
-////
-////
-////        })
-//                    orderSystemDeliveryTime != null &&
-//                            (!orderSystemDeliveryTime.isBefore(startTime) && !orderSystemDeliveryTime.isAfter(endTime)
-//                                    || orderSystemDeliveryTime.isEqual(startTime) || orderSystemDeliveryTime.isEqual(endTime)) &&
-//                            (actualDepartureDate != null && actualDepartureDate.isBefore(orderSystemDeliveryTime)
-//                                    || systemDeliveryTime != null && systemDeliveryTime.isBefore(orderSystemDeliveryTime)
-//                                    || actualDepartureDate != null && actualDepartureDate.isEqual(orderSystemDeliveryTime)
-//                                    || systemDeliveryTime != null && systemDeliveryTime.isEqual(orderSystemDeliveryTime));
-//        })
-//        .collect(Collectors.groupingBy(
-//                a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
-//                Collectors.groupingBy(a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1)
-//                        , Collectors.summingLong(MarketSalesTable::getNumber))));
-
 
         System.out.println("实际发车日期W，系统交货日期X任一列有日期且小于订单系统交货期T的数量"+collect);
 
@@ -1287,7 +1251,7 @@ public class MarketIndexController extends BaseController {
 
 
         }).collect(Collectors.groupingBy(
-                a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                 Collectors.groupingBy(a -> a.getOrderSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter1)
                         , Collectors.summingLong(MarketSalesTable::getNumber))));
 //                        .collect(Collectors.groupingBy(
@@ -1320,10 +1284,20 @@ public class MarketIndexController extends BaseController {
             }
             ratioMap.put(year, ratioYearMap);
         }
+        //按照月份排序
+        TreeMap<String, Map<String, Double>> sortedRatioMap = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2); // 默认字符串比较，将按照字典顺序排序
+            }
+        });
+
+        // 将所有元素从HashMap转移到TreeMap
+        sortedRatioMap.putAll(ratioMap);
 
         System.out.println("实际发车日期W，系统交货日期X任一列有日期且小于等于订单系统交货期T的数量"+collect1+ratioMap);
 
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(ratioMap);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(sortedRatioMap);
         return voEntities;
     }
 
@@ -1358,12 +1332,23 @@ public class MarketIndexController extends BaseController {
                         )
                 ));
 
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
+
         System.out.println("测试分组"+groupedResults);
 
 
 
 
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(groupedResults);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
+//        List<VoEntity> voEntities1 = VoEntity.convertCpdToVoEntitiesDouble(groupedResults);
         return voEntities;
     }
 
@@ -1399,12 +1384,181 @@ public class MarketIndexController extends BaseController {
 
         System.out.println("测试分组"+groupedResults);
 
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
+
+//        System.out.println("测试分组"+groupedResults);
 
 
-
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(groupedResults);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
         return voEntities;
     }
+
+
+    /*
+    * 指标45 电动车整机制造天数
+平均数
+    * */
+    @PostMapping("/ElCarAvergaeDay45")
+    public  List<VoEntity> ElCarAvergaeDay45(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+
+        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
+        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage45();
+        System.out.println("数据库测试2"+averageResults+"测试完成");
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
+
+
+// TODO改sql语句 获取当前年份
+        Map<String, Map<String, Double>> groupedResults = averageResults.stream()
+                .filter(result -> {
+                    int resultMonth = Integer.parseInt(result.getMonth());
+                    return resultMonth >= startMonth1 && resultMonth <= endMonth;
+                })
+                .collect(Collectors.groupingBy(
+                        result -> String.valueOf("2024年"),
+                        Collectors.groupingBy(
+                                AverageResult::getMonth,  // 将Over_20_Percent_Count转换为字符串
+                                Collectors.averagingDouble(AverageResult::getAverage_Days_Difference)
+                        )
+                ));
+
+        System.out.println("测试分组"+groupedResults);
+
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
+
+//        System.out.println("测试分组"+groupedResults);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
+        return voEntities;
+    }
+
+
+    /*
+    * 指标46 小吨位整机制造天数
+平均数
+    * */
+    @PostMapping("/ElCarAvergaeDay46")
+    public  List<VoEntity> ElCarAvergaeDay46(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+
+        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
+        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage46();
+        System.out.println("数据库测试2"+averageResults+"测试完成");
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
+
+
+// TODO改sql语句 获取当前年份
+        Map<String, Map<String, Double>> groupedResults = averageResults.stream()
+                .filter(result -> {
+                    int resultMonth = Integer.parseInt(result.getMonth());
+                    return resultMonth >= startMonth1 && resultMonth <= endMonth;
+                })
+                .collect(Collectors.groupingBy(
+                        result -> String.valueOf("2024年"),
+                        Collectors.groupingBy(
+                                AverageResult::getMonth,  // 将Over_20_Percent_Count转换为字符串
+                                Collectors.averagingDouble(AverageResult::getAverage_Days_Difference)
+                        )
+                ));
+
+        System.out.println("测试分组"+groupedResults);
+
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
+
+//        System.out.println("测试分组"+groupedResults);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
+        return voEntities;
+    }
+
+    /*
+* 指标47 小吨位整机制造天数
+平均数
+* */
+    @PostMapping("/ElCarAvergaeDay47")
+    public  List<VoEntity> ElCarAvergaeDay47(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+
+        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
+        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage47();
+        System.out.println("数据库测试2"+averageResults+"测试完成");
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
+
+
+// TODO改sql语句 获取当前年份
+        Map<String, Map<String, Double>> groupedResults = averageResults.stream()
+                .filter(result -> {
+                    int resultMonth = Integer.parseInt(result.getMonth());
+                    return resultMonth >= startMonth1 && resultMonth <= endMonth;
+                })
+                .collect(Collectors.groupingBy(
+                        result -> String.valueOf("2024年"),
+                        Collectors.groupingBy(
+                                AverageResult::getMonth,  // 将Over_20_Percent_Count转换为字符串
+                                Collectors.averagingDouble(AverageResult::getAverage_Days_Difference)
+                        )
+                ));
+
+        System.out.println("测试分组"+groupedResults);
+
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
+
+//        System.out.println("测试分组"+groupedResults);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
+        return voEntities;
+    }
+
 
     /*
      * 指标44 小吨位内燃叉车整机交货天数
@@ -1439,10 +1593,18 @@ public class MarketIndexController extends BaseController {
 
         System.out.println("测试分组"+groupedResults);
 
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
 
 
-
-        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(groupedResults);
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
         return voEntities;
     }
 

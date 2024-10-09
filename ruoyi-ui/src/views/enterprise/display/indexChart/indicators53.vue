@@ -36,6 +36,7 @@ export default {
         return {
             loading: false,
             data: [],
+            actualYY: [],
             timeData: {
                 startTime: new Date(),
                 endTime: new Date(),
@@ -52,6 +53,7 @@ export default {
             actualData: [],
             targetData: [],
             scoreData: [],
+            dataYY: [],
         }
     },
     computed: {},
@@ -87,7 +89,9 @@ export default {
                 })
                 this.actualData.forEach(item => {
                     this.targetData.forEach(row => {
-                        if (row.yearAndMonth == item.yearAndMonth) {
+                        let item1 = moment(item.yearAndMonth).format('YYYY')
+                        let row1 = moment(row.yearAndMonth).format('YYYY')
+                        if (item1 == row1) {
                             item.orderEntryDelayTarget = row.orderEntryDelayRatio
                             item.shipmentDelayTarget = row.shipmentDelayRatio
                             item.productionReportDelayTarget = row.productionReportDelayRatio
@@ -97,6 +101,20 @@ export default {
                         }
                     })
                 })
+                this.actualYY[0] = this.actualData[0].orderEntryDelayRatio
+                this.actualYY[1] = this.actualData[0].shipmentDelayRatio
+                this.actualYY[2] = this.actualData[0].productionReportDelayRatio
+                this.actualYY[3] = this.actualData[0].invoicePostingDelayRate
+                this.actualYY[4] = this.actualData[0].unsettledAccountsRatio
+                this.actualYY[5] = this.actualData[0].inspectionDelayRate
+                // this.dataYY = []
+                this.dataYY[0] = this.actualData[0].orderEntryDelayTarget
+                this.dataYY[1] = this.actualData[0].shipmentDelayTarget
+                this.dataYY[2] = this.actualData[0].productionReportDelayTarget
+                this.dataYY[3] = this.actualData[0].invoicePostingDelayTarget
+                this.dataYY[4] = this.actualData[0].unsettledAccountsTarget
+                this.dataYY[5] = this.actualData[0].inspectionDelayTarget
+                console.log(this.dataYY)
                 console.log(this.actualData)
                 // console.log(this.scoreData)
                 this.loading = false
@@ -225,7 +243,7 @@ export default {
                 legend: {
                     type: 'scroll',
                     animationDurationUpdate: 0,
-                    data: ['销售订单录入不及时比例', '销售订单录入不及时比例目标值', '销售订单不及时发货比例', '销售订单不及时发货比例目标值', '生产订单不及时报工比例', '生产订单不及时报工比例目标值', '成品检验业务不及时率', '成品检验业务不及时率目标值', '销售发票过账不及时率', '销售发票过账不及时率目标值', '客户未清账比例', '客户未清账比例目标值'],
+                    data: ['实际值', '目标值'],
                 },
                 toolbox: {
                     show: true,
@@ -244,7 +262,7 @@ export default {
                     {
                         type: 'category',
                         axisTick: { show: false },
-                        data: this.actualData.map(item => moment(item.yearAndMonth).format('YY-MM')),
+                        data: ['销售录入不及时', '销售发货不及时', '生产报工不及时', '成品检验业务不及时', '销售发票过账不及时', '客户未清账'],
                     },
                 ],
                 yAxis: [
@@ -263,151 +281,152 @@ export default {
                 ],
                 series: [
                     {
-                        name: '销售订单录入不及时比例',
-                        type: 'bar',
+                        name: '实际值',
+                        type: 'line',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        color: '#fadc03',
+                        // color: '#fadc03',
                         // yAxisIndex: 1,
                         // yAxisIndex: 1,
                         // stack: 'stack1',
                         // symbolOffset: [50, 0],
-                        data: this.actualData.map(item => item.orderEntryDelayRatio),
+                        data: this.actualYY,
                     },
                     {
-                        name: '销售订单录入不及时比例目标值',
+                        name: '目标值',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        color: '#fab103',
+                        // color: '#fab103',
                         // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.actualData.map(item => item.orderEntryDelayTarget),
+                        data: this.dataYY,
+                        // data: this.actualData.map(item => item.orderEntryDelayTarget),
                     },
-                    {
-                        name: '销售订单不及时发货比例',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#03fafa',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.shipmentDelayRatio),
-                    },
-                    {
-                        name: '销售订单不及时发货比例目标值',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#037efa',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.shipmentDelayTarget),
-                    },
-                    {
-                        name: '生产订单不及时报工比例',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#c903fa',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.productionReportDelayRatio),
-                    },
-                    {
-                        name: '生产订单不及时报工比例目标值',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#8c03fa',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.productionReportDelayTarget),
-                    },
-                    {
-                        name: '成品检验业务不及时率',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#fa036b',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.inspectionDelayRate),
-                    },
-                    {
-                        name: '成品检验业务不及时率目标值',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#fa0323',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.inspectionDelayTarget),
-                    },
-                    {
-                        name: '销售发票过账不及时率',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#03fa94',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.invoicePostingDelayRate),
-                    },
-                    {
-                        name: '销售发票过账不及时率目标值',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#03fadd',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.invoicePostingDelayTarget),
-                    },
-                    {
-                        name: '客户未清账比例',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#91cc75',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.unsettledAccountsRatio),
-                    },
-                    {
-                        name: '客户未清账比例目标值',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        color: '#3ba272',
-                        // yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.actualData.map(item => item.unsettledAccountsTarget),
-                    },
+                    // {
+                    //     name: '销售订单不及时发货比例',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#03fafa',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.shipmentDelayRatio),
+                    // },
+                    // {
+                    //     name: '销售订单不及时发货比例目标值',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#037efa',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.shipmentDelayTarget),
+                    // },
+                    // {
+                    //     name: '生产订单不及时报工比例',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#c903fa',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.productionReportDelayRatio),
+                    // },
+                    // {
+                    //     name: '生产订单不及时报工比例目标值',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#8c03fa',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.productionReportDelayTarget),
+                    // },
+                    // {
+                    //     name: '成品检验业务不及时率',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#fa036b',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.inspectionDelayRate),
+                    // },
+                    // {
+                    //     name: '成品检验业务不及时率目标值',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#fa0323',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.inspectionDelayTarget),
+                    // },
+                    // {
+                    //     name: '销售发票过账不及时率',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#03fa94',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.invoicePostingDelayRate),
+                    // },
+                    // {
+                    //     name: '销售发票过账不及时率目标值',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#03fadd',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.invoicePostingDelayTarget),
+                    // },
+                    // {
+                    //     name: '客户未清账比例',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#91cc75',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.unsettledAccountsRatio),
+                    // },
+                    // {
+                    //     name: '客户未清账比例目标值',
+                    //     type: 'bar',
+                    //     label: labelOption,
+                    //     emphasis: {
+                    //         focus: 'series'
+                    //     },
+                    //     color: '#3ba272',
+                    //     // yAxisIndex: 1,
+                    //     // stack: 'stack1',
+                    //     data: this.actualData.map(item => item.unsettledAccountsTarget),
+                    // },
 
                 ]
             };
@@ -666,7 +685,7 @@ export default {
 
 <style lang="scss" scoped>
 #main {
-    width: 1000px;
+    width: 1400px;
     height: 600px;
     margin: 40px auto;
 }

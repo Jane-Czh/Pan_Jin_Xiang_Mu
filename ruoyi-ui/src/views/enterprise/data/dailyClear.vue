@@ -115,7 +115,7 @@
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="类别" prop="flag">
+        <el-form-item label="类别" prop="flag" v-show="title !== '修改日清日结'">
           <el-select v-model="form.flag" placeholder="请选择类别" @change="onMonthChange">
             <el-option label="目标值" value="1"></el-option>
             <el-option label="实际值" value="2"></el-option>
@@ -224,6 +224,9 @@ export default {
       rules: {
         yearAndMonth: [
           { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        flag: [
+          { required: true, message: "类别不能为空", trigger: "blur" }
         ],
         orderEntryDelayRatio: [
           {

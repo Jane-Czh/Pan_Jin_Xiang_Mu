@@ -2,9 +2,11 @@
     <div>
         <div class="block">
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+            <!-- <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange">
+            </el-date-picker> -->
+            <el-date-picker v-model="selectedDateNew" type="month" placeholder="选择日期" @change="handleDateChange">
             </el-date-picker>
         </div>
         <div v-if="loading" class="loading-indicator">
@@ -28,7 +30,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getDailyClearingSettlementData } from '@/api/enterprise/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -39,6 +41,7 @@ export default {
                 endTime: new Date(),
             },
             selectedDate: [],
+            selectedDateNew: '',
             pickerOptions: [],
             option: {},
             option2: {},
@@ -46,6 +49,9 @@ export default {
             myChart2: {},
             parsedData: {},
             routerData: {},
+            actualData: [],
+            targetData: [],
+            scoreData: [],
         }
     },
     computed: {},
@@ -62,8 +68,37 @@ export default {
             this.timeData.endTime = new Date(this.selectedDate[1]);
             try {
                 this.loading = true
+                // let newTarget = {}
                 const res = await getDailyClearingSettlementData(this.timeData);
                 this.data = res.rows
+                this.targetData = []
+                this.actualData = []
+                this.scoreData = []
+                res.rows.forEach(item => {
+                    // console.log(item.flag)
+                    if (item.flag === 1) {
+                        this.targetData.push(item)
+                    } if (item.flag === 2) {
+                        this.actualData.push(item)
+                    } else if (item.flag === 3) {
+                        this.scoreData.push(item)
+                        // console.log('+++')
+                    }
+                })
+                this.actualData.forEach(item => {
+                    this.targetData.forEach(row => {
+                        if (row.yearAndMonth == item.yearAndMonth) {
+                            item.orderEntryDelayTarget = row.orderEntryDelayRatio
+                            item.shipmentDelayTarget = row.shipmentDelayRatio
+                            item.productionReportDelayTarget = row.productionReportDelayRatio
+                            item.invoicePostingDelayTarget = row.invoicePostingDelayRate
+                            item.unsettledAccountsTarget = row.unsettledAccountsRatio
+                            item.inspectionDelayTarget = row.inspectionDelayRate
+                        }
+                    })
+                })
+                console.log(this.actualData)
+                // console.log(this.scoreData)
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -71,13 +106,14 @@ export default {
             }
         },
         handleDateChange(value) {
-            if (value && value[1]) {
-                let endDate = new Date(value[1]);
-                endDate.setHours(endDate.getHours() + 13);
-                this.selectedDate[1] = endDate;
-            }
+            let startDate = new Date(value)
+            let endDate = new Date(value);
+            endDate.setHours(endDate.getHours() + 13);
+            this.selectedDate[0] = startDate
+            this.selectedDate[1] = endDate;
             this.initData()
         },
+        //目标值，实际值
         updateChart() {
             var app = {};
             const posList = [
@@ -187,8 +223,9 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['销售订单录入不及时比例(%)', '销售订单不及时发货比例(%)', '生产订单不及时报工比例(%)', '成品检验业务不及时率(%)', '销售发票过账不及时率(%)', '客户未清账比例(%)'],
-
+                    type: 'scroll',
+                    animationDurationUpdate: 0,
+                    data: ['销售订单录入不及时比例', '销售订单录入不及时比例目标值', '销售订单不及时发货比例', '销售订单不及时发货比例目标值', '生产订单不及时报工比例', '生产订单不及时报工比例目标值', '成品检验业务不及时率', '成品检验业务不及时率目标值', '销售发票过账不及时率', '销售发票过账不及时率目标值', '客户未清账比例', '客户未清账比例目标值'],
                 },
                 toolbox: {
                     show: true,
@@ -205,91 +242,171 @@ export default {
                 },
                 xAxis: [
                     {
-                        // type: 'category',
+                        type: 'category',
                         axisTick: { show: false },
-                        data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
-                    }
+                        data: this.actualData.map(item => moment(item.yearAndMonth).format('YY-MM')),
+                    },
                 ],
                 yAxis: [
                     {
                         type: 'value'
                     },
-                    {
-                        type: 'value',
-                        name: '比例',
-                        // interval: 5,
-                        splitLine: { show: false },
-                        axisLabel: {
-                            formatter: '{value} %'
-                        }
-                    }
+                    // {
+                    //     type: 'value',
+                    //     name: '比例',
+                    //     // interval: 5,
+                    //     splitLine: { show: false },
+                    //     axisLabel: {
+                    //         formatter: '{value} %'
+                    //     }
+                    // }
                 ],
                 series: [
                     {
-                        name: '销售订单录入不及时比例(%)',
+                        name: '销售订单录入不及时比例',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        color: '#fadc03',
+                        // yAxisIndex: 1,
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.orderEntryDelayRatio),
+                        // symbolOffset: [50, 0],
+                        data: this.actualData.map(item => item.orderEntryDelayRatio),
                     },
                     {
-                        name: '销售订单不及时发货比例(%)',
+                        name: '销售订单录入不及时比例目标值',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        color: '#fab103',
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.shipmentDelayRatio),
+                        data: this.actualData.map(item => item.orderEntryDelayTarget),
                     },
                     {
-                        name: '生产订单不及时报工比例(%)',
+                        name: '销售订单不及时发货比例',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        color: '#03fafa',
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.productionReportDelayRatio),
+                        data: this.actualData.map(item => item.shipmentDelayRatio),
                     },
                     {
-                        name: '成品检验业务不及时率(%)',
+                        name: '销售订单不及时发货比例目标值',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        color: '#037efa',
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.inspectionDelayRate),
+                        data: this.actualData.map(item => item.shipmentDelayTarget),
                     },
                     {
-                        name: '销售发票过账不及时率(%)',
+                        name: '生产订单不及时报工比例',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        color: '#c903fa',
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.invoicePostingDelayRate),
+                        data: this.actualData.map(item => item.productionReportDelayRatio),
                     },
                     {
-                        name: '客户未清账比例(%)',
+                        name: '生产订单不及时报工比例目标值',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        color: '#8c03fa',
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.unsettledAccountsRatio),
+                        data: this.actualData.map(item => item.productionReportDelayTarget),
+                    },
+                    {
+                        name: '成品检验业务不及时率',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#fa036b',
+                        // yAxisIndex: 1,
+                        // stack: 'stack1',
+                        data: this.actualData.map(item => item.inspectionDelayRate),
+                    },
+                    {
+                        name: '成品检验业务不及时率目标值',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#fa0323',
+                        // yAxisIndex: 1,
+                        // stack: 'stack1',
+                        data: this.actualData.map(item => item.inspectionDelayTarget),
+                    },
+                    {
+                        name: '销售发票过账不及时率',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#03fa94',
+                        // yAxisIndex: 1,
+                        // stack: 'stack1',
+                        data: this.actualData.map(item => item.invoicePostingDelayRate),
+                    },
+                    {
+                        name: '销售发票过账不及时率目标值',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#03fadd',
+                        // yAxisIndex: 1,
+                        // stack: 'stack1',
+                        data: this.actualData.map(item => item.invoicePostingDelayTarget),
+                    },
+                    {
+                        name: '客户未清账比例',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#91cc75',
+                        // yAxisIndex: 1,
+                        // stack: 'stack1',
+                        data: this.actualData.map(item => item.unsettledAccountsRatio),
+                    },
+                    {
+                        name: '客户未清账比例目标值',
+                        type: 'bar',
+                        label: labelOption,
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        color: '#3ba272',
+                        // yAxisIndex: 1,
+                        // stack: 'stack1',
+                        data: this.actualData.map(item => item.unsettledAccountsTarget),
                     },
 
                 ]
@@ -308,6 +425,7 @@ export default {
             });
             this.updateChart2()
         },
+        //得分情况
         updateChart2() {
             var app = {};
             const posList = [
@@ -437,7 +555,7 @@ export default {
                     {
                         // type: 'category',
                         axisTick: { show: false },
-                        data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
+                        data: this.scoreData.map(item => moment(item.yearAndMonth).format('YY-MM')),
                     }
                 ],
                 yAxis: [
@@ -455,7 +573,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.orderEntryDelayScore),
+                        data: this.scoreData.map(item => item.orderEntryDelayRatio),
                     },
                     {
                         name: '销售订单不及时发货得分',
@@ -466,7 +584,7 @@ export default {
                         },
 
                         // stack: 'stack2',
-                        data: this.data.map(item => item.shipmentDelayScore),
+                        data: this.scoreData.map(item => item.shipmentDelayRatio),
                     },
                     {
                         name: '生产订单不及时报工得分',
@@ -476,7 +594,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.productionReportDelayScore),
+                        data: this.scoreData.map(item => item.productionReportDelayRatio),
                     },
                     {
                         name: '成品检验业务不及时得分',
@@ -486,7 +604,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.inspectionDelayScore),
+                        data: this.scoreData.map(item => item.inspectionDelayRate),
                     },
                     {
                         name: '销售发票过账不及时得分',
@@ -496,7 +614,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.invoicePostingDelayScore),
+                        data: this.scoreData.map(item => item.invoicePostingDelayRate),
                     },
                     {
                         name: '客户未清账得分',
@@ -506,7 +624,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.unsettledAccountsScore),
+                        data: this.scoreData.map(item => item.unsettledAccountsRatio),
                     },
 
                 ]
@@ -532,6 +650,7 @@ export default {
             const startDate = new Date(currentYear, currentMonth - 1, 1);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
+            this.selectedDateNew = startDate
         },
     },
 

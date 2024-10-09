@@ -15,6 +15,7 @@ import * as echarts from 'echarts';
 import moment from 'moment'
 import { getPartyBuildingRankData } from '@/api/partybuilding/data'
 import { getTargetData } from '@/api/financial/target'
+import { getNameTarget } from '@/api/financial/target'
 export default {
   name: 'Indicators50',
   data() {
@@ -31,6 +32,7 @@ export default {
       pickerOptions: [],
       option: {},
       myChart: {},
+      ifTargetEmpty: '',
       targetValueArray: [],
       routerData:
         [
@@ -47,23 +49,22 @@ export default {
   },
   methods: {
     async initData() {
-      let target = {
-        date: new Date(),
-        deptName: 'partybuilding',
-      }
-      const resTarget = await getTargetData(target)
-      //目标值赋予
-      this.routerData.forEach(item => {
-        resTarget.rows.forEach(row => {
-          if (item.sum === row.indicatorName) {
-            item.targetValue = row.targetValue;
-            item.targetValueDate = row.natureYear;
-
-          }
-        });
-      });
-      console.log(this.routerData)
-      console.log('++++++++++++')
+      // let target = {
+      //   date: new Date(),
+      //   deptName: 'partybuilding',
+      // }
+      // const resTarget = await getTargetData(target)
+      // 是否目标值赋予
+      // this.routerData.forEach(item => {
+      //   resTarget.rows.forEach(row => {
+      //     if (item.sum === row.indicatorName) {
+      //       item.targetValue = row.targetValue;
+      //       item.targetValueDate = row.natureYear;
+      //     }
+      //   });
+      // });
+      // console.log(this.routerData)
+      // console.log('++++++++++++')
       this.timeData.startTime = this.selectedDate[0],
         this.timeData.endTime = this.selectedDate[1]
       try {
@@ -72,6 +73,38 @@ export default {
         this.data = res.rows
         const yAxisDataLength = this.data.length;
         this.targetValueArray = Array(yAxisDataLength).fill(this.routerData[0].targetValue);
+
+        //目标值
+        let newTarget = {
+          name: 'partyBuildingRank',
+          startDate: this.selectedDate[0],
+          endDate: this.selectedDate[1]
+        }
+        const tmp = await getNameTarget(newTarget)
+        let nowTarget = tmp.rows
+        this.ifTargetEmpty = tmp.rows.length
+        if (this.ifTargetEmpty) {
+          let allTarget = []; // 初始化目标数组
+          nowTarget.forEach(item => {
+            let natureYear = moment(item.natureYear).format('YYYY')
+            let targetValue = item.targetValue; // 目标值可能是数字或null
+            allTarget.push({ natureYear, targetValue });
+          })
+          this.data.forEach(item => {
+            const year = moment(item.yearAndMonth).format('YYYY')
+            allTarget.forEach(row => {
+              if (year === row.natureYear) {
+                item.targetValue = row.targetValue
+              }
+            })
+          });
+        }
+
+
+        console.log(this.data)
+
+
+
         this.loading = false
         this.updateChart()
       } catch (error) {
@@ -190,7 +223,7 @@ export default {
         data: this.data.map(item => item.score),
       },
       ];
-      if (this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '') {
+      if (this.ifTargetEmpty) {
         series.push({
           name: '目标值',
           type: 'line',
@@ -198,7 +231,7 @@ export default {
           emphasis: {
             focus: 'series'
           },
-          data: this.targetValueArray,
+          data: this.data.map(item => item.targetValue),
         });
 
       }
@@ -213,7 +246,7 @@ export default {
           }
         },
         legend: {
-          data: ['分数', this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '' ? '目标值' : null].filter(item => item !== null),
+          data: ['分数', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,

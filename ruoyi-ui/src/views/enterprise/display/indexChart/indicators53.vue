@@ -95,25 +95,28 @@ export default {
                             item.orderEntryDelayTarget = row.orderEntryDelayRatio
                             item.shipmentDelayTarget = row.shipmentDelayRatio
                             item.productionReportDelayTarget = row.productionReportDelayRatio
+                            item.inspectionDelayTarget = row.inspectionDelayRate
                             item.invoicePostingDelayTarget = row.invoicePostingDelayRate
                             item.unsettledAccountsTarget = row.unsettledAccountsRatio
-                            item.inspectionDelayTarget = row.inspectionDelayRate
+
                         }
                     })
                 })
                 this.actualYY[0] = this.actualData[0].orderEntryDelayRatio
                 this.actualYY[1] = this.actualData[0].shipmentDelayRatio
                 this.actualYY[2] = this.actualData[0].productionReportDelayRatio
-                this.actualYY[3] = this.actualData[0].invoicePostingDelayRate
-                this.actualYY[4] = this.actualData[0].unsettledAccountsRatio
-                this.actualYY[5] = this.actualData[0].inspectionDelayRate
+                this.actualYY[3] = this.actualData[0].inspectionDelayRate
+                this.actualYY[4] = this.actualData[0].invoicePostingDelayRate
+                this.actualYY[5] = this.actualData[0].unsettledAccountsRatio
+
                 // this.dataYY = []
                 this.dataYY[0] = this.actualData[0].orderEntryDelayTarget
                 this.dataYY[1] = this.actualData[0].shipmentDelayTarget
                 this.dataYY[2] = this.actualData[0].productionReportDelayTarget
-                this.dataYY[3] = this.actualData[0].invoicePostingDelayTarget
-                this.dataYY[4] = this.actualData[0].unsettledAccountsTarget
-                this.dataYY[5] = this.actualData[0].inspectionDelayTarget
+                this.dataYY[3] = this.actualData[0].inspectionDelayTarget
+                this.dataYY[4] = this.actualData[0].invoicePostingDelayTarget
+                this.dataYY[5] = this.actualData[0].unsettledAccountsTarget
+
                 console.log(this.dataYY)
                 console.log(this.actualData)
                 // console.log(this.scoreData)

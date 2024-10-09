@@ -241,8 +241,9 @@ const labelOption = {
   rotate: app.config.rotate,
   formatter: '{c}  {name|{a}}',
   fontSize: 16,
-       formatter: function (params) {
-    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
+      formatter: function (params) {
+    // 当值为0时，返回空字符串，否则转换为百分比
+    return params.value === 0 ? '' : `${(params.value * 100).toFixed(2)}%`;
   },
   rich: {
     name: {}

@@ -55,3 +55,17 @@ export function getTargetData(data) {
     }
   })
 }
+
+
+// 查询当年目标值
+export function getNameTarget(data) {
+  return request({
+    url: '/indicators/target/targetInfoByIndicator',
+    method: 'post',
+    data: {
+      name: data.name,
+      startDate: data.startDate,
+      endDate: data.endDate
+    }
+  })
+}

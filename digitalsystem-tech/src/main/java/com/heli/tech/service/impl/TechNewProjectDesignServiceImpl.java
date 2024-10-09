@@ -2,16 +2,15 @@ package com.heli.tech.service.impl;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
 import com.alibaba.excel.EasyExcel;
 import com.heli.tech.domain.Tech;
-import com.heli.tech.domain.TechNonStandardOrder;
 import com.heli.tech.listener.TechNewProjectListener;
-import com.heli.tech.listener.TechNonStandardOrderListener;
-import com.heli.tech.service.ITechAnnualPlanCountService;
 import com.heli.tech.service.ITechService;
+import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +33,7 @@ public class TechNewProjectDesignServiceImpl implements ITechNewProjectDesignSer
     private TechNewProjectDesignMapper techNewProjectDesignMapper;
     @Autowired
     private ITechService techService;
-    @Autowired
-    private ITechAnnualPlanCountService techAnnualPlanCountService;
+
 
     @Override
     public boolean checkTechNewProjectDesignIsExisted(Date yearAndMonth) {
@@ -49,34 +47,10 @@ public class TechNewProjectDesignServiceImpl implements ITechNewProjectDesignSer
             if (checkTechNewProjectDesignIsExisted(yearAndMonth)) {
                 techNewProjectDesignMapper.deleteTechNewProjectDesignByYearAndMonth(yearAndMonth);
             }
-
-
             // 读取文件内容
             log.info("开始读取文件: {}", fileName);
             EasyExcel.read(inputStream, TechNewProjectDesign.class, new TechNewProjectListener(techNewProjectDesignMapper, yearAndMonth)).sheet().doRead();
-//            return R.ok("读取" + fileName + "文件成功");
-
             log.info("读取文件: {} 成功", fileName);
-
-//            log.info("开始统计，时间：" + yearAndMonth);
-
-            Integer completeNum = techNewProjectDesignMapper.selectTechNewProjectDesignCount(yearAndMonth);
-//            Integer completeNumLastMonth = techNewProjectDesignMapper.selectTechNewProjectDesignCount(DateUtils.getLastMonth(yearAndMonth));
-//            log.info("统计结果：本月完成总数：" + completeNum);
-//            log.info("统计结果：上月完成总数：" + completeNumLastMonth);
-//            int temp = completeNum - completeNumLastMonth;
-//
-            Tech tech = new Tech();
-            tech.setYearAndMonth(yearAndMonth);
-//            tech.setCompletedmonthlyPlancounts((long) temp);
-            tech.setCompletedPlanCount(Long.valueOf(completeNum));
-//
-////            int i = techService.insertOrUpdateTech(techService.calculateCompletionRate(tech));
-//            Long annualNumber = techAnnualPlanCountService.selectTechAnnualNumberByYear(DateUtils.getYear(yearAndMonth));
-//            tech.setPrdscheduleCompletionrate(BigDecimal.valueOf(completeNum* 100.0 / annualNumber ));
-            techService.insertOrUpdateTech(tech);
-            techService.calculateCompletionRate(yearAndMonth);
-
             return R.ok("读取" + fileName + "文件成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +59,44 @@ public class TechNewProjectDesignServiceImpl implements ITechNewProjectDesignSer
         }
     }
 
+    /**
+     * @description: 统计项目情况
+     * @author: hong
+     * @date: 2024/9/28 15:27
+     * @version: 1.0
+     */
+    public void calculateProjectData(Date yearAndMonth) {
+        //  项目总数
+        Integer totalProjectCount = techNewProjectDesignMapper.selectTechTotalProjectCount(yearAndMonth);
+        // 未开始项目数
+        Integer unstartedProjectCount = techNewProjectDesignMapper.selectTechUnstartedProjectCount(yearAndMonth);
+        // 已完成项目数
+        Integer completedProjectCount = techNewProjectDesignMapper.selectTechCompletedProjectCount(yearAndMonth);
+        // 进行中项目数
+        Integer ongoingProjectCount = totalProjectCount - unstartedProjectCount - completedProjectCount;
+        // 总积分数
+        BigDecimal totalPoints = techNewProjectDesignMapper.selectTechTotalPoints(yearAndMonth);
+        //累计得分
+        BigDecimal accumulatedScore = techNewProjectDesignMapper.selectTechAccumulatedScore(yearAndMonth);
+        //项目积分占比
+        BigDecimal projectPointsPercentage = null ;
+        if (totalPoints.compareTo(BigDecimal.ZERO) == 0 || accumulatedScore.compareTo(BigDecimal.ZERO) == 0) {
+        } else {
+            projectPointsPercentage = accumulatedScore.divide(totalPoints, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        }
 
+
+        Tech tech = new Tech();
+        tech.setYearAndMonth(yearAndMonth);
+        tech.setTotalProjectCount(Long.valueOf(totalProjectCount));
+        tech.setUnstartedProjectCount(Long.valueOf(unstartedProjectCount));
+        tech.setCompletedProjectCount(Long.valueOf(completedProjectCount));
+        tech.setOngoingProjectCount(Long.valueOf(ongoingProjectCount));
+        tech.setTotalPoints(totalPoints);
+        tech.setAccumulatedScore(accumulatedScore);
+        tech.setProjectPointsPercentage(projectPointsPercentage);
+        techService.insertOrUpdateProjectData(tech);
+    }
 
 
     /**

@@ -1,9 +1,17 @@
 package com.heli.enterprise.service.impl;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.excel.EasyExcel;
+import com.heli.enterprise.domain.EnterpriseManagementDailyClearingReadEntity;
+import com.heli.enterprise.domain.EnterpriseManagementSalaryTable;
+import com.heli.enterprise.listener.DailyClearingTableListener;
+import com.heli.enterprise.listener.SalaryTableListener;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.enterprise.mapper.EnterpriseManagementIndicatorsDailyClearingSettlementMapper;
@@ -17,6 +25,7 @@ import com.heli.enterprise.service.IEnterpriseManagementIndicatorsDailyClearingS
  * @author hong
  * @date 2024-09-12
  */
+@Slf4j
 @Service
 public class EnterpriseManagementIndicatorsDailyClearingSettlementServiceImpl implements IEnterpriseManagementIndicatorsDailyClearingSettlementService {
     @Autowired
@@ -98,6 +107,23 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementServiceImpl im
     public int deleteEnterpriseManagementIndicatorsDailyClearingSettlementByEdId(String edId) {
         return enterpriseManagementIndicatorsDailyClearingSettlementMapper.deleteEnterpriseManagementIndicatorsDailyClearingSettlementByEdId(edId);
     }
+
+
+    @Override
+    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream,Date yearAndMonth) {
+        try {
+
+            // 读取文件内容
+            log.info("开始读取文件: {}", fileName);
+            EasyExcel.read(inputStream, EnterpriseManagementDailyClearingReadEntity.class, new DailyClearingTableListener(enterpriseManagementIndicatorsDailyClearingSettlementMapper,yearAndMonth)).sheet().doRead();
+            return R.ok("读取" + fileName + "文件成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("读取 " + fileName + " 文件失败, 原因: {}", e.getMessage());
+            return R.fail("读取文件失败,您需要工资表,当前上传的文件为：" + fileName);
+        }
+    }
+
 }
 
 

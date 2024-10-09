@@ -91,17 +91,17 @@
           v-hasPermi="['project:Info:edit']"
         >修改</el-button>
       </el-col> -->
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
-          @click="handleDelete"
+          @click="handleBatchRecycle"
           v-hasPermi="['project:Info:remove']"
         >删除</el-button>
-      </el-col> -->
+      </el-col>
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -164,57 +164,7 @@
     </el-dialog>
 
     <el-table v-loading="loading" :data="InfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id(主键)" align="center" prop="projectId" />
-      <el-table-column label="项目名称" align="center" prop="projectName" />
-      <el-table-column label="项目类别" align="center" prop="category" />
-      <el-table-column label="项目等级" align="center" prop="level" />
-      <el-table-column label="主责部门" align="center" prop="department" />
-      <el-table-column label="项目负责人" align="center" prop="manager" />
-      <!-- <el-table-column label="项目描述" align="center" prop="description" /> -->
-      <el-table-column label="立项评审时间" align="center" prop="startDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="项目组成员" align="center" prop="teamMembers" />
-      <el-table-column label="项目现状" align="center" prop="currentStatus" />
-
-      <el-table-column label="项目目标" align="center" prop="goal" />
-      <el-table-column label="项目范围" align="center" prop="scope" />
-
-      <!-- <el-table-column label="导入时间" align="center" prop="importDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="描述" align="center" prop="remake" /> -->
-      <el-table-column label="计划结项时间" align="center" prop="plannedCompletionTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.plannedCompletionTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="项目归属" align="center" prop="attribute" />
-      <el-table-column label="历史项目" align="center" prop="oldProjectId" />
-      <el-table-column label="项目状态" align="center" prop="status" />
-      <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
-      <!-- <el-table-column label="关联时间" align="center" prop="associationDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.associationDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column> -->
-
-
-
-      <!-- <el-table-column label="项目进度" align="center" prop="progress" /> -->
-
-
-
-
-      <!-- <el-table-column label="已过天数" align="center" prop="daysPassed" />
-      <el-table-column label="剩余天数" align="center" prop="daysRemaining" /> -->
-      <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px"> 
         <template slot-scope="scope">
           <div class="button-group">
             <!-- <el-button
@@ -261,15 +211,51 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="id(主键)" align="center" prop="projectId" />
+      <el-table-column label="项目名称" align="center" prop="projectName" />
+      <el-table-column label="项目类别" align="center" prop="category" />
+      <el-table-column label="项目等级" align="center" prop="level" />
+      <el-table-column label="主责部门" align="center" prop="department" />
+      <el-table-column label="项目负责人" align="center" prop="manager" />
+      <!-- <el-table-column label="项目描述" align="center" prop="description" /> -->
+      <el-table-column label="立项评审时间" align="center" prop="startDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="项目组成员" align="center" prop="teamMembers" />
+      <el-table-column label="项目现状" align="center" prop="currentStatus" />
+
+      <el-table-column label="项目目标" align="center" prop="goal" />
+      <el-table-column label="项目范围" align="center" prop="scope" />
+
+      <!-- <el-table-column label="导入时间" align="center" prop="importDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column> -->
+      <!-- <el-table-column label="描述" align="center" prop="remake" /> -->
+      <el-table-column label="计划结项时间" align="center" prop="plannedCompletionTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.plannedCompletionTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="项目归属" align="center" prop="attribute" />
+      <el-table-column label="历史项目" align="center" prop="oldProjectId" />
+      <el-table-column label="项目状态" align="center" prop="status" />
+      <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
+      <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
+
     </el-table>
     
-    <pagination
+    <!-- <pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
-    />
+    /> -->
 
     <!-- 添加或修改项目基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -485,7 +471,7 @@ export default {
       queryParams: {
         oldProjectList:null,
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10000,
         projectName: null,
         category: null,
         level: null,
@@ -957,6 +943,60 @@ export default {
       this.download('project/Info/export', {
         ...this.queryParams
       }, `Info_${new Date().getTime()}.xlsx`)
+    },
+
+    handleBatchRecycle() {
+      // 检查是否有项目被选中
+      if (!this.ids || this.ids.length === 0) {
+        this.$modal.msgWarning('请至少选择一个项目进行操作。');
+        return;
+      }
+
+      // 确认删除操作
+      this.$modal.confirm('是否确认移除选中的项目信息？').then(() => {
+        // 从选中的项目中提取所有的 projectId
+        // 调用删除接口
+        // return delInfo(this.ids);
+      }).then(() => {
+        
+        console.log("this.ids=="+this.ids);
+        var temp = getProjectInfo(this.ids).data;
+
+        temp = temp.data;
+        console.log("hello +"+temp);
+       
+
+          // 获取每个 projectId 对应的完整项目信息
+          const getInfoPromises = this.ids.map(projectId =>   getProjectInfo(projectId));
+
+      
+
+
+          console.log("--------"+temp);
+
+          console.log("======"+getInfoPromises);
+          // 等待所有项目信息获取完成
+          return Promise.all(getInfoPromises);
+        }).then(fullProjectInfos => {
+          // 使用获取到的完整项目信息来调用 addRecycle
+          const addRecyclePromises = fullProjectInfos.map(projectInfo => {
+            // 假设这里需要设置项目的状态为 "已取消"
+            projectInfo.status = "已取消";
+            return addRecycle(projectInfo);
+          });
+
+          // 等待所有 addRecycle 调用完成
+          return Promise.all(addRecyclePromises);
+      }).then(() => {
+        // 删除和更新操作成功后，重新获取列表
+        this.getList();
+        // 显示成功消息
+        this.$modal.msgSuccess("移除成功，已移入回收站");
+        this.ids = [];
+      }).catch(() => {
+        // 处理取消操作或其他错误
+        this.$modal.msgError('操作已取消或发生错误。');
+      });
     }
   }
 };

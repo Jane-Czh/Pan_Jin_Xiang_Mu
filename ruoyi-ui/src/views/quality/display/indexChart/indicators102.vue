@@ -186,14 +186,23 @@ export default {
                     data: this.data.map(item => item.largeTonPassRate),
                 },
                 {
-                    name: '电车和大吨位',
+                    name: '内燃车',
                     type: 'bar',
                     label: labelOption,
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.data.map(item => item.singleInspectionPassRate),
+                    data: this.data.map(item => item.icvPassRate ? item.icvPassRate : null),
                 },
+                {
+                    name: '所有',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.allPassRate ? item.allPassRate : null),
+                }
             ];
 
             if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
@@ -218,7 +227,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['电车', '大吨位', '电车和大吨位', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['电车', '大吨位', '内燃车', '所有', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

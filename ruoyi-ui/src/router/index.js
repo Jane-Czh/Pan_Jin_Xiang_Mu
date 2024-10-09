@@ -211,7 +211,13 @@ export const constantRoutes = [
         path: 'indicators71',
         component: () => import('@/views/tech/display/indexChart/indicators71'),
         name: 'Indicators71',
-        meta: { title: '指标71：研发项目计划进度完成率' }
+        meta: { title: '指标71：项目完成情况' }
+      },
+      {
+        path: 'indicators106',
+        component: () => import('@/views/tech/display/indexChart/indicators106'),
+        name: 'Indicators106',
+        meta: { title: '指标106：项目进度情况' }
       }
     ]
   },
@@ -677,7 +683,40 @@ export const constantRoutes = [
         meta: { title: '指标73：日/月/年交货数' }
       }
     ]
-  }
+  },
+
+  // {
+  //   path: '/process', //ori from 路径
+  //   component: Layout,
+  //   hidden: true,
+  //   // permissions: ['process:ef:panel'],
+  //   redirect: 'noredirect',
+  //   children: [
+  //     {
+  //       path: 'panel',// to 路径
+  //       component: () => import('@/views/process/ef/panel'), //组件vue路径
+  //       name: 'panel',
+  //       meta: { title: '新建流程页面' }
+  //     }
+  //   ]
+  // },
+
+    //流程模块-流程新建
+    {
+      path: '/ef',
+      component: Layout,
+      hidden: true,
+      // permissions: ['system:user:edit'],
+      children: [
+        {
+          path: 'panel',
+          component: () => import('@/views/process/ef/panel'),
+          name: '流程',
+          meta: { title: '流程模块', activeMenu: '/process/ef' }
+        }
+      ]
+    },
+
 ]
 
 //
@@ -798,21 +837,12 @@ export const dynamicRoutes = [
   },
 
 
-  //流程模块-流程新建
-  {
-    path: '/ef',
-    component: Layout,
-    hidden: true,
-    permissions: ['system:user:edit'],
-    children: [
-      {
-        path: 'ef',
-        component: () => import('@/views/process/ef/panel'),
-        name: '流程',
-        meta: { title: '流程模块', activeMenu: '/process/ef' }
-      }
-    ]
-  },
+
+
+
+
+
+
   //流程模块-流程统计
   {
     path: '/statistics',
@@ -861,6 +891,13 @@ export const dynamicRoutes = [
       }
     ]
   },
+
+  //流程模块 -- sb杜工要求将其作为一个小按钮跳转
+
+  // '/process/ef/panel'
+
+
+
 
   //流程模块
   // {

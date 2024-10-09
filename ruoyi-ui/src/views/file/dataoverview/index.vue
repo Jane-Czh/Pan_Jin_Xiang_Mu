@@ -494,7 +494,6 @@ export default {
         return {
           classificationOfSpecialties: item.classificationOfSpecialties,
           times: item.times,
-
         };
       });
 
@@ -514,6 +513,7 @@ export default {
         "insideBottomLeft",
         "insideBottomRight",
       ];
+
       app.configParameters = {
         rotate: { min: -90, max: 90 },
         align: { options: { left: "left", center: "center", right: "right" } },
@@ -528,6 +528,7 @@ export default {
         },
         distance: { min: 0, max: 100 },
       };
+
       app.config = {
         rotate: 0,
         align: "center",
@@ -552,19 +553,22 @@ export default {
           });
         },
       };
-      const labelOption = {
-        show: true,
-        position: app.config.position,
-        distance: app.config.distance,
-        align: app.config.align,
-        verticalAlign: app.config.verticalAlign,
-        rotate: app.config.rotate,
+
+      const labelOption1 = {
         formatter: function (params) {
-          return params.data.times;
+          // 返回分类名称
+          return params.name;
         },
-        fontSize: 16,
-        rich: { name: {} },
+
       };
+      const labelOption2 = {
+        formatter: function (params) {
+          // 返回数量
+          return params.value;
+        },
+        position: 'inside',
+      };
+
       this.option = {
         title: {
           text: "制度分类",
@@ -582,6 +586,16 @@ export default {
               value: item.times,
               name: item.classificationOfSpecialties,
             })),
+          },
+          {
+            name: "制度总数",
+            type: "pie",
+            emphasis: { focus: "series" },
+            data: formattedData.map((item) => ({
+              value: item.times,
+              name: item.classificationOfSpecialties,
+            })),
+            label: labelOption2,
           },
         ],
       };
@@ -651,18 +665,19 @@ export default {
           });
         },
       };
-      const labelOption = {
-        show: true,
-        position: app.config.position,
-        distance: app.config.distance,
-        align: app.config.align,
-        verticalAlign: app.config.verticalAlign,
-        rotate: app.config.rotate,
+      const labelOption1 = {
         formatter: function (params) {
-          return params.data.times;
+          // 返回分类名称
+          return params.name;
         },
-        fontSize: 16,
-        rich: { name: {} },
+
+      };
+      const labelOption2 = {
+        formatter: function (params) {
+          // 返回数量
+          return params.value;
+        },
+        position: 'inside',
       };
       this.option = {
         title: {
@@ -674,13 +689,23 @@ export default {
         },
         series: [
           {
-            name: "流程总数",
+            name: "制度总数",
             type: "pie",
             emphasis: { focus: "series" },
             data: formattedData.map((item) => ({
               value: item.times,
               name: item.classificationOfSpecialties,
             })),
+          },
+          {
+            name: "制度总数",
+            type: "pie",
+            emphasis: { focus: "series" },
+            data: formattedData.map((item) => ({
+              value: item.times,
+              name: item.classificationOfSpecialties,
+            })),
+            label: labelOption2,
           },
         ],
       };

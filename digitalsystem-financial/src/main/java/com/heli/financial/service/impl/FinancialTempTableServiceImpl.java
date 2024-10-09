@@ -105,11 +105,20 @@ public class FinancialTempTableServiceImpl implements IFinancialTempTableService
         balanceTable.setPcvFinished(stringToBigDecimal(
                 financialTempTableMapper.selectAmountByName("1407020000  产品成本差异-产成品")));
 
-        balanceTable.setMonthlyInventoryTotalAmount(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("*    存货")));
+//        balanceTable.setMonthlyInventoryTotalAmount(stringToBigDecimal(
+//                financialTempTableMapper.selectAmountByName("*    存货")));
 
         balanceTable.setReceivables(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("*    应收账款")));
+                        financialTempTableMapper.selectAmountByName("    1122010000  应收账款-控股公司"))
+                .add(
+                        stringToBigDecimal(
+                                financialTempTableMapper.selectAmountByName("    1122030000  应收账款-直接客户"))
+                ).add(
+                        stringToBigDecimal(
+                                financialTempTableMapper.selectAmountByName("    1231020100  坏账准备-应收账款-账龄计提"))
+                )
+
+        );
 
 
         financialBalanceTableService.insertFinancialBalanceTable(balanceTable);
@@ -160,7 +169,6 @@ public class FinancialTempTableServiceImpl implements IFinancialTempTableService
 
         interestsTable.setRdExpense(stringToBigDecimal(
                 financialTempTableMapper.selectAmountByName("*          研发费用")));
-
 
 
         financialInterestsTableService.insertFinancialInterestsTable(interestsTable);

@@ -21,6 +21,9 @@ public interface ITechNewProjectDesignService {
 
     public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream , Date yearAndMonth) ;
 
+    public void calculateProjectData(Date yearAndMonth);
+
+
     /**
      * 查询技术-项目计划完成统计
      *

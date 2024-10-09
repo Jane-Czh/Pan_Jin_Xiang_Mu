@@ -47,4 +47,10 @@ public class SupplyIndicatorsControlledMaterialPurchases extends BaseEntity {
     @Excel(name = "比例")
     private BigDecimal controlledPurchaseAmountRatio;
 
+    /**
+     * 年度累计比例
+     */
+    @Excel(name = "年度累计比例")
+    private BigDecimal yearAmountRatio;
+
 }

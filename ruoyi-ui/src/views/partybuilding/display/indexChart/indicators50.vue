@@ -190,7 +190,6 @@ export default {
         data: this.data.map(item => item.score),
       },
       ];
-      // console.log(this.routerData[0].targetValue)
       if (this.routerData[0].targetValue != 0 && this.routerData[0].targetValue != '') {
         series.push({
           name: '目标值',
@@ -201,8 +200,6 @@ export default {
           },
           data: this.targetValueArray,
         });
-        console.log('***********')
-        console.log(series)
 
       }
       this.option = {

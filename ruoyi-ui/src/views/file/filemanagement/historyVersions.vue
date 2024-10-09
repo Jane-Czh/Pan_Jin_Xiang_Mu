@@ -202,6 +202,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+<!--      <el-table-column label="关联表单" align="center" prop="formId" />-->
       <el-table-column label="状态" align="center" prop="revisionContent"/>
       <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
@@ -631,7 +632,8 @@
           newFlag: null,
           newRegulationsId: null,
           businesses: null,
-          subBusinesses: null
+          subBusinesses: null,
+          formId: null
         },
         //流程查询参数
         projecQueryParams: {
@@ -680,6 +682,7 @@
           revisionDate: null,
           revisionContent: null,
           reviser: null,
+          formId: null,
           projectIds: null,
           newFlag: null,
           newRegulationsId: null,
@@ -957,7 +960,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         // 检查权限
-        if (this.thisDept !== row.mainResponsibleDepartment) {
+        if (this.thisDept !== row.mainResponsibleDepartment  && this.thisDept !== '研发'&&'企管'&&'总部') {
           this.$modal.msgError('没有权限删除该制度!');
           return; // 中止删除操作
         }
@@ -1173,6 +1176,7 @@
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
+              状态 :regulation.revisionContent,
               最新上传日期 : regulation.uploadDate,
             };
           });

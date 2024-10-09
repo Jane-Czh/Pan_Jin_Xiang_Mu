@@ -7,12 +7,22 @@
             <div class="allIndex-item__body">
               <i :class="item.icon" />
               <div class="main-content">
-                <h3>{{ item.title }}</h3>
+                <h3>
+                  {{ item.title }}
+                  <span v-if="item.showWarning">
+                    <i class="el-icon-warning-outline" style="font-size: 20px; color: red;"></i>
+                  </span>
+                </h3>
+
                 <div>{{ item.content }}</div>
               </div>
             </div>
             <div class="allIndex-item__footer">
-              <el-button type="text" style="font-size: 18px;" @click="toDetail(item, index)">指标数据图</el-button>
+              <div class="footer-content">
+                <span v-if="item.id === '102'" style="font-size: 16px;">{{ item.date }}</span>
+                <span v-else style="font-size: 16px;">截至{{ item.date }}</span>
+                <el-button type="text" style="font-size: 18px;" @click="toDetail(item, index)">指标数据图</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -26,6 +36,8 @@
 
 <script>
 import { getTargetData } from '@/api/financial/target'
+import { getTechNewData } from '@/api/tech/data'
+import moment from 'moment'
 export default {
   components: {},
   props: [],
@@ -33,11 +45,13 @@ export default {
     return {
       activeName: 'first',
       allIndex: [
-        { id: '47', showTarget: 'tech', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'nonStandardAVGPreparationDays', icon: 'el-icon-s-data', title: '非标订单平均技术准备天数', content: '非标订单平均技术准备天数', path: '/tech/indicators47' },
-        { id: '71', showTarget: 'tech', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'prdScheduleCompletionRate', icon: 'el-icon-s-data', title: '研发项目计划进度完成率', content: '研发项目计划进度完成率', path: '/tech/indicators71' },
+        { id: '47', showTarget: 'tech', date: '', type: '天', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'nonStandardAvgPreparationDays', icon: 'el-icon-s-data', title: '非标订单平均技术准备天数', content: '非标订单平均技术准备天数', path: '/tech/indicators47' },
+        { id: '71', showTarget: 'tech', date: '', type: '元', showWarning: false, targetValue: 0, targetValueDate: '', sum: 'prdScheduleCompletionRate', icon: 'el-icon-s-data', title: '项目完成情况', content: '项目完成情况', path: '/tech/indicators71' },
+        { id: '106', showTarget: 'tech', date: '', type: '元', showWarning: false, targetValue: 0, targetValueDate: '', sum: '', icon: 'el-icon-s-data', title: '项目进度情况', content: '项目进度情况', path: '/tech/indicators106' },
       ],
       formData: {},
       rules: {},
+      newData: {},
     }
   },
   computed: {},
@@ -49,12 +63,35 @@ export default {
   },
   methods: {
     async init() {
+
+      const res = await getTechNewData()
+      this.newData = res.data
+
+      //页面截至
+      this.allIndex.forEach(item => {
+        item.date = res && res.data ? moment(res.data.yearAndMonth).format('YYYY-MM') : '--';
+      });
+      //卡片content
+      this.allIndex.forEach(item => {
+        console.log(item.id)
+        if (item.id === '47') {
+          item.content = `最新一月：平均天数：${this.newData['nonStandardAvgPreparationDays'] || '-'} / 总条数：${this.newData['nonStandardNum'] || '-'} / 增幅率：${this.newData['nonStandardOrderGrowthRate'] || '-'}`;
+        } else if (item.id === '71') {
+          item.content = `最新一月：总数：${this.newData['totalProjectCount'] || '-'} / 占比率：${this.newData['projectPointsPercentage'] || '-'}`;
+        } else if (item.id === '106') {
+          item.content = `最新一月：已完成：${this.newData['completedProjectCount'] || '-'} / 进行中：${this.newData['ongoingProjectCount'] || '-'} / 暂未开展：${this.newData['unstartedProjectCount'] || '-'}`;
+        } else {
+          console.warn(`Not found in response data.`);
+        }
+      });
+
       let target = {
         date: new Date(),
         deptName: 'tech',
       }
       const resTarget = await getTargetData(target)
       //目标值赋予及上下限预警
+
       this.allIndex.forEach(item => {
         resTarget.rows.forEach(row => {
           if (item.sum === row.indicatorName) {
@@ -119,6 +156,14 @@ export default {
   .allIndex-item__footer {
     border-top: 1px solid #eee;
     text-align: right;
+  }
+
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    /* 文本靠左，按钮靠右 */
+    align-items: center;
   }
 }
 </style>

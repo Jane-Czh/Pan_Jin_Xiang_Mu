@@ -24,6 +24,7 @@ export default {
         return {
             loading: false,
             data: [],
+            result: [],
             date: new Date(),
             timeData: {
                 startTime: new Date(),
@@ -44,6 +45,7 @@ export default {
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
         this.initData()
+
     },
     methods: {
         async initData() {
@@ -53,6 +55,19 @@ export default {
                 this.loading = true
                 const res = await getInTimeReturnRateData(this.timeData);
                 this.data = res.rows
+                this.result = res.rows.map(item => {
+                    if (item.intimeReturnrate === -1) {
+                        return {
+                            value: -1,
+                            itemStyle: {
+                                color: '#c75450'
+                            }
+                        };
+                    } else {
+                        return item.intimeReturnrate;
+                    }
+                });
+                // console.log(this.data)
                 // const yAxisDataLength = this.data.length;
                 // this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
                 this.loading = false
@@ -236,7 +251,7 @@ export default {
                         emphasis: {
                             focus: 'series'
                         },
-                        data: this.data.map(item => item.intimeReturnrate),
+                        data: this.result,
                     },
                 ]
             };

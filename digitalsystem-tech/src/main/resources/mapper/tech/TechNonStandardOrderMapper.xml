@@ -70,6 +70,11 @@
         where Year_And_Month = #{yearAndMonth}
     </select>
 
+    <select id="countNonStandardOrderNum" resultType="java.lang.Integer">
+        select count(*) from Tech_Non_Standard_Order
+        where Year_And_Month = #{yearAndMonth}
+    </select>
+
     <!--  删除当月的数据，入参为日期  -->
     <delete id="deleteTechNonStandardOrderByMonth" parameterType="Date">
         delete from Tech_Non_Standard_Order

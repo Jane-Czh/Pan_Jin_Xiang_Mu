@@ -146,6 +146,42 @@ export function getIndex11(data) {
       }
     })
   }
+  export function getIndex45(data) {
+    return request({
+      url: '/market/Index/ElCarAvergaeDay45',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+
+  export function getIndex46(data) {
+    return request({
+      url: '/market/Index/ElCarAvergaeDay46',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+
+  export function getIndex47(data) {
+    return request({
+      url: '/market/Index/ElCarAvergaeDay47',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+  
   export function getIndex44(data) {
     return request({
       url: '/market/Index/LitterTAvergaeDay',

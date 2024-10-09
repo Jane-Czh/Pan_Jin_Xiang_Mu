@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class AverageResult {
-
+    private final static String Year="2024";
     private String Month;
 
     private Double Average_Days_Difference;

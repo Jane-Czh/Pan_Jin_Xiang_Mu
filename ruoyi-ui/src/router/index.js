@@ -363,7 +363,7 @@ export const constantRoutes = [
         path: 'indicators42',
         component: () => import('@/views/market/display/indexChart/indicators42'),
         name: 'Indicators42',
-        meta: { title: '指标42：大叉位叉车整机交货天数平均数' }
+        meta: { title: '指标42：大叉车整机交货天数平均数' }
       }
     ]
   },
@@ -612,7 +612,50 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index45',
+        component: () => import('@/views/market/display/indexChart/index45'),
+        name: 'Index45',
+        meta: { title: '指标45：电动车整机制造天数' }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index46',
+        component: () => import('@/views/market/display/indexChart/index46'),
+        name: 'Index46',
+        meta: { title: '指标46：小吨位内燃叉车整机制造天数' }
+      }
+    ]
+  },
 
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index47',
+        component: () => import('@/views/market/display/indexChart/index47'),
+        name: 'Index47',
+        meta: { title: '指标47：大吨位内燃叉车整机制造天数' }
+      }
+    ]
+  },
+  
   {
     path: '/market',
     component: Layout,

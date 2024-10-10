@@ -181,6 +181,18 @@ export function getIndex11(data) {
       }
     })
   }
+
+  export function getIndex48(data) {
+    return request({
+      url: '/market/Index/ElCarAvergaeDay48',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
   
   export function getIndex44(data) {
     return request({

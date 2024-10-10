@@ -1561,6 +1561,65 @@ public class MarketIndexController extends BaseController {
 
 
     /*
+* 指标48 小吨位整机制造天数
+平均数
+* */
+    @PostMapping("/ElCarAvergaeDay48")
+    public  List<VoEntity> ElCarAvergaeDay48(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+
+        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
+        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage48();
+        System.out.println("数据库测试2"+averageResults+"测试完成");
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
+
+
+// TODO改sql语句 获取当前年份
+        Map<String, Map<String, Double>> groupedResults = Optional.ofNullable(averageResults)
+                .orElseGet(Collections::emptyList) // 如果averageResults为null，则使用空列表
+                .stream()
+                .filter(result -> result != null) // 过滤掉流中的null元素
+                .filter(result -> {
+                    String monthStr = result.getMonth();
+                    if (monthStr == null) return false; // 如果月份为null，则跳过该结果
+                    int resultMonth = Integer.parseInt(monthStr);
+                    return resultMonth >= startMonth1 && resultMonth <= endMonth;
+                })
+                .collect(Collectors.groupingBy(
+                        AverageResult::getCompletionYear,
+                        Collectors.groupingBy(
+                                AverageResult::getMonth,
+                                Collectors.averagingDouble(AverageResult::getAverage_Days_Difference)
+                        )
+                ));
+
+
+        System.out.println("测试分组"+groupedResults);
+
+        Map<String, Map<String, Double>> modifiedResults = groupedResults.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
+                                        Map.Entry::getValue
+                                ))
+                ));
+
+//        System.out.println("测试分组"+groupedResults);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntitiesDouble(modifiedResults);
+        return voEntities;
+    }
+
+
+    /*
      * 指标44 小吨位内燃叉车整机交货天数
 超过平均数20%统计台数
      * */

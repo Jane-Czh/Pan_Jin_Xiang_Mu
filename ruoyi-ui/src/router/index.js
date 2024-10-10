@@ -648,6 +648,21 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
+        path: 'index48',
+        component: () => import('@/views/market/display/indexChart/index48'),
+        name: 'Index48',
+        meta: { title: '指标48：越野车整机制造天数' }
+      }
+    ]
+  },
+
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
         path: 'index47',
         component: () => import('@/views/market/display/indexChart/index47'),
         name: 'Index47',

@@ -1,9 +1,17 @@
 package com.heli.enterprise.service.impl;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.excel.EasyExcel;
+import com.heli.enterprise.domain.EnterpriseManagementDailyClearingReadEntity;
+import com.heli.enterprise.domain.EnterpriseManagementManagementReadEntity;
+import com.heli.enterprise.listener.DailyClearingTableListener;
+import com.heli.enterprise.listener.ManagementTableListener;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.heli.enterprise.mapper.EnterpriseManagementIndicatorsManagementMapper;
@@ -17,6 +25,7 @@ import com.heli.enterprise.service.IEnterpriseManagementIndicatorsManagementServ
  * @author hong
  * @date 2024-09-13
  */
+@Slf4j
 @Service
 public class EnterpriseManagementIndicatorsManagementServiceImpl implements IEnterpriseManagementIndicatorsManagementService {
     @Autowired
@@ -98,6 +107,20 @@ public class EnterpriseManagementIndicatorsManagementServiceImpl implements IEnt
     @Override
     public int deleteEnterpriseManagementIndicatorsManagementByEmId(String emId) {
         return enterpriseManagementIndicatorsManagementMapper.deleteEnterpriseManagementIndicatorsManagementByEmId(emId);
+    }
+
+    @Override
+    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream,Date yearAndMonth) {
+        try {
+            // 读取文件内容
+            log.info("开始读取文件: {}", fileName);
+            EasyExcel.read(inputStream, EnterpriseManagementManagementReadEntity.class, new ManagementTableListener(enterpriseManagementIndicatorsManagementMapper,yearAndMonth)).sheet().headRowNumber(2).doRead();
+            return R.ok("读取" + fileName + "文件成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("读取 " + fileName + " 文件失败, 原因: {}", e.getMessage());
+            return R.fail("读取文件失败,您需要工资表,当前上传的文件为：" + fileName);
+        }
     }
 }
 

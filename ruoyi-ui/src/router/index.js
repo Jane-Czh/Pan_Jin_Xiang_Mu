@@ -580,7 +580,7 @@ export const constantRoutes = [
         path: 'index42',
         component: () => import('@/views/market/display/indexChart/index42'),
         name: 'Index42',
-        meta: { title: '指标42：大叉位叉车整机交货天数平均数' }
+        meta: { title: '指标42：大吨位叉车整机交货天数平均数' }
       }
     ]
   },
@@ -655,7 +655,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   {
     path: '/market',
     component: Layout,

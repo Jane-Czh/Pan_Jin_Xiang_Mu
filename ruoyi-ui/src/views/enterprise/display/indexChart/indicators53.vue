@@ -6,7 +6,8 @@
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange">
             </el-date-picker> -->
-            <el-date-picker v-model="selectedDateNew" type="month" placeholder="选择日期" @change="handleDateChange">
+            <el-date-picker v-model="selectedDateNew" type="month" placeholder="选择日期" value-format="yyyy-MM-dd HH:mm:ss"
+                @change="handleDateChange">
             </el-date-picker>
         </div>
         <div v-if="loading" class="loading-indicator">
@@ -54,6 +55,7 @@ export default {
             targetData: [],
             scoreData: [],
             dataYY: [],
+            flag: 0,
         }
     },
     computed: {},
@@ -66,8 +68,9 @@ export default {
     },
     methods: {
         async initData() {
-            this.timeData.startTime = new Date(this.selectedDate[0]);
-            this.timeData.endTime = new Date(this.selectedDate[1]);
+            console.log(this.selectedDateNew)
+            this.timeData.startTime = this.selectedDateNew;
+            this.timeData.endTime = this.selectedDateNew;
             try {
                 this.loading = true
                 // let newTarget = {}
@@ -76,53 +79,65 @@ export default {
                 this.targetData = []
                 this.actualData = []
                 this.scoreData = []
+                let flagTarget = 0
+                let flagActual = 0
+                let flagScore = 0
                 res.rows.forEach(item => {
-                    // console.log(item.flag)
                     if (item.flag === 1) {
                         this.targetData.push(item)
-                    } if (item.flag === 2) {
+                        flagTarget = 1
+                    } else if (item.flag === 2) {
                         this.actualData.push(item)
+                        flagActual = 1
                     } else if (item.flag === 3) {
                         this.scoreData.push(item)
-                        // console.log('+++')
+                        flagScore = 1
                     }
                 })
-                this.actualData.forEach(item => {
-                    this.targetData.forEach(row => {
-                        let item1 = moment(item.yearAndMonth).format('YYYY')
-                        let row1 = moment(row.yearAndMonth).format('YYYY')
-                        if (item1 == row1) {
-                            item.orderEntryDelayTarget = row.orderEntryDelayRatio
-                            item.shipmentDelayTarget = row.shipmentDelayRatio
-                            item.productionReportDelayTarget = row.productionReportDelayRatio
-                            item.inspectionDelayTarget = row.inspectionDelayRate
-                            item.invoicePostingDelayTarget = row.invoicePostingDelayRate
-                            item.unsettledAccountsTarget = row.unsettledAccountsRatio
-
-                        }
+                // console.log(flagActual)
+                this.actualYY = []
+                this.dataYY = []
+                if (flagActual) {
+                    this.actualData.forEach(item => {
+                        this.targetData.forEach(row => {
+                            let item1 = moment(item.yearAndMonth).format('YYYY')
+                            let row1 = moment(row.yearAndMonth).format('YYYY')
+                            if (item1 == row1) {
+                                item.orderEntryDelayTarget = row.orderEntryDelayRatio ? row.orderEntryDelayRatio : 0
+                                item.shipmentDelayTarget = row.shipmentDelayRatio ? row.shipmentDelayRatio : 0
+                                item.productionReportDelayTarget = row.productionReportDelayRatio ? row.productionReportDelayRatio : 0
+                                item.inspectionDelayTarget = row.inspectionDelayRate ? row.inspectionDelayRate : 0
+                                item.invoicePostingDelayTarget = row.invoicePostingDelayRate ? row.invoicePostingDelayRate : 0
+                                item.unsettledAccountsTarget = row.unsettledAccountsRatio ? row.unsettledAccountsRatio : 0
+                                // this.flag = 1
+                            }
+                        })
                     })
-                })
-                this.actualYY[0] = this.actualData[0].orderEntryDelayRatio
-                this.actualYY[1] = this.actualData[0].shipmentDelayRatio
-                this.actualYY[2] = this.actualData[0].productionReportDelayRatio
-                this.actualYY[3] = this.actualData[0].inspectionDelayRate
-                this.actualYY[4] = this.actualData[0].invoicePostingDelayRate
-                this.actualYY[5] = this.actualData[0].unsettledAccountsRatio
+                    this.actualYY[0] = this.actualData[0].orderEntryDelayRatio ? this.actualData[0].orderEntryDelayRatio : 0
+                    this.actualYY[1] = this.actualData[0].shipmentDelayRatio ? this.actualData[0].shipmentDelayRatio : 0
+                    this.actualYY[2] = this.actualData[0].productionReportDelayRatio ? this.actualData[0].productionReportDelayRatio : 0
+                    this.actualYY[3] = this.actualData[0].inspectionDelayRate ? this.actualData[0].inspectionDelayRate : 0
+                    this.actualYY[4] = this.actualData[0].invoicePostingDelayRate ? this.actualData[0].invoicePostingDelayRate : 0
+                    this.actualYY[5] = this.actualData[0].unsettledAccountsRatio ? this.actualData[0].unsettledAccountsRatio : 0
 
-                // this.dataYY = []
-                this.dataYY[0] = this.actualData[0].orderEntryDelayTarget
-                this.dataYY[1] = this.actualData[0].shipmentDelayTarget
-                this.dataYY[2] = this.actualData[0].productionReportDelayTarget
-                this.dataYY[3] = this.actualData[0].inspectionDelayTarget
-                this.dataYY[4] = this.actualData[0].invoicePostingDelayTarget
-                this.dataYY[5] = this.actualData[0].unsettledAccountsTarget
+                    this.dataYY[0] = this.actualData[0].orderEntryDelayTarget ? this.actualData[0].orderEntryDelayTarget : 0
+                    this.dataYY[1] = this.actualData[0].shipmentDelayTarget ? this.actualData[0].shipmentDelayTarget : 0
+                    this.dataYY[2] = this.actualData[0].productionReportDelayTarget ? this.actualData[0].productionReportDelayTarget : 0
+                    this.dataYY[3] = this.actualData[0].inspectionDelayTarget ? this.actualData[0].inspectionDelayTarget : 0
+                    this.dataYY[4] = this.actualData[0].invoicePostingDelayTarget ? this.actualData[0].invoicePostingDelayTarget : 0
+                    this.dataYY[5] = this.actualData[0].unsettledAccountsTarget ? this.actualData[0].unsettledAccountsTarget : 0
+                }
 
-                console.log(this.dataYY)
-                console.log(this.actualData)
+
+                console.log(this.actualYY)
+
+                // console.log(this.dataYY)
+                // console.log(this.actualData)
                 // console.log(this.scoreData)
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
@@ -310,126 +325,6 @@ export default {
                         data: this.dataYY,
                         // data: this.actualData.map(item => item.orderEntryDelayTarget),
                     },
-                    // {
-                    //     name: '销售订单不及时发货比例',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#03fafa',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.shipmentDelayRatio),
-                    // },
-                    // {
-                    //     name: '销售订单不及时发货比例目标值',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#037efa',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.shipmentDelayTarget),
-                    // },
-                    // {
-                    //     name: '生产订单不及时报工比例',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#c903fa',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.productionReportDelayRatio),
-                    // },
-                    // {
-                    //     name: '生产订单不及时报工比例目标值',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#8c03fa',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.productionReportDelayTarget),
-                    // },
-                    // {
-                    //     name: '成品检验业务不及时率',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#fa036b',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.inspectionDelayRate),
-                    // },
-                    // {
-                    //     name: '成品检验业务不及时率目标值',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#fa0323',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.inspectionDelayTarget),
-                    // },
-                    // {
-                    //     name: '销售发票过账不及时率',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#03fa94',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.invoicePostingDelayRate),
-                    // },
-                    // {
-                    //     name: '销售发票过账不及时率目标值',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#03fadd',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.invoicePostingDelayTarget),
-                    // },
-                    // {
-                    //     name: '客户未清账比例',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#91cc75',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.unsettledAccountsRatio),
-                    // },
-                    // {
-                    //     name: '客户未清账比例目标值',
-                    //     type: 'bar',
-                    //     label: labelOption,
-                    //     emphasis: {
-                    //         focus: 'series'
-                    //     },
-                    //     color: '#3ba272',
-                    //     // yAxisIndex: 1,
-                    //     // stack: 'stack1',
-                    //     data: this.actualData.map(item => item.unsettledAccountsTarget),
-                    // },
 
                 ]
             };

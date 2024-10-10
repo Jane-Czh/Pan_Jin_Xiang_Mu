@@ -6,6 +6,17 @@
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="类别" prop="flag">
+        <el-select v-model="queryParams.flag" placeholder="请选择类别" clearable @keyup.enter.native="handleQuery">
+          <el-option value="1" label="目标值"></el-option>
+          <el-option value="2" label="实际值"></el-option>
+          <el-option value="3" label="得分"></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="类别" prop="flag">
+        <el-input v-model="queryParams.flag" placeholder="请输入SD 销售订单有效性考核得分" clearable
+          @keyup.enter.native="handleQuery" />
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -39,7 +50,7 @@
             <el-form-item label="上传表类">
               <span style="color: rgb(68, 140, 39);">日清日结表</span>
               <br>
-              <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
+              <el-date-picker clearable v-model="form3.yearAndMonth" type="year" value-format="yyyy-MM-dd"
                 placeholder="请选择日期">
               </el-date-picker>
             </el-form-item>
@@ -180,8 +191,10 @@ export default {
       isLoading: false,
       // 遮罩层
       loading: true,
+      selectedType: '',
       // 选中数组
       ids: [],
+      dates: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -195,6 +208,7 @@ export default {
       SettlementList: [],
       // 弹出层标题
       title: "",
+      open2: false,
       form3: {
         yearAndMonth: null
       },
@@ -345,7 +359,7 @@ export default {
     },
     onMonthChange(value) {
 
-      console.log(value)
+      // console.log(value)
       if (value == 1) {
         this.showTargetDate = true;
       } else {

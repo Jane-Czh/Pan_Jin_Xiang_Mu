@@ -16,7 +16,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getPartQualificationRateData } from '@/api/quality/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 
 export default {
     data() {
@@ -33,6 +33,7 @@ export default {
             myChart: {},
             routerData: {},
             targetValueArray: [],
+            ifTargetEmpty: '',
         }
     },
     computed: {},
@@ -52,9 +53,68 @@ export default {
                 this.data = res.rows
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                let newTarget2 = {
+                    name: this.routerData.sum2,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                // console.log(newTarget)
+                const res1 = await getNameTarget(newTarget)
+                const res2 = await getNameTarget(newTarget2)
+                let nowTarget = res1.rows
+                let nowTarget2 = res2.rows
+                this.ifTargetEmpty = res1.rows.length
+                this.ifTargetEmpty2 = res2.rows.length
+                // console.log(this.ifTargetEmpty)
+                // console.log(nowTarget)
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
+                    })
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                    console.log(allTarget)
+                }
+                if (this.ifTargetEmpty2) {
+                    let allTarget2 = []; // 初始化目标数组
+                    nowTarget2.forEach(item => {
+                        let natureYear2 = moment(item.natureYear).format('YYYY')
+                        let targetValue2 = item.targetValue; // 目标值可能是数字或null
+                        allTarget2.push({ natureYear2, targetValue2 });
+                    })
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget2.forEach(row => {
+                            if (year === row.natureYear2) {
+                                item.targetValue2 = row.targetValue2
+                            }
+                        })
+                    });
+                    console.log(allTarget2)
+                }
+
+                console.log(this.data)
+
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
@@ -182,20 +242,31 @@ export default {
                 data: this.data.map(item => item.nextprocessFeedbackPassrate),
             }];
 
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            if (this.ifTargetEmpty) {
                 series.push({
-                    name: '目标值',
+                    name: '班组目标值',
                     type: 'line',
                     label: labelOption,
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
+                });
+            }
+            if (this.ifTargetEmpty2) {
+                series.push({
+                    name: '下道目标值',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.targetValue2),
                 });
             }
             this.option = {
                 title: {
-                    text: '班组自查合格率与下道工序反馈合格率'
+                    text: '班组自查合格率与\n下道工序反馈合格率'
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -204,7 +275,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['班组自查合格率', '下道工序反馈合格率', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['班组自查合格率', '下道工序反馈合格率', this.ifTargetEmpty ? '班组目标值' : null, this.ifTargetEmpty2 ? '下道目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

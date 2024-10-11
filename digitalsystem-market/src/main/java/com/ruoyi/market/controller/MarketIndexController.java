@@ -1302,7 +1302,7 @@ public class MarketIndexController extends BaseController {
     }
 
     /*
-     * 指标42 大叉位叉车整机交货天数平均数
+     * 指标42 大吨位叉车整机交货天数平均数
      * TODO 筛选出平均值>20%的数据，过滤对应的车型
      * */
     @PostMapping("/AvergaeDay")

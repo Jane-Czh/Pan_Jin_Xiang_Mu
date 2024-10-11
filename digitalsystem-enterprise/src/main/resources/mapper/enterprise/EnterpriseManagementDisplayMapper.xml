@@ -123,28 +123,20 @@
 
     <resultMap type="EnterpriseManagementIndicatorsManagement" id="EnterpriseManagementIndicatorsManagementResult">
         <result property="yearAndMonth" column="Year_And_Month"/>
-        <result property="sdSalesordervalidityscore" column="SD_SalesOrderValidityScore"/>
+        <result property="flag" column="flag"/>
         <result property="sdSalesordervalidity" column="SD_SalesOrderValidity"/>
-        <result property="ppManualpocreationratioscore" column="PP_ManualPOCreationRatioScore"/>
         <result property="ppManualpocreationratio" column="PP_ManualPOCreationRatio"/>
-        <result property="ppDeliveredunreportedratioscore" column="PP_DeliveredUnreportedRatioScore"/>
         <result property="ppDeliveredunreportedratio" column="PP_DeliveredUnreportedRatio"/>
-        <result property="mesLateworkreportingscore" column="MES_LateWorkReportingScore"/>
         <result property="mesLateworkreportingrate" column="MES_LateWorkReportingRate"/>
-        <result property="qmExternalinspectiondelayscore" column="QM_ExternalInspectionDelayScore"/>
         <result property="qmExternalinspectiondelay" column="QM_ExternalInspectionDelay"/>
-        <result property="mmPurchaseorderlatedeliveryscore" column="MM_PurchaseOrderLateDeliveryScore"/>
         <result property="mmPurchaseorderlatedelivery" column="MM_PurchaseOrderLateDelivery"/>
-        <result property="mmManualpocreationscore" column="MM_ManualPOCreationScore"/>
         <result property="mmManualpocreation" column="MM_ManualPOCreation"/>
-        <result property="mmUnsettledpurchaserequestsscore" column="MM_UnsettledPurchaseRequestsScore"/>
         <result property="mmUnsettledpurchaserequests" column="MM_UnsettledPurchaseRequests"/>
-        <result property="ficoMonthlystandardpricevariationscore" column="FICO_MonthlyStandardPriceVariationScore"/>
         <result property="ficoMonthlystandardpricevariation" column="FICO_MonthlyStandardPriceVariation"/>
-        <result property="crossMonthProductionOrdersScore" column="CrossMonthProductionOrdersScore"/>
         <result property="crossMonthProductionOrders" column="CrossMonthProductionOrders"/>
-        <result property="pmLatemaintenanceordercompletionscore" column="PM_LateMaintenanceOrderCompletionScore"/>
         <result property="pmLatemaintenanceordercompletion" column="PM_LateMaintenanceOrderCompletion"/>
+        <result property="indicator1" column="indicator1"/>
+        <result property="indicator2" column="indicator2"/>
         <result property="createBy" column="CREATE_BY"/>
         <result property="createTime" column="CREATE_TIME"/>
         <result property="updateBy" column="UPDATE_BY"/>
@@ -155,30 +147,23 @@
     <select id="selectManagement" resultMap="EnterpriseManagementIndicatorsManagementResult">
         select *
         from (select Year_And_Month,
-                     SD_SalesOrderValidityScore,
+                     flag,
                      SD_SalesOrderValidity,
-                     PP_ManualPOCreationRatioScore,
                      PP_ManualPOCreationRatio,
-                     PP_DeliveredUnreportedRatioScore,
                      PP_DeliveredUnreportedRatio,
-                     MES_LateWorkReportingScore,
                      MES_LateWorkReportingRate,
-                     QM_ExternalInspectionDelayScore,
                      QM_ExternalInspectionDelay,
-                     MM_PurchaseOrderLateDeliveryScore,
                      MM_PurchaseOrderLateDelivery,
-                     MM_ManualPOCreationScore,
                      MM_ManualPOCreation,
-                     MM_UnsettledPurchaseRequestsScore,
                      MM_UnsettledPurchaseRequests,
-                     FICO_MonthlyStandardPriceVariationScore,
                      FICO_MonthlyStandardPriceVariation,
-                     CrossMonthProductionOrdersScore,
                      CrossMonthProductionOrders,
-                     PM_LateMaintenanceOrderCompletionScore,
-                     PM_LateMaintenanceOrderCompletion
+                     PM_LateMaintenanceOrderCompletion,
+                     indicator1,
+                     indicator2
               from Enterprise_Management_Indicators_Management
               where Year_And_Month between #{startTime} and #{endTime}
+                and (flag = 3 or flag = 4)
               order by Year_And_Month DESC) as t
         order by Year_And_Month ASC
     </select>

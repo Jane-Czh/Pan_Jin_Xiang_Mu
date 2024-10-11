@@ -35,6 +35,7 @@ export default {
             myChart: {},
             routerData: {},
             targetValueArray: [],
+            ifTargetEmpty: '',
         }
     },
     mounted() {
@@ -64,20 +65,24 @@ export default {
                 }
                 const tmp = await getNameTarget(newTarget)
                 let nowTarget = tmp.rows
-                let allTarget = []; // 初始化目标数组
-                nowTarget.forEach(item => {
-                    let natureYear = moment(item.natureYear).format('YYYY')
-                    let targetValue = item.targetValue; // 目标值可能是数字或null
-                    allTarget.push({ natureYear, targetValue });
-                })
-                this.data.forEach(item => {
-                    const year = moment(item.Year_And_Month).format('YYYY')
-                    allTarget.forEach(row => {
-                        if (year === row.natureYear) {
-                            item.targetValue = row.targetValue
-                        }
+                this.ifTargetEmpty = tmp.rows.length
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
                     })
-                });
+                    this.data.forEach(item => {
+                        const year = moment(item.Year_And_Month).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                }
+
                 console.log(this.data)
 
                 this.loading = false
@@ -200,7 +205,7 @@ export default {
             },
             ];
 
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            if (this.ifTargetEmpty) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -222,7 +227,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['存货增长率/销售增长率', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['存货增长率/销售增长率', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

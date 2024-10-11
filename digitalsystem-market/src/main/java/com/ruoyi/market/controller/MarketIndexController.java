@@ -1684,6 +1684,87 @@ public class MarketIndexController extends BaseController {
         //TODO 修改了时间格式，后续可能要改
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
         DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("YYYY");
+        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+
+
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter(a -> {
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    // 获取结束时间前一个月的 LocalDate
+                    //For example, 2007-03-31 minus one month would result in the invalid date 2007-02-31.
+                    // Instead of returning an invalid result,
+                    // the last valid day of the month, 2007-02-28, is selected instead.
+
+                    LocalDate oneMonthBefore = endTime.minusMonths(1);
+                    //TODO 把startTime时间改为了oneMonthBefore
+//                    return !acceptanceTime.isBefore(oneMonthBefore) && !acceptanceTime.isAfter(endTime)
+//                            || acceptanceTime.isEqual(oneMonthBefore) || acceptanceTime.isEqual(endTime);
+                    // 打印结果
+//                    System.out.println("结束时间: " + endTime);
+//                    System.out.println("结束时间前一个月: " + oneMonthBefore);
+                    // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+                    return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                })
+                .collect(Collectors.groupingBy(
+                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(yearFormatter),
+                        Collectors.collectingAndThen(
+                                Collectors.groupingBy(
+//                                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(monthFormatter),
+                                        result -> String.valueOf("年接单数"),
+                                        Collectors.summingLong(MarketSalesTable::getNumber)
+                                ),
+                                map -> {
+                                    // 对内部的 Map 进行排序
+                                    return map.entrySet().stream()
+                                            .sorted(Map.Entry.comparingByKey())
+                                            .collect(Collectors.toMap(
+                                                    Map.Entry::getKey,
+                                                    Map.Entry::getValue,
+                                                    (e1, e2) -> e1,
+                                                    LinkedHashMap::new
+                                            ));
+                                }
+                        )
+                ));
+
+// 对外层的 Map 进行排序
+        Map<String, Map<String, Long>> sortedCollect = collect.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+collect);
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+sortedCollect);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(sortedCollect);
+        return voEntities;
+    }
+
+    /*
+     * 指标72  日/月/年接单数
+     * */
+    @PostMapping("/OrderReceiveNumberB")
+    public   List<VoEntity>  OrderReceiveNumberB(@RequestBody MarketSalesTable marketSalesTable){
+
+        System.out.println("获取到的实体类"+marketSalesTable);
+        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+//        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM-dd");
+        //TODO 修改了时间格式，后续可能要改
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("YYYY");
 
 
         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
@@ -1748,6 +1829,86 @@ public class MarketIndexController extends BaseController {
     }
 
     /*
+     * 指标72  日/月/年接单数
+     * */
+    @PostMapping("/OrderReceiveNumberC")
+    public   List<VoEntity>  OrderReceiveNumberC(@RequestBody MarketSalesTable marketSalesTable){
+
+        System.out.println("获取到的实体类"+marketSalesTable);
+        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+//        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM-dd");
+        //TODO 修改了时间格式，后续可能要改
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("YYYY");
+        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+
+
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
+                .filter(a -> {
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    // 获取结束时间前一个月的 LocalDate
+                    //For example, 2007-03-31 minus one month would result in the invalid date 2007-02-31.
+                    // Instead of returning an invalid result,
+                    // the last valid day of the month, 2007-02-28, is selected instead.
+
+                    LocalDate oneMonthBefore = endTime.minusMonths(1);
+                    //TODO 把startTime时间改为了oneMonthBefore
+//                    return !acceptanceTime.isBefore(oneMonthBefore) && !acceptanceTime.isAfter(endTime)
+//                            || acceptanceTime.isEqual(oneMonthBefore) || acceptanceTime.isEqual(endTime);
+                    // 打印结果
+//                    System.out.println("结束时间: " + endTime);
+//                    System.out.println("结束时间前一个月: " + oneMonthBefore);
+                    // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+                    return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                })
+                .collect(Collectors.groupingBy(
+                        a -> a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(dayFormatter),
+                        Collectors.collectingAndThen(
+                                Collectors.groupingBy(
+                                        result -> String.valueOf("日接单"),
+                                        Collectors.summingLong(MarketSalesTable::getNumber)
+                                ),
+                                map -> {
+                                    // 对内部的 Map 进行排序
+                                    return map.entrySet().stream()
+                                            .sorted(Map.Entry.comparingByKey())
+                                            .collect(Collectors.toMap(
+                                                    Map.Entry::getKey,
+                                                    Map.Entry::getValue,
+                                                    (e1, e2) -> e1,
+                                                    LinkedHashMap::new
+                                            ));
+                                }
+                        )
+                ));
+
+// 对外层的 Map 进行排序
+        Map<String, Map<String, Long>> sortedCollect = collect.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+collect);
+        System.out.println("筛选出实际发车日期为空，系统发车日期不为空,再按照地区和月份统计数量"+sortedCollect);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(sortedCollect);
+        System.out.println("返回给前端的vo对象"+voEntities);
+        return voEntities;
+    }
+    /*
      * 指标73  日/月/年交货数
      * 可能需要修改 传出参数；YY-MM-DD
      * */
@@ -1780,7 +1941,7 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.groupingBy(
                         a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                         Collectors.groupingBy(
-                                a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+                                result -> String.valueOf("年接单"),
                                 Collectors.summingLong(MarketSalesTable::getNumber)
                         )
                 ));
@@ -1798,5 +1959,111 @@ public class MarketIndexController extends BaseController {
 
         return voEntities;
     }
+
+
+    /*
+     * 指标73  日/月/年交货数
+     * 可能需要修改 传出参数；YY-MM-DD
+     * */
+    @PostMapping("/OrderDeliveryNumberB")
+    public   List<VoEntity> OrderDeliveryNumberB(@RequestBody MarketSalesTable marketSalesTable){
+
+        System.out.println("获取到的实体类"+marketSalesTable);
+        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+        DateTimeFormatter Yearmonth = DateTimeFormatter.ofPattern("YYYY-MM");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
+
+
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                //过滤掉为空的日期
+                .filter(a -> a.getSystemDeliveryTime() != null)
+                .filter(a -> {
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+                    return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                })
+                .collect(Collectors.groupingBy(
+                        a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Yearmonth),
+                        Collectors.groupingBy(
+                                a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
+                                Collectors.summingLong(MarketSalesTable::getNumber)
+                        )
+                ));
+
+//        Map<Date, Long> collect = marketSalesTables.stream()
+//                .collect(Collectors.groupingBy(
+//                        a -> a.getSystemDeliveryTime()
+//                        , Collectors.summingLong(MarketSalesTable::getNumber))
+//                );
+
+        System.out.println("按照交货日期分组，统计台数"+collect);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+
+        return voEntities;
+    }
+
+    /*
+     * 指标73  日/月/年交货数
+     * 可能需要修改 传出参数；YY-MM-DD
+     * */
+    @PostMapping("/OrderDeliveryNumberC")
+    public   List<VoEntity> OrderDeliveryNumberC(@RequestBody MarketSalesTable marketSalesTable){
+
+        System.out.println("获取到的实体类"+marketSalesTable);
+        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
+        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
+
+        //获取到全部的数据
+        List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
+
+
+        Map<String, Map<String, Long>> collect = marketSalesTables.stream()
+                //过滤掉为空的日期
+                .filter(a -> a.getSystemDeliveryTime() != null)
+                .filter(a -> {
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    // 检查日期是否在起止时间范围内，包括等于起止时间的情况
+                    return !acceptanceTime.isBefore(startTime) && !acceptanceTime.isAfter(endTime)
+                            || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
+                })
+                .collect(Collectors.groupingBy(
+                        a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                        Collectors.groupingBy(
+                                result -> String.valueOf("日接单"),
+                                Collectors.summingLong(MarketSalesTable::getNumber)
+                        )
+                ));
+
+//        Map<Date, Long> collect = marketSalesTables.stream()
+//                .collect(Collectors.groupingBy(
+//                        a -> a.getSystemDeliveryTime()
+//                        , Collectors.summingLong(MarketSalesTable::getNumber))
+//                );
+
+        System.out.println("按照交货日期分组，统计台数"+collect);
+
+
+        List<VoEntity> voEntities = VoEntity.convertCpdToVoEntities(collect);
+
+        return voEntities;
+    }
+
 
 }

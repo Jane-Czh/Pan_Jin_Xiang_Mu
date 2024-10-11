@@ -205,7 +205,7 @@ export function getIndex11(data) {
       }
     })
   }
-  export function getIndex72(data) {
+  export function getIndex72A(data) {
     return request({
       url: '/market/Index/OrderReceiveNumber',
       method: 'post',
@@ -216,9 +216,56 @@ export function getIndex11(data) {
       }
     })
   }
-  export function getIndex73(data) {
+
+  export function getIndex72B(data) {
+    return request({
+      url: '/market/Index/OrderReceiveNumberB',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+
+  export function getIndex72C(data) {
+    return request({
+      url: '/market/Index/OrderReceiveNumberC',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+  export function getIndex73A(data) {
     return request({
       url: '/market/Index/OrderDeliveryNumber',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+
+  export function getIndex73B(data) {
+    return request({
+      url: '/market/Index/OrderDeliveryNumberB',
+      method: 'post',
+      data: {
+        startTime: data.startTime,
+        endTime: data.endTime,
+        numberInput:data.numberInput
+      }
+    })
+  }
+  export function getIndex73C(data) {
+    return request({
+      url: '/market/Index/OrderDeliveryNumberC',
       method: 'post',
       data: {
         startTime: data.startTime,

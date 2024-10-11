@@ -162,6 +162,8 @@ export default {
   },
   mounted() { },
   methods: {
+    
+    
     toDetail(item, index) {
       //  this.dialogVisible = true
        this.item=item

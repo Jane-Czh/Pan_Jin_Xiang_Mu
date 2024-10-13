@@ -2,8 +2,11 @@
     <div>
         <div class="block">
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+            <!-- <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
+                @change="handleDateChange">
+            </el-date-picker> -->
+            <el-date-picker v-model="selectedDateNew" type="month" placeholder="选择日期" value-format="yyyy-MM-dd HH:mm:ss"
                 @change="handleDateChange">
             </el-date-picker>
         </div>
@@ -28,17 +31,19 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { getDailyClearingSettlementData } from '@/api/enterprise/chartAPI'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
             loading: false,
             data: [],
+            actualYY: [],
             timeData: {
                 startTime: new Date(),
                 endTime: new Date(),
             },
             selectedDate: [],
+            selectedDateNew: '',
             pickerOptions: [],
             option: {},
             option2: {},
@@ -46,6 +51,11 @@ export default {
             myChart2: {},
             parsedData: {},
             routerData: {},
+            actualData: [],
+            targetData: [],
+            scoreData: [],
+            dataYY: [],
+            flag: 0,
         }
     },
     computed: {},
@@ -58,26 +68,88 @@ export default {
     },
     methods: {
         async initData() {
-            this.timeData.startTime = new Date(this.selectedDate[0]);
-            this.timeData.endTime = new Date(this.selectedDate[1]);
+            console.log(this.selectedDateNew)
+            this.timeData.startTime = this.selectedDateNew;
+            this.timeData.endTime = this.selectedDateNew;
             try {
                 this.loading = true
+                // let newTarget = {}
                 const res = await getDailyClearingSettlementData(this.timeData);
                 this.data = res.rows
+                this.targetData = []
+                this.actualData = []
+                this.scoreData = []
+                let flagTarget = 0
+                let flagActual = 0
+                let flagScore = 0
+                res.rows.forEach(item => {
+                    if (item.flag === 1) {
+                        this.targetData.push(item)
+                        flagTarget = 1
+                    } else if (item.flag === 2) {
+                        this.actualData.push(item)
+                        flagActual = 1
+                    } else if (item.flag === 3) {
+                        this.scoreData.push(item)
+                        flagScore = 1
+                    }
+                })
+                // console.log(flagActual)
+                this.actualYY = []
+                this.dataYY = []
+                if (flagActual) {
+                    this.actualData.forEach(item => {
+                        this.targetData.forEach(row => {
+                            let item1 = moment(item.yearAndMonth).format('YYYY')
+                            let row1 = moment(row.yearAndMonth).format('YYYY')
+                            if (item1 == row1) {
+                                item.orderEntryDelayTarget = row.orderEntryDelayRatio ? row.orderEntryDelayRatio : 0
+                                item.shipmentDelayTarget = row.shipmentDelayRatio ? row.shipmentDelayRatio : 0
+                                item.productionReportDelayTarget = row.productionReportDelayRatio ? row.productionReportDelayRatio : 0
+                                item.inspectionDelayTarget = row.inspectionDelayRate ? row.inspectionDelayRate : 0
+                                item.invoicePostingDelayTarget = row.invoicePostingDelayRate ? row.invoicePostingDelayRate : 0
+                                item.unsettledAccountsTarget = row.unsettledAccountsRatio ? row.unsettledAccountsRatio : 0
+                                // this.flag = 1
+                            }
+                        })
+                    })
+                    this.actualYY[0] = this.actualData[0].orderEntryDelayRatio ? this.actualData[0].orderEntryDelayRatio : 0
+                    this.actualYY[1] = this.actualData[0].shipmentDelayRatio ? this.actualData[0].shipmentDelayRatio : 0
+                    this.actualYY[2] = this.actualData[0].productionReportDelayRatio ? this.actualData[0].productionReportDelayRatio : 0
+                    this.actualYY[3] = this.actualData[0].inspectionDelayRate ? this.actualData[0].inspectionDelayRate : 0
+                    this.actualYY[4] = this.actualData[0].invoicePostingDelayRate ? this.actualData[0].invoicePostingDelayRate : 0
+                    this.actualYY[5] = this.actualData[0].unsettledAccountsRatio ? this.actualData[0].unsettledAccountsRatio : 0
+
+                    this.dataYY[0] = this.actualData[0].orderEntryDelayTarget ? this.actualData[0].orderEntryDelayTarget : 0
+                    this.dataYY[1] = this.actualData[0].shipmentDelayTarget ? this.actualData[0].shipmentDelayTarget : 0
+                    this.dataYY[2] = this.actualData[0].productionReportDelayTarget ? this.actualData[0].productionReportDelayTarget : 0
+                    this.dataYY[3] = this.actualData[0].inspectionDelayTarget ? this.actualData[0].inspectionDelayTarget : 0
+                    this.dataYY[4] = this.actualData[0].invoicePostingDelayTarget ? this.actualData[0].invoicePostingDelayTarget : 0
+                    this.dataYY[5] = this.actualData[0].unsettledAccountsTarget ? this.actualData[0].unsettledAccountsTarget : 0
+                }
+
+
+                console.log(this.actualYY)
+
+                // console.log(this.dataYY)
+                // console.log(this.actualData)
+                // console.log(this.scoreData)
                 this.loading = false
                 this.updateChart()
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
         handleDateChange(value) {
-            if (value && value[1]) {
-                let endDate = new Date(value[1]);
-                endDate.setHours(endDate.getHours() + 13);
-                this.selectedDate[1] = endDate;
-            }
+            let startDate = new Date(value)
+            let endDate = new Date(value);
+            endDate.setHours(endDate.getHours() + 13);
+            this.selectedDate[0] = startDate
+            this.selectedDate[1] = endDate;
             this.initData()
         },
+        //目标值，实际值
         updateChart() {
             var app = {};
             const posList = [
@@ -187,8 +259,9 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['销售订单录入不及时比例(%)', '销售订单不及时发货比例(%)', '生产订单不及时报工比例(%)', '成品检验业务不及时率(%)', '销售发票过账不及时率(%)', '客户未清账比例(%)'],
-
+                    type: 'scroll',
+                    animationDurationUpdate: 0,
+                    data: ['实际值', '目标值'],
                 },
                 toolbox: {
                     show: true,
@@ -205,91 +278,52 @@ export default {
                 },
                 xAxis: [
                     {
-                        // type: 'category',
+                        type: 'category',
                         axisTick: { show: false },
-                        data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
-                    }
+                        data: ['销售录入不及时', '销售发货不及时', '生产报工不及时', '成品检验业务不及时', '销售发票过账不及时', '客户未清账'],
+                    },
                 ],
                 yAxis: [
                     {
                         type: 'value'
                     },
-                    {
-                        type: 'value',
-                        name: '比例',
-                        // interval: 5,
-                        splitLine: { show: false },
-                        axisLabel: {
-                            formatter: '{value} %'
-                        }
-                    }
+                    // {
+                    //     type: 'value',
+                    //     name: '比例',
+                    //     // interval: 5,
+                    //     splitLine: { show: false },
+                    //     axisLabel: {
+                    //         formatter: '{value} %'
+                    //     }
+                    // }
                 ],
                 series: [
                     {
-                        name: '销售订单录入不及时比例(%)',
-                        type: 'bar',
+                        name: '实际值',
+                        type: 'line',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        // color: '#fadc03',
+                        // yAxisIndex: 1,
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.orderEntryDelayRatio),
+                        // symbolOffset: [50, 0],
+                        data: this.actualYY,
                     },
                     {
-                        name: '销售订单不及时发货比例(%)',
+                        name: '目标值',
                         type: 'bar',
                         label: labelOption,
                         emphasis: {
                             focus: 'series'
                         },
-                        yAxisIndex: 1,
+                        // color: '#fab103',
+                        // yAxisIndex: 1,
                         // stack: 'stack1',
-                        data: this.data.map(item => item.shipmentDelayRatio),
-                    },
-                    {
-                        name: '生产订单不及时报工比例(%)',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.data.map(item => item.productionReportDelayRatio),
-                    },
-                    {
-                        name: '成品检验业务不及时率(%)',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.data.map(item => item.inspectionDelayRate),
-                    },
-                    {
-                        name: '销售发票过账不及时率(%)',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.data.map(item => item.invoicePostingDelayRate),
-                    },
-                    {
-                        name: '客户未清账比例(%)',
-                        type: 'bar',
-                        label: labelOption,
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        yAxisIndex: 1,
-                        // stack: 'stack1',
-                        data: this.data.map(item => item.unsettledAccountsRatio),
+                        data: this.dataYY,
+                        // data: this.actualData.map(item => item.orderEntryDelayTarget),
                     },
 
                 ]
@@ -308,6 +342,7 @@ export default {
             });
             this.updateChart2()
         },
+        //得分情况
         updateChart2() {
             var app = {};
             const posList = [
@@ -437,7 +472,7 @@ export default {
                     {
                         // type: 'category',
                         axisTick: { show: false },
-                        data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
+                        data: this.scoreData.map(item => moment(item.yearAndMonth).format('YY-MM')),
                     }
                 ],
                 yAxis: [
@@ -455,7 +490,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.orderEntryDelayScore),
+                        data: this.scoreData.map(item => item.orderEntryDelayRatio),
                     },
                     {
                         name: '销售订单不及时发货得分',
@@ -466,7 +501,7 @@ export default {
                         },
 
                         // stack: 'stack2',
-                        data: this.data.map(item => item.shipmentDelayScore),
+                        data: this.scoreData.map(item => item.shipmentDelayRatio),
                     },
                     {
                         name: '生产订单不及时报工得分',
@@ -476,7 +511,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.productionReportDelayScore),
+                        data: this.scoreData.map(item => item.productionReportDelayRatio),
                     },
                     {
                         name: '成品检验业务不及时得分',
@@ -486,7 +521,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.inspectionDelayScore),
+                        data: this.scoreData.map(item => item.inspectionDelayRate),
                     },
                     {
                         name: '销售发票过账不及时得分',
@@ -496,7 +531,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.invoicePostingDelayScore),
+                        data: this.scoreData.map(item => item.invoicePostingDelayRate),
                     },
                     {
                         name: '客户未清账得分',
@@ -506,7 +541,7 @@ export default {
                             focus: 'series'
                         },
                         // stack: 'stack2',
-                        data: this.data.map(item => item.unsettledAccountsScore),
+                        data: this.scoreData.map(item => item.unsettledAccountsRatio),
                     },
 
                 ]
@@ -532,6 +567,7 @@ export default {
             const startDate = new Date(currentYear, currentMonth - 1, 1);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
+            this.selectedDateNew = startDate
         },
     },
 
@@ -547,7 +583,7 @@ export default {
 
 <style lang="scss" scoped>
 #main {
-    width: 1000px;
+    width: 1400px;
     height: 600px;
     margin: 40px auto;
 }

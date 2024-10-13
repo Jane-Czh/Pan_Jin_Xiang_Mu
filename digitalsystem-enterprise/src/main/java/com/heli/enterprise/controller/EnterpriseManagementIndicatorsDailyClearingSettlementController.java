@@ -1,8 +1,13 @@
 package com.heli.enterprise.controller;
 
+import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.exception.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +26,7 @@ import com.heli.enterprise.domain.EnterpriseManagementIndicatorsDailyClearingSet
 import com.heli.enterprise.service.IEnterpriseManagementIndicatorsDailyClearingSettlementService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 日清日结
@@ -29,11 +35,30 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author hong
  * @date 2024-09-12
  */
+@Slf4j
 @RestController
 @RequestMapping("/enterprise/data/dailyclear")
 public class EnterpriseManagementIndicatorsDailyClearingSettlementController extends BaseController {
     @Autowired
     private IEnterpriseManagementIndicatorsDailyClearingSettlementService enterpriseManagementIndicatorsDailyClearingSettlementService;
+
+    /**
+     * @description: 上传日清日结表，存入数据库
+     * @author: hong
+     * @date: 2024/10/8 14:27
+     * @version: 1.0
+     */
+    @PreAuthorize("@ss.hasPermi('enterprise:dailyclear:import')")
+    @PostMapping("/read")
+    public R<String> simpleRead(Date yearAndMonth, MultipartFile multipartFile) {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            enterpriseManagementIndicatorsDailyClearingSettlementService.readSalaryExcelToDB(multipartFile.getOriginalFilename(), inputStream, yearAndMonth);
+            return R.ok("上传成功");
+        } catch (Exception e) {
+            log.error("读取 " + multipartFile.getName() + " 文件失败, 原因: {}", e.getMessage());
+            throw new ServiceException("读取 " + multipartFile.getName() + " 文件失败");
+        }
+    }
 
     /**
      * 查询日清日结
@@ -77,17 +102,16 @@ public class EnterpriseManagementIndicatorsDailyClearingSettlementController ext
     @Log(title = "日清日结 ", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
-        System.out.println('1');
-        if (enterpriseManagementIndicatorsDailyClearingSettlementService.checkDailyClearingDataIsExisted(enterpriseManagementIndicatorsDailyClearingSettlement.getYearAndMonth())) {
+        EnterpriseManagementIndicatorsDailyClearingSettlement dailyClear = new EnterpriseManagementIndicatorsDailyClearingSettlement();
+        dailyClear.setYearAndMonth(enterpriseManagementIndicatorsDailyClearingSettlement.getYearAndMonth());
+        dailyClear.setFlag(enterpriseManagementIndicatorsDailyClearingSettlement.getFlag());
+
+        if (enterpriseManagementIndicatorsDailyClearingSettlementService.selectEnterpriseManagementIndicatorsDailyClearingSettlementList(dailyClear).size() > 0) {
             return AjaxResult.warn("当月数据已上传");
         }
         enterpriseManagementIndicatorsDailyClearingSettlement.setCreateBy(getUsername());
         return toAjax(enterpriseManagementIndicatorsDailyClearingSettlementService.insertEnterpriseManagementIndicatorsDailyClearingSettlement(enterpriseManagementIndicatorsDailyClearingSettlement));
     }
-//    public AjaxResult add(@RequestBody EnterpriseManagementIndicatorsDailyClearingSettlement enterpriseManagementIndicatorsDailyClearingSettlement) {
-//        return toAjax(enterpriseManagementIndicatorsDailyClearingSettlementService.insertEnterpriseManagementIndicatorsDailyClearingSettlement(enterpriseManagementIndicatorsDailyClearingSettlement));
-//    }
-
 
     /**
      * 修改日清日结

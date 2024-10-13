@@ -5,7 +5,11 @@ import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
 import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.heli.enterprise.mapper.EnterpriseManagementDisplayMapper;
 import com.heli.enterprise.service.IEnterpriseManagementDisplayService;
+import com.heli.enterprise.service.IEnterpriseManagementIndicatorsDailyClearingSettlementService;
+import com.heli.enterprise.service.IEnterpriseManagementIndicatorsManagementService;
 import com.ruoyi.common.core.domain.DisplayEntity;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +17,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManagementDisplayService {
     @Autowired
     private EnterpriseManagementDisplayMapper enterpriseManagementDisplayMapper;
+    @Autowired
+    private IEnterpriseManagementIndicatorsDailyClearingSettlementService dailyClearingSettlementService;
+    @Autowired
+    private IEnterpriseManagementIndicatorsManagementService managementService;
 
     @Override
     public List<Map<Date, Object>> selectEmployeesNumber(Date startTime, Date endTime) {
@@ -69,12 +78,35 @@ public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManage
 
     @Override
     public List<EnterpriseManagementIndicatorsDailyClearingSettlement> selectDailyClearingSettlement(Date startTime, Date endTime) {
-        return enterpriseManagementDisplayMapper.selectDailyClearingSettlement(startTime,endTime);
+        List<EnterpriseManagementIndicatorsDailyClearingSettlement> list = enterpriseManagementDisplayMapper.selectDailyClearingSettlement(startTime, endTime);
+
+        EnterpriseManagementIndicatorsDailyClearingSettlement dailyClearingSettlement = new EnterpriseManagementIndicatorsDailyClearingSettlement();
+
+        // 获取当前Date的1月1日
+        Date date = new Date(DateUtils.getYear(startTime) - 1900, 0, 1);
+        log.info("date: " + date);
+        dailyClearingSettlement.setFlag(1);
+        List<EnterpriseManagementIndicatorsDailyClearingSettlement> target = dailyClearingSettlementService.selectEnterpriseManagementIndicatorsDailyClearingSettlementList(dailyClearingSettlement);
+
+        list.add(target.get(0));
+        return list;
     }
 
     @Override
     public List<EnterpriseManagementIndicatorsManagement> selectManagement(Date startTime, Date endTime) {
-        return enterpriseManagementDisplayMapper.selectManagement(startTime,endTime);
+        List<EnterpriseManagementIndicatorsManagement> list = enterpriseManagementDisplayMapper.selectManagement(startTime, endTime);
+        EnterpriseManagementIndicatorsManagement management = new EnterpriseManagementIndicatorsManagement();
+        management.setFlag(1);
+        management.setYearAndMonth(new Date(DateUtils.getYear(startTime) - 1900, 0, 1));
+        List<EnterpriseManagementIndicatorsManagement> target = managementService.selectEnterpriseManagementIndicatorsManagementList(management);
+        if (target.size() > 0)
+            list.add(target.get(0));
+
+        management.setFlag(2);
+        target = managementService.selectEnterpriseManagementIndicatorsManagementList(management);
+        if (target.size() > 0)
+            list.add(target.get(0));
+        return list;
     }
 
     @Override

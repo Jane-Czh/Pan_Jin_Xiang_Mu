@@ -1,9 +1,11 @@
 package com.heli.enterprise.service;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
 import com.heli.enterprise.domain.EnterpriseManagementIndicatorsManagement;
+import com.ruoyi.common.core.domain.R;
 
 /**
  * 十一项管理指标
@@ -69,6 +71,9 @@ public interface IEnterpriseManagementIndicatorsManagementService {
      * @return 结果
      */
     public int deleteEnterpriseManagementIndicatorsManagementByEmId(String emId);
+
+    public R<String> readSalaryExcelToDB(String fileName, InputStream inputStream, Date yearAndMonth);
+
 }
 
 

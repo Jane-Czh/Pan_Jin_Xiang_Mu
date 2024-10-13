@@ -240,6 +240,71 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                          FROM
                              Market_Commercial_Vehicle_table
                          WHERE
+                             Vehicle_Model REGEXP 'CPCD?([4-9]\\d|1[0-9]\\d|100)'
+                         GROUP BY
+                             MONTH(Precision_Completion_Period)
+                     ) AS AvgDaysDifference
+            ) AS Threshold ON MONTH(mv.Precision_Completion_Period) = Threshold.Month
+        WHERE
+            mv.Vehicle_Model REGEXP 'CPCD?([4-9]\\d|1[0-9]\\d|100)'
+          AND DATEDIFF(mv.Precision_Completion_Period, mv.Acceptance_Date) > Threshold.Threshold
+        ORDER BY
+            MONTH(mv.Precision_Completion_Period) ASC;
+
+
+
+    </select>
+
+    <select id="selectcountAverage45" resultMap="MarketCommercialVehicleMap">
+
+        SELECT
+            Threshold.Month AS Month,
+            Threshold.Average_Days_Difference AS Average_Days_Difference,
+            COUNT(*) OVER (PARTITION BY MONTH(mv.Precision_Completion_Period)) AS Over_20_Percent_Count
+        FROM
+            Market_Commercial_Vehicle_table mv
+                JOIN (
+                SELECT
+                    Month,
+                    Average_Days_Difference,
+                    Average_Days_Difference * 1.2 AS Threshold
+                FROM (
+                         SELECT
+                             MONTH(Precision_Completion_Period) AS Month,
+                             AVG(DATEDIFF(Precision_Completion_Period, Vehicle_Launch_Date)) AS Average_Days_Difference
+                         FROM
+                             Market_Commercial_Vehicle_table
+                         WHERE
+                             Vehicle_Model LIKE 'cpd%'
+                         GROUP BY
+                             MONTH(Precision_Completion_Period)
+                     ) AS AvgDaysDifference
+            ) AS Threshold ON MONTH(mv.Precision_Completion_Period) = Threshold.Month
+        WHERE
+            mv.Vehicle_Model LIKE 'cpd%'
+          AND DATEDIFF(mv.Precision_Completion_Period, mv.Vehicle_Launch_Date) > Threshold.Threshold
+        ORDER BY
+            MONTH(mv.Precision_Completion_Period) ASC;
+    </select>
+    <select id="selectcountAverage46" resultMap="MarketCommercialVehicleMap">
+        SELECT
+            Threshold.Month AS Month,
+            Threshold.Average_Days_Difference AS Average_Days_Difference,
+            COUNT(*) OVER (PARTITION BY MONTH(mv.Precision_Completion_Period)) AS Over_20_Percent_Count
+        FROM
+            Market_Commercial_Vehicle_table mv
+                JOIN (
+                SELECT
+                    Month,
+                    Average_Days_Difference,
+                    Average_Days_Difference * 1.2 AS Threshold
+                FROM (
+                         SELECT
+                             MONTH(Precision_Completion_Period) AS Month,
+                             AVG(DATEDIFF(Precision_Completion_Period, Vehicle_Launch_Date)) AS Average_Days_Difference
+                         FROM
+                             Market_Commercial_Vehicle_table
+                         WHERE
                              Vehicle_Model REGEXP  'CPCD?2[0-9]|CPCD?3[0-9]'
                          GROUP BY
                              MONTH(Precision_Completion_Period)
@@ -247,12 +312,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ) AS Threshold ON MONTH(mv.Precision_Completion_Period) = Threshold.Month
         WHERE
             mv.Vehicle_Model REGEXP 'CPCD?2[0-9]|CPCD?3[0-9]'
+          AND DATEDIFF(mv.Precision_Completion_Period, mv.Vehicle_Launch_Date) > Threshold.Threshold
+        ORDER BY
+            MONTH(mv.Precision_Completion_Period) ASC;
+    </select>
+    <select id="selectcountAverage47" resultMap="MarketCommercialVehicleMap">
+        SELECT
+            Threshold.Month,
+            Threshold.Average_Days_Difference,
+            COUNT(*) OVER (PARTITION BY MONTH(mv.Precision_Completion_Period)) AS Over_20_Percent_Count
+        FROM
+            Market_Commercial_Vehicle_table mv
+                JOIN (
+                SELECT
+                    Month,
+                    Average_Days_Difference,
+                    Average_Days_Difference * 1.2 AS Threshold
+                FROM (
+                         SELECT
+                             MONTH(Precision_Completion_Period) AS Month,
+                             AVG(DATEDIFF(Precision_Completion_Period, Acceptance_Date)) AS Average_Days_Difference
+                         FROM
+                             Market_Commercial_Vehicle_table
+                         WHERE
+                             Vehicle_Model REGEXP 'CPCD?([4-9]\\d|1[0-9]\\d|100)'
+                         GROUP BY
+                             MONTH(Precision_Completion_Period)
+                     ) AS AvgDaysDifference
+            ) AS Threshold ON MONTH(mv.Precision_Completion_Period) = Threshold.Month
+        WHERE
+            mv.Vehicle_Model REGEXP 'CPCD?([4-9]\\d|1[0-9]\\d|100)'
           AND DATEDIFF(mv.Precision_Completion_Period, mv.Acceptance_Date) > Threshold.Threshold
         ORDER BY
             MONTH(mv.Precision_Completion_Period) ASC;
-
-
-
+    </select>
+    <select id="selectcountAverage48" resultMap="MarketCommercialVehicleMap">
+        SELECT
+            YEAR(Precision_Completion_Period) AS CompletionYear,
+            MONTH(Precision_Completion_Period) AS Month,
+            AVG(DATEDIFF(Precision_Completion_Period, Vehicle_Launch_Date)) AS Average_Days_Difference
+        FROM
+            Market_Commercial_Vehicle_table
+                JOIN
+            market_main_type ON Market_Commercial_Vehicle_table.Vehicle_Model = market_main_type.car_Type
+        WHERE
+            market_main_type.main_car_type = '越野车'
+        GROUP BY
+            CompletionYear, Month
+        ORDER BY
+            CompletionYear,  Month;
     </select>
 
 

@@ -345,7 +345,7 @@ export default {
         this.allIndex.forEach(item => {
           resTarget.rows.forEach(row => {
             if (item.sum === row.indicatorName) {
-              item.targetValue = row.targetValue;
+              // item.targetValue = row.targetValue;
               item.targetValueDate = row.natureYear;
               if (row.targetLowerLimit || row.targetUpperLimit) {
                 if (allData[item.sum] < row.targetLowerLimit || allData[item.sum] > row.targetUpperLimit) {

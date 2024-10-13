@@ -16,7 +16,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getPrdScheduleCompletionRateData } from '@/api/tech/data'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -30,7 +30,8 @@ export default {
             pickerOptions: [],
             option: {},
             myChart: {},
-            routerData: {}
+            routerData: {},
+            ifTargetEmpty: '',
         }
     },
     computed: {},
@@ -50,6 +51,38 @@ export default {
                 this.data = res.rows
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                console.log(newTarget)
+                const res1 = await getNameTarget(newTarget)
+                let nowTarget = res1.rows
+                this.ifTargetEmpty = res1.rows.length
+                // console.log(res1)
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
+                    })
+                    console.log(nowTarget)
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                }
+
+                console.log(this.data)
+
                 this.loading = false
                 this.updateChart()
             } catch (error) {
@@ -190,6 +223,7 @@ export default {
                     data: this.data.map(item => item.totalProjectCount),
                 },
                 {
+
                     name: '积分占比率',
                     type: 'line',
                     label: labelOption,
@@ -201,7 +235,7 @@ export default {
                 }
             ];
             // 根据条件决定是否添加目标值
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            if (this.ifTargetEmpty) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -209,7 +243,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
 
@@ -224,7 +258,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['项目总数', '积分占比率', (this.routerData.targetValue != 0 && this.routerData.targetValue != '') ? '目标值' : null].filter(item => item !== null),
+                    data: ['项目总数', '积分占比率', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

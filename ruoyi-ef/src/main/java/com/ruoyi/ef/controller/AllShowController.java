@@ -192,6 +192,9 @@ public class AllShowController {
         Set<String> linkedRegularIds = new HashSet<>();
         Set<String> linkedFormIds = new HashSet<>();
 
+        // 保存制度中关联的表单ID
+        Set<String> RegulationlinkedFormIds = new HashSet<>();
+
         // 1. 以流程为主，将流程信息转换为AllShowEntity
         for (ProjectEntity project : projects) {
             String[] regularIds = project.getState() != null ? project.getState().replace("[", "").replace("]", "").split(",") : new String[0];
@@ -232,7 +235,7 @@ public class AllShowController {
                             .findFirst()
                             .orElse(null);
                     if (form != null) {
-                        entity.setFormName(form.getFormName());
+                        entity.setFormName(form.getFormTitle());
                     }
                 }
 
@@ -240,30 +243,38 @@ public class AllShowController {
             }
         }
 
-//         2. 处理没有绑定到流程的制度
+//         2. 处理没有绑定到流程的制度和表单
         for (RegulationsInfoTable regular : regulars) {
             if (!linkedRegularIds.contains(regular.getRegulationsId().toString())) {
                 AllShowEntity entity = new AllShowEntity();
-
+                // 保存制度中关联的表单ID
+                if(regular.getFormId() != null && regular.getFormId() != "") {
+                    RegulationlinkedFormIds.add(regular.getFormId());
+                }
                 entity.setDepartment(regular.getMainResponsibleDepartment()); // 部门
                 entity.setBusinessesModules(regular.getBusinesses()); // 业务模块
                 entity.setSubBusinesses(regular.getSubBusinesses()); // 细分业务
 
                 entity.setRegularName(regular.getRegulationsTitle());
                 entity.setRegularLevel(regular.getRegulationLeval());
+                entity.setFormName(regular.getFormId());
                 allShowEntities.add(entity);
             }
         }
 
-        // 3. 处理没有绑定到流程的表单
+        for (String formId : RegulationlinkedFormIds) {
+            System.out.println("formId == " +formId);
+        }
+
+        // 3. 处理没有绑定到流程和制度的表单
         for (FormInfoTable form : forms) {
-            if (!linkedFormIds.contains(form.getFormId().toString())) {
+            if (!linkedFormIds.contains(form.getFormId().toString()) && !RegulationlinkedFormIds.contains(form.getFormTitle())) {
                 AllShowEntity entity = new AllShowEntity();
                 entity.setDepartment(form.getDepartmentCategory()); // 部门
                 entity.setBusinessesModules(form.getBusinesses()); // 业务模块
                 entity.setSubBusinesses(form.getSubBusinesses()); // 细分业务
 
-                entity.setFormName(form.getFormName());
+                entity.setFormName(form.getFormTitle());
                 allShowEntities.add(entity);
             }
         }

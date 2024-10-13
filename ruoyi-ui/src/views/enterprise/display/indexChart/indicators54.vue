@@ -38,6 +38,7 @@ export default {
             },
             selectedDate: [],
             pickerOptions: [],
+            ifTargetEmpty: '',
             option: {},
             myChart: {},
             parsedData: {},
@@ -84,6 +85,7 @@ export default {
                     })
                 });
 
+                //目标值
                 let newTarget = {
                     name: this.routerData.sum,
                     startDate: this.selectedDate[0],
@@ -92,22 +94,26 @@ export default {
                 console.log(newTarget)
                 const res1 = await getNameTarget(newTarget)
                 let nowTarget = res1.rows
-                console.log(res1)
-                let allTarget = []; // 初始化目标数组
-                nowTarget.forEach(item => {
-                    let natureYear = moment(item.natureYear).format('YYYY')
-                    let targetValue = item.targetValue; // 目标值可能是数字或null
-                    allTarget.push({ natureYear, targetValue });
-                })
-                console.log(nowTarget)
-                this.data.forEach(item => {
-                    const year = moment(item.yearAndMonth).format('YYYY')
-                    allTarget.forEach(row => {
-                        if (year === row.natureYear) {
-                            item.targetValue = row.targetValue
-                        }
+                this.ifTargetEmpty = res1.rows.length
+                // console.log(res1)
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
                     })
-                });
+                    console.log(nowTarget)
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                }
+
                 console.log(this.data)
 
 
@@ -238,7 +244,7 @@ export default {
                     data: this.data.map(item => item.cumulativeAverageIncomeBefore),
                 }];
 
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            if (this.ifTargetEmpty) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -260,7 +266,7 @@ export default {
                     },
                 },
                 legend: {
-                    data: ['收入', '同期收入', (this.routerData.targetValue != '' && this.routerData.targetValue != 0) ? '目标值' : null].filter(item => item !== null),
+                    data: ['收入', '同期收入', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

@@ -79,4 +79,12 @@ public interface MarketCommercialVehicleTableMapper
     List<AverageResult> selectLightWeight();
 
     List<AverageResult> selectBigWeight();
+
+    List<AverageResult> selectcountAverage45();
+
+    List<AverageResult> selectcountAverage46();
+
+    List<AverageResult> selectcountAverage47();
+
+    List<AverageResult> selectcountAverage48();
 }

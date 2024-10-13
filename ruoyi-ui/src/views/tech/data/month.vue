@@ -93,7 +93,7 @@
           <span>{{ formatNumber(scope.row.accumulatedScore) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="项目积分占比(%)" align="center" prop="projectPointsPercentage">
+      <el-table-column label="项目积分占比(%)" align="center" prop="projectPointsPercentage" width="120">
         <template slot-scope="scope">
           <span>{{ formatNumber(scope.row.projectPointsPercentage) }}</span>
         </template>

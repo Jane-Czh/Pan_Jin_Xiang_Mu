@@ -116,6 +116,11 @@ export default {
         { id: '42', icon: 'el-icon-s-data', title: '大吨位叉车整机交货天数平均数', content: '大吨位叉车整机交货天数平均数', path: '/market/index42' },
         { id: '43', icon: 'el-icon-s-data', title: '电动车整机交货天数', content: '电动车整机交货天数', path: '/market/index43' },
         { id: '44', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机交货天数', content: '小吨位内燃叉车整机交货天数', path: '/market/index44' },
+        { id: '45', icon: 'el-icon-s-data', title: '电动车整机制造天数', content: '电动车整机制造天数', path: '/market/index45' },
+        { id: '46', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机制造天数', content: '小吨位内燃叉车整机制造天数', path: '/market/index46' },
+         { id: '47', icon: 'el-icon-s-data', title: '大吨位叉车整机制造天数', content: '大吨位叉车整机制造天数', path: '/market/index47' },
+                        { id: '48', icon: 'el-icon-s-data', title: '越野车整机制造天数', content: '越野车整机制造天数', path: '/market/index48' },
+
         { id: '72', icon: 'el-icon-s-data', title: '日/月/年接单数', content: '日/月/年接单数', path: '/market/index72' },
         { id: '73', icon: 'el-icon-s-data', title: '日/月/年交货数', content: '日/月/年交货数', path: '/market/index73' },
       ],
@@ -136,7 +141,12 @@ export default {
         { id: '40', icon: 'el-icon-s-data', title: '订单兑现率', content: '订单兑现率', path: '/market/index40' },
         { id: '42', icon: 'el-icon-s-data', title: '大吨位叉车整机交货天数平均数', content: '大吨位叉车整机交货天数平均数', path: '/market/index42' },
         { id: '43', icon: 'el-icon-s-data', title: '电动车整机交货天数', content: '电动车整机交货天数', path: '/market/index43' },
-        { id: '44', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机交货天数', content: '小吨位内燃叉车整机交货天数', path: '/market/index44' },
+        { id: '45', icon: 'el-icon-s-data', title: '电动车整机制造天数', content: '电动车整机制造天数', path: '/market/index45' },
+        { id: '46', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机制造天数', content: '小吨位内燃叉车整机制造天数', path: '/market/index46' },
+        { id: '47', icon: 'el-icon-s-data', title: '大吨位叉车整机制造天数', content: '大吨位叉车整机制造天数', path: '/market/index47' },
+                { id: '48', icon: 'el-icon-s-data', title: '越野车整机制造天数', content: '越野车整机制造天数', path: '/market/index48' },
+
+       { id: '44', icon: 'el-icon-s-data', title: '小吨位内燃叉车整机交货天数', content: '小吨位内燃叉车整机交货天数', path: '/market/index44' },
         { id: '72', icon: 'el-icon-s-data', title: '日/月/年接单数', content: '日/月/年接单数', path: '/market/index72' },
         { id: '73', icon: 'el-icon-s-data', title: '日/月/年交货数', content: '日/月/年交货数', path: '/market/index73' },
       ],
@@ -152,6 +162,8 @@ export default {
   },
   mounted() { },
   methods: {
+    
+    
     toDetail(item, index) {
       //  this.dialogVisible = true
        this.item=item

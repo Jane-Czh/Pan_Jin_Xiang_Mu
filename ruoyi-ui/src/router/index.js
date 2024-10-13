@@ -163,6 +163,12 @@ export const constantRoutes = [
         meta: { title: '指标74：日/月/年上线数' }
       },
       {
+        path: 'index39',
+        component: () => import('@/views/production/display/indexChart/index39'),
+        name: 'index39',
+        meta: { title: '商品车计划兑现率' }
+      },
+      {
         path: 'indicators75',
         component: () => import('@/views/production/display/indexChart/indicators75'),
         name: 'Indicators75',

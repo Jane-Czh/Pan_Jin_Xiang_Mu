@@ -3,6 +3,7 @@ package com.heli.project.mapper;
 import java.util.List;
 import com.heli.project.domain.ProjectInfoTable;
 import com.ruoyi.project.domain.ProjectInfoRecode;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 项目基本信息Mapper接口
@@ -60,4 +61,6 @@ public interface ProjectInfoTableMapper
      * @return 结果
      */
     public int deleteProjectInfoTableByProjectIds(Long[] projectIds);
+
+    public void batchInsert(@Param("list") List<ProjectInfoTable> marketCarTypes);
 }

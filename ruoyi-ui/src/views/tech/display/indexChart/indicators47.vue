@@ -7,7 +7,11 @@
                 @change="handleDateChange">
             </el-date-picker>
         </div>
+        <!-- <div id="charts-container"> -->
         <div id="main" ref="main"></div>
+        <div id="main2" ref="main2"></div>
+        <!-- </div> -->
+
 
     </div>
 </template>
@@ -16,7 +20,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getNonStandardAVGPreparationDaysData } from '@/api/tech/data'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -29,9 +33,12 @@ export default {
             selectedDate: [],
             pickerOptions: [],
             option: {},
+            option2: {},
             myChart: {},
+            myChart2: {},
             routerData: {},
             targetValueArray: [],
+            ifTargetEmpty: '',
         }
     },
     computed: {},
@@ -39,6 +46,7 @@ export default {
         this.routerData = this.$route.query.data ? JSON.parse(this.$route.query.data) : { id: '', title: '', dataName: '', apiName: '', yDataName: '', showTarget: '', targetValue: 0, targetValueDate: '', }
         this.defaultMonth()
         this.myChart = echarts.init(document.getElementById('main'))
+        this.myChart2 = echarts.init(document.getElementById('main2'))
         this.initData()
     },
     methods: {
@@ -49,11 +57,44 @@ export default {
                 this.loading = true
                 const res = await getNonStandardAVGPreparationDaysData(this.timeData);
                 this.data = res.rows
-                this.loading = false
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                console.log(newTarget)
+                const res1 = await getNameTarget(newTarget)
+                let nowTarget = res1.rows
+                this.ifTargetEmpty = res1.rows.length
+                // console.log(res1)
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
+                    })
+                    console.log(nowTarget)
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                }
+
+                console.log(this.data)
                 this.updateChart()
+                // console.log(this.data)
+                this.loading = false
             } catch (error) {
+                console.log(error)
                 this.loading = false
             }
         },
@@ -152,24 +193,34 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
+                formatter: function (params) {
+                    let value = parseFloat(params.value).toFixed(2);
+                    // 移除多余的零
+                    value = value.replace(/\.?0+$/, '');
+                    if (params.seriesName.includes('率')) {
+                        value += '%';
+                    }
+                    return value;
+                },
                 fontSize: 16,
                 rich: {
                     name: {}
                 }
             };
             // 根据条件决定是否添加目标值系列
-            let series = [{
-                name: '天数',
-                type: 'line',
-                label: labelOption,
-                emphasis: {
-                    focus: 'series'
+            let series = [
+                {
+                    name: '平均准备天数',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    // yAxisIndex: 1,
+                    data: this.data.map(item => item.nonStandardAvgPreparationDays),
                 },
-                data: this.data.map(item => item.nonStandardAVGPreparationDays),
-            }];
-
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 || '')) {
+            ];
+            if (this.ifTargetEmpty) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -177,7 +228,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
             this.option = {
@@ -191,7 +242,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['天数', (this.targetValue != 0 && this.targetValue != '') ? '目标值' : null].filter(item => item !== null),
+                    data: ['平均准备天数', , this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -216,12 +267,204 @@ export default {
                 yAxis: [
                     {
                         type: 'value'
-                    }
+                    },
                 ],
                 series: series
             };
-
             this.option && this.myChart.setOption(this.option);
+            this.updateChart2()
+        },
+        updateChart2() {
+            var app = {};
+            const posList = [
+                'left',
+                'right',
+                'top',
+                'bottom',
+                'inside',
+                'insideTop',
+                'insideLeft',
+                'insideRight',
+                'insideBottom',
+                'insideTopLeft',
+                'insideTopRight',
+                'insideBottomLeft',
+                'insideBottomRight'
+            ];
+            app.configParameters = {
+                rotate: {
+                    min: -90,
+                    max: 90
+                },
+                align: {
+                    options: {
+                        left: 'left',
+                        center: 'center',
+                        right: 'right'
+                    }
+                },
+                verticalAlign: {
+                    options: {
+                        top: 'top',
+                        middle: 'middle',
+                        bottom: 'bottom'
+                    }
+                },
+                position: {
+                    options: posList.reduce(function (map, pos) {
+                        map[pos] = pos;
+                        return map;
+                    }, {})
+                },
+                distance: {
+                    min: 0,
+                    max: 100
+                }
+            };
+            app.config = {
+                rotate: 0,
+                align: 'center',
+                verticalAlign: 'middle',
+                position: 'top',
+                distance: 15,
+                onChange: function () {
+                    const labelOption = {
+                        rotate: app.config.rotate,
+                        align: app.config.align,
+                        verticalAlign: app.config.verticalAlign,
+                        position: app.config.position,
+                        distance: app.config.distance
+                    };
+                    this.myChart.setOption({
+                        series: [
+                            {
+                                label: labelOption
+                            },
+                            {
+                                label: labelOption
+                            },
+                            {
+                                label: labelOption
+                            },
+                            {
+                                label: labelOption
+                            }
+                        ]
+                    });
+                }
+            };
+            const labelOption = {
+                show: true,
+                position: app.config.position,
+                distance: app.config.distance,
+                align: app.config.align,
+                verticalAlign: app.config.verticalAlign,
+                rotate: app.config.rotate,
+                formatter: function (params) {
+                    let value = parseFloat(params.value).toFixed(2);
+                    // 移除多余的零
+                    value = value.replace(/\.?0+$/, '');
+                    if (params.seriesName.includes('率')) {
+                        value += '%';
+                    }
+                    return value;
+                },
+                fontSize: 16,
+
+                rich: {
+                    name: {}
+                }
+            };
+            // 根据条件决定是否添加目标值系列
+            let series = [
+                {
+                    name: '当月总条数',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.nonStandardNum),
+                },
+                {
+                    name: '同比增幅率',
+                    type: 'line',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    yAxisIndex: 1,
+                    data: this.data.map(item => item.nonStandardOrderGrowthRate),
+                    //折线图加粗
+                    lineStyle: {
+                        width: 5
+                    }
+                },
+            ];
+
+
+            this.option2 = {
+                title: {
+                    text: '总条数与同比增幅率'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['当月总条数', '同比增幅率'],
+                },
+                toolbox: {
+                    show: true,
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 'center',
+                    feature: {
+                        mark: { show: true, },
+                        dataView: { show: true, readOnly: false, title: '数据视图' },
+                        magicType: { show: true, type: ['bar', 'line'], title: { bar: '切换为柱状图', line: '切换为折线图' } },
+                        restore: { show: true, title: '还原' },
+                        saveAsImage: { show: true, title: '保存为图片' }
+                    }
+                },
+                xAxis: [
+                    {
+                        // type: 'category',
+                        axisTick: { show: false },
+                        data: this.data.map(item => moment(item.yearAndMonth).format('YY-MM')),
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLine: {
+                            show: true // y轴线
+                        },
+                    },
+                    {
+                        type: 'value',
+                        name: '率',
+                        position: 'right',
+                        axisLine: {
+                            lineStyle: {
+                                color: '#9b9ca3'
+                            },
+                            show: true // y轴线
+                        },
+                        splitLine: {
+                            show: false // 网格线
+                        },
+                        axisTick: {
+                            show: false // 刻度标记
+                        },
+                    },
+
+                ],
+                series: series
+            };
+            this.option2 && this.myChart2.setOption(this.option2);
         },
         defaultMonth() {
             const currentDate = new Date();
@@ -244,7 +487,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+//左右展示
+// #charts-container {
+//     display: flex;
+//     justify-content: space-between;
+//     margin: 40px;
+// }
+
+// #main,
+// #main2 {
+//     width: calc(50% - 80px);
+//     /* 减去两边的 margin 总和 */
+//     height: 600px;
+// }
+
+// #main {
+//     margin-right: 40px;
+// }
+
+// #main2 {
+//     margin-left: 40px;
+// }
+
 #main {
+    width: 1000px;
+    height: 600px;
+    margin: 40px auto;
+}
+
+#main2 {
     width: 1000px;
     height: 600px;
     margin: 40px auto;

@@ -70,7 +70,11 @@ export default {
       this.newData = res.data;
       const resType = await getSafetyTypeNewData()
       const typeData = resType.rows[0];
-      console.log(typeData)
+      this.newData = {
+        ...this.newData,
+        outputPercapitavalue: typeData.resultData
+      }
+
       //页面截至
       this.allIndex.forEach(item => {
         item.date = res && res.data ? moment(res.data.yearAndMonth).format('YYYY-MM') : '--';
@@ -78,15 +82,15 @@ export default {
       //卡片content
       this.allIndex.forEach(item => {
         const key = item.sum;
-        if (item.id != '68') {
-          if (this.newData[key] !== undefined) {
-            item.content = `最新一月：${this.newData[key] || ''} (${item.type})`;
-          } else {
-            console.warn(`Key ${key} not found in response data.`);
-          }
+        // if (item.id != '68') {
+        if (this.newData[key] !== undefined) {
+          item.content = `最新一月：${this.newData[key] || ''} (${item.type})`;
         } else {
-          item.content = `最新一月：${typeData.resultData || ''} (${item.type})`;
+          console.warn(`Key ${key} not found in response data.`);
         }
+        // } else {
+        //   item.content = `最新一月：${typeData.resultData || ''} (${item.type})`;
+        // }
       });
 
       let target = {

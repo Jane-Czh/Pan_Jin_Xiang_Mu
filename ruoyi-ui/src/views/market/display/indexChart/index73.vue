@@ -8,13 +8,38 @@
     <!-- 添加输入框 -->
     <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
   
-            <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
+            <!-- <span class="DataSelect" style="margin-right:10px">日期选择</span>
+            <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
+                @change="handleDateChange">
+            </el-date-picker> -->
+
+            <el-date-picker
+                v-model="selectedDate"
+                :type="datePickerType"
+                unlink-panels
+                range-separator="至"
+                :start-placeholder="startPlaceholder"
+                :end-placeholder="endPlaceholder"
+                :picker-options="pickerOptions"
                 @change="handleDateChange">
             </el-date-picker>
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
+
+            
         </div>
+        <el-tabs v-model="activeTab" @tab-click="handleTabClick">  
+            <el-tab-pane label="年接单数" name="year">  
+                <div id="yearChart" ref="yearChart" class="chart"></div>  
+            </el-tab-pane>  
+            <el-tab-pane label="月接单数" name="month">  
+                <div id="monthChart" ref="monthChart" class="chart"></div>  
+            </el-tab-pane>  
+            <el-tab-pane label="日接单数" name="day">  
+                <div id="dayChart" ref="dayChart" class="chart"></div>  
+            </el-tab-pane>  
+        </el-tabs>  
+        
         <div id="main" ref="main"></div>
     </div>
 </template>
@@ -22,14 +47,21 @@
 <script>
 import * as echarts from 'echarts';     
 import moment from 'moment'
-import { getIndex73 } from '@/api/market/index'
+import { getIndex73A,getIndex73B,getIndex73C } from '@/api/market/index'
 
 export default {
     data() {
         return {
+          activeTab: 'year', // 默认激活的标签页 
           transposedSeriesData:[],
             branchmonthIdx:[],
             seriesData :[],
+            
+            selectedDate: [],
+            datePickerType: 'daterange',
+            startPlaceholder: '开始日期',
+            endPlaceholder: '结束日期',
+            
             branches :[],
          months : [],
         numbers : [],
@@ -59,9 +91,12 @@ export default {
         this.financialId = this.$route.query.id;
         this.myChart = echarts.init(document.getElementById('main'));
         this.initData();
+        
         this.getCurrentMonth();
         this.getCurrentYear();
         const currentDate = new Date();
+        this.setDefaultDateRange();
+        
         //
 //   const currentYear = currentDate.getFullYear();
 //   const firstMonthOfYear = new Date(currentYear, 0, 1); // 设置为每一年的第一个月的第一天
@@ -118,7 +153,12 @@ export default {
             try {
                 this.loading = true
                 console.log(this.timeData)
-                this.result = await getIndex73(this.timeData);
+                if(this.activeTab==='year')
+                 this.result = await getIndex73A(this.timeData);
+                if(this.activeTab==='month')
+                this.result = await getIndex73B(this.timeData);
+              if(this.activeTab==='day')
+                this.result = await getIndex73C(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
                    console.log("后端传过来的数据：", this.result[0].branch);
@@ -131,6 +171,35 @@ export default {
                 this.loading = false
             }
         },
+         handleTabClick(tab) {  
+            this.activeTab = tab.name; // 更新当前激活的标签  
+             console.log(tab,  this.activeTab)
+             this.setDefaultDateRange();
+            this.initData(); // 切换标签时加载相应的数据  
+        }, 
+        setDefaultDateRange() {
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            let startDate, endDate;
+
+            if (this.activeTab === 'year') {
+                this.datePickerType = 'monthrange';
+                startDate = new Date(currentYear, 0, 1); // 当年1月1日
+                endDate = new Date(currentYear, currentDate.getMonth(), 1); // 当年当前月1日
+            } else if (this.activeTab === 'month') {
+                this.datePickerType = 'monthrange';
+                startDate = new Date(currentYear, 0, 1); // 当年1月1日
+                endDate = new Date(currentYear, currentDate.getMonth(), 1); // 当年当前月1日
+            } else if (this.activeTab === 'day') {
+                this.datePickerType = 'daterange';
+                startDate = new Date(currentYear, currentDate.getMonth(), 1); // 当月1日
+                endDate = new Date(currentYear, currentDate.getMonth() + 1, 0); // 当月最后一天
+            }
+
+            this.selectedDate = [startDate, endDate];
+            this.timeData.startTime = startDate;
+            this.timeData.endTime = endDate;
+        },
         handleDateChange(val) {
             console.log(val, 'val')
             this.initData()
@@ -139,10 +208,13 @@ export default {
 
 
 var app = {};
-
+this.myChart.clear();
 var chartDom = document.getElementById('main');
 var myChart = echarts.init(chartDom);
+
 var option;
+
+
 
 const posList = [
   'left',
@@ -233,12 +305,16 @@ const labelOption = {
   verticalAlign: app.config.verticalAlign,
   rotate: app.config.rotate,
   formatter: '{c}  {name|{a}}',
+      formatter: function (params) {
+    // 当值为0时，返回空字符串，否则转换为百分比
+    return params.value === 0 ? '' : `${(params.value )}`;
+  },
   fontSize: 16,
   rich: {
     name: {}
   }
 };
-
+ 
 // 提取 xAxis 数据
 var xAxisData = [];
 this.result.forEach(function (item) {

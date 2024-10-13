@@ -108,7 +108,19 @@ export function getNonStandardAVGPreparationDaysData(data) {
 // 研发项目计划进度完成率 指标71
 export function getPrdScheduleCompletionRateData(data) {
   return request({
-    url: `/tech/display/prdScheduleCompletionRate`,
+    url: `/tech/display/projectCompletion`,
+    method: 'post',
+    data: {
+      startTime: data.startTime,
+      endTime: data.endTime
+    }
+  })
+}
+
+// 项目进度情况 指标106
+export function getProjectProgressData(data) {
+  return request({
+    url: `/tech/display/projectProgress`,
     method: 'post',
     data: {
       startTime: data.startTime,
@@ -130,4 +142,13 @@ export function updateList(data) {
     }
   })
 }
+
+// 技术指标总览最新展示
+export function getTechNewData() {
+  return request({
+    url: `/tech/display/newData`,
+    method: 'get',
+  })
+}
+
 

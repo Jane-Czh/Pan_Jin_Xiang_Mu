@@ -200,7 +200,7 @@ export default {
     getList() {
       this.loading = true;
       let target = {
-        date: new Date(),
+        date: '',
         deptName: 'financial',
       }
       getTargetData(target).then(response => {

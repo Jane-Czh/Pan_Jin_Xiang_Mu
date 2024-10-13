@@ -49,6 +49,16 @@ public class FormInfoTableController extends BaseController
     }
 
     /**
+     * 查询表单文件管理列表(无权限+不分页)
+     */
+    @GetMapping("/list3")
+    public TableDataInfo list3(FormInfoTable formInfoTable)
+    {
+        List<FormInfoTable> list = formInfoTableService.selectFormInfoTableList(formInfoTable);
+        return getDataTable(list);
+    }
+
+    /**
      * 查询表单文件管理列表(全部+无权限)
      */
     @GetMapping("/list1")

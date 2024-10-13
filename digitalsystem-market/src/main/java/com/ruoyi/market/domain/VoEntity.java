@@ -43,8 +43,23 @@ public class VoEntity {
                 voEntity.setMinEntity(minEntities);
                 voEntities.add(voEntity);
             }
+        if (voEntities.isEmpty()) {
+            // 创建一个默认的 VoEntity 对象，所有属性设置为0
+            System.out.println("voEntities为空"+voEntities);
+            VoEntity defaultVoEntity = new VoEntity();
+            defaultVoEntity.setYearMonth("0"); // 假设年月可以设置为"0"
 
-            return voEntities;
+            List<MinEntity> defaultMinEntities = new ArrayList<>();
+            MinEntity defaultMinEntity = new MinEntity();
+            defaultMinEntity.setBranch("0"); // 假设分支可以设置为"0"
+            defaultMinEntity.setNumber(0L); // 设置数量为0
+            defaultMinEntities.add(defaultMinEntity);
+
+            defaultVoEntity.setMinEntity(defaultMinEntities);
+            voEntities.add(defaultVoEntity);
+        }
+        System.out.println("赋值后的voEntities"+voEntities);
+        return voEntities;
         }
 
     public static List<VoEntity> convertCpdToVoEntitiesDouble(Map<String, Map<String, Double>> cpd) {
@@ -73,6 +88,22 @@ public class VoEntity {
             voEntities.add(voEntity);
         }
 
+        if (voEntities.isEmpty()) {
+            // 创建一个默认的 VoEntity 对象，所有属性设置为0
+            System.out.println("voEntities为空"+voEntities);
+            VoEntity defaultVoEntity = new VoEntity();
+            defaultVoEntity.setYearMonth("0"); // 假设年月可以设置为"0"
+
+            List<MinEntity> defaultMinEntities = new ArrayList<>();
+            MinEntity defaultMinEntity = new MinEntity();
+            defaultMinEntity.setBranch("0"); // 假设分支可以设置为"0"
+            defaultMinEntity.setNumber(0L); // 设置数量为0
+            defaultMinEntities.add(defaultMinEntity);
+
+            defaultVoEntity.setMinEntity(defaultMinEntities);
+            voEntities.add(defaultVoEntity);
+        }
+        System.out.println("赋值后的voEntities"+voEntities);
         return voEntities;
     }
 

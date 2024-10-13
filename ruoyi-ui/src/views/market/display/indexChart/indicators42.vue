@@ -58,7 +58,7 @@ export default {
     updateChart() {
       this.option = {
         title: {
-          text: '大叉位叉车整机交货天数平均数'
+          text: '大吨位叉车整机交货天数平均数'
         },
         tooltip: {},
         xAxis: {

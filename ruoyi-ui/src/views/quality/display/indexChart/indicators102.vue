@@ -17,7 +17,7 @@ import * as echarts from 'echarts';
 import moment from 'moment'
 import { getSingleInspectionPassRateData } from '@/api/quality/chartAPI'
 import { getTargetData } from '@/api/financial/target'
-
+import { getNameTarget } from '@/api/financial/target'
 
 export default {
     data() {
@@ -35,6 +35,7 @@ export default {
             targetValueArray: [],
             pickerOptions: [],
             option: {},
+            ifTargetEmpty: '',
             myChart: {}
         }
     },
@@ -55,10 +56,41 @@ export default {
                 this.data = res.rows
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                // console.log(newTarget)
+                const res1 = await getNameTarget(newTarget)
+                let nowTarget = res1.rows
+                // console.log(nowTarget)
+                this.ifTargetEmpty = res1.rows.length
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
+                    })
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                }
+
+                console.log(this.data)
+
                 this.loading = false
                 this.updateChart()
             } catch (error) {
-                console.log('-------------++++++:error')
+                console.log(error)
                 this.loading = false
             }
         },
@@ -186,17 +218,26 @@ export default {
                     data: this.data.map(item => item.largeTonPassRate),
                 },
                 {
-                    name: '电车和大吨位',
+                    name: '内燃车',
                     type: 'bar',
                     label: labelOption,
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.data.map(item => item.singleInspectionPassRate),
+                    data: this.data.map(item => item.icvPassRate ? item.icvPassRate : null),
                 },
+                {
+                    name: '所有',
+                    type: 'bar',
+                    label: labelOption,
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: this.data.map(item => item.allPassRate ? item.allPassRate : null),
+                }
             ];
 
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            if (this.ifTargetEmpty) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -204,7 +245,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
             this.option = {
@@ -218,7 +259,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['电车', '大吨位', '电车和大吨位', this.routerData.targetValue != '' && this.routerData.targetValue != 0 ? '目标值' : null].filter(item => item !== null),
+                    data: ['电车', '大吨位', '内燃车', '所有', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

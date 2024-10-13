@@ -39,7 +39,7 @@ public class TechController extends BaseController {
     @Autowired
     private ITechService techService;
 
-    @PreAuthorize("@ss.hasPermi('tech:monthly:update')")
+//    @PreAuthorize("@ss.hasPermi('tech:monthly:update')")
     @Log(title = "[技术]计算", businessType = BusinessType.UPDATE)
     @PostMapping("/data/update")
     public AjaxResult test() {

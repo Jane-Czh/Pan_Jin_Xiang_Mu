@@ -25,7 +25,7 @@
       style="display: flex; justify-content: center; align-items: center; height: 50vh; font-size: 24px;">加载中……</div>
     <indicator-chart v-else :title="option.title" :dataName="option.dataName" :xAxisData="xAxisData"
       :yAxisData="yAxisData" :targetValue="option.targetValue" :targetValueDate="option.targetValueDate"
-      :showTarget="option.showTarget"></indicator-chart>
+      :showTarget="option.showTarget" :dataOfTarget="dataOfTarget"></indicator-chart>
   </div>
 </template>
 
@@ -34,7 +34,7 @@
 import moment from 'moment'
 import chartAPI from '@/api/financial/chartAPI.js'
 import indicatorChart from './indexChart/indicatorChart.vue';
-
+import { getNameTarget } from '@/api/financial/target'
 
 export default {
   components: { indicatorChart },
@@ -57,6 +57,7 @@ export default {
       currentSum: [],
       option: { id: '', title: '', dataName: '', apiName: '', yDataName: '', targetValue: 0, targetValueDate: '', showTarget: '' },
       name: '',
+      dataOfTarget: [],
     }
 
   },
@@ -91,9 +92,42 @@ export default {
         console.log(this.yAxisData)
         this.currentSum = this.yAxisData.reduce((a, b) => a + b, 0)
         this.currentSum = this.formatNumber(this.currentSum)
+
+        //目标值
+        let newTarget = {
+          name: this.option.sum,
+          startDate: this.timeData.startTime,
+          endDate: this.timeData.endTime
+        }
+        const tmp = await getNameTarget(newTarget)
+        let nowTarget = tmp.rows
+        this.option.targetValue = tmp.rows.length
+        // console.log(this.option.targetValue)
+        if (this.option.targetValue) {
+          let allTarget = []; // 初始化目标数组
+          nowTarget.forEach(item => {
+            let natureYear = item.natureYear = moment(item.natureYear).format('YYYY')
+            let targetValue = item.targetValue; // 目标值可能是数字或null
+            allTarget.push({ natureYear, targetValue });
+          })
+          this.data.forEach(item => {
+            const year = moment(item.Year_And_Month).format('YYYY')
+            allTarget.forEach(row => {
+              if (year === row.natureYear) {
+                item.targetValue = row.targetValue
+              }
+            })
+          });
+        }
+
+        console.log(this.data)
+        this.dataOfTarget = this.data
+
         this.loading = false;
+
       } catch (error) {
         this.$modal.msgError("数据加载失败")
+        console.log(error)
         this.loading = false
       }
     },

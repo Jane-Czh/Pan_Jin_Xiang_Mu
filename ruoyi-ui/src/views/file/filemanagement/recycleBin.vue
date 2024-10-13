@@ -195,6 +195,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+<!--      <el-table-column label="关联表单" align="center" prop="formId" />-->
       <el-table-column label="状态" align="center" prop="revisionContent"/>
       <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
@@ -237,6 +238,16 @@
             :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
           >
             删除
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handlerestore(scope.row)"
+            v-hasPermi="['file:filemanagement:remove']"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+          >
+            还原
           </el-button>
 
         </template>
@@ -458,6 +469,7 @@ export default {
         revisionDate: null,
         revisionContent: null,
         reviser: null,
+        formId: null,
         projectIds: null,
         newFlag: null,
         newRegulationsId: null,
@@ -532,6 +544,7 @@ export default {
         revisionDate: null,
         revisionContent: null,
         reviser: null,
+        formId: null,
         projectIds: null,
         newFlag: null,
         newRegulationsId: null,
@@ -922,6 +935,33 @@ export default {
           loadingInstance.close();
         });
 
+    },
+    /** 还原操作 */
+    handlerestore(row) {
+      this.$confirm('是否确认还原数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        row.newFlag = 1;
+        row.revisionContent = "新增";
+      }).then(() => {
+        //还原
+        updateFilemanagement(row);
+        //历史版本
+        if(row.oldRegulationsId) {
+          getFilemanagement(row.oldRegulationsId).then(response => {
+            const  thisForm = response.data;
+            thisForm.newFlag = 0;
+            thisForm.revisionContent = "更新";
+            updateFilemanagement(thisForm);
+          })
+        }
+      }).then(() => {
+        this.$modal.msgSuccess("还原成功");
+      }).then(() => {
+        this.getList();
+      }).catch(function() {});
     },
     /** 查询部门列表 */
     getDeptList() {

@@ -254,7 +254,7 @@
           v-hasPermi="['project:recycle:add']"
         >新增</el-button>
       </el-col> -->
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -264,7 +264,7 @@
           @click="handleUpdate"
           v-hasPermi="['project:recycle:edit']"
         >修改</el-button>
-      </el-col> -->
+      </el-col>
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -518,7 +518,7 @@ export default {
       },
 
             //项目进度选项
-            progressOptions: [
+      progressOptions: [
         { value: '10%', label: '10%' },
         { value: '20%', label: '20%' },
         { value: '30%', label: '30%' },

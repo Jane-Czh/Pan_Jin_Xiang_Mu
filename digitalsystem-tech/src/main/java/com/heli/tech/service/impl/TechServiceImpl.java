@@ -298,9 +298,17 @@ public class TechServiceImpl implements ITechService {
             Tech techLastMonth = techMapper.selectTechByDate(DateUtils.getLastMonth(date));
 
             if (tech != null && techLastMonth != null) {
-                tech.setNonStandardOrderGrowthRate(BigDecimal.valueOf((tech.getNonStandardNum() - techLastMonth.getNonStandardNum()) * 1.0 / techLastMonth.getNonStandardNum() * 100));
+                if (tech.getNonStandardNum() != null && techLastMonth.getNonStandardNum() != null) {
+                    tech.setNonStandardOrderGrowthRate(BigDecimal.valueOf((tech.getNonStandardNum() - techLastMonth.getNonStandardNum()) * 1.0 / techLastMonth.getNonStandardNum() * 100));
+                } else {
+                    tech.setNonStandardOrderGrowthRate(null);
+                }
+
+                if (techMapper.selectTechByDate(date) != tech)
+                    techMapper.updateTech(tech);
             }
-            techMapper.updateTech(tech);
+
+
         }
 
         return 1;

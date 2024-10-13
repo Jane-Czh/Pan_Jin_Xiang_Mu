@@ -133,3 +133,22 @@ export function getMonthlyFunctionalAVGIncomeData(data) {
     }
   })
 }
+
+
+// 企管工资指标总览最新展示
+export function getSalaryNewData() {
+  return request({
+    url: `/enterprise/display/salaryNewData`,
+    method: 'get',
+  })
+}
+
+// 企管其他指标总览最新展示
+export function getMonthlyNewData() {
+  return request({
+    url: `/enterprise/display/monthlyNewData`,
+    method: 'get',
+  })
+}
+
+

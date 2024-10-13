@@ -101,7 +101,6 @@ export default {
           return null; // 返回 null 或其他默认值
         }))
         );
-
         //月度最新数据
         const resMonthNewNeededFields = {
           quarterlyRank: resMonthNewData && resMonthNewData.data ? resMonthNewData.data.quarterlyRank : '',
@@ -151,7 +150,7 @@ export default {
           const key = item.sum;
           if (item.id != '103') {
             if (allData[key] !== undefined) {
-              item.content = `最新一月：${allData[key] || '——'}`;
+              item.content = `最新一月：${allData[key] || '—'}`;
             } else {
               console.warn(`Key ${key} not found in response data.`);
             }

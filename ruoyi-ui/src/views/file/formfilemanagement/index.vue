@@ -206,6 +206,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="关联制度" align="center" prop="regulationId" />
       <el-table-column label="关键字" align="center" prop="remark" />
       <el-table-column label="表单上传时间" align="center" prop="effectiveDate" width="180">
         <template slot-scope="scope">
@@ -217,18 +218,6 @@
           <a v-if="scope.row.formPath" @click.prevent="downloadFile(scope.row.formPath)" style="color: #6495ED;">点击下载</a>
         </template>
       </el-table-column>
-<!--      <el-table-column label="表单大小" align="center" prop="formSize" />-->
-<!--      <el-table-column label="上传人" align="center" prop="createUsername" />-->
-<!--      <el-table-column label="历史表单" align="center" prop="oldFormId" />-->
-<!--      <el-table-column label="新版本表单" align="center" prop="newFormId"/>-->
-<!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
-<!--      <el-table-column label="修订时间" align="center" prop="revisionTime" width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span>{{ parseTime(scope.row.revisionTime, '{y}-{m}-{d}') }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="修订内容" align="center" prop="revisionContent" />-->
-<!--      <el-table-column label="修订人" align="center" prop="reviser" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -668,7 +657,8 @@ export default {
         newFlag: null,
         newFormId: null,
         businesses: null,
-        subBusinesses: null
+        subBusinesses: null,
+        regulationId: null,
       },
       //流程查询参数
       projecQueryParams: {

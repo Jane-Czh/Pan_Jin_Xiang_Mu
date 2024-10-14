@@ -35,7 +35,9 @@ public class MarketOrderSumnumberController extends BaseController
     @Autowired
     private MarketOrderSumnumberMapper marketOrderSumnumberMapper;
     @Log(title = "[市场]订单总数表", businessType = BusinessType.INSERT)
-    @PreAuthorize("@ss.hasPermi('market:ledger:import')")
+//    @PreAuthorize("@ss.hasPermi('market:ledger:import')")
+
+    @PreAuthorize("@ss.hasPermi('market:sumNumber:import')")
     @PostMapping("/import")
     public AjaxResult importExcel(@RequestParam("file") MultipartFile excelFile)
     {
@@ -60,8 +62,10 @@ public class MarketOrderSumnumberController extends BaseController
     /**
      * 查询【请填写功能名称】列表
      */
-    //TODO 权限配置有误
-    @PreAuthorize("@ss.hasPermi('system:sumNumber:list')")
+    //TODO 权限配置有误,已修改10-13
+//    @PreAuthorize("@ss.hasPermi('system:sumNumber:list')")
+
+    @PreAuthorize("@ss.hasPermi('market:sumNumber:list')")
     @GetMapping("/list")
     public TableDataInfo list(MarketOrderSumnumber marketOrderSumnumber)
     {

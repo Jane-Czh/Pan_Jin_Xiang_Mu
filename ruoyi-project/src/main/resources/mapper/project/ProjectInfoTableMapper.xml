@@ -171,5 +171,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO project_info_table (
+        project_name,
+        category,
+        level,
+        department,
+        manager,
+        team_members,
+        current_status,
+        goal,
+        scope,
+        start_date,
+        planned_completion_time,
+        status,
+        progress_allover_progress,
+        remake
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.projectName},
+            #{item.category},
+            #{item.level},
+            #{item.department},
+            #{item.manager},
+            #{item.teamMembers},
+            #{item.currentStatus},
+            #{item.goal},
+            #{item.scope},
+            #{item.startDate},
+            #{item.plannedCompletionTime},
+            #{item.status},
+            #{item.progressAlloverProgress},
+            #{item.remake}
+            )
+        </foreach>
+    </insert>
 </mapper>

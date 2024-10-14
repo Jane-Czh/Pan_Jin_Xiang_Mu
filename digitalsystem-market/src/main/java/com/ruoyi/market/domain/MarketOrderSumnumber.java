@@ -45,7 +45,7 @@ public class MarketOrderSumnumber extends BaseEntity
     private Date creatTime;
 
     /** 创建人 */
-    @ExcelProperty("创建人")
+    @ExcelProperty(index = 3)
     private String creatPeople;
     /** $column.columnComment */
 //    private Long id;

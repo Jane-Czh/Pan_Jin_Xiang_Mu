@@ -582,8 +582,9 @@ public class MarketIndexController extends BaseController {
                         MarketSalesTable::getBranch, // 按照地区分组
                         Collectors.groupingBy(
 //                                a -> getVehicleModelPrefix(a.getVehicleModel()), // 按照车型前缀分组
-                                a -> carModelToTypeMap.getOrDefault(a.getVehicleModel(), "其他"), // 使用newtype中的type属性表示车型
-
+//                                a -> carModelToTypeMap.getOrDefault(a.getVehicleModel(), "其他"), // 使用newtype中的type属性表示车型
+                            //啥都不返回，对面提出的需求
+                                a-> " ",
                                 Collectors.summingLong(MarketSalesTable::getNumber) // 计算每个分组中 Number 的和
                         )
                 ));
@@ -1477,9 +1478,12 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
+                                .sorted(Map.Entry.comparingByKey()) // 按照key排序
                                 .collect(Collectors.toMap(
-                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        Map.Entry::getValue
+                                        e -> e.getKey() + "月份", // 添加 "月份" 后缀
+                                        Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue, // 如果有相同的key，保留旧的值
+                                        LinkedHashMap::new // 使用LinkedHashMap保持插入顺序
                                 ))
                 ));
 
@@ -1530,9 +1534,12 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
+                                .sorted(Map.Entry.comparingByKey()) // 按照key排序
                                 .collect(Collectors.toMap(
-                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        Map.Entry::getValue
+                                        e -> e.getKey() + "月份", // 添加 "月份" 后缀
+                                        Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue, // 如果有相同的key，保留旧的值
+                                        LinkedHashMap::new // 使用LinkedHashMap保持插入顺序
                                 ))
                 ));
 
@@ -1544,7 +1551,7 @@ public class MarketIndexController extends BaseController {
     }
 
     /*
-* 指标47 小吨位整机制造天数
+* 指标47 大吨位叉车整机制造天数
 平均数
 * */
     @PostMapping("/ElCarAvergaeDay47")
@@ -1582,11 +1589,15 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
+                                .sorted(Map.Entry.comparingByKey()) // 按照key排序
                                 .collect(Collectors.toMap(
-                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        Map.Entry::getValue
+                                        e -> e.getKey() + "月份", // 添加 "月份" 后缀
+                                        Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue, // 如果有相同的key，保留旧的值
+                                        LinkedHashMap::new // 使用LinkedHashMap保持插入顺序
                                 ))
                 ));
+
 
 //        System.out.println("测试分组"+groupedResults);
 
@@ -1597,7 +1608,7 @@ public class MarketIndexController extends BaseController {
 
 
     /*
-* 指标48 小吨位整机制造天数
+* 指标48 越野车整机制造天数
 平均数
 * */
     @PostMapping("/ElCarAvergaeDay48")
@@ -1641,9 +1652,12 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
+                                .sorted(Map.Entry.comparingByKey()) // 按照key排序
                                 .collect(Collectors.toMap(
-                                        e -> "月份 " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        Map.Entry::getValue
+                                        e -> e.getKey() + "月份", // 添加 "月份" 后缀
+                                        Map.Entry::getValue,
+                                        (oldValue, newValue) -> oldValue, // 如果有相同的key，保留旧的值
+                                        LinkedHashMap::new // 使用LinkedHashMap保持插入顺序
                                 ))
                 ));
 

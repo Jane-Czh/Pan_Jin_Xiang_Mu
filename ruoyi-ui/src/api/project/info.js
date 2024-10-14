@@ -90,5 +90,14 @@ export function uploadImport(formData) {
 
 export function handleTrueDownload(url) {
   return window.location.href = "http://10.36.53.24:8080" + url;
-  // return window.location.href = "http://localhost:8080" + url;
+}
+
+// 新增项目修改记录
+export function addRecode(data) {
+  return request({
+
+    url: '/project/Info/recodeAdd',
+    method: 'post',
+    data: data
+  })
 }

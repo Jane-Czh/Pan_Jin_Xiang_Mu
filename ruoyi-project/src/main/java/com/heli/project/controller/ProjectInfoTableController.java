@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heli.project.domain.UpdataRecode;
+import com.heli.project.service.IUpdataRecodeService;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,9 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ruoyi.project.domain.ProjectInfoRecode;
+import com.ruoyi.project.service.IProjectInfoRecodeService;
+
 /**
  * 项目基本信息Controller
  * 
@@ -33,6 +38,9 @@ public class ProjectInfoTableController extends BaseController
 {
     @Autowired
     private IProjectInfoTableService projectInfoTableService;
+
+    @Autowired
+    private IProjectInfoRecodeService projectInfoRecodeService;
 
 
     @PreAuthorize("@ss.hasPermi('project:Info:import')")
@@ -94,6 +102,19 @@ public class ProjectInfoTableController extends BaseController
         System.out.println("-------" + "query" + "-------" +projectName+ "recode" +"-------");
         System.out.println(projectInfoTableService.selectProjectRecodingByProjectName(projectName));
         return getDataTable(projectInfoTableService.selectProjectRecodingByProjectName(projectName));
+    }
+    /**
+     * 进度上报时记录修改信息
+     */
+    @PreAuthorize("@ss.hasPermi('updata_recode:recode:add')")
+    @Log(title = "更新记录", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/recodeAdd")
+    public AjaxResult addUpdateRecode(@RequestBody ProjectInfoRecode projectInfoRecode)
+    {
+        System.out.println("----------");
+        System.out.println(projectInfoRecode);
+
+        return toAjax(projectInfoRecodeService.insertProjectInfoRecode(projectInfoRecode));
     }
 
 

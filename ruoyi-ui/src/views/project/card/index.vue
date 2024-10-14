@@ -93,7 +93,7 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['project:Info:add']">新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" >新增</el-button>
       </el-form-item>
     </el-form>
 
@@ -121,8 +121,8 @@
             <p>项目等级: {{ info.level }}</p>
 
             <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
-              <el-button @click="ProgressReporting(info)">进度上报</el-button>
-              <el-button @click="showDialog(info)">修改记录</el-button>
+              <el-button @click="ProgressReporting(info)" v-hasPermi="['updata_recode:recode:add']">进度上报</el-button>
+              <el-button @click="showDialog(info)" v-hasPermi="['project:Info:recode']" >修改记录</el-button>
 
               <!-- 详情查看 -->
               <el-popover placement="right" trigger="click" width="1000">
@@ -419,8 +419,7 @@
 </template>
 
 <script>
-import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, Recodingquery} from "@/api/project/info";
-import { listRecode, getRecode, delRecode, addRecode, updateRecode } from "@/api/project/recode";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, Recodingquery, addRecode} from "@/api/project/info";
 import { listHistory } from "@/api/project/history";
 import { getUserProfile } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
@@ -1014,6 +1013,8 @@ export default {
               this.open = false;
               this.getList();
             });
+
+            console.log(this.form);
             addRecode(this.form);
 
           } else {

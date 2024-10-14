@@ -812,19 +812,7 @@ export default {
 
       await this.getUserInfo();
       listInfo(this.queryParams).then(response => {
-
-        for (var i = 0; i < response.total; i++) {
-
-          if (
-            this.departmentCategory == response.rows[i].department ||
-            this.departmentCategory == "研发" ||
-            this.departmentCategory == "总部"
-          ) {
-            this.InfoList.push(response.rows[i]);
-            
-          }
-        }
-        // this.InfoList = response.rows;
+        this.InfoList = response.rows;
         this.total = response.total;
         this.loading = false;
         

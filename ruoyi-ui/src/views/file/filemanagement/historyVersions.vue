@@ -630,6 +630,7 @@
           reviser: null,
           projectIds: null,
           newFlag: null,
+          addFlag: null,
           newRegulationsId: null,
           businesses: null,
           subBusinesses: null,
@@ -685,6 +686,7 @@
           formId: null,
           projectIds: null,
           newFlag: null,
+          addFlag: null,
           newRegulationsId: null,
           businesses: null,
           subBusinesses: null

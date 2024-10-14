@@ -472,6 +472,7 @@ export default {
         formId: null,
         projectIds: null,
         newFlag: null,
+        addFlag: null,
         newRegulationsId: null,
         businesses: null,
         subBusinesses: null
@@ -547,6 +548,7 @@ export default {
         formId: null,
         projectIds: null,
         newFlag: null,
+        addFlag: null,
         newRegulationsId: null,
         businesses: null,
         subBusinesses: null

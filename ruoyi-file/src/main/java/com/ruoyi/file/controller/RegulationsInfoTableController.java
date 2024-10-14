@@ -86,6 +86,16 @@ public class RegulationsInfoTableController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 查询所有新增文件列表
+     */
+    @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")
+    @GetMapping(value = "/listadd")
+    public List<RegulationsInfoTable> listaddFilemanagement(RegulationsInfoTable regulationsInfoTable) {
+
+        List<RegulationsInfoTable> list = regulationsInfoTableService.listaddFilemanagement(regulationsInfoTable);
+        return list;
+    }
 
     /**
      * 查询所有历史版本文件列表

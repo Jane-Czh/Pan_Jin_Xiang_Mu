@@ -6,6 +6,7 @@ import com.heli.enterprise.domain.EnterpriseManagementMonthlyData;
 import com.heli.enterprise.mapper.EnterpriseManagementDisplayMapper;
 import com.heli.enterprise.service.IEnterpriseManagementDisplayService;
 import com.heli.enterprise.service.IEnterpriseManagementIndicatorsDailyClearingSettlementService;
+import com.heli.enterprise.service.IEnterpriseManagementIndicatorsManagementService;
 import com.ruoyi.common.core.domain.DisplayEntity;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,8 @@ public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManage
     private EnterpriseManagementDisplayMapper enterpriseManagementDisplayMapper;
     @Autowired
     private IEnterpriseManagementIndicatorsDailyClearingSettlementService dailyClearingSettlementService;
+    @Autowired
+    private IEnterpriseManagementIndicatorsManagementService managementService;
 
     @Override
     public List<Map<Date, Object>> selectEmployeesNumber(Date startTime, Date endTime) {
@@ -91,7 +94,19 @@ public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManage
 
     @Override
     public List<EnterpriseManagementIndicatorsManagement> selectManagement(Date startTime, Date endTime) {
-        return enterpriseManagementDisplayMapper.selectManagement(startTime,endTime);
+        List<EnterpriseManagementIndicatorsManagement> list = enterpriseManagementDisplayMapper.selectManagement(startTime, endTime);
+        EnterpriseManagementIndicatorsManagement management = new EnterpriseManagementIndicatorsManagement();
+        management.setFlag(1);
+        management.setYearAndMonth(new Date(DateUtils.getYear(startTime) - 1900, 0, 1));
+        List<EnterpriseManagementIndicatorsManagement> target = managementService.selectEnterpriseManagementIndicatorsManagementList(management);
+        if (target.size() > 0)
+            list.add(target.get(0));
+
+        management.setFlag(2);
+        target = managementService.selectEnterpriseManagementIndicatorsManagementList(management);
+        if (target.size() > 0)
+            list.add(target.get(0));
+        return list;
     }
 
     @Override

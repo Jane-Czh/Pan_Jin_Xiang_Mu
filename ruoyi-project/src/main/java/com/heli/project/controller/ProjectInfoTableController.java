@@ -1,21 +1,16 @@
 package com.heli.project.controller;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.exception.ServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -24,6 +19,7 @@ import com.heli.project.domain.ProjectInfoTable;
 import com.heli.project.service.IProjectInfoTableService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 项目基本信息Controller
@@ -37,6 +33,21 @@ public class ProjectInfoTableController extends BaseController
 {
     @Autowired
     private IProjectInfoTableService projectInfoTableService;
+
+
+    @PreAuthorize("@ss.hasPermi('project:Info:import')")
+    @PostMapping("/import")
+    public AjaxResult importTable(@RequestParam("file") MultipartFile excelFile) {
+        System.out.println("------------import-------import------------");
+        try {
+            projectInfoTableService.importInterests(excelFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ServiceException("excel上传失败");
+        }
+        return success();
+    }
+
 
     /**
      * 查询项目基本信息列表

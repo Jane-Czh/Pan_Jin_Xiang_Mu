@@ -7,8 +7,11 @@
                 @change="handleDateChange">
             </el-date-picker>
         </div>
+        <!-- <div id="charts-container"> -->
         <div id="main" ref="main"></div>
         <div id="main2" ref="main2"></div>
+        <!-- </div> -->
+
 
     </div>
 </template>
@@ -17,7 +20,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getNonStandardAVGPreparationDaysData } from '@/api/tech/data'
-
+import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -35,6 +38,7 @@ export default {
             myChart2: {},
             routerData: {},
             targetValueArray: [],
+            ifTargetEmpty: '',
         }
     },
     computed: {},
@@ -55,12 +59,39 @@ export default {
                 this.data = res.rows
                 const yAxisDataLength = this.data.length;
                 this.targetValueArray = Array(yAxisDataLength).fill(this.routerData.targetValue);
-                // this.data[4].nonStandardOrderGrowthRate = 20
-                // this.data[5].nonStandardOrderGrowthRate = -20
-                this.updateChart()
+
+                //目标值
+                let newTarget = {
+                    name: this.routerData.sum,
+                    startDate: this.selectedDate[0],
+                    endDate: this.selectedDate[1]
+                }
+                console.log(newTarget)
+                const res1 = await getNameTarget(newTarget)
+                let nowTarget = res1.rows
+                this.ifTargetEmpty = res1.rows.length
+                // console.log(res1)
+                if (this.ifTargetEmpty) {
+                    let allTarget = []; // 初始化目标数组
+                    nowTarget.forEach(item => {
+                        let natureYear = moment(item.natureYear).format('YYYY')
+                        let targetValue = item.targetValue; // 目标值可能是数字或null
+                        allTarget.push({ natureYear, targetValue });
+                    })
+                    console.log(nowTarget)
+                    this.data.forEach(item => {
+                        const year = moment(item.yearAndMonth).format('YYYY')
+                        allTarget.forEach(row => {
+                            if (year === row.natureYear) {
+                                item.targetValue = row.targetValue
+                            }
+                        })
+                    });
+                }
+
                 console.log(this.data)
-                // console.log(this.targetValue)
-                // console.log(this.targetValue != 0 && this.targetValue != '' && this.targetValue != undefined)
+                this.updateChart()
+                // console.log(this.data)
                 this.loading = false
             } catch (error) {
                 console.log(error)
@@ -189,7 +220,7 @@ export default {
                     data: this.data.map(item => item.nonStandardAvgPreparationDays),
                 },
             ];
-            if (this.routerData.showTarget && (this.routerData.targetValue != 0 && this.routerData.targetValue != '')) {
+            if (this.ifTargetEmpty) {
                 series.push({
                     name: '目标值',
                     type: 'line',
@@ -197,7 +228,7 @@ export default {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: this.targetValueArray,
+                    data: this.data.map(item => item.targetValue),
                 });
             }
             this.option = {
@@ -211,7 +242,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['平均准备天数', (this.routerData.targetValue != 0 && this.routerData.targetValue != '') ? '目标值' : null].filter(item => item !== null),
+                    data: ['平均准备天数', , this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,
@@ -371,6 +402,7 @@ export default {
                 },
             ];
 
+
             this.option2 = {
                 title: {
                     text: '总条数与同比增幅率'
@@ -455,6 +487,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+//左右展示
+// #charts-container {
+//     display: flex;
+//     justify-content: space-between;
+//     margin: 40px;
+// }
+
+// #main,
+// #main2 {
+//     width: calc(50% - 80px);
+//     /* 减去两边的 margin 总和 */
+//     height: 600px;
+// }
+
+// #main {
+//     margin-right: 40px;
+// }
+
+// #main2 {
+//     margin-left: 40px;
+// }
+
 #main {
     width: 1000px;
     height: 600px;

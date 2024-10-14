@@ -158,7 +158,7 @@ export default {
         data: this.yAxisData,
       }];
 
-      if (this.showTarget && (this.targetValue != 0 && this.targetValue != '')) {
+      if (this.targetValue) {
         series.push({
           name: '目标值',
           type: 'line',
@@ -180,7 +180,7 @@ export default {
           }
         },
         legend: {
-          data: [this.dataName, this.showTarget && (this.targetValue != 0 && this.targetValue != '') ? '目标值' : null].filter(item => item !== null),
+          data: [this.dataName, this.targetValue ? '目标值' : null].filter(item => item !== null),
         },
         toolbox: {
           show: true,

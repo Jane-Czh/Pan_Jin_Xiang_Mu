@@ -85,4 +85,6 @@ public interface MarketCommercialVehicleTableMapper
     List<AverageResult> selectcountAverage46();
 
     List<AverageResult> selectcountAverage47();
+
+    List<AverageResult> selectcountAverage48();
 }

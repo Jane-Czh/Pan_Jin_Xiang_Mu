@@ -16,7 +16,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment'
 import { getProjectProgressData } from '@/api/tech/data'
-
+// import { getNameTarget } from '@/api/financial/target'
 export default {
     data() {
         return {
@@ -112,7 +112,7 @@ export default {
                         data: [
                             { value: this.totalUnstarted, name: '暂未开展' },
                             { value: this.totalOngoing, name: '进行中' },
-                            { value: this.totalCompleted, name: '已完成' },
+                            { value: this.totalCompleted, name: '结项' },
                         ],
                         emphasis: {
                             itemStyle: {
@@ -133,7 +133,7 @@ export default {
                             smooth: 0.2,
                         },
                         // 设置颜色
-                        color: ['#b4bccc', '#73c0de', '#91cc75'] // 灰，蓝，绿
+                        color: ['#ee6666', '#91cc75', '#73c0de'] // 红，绿，蓝
                     }
                 ]
             };

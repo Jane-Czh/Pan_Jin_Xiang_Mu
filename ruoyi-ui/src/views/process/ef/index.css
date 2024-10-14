@@ -77,8 +77,9 @@
 .ef-node-container {
     position: absolute;
     display: flex;
-    width: 250px;
-    height: 32px;
+    min-width: 250px;
+    max-width: 250px; /* 控制最大宽度 */
+    
     border: 1px solid #E0E3E7;
     border-radius: 5px;
     background-color: #fff;

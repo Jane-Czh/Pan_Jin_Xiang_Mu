@@ -359,6 +359,7 @@ option = {
 series : this.transposedSeriesData.map( (item,index) => {
      return {
       // console:console.log(legendData[index]),
+      stack: 'Total', // 设置堆叠
       name :legendData[index],
       type: 'bar',
       label: labelOption,

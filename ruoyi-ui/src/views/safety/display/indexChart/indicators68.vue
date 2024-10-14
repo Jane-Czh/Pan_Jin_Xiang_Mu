@@ -282,8 +282,8 @@ export default {
         }
 
       });
-      console.log(this.chartData)
-      console.log('+++++++++++++')
+      // console.log(this.chartData)
+      // console.log('+++++++++++++')
     }
 
   },

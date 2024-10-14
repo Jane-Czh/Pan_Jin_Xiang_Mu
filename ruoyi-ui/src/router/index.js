@@ -163,6 +163,12 @@ export const constantRoutes = [
         meta: { title: '指标74：日/月/年上线数' }
       },
       {
+        path: 'index39',
+        component: () => import('@/views/production/display/indexChart/index39'),
+        name: 'index39',
+        meta: { title: '商品车计划兑现率' }
+      },
+      {
         path: 'indicators75',
         component: () => import('@/views/production/display/indexChart/indicators75'),
         name: 'Indicators75',
@@ -580,7 +586,7 @@ export const constantRoutes = [
         path: 'index42',
         component: () => import('@/views/market/display/indexChart/index42'),
         name: 'Index42',
-        meta: { title: '指标42：大叉位叉车整机交货天数平均数' }
+        meta: { title: '指标42：大吨位叉车整机交货天数平均数' }
       }
     ]
   },
@@ -648,6 +654,21 @@ export const constantRoutes = [
     redirect: 'noredirect',
     children: [
       {
+        path: 'index48',
+        component: () => import('@/views/market/display/indexChart/index48'),
+        name: 'Index48',
+        meta: { title: '指标48：越野车整机制造天数' }
+      }
+    ]
+  },
+
+  {
+    path: '/market',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
         path: 'index47',
         component: () => import('@/views/market/display/indexChart/index47'),
         name: 'Index47',
@@ -655,7 +676,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   {
     path: '/market',
     component: Layout,

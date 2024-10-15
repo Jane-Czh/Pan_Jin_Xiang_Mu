@@ -87,6 +87,11 @@ public class RegulationsInfoTableServiceImpl implements IRegulationsInfoTableSer
     }
 
     @Override
+    public List<RegulationsInfoTable> listaddFilemanagement(RegulationsInfoTable regulationsInfoTable) {
+        return regulationsInfoTableMapper.listaddFilemanagement(regulationsInfoTable);
+    }
+
+    @Override
     public List<RegulationsInfoTable> listHistoryFilemanagement(RegulationsInfoTable regulationsInfoTable) {
         return regulationsInfoTableMapper.listHistoryFilemanagement(regulationsInfoTable);
     }

@@ -48,7 +48,7 @@ public class FinancialTempTableController extends BaseController {
 
     /**
      * @return
-     * @description: 上传工资表，存入数据库,计算相关数据
+     * @description: 上传资产负债表，存入数据库,计算相关数据
      * @author: hong
      * @date: 2024/4/11 16:38
      */

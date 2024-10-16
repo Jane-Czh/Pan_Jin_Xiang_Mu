@@ -14,6 +14,10 @@ import java.util.List;
  **/
 public interface ProductionTableMapper {
 
+    void truncateDailyTable();
+    void truncateMonthlyTable();
+    void truncateAnnualTable();
+
     int batchInsertOrUpdateMonthlyLaunchAndCompletion(@Param("productionCountNumberEntityList") List<ProductionCountNumberEntity> productionCountNumberEntityList);
 
     int batchInsertOrUpdateYearlyLaunchAndCompletion(@Param("productionCountNumberEntityList") List<ProductionCountNumberEntity> productionCountNumberEntityList);

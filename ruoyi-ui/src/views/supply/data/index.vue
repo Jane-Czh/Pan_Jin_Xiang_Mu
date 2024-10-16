@@ -111,8 +111,8 @@
         <el-form-item label="比例(%)" prop="controlledPurchaseAmountRatio">
           <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例(%)" />
         </el-form-item>
-        <el-form-item label="月度求和比例(%)" prop="controlledPurchaseAmountRatio">
-          <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入月度求和比例(%)" />
+        <el-form-item label="月度求和比例(%)" prop="yearAmountRatio">
+          <el-input v-model="form.yearAmountRatio" placeholder="请输入月度求和比例(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -199,7 +199,14 @@ export default {
             trigger: "blur"
           }
         ],
-
+        //比例
+        yearAmountRatio: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
       }
     };
   },

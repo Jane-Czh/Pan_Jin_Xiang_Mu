@@ -67,3 +67,37 @@ export function Recodingquery(projectName) {
     method: 'get'
   })
 }
+
+//导入 excel文件
+export function uploadImport(formData) {
+  return request({
+    url: '/project/Info/import',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: true,
+    data: formData,
+    onUploadProgress: (progressEvent) => {
+      let progress = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      // 这里可以处理上传进度，例如通过事件发射给外部组件
+      // this.$emit('progress', progress);
+    },
+  });
+}
+
+export function handleTrueDownload(url) {
+  return window.location.href = "http://10.36.53.24:8080" + url;
+}
+
+// 新增项目修改记录
+export function addRecode(data) {
+  return request({
+
+    url: '/project/Info/recodeAdd',
+    method: 'post',
+    data: data
+  })
+}

@@ -346,6 +346,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY
             MONTH(mv.Precision_Completion_Period) ASC;
     </select>
+    <select id="selectcountAverage48" resultMap="MarketCommercialVehicleMap">
+        SELECT
+            YEAR(Precision_Completion_Period) AS CompletionYear,
+            MONTH(Precision_Completion_Period) AS Month,
+            AVG(DATEDIFF(Precision_Completion_Period, Vehicle_Launch_Date)) AS Average_Days_Difference
+        FROM
+            Market_Commercial_Vehicle_table
+                JOIN
+            market_main_type ON Market_Commercial_Vehicle_table.Vehicle_Model = market_main_type.car_Type
+        WHERE
+            market_main_type.main_car_type = '越野车'
+        GROUP BY
+            CompletionYear, Month
+        ORDER BY
+            CompletionYear,  Month;
+    </select>
 
 
     <insert id="insertMarketCommercialVehicleTable" parameterType="MarketCommercialVehicleTable">

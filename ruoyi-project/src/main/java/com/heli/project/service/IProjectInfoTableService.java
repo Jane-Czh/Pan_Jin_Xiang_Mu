@@ -1,8 +1,10 @@
 package com.heli.project.service;
 
+import java.io.IOException;
 import java.util.List;
 import com.heli.project.domain.ProjectInfoTable;
 import com.ruoyi.project.domain.ProjectInfoRecode;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 项目基本信息Service接口
@@ -12,6 +14,8 @@ import com.ruoyi.project.domain.ProjectInfoRecode;
  */
 public interface IProjectInfoTableService 
 {
+
+    public int importInterests(MultipartFile excelFile) throws IOException;
     /**
      * 查询项目基本信息
      * 

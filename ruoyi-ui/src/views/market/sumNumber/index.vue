@@ -25,18 +25,18 @@
           placeholder="请选择统计时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="创建时间" prop="creatTime">
+      <!-- <el-form-item label="创建时间" prop="creatTime">
         <el-date-picker clearable
           v-model="queryParams.creatTime"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="请选择创建时间">
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="创建人" prop="creatPeople">
+      </el-form-item> -->
+      <el-form-item label="车型" prop="creatPeople">
         <el-input
           v-model="queryParams.creatPeople"
-          placeholder="请输入创建人"
+          placeholder="请输入车型"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -140,7 +140,7 @@
 
     <el-table v-loading="loading" :data="sumNumberList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
+      <el-table-column label="序号" align="center" prop="id" />
       <el-table-column label="地区名称" align="center" prop="marketLedger" />
       <el-table-column label="订单总数" align="center" prop="marketOrderSumnumber" />
       <el-table-column label="统计时间" align="center" prop="marketTime" width="180">
@@ -148,12 +148,12 @@
           <span>{{ parseTime(scope.row.marketTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="creatTime" width="180">
+      <!-- <el-table-column label="创建时间" align="center" prop="creatTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.creatTime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="创建人" align="center" prop="creatPeople" />
+      </el-table-column> -->
+      <el-table-column label="车型" align="center" prop="creatPeople" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -199,16 +199,16 @@
             placeholder="请选择统计时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="创建时间" prop="creatTime">
+        <!-- <el-form-item label="创建时间" prop="creatTime">
           <el-date-picker clearable
             v-model="form.creatTime"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择创建时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="创建人" prop="creatPeople">
-          <el-input v-model="form.creatPeople" placeholder="请输入创建人" />
+        </el-form-item> -->
+        <el-form-item label="车型" prop="creatPeople">
+          <el-input v-model="form.creatPeople" placeholder="请输入车型" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

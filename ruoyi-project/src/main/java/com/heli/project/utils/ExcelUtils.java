@@ -1,6 +1,7 @@
 package com.heli.project.utils;
 
 import com.heli.project.domain.ProjectHistoryInfoTable;
+import com.heli.project.domain.ProjectInfoTable;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,7 +88,69 @@ public class ExcelUtils {
         return dataList;
     }
 
+    public static List<ProjectInfoTable> parseExcel2ProjectInfoTable(MultipartFile file) throws IOException {
+        List<ProjectInfoTable> dataList = new ArrayList<>();
 
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.rowIterator();
+
+        // Skip header row
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            ProjectInfoTable projectInfoTable = new ProjectInfoTable();
+            /**
+             * 将excel设置的字段，写入到数据库对应字段
+             */
+
+//            marketSalesTable.setMsId(GenerateId.getUUid());
+
+            int count = 0;
+
+            //项目名称
+            projectInfoTable.setProjectName(getStringCellValue(row.getCell(count++)));
+            //项目类别
+            projectInfoTable.setCategory(getStringCellValue(row.getCell(count++)));
+            //项目等级
+            projectInfoTable.setLevel(getStringCellValue(row.getCell(count++)));
+            //主责部门
+            projectInfoTable.setDepartment(getStringCellValue(row.getCell(count++)));
+            //负责人
+            projectInfoTable.setManager(getStringCellValue(row.getCell(count++)));
+            //立项时间
+            projectInfoTable.setStartDate(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            //项目组成员
+            projectInfoTable.setTeamMembers(getStringCellValue(row.getCell(count++)));
+            //项目现状
+            projectInfoTable.setCurrentStatus(getStringCellValue(row.getCell(count++)));
+            //项目目标
+            projectInfoTable.setGoal(getStringCellValue(row.getCell(count++)));
+            //项目范围
+            projectInfoTable.setScope(getStringCellValue(row.getCell(count++)));
+            //计划结项时间
+            projectInfoTable.setPlannedCompletionTime(getDateCellValue(ExcelDateUtils.convertExcelDateToString(getNumericCellValue(row.getCell(count++)))));
+            //项目状态
+            projectInfoTable.setStatus(getStringCellValue(row.getCell(count++)));
+            //是否有相关方案或计划
+            System.out.println("--------"+getStringCellValue(row.getCell(count)));
+            projectInfoTable.setRemake(getStringCellValue(row.getCell(count++)));
+            count++;
+            //项目总进度
+            projectInfoTable.setProgressAlloverProgress(getStringCellValue(row.getCell(count++)));
+
+            dataList.add(projectInfoTable);
+        }
+
+
+
+        workbook.close();
+
+        return dataList;
+    }
 
     private static String getStringCellValue(Cell cell) {
         if (cell == null) {

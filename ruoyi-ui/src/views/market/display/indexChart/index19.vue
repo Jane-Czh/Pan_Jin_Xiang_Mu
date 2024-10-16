@@ -233,6 +233,10 @@ const labelOption = {
   verticalAlign: app.config.verticalAlign,
   rotate: app.config.rotate,
   formatter: '{c}  {name|{a}}',
+      formatter: function (params) {
+    // 当值为0时，返回空字符串，否则返回默认值
+    return params.value === 0 ? '' : `${(params.value )}`;
+  },
   fontSize: 16,
   rich: {
     name: {}

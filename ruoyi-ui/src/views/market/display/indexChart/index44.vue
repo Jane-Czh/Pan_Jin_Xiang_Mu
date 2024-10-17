@@ -367,6 +367,57 @@ export default {
           }
         })
       };
+this.transposedSeriesData=roundedData;
+myChart.clear;
+option = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  legend: {
+    data: legendData
+  },
+  toolbox: {
+    show: true,
+    orient: 'vertical',
+    left: 'right',
+    top: 'center',
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      magicType: { show: true, type: ['line', 'bar', 'stack'] },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
+  xAxis: [
+    {
+      type: 'category',
+      axisTick: { show: false },
+      data: xAxisData
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value'
+    }
+  ],
+series : this.transposedSeriesData.map( (item,index) => {
+     return {
+      // console:console.log(legendData[index]),
+        stack: 'Total', // 设置堆叠
+      name :legendData[index],
+      type: 'bar',
+      label: labelOption,
+      emphasis: {
+          focus: 'series'
+      },
+      data: item
+     }
+  })
+};
 
       option && myChart.setOption(option);
 
@@ -385,7 +436,11 @@ export default {
   },
 
 
+
 }
+
+
+
 
 
 </script>

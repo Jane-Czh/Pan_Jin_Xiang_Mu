@@ -137,10 +137,10 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:management:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['enterprise:management:export']">导出</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"

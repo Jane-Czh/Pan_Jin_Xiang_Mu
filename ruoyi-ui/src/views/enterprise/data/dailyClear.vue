@@ -36,14 +36,14 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['enterprise:dailyclear:export']">导出</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['enterprise:dailyclear:read']">导入Excel文件
+          v-hasPermi="['enterprise:dailyclear:import']">导入Excel文件
         </el-button>
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
           <el-form :model="form" ref="form" label-width="90px">

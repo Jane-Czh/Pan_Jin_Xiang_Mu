@@ -26,24 +26,24 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:dailyClear:add']">新增</el-button>
+          v-hasPermi="['enterprise:dailyclear:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:dailyClear:edit']">修改</el-button>
+          v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:dailyClear:remove']">删除</el-button>
+          v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:dailyClear:export']">导出</el-button>
+          v-hasPermi="['enterprise:dailyclear:export']">导出</el-button>
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['enterprise:dailyClear:read']">导入Excel文件
+          v-hasPermi="['enterprise:dailyclear:read']">导入Excel文件
         </el-button>
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
           <el-form :model="form" ref="form" label-width="90px">

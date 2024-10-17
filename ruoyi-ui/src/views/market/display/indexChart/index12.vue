@@ -1,22 +1,26 @@
 <template>
-
+    
     <div>
         <div class="block">
-
+            
     <!-- 添加标签页标题 -->
     <span class="DataSelect" style="margin-right:10px"></span>
     <!-- 添加输入框 -->
     <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
-
-
+  
+  
 
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
-            <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
+            <!-- <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
+                start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
+                @change="handleDateChange" >
+            </el-date-picker> -->
+              <el-date-picker v-model="selectedDate" type="daterange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange" >
             </el-date-picker>
-
-            <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数" style="width: 200px;"></el-input>
+<!-- 
+            <el-input v-model.number="numberInput" placeholder="请输入订单总台数" style="width: 200px;"></el-input>
             <el-button type="primary" @click="handleConfirm">确定</el-button> -->
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
@@ -25,7 +29,7 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';
+import * as echarts from 'echarts';     
 import moment from 'moment'
 import { getIndex12 } from '@/api/market/index'
 
@@ -40,7 +44,7 @@ export default {
         numbers : [],
             result:[],
             provinces: [],
-
+          
             quantities: [],
              quantitiesForMonth3: [], // 针对月份3的数量数组
             numberInput:null,
@@ -52,23 +56,23 @@ export default {
                 startTime: new Date(),
                 endTime: new Date(),
                 numberInput:null
-
+    
             },
-
+            
             selectedDate: [],
             pickerOptions: [],
             option: {},
             myChart: {}
         }
-
+        
     },
     //    watch: {
     //     numberInput(newValue) {
     //         if (newValue) {
     //             // 输入框有数据时，处理 transposedSeriesData
     //           this.updateChart()
-    //         }
-
+    //         } 
+            
     //         console.log("_____--------总数量seriesData：", this.transposedSeriesData);
     //     }
     // },
@@ -79,7 +83,7 @@ export default {
         this.initData();
         // this.getCurrentMonth();
         // this.getCurrentYear();
-
+        
         const currentDate = new Date();
         //
 //   const currentYear = currentDate.getFullYear();
@@ -102,7 +106,7 @@ export default {
     //     }
     // }
     // console.log("更新 transposedSeriesData 的值：", this.transposedSeriesData);
-      },
+      }, 
    splitData() {
     // 初始化空数组用来存放拆分后的数据
 
@@ -168,7 +172,7 @@ export default {
             try {
                 this.loading = true
                 console.log(this.timeData)
-                this.result = await getIndex12(this.timeData);
+                this.result = await getIndex11(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
                    console.log("后端传过来的数据：", this.result[0].branch);
@@ -259,10 +263,7 @@ app.config = {
       align: app.config.align,
       verticalAlign: app.config.verticalAlign,
       position: app.config.position,
-      distance: app.config.distance,
-       formatter: function (params) {
-    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
-  },
+      distance: app.config.distance
     };
     myChart.setOption({
       series: [
@@ -289,10 +290,12 @@ const labelOption = {
   align: app.config.align,
   verticalAlign: app.config.verticalAlign,
   rotate: app.config.rotate,
-  formatter: '{c}  {name|{a}}',
   fontSize: 16,
   rich: {
     name: {}
+  },
+   formatter: function (params) {
+    return `${(params.value * 100).toFixed(2)}%`; // 将数值转换为百分比
   }
 };
 
@@ -325,11 +328,11 @@ var seriesData = [];
 // 遍历每个 result 中的 minEntity 数据
 this.result.forEach(function (item) {
     var data = [];
-
+    
     // 遍历图例数据
     legendData.forEach(function (legendItem) {
         var found = false;
-
+        
         // 在当前 result 的 minEntity 中查找与图例数据匹配的 branch
         item.minEntity.forEach(function (minEntity) {
             if (minEntity.branch === legendItem) {
@@ -338,13 +341,13 @@ this.result.forEach(function (item) {
                 found = true;
             }
         });
-
+        
         // 如果当前 branch 在当前 result 的 minEntity 中未找到，则将 0 添加到 data 数组中
         if (!found) {
             data.push(0);
         }
     });
-
+    
     // 将当前 result 的 data 添加到 series 数据中
     seriesData.push(data);
 });
@@ -407,10 +410,12 @@ option = {
     }
   ],
   yAxis: [
-     {
+    {
       type: 'value',
-      axisLabel: {
-        formatter: '{value}%' // 在Y轴标签上显示百分比
+       axisLabel: {  
+                formatter: function(value) {  
+                    return value * 100 + '%'; // 将Y轴的值乘以100后显示百分比  
+                }  
       }
     }
   ],
@@ -424,6 +429,9 @@ series : this.transposedSeriesData.map( (item,index) => {
           focus: 'series'
       },
       data: item
+      // data: item.map(value => {
+      //    return `${(value * 100).toFixed(2)}%`; // 将每个值转换为百分比并格式化
+      //  })
      }
   })
 };
@@ -432,7 +440,7 @@ option && myChart.setOption(option);
 
 },
 
-
+     
             //时间选择器的默认月份设置
     defaultMonth() {
       const currentDate = new Date();

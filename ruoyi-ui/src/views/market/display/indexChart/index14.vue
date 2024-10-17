@@ -342,6 +342,10 @@ option = {
     {
       type: 'category',
       axisTick: { show: false },
+       axisLabel: {
+        interval:0,
+        rotate:40
+      },
       data: xAxisData
     }
   ],

@@ -23,6 +23,7 @@ public class MarketCommercialVehicleTable {
      * 不需要持久化的数据，用于接收前端入参
      * */
     @Transient
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
     private String Month;
@@ -30,8 +31,12 @@ public class MarketCommercialVehicleTable {
     private Double Average_Days_Difference;
 
     private Long Over_20_Percent_Count;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Transient
     private Date endTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Transient
     private Integer numberInput;
     /**

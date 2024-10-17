@@ -249,7 +249,7 @@ export default {
         productionLiabilityIssues: [
           {
             required: true,
-            validator: numValidatorNonZeroNature,
+            validator: numValidator,
             trigger: "blur"
           }
         ],

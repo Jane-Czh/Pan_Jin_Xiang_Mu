@@ -105,7 +105,7 @@
           <span v-else>—</span>
         </template>
       </el-table-column>
-      <el-table-column label="小吨位内燃车生产数量" align="center" prop="icvProductionQuantity" width="160">
+      <el-table-column label="小吨位内燃车检查数量" align="center" prop="icvProductionQuantity" width="160">
         <template slot-scope="scope">
           <span v-if="scope.row.icvProductionQuantity || scope.row.icvProductionQuantity === 0">{{
       scope.row.icvProductionQuantity
@@ -182,7 +182,7 @@
         <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
           <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
         </el-form-item>
-        <el-form-item label="小吨位内燃车生产数量" prop="icvProductionQuantity">
+        <el-form-item label="小吨位内燃车检查数量" prop="icvProductionQuantity">
           <el-input v-model="form.icvProductionQuantity" placeholder="请输入小吨位内燃车生产数量" />
         </el-form-item>
         <el-form-item label="小吨位内燃车问题车数量" prop="icvProblemVehicles">

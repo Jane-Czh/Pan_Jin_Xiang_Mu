@@ -272,16 +272,6 @@ export default {
           {
             type: 'value'
           },
-          {
-            type: 'value',
-            name: '排名',
-            inverse: true,
-            // interval: 5,
-            splitLine: { show: false },
-            axisLabel: {
-              formatter: '{value} '
-            }
-          }
         ],
         series: series
       };

@@ -93,7 +93,7 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['project:Info:add']">新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" >新增</el-button>
       </el-form-item>
     </el-form>
 
@@ -121,8 +121,8 @@
             <p>项目等级: {{ info.level }}</p>
 
             <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
-              <el-button @click="ProgressReporting(info)">进度上报</el-button>
-              <el-button @click="showDialog(info)">修改记录</el-button>
+              <el-button @click="ProgressReporting(info)" v-hasPermi="['updata_recode:recode:add']">进度上报</el-button>
+              <el-button @click="showDialog(info)" v-hasPermi="['project:Info:recode']" >修改记录</el-button>
 
               <!-- 详情查看 -->
               <el-popover placement="right" trigger="click" width="1000">
@@ -149,7 +149,18 @@
                       <pre style="white-space: pre-wrap;">负责人: {{ info.manager }}</pre>
                       <pre style="white-space: pre-wrap;">组成员: {{ info.teamMembers }}</pre>
                       <pre style="white-space: pre-wrap;">项目状态: {{ info.status }}</pre>
-                      <pre style="white-space: pre-wrap;">项目进度: {{ info.progress }}</pre>
+                      <pre style="white-space: pre-wrap;">交付物: </pre>
+                      <div style="white-space: pre-wrap;">
+                        <div v-if="info.progress">
+                          <a :href="info.progress" download>
+                            <el-button size="small" type="primary">下载</el-button>
+                          </a>
+                        </div>
+                        <div v-else>
+                          无文件
+                        </div>
+                      </div>
+                      
                       <pre style="white-space: pre-wrap;">项目现状: {{ info.currentStatus }}</pre>
                       <pre style="white-space: pre-wrap;">目标: {{ info.goal }}</pre>
                       <pre style="white-space: pre-wrap;">范围: {{ info.scope }}</pre>
@@ -237,7 +248,6 @@
               </el-date-picker>
             </el-form-item>
 
-
             <el-form-item label="项目总进度" prop="progressAlloverProgress">
               <el-select v-model="form.progressAlloverProgress" placeholder="请选择进度">
                 <el-option
@@ -271,7 +281,26 @@
             </el-form-item>
 
             <el-form-item label="交付物" prop="progress">
-              <el-input type="textarea" :rows="2" v-model="form.progress" placeholder="请输入交付物" />
+              <!-- <el-input type="textarea" :rows="2" v-model="form.progress" placeholder="请输入交付物" /> -->
+              <div >
+                <!--pdf文件上传-->
+                <el-upload
+                  ref="fileUpload"
+                  v-model="fileInfo.filePath"
+                  class="upload-file-uploader"
+                  :action="uploadFileUrl"
+                  :headers="headers"
+                  :on-change="handleFileChange"
+                  :on-success="prehandleUploadSuccess"
+                  multiple
+                  :limit="3"
+                  :file-list="fileList"
+                  :accept="acceptedFileTypes"
+                  list-type="picture-card"
+                >
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+              </div>
             </el-form-item>
 
             <el-form-item label="关键事项说明" prop="description">
@@ -390,16 +419,38 @@
 </template>
 
 <script>
-import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, Recodingquery} from "@/api/project/info";
-import { listRecode, getRecode, delRecode, addRecode, updateRecode } from "@/api/project/recode";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, Recodingquery, addRecode} from "@/api/project/info";
 import { listHistory } from "@/api/project/history";
 import { getUserProfile } from "@/api/system/user";
+import { getToken } from "@/utils/auth";
+
 //获取用户信息-部门
 import { getDept } from "@/api/system/project";
 
 export default {
   inject: ["reload"],
   name: "Info",
+  props: {
+      value: [String, Object, Array],
+      limit: {
+        type: Number,
+        default: 10,
+      },
+      fileSize: {
+        type: Number,
+        default: 5,
+      },
+      fileType: {
+        type: Array,
+        default: () => ["doc", "docx", "pdf", "xlsx", "jpg", "png"],
+      },
+      isShowTip: {
+        type: Boolean,
+        default: true,
+      },
+    },
+
+
   data() {
 
     const validateProgressFormat = (rule, value, callback) => {
@@ -606,6 +657,26 @@ export default {
       userInfo: {}, // 存储用户信息
 
       reportingopen: false,
+
+
+      //文件上传相关参数
+      fileInfo: {
+        filePath: '',
+        fileName: '',
+        fileType: '',
+        fileSize: 0,
+        uploadDate: '',
+        createUsername: '',
+        departmentCategory: ''
+      },
+      fileList: [],
+      uploadList: [],
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload",
+      acceptedFileTypes: '.jpg,.png,.pdf,.docx,.xlsx,.txt,.rar,.zip' // 接收的文件类型
+
     };
   },
   watch: {
@@ -942,6 +1013,8 @@ export default {
               this.open = false;
               this.getList();
             });
+
+            console.log(this.form);
             addRecode(this.form);
 
           } else {
@@ -988,7 +1061,110 @@ export default {
     handleClose(done) {
       // 阻止默认的关闭行为
       done(false);
-    }
+    },
+
+    //文件上传相关方法
+    //&&&&&&&&&&&&&&&&&&&&&&&&&&//
+    handleFileChange(file, fileList) {
+      const uploadedFile = file.raw; // 获取上传的文件对象
+
+      // 更新文件信息
+      this.$set(this.fileInfo, 'fileName', uploadedFile.name);
+      this.$set(this.fileInfo, 'filePath', '');
+      this.$set(this.fileInfo, 'fileType', this.getFileType(uploadedFile.type));
+      this.$set(this.fileInfo, 'fileSize', this.formatFileSize(uploadedFile.size));
+      this.$set(this.fileInfo, 'uploadDate', new Date().toISOString().split('T')[0]);
+      this.getUserInfo();
+    },
+    prehandleUploadSuccess(res, file) {
+      //将返回的地址存入数据库中
+      // console.log(res.url);
+      this.form.progress = res.url;
+
+      if (res.code === 200) {
+        this.path = res.url;
+        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadedSuccessfully();
+      } else {
+        this.number--;
+        this.$refs.fileUpload.handleRemove(file);
+        this.uploadedSuccessfully();
+      }
+    },
+    posthandleUploadSuccess(res, file) {
+      //将返回的地址存入数据库中
+      // console.log(res.url);
+      this.form.postRectificationPhoto = res.url;
+
+      if (res.code === 200) {
+        this.path = res.url;
+        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadedSuccessfully();
+      } else {
+        this.number--;
+        this.$refs.fileUpload.handleRemove(file);
+        this.uploadedSuccessfully();
+      }
+    },
+    formatFileSize(sizeInBytes) {
+      const KB = 1024;
+      const MB = KB * 1024;
+      const GB = MB * 1024;
+
+      if (sizeInBytes < KB) {
+        return sizeInBytes + "B";
+      } else if (sizeInBytes < MB) {
+        return (sizeInBytes / KB).toFixed(2) + "KB";
+      } else if (sizeInBytes < GB) {
+        return (sizeInBytes / MB).toFixed(2) + "MB";
+      } else {
+        return (sizeInBytes / GB).toFixed(2) + "GB";
+      }
+    },
+    getFileType(fullType) {
+      if (fullType.includes('jpeg') || fullType.includes('jpg')) {
+        return 'jpg';
+      } else if (fullType.includes('png')) {
+        return 'png';
+      } else {
+        return 'other';
+      }
+    },
+    getUserInfo() {
+      getUserProfile().then(response => {
+        const userInfo = response.data;
+        this.$set(this.fileInfo, 'createUsername', userInfo.userName);
+        getDept(userInfo.deptId).then(response => {
+          const deptInfo = response.data;
+          this.$set(this.fileInfo, 'departmentCategory', deptInfo.deptName);
+        });
+      }).catch(error => {
+        console.error('获取用户信息失败:', error);
+      });
+    },
+    uploadedSuccessfully() {
+      if (this.number > 0 && this.uploadList.length === this.number) {
+        this.fileList = this.fileList.concat(this.uploadList);
+        this.uploadList = [];
+        this.number = 0;
+        this.$emit("input", this.fileList.map(file => file.url).join(','));
+      }
+    },
+    previewImage(photoUrl) {
+      // 在这里实现预览图片的逻辑
+      // 例如，可以打开一个模态框显示图片
+      console.log('预览图片', photoUrl);
+      if (!photoUrl) {
+        // 如果URL为空，显示提示信息
+        this.$message({
+          message: '没有图片可供预览',
+          type: 'warning'
+        });
+        return;
+      }
+      window.open(photoUrl, '_blank');
+    },
+
 
   }
 };

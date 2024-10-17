@@ -26,6 +26,16 @@ export function listAllFilemanagement(query) {
     params: query
   })
 }
+
+// 查询所有新增文件列表
+export function listAddFilemanagement(query) {
+  return request({
+    url: '/file/filemanagement/listadd',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询所有历史文件列表
 export function listHistoryFilemanagement(query) {
   return request({

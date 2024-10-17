@@ -34,6 +34,11 @@ public class ProductionTableServiceImpl implements IProductionTableService {
             // 读取文件内容
             EasyExcel.read(inputStream, ProductionTable.class, new ProductionTableListener(productionTableMapper)).sheet().doRead();
 
+            // 计算前先清空表
+            productionTableMapper.truncateAnnualTable();
+            productionTableMapper.truncateMonthlyTable();
+            productionTableMapper.truncateDailyTable();
+
             //计算每日上线数和完工数
             List<ProductionCountNumberEntity> list1 = productionTableMapper.selectLaunchNumGroupByDate();
             List<ProductionCountNumberEntity> list2 = productionTableMapper.selectCompletionNumGroupByDate();

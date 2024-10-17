@@ -18,6 +18,7 @@ import com.ruoyi.market.mapper.MarketSalesTableMapper;
 import com.ruoyi.market.service.IMarketAfterSaleLedgerService;
 import com.ruoyi.market.service.IMarketCommercialVehicleTableService;
 import com.ruoyi.market.service.IMarketSalesTableService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @RestController
 @RequestMapping("/market/Index")
 public class MarketIndexController extends BaseController {
@@ -45,7 +47,7 @@ public class MarketIndexController extends BaseController {
     */
 //TODO 规定起止时间只看年月，现在部分是看到日期的
     @Autowired
-     private IMarketSalesTableService iMarketSalesTableService;
+    private IMarketSalesTableService iMarketSalesTableService;
     @Autowired
     private IMarketAfterSaleLedgerService iMarketAfterSaleLedgerService;
     @Autowired
@@ -69,12 +71,12 @@ public class MarketIndexController extends BaseController {
 
 
     @PostMapping("/IClassProportion")
-    public  List<VoEntity>  ProportionOfClassITrams(@RequestBody MarketSalesTable marketSalesTable){
+    public List<VoEntity> ProportionOfClassITrams(@RequestBody MarketSalesTable marketSalesTable) {
 //        System.out.println("获取到的实体类"+marketSalesTable);
 //        System.out.println("获取订单总台数"+marketSalesTable.getNumberInput());
 //        System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
         Date orderAcceptanceTime = marketSalesTable.getOrderAcceptanceTime();
-         String vehicleModel = marketSalesTable.getVehicleModel();
+        String vehicleModel = marketSalesTable.getVehicleModel();
 //        System.out.println("获取到的车型"+vehicleModel);
 //        String substring = vehicleModel.substring(0, 3);
 
@@ -192,6 +194,7 @@ public class MarketIndexController extends BaseController {
 
         return orderRatios;
     }
+
     /*
     *指标12   TODO CPCD是否也算CPC的车型？
     **/
@@ -1018,7 +1021,7 @@ public class MarketIndexController extends BaseController {
             //当日>订单系统交货期
                             && (currentDate.isAfter(SystemDeliveryTime))
             //且车号为空或汉字
-                            &&(a.getCarNumber() == " " || containsChinese(a.getCarNumber()));
+                            &&(a.getCarNumber() == null || containsChinese(a.getCarNumber()));
 //                            && a.getOrderAcceptanceTime().getMonth()<= marketSalesTable.getEndTime().getMonth());
 //                   LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 //            LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -1354,8 +1357,8 @@ public class MarketIndexController extends BaseController {
 
         List<AverageResult> averageResults = iMarketCommercialVehicleTableService.selectBigWeight();
         System.out.println("数据库测试2"+averageResults+"测试完成");
-        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth()+1;
-        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth()+1;
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
         Map<String, Map<String, Double>> groupedResults = averageResults.stream()
                 .filter(result -> {
                     int resultMonth = Integer.parseInt(result.getMonth());
@@ -1374,8 +1377,7 @@ public class MarketIndexController extends BaseController {
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
                                 .collect(Collectors.toMap(
-//                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        e -> "" ,
+                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
                                         Map.Entry::getValue
                                 ))
                 ));
@@ -1405,10 +1407,8 @@ public class MarketIndexController extends BaseController {
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
          List<AverageResult> averageResults = iMarketCommercialVehicleTableService.selectcountAverage();
         System.out.println("数据库测试2"+averageResults+"测试完成");
-
-         int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth()+1;
-         int endMonth = marketCommercialVehicleTable.getEndTime().getMonth()+1;
-
+         int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+         int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
         Map<String, Map<String, Double>> groupedResults = averageResults.stream()
                 .filter(result -> {
                     int resultMonth = Integer.parseInt(result.getMonth());
@@ -1429,10 +1429,8 @@ public class MarketIndexController extends BaseController {
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
                                 .collect(Collectors.toMap(
-//                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        e -> "" ,
+                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
                                         Map.Entry::getValue
-
                                 ))
                 ));
 
@@ -1459,8 +1457,8 @@ public class MarketIndexController extends BaseController {
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
         List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage45();
         System.out.println("数据库测试2"+averageResults+"测试完成");
-        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth()+1;
-        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth()+1;
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
 
 
 // TODO改sql语句 获取当前年份
@@ -1570,8 +1568,8 @@ public class MarketIndexController extends BaseController {
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
         List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage47();
         System.out.println("数据库测试2"+averageResults+"测试完成");
-        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth()+1;
-        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth()+1;
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
 
 
 // TODO改sql语句 获取当前年份
@@ -1627,8 +1625,8 @@ public class MarketIndexController extends BaseController {
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
         List<AverageResult> averageResults = marketCommercialVehicleTableMapper.selectcountAverage48();
         System.out.println("数据库测试2"+averageResults+"测试完成");
-        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth()+1;
-        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth()+1;
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth();
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth();
 
 
 // TODO改sql语句 获取当前年份
@@ -1679,19 +1677,24 @@ public class MarketIndexController extends BaseController {
 超过平均数20%统计台数
      * */
     @PostMapping("/LitterTAvergaeDay")
-    public  List<VoEntity> LitterTAvergaeDay(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
+    public List<VoEntity> LitterTAvergaeDay(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable) {
 
-        System.out.println("获取到的实体类"+marketCommercialVehicleTable);
-        System.out.println("获取订单总台数"+marketCommercialVehicleTable.getNumberInput());
-        System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
+        System.out.println("获取到的实体类" + marketCommercialVehicleTable);
+        System.out.println("获取订单总台数" + marketCommercialVehicleTable.getNumberInput());
+        System.out.println("获取到起止时间" + marketCommercialVehicleTable.getStartTime() + marketCommercialVehicleTable.getEndTime());
 
         //获取到全部的数据
         List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
 
         List<AverageResult> averageResults = iMarketCommercialVehicleTableService.selectLightWeight();
-        System.out.println("数据库测试2"+averageResults+"测试完成");
-        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth()+1;
-        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth()+1;
+        System.out.println("数据库测试2" + averageResults + "测试完成");
+        int startMonth1 = marketCommercialVehicleTable.getStartTime().getMonth() + 1;
+        int endMonth = marketCommercialVehicleTable.getEndTime().getMonth() + 1;
+
+        log.info("开始时间：{}", startMonth1);
+        log.info("结束时间：{}", endMonth);
+
+
         Map<String, Map<String, Double>> groupedResults = averageResults.stream()
                 .filter(result -> {
                     int resultMonth = Integer.parseInt(result.getMonth());
@@ -1712,8 +1715,7 @@ public class MarketIndexController extends BaseController {
                         Map.Entry::getKey,
                         entry -> entry.getValue().entrySet().stream()
                                 .collect(Collectors.toMap(
-//                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
-                                        e -> "" ,
+                                        e -> "超过平均数20% " + e.getKey(), // 添加 "平均天数 " 前缀
                                         Map.Entry::getValue
                                 ))
                 ));
@@ -1997,7 +1999,7 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.groupingBy(
                         a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                         Collectors.groupingBy(
-                                result -> String.valueOf("年交货"),
+                                result -> String.valueOf("年接单"),
                                 Collectors.summingLong(MarketSalesTable::getNumber)
                         )
                 ));
@@ -2039,8 +2041,7 @@ public class MarketIndexController extends BaseController {
                 //过滤掉为空的日期
                 .filter(a -> a.getSystemDeliveryTime() != null)
                 .filter(a -> {
-                    //TODO acceptanceTime需要改为 getSystemDeliveryTime；命名问题
-                    LocalDate acceptanceTime = a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -2049,7 +2050,7 @@ public class MarketIndexController extends BaseController {
                             || acceptanceTime.isEqual(startTime) || acceptanceTime.isEqual(endTime);
                 })
                 .collect(Collectors.groupingBy(
-                        a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
+                        a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Yearmonth),
                         Collectors.groupingBy(
                                 a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter),
                                 Collectors.summingLong(MarketSalesTable::getNumber)
@@ -2085,7 +2086,7 @@ public class MarketIndexController extends BaseController {
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+        DateTimeFormatter Year = DateTimeFormatter.ofPattern("YYYY");
 
 
         Map<String, Map<String, Long>> collect = marketSalesTables.stream()
@@ -2103,7 +2104,7 @@ public class MarketIndexController extends BaseController {
                 .collect(Collectors.groupingBy(
                         a -> a.getSystemDeliveryTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(Year),
                         Collectors.groupingBy(
-                                result -> String.valueOf("日交货"),
+                                result -> String.valueOf("日接单"),
                                 Collectors.summingLong(MarketSalesTable::getNumber)
                         )
                 ));

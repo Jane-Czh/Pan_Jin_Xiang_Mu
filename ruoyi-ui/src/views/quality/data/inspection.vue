@@ -80,7 +80,7 @@
       <el-table-column label="K2系列4-5t检查数量" align="center" prop="k2lessthan5tonProductionQuantity" width="190" />
       <el-table-column label="K2系列5-10t检查数量" align="center" prop="k2largetonnageProductionQuantity" width="190" />
       <el-table-column label="电车的问题车数量" align="center" prop="electricCarProblemVehicles" width="180" />
-      <el-table-column label="K2系列4-5t问题车数量 " align="center" prop="k2lessthan5tonProblemVehicles" width="210" />
+      <el-table-column label="K2系列4-5t问题车数量" align="center" prop="k2lessthan5tonProblemVehicles" width="210" />
       <el-table-column label="K2系列5-10t问题车数量" align="center" prop="k2largetonnageProblemVehicles" width="200" />
       <el-table-column label="电车一次交检合格率" align="center" prop="electricCarPassRate" width="210">
         <template slot-scope="scope">
@@ -105,7 +105,7 @@
           <span v-else>—</span>
         </template>
       </el-table-column>
-      <el-table-column label="内燃车生产数量" align="center" prop="icvProductionQuantity" width="150">
+      <el-table-column label="小吨位内燃车检查数量" align="center" prop="icvProductionQuantity" width="160">
         <template slot-scope="scope">
           <span v-if="scope.row.icvProductionQuantity || scope.row.icvProductionQuantity === 0">{{
       scope.row.icvProductionQuantity
@@ -113,7 +113,7 @@
           <span v-else>—</span>
         </template>
       </el-table-column>
-      <el-table-column label="内燃车问题车数量" align="center" prop="icvProblemVehicles" width="180">
+      <el-table-column label="小吨位内燃车问题车数量" align="center" prop="icvProblemVehicles" width="180">
         <template slot-scope="scope">
           <span v-if="scope.row.icvProblemVehicles || scope.row.icvProblemVehicles === 0">{{
       scope.row.icvProblemVehicles
@@ -121,7 +121,7 @@
           <span v-else>—</span>
         </template>
       </el-table-column>
-      <el-table-column label="内燃车一次交检合格率" align="center" prop="icvPassRate" width="210">
+      <el-table-column label="小吨位内燃车一次交检合格率" align="center" prop="icvPassRate" width="210">
         <template slot-scope="scope">
           <span v-if="scope.row.icvPassRate || scope.row.icvPassRate === 0">{{ formatNumber(scope.row.icvPassRate)
             }}%</span>
@@ -158,24 +158,42 @@
         <el-form-item label="电车的问题数量" prop="electricCarProductionQuantity">
           <el-input v-model="form.electricCarProductionQuantity" placeholder="请输入电车的问题数量" />
         </el-form-item>
-        <el-form-item label="K2型号中小于5吨的问题数量" prop="k2lessthan5tonProductionQuantity">
-          <el-input v-model="form.k2lessthan5tonProductionQuantity" placeholder="请输入K2型号中小于5吨的问题数量" />
+        <el-form-item label="K2系列4-5t检查数量" prop="k2lessthan5tonProductionQuantity">
+          <el-input v-model="form.k2lessthan5tonProductionQuantity" placeholder="请输入K2系列4-5t检查数量" />
         </el-form-item>
-        <el-form-item label="K2型号中大吨位的问题数量" prop="k2largetonnageProductionQuantity">
-          <el-input v-model="form.k2largetonnageProductionQuantity" placeholder="请输入K2型号中大吨位的问题数量" />
+        <el-form-item label="K2系列5-10t检查数量" prop="k2largetonnageProductionQuantity">
+          <el-input v-model="form.k2largetonnageProductionQuantity" placeholder="请输入K2系列5-10t检查数量" />
         </el-form-item>
         <el-form-item label="电车的问题车数量" prop="electricCarProblemVehicles">
           <el-input v-model="form.electricCarProblemVehicles" placeholder="请输入电车的问题车数量" />
         </el-form-item>
-        <el-form-item label="K2型号中小于5吨的问题车数量 " prop="k2lessthan5tonProblemVehicles">
-          <el-input v-model="form.k2lessthan5tonProblemVehicles" placeholder="请输入K2型号中小于5吨的问题车数量 " />
+        <el-form-item label="K2系列4-5t问题车数量" prop="k2lessthan5tonProblemVehicles">
+          <el-input v-model="form.k2lessthan5tonProblemVehicles" placeholder="请输入K2系列4-5t问题车数量" />
         </el-form-item>
-        <el-form-item label="K2型号中大吨位的问题车数量" prop="k2largetonnageProblemVehicles">
-          <el-input v-model="form.k2largetonnageProblemVehicles" placeholder="请输入K2型号中大吨位的问题车数量" />
+        <el-form-item label="K2系列5-10t问题车数量" prop="k2largetonnageProblemVehicles">
+          <el-input v-model="form.k2largetonnageProblemVehicles" placeholder="请输入K2系列5-10t问题车数量" />
         </el-form-item>
-        <!-- <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
+        <el-form-item label="电车一次交检合格率" prop="electricCarPassRate">
+          <el-input v-model="form.electricCarPassRate" placeholder="请输入电车一次交检合格率" />
+        </el-form-item>
+        <el-form-item label="大吨位一次交检合格率" prop="largeTonPassRate">
+          <el-input v-model="form.largeTonPassRate" placeholder="请输入大吨位一次交检合格率" />
+        </el-form-item>
+        <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
           <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
-        </el-form-item> -->
+        </el-form-item>
+        <el-form-item label="小吨位内燃车检查数量" prop="icvProductionQuantity">
+          <el-input v-model="form.icvProductionQuantity" placeholder="请输入小吨位内燃车生产数量" />
+        </el-form-item>
+        <el-form-item label="小吨位内燃车问题车数量" prop="icvProblemVehicles">
+          <el-input v-model="form.icvProblemVehicles" placeholder="请输入小吨位内燃车问题车数量" />
+        </el-form-item>
+        <el-form-item label="小吨位内燃车一次交检合格率" prop="icvPassRate">
+          <el-input v-model="form.icvPassRate" placeholder="请输入小吨位内燃车一次交检合格率" />
+        </el-form-item>
+        <el-form-item label="一次交检合格率" prop="allPassRate">
+          <el-input v-model="form.allPassRate" placeholder="请输入一次交检合格率" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -297,6 +315,49 @@ export default {
             trigger: "blur"
           }
         ],
+        largeTonPassRate: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        electricCarPassRate: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+
+        icvProductionQuantity: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        icvProblemVehicles: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        icvPassRate: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
+        allPassRate: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
       }
     };
   },
@@ -366,6 +427,9 @@ export default {
         singleInspectionPassRate: null,
         electricCarPassRate: null,
         largeTonPassRate: null,
+        icvPassRate: null,
+        icvProblemVehicles: null,
+        icvProductionQuantity: null,
         createBy: null,
         createTime: null,
         updateBy: null,

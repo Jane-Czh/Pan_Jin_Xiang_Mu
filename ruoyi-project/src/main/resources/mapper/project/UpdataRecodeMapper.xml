@@ -123,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where oper_id = #{operId}
     </update>
 
+
     <delete id="deleteUpdataRecodeByOperId" parameterType="Long">
         delete from sys_oper_log where oper_id = #{operId}
     </delete>

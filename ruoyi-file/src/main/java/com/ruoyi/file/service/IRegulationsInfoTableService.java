@@ -56,6 +56,11 @@ public interface IRegulationsInfoTableService {
      */
     public List<RegulationsInfoTable> selectRegulationRecycleList(RegulationsInfoTable regulationsInfoTable);
 
+    /**
+     * 查询所有新增文件管理列表
+     *
+     * */
+    public List<RegulationsInfoTable> listaddFilemanagement(RegulationsInfoTable regulationsInfoTable);
 
     /**
      * 查询所有历史版本文件管理列表

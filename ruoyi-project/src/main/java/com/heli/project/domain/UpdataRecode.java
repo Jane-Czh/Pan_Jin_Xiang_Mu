@@ -70,7 +70,7 @@ public class UpdataRecode extends BaseEntity
 
     /** 操作状态（0正常 1异常） */
     @Excel(name = "操作状态", readConverterExp = "0=正常,1=异常")
-    private Long status;
+    private String status;
 
     /** 错误消息 */
     @Excel(name = "错误消息")
@@ -202,12 +202,12 @@ public class UpdataRecode extends BaseEntity
     {
         return jsonResult;
     }
-    public void setStatus(Long status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public String getStatus()
     {
         return status;
     }

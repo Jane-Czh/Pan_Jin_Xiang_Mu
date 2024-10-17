@@ -329,6 +329,17 @@
         where MCV_ID = #{mcvId}
     </update>
 
+    <update id="truncateDailyTable">
+        TRUNCATE TABLE Production_Launch_Completion_Annual_Number
+    </update>
+    <update id="truncateMonthlyTable">
+        TRUNCATE TABLE Production_Launch_Completion_Monthly_Number
+    </update>
+    <update id="truncateAnnualTable">
+        TRUNCATE TABLE Production_Launch_Completion_Daily_Number
+    </update>
+
+
     <delete id="deleteProductionTableByMcvId" parameterType="Long">
         delete from Production_Table where MCV_ID = #{mcvId}
     </delete>

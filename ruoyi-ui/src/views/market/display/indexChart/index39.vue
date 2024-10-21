@@ -139,7 +139,7 @@ export default {
 
 
 var app = {};
-
+this.myChart.clear();
 var chartDom = document.getElementById('main');
 var myChart = echarts.init(chartDom);
 var option;
@@ -318,6 +318,7 @@ const roundedData =  this.transposedSeriesData.map(innerArray =>
 );
 // console.log("转换后的百分比 seriesData：", percentageData);
 this.transposedSeriesData=roundedData;
+myChart.clear;
 option = {
   tooltip: {
     trigger: 'axis',
@@ -345,15 +346,24 @@ option = {
     {
       type: 'category',
       axisTick: { show: false },
+      axisLabel: {
+        interval:0,
+        rotate:40
+      },
       data: xAxisData
     }
   ],
    yAxis: [
     {
       type: 'value',
-      axisLabel: {
-        formatter: '{value}%' // 在Y轴标签上显示百分比
+      axisLabel: {  
+                formatter: function(value) {  
+                    return value * 100 + '%'; // 将Y轴的值乘以100后显示百分比  
+                }  
       }
+      // axisLabel: {
+      //   formatter: '{value}%' // 在Y轴标签上显示百分比
+      // }
     }
   ],
 series : this.transposedSeriesData.map( (item,index) => {

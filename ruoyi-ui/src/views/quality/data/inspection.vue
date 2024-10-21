@@ -155,7 +155,7 @@
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM" placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="电车的问题数量" prop="electricCarProductionQuantity">
+        <el-form-item label="电车的检查数量" prop="electricCarProductionQuantity">
           <el-input v-model="form.electricCarProductionQuantity" placeholder="请输入电车的问题数量" />
         </el-form-item>
         <el-form-item label="K2系列4-5t检查数量" prop="k2lessthan5tonProductionQuantity">

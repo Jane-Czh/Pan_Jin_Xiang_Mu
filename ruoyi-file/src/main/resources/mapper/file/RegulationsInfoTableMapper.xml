@@ -125,7 +125,7 @@
     <select id="listaddFilemanagement" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
         <include refid="selectRegulationsInfoTableVo"/>
         <where>
-            add_flag = 1
+            add_flag = 1 and new_flag != 2
         </where>
     </select>
 

@@ -170,8 +170,6 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 
 
 
-
-
     /**
      * @description: 计算存货增长率/销售增长率 growthRateInventorySales
      * (资产负债表)(b29(本月) / b29(上月) - 1)
@@ -291,10 +289,10 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
 
     /**
      * @description: 计算当月存货总额
-     * 月度存货金额=当月原材料存货额 +当月在制品存货额 + 当月库存商品存货额
+     * 月度存货金额=当月原材料存货额 +当月在制品存货额 + 当月库存商品存货额 + 当月低值易耗品金额
      * @author: hong
-     * @date: 2024/9/27 16:51
-     * @version: 1.0
+     * @date: 2024/10/22 16:15
+     * @version: 2.0
      */
     public void countMonthlyInventoryTotalAmount(Date yearAndMonth) {
         FinancialBalanceTable financialBalanceTable = financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth);
@@ -305,15 +303,42 @@ public class FinancialDataServiceImpl implements IFinancialDataService {
             financialBalanceTable.setMonthlyInventoryTotalAmount(
                     financialBalanceTable.getMonthlyRawMaterialInventory()
                             .add(financialBalanceTable.getMonthlyWorkInProgressInventory())
-                            .add(financialBalanceTable.getMonthAmountInStock()));
+                            .add(financialBalanceTable.getMonthAmountInStock())
+                            .add(BigDecimal.valueOf(financialBalanceTable.getLowValueConsumablesAmount())));
             log.info("当月存货总额为：" + financialBalanceTable.getMonthlyInventoryTotalAmount());
 
         } else {
             financialBalanceTable.setMonthlyInventoryTotalAmount(null);
-             log.info("当月当月存货总额缺少数据，无法计算存货总额");
+            log.info("当月当月存货总额缺少数据，无法计算存货总额");
         }
         financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
     }
+
+    /**
+     * @description: 计算当月存货总额
+     * 月度存货金额=当月原材料存货额 +当月在制品存货额 + 当月库存商品存货额
+     * @author: hong
+     * @date: 2024/9/27 16:51
+     * @version: 1.0
+     */
+//    public void countMonthlyInventoryTotalAmount(Date yearAndMonth) {
+//        FinancialBalanceTable financialBalanceTable = financialBalanceTableService.selectFinancialBalanceTableByYearAndMonth(yearAndMonth);
+//
+//        if (financialBalanceTable != null && financialBalanceTable.getMonthlyRawMaterialInventory() != null
+//                && financialBalanceTable.getMonthlyWorkInProgressInventory() != null && financialBalanceTable.getMonthAmountInStock() != null ) {
+//
+//            financialBalanceTable.setMonthlyInventoryTotalAmount(
+//                    financialBalanceTable.getMonthlyRawMaterialInventory()
+//                            .add(financialBalanceTable.getMonthlyWorkInProgressInventory())
+//                            .add(financialBalanceTable.getMonthAmountInStock()));
+//            log.info("当月存货总额为：" + financialBalanceTable.getMonthlyInventoryTotalAmount());
+//
+//        } else {
+//            financialBalanceTable.setMonthlyInventoryTotalAmount(null);
+//             log.info("当月当月存货总额缺少数据，无法计算存货总额");
+//        }
+//        financialBalanceTableService.updateFinancialBalanceTable(financialBalanceTable);
+//    }
 
     /**
      * @description: 计算存货增长率/销售增长率

@@ -351,17 +351,18 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // if (this.form.qihfId != null) {
           if (this.form.intimeReturnrate === '不及时') {
             this.form.intimeReturnrate = -1
           } else if (this.form.intimeReturnrate === '及时') {
             this.form.intimeReturnrate = 1
-            // }
+          }
+          if (this.form.qihfId != null) {
             updateHandFill(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
+
           } else {
             addHandFill(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");

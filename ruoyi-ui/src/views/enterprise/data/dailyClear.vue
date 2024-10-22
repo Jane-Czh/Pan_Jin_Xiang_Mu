@@ -26,24 +26,24 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:Settlement:add']">新增</el-button>
+          v-hasPermi="['enterprise:dailyclear:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
+          v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
+          v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:Settlement:export']">导出</el-button>
-      </el-col>
+          v-hasPermi="['enterprise:dailyclear:export']">导出</el-button>
+      </el-col> -->
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['enterprise:Settlement:read']">导入Excel文件
+          v-hasPermi="['enterprise:dailyclear:import']">导入Excel文件
         </el-button>
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
           <el-form :model="form" ref="form" label-width="90px">
@@ -103,9 +103,9 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="120">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:Settlement:edit']">修改</el-button>
+            v-hasPermi="['enterprise:dailyclear:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:Settlement:remove']">删除</el-button>
+            v-hasPermi="['enterprise:dailyclear:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

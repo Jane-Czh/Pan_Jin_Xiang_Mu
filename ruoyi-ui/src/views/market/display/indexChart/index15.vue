@@ -183,7 +183,7 @@ export default {
 
 
 var app = {};
-
+this.myChart.clear();
 var chartDom = document.getElementById('main');
 var myChart = echarts.init(chartDom);
 var option;
@@ -384,6 +384,10 @@ option = {
     {
       type: 'category',
       axisTick: { show: false },
+        axisLabel: {
+        interval:0,
+        rotate:40
+      },
       data: xAxisData
     }
   ],

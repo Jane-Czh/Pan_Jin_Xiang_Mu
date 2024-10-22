@@ -67,57 +67,64 @@ public class FinancialTempTableServiceImpl implements IFinancialTempTableService
         balanceTable.setYearAndMonth(yearAndMonth);
 
 
-        BigDecimal inTransitInventory = stringToBigDecimal(financialTempTableMapper.selectAmountByName("1402000000  在途物资"));
+        BigDecimal inTransitInventory = stringToBigDecimal(financialTempTableMapper.selectAmountByName("1402000000在途物资"));
+        log.info("在途物资: " + inTransitInventory);
         balanceTable.setInTransitInventory(inTransitInventory);
 
         BigDecimal materials = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1403000000  原材料"));
+                financialTempTableMapper.selectAmountByName("1403000000原材料"));
         balanceTable.setMaterials(materials);
 
         BigDecimal materialCostVariance = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1404010000  材料成本差异"));
+                financialTempTableMapper.selectAmountByName("1404010000材料成本差异"));
         balanceTable.setMaterialCostVariance(materialCostVariance);
 
         BigDecimal materialCostVarianceUnallocated = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1404030000  材料成本差异-差异待分摊"));
+                financialTempTableMapper.selectAmountByName("1404030000材料成本差异-差异待分摊"));
         balanceTable.setMaterialCostVarianceUnallocated(materialCostVarianceUnallocated);
 
         balanceTable.setMonthlyRawMaterialInventory(materials.add(inTransitInventory).add(materialCostVariance).add(materialCostVarianceUnallocated));
 
         BigDecimal workInProgressSemiFinishedGoods = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1405010000  库存商品-半成品"));
+                financialTempTableMapper.selectAmountByName("1405010000库存商品-半成品"));
         balanceTable.setWorkInProgressSemiFinishedGoods(workInProgressSemiFinishedGoods);
 
         BigDecimal productCostVarianceSemiFinishedGoods = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1407010000  产品成本差异-半成品"));
+                financialTempTableMapper.selectAmountByName("1407010000产品成本差异-半成品"));
         balanceTable.setProductCostVarianceSemiFinishedGoods(productCostVarianceSemiFinishedGoods);
 
         BigDecimal workInProgressEndOfMonth = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("5001090000  月末在制品"));
+                financialTempTableMapper.selectAmountByName("5001090000月末在制品"));
         balanceTable.setWorkInProgressEndOfMonth(workInProgressEndOfMonth);
 
         balanceTable.setMonthlyWorkInProgressInventory(workInProgressSemiFinishedGoods.add(productCostVarianceSemiFinishedGoods).add(workInProgressEndOfMonth));
 
 
         balanceTable.setInventoryVehicles(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1405020000  库存商品-整车")));
+                financialTempTableMapper.selectAmountByName("1405020000库存商品-整车")));
 
         balanceTable.setPcvFinished(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("1407020000  产品成本差异-产成品")));
-
-//        balanceTable.setMonthlyInventoryTotalAmount(stringToBigDecimal(
-//                financialTempTableMapper.selectAmountByName("*    存货")));
+                financialTempTableMapper.selectAmountByName("1407020000产品成本差异-产成品")));
 
         balanceTable.setReceivables(stringToBigDecimal(
-                        financialTempTableMapper.selectAmountByName("    1122010000  应收账款-控股公司"))
+                financialTempTableMapper.selectAmountByName("1122010000应收账款-控股公司"))
                 .add(
                         stringToBigDecimal(
-                                financialTempTableMapper.selectAmountByName("    1122030000  应收账款-直接客户"))
+                                financialTempTableMapper.selectAmountByName("1122030000应收账款-直接客户"))
                 ).add(
                         stringToBigDecimal(
-                                financialTempTableMapper.selectAmountByName("    1231020100  坏账准备-应收账款-账龄计提"))
+                                financialTempTableMapper.selectAmountByName("1231020100坏账准备-应收账款-账龄计提"))
                 )
 
+        );
+
+        balanceTable.setLowValueConsumablesAmount((
+                        Double.parseDouble(financialTempTableMapper.selectAmountByName("1412010000低值易耗品-备品备件"))
+                                + Double.parseDouble(financialTempTableMapper.selectAmountByName("1412020000低值易耗品-劳保用品"))
+                                + Double.parseDouble(financialTempTableMapper.selectAmountByName("1412030000低值易耗品-刀工具类"))
+                                + Double.parseDouble(financialTempTableMapper.selectAmountByName("1412050000低值易耗品-办公用品"))
+                                + Double.parseDouble(financialTempTableMapper.selectAmountByName("1412060000低值易耗品-工装模具"))
+                ) / 10000
         );
 
 
@@ -132,50 +139,55 @@ public class FinancialTempTableServiceImpl implements IFinancialTempTableService
 
         interestsTable.setYearAndMonth(yearAndMonth);
 
-
         interestsTable.setOperatingRevenue(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("*    一、营业收入")));
+                financialTempTableMapper.selectAmountByName("*一、营业收入")));
 
         BigDecimal internalMainRevenue = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("6001010000  主营业务收入-集团内"));
+                financialTempTableMapper.selectAmountByName("6001010000主营业务收入-集团内"));
         interestsTable.setInternalMainRevenue(internalMainRevenue);
 
         BigDecimal externalMainRevenue = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("6001020000  主营业务收入-集团外"));
+                financialTempTableMapper.selectAmountByName("6001020000主营业务收入-集团外"));
         interestsTable.setExternalMainRevenue(externalMainRevenue);
 
         interestsTable.setMainRevenue(internalMainRevenue.add(externalMainRevenue));
 
         BigDecimal cogsProductSalesSd = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("6401010000  主营业务成本-产品销售SD"));
+                financialTempTableMapper.selectAmountByName("6401010000主营业务成本-产品销售SD"));
         interestsTable.setCogsProductSalesSd(cogsProductSalesSd);
 
         BigDecimal cogsFreight = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("6401040000  主营业务成本-运费"));
+                financialTempTableMapper.selectAmountByName("6401040000主营业务成本-运费"));
         interestsTable.setCogsFreight(cogsFreight);
 
         BigDecimal cogsVariation = stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("6401090000  主营业务成本-差异"));
+                financialTempTableMapper.selectAmountByName("6401090000主营业务成本-差异"));
         interestsTable.setCogsVariation(cogsVariation);
 
         interestsTable.setCOGS(cogsProductSalesSd.add(cogsFreight).add(cogsVariation));
 
         interestsTable.setNetProfit(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("**** 四、净利润")));
+                financialTempTableMapper.selectAmountByName("****四、净利润")));
 
 
         interestsTable.setManagementExpense(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("*          管理费用")));
+                financialTempTableMapper.selectAmountByName("*管理费用")));
 
         interestsTable.setRdExpense(stringToBigDecimal(
-                financialTempTableMapper.selectAmountByName("*          研发费用")));
+                financialTempTableMapper.selectAmountByName("*研发费用")));
 
 
         financialInterestsTableService.insertFinancialInterestsTable(interestsTable);
         log.info("插入成功");
     }
 
-    //将传入的string转为BigDecimal
+
+    /**
+     * @description: 将传入的string转为BigDecimal，并转单位为 万元
+     * @author: hong
+     * @date: 2024/10/22 16:43
+     * @version: 1.0
+     */
     public BigDecimal stringToBigDecimal(String str) {
         if (str == null || str.trim().length() == 0) {
             return BigDecimal.valueOf(0);

@@ -393,7 +393,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm" && fileExt.toLowerCase() !== "xls") {
         this.$message.error("只能上传 Excel 文件！");
         // this.$refs.fileInput.value = ""; // 清空文件选择框
       }

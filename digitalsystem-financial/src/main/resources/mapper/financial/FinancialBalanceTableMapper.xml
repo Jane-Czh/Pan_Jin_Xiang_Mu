@@ -23,13 +23,13 @@
         <result property="monthAmountInStock"    column="Month_Amount_InStock"    />
         <result property="monthlyInventoryTotalAmount"    column="MonthlyInventoryTotalAmount"    />
         <result property="growthRateInventory"    column="GrowthRate_Inventory"    />
-        <result property="growthRateSales"    column="GrowthRate_Sales"    />
+        <result property="lowValueConsumablesAmount"    column="Low_Value_Consumables_Amount"    />
         <result property="receivables"    column="Receivables"    />
         <result property="turnoverRateReceivable"    column="TurnoverRate_Receivable"    />
     </resultMap>
 
     <sql id="selectFinancialBalanceTableVo">
-        select FB_ID, CREATE_BY, CREATE_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, Inventory_Vehicles, PCV_Finished, Month_Amount_InStock, MonthlyInventoryTotalAmount, GrowthRate_Inventory, GrowthRate_Sales, Receivables, TurnoverRate_Receivable from Financial_Balance_table
+        select FB_ID, CREATE_BY, CREATE_TIME, Year_And_Month, InTransitInventory, Materials, MaterialCostVariance, MaterialCostVariance_Unallocated, MonthlyRawMaterialInventory, WorkInProgress_SemiFinishedGoods, ProductCostVariance_SemiFinishedGoods, WorkInProgress_EndOfMonth, MonthlyWorkInProgressInventory, Inventory_Vehicles, PCV_Finished, Month_Amount_InStock, MonthlyInventoryTotalAmount, GrowthRate_Inventory, Low_Value_Consumables_Amount, Receivables, TurnoverRate_Receivable from Financial_Balance_table
     </sql>
 
     <select id="selectFinancialBalanceTableList" parameterType="FinancialBalanceTable" resultMap="FinancialBalanceTableResult">
@@ -52,7 +52,7 @@
             <if test="monthAmountInStock != null "> and Month_Amount_InStock = #{monthAmountInStock}</if>
             <if test="monthlyInventoryTotalAmount != null "> and MonthlyInventoryTotalAmount = #{monthlyInventoryTotalAmount}</if>
             <if test="growthRateInventory != null "> and GrowthRate_Inventory = #{growthRateInventory}</if>
-            <if test="growthRateSales != null "> and GrowthRate_Sales = #{growthRateSales}</if>
+            <if test="lowValueConsumablesAmount != null "> and Low_Value_Consumables_Amount = #{lowValueConsumablesAmount}</if>
             <if test="receivables != null "> and Receivables = #{receivables}</if>
             <if test="turnoverRateReceivable != null "> and TurnoverRate_Receivable = #{turnoverRateReceivable}</if>
         </where>
@@ -165,7 +165,7 @@
             <if test="monthAmountInStock != null">Month_Amount_InStock,</if>
             <if test="monthlyInventoryTotalAmount != null">MonthlyInventoryTotalAmount,</if>
             <if test="growthRateInventory != null">GrowthRate_Inventory,</if>
-            <if test="growthRateSales != null">GrowthRate_Sales,</if>
+            <if test="lowValueConsumablesAmount != null">Low_Value_Consumables_Amount,</if>
             <if test="receivables != null">Receivables,</if>
             <if test="turnoverRateReceivable != null">TurnoverRate_Receivable,</if>
         </trim>
@@ -187,7 +187,7 @@
             <if test="monthAmountInStock != null">#{monthAmountInStock},</if>
             <if test="monthlyInventoryTotalAmount != null">#{monthlyInventoryTotalAmount},</if>
             <if test="growthRateInventory != null">#{growthRateInventory},</if>
-            <if test="growthRateSales != null">#{growthRateSales},</if>
+            <if test="lowValueConsumablesAmount != null">#{lowValueConsumablesAmount},</if>
             <if test="receivables != null">#{receivables},</if>
             <if test="turnoverRateReceivable != null">#{turnoverRateReceivable},</if>
         </trim>
@@ -213,7 +213,7 @@
             <if test="monthAmountInStock != null">Month_Amount_InStock = #{monthAmountInStock},</if>
             <if test="monthlyInventoryTotalAmount != null">MonthlyInventoryTotalAmount = #{monthlyInventoryTotalAmount},</if>
             <if test="growthRateInventory != null">GrowthRate_Inventory = #{growthRateInventory},</if>
-            <if test="growthRateSales != null">GrowthRate_Sales = #{growthRateSales},</if>
+            <if test="lowValueConsumablesAmount != null">low_value_consumables_amount = #{lowValueConsumablesAmount},</if>
             <if test="receivables != null">Receivables = #{receivables},</if>
             <if test="turnoverRateReceivable != null">TurnoverRate_Receivable = #{turnoverRateReceivable},</if>
         </trim>

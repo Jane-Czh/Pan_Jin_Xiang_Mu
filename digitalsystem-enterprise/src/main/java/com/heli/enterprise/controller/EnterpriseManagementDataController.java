@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -58,21 +59,21 @@ public class EnterpriseManagementDataController extends BaseController {
 
         System.out.println(enterpriseManagementMonthlyData);
 
+        EnterpriseManagementMonthlyData monthlyData = new EnterpriseManagementMonthlyData();
+        monthlyData.setYearAndMonth(enterpriseManagementMonthlyData.getYearAndMonth());
+        List<EnterpriseManagementMonthlyData> list = enterpriseManagementMonthlyDataService.selectEnterpriseManagementMonthlyDataList(monthlyData);
 
-        if (enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(enterpriseManagementMonthlyData.getYearAndMonth())) {
-            return AjaxResult.error("当月数据已填报");
-        }
-//        if (!enterpriseManagementMonthlyDataService.checkEMEmployeesDataIsExisted(DateUtils.getLastMonth(enterpriseManagementMonthlyData.getYearAndMonth()))
-//                && enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsExisted()
-//                && !enterpriseManagementMonthlyDataService.checkEMMonthlyDataIsMinMonth(enterpriseManagementMonthlyData.getYearAndMonth())) {
-//            return AjaxResult.error("上月数据未填报");
-//        }
+        log.info("查询到的数据：" + list);
+
         enterpriseManagementMonthlyData.setCreateBy(getUsername());
+        if (Objects.nonNull(list) && list.size() > 0) {
+            enterpriseManagementMonthlyData.setEsId(list.get(0).getEsId());
+            enterpriseManagementMonthlyDataService.updateEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
+        }  else {
+            enterpriseManagementMonthlyDataService.insertMonthlyFillingDataByMonth(enterpriseManagementMonthlyData);
+        }
 
-//        enterpriseManagementMonthlyDataService.insertEnterpriseManagementMonthlyData(enterpriseManagementMonthlyData);
-        enterpriseManagementMonthlyDataService.insertMonthlyFillingDataByMonth(enterpriseManagementMonthlyData);
-//        enterpriseManagementMonthlyDataService.calculateHandFillIndicators(enterpriseManagementMonthlyData.getYearAndMonth());
-        enterpriseManagementMonthlyDataService.calculateEmployeesNumber(enterpriseManagementMonthlyData.getYearAndMonth());
+//        enterpriseManagementMonthlyDataService.calculateEmployeesNumber(enterpriseManagementMonthlyData.getYearAndMonth());
         enterpriseManagementMonthlyDataService.calculateSalaryFillNumber(enterpriseManagementMonthlyData.getYearAndMonth());
 
         return AjaxResult.success();

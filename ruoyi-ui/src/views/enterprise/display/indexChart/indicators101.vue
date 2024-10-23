@@ -256,13 +256,14 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: function (params) {
-                    let value = params.value;
-                    if (params.seriesName.includes('%') && value != 0) {
-                        value += '%';
-                    }
-                    return value;
-                },
+                // formatter: function (params) {
+                //     let value = params.value;
+                //     if (params.seriesName.includes('%') && value != 0) {
+                //         value += '%';
+                //     }
+                //     return value;
+                // },
+                formatter: '{c} %',
                 fontSize: 14,
                 rich: {
                     name: {}
@@ -302,7 +303,7 @@ export default {
                     {
                         // type: 'category',
                         axisTick: { show: false },
-                        data: ['SD销售订单有效性考核', 'PP手工创建生产订单比例', 'PP生产订单已收货未报工的比例', 'MES报工不及时率比率', 'QM外检业务不及时率', 'MM采购订单交货不及时的比例', 'MM手工创建采购订单比例', 'MM未清采购申请', 'FICO月度标准价格与周期单位价格综合差异率', '跨月生产订单比例', 'PM维修订单完工不及时率'],
+                        data: ['SD销售\n订单有效\n性考核', 'PP手工\n创建生产\n订单比例', 'PP生产订\n单已收货\n未报工的\n比例', 'MES报工\n不及时率', 'QM外检\n业务不及\n时率', 'MM采购\n订单交货\n不及时的\n比例', 'MM手工\n创建采购\n订单比例', 'MM未清\n采购申请', 'FICO月度\n标准价格\n与周期单\n位价格综\n合差异率', '跨月生产\n订单比例', 'PM维修订\n单完工不\n及时率'],
                     }
                 ],
                 yAxis: [
@@ -653,7 +654,7 @@ export default {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
             const currentMonth = currentDate.getMonth();
-            const startDate = new Date(currentYear, currentMonth - 1, 1);
+            const startDate = new Date(currentYear, currentMonth - 1, 2);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
             this.selectedDateNew = startDate

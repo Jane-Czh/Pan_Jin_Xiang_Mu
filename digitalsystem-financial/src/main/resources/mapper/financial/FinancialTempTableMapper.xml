@@ -31,6 +31,7 @@
         ON DUPLICATE KEY UPDATE
          Row_Name = values(Row_Name),Column_Num = values(Column_Num)
     </insert>
+
     <!--  批量插入数据库  -->
     <insert id="batchInsertSalaryTable" parameterType="java.util.List">
         insert into Enterprise_Management_Salary_Table(Salary_Calculation_Year_Month,Employee_Id,Name,Position,Department,

@@ -12,7 +12,7 @@
       <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
         <el-select
           v-model="queryParams.mainResponsibleDepartment"
-          placeholder="请选择主责部门"
+          :placeholder="`总数： ${departments.length}`"
           clearable
           @change="handleDepartmentChange"
         >
@@ -28,7 +28,7 @@
       <el-form-item label="业务模块" prop="businesses">
         <el-select
           v-model="queryParams.businesses"
-          placeholder="请选择业务模块"
+          :placeholder="`总数： ${modules.length}`"
           clearable
           :disabled="!queryParams.mainResponsibleDepartment"
           @change="handleModuleChange"
@@ -45,7 +45,7 @@
       <el-form-item label="细分业务" prop="subBusinesses">
         <el-select
           v-model="queryParams.subBusinesses"
-          placeholder="请选择细分业务"
+          :placeholder="`总数： ${subBusinesses.length}`"
           clearable
           :disabled="!queryParams.businesses"
         >
@@ -261,11 +261,6 @@ export default {
 
       // 表单参数
       form: {},
-      modules1: [
-        { title: '模块 1', content: '这是模块 1 的内容' },
-        { title: '模块 2', content: '这是模块 2 的内容' },
-        { title: '模块 3', content: '这是模块 3 的内容' }
-      ],
       // 显示搜索条件
       showSearch: true,
     };

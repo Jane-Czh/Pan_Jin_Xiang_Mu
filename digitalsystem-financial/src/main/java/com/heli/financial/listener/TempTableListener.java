@@ -38,8 +38,14 @@ public class TempTableListener implements ReadListener<FinancialTempTable> {
         // 将监听到的数据存入缓存集合中
         if (registerInfoExcel.getRowName() != null) {
             // 处理数据
-            if (registerInfoExcel.getColumnNum() != null)
+            if (registerInfoExcel.getColumnNum() != null) {
                 registerInfoExcel.setColumnNum(registerInfoExcel.getColumnNum().replaceAll(",", ""));
+            }else {
+                registerInfoExcel.setColumnNum("0");
+            }
+            if (registerInfoExcel.getRowName() != null) {
+                registerInfoExcel.setRowName(registerInfoExcel.getRowName().replaceAll(" ", ""));
+            }
             cacheDataList.add(registerInfoExcel);
         }
 

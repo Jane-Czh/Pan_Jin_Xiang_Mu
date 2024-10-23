@@ -100,13 +100,13 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         }
 
         //如果截止到当月数据条数 = 当前月数，则计算平均人数
-        int monthDataNumber = enterpriseManagementMonthlyDataMapper.countMonthDataNumber(yearAndMonth);
-        if (monthDataNumber == DateUtils.getMonth(yearAndMonth)) {
-            int numberByYear = enterpriseManagementMonthlyDataMapper.countEmployeesNumberByYear(yearAndMonth);
-            enterpriseManagementMonthlyData.setEmployeesAvgAnnualNumber((long) (numberByYear / DateUtils.getMonth(yearAndMonth)));
-        } else {
-            enterpriseManagementMonthlyData.setEmployeesAvgAnnualNumber(null);
-        }
+//        int monthDataNumber = enterpriseManagementMonthlyDataMapper.countMonthDataNumber(yearAndMonth);
+//        if (monthDataNumber == DateUtils.getMonth(yearAndMonth)) {
+//            int numberByYear = enterpriseManagementMonthlyDataMapper.countEmployeesNumberByYear(yearAndMonth);
+//            enterpriseManagementMonthlyData.setEmployeesAvgAnnualNumber((long) (numberByYear / DateUtils.getMonth(yearAndMonth)));
+//        } else {
+//            enterpriseManagementMonthlyData.setEmployeesAvgAnnualNumber(null);
+//        }
         log.info("计算后数据：" + yearAndMonth + enterpriseManagementMonthlyData);
 
 
@@ -294,13 +294,16 @@ public class EnterpriseManagementMonthlyDataServiceImpl implements IEnterpriseMa
         monthlyData.setEmployeesAvgMonthlyNumber((employeesNumber + employeesNumberLastMonth) / 2);
 
         //计算公司年度平均从业人数
-        int sumEmployeesNumber = enterpriseManagementMonthlyDataMapper.selectEmployeesAVGMonthlyNumber(yearAndMonth);
-        monthlyData.setEmployeesAvgAnnualNumber((long) sumEmployeesNumber);
+//        int sumEmployeesNumber = enterpriseManagementMonthlyDataMapper.selectEmployeesAVGMonthlyNumber(yearAndMonth);
+//        monthlyData.setEmployeesAvgAnnualNumber((long) sumEmployeesNumber);
 
 
         // 计算工资月度占比
         BigDecimal monthlySalary = enterpriseManagementMonthlyDataMapper.selectMonthlySalary(yearAndMonth);
         BigDecimal annualSalary = enterpriseManagementMonthlyDataMapper.selectAnnualSalary(DateUtils.getYear(yearAndMonth));
+
+
+        log.info("月度工资：" + monthlySalary + "年度工资 " + annualSalary);
 
         monthlyData.setMonthlySalaryRatio(monthlySalary.divide(annualSalary, 4, ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)));
         BigDecimal totalNumber = enterpriseManagementMonthlyDataMapper.selectSalaryTotalNumber(yearAndMonth);

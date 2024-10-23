@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="yearAndMonth">
         <el-date-picker clearable v-model="queryParams.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-          placeholder="请选择日期">
+                        placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -14,29 +14,29 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"
-          v-hasPermi="['enterprise:monthly:add']">新增
+                   v-hasPermi="['enterprise:monthly:add']">新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
-          v-hasPermi="['enterprise:monthly:edit']">修改
+                   v-hasPermi="['enterprise:monthly:edit']">修改
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['enterprise:monthly:remove']">删除
+                   v-hasPermi="['enterprise:monthly:remove']">删除
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-refresh" v-if="!updateLoading" size="mini"
-          @click="handleCacluation" v-hasPermi="['enterprise:monthly:calculation']">更新
+                   @click="handleCacluation" v-hasPermi="['enterprise:monthly:calculation']">更新
         </el-button>
         <el-button type="primary" v-if="updateLoading" :loading="true">更新中</el-button>
       </el-col>
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
-          v-hasPermi="['enterprise:monthly:import']">导入Excel文件
+                   v-hasPermi="['enterprise:monthly:import']">导入Excel文件
         </el-button>
         <el-dialog title="导入Excel文件" :visible.sync="showDialog" width="30%" @close="resetFileInput">
           <el-form :model="form" ref="form" label-width="90px">
@@ -44,7 +44,7 @@
               <span style="color: rgb(68, 140, 39);">工资表</span>
               <br>
               <el-date-picker clearable v-model="form3.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-                placeholder="请选择日期">
+                              placeholder="请选择日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="含其他奖金">
@@ -52,7 +52,7 @@
             </el-form-item>
           </el-form>
           <i class="el-icon-upload"></i>
-          <input type="file" id="inputFile" ref="fileInput" @change="checkFile" />
+          <input type="file" id="inputFile" ref="fileInput" @change="checkFile"/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
             <el-button type="primary" @click="fileSend()" v-if="!isLoading">确 定</el-button>
@@ -67,7 +67,7 @@
 
       <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
-          v-hasPermi="['enterprise:monthly:export']">导出
+                   v-hasPermi="['enterprise:monthly:export']">导出
         </el-button>
       </el-col>
 
@@ -76,77 +76,77 @@
     </el-row>
 
     <el-table v-loading="loading" :data="DataList" @selection-change="handleSelectionChange"
-      @sort-change="handleSortChange" border>
-      <el-table-column type="selection" width="55" align="center" />
+              @sort-change="handleSortChange" border>
+      <el-table-column type="selection" width="55" align="center"/>
       <!-- <el-table-column label="主键" align="center" prop="esId" /> -->
       <el-table-column fixed label="日期" align="center" prop="yearAndMonth" width="120" sortable="custom">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.yearAndMonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="一线从业人数" align="center" prop="employeesNumber" width="120" />
-      <el-table-column label="生产实习生人数" align="center" prop="productionInternNumbers" width="150" />
-      <el-table-column label="公司当月从业人数" align="center" prop="employeesNumberCurrentMonth" width="150" />
-      <el-table-column label="公司平均从业人数(月度)" align="center" prop="employeesAvgMonthlyNumber" width="170" />
-      <el-table-column label="公司平均从业人数(年度)" align="center" prop="employeesAvgAnnualNumber" width="170" />
-      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150" />
-      <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150" />
-      <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150" />
+      <el-table-column label="一线从业人数" align="center" prop="employeesNumber" width="120"/>
+      <el-table-column label="生产实习生人数" align="center" prop="productionInternNumbers" width="150"/>
+      <el-table-column label="公司当月从业人数" align="center" prop="employeesNumberCurrentMonth" width="150"/>
+      <el-table-column label="公司平均从业人数(月度)" align="center" prop="employeesAvgMonthlyNumber" width="170"/>
+      <el-table-column label="公司平均从业人数(年度)" align="center" prop="employeesAvgAnnualNumber" width="170"/>
+      <el-table-column label="工资总额月度值" align="center" prop="totalMonthlySalary" width="150"/>
+      <el-table-column label="工资总额月度占比(%)" align="center" prop="monthlySalaryRatio" width="150"/>
+      <el-table-column label="工资总额年度占比(%)" align="center" prop="annualSalaryRatio" width="150"/>
 
-      <el-table-column label="月度人均收入" align="center" prop="monthlyCumulativeAverageIncome" width="140" />
-      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140" />
+      <el-table-column label="月度人均收入" align="center" prop="monthlyCumulativeAverageIncome" width="140"/>
+      <el-table-column label="累计人均收入" align="center" prop="cumulativeAverageIncome" width="140"/>
 
-      <el-table-column label="月度生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150" />
-      <el-table-column label="累计生产人均收入" align="center" prop="productionAvgIncome" width="140" />
+      <el-table-column label="月度生产人均收入" align="center" prop="monthlyProductionAvgIncome" width="150"/>
+      <el-table-column label="累计生产人均收入" align="center" prop="productionAvgIncome" width="140"/>
 
-      <el-table-column label="月度职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150" />
-      <el-table-column label="累计职能人均收入" align="center" prop="functionalAvgIncome" width="140" />
+      <el-table-column label="月度职能人均收入" align="center" prop="monthlyFunctionalAvgIncome" width="150"/>
+      <el-table-column label="累计职能人均收入" align="center" prop="functionalAvgIncome" width="140"/>
 
 
-      <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150" />
+      <el-table-column label="职能部门人均加班费用" align="center" prop="functionalDeptOvertimeCost" width="150"/>
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:monthly:edit']">修改
+                     v-hasPermi="['enterprise:monthly:edit']">修改
           </el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:monthly:remove']">删除
+                     v-hasPermi="['enterprise:monthly:remove']">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-      @pagination="getList" />
+                @pagination="getList"/>
 
     <!-- 添加或修改[企业管理]指标月度数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="handleClose">
       <el-form ref="form" :model="form" :rules="rules" label-width="180px">
         <el-form-item label="日期" prop="yearAndMonth">
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM-dd"
-            placeholder="请选择日期">
+                          placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="工资总额月度值" prop="totalMonthlySalary">
-          <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值" />
+          <el-input v-model="form.totalMonthlySalary" placeholder="请输入工资总额月度值"/>
+        </el-form-item>
+        <el-form-item label="公司年度平均从业人数" prop="employeesAvgAnnualNumber">
+          <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司年度平均从业人数"/>
         </el-form-item>
         <el-form-item label="公司当月从业人数" prop="employeesNumberCurrentMonth">
-          <el-input v-model="form.employeesNumberCurrentMonth" placeholder="请输入公司当月从业人数" />
+          <el-input v-model="form.employeesNumberCurrentMonth" placeholder="请输入公司当月从业人数"/>
         </el-form-item>
         <el-form-item label="一线从业人数" prop="employeesNumber">
-          <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数" />
+          <el-input v-model="form.employeesNumber" placeholder="请输入一线从业人数"/>
         </el-form-item>
         <el-form-item label="生产实习生人数" prop="productionInternNumbers">
-          <el-input v-model="form.productionInternNumbers" placeholder="请输入生产实习生人数" />
+          <el-input v-model="form.productionInternNumbers" placeholder="请输入生产实习生人数"/>
         </el-form-item>
         <!-- <el-form-item label="累计生产人均收入" prop="productionAvgIncome">
           <el-input v-model="form.productionAvgIncome" placeholder="请输入生产人均收入" />
         </el-form-item> -->
         <!-- <el-form-item label="公司平均从业人数" prop="employeesAvgMonthlyNumber">
           <el-input v-model="form.employeesAvgMonthlyNumber" placeholder="请输入公司平均从业人数" />
-        </el-form-item> -->
-        <!-- <el-form-item label="公司年度平均从业人数" prop="employeesAvgAnnualNumber">
-          <el-input v-model="form.employeesAvgAnnualNumber" placeholder="请输入公司年度平均从业人数" />
         </el-form-item> -->
         <!-- <el-form-item label="工资总额月度占比" prop="monthlySalaryRatio">
           <el-input v-model="form.monthlySalaryRatio" placeholder="请输入工资总额月度占比" />
@@ -158,16 +158,16 @@
           <el-input v-model="form.cumulativeAverageIncome" placeholder="请输入累计人均收入" />
         </el-form-item> -->
         <el-form-item label="月度人均收入" prop="monthlyCumulativeAverageIncome">
-          <el-input v-model="form.monthlyCumulativeAverageIncome" placeholder="请输入当月人均收入" />
+          <el-input v-model="form.monthlyCumulativeAverageIncome" placeholder="请输入当月人均收入"/>
         </el-form-item>
         <el-form-item label="月度生产人均收入" prop="monthlyProductionAvgIncome">
-          <el-input v-model="form.monthlyProductionAvgIncome" placeholder="请输入月度累计生产人均收入" />
+          <el-input v-model="form.monthlyProductionAvgIncome" placeholder="请输入月度累计生产人均收入"/>
         </el-form-item>
         <el-form-item label="月度职能人均收入" prop="monthlyFunctionalAvgIncome">
-          <el-input v-model="form.monthlyFunctionalAvgIncome" placeholder="请输入月度累计职能人均收入" />
+          <el-input v-model="form.monthlyFunctionalAvgIncome" placeholder="请输入月度累计职能人均收入"/>
         </el-form-item>
         <el-form-item label="职能部门人均加班费用" prop="functionalDeptOvertimeCost">
-          <el-input v-model="form.functionalDeptOvertimeCost" placeholder="请输入职能部门人均加班费用" />
+          <el-input v-model="form.functionalDeptOvertimeCost" placeholder="请输入职能部门人均加班费用"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -188,7 +188,7 @@ import {
   updateMonthData,
   calculation
 } from "@/api/enterprise/data";
-import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
+import {uploadFile, handleTrueDownload} from '@/api/financial/excelImport';
 import {
   numValidatorEnableEmpty,
   numValidator,
@@ -251,8 +251,8 @@ export default {
       },
       // 表单参数
       form: {},
-      form3: { yearAndMonth: null },
-      form4: { otherBonus: true },
+      form3: {yearAndMonth: null},
+      form4: {otherBonus: true},
       // 表单校验
       rules: {
         yearAndMonth: [
@@ -282,6 +282,13 @@ export default {
         // ],
 
         totalMonthlySalary: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur",
+          }
+        ],
+        employeesAvgAnnualNumber: [
           {
             required: true,
             validator: numValidator,
@@ -593,7 +600,7 @@ export default {
               // this.$message.error("上传失败，请重试");
               this.isLoading = false;
             })
-            ;
+          ;
         } else {
           let nowDate = moment(yearAndMonth).format("YYYY-MM");
 

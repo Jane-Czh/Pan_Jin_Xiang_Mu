@@ -245,11 +245,15 @@ public class AllShowController {
 
 //         2. 处理没有绑定到流程的制度和表单
         for (RegulationsInfoTable regular : regulars) {
+            //没有绑定流程的制度
             if (!linkedRegularIds.contains(regular.getRegulationsId().toString())) {
                 AllShowEntity entity = new AllShowEntity();
                 // 保存制度中关联的表单ID
-                if(regular.getFormId() != null && regular.getFormId() != "") {
-                    RegulationlinkedFormIds.add(regular.getFormId());
+                if(regular.getFormId() != null && !regular.getFormId().isEmpty()) {
+                    String[] formIds = regular.getFormId().split(",");
+                    for (String formId : formIds) {
+                        RegulationlinkedFormIds.add(formId.trim());
+                    }
                 }
                 entity.setDepartment(regular.getMainResponsibleDepartment()); // 部门
                 entity.setBusinessesModules(regular.getBusinesses()); // 业务模块

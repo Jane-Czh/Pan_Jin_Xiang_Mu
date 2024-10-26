@@ -8,8 +8,8 @@
     >
       <!-- 检索框 -->
       <el-input
-        v-model="searchQuery"
-        placeholder="请输入[表单文件名称]进行检索"
+         v-model="queryParams.regulationsTitle"
+        placeholder="请输入制度标题进行检索"
         @input="handleSearch"
         style="margin-bottom: 10px"
       />
@@ -37,18 +37,19 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
-        <el-table-column label="文件名称" align="center" prop="fileName" />
-        <el-table-column
-          label="制度所属科室"
-          align="center"
-          prop="departmentCategory"
-        />
         <el-table-column
           label="制度标题"
           align="center"
           prop="regulationsTitle"
         />
+        <el-table-column
+          label="制度所属科室"
+          align="center"
+          prop="departmentCategory"
+        />
+        <el-table-column label="文件名称" align="center" prop="fileName" />
+
+     
       </el-table>
 
       <!-- 分页功能 -->
@@ -115,7 +116,8 @@ export default {
   computed: {
     filteredFileList() {
       return this.filemanagementList.filter((item) =>
-        item.fileName.includes(this.searchQuery)
+        // item.fileName.includes(this.searchQuery)
+        item.regulationsTitle.includes(this.searchQuery)
       );
     },
   },

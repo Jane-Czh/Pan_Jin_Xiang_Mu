@@ -3,13 +3,12 @@
     <!-- 1 -->
     <el-tab-pane
       label="表单文件"
-      name="first"
       style="background-color: #f2f2f2; padding: 2px"
     >
       <!-- 检索框 -->
       <el-input
         v-model="searchQuery"
-        placeholder="请输入[制度文件名称]进行检索"
+        placeholder="输入文件名称自动搜索"
         @input="handleSearch"
         style="margin-bottom: 10px"
       />

@@ -2,9 +2,12 @@ package com.heli.project.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.excel.util.ListUtils;
+import com.heli.project.domain.ProjectInfoRecycle;
+import com.heli.project.mapper.ProjectInfoRecycleMapper;
 import com.heli.project.utils.ExcelUtils;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,10 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     @Autowired
     private ProjectInfoTableMapper projectInfoTableMapper;
 
-    private static final int BATCH_COUNT = 5000; // 批处理数量
+    @Autowired
+    private ProjectInfoRecycleMapper projectInfoRecycleMapper;
+
+    private static final int BATCH_COUNT = 500; // 批处理数量
     //缓存一批数据
     private List<ProjectInfoTable> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
 
@@ -130,6 +136,53 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
     public int deleteProjectInfoTableByProjectIds(Long[] projectIds)
     {
         return projectInfoTableMapper.deleteProjectInfoTableByProjectIds(projectIds);
+    }
+
+    @Override
+    public int recycleProjectInfoTableByProjectIds(Long[] projectIds){
+
+        //根据ids查询出所有信息
+        List<ProjectInfoTable> list = new ArrayList<>();
+        for (Long ids : projectIds){
+            list.add(projectInfoTableMapper.selectProjectInfoTableByProjectId(ids));
+        }
+        System.out.println(list);
+
+        //删除infoTable中的信息
+        projectInfoTableMapper.deleteProjectInfoTableByProjectIds(projectIds);
+
+        //移入信息回收表中
+        for (ProjectInfoTable projectInfoTable : list){
+            ProjectInfoRecycle projectInfoRecycle = new ProjectInfoRecycle();
+
+            //对应两者参数，进行赋值
+            projectInfoRecycle.setProjectName(projectInfoTable.getProjectName());
+            projectInfoRecycle.setCategory(projectInfoTable.getCategory());
+            projectInfoRecycle.setLevel(projectInfoTable.getLevel());
+            projectInfoRecycle.setDepartment(projectInfoTable.getDepartment());
+            projectInfoRecycle.setManager(projectInfoTable.getManager());
+            projectInfoRecycle.setTeamMembers(projectInfoTable.getTeamMembers());
+            projectInfoRecycle.setCurrentStatus(projectInfoTable.getCurrentStatus());
+            projectInfoRecycle.setGoal(projectInfoTable.getGoal());
+            projectInfoRecycle.setScope(projectInfoTable.getScope());
+            projectInfoRecycle.setStartDate(projectInfoTable.getStartDate());
+            projectInfoRecycle.setPlannedCompletionTime(projectInfoTable.getPlannedCompletionTime());
+            projectInfoRecycle.setAttribute(projectInfoTable.getAttribute());
+            projectInfoRecycle.setOldProjectId(projectInfoTable.getOldProjectId());
+            projectInfoRecycle.setStatus(projectInfoTable.getStatus());
+            projectInfoRecycle.setProgressAlloverProgress(projectInfoTable.getProgressAlloverProgress());
+            projectInfoRecycle.setDescription(projectInfoTable.getDescription());
+            projectInfoRecycle.setImportDate(projectInfoTable.getImportDate());
+            projectInfoRecycle.setAssociationDate(projectInfoTable.getAssociationDate());
+            projectInfoRecycle.setRemake(projectInfoTable.getRemake());
+            projectInfoRecycle.setProgress(projectInfoTable.getProgress());
+            projectInfoRecycle.setCompletionSummary(projectInfoTable.getCompletionSummary());
+
+            projectInfoRecycleMapper.insertProjectInfoRecycle(projectInfoRecycle);
+        }
+
+
+        return 1;
     }
 
     /**

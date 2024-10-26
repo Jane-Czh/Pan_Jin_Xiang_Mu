@@ -337,13 +337,6 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         return financialBalanceTable;
     }
 
-
-
-
-
-
-
-
     /**
      * @description: 计算存货增长率/销售增长率 growthRateInventorySales
      * (资产负债表)(b29(本月) / b29(上月) - 1)  /  (利润表)(b2(本月) / (b2(上月) - 1))
@@ -383,16 +376,10 @@ public class FinancialBalanceTableServiceImpl implements IFinancialBalanceTableS
         System.out.println("operatingRevenueRate" + operatingRevenueRate);
 
         financialBalanceTable.setGrowthRateInventory(monthlyInventoryTotalAmountRate.doubleValue());
-        financialBalanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
+//        financialBalanceTable.setGrowthRateSales(operatingRevenueRate.doubleValue());
 
         return financialBalanceTable;
     }
-
-
-
-
-
-
 
     /**
      * @description: 计算应收帐款周转率

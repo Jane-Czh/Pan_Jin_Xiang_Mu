@@ -7,7 +7,7 @@
       style="background-color: #f2f2f2; padding: 2px"
     >
       <el-input
-        placeholder="输入制度标题自动搜索制度文件"
+        placeholder="输入文件名称自动搜索"
         v-model="queryParams.regulationsTitle"
         @input="getRegularFileData"
         style="margin-bottom: 10px"
@@ -36,16 +36,16 @@
         </el-table-column>
 
         <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
-        <el-table-column label="文件名称" align="center" prop="fileName" />
+        <el-table-column label="制度标题" align="center" prop="regulationsTitle" />
         <el-table-column
           label="制度所属科室"
           align="center"
           prop="departmentCategory"
         />
         <el-table-column
-          label="制度标题"
+          label="文件名称"
           align="center"
-          prop="regulationsTitle"
+          prop="fileName"
         />
       </el-table>
     </el-tab-pane>

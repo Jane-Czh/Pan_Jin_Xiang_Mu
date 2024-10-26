@@ -146,6 +146,9 @@ public class RegulationsInfoTable extends BaseEntity
     @Excel(name = "标志位(是否为最新文件)")
     private Integer newFlag;
 
+    /** 标志位（新增的制度标志为1） */
+    private Integer addFlag;
+
     /** 标志位(本文件上一旧文件id) */
     @Excel(name = "标志位(本文件上一旧文件id)")
     private Long newRegulationsId;

@@ -209,7 +209,7 @@ export default {
                     data: this.data.map(item => item.electricCarPassRate),
                 },
                 {
-                    name: '大吨位',
+                    name: '大吨位内燃',
                     type: 'bar',
                     label: labelOption,
                     emphasis: {
@@ -218,7 +218,7 @@ export default {
                     data: this.data.map(item => item.largeTonPassRate),
                 },
                 {
-                    name: '内燃车',
+                    name: '小吨位内燃',
                     type: 'bar',
                     label: labelOption,
                     emphasis: {
@@ -259,7 +259,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['电车', '大吨位', '内燃车', '所有', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
+                    data: ['电车', '大吨位内燃', '小吨位内燃', '所有', this.ifTargetEmpty ? '目标值' : null].filter(item => item !== null),
                 },
                 toolbox: {
                     show: true,

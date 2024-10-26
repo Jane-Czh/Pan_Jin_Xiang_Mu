@@ -80,6 +80,7 @@
       <el-table-column label="当月采购总金额(万元)" align="center" prop="totalPurchaseAmount" />
       <el-table-column label="当月管控物资采购金额(万元)" align="center" prop="controlledMaterialPurchases" />
       <el-table-column label="比例(%)" align="center" prop="controlledPurchaseAmountRatio" />
+      <el-table-column label="月度求和比例(%)" align="center" prop="yearAmountRatio" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -109,6 +110,9 @@
         </el-form-item>
         <el-form-item label="比例(%)" prop="controlledPurchaseAmountRatio">
           <el-input v-model="form.controlledPurchaseAmountRatio" placeholder="请输入比例(%)" />
+        </el-form-item>
+        <el-form-item label="月度求和比例(%)" prop="yearAmountRatio">
+          <el-input v-model="form.yearAmountRatio" placeholder="请输入月度求和比例(%)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -195,7 +199,14 @@ export default {
             trigger: "blur"
           }
         ],
-
+        //比例
+        yearAmountRatio: [
+          {
+            required: true,
+            validator: numValidator,
+            trigger: "blur"
+          }
+        ],
       }
     };
   },
@@ -322,7 +333,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm" && fileExt.toLowerCase() !== "xls") {
         this.$message.error("只能上传 Excel 文件！");
         // this.$refs.fileInput.value = ""; // 清空文件选择框
       }

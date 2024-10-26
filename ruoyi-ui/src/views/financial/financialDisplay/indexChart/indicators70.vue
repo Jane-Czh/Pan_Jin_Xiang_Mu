@@ -202,7 +202,9 @@ export default {
                 align: app.config.align,
                 verticalAlign: app.config.verticalAlign,
                 rotate: app.config.rotate,
-                formatter: '{c}',
+                formatter: (params) => {
+                    return params.value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                },
                 fontSize: 16,
                 rich: {
                     name: {}

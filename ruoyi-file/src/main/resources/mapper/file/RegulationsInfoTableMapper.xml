@@ -35,6 +35,7 @@
         <result property="formId"    column="form_id"    />
         <result property="projectIds"    column="project_ids"    />
         <result property="newFlag"    column="new_flag"    />
+        <result property="addFlag"    column="add_flag"    />
         <result property="newRegulationsId"    column="new_regulations_id"    />
         <result property="businesses"    column="businesses"    />
         <result property="subBusinesses"    column="sub_businesses"    />
@@ -42,7 +43,7 @@
     </resultMap>
 
     <sql id="selectRegulationsInfoTableVo">
-        select regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, pdf_path, word_path, file_type, file_size, pdf_size, word_size, file_content, create_date, upload_username, use_state, department_category, main_responsible_department, classification_of_specialties, regulation_leval, regulation_number, file_tag, old_regulations_id, revision_date, revision_content, reviser, form_id, project_ids, new_flag, new_regulations_id, businesses, sub_businesses from Regulations_Info_table
+        select regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, pdf_path, word_path, file_type, file_size, pdf_size, word_size, file_content, create_date, upload_username, use_state, department_category, main_responsible_department, classification_of_specialties, regulation_leval, regulation_number, file_tag, old_regulations_id, revision_date, revision_content, reviser, form_id, project_ids, new_flag, add_flag, new_regulations_id, businesses, sub_businesses from Regulations_Info_table
     </sql>
 
     <select id="selectRegulationsInfoTableList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
@@ -73,12 +74,13 @@
             <if test="revisionDate != null "> and revision_date = #{revisionDate}</if>
             <if test="revisionContent != null  and revisionContent != ''"> and revision_content = #{revisionContent}</if>
             <if test="reviser != null  and reviser != ''"> and reviser = #{reviser}</if>
-             <if test="formId != null and formId != ''"> and form_id = #{formId}</if>
+            <if test="formId != null and formId != ''"> and form_id = #{formId}</if>
             <if test="projectIds != null  and projectIds != ''"> and project_ids = #{projectIds}</if>
             <if test="newFlag = 1 "> and new_flag = #{newFlag}</if>
+            <if test="addFlag != null and addFlag != ''"> and add_flag = #{addFlag}</if>
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
-             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
-              <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+            <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
+            <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
         </where>
     </select>
 
@@ -113,9 +115,17 @@
             <if test="formId != null and formId != ''"> and form_id = #{formId}</if>
             <if test="projectIds != null  and projectIds != ''"> and project_ids = #{projectIds}</if>
             <if test="newFlag !=null and newFlag != '' "> and new_flag = #{newFlag}</if>
+            <if test="addFlag != null and addFlag != ''"> and add_flag = #{addFlag}</if>
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+        </where>
+    </select>
+
+    <select id="listaddFilemanagement" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
+        <include refid="selectRegulationsInfoTableVo"/>
+        <where>
+            add_flag = 1 and new_flag != 2
         </where>
     </select>
 
@@ -166,6 +176,7 @@
             <if test="formId != null">form_id,</if>
             <if test="projectIds != null">project_ids,</if>
             <if test="newFlag != null">new_flag,</if>
+            <if test="addFlag != null">add_flag,</if>
             <if test="newRegulationsId != null">new_regulations_id,</if>
             <if test="businesses != null">businesses,</if>
             <if test="subBusinesses != null">sub_businesses,</if>
@@ -200,6 +211,7 @@
             <if test="formId != null">#{formId},</if>
             <if test="projectIds != null">#{projectIds},</if>
             <if test="newFlag != null">#{newFlag},</if>
+            <if test="addFlag != null">#{addFlag},</if>
             <if test="newRegulationsId != null">#{newRegulationsId},</if>
             <if test="businesses != null and businesses != ''">#{businesses},</if>
             <if test="subBusinesses != null and subBusinesses != ''">#{subBusinesses},</if>
@@ -238,6 +250,7 @@
             <if test="formId != null">form_id = #{formId},</if>
             <if test="projectIds != null">project_ids = #{projectIds},</if>
             <if test="newFlag != null">new_flag = #{newFlag},</if>
+            <if test="addFlag != null">add_flag = #{addFlag},</if>
             <if test="newRegulationsId != null">new_regulations_id = #{newRegulationsId},</if>
             <if test="businesses != null and businesses != ''">businesses = #{businesses},</if>
             <if test="subBusinesses != null and subBusinesses != ''">sub_businesses = #{subBusinesses},</if>
@@ -331,6 +344,7 @@
             <if test="formId != null and formId != ''" >and form_id = #{formId}</if>
             <if test="projectIds != null  and projectIds != ''"> and project_ids = #{projectIds}</if>
             <if test="newFlag = 2 "> and new_flag = #{newFlag}</if>
+            <if test="addFlag != null and addFlag != ''"> and add_flag = #{addFlag}</if>
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>

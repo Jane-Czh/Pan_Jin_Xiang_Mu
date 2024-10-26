@@ -198,6 +198,16 @@
           plain
           icon="el-icon-download"
           size="mini"
+          @click="exportAllAdd"
+          v-hasPermi="['file:filemanagement:export']"
+        >新增台账导出</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
           @click="exportAllHistory"
           v-hasPermi="['file:filemanagement:export']"
         >历史台账导出</el-button>
@@ -541,6 +551,7 @@
             <el-form-item label="关联表单">
               <el-select
                 v-model="form.formId"
+                multiple
                 placeholder="请选择关联表单"
                 filterable
                 clearable
@@ -746,6 +757,7 @@
               <el-select
                 v-model="form.formId"
                 placeholder="请选择关联表单"
+                multiple
                 filterable
                 clearable
               >
@@ -806,7 +818,7 @@ import {
   getFilemanagement,
   delFilemanagement,
   addFilemanagement,
-  updateFilemanagement, listAllFilemanagement, listHistoryFilemanagement
+  updateFilemanagement, listAllFilemanagement, listHistoryFilemanagement, listAddFilemanagement
 } from "@/api/file/filemanagement";
   import {
     listProject,
@@ -952,6 +964,7 @@ import {
         total: 0,
         // 制度文件管理表格数据
         filemanagementList: [],
+        addFilemanagementList: [], // 新增文件管理表格数据
         historyFilemanagementList: [], //历史版本制度文件管理表格数据
         // 表单文件管理表格数据
         formmanagementList: [],
@@ -994,6 +1007,7 @@ import {
           formId: null,
           projectIds: null,
           newFlag: null,
+          addFlag: null,
           newRegulationsId: null,
           businesses: null,
           subBusinesses: null
@@ -1069,6 +1083,7 @@ import {
           formId: null,
           projectIds: null,
           newFlag: null,
+          addFlag: null,
           newRegulationsId: null,
           businesses: null,
           subBusinesses: null
@@ -1205,10 +1220,17 @@ import {
 
 
         console.log("this.queryParams====>",this.queryParams);
+        //获取历史制度
         listHistoryFilemanagement(this.queryParams).then(response => {
           console.log("response:：", response);
           this.historyFilemanagementList = response;
           console.log("historyFilemanagementList=>", this.historyFilemanagementList);
+        });
+        //获取新增制度
+        listAddFilemanagement(this.queryParams).then(response => {
+          console.log("response:：", response);
+          this.addFilemanagementList = response;
+          console.log("this.addFilemanagementList=>", this.addFilemanagementList);
         });
 
       },
@@ -1268,18 +1290,33 @@ import {
           effectiveDate: null,
           fileName: null,
           filePath: null,
+          pdfPath: null,
+          wordPath: null,
           fileType: null,
           fileSize: null,
+          pdfSize: null,
+          wordSize: null,
+          fileContent: null,
           createDate: null,
           uploadUsername: null,
           useState: null,
           departmentCategory: null,
+          mainResponsibleDepartment: null,
+          classificationOfSpecialties: null,
+          regulationLeval: null,
+          regulationNumber: null,
           fileTag: null,
           oldRegulationsId: null,
           revisionDate: null,
           revisionContent: null,
           reviser: null,
+          formId: null,
+          projectIds: null,
+          newFlag: null,
+          addFlag: null,
           newRegulationsId: null,
+          businesses: null,
+          subBusinesses: null
         };
         this.resetForm("form");
       },
@@ -1350,7 +1387,11 @@ import {
         }
         this.$refs["form"].validate(valid => {
           if (valid) {
+            // 将 form.formId 数组转换为字符串
+            this.form.formId = this.form.formId.join(',');
+            console.log("this.form.formId=>", this.form.formId);
             this.form.newFlag = 1;
+            this.form.addFlag = 1;
             this.form.revisionContent = "新增";
             addFilemanagement(this.form).then(response => {
               this.$modal.msgSuccess("上传成功");
@@ -1358,17 +1399,25 @@ import {
               this.getList();
               console.log("上传文件提交按钮=>", this.form);
             });
-
+            // 将字符串拆分成数组
+            const formTitles = this.form.formId.split(',');
             //将制度文件绑定到表单文件
-            const queryParams = {
-              formTitle: this.form.formId
-            };
-            listFormfilemanagement(queryParams).then(response => {
-              const resultForm = response.rows;
-              console.log("resultForm=>", resultForm);
-              resultForm[0].regulationId = this.form.regulationsTitle;
-              return updateFormfilemanagement(resultForm[0]);
-            });
+            formTitles.forEach(formTitle => {
+              const queryParams = {
+                formTitle: formTitle
+              };
+              listFormfilemanagement(queryParams).then(response => {
+                const resultForm = response.rows;
+                console.log("resultForm=>", resultForm);
+                // 将 this.form.regulationsTitle 添加到 resultForm[0].regulationId 中
+                const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                if (!existingRegulations.includes(this.form.regulationsTitle)) {
+                  existingRegulations.push(this.form.regulationsTitle);
+                }
+                resultForm[0].regulationId = existingRegulations.join(',');
+                return updateFormfilemanagement(resultForm[0]);
+              });
+            })
           }
         });
         this.pdfList = [];
@@ -1378,112 +1427,79 @@ import {
       modifySubmitForm(file, fileList) {
         console.log("Before validate - fileList:", this.fileList);
         console.log("file=======>:", file);
-        this.$refs["form"].validate(valid => {
+        this.$refs["form"].validate(async valid => {
           if (valid) {
             if (this.form.regulationsId != null) {
               const thisId = this.form.regulationsId;
               console.log("thisId=>", thisId);
               console.log("newform=>", this.form);
               this.form.oldRegulationsId = this.form.regulationsId;
-              addFilemanagement(this.form).then(response => {
+              this.form.addFlag = 0;
+              this.form.formId = this.form.formId.join(','); // 将字符串拆分成数组
+
+              try {
+                const response = await addFilemanagement(this.form);
                 const newId = response.data;
                 this.$modal.msgSuccess("更新成功");
                 this.fileModifyDialogVisible = false;
                 this.form.newRegulationsId = null;
-                //更新历史版本制度
-                getFilemanagement(this.form.oldRegulationsId).then(response => {
-                  const lastForm = response.data;
-                  lastForm.newFlag = 0;
-                  lastForm.newRegulationsId = newId;
-                  lastForm.revisionContent = "更新";
-                  lastForm.formId = '';
-                  console.log("上一表单=>", lastForm);
 
-                  //将制度文件解绑到表单文件
-                  const queryParams = {
-                    regulationId: lastForm.regulationsTitle
-                  };
-                  listFormfilemanagement(queryParams).then(response => {
+                // 更新历史版本制度
+                const lastFormResponse = await getFilemanagement(this.form.oldRegulationsId);
+                const lastForm = lastFormResponse.data;
+                lastForm.newFlag = 0;
+                lastForm.newRegulationsId = newId;
+                lastForm.revisionContent = "更新";
+                console.log("上一表单=>", lastForm);
+
+                // 将制度文件解绑到表单文件
+                const formTitles = lastForm.formId.split(',');
+                const unbindPromises = formTitles.map(formTitle => {
+                  const queryParams = { formTitle };
+                  return listFormfilemanagement(queryParams).then(response => {
                     const resultForm = response.rows;
                     console.log("resultForm=>", resultForm);
-                    resultForm[0].regulationId = '';
+                    const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                    const updatedRegulations = existingRegulations.filter(regulation => regulation !== lastForm.regulationsTitle);
+                    resultForm[0].regulationId = updatedRegulations.join(',');
+                    console.log("Updated regulationId=>", resultForm[0].regulationId);
                     return updateFormfilemanagement(resultForm[0]);
-                  });
-
-                  updateFilemanagement(lastForm).then(response => {
-                    this.getList();
                   });
                 });
 
+                await Promise.all(unbindPromises);
+                await updateFilemanagement(lastForm);
+                this.getList();
 
-                //将新的制度文件绑定到表单文件
-                const queryParams = {
-                  formTitle: this.form.formId
-                };
-                if(this.form.formId != '' && this.form.formId != null){
-                  listFormfilemanagement(queryParams).then(response => {
+                // 将制度文件绑定到表单文件
+                const bindPromises = this.form.formId.split(',').map(formTitle => {
+                  const queryParams = { formTitle };
+                  return listFormfilemanagement(queryParams).then(response => {
                     const resultForm = response.rows;
-                    console.log("resultForm33333=>", resultForm);
-                    resultForm[0].regulationId = this.form.regulationsTitle;
+                    console.log("更新的resultForm=>", resultForm);
+                    const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                    if (!existingRegulations.includes(this.form.regulationsTitle)) {
+                      existingRegulations.push(this.form.regulationsTitle);
+                      console.log("existingRegulations=>", existingRegulations);
+                    }
+                    resultForm[0].regulationId = existingRegulations.join(',');
+                    console.log("resultForm[0]=>", resultForm[0]);
                     return updateFormfilemanagement(resultForm[0]);
                   });
-                }
-                // this.getList();
-                console.log("更新文件提交按钮1=>", this.form);
-                console.log("response=>", response);
-              });
-
-            }
-          }
-        });
-        this.pdfList = [];
-        this.wordList = [];
-      },
-      /** 更新文件提交按钮 */
-      updateSubmitForm() {
-        console.log("Before validate - fileList:", this.fileList);
-        console.log("form12345===>", this.form);
-        // 检查 fileList 是否为空
-        if (this.fileList.length === 0) {
-          this.$message.error("请上传文件");
-          return;
-        }
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            if (this.form.regulationsId != null) {
-              const thisId = this.form.regulationsId;
-              console.log("thisId=>", thisId);
-              console.log("newform=>", this.form);
-              this.form.oldRegulationsId = this.form.regulationsId;
-              console.log("this.form.newRegulationsId=>", this.form.newRegulationsId);
-              console.log("(this.form.newRegulationsId == null)", (this.form.newRegulationsId == null));
-              console.log("(thisId == this.form.newRegulationsId)", (thisId === this.form.newRegulationsId));
-              addFilemanagement(this.form).then(response => {
-                const newId = response.data;
-                this.$modal.msgSuccess("更新成功");
-                this.fileUpdateDialogVisible = false;
-                this.form.newRegulationsId = null;
-                //更新历史版本制度
-                getFilemanagement(this.form.oldRegulationsId).then(response => {
-                  const lastForm = response.data;
-                  lastForm.newFlag = 0;
-                  lastForm.newRegulationsId = newId;
-                  console.log("上一表单=>", lastForm);
-                  updateFilemanagement(lastForm).then(response => {
-                    this.getList();
-                  });
                 });
-                // this.getList();
-                console.log("更新文件提交按钮1=>", this.form);
-                console.log("response=>", response);
-              });
+
+                await Promise.all(bindPromises);
+              } catch (error) {
+                console.error('处理过程中发生错误', error);
+                this.$modal.msgError("更新失败");
+              }
             }
           }
         });
+
         this.pdfList = [];
         this.wordList = [];
       },
-
       /** 删除按钮操作 */
       handleDelete(row) {
         console.log("当前表单1=>", row);
@@ -1516,37 +1532,54 @@ import {
                 // 将当前表单的 newFlag 设置为 2（表示逻辑删除）
                 thisForm.newFlag = 2;
                 thisForm.revisionContent = "删除";
-                thisForm.formId = '';
+                // thisForm.formId = '';
                 console.log("更新表单 newFlag 为 2 =>", thisForm);
 
-                //将制度文件解绑到表单文件
-                const queryParams = {
-                  regulationId: thisForm.regulationsTitle
-                };
-                listFormfilemanagement(queryParams).then(response => {
-                  const resultForm = response.rows;
-                  console.log("resultForm=>", resultForm);
-                  resultForm[0].regulationId = '';
-                  return updateFormfilemanagement(resultForm[0]);
+                // 将字符串拆分成数组
+                const formTitles = thisForm.formId.split(',');
+
+                // 将制度文件解绑到表单文件
+                const unbindPromises = formTitles.map(formTitle => {
+                  const queryParams = {
+                    formTitle: formTitle
+                  };
+                  return listFormfilemanagement(queryParams).then(response => {
+                    const resultForm = response.rows;
+                    console.log("resultForm=>", resultForm);
+                    const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                    const updatedRegulations = existingRegulations.filter(regulation => regulation !== thisForm.regulationsTitle);
+                    resultForm[0].regulationId = updatedRegulations.join(',');
+                    console.log("Updated regulationId=>", resultForm[0].regulationId);
+                    return updateFormfilemanagement(resultForm[0]);
+                  }).catch(error => {
+                    console.error("解绑表单文件失败", error);
+                    throw error; // 重新抛出错误以便在外部捕获
+                  });
                 });
 
-                // 如果存在旧表单，处理旧表单
-                if (thisForm.oldRegulationsId != null) {
-                  return getFilemanagement(thisForm.oldRegulationsId).then(response => {
-                    const lastForm = response.data;
-                    lastForm.revisionContent = "新增";
-                    lastForm.newFlag = 1; // 将旧表单标记为未删除的状态
-                    console.log("更新旧表单 newFlag 为 1 =>", lastForm);
+                // 等待所有解绑操作完成
+                return Promise.all(unbindPromises).then(() => {
+                  thisForm.formId = '';
+                  // 如果存在旧表单，处理旧表单
+                  if (thisForm.oldRegulationsId != null) {
+                    return getFilemanagement(thisForm.oldRegulationsId).then(response => {
+                      const lastForm = response.data;
+                      lastForm.newFlag = 1; // 将旧表单标记为未删除的状态
+                      console.log("更新旧表单 newFlag 为 1 =>", lastForm);
 
-                    // 先更新当前表单，再更新旧表单
-                    return updateFilemanagement(thisForm).then(() => {
-                      return updateFilemanagement(lastForm);
+                      // 先更新当前表单，再更新旧表单
+                      return updateFilemanagement(thisForm).then(() => {
+                        return updateFilemanagement(lastForm);
+                      });
+                    }).catch(error => {
+                      console.error("获取旧表单失败", error);
+                      throw error; // 重新抛出错误以便在外部捕获
                     });
-                  });
-                } else {
-                  // 如果没有旧表单，直接更新当前表单
-                  return updateFilemanagement(thisForm);
-                }
+                  } else {
+                    // 如果没有旧表单，直接更新当前表单
+                    return updateFilemanagement(thisForm);
+                  }
+                });
               });
 
               // 等待所有更新操作完成后执行后续逻辑
@@ -1978,7 +2011,61 @@ import {
         const promises = this.filemanagementList.map((regulation) => {
           return this.handleProjectDetails(regulation).then((projectNames) => {
             return {
-              主责部门 : regulation.departmentCategory,
+              主责部门 : regulation.mainResponsibleDepartment,
+              制度名称 : regulation.regulationsTitle,
+              专业分类 : regulation.classificationOfSpecialties,
+              制度范围 : regulation.useScope,
+              制度编号 : regulation.regulationNumber,
+              发布日期 : regulation.createDate,
+              实施日期 : regulation.effectiveDate,
+              关联流程 :this.projectNamesString,
+              关联表单 :regulation.formId,
+              状态 :regulation.revisionContent,
+              最新上传日期 : regulation.uploadDate,
+            };
+          });
+        });
+        Promise.all(promises)
+          .then((data) => {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "项目列表");
+
+            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+            saveAs(
+              new Blob([wbout], { type: "application/octet-stream" }),
+              "制度总台账.xlsx"
+            );
+
+            // 提交数据到Vuex Store
+            this.updateExportedData(data);
+
+
+          })
+          .finally(() => {
+            loadingInstance.close();
+          })
+          .catch((error) => {
+            console.error("导出失败:", error);
+            loadingInstance.close();
+          });
+
+      },
+
+      exportAllAdd(){
+        const loadingInstance = Loading.service({
+          lock: true,
+          text: "正在导出，请稍后...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+
+
+
+        const promises = this.addFilemanagementList.map((regulation) => {
+          return this.handleProjectDetails(regulation).then((projectNames) => {
+            return {
+              主责部门 : regulation.mainResponsibleDepartment,
               制度名称 : regulation.regulationsTitle,
               专业分类 : regulation.classificationOfSpecialties,
               制度范围 : regulation.useScope,
@@ -2032,7 +2119,7 @@ import {
         const promises = this.historyFilemanagementList.map((regulation) => {
           return this.handleProjectDetails(regulation).then((projectNames) => {
             return {
-              主责部门 : regulation.departmentCategory,
+              主责部门 : regulation.mainResponsibleDepartment,
               制度名称 : regulation.regulationsTitle,
               专业分类 : regulation.classificationOfSpecialties,
               制度范围 : regulation.useScope,

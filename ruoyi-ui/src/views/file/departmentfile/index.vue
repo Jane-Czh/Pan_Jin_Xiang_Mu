@@ -293,7 +293,6 @@ export default {
     getUserProfile02().then(response => {
       // 处理成功的情况
       console.log('成功获取用户信息response.data====>', response.data);
-      console.log('成功获取用户信息response.data.dept.deptName====>', response.data.dept.deptName);
       // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
       this.thisDept =  response.data.dept.deptName;
       this.getList();

@@ -58,6 +58,14 @@ public interface IProjectInfoTableService
     public int deleteProjectInfoTableByProjectIds(Long[] projectIds);
 
     /**
+     * 批量移除项目基本信息
+     *
+     * @param projectIds 需要删除的项目基本信息主键集合
+     * @return 结果
+     */
+    public int recycleProjectInfoTableByProjectIds(Long[] projectIds);
+
+    /**
      * 删除项目基本信息信息
      * 
      * @param projectId 项目基本信息主键

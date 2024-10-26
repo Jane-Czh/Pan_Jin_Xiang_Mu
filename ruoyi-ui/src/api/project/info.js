@@ -53,9 +53,9 @@ export function delInfo(projectId) {
 }
 
 // 移入回收站
-export function recycleInfo(projectId) {
+export function recycle(projectId) {
   return request({
-    url: '/project/Info/recycle' + projectId,
+    url: '/project/Info/recycle/' + projectId,
     method: 'delete'
   })
 }
@@ -91,6 +91,7 @@ export function uploadImport(formData) {
 export function handleTrueDownload(url) {
   return window.location.href = "http://10.36.53.24:8080" + url;
 }
+
 
 // 新增项目修改记录
 export function addRecode(data) {

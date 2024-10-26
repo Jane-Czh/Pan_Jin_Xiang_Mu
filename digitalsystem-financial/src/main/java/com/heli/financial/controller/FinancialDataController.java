@@ -10,6 +10,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import java.util.List;
  * @author: hong
  * @date: 2024/4/8 14:18
  **/
+@Slf4j
 @RestController
 @RequestMapping("/financial/data")
 public class FinancialDataController extends BaseController {
@@ -44,43 +46,24 @@ public class FinancialDataController extends BaseController {
     private IFinancialDataService financialDataService;
     @Autowired
     private IFinancialTempTableService financialTempTableService;
-    private static final Logger log = LoggerFactory.getLogger(FinancialDataController.class);
 
 
-    @PostMapping("/test")
-    public AjaxResult test( Date yearAndMonth) {
-        log.info(String.valueOf(yearAndMonth));
-        financialDataService.countTurnoverRateReceivable(yearAndMonth);
-        return AjaxResult.success();
-    }
-
+    /**
+     * @description: 资产负债表数据-更新
+     * @author: hong
+     * @date: 2024/10/23 14:47
+     * @version: 1.0
+     */
     @Log(title = "[财务]资产负债表数据批量计算", businessType = BusinessType.UPDATE)
     @GetMapping("/calculate")
     public AjaxResult batchCalculateBalanceIndicator() {
         return AjaxResult.success(financialDataService.batchCalculateBalanceIndicator());
     }
 
-
     @Log(title = "[财务]数据填报", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:fill:add')")
     @PostMapping("/fill")
     public AjaxResult handFillData(@RequestBody FinancialIndicatorsHandfillTable FITable) {
-//        System.out.println(FITable);
-//        Date lastMonth = DateUtils.getLastMonth(FITable.getYearAndMonth());
-
-//        boolean b = financialIndicatorsHandfillTableService.checkDataExists();
-//        log.info(String.valueOf(b));
-
-
-//        if (!financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(lastMonth)
-//            && financialIndicatorsHandfillTableService.checkDataExists()) {
-//            return AjaxResult.error("上月数据还未填报");
-//        }
-//        else if (!financialBalanceTableService.checkBalanceDataIsExisted(lastMonth)) {
-//            return AjaxResult.error("上月资产负债表未上传");
-//        } else if (!financialInterestsTableService.checkInterestsDataIsExisted(lastMonth)) {
-//            return AjaxResult.error("上月利润表未上传");
-//        }
 
         if (financialIndicatorsHandfillTableService.checkHandFillDataIsExisted(FITable.getYearAndMonth())) {
             return AjaxResult.error("当月数据已填报");
@@ -205,7 +188,7 @@ public class FinancialDataController extends BaseController {
     @Log(title = "[财务]资产负债表上传", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('financial:balance:import')")
     @PostMapping("/balance/import")
-//    @Transactional
+    @Transactional
     public AjaxResult importBalanceTable(Date yearAndMonth, MultipartFile BalanceFile) {
 
         if (financialBalanceTableService.checkBalanceDataIsExisted(yearAndMonth)) {

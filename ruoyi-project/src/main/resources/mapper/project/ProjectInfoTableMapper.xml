@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectInfoTableVo">
-        select project_id, project_name, category, level, department, attribute, description, start_date, progress_allover_progress, import_date, remake, old_project_id, association_date, manager, team_members, status, progress, current_status, goal, scope, planned_completion_time, days_passed, days_remaining, completion_summary from Project_Info_table
+        select project_id, project_name, category, level, department, attribute, description, start_date, progress_allover_progress, import_date, remake, old_project_id, association_date, manager, team_members, status, progress, current_status, goal, scope, planned_completion_time, days_passed, days_remaining, completion_summary from project_info_table
     </sql>
 
     <select id="selectProjectInfoTableList" parameterType="ProjectInfoTable" resultMap="ProjectInfoTableResult">
@@ -77,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <insert id="insertProjectInfoTable" parameterType="ProjectInfoTable" useGeneratedKeys="true" keyProperty="projectId">
-        insert into Project_Info_table
+        insert into project_info_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="projectName != null and projectName != ''">project_name,</if>
             <if test="category != null and category != ''">category,</if>
@@ -131,7 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateProjectInfoTable" parameterType="ProjectInfoTable">
-        update Project_Info_table
+        update project_info_table
         <trim prefix="SET" suffixOverrides=",">
             <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
             <if test="category != null and category != ''">category = #{category},</if>
@@ -161,11 +161,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteProjectInfoTableByProjectId" parameterType="Long">
-        delete from Project_Info_table where project_id = #{projectId}
+        delete from project_info_table where project_id = #{projectId}
     </delete>
 
     <delete id="deleteProjectInfoTableByProjectIds" parameterType="String">
-        delete from Project_Info_table where project_id in 
+        delete from project_info_table where project_id in
         <foreach item="projectId" collection="array" open="(" separator="," close=")">
             #{projectId}
         </foreach>

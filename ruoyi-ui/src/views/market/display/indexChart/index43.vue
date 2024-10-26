@@ -318,6 +318,7 @@ const roundedData =  this.transposedSeriesData.map(innerArray =>
 );
 // console.log("转换后的百分比 seriesData：", percentageData);
 this.transposedSeriesData=roundedData;
+myChart.clear;
 option = {
   tooltip: {
     trigger: 'axis',

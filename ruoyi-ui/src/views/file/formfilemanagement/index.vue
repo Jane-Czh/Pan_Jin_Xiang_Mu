@@ -307,7 +307,7 @@
         </el-row>
         <el-row>
           <el-col :span='12'>
-            <el-form-item label="主责部门" prop="departmentCategory"  required="true">
+            <el-form-item label="主责部门" prop="departmentCategory">
               <el-select
                 v-model="form.departmentCategory"
                 placeholder="请选择主责部门"
@@ -669,7 +669,27 @@ export default {
         type: null
       },
       // 表单参数
-      form: {},
+      form: {
+        formId: null,
+        formTitle: null,
+        scope: null,
+        effectiveDate: null,
+        formName: null,
+        formType: null,
+        formPath: null,
+        formSize: null,
+        createUsername: null,
+        departmentCategory: null,
+        remark: null,
+        oldFormId: null,
+        revisionTime: null,
+        revisionContent: null,
+        reviser: null,
+        newFlag: null,
+        newFormId: null,
+        businesses: null,
+        subBusinesses: null,
+        regulationId: null,},
       // 表单校验
       rules: {
         formTitle: [
@@ -677,6 +697,9 @@ export default {
         ],
         scope: [
           { required: true, message: "表单存储内容不能为空", trigger: "blur" }
+        ],
+        departmentCategory: [
+          {required: true, message: "表单主责部门不能为空", trigger: "blur"}
         ],
       }
     };
@@ -806,7 +829,10 @@ export default {
         revisionContent: null,
         reviser: null,
         newFlag: null,
-        newFormId: null
+        newFormId: null,
+        businesses: null,
+        subBusinesses: null,
+        regulationId: null,
       };
       this.resetForm("form");
     },
@@ -1073,6 +1099,7 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       const uploadedFile = file.raw; // 获取上传的文件对象
+      this.path = res.url;
       const uploadedFileName = uploadedFile.name.substring(0, uploadedFile.name.lastIndexOf('.')); // 获取上传文件的文件名
       // 发起请求检查文件名是否存在于数据库中
       const isFormNameDuplicate = this.formmanagementList.some(item => item.formName === uploadedFileName);
@@ -1087,7 +1114,6 @@ export default {
       if (res.code === 200) {
         console.log("上传成功回调");
         console.log(res);
-        this.path = res.url;
         this.uploadList.push({name: res.formName, url: res.formName});
         this.uploadedSuccessfully();
       } else {

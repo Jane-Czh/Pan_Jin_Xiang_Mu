@@ -564,7 +564,7 @@ export default {
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
             const currentMonth = currentDate.getMonth();
-            const startDate = new Date(currentYear, currentMonth - 1, 1);
+            const startDate = new Date(currentYear, currentMonth - 1, 2);
             const endDate = new Date(currentYear, currentMonth, 0);
             this.selectedDate = [startDate, endDate];
             this.selectedDateNew = startDate

@@ -105,7 +105,7 @@
           <span v-else>—</span>
         </template>
       </el-table-column>
-      <el-table-column label="小吨位内燃车生产数量" align="center" prop="icvProductionQuantity" width="160">
+      <el-table-column label="小吨位内燃车检查数量" align="center" prop="icvProductionQuantity" width="160">
         <template slot-scope="scope">
           <span v-if="scope.row.icvProductionQuantity || scope.row.icvProductionQuantity === 0">{{
       scope.row.icvProductionQuantity
@@ -155,7 +155,7 @@
           <el-date-picker clearable v-model="form.yearAndMonth" type="month" value-format="yyyy-MM" placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="电车的问题数量" prop="electricCarProductionQuantity">
+        <el-form-item label="电车的检查数量" prop="electricCarProductionQuantity">
           <el-input v-model="form.electricCarProductionQuantity" placeholder="请输入电车的问题数量" />
         </el-form-item>
         <el-form-item label="K2系列4-5t检查数量" prop="k2lessthan5tonProductionQuantity">
@@ -182,7 +182,7 @@
         <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
           <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
         </el-form-item>
-        <el-form-item label="小吨位内燃车生产数量" prop="icvProductionQuantity">
+        <el-form-item label="小吨位内燃车检查数量" prop="icvProductionQuantity">
           <el-input v-model="form.icvProductionQuantity" placeholder="请输入小吨位内燃车生产数量" />
         </el-form-item>
         <el-form-item label="小吨位内燃车问题车数量" prop="icvProblemVehicles">
@@ -514,7 +514,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm" && fileExt.toLowerCase() !== "xls") {
         this.$message.error("只能上传 Excel 文件！");
         // this.$refs.fileInput.value = ""; // 清空文件选择框
       }

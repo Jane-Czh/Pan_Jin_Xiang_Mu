@@ -139,7 +139,7 @@ export default {
 
 
 var app = {};
-
+this.myChart.clear();
 var chartDom = document.getElementById('main');
 var myChart = echarts.init(chartDom);
 var option;

@@ -14,110 +14,7 @@
           <el-option value="4" label="实际得分"></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="SD 销售订单有效性考核得分" prop="sdSalesordervalidityscore">
-        <el-input v-model="queryParams.sdSalesordervalidityscore" placeholder="请输入SD 销售订单有效性考核得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="SD 销售订单有效性考核" prop="sdSalesordervalidity">
-        <el-input v-model="queryParams.sdSalesordervalidity" placeholder="请输入SD 销售订单有效性考核" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="PP 手工创建生产订单得分" prop="ppManualpocreationratioscore">
-        <el-input v-model="queryParams.ppManualpocreationratioscore" placeholder="请输入PP 手工创建生产订单得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="PP 手工创建生产订单比例" prop="ppManualpocreationratio">
-        <el-input v-model="queryParams.ppManualpocreationratio" placeholder="请输入PP 手工创建生产订单比例" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="PP 生产订单已收货未报工的得分" prop="ppDeliveredunreportedratioscore">
-        <el-input v-model="queryParams.ppDeliveredunreportedratioscore" placeholder="请输入PP 生产订单已收货未报工的得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="PP 生产订单已收货未报工的比例" prop="ppDeliveredunreportedratio">
-        <el-input v-model="queryParams.ppDeliveredunreportedratio" placeholder="请输入PP 生产订单已收货未报工的比例" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MES 报工不及时得分" prop="mesLateworkreportingscore">
-        <el-input v-model="queryParams.mesLateworkreportingscore" placeholder="请输入MES 报工不及时得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MES 报工不及时率比率" prop="mesLateworkreportingrate">
-        <el-input v-model="queryParams.mesLateworkreportingrate" placeholder="请输入MES 报工不及时率比率" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="QM 外检业务不及时得分" prop="qmExternalinspectiondelayscore">
-        <el-input v-model="queryParams.qmExternalinspectiondelayscore" placeholder="请输入QM 外检业务不及时得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="QM 外检业务不及时率" prop="qmExternalinspectiondelay">
-        <el-input v-model="queryParams.qmExternalinspectiondelay" placeholder="请输入QM 外检业务不及时率" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MM 采购订单交货不及时得分" prop="mmPurchaseorderlatedeliveryscore">
-        <el-input v-model="queryParams.mmPurchaseorderlatedeliveryscore" placeholder="请输入MM 采购订单交货不及时得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MM 采购订单交货不及时的比例" prop="mmPurchaseorderlatedelivery">
-        <el-input v-model="queryParams.mmPurchaseorderlatedelivery" placeholder="请输入MM 采购订单交货不及时的比例" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MM 手工创建采购订单得分" prop="mmManualpocreationscore">
-        <el-input v-model="queryParams.mmManualpocreationscore" placeholder="请输入MM 手工创建采购订单得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MM 手工创建采购订单比例" prop="mmManualpocreation">
-        <el-input v-model="queryParams.mmManualpocreation" placeholder="请输入MM 手工创建采购订单比例" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MM 未清采购申请得分" prop="mmUnsettledpurchaserequestsscore">
-        <el-input v-model="queryParams.mmUnsettledpurchaserequestsscore" placeholder="请输入MM 未清采购申请得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="MM 未清采购申请" prop="mmUnsettledpurchaserequests">
-        <el-input v-model="queryParams.mmUnsettledpurchaserequests" placeholder="请输入MM 未清采购申请" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="FICO 月度标准价格与周期单位价格综合差异得分" prop="ficoMonthlystandardpricevariationscore">
-        <el-input v-model="queryParams.ficoMonthlystandardpricevariationscore" placeholder="请输入FICO 月度标准价格与周期单位价格综合差异得分"
-          clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="FICO 月度标准价格与周期单位价格综合差异率" prop="ficoMonthlystandardpricevariation">
-        <el-input v-model="queryParams.ficoMonthlystandardpricevariation" placeholder="请输入FICO 月度标准价格与周期单位价格综合差异率"
-          clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="跨月生产订单得分" prop="crossMonthProductionOrders">
-        <el-input v-model="queryParams.crossMonthProductionOrders" placeholder="请输入跨月生产订单得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="跨月生产订单比例" prop="CrossMonthProductionOrders">
-        <el-input v-model="queryParams.CrossMonthProductionOrders" placeholder="请输入跨月生产订单比例" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="PM 维修订单完工不及时得分" prop="pmLatemaintenanceordercompletionscore">
-        <el-input v-model="queryParams.pmLatemaintenanceordercompletionscore" placeholder="请输入PM 维修订单完工不及时得分" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="PM 维修订单完工不及时率" prop="pmLatemaintenanceordercompletion">
-        <el-input v-model="queryParams.pmLatemaintenanceordercompletion" placeholder="请输入PM 维修订单完工不及时率" clearable
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="" prop="createBy">
-        <el-input v-model="queryParams.createBy" placeholder="请输入" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="" prop="createTime">
-        <el-date-picker clearable v-model="queryParams.createTime" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="" prop="updateBy">
-        <el-input v-model="queryParams.updateBy" placeholder="请输入" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="" prop="updateTime">
-        <el-date-picker clearable v-model="queryParams.updateTime" type="date" value-format="yyyy-MM-dd"
-          placeholder="请选择">
-        </el-date-picker>
-      </el-form-item> -->
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -137,10 +34,10 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"
           v-hasPermi="['enterprise:management:remove']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
           v-hasPermi="['enterprise:management:export']">导出</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
         <el-button type="primary" icon="el-icon-share" @click="showDialog = true" size="mini" plain v-if="true"
@@ -220,9 +117,9 @@
       <el-table-column label="操作" fixed="right" align="center" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['enterprise:Management:edit']">修改</el-button>
+            v-hasPermi="['enterprise:management:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['enterprise:Management:remove']">删除</el-button>
+            v-hasPermi="['enterprise:management:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -724,7 +621,7 @@ export default {
       const fileName = file.name;
       const fileExt = fileName.split(".").pop(); // 获取文件的扩展名
 
-      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm") {
+      if (fileExt.toLowerCase() !== "xlsx" && fileExt.toLowerCase() !== "xlsm" && fileExt.toLowerCase() !== "xls") {
         this.$message.error("只能上传 Excel 文件！");
         // this.$refs.fileInput.value = ""; // 清空文件选择框
       }

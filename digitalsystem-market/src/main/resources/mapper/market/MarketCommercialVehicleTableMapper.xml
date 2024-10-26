@@ -331,7 +331,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 FROM (
                          SELECT
                              MONTH(Precision_Completion_Period) AS Month,
-                             AVG(DATEDIFF(Precision_Completion_Period, Acceptance_Date)) AS Average_Days_Difference
+                             AVG(DATEDIFF(Precision_Completion_Period, Vehicle_Launch_Date)) AS Average_Days_Difference
                          FROM
                              Market_Commercial_Vehicle_table
                          WHERE
@@ -342,7 +342,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ) AS Threshold ON MONTH(mv.Precision_Completion_Period) = Threshold.Month
         WHERE
             mv.Vehicle_Model REGEXP 'CPCD?([4-9]\\d|1[0-9]\\d|100)'
-          AND DATEDIFF(mv.Precision_Completion_Period, mv.Acceptance_Date) > Threshold.Threshold
+          AND DATEDIFF(mv.Precision_Completion_Period, mv.Vehicle_Launch_Date) > Threshold.Threshold
         ORDER BY
             MONTH(mv.Precision_Completion_Period) ASC;
     </select>

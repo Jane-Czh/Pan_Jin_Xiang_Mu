@@ -112,9 +112,9 @@ public class FinancialBalanceTable extends BaseEntity {
     private Double growthRateInventory;
 
     /**
-     * 销售增长率(计算)
+     * 低值易耗品
      */
-    private Double growthRateSales;
+    private Double lowValueConsumablesAmount;
 
     /**
      * 应收账款

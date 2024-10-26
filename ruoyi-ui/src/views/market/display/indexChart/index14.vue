@@ -4,15 +4,15 @@
         <div class="block">
             
     <!-- 添加标签页标题 -->
-    <span class="DataSelect" style="margin-right:10px">填写数字</span>
+    <!-- <span class="DataSelect" style="margin-right:10px">填写数字</span> -->
     <!-- 添加输入框 -->
     <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
-  
+<!--   
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
             <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
                 @change="handleDateChange">
-            </el-date-picker>
+            </el-date-picker> -->
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
         </div>
         <div id="main" ref="main"></div>
@@ -342,6 +342,10 @@ option = {
     {
       type: 'category',
       axisTick: { show: false },
+       axisLabel: {
+        interval:0,
+        rotate:40
+      },
       data: xAxisData
     }
   ],

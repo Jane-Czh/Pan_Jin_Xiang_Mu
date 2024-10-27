@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.file.mapper.DepartmentFilesTableMapper">
+    
+    <resultMap type="DepartmentFilesTable" id="DepartmentFilesTableResult">
+        <result property="id"    column="id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="folderId"    column="folder_id"    />
+        <result property="uploadTime"    column="upload_time"    />
+    </resultMap>
+
+    <sql id="selectDepartmentFilesTableVo">
+        select id, file_name, file_path, file_size, file_type, folder_id, upload_time from Department_Files_table
+    </sql>
+
+    <select id="selectDepartmentFilesTableList" parameterType="DepartmentFilesTable" resultMap="DepartmentFilesTableResult">
+        <include refid="selectDepartmentFilesTableVo"/>
+        <where>  
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+             <if test="fileSize != null "> and file_size = #{fileSize}</if>
+              <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="folderId != null "> and folder_id = #{folderId}</if>
+            <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectDepartmentFilesTableById" parameterType="Long" resultMap="DepartmentFilesTableResult">
+        <include refid="selectDepartmentFilesTableVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDepartmentFilesTable" parameterType="DepartmentFilesTable">
+        insert into Department_Files_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="fileType != null">file_type,</if>
+            <if test="folderId != null">folder_id,</if>
+            <if test="uploadTime != null">upload_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="folderId != null">#{folderId},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDepartmentFilesTable" parameterType="DepartmentFilesTable">
+        update Department_Files_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="folderId != null">folder_id = #{folderId},</if>
+            <if test="uploadTime != null">upload_time = #{uploadTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDepartmentFilesTableById" parameterType="Long">
+        delete from Department_Files_table where id = #{id}
+    </delete>
+
+    <delete id="deleteDepartmentFilesTableByIds" parameterType="String">
+        delete from Department_Files_table where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getAllfilesByFolderId" resultType="departmentFilesTable">
+        WITH RECURSIVE folder_tree AS (
+            SELECT id, parent_id, folder_name
+            FROM Department_Folders_table
+            WHERE id = #{folderId}
+            UNION ALL
+            SELECT f.id, f.parent_id, f.folder_name
+            FROM Department_Folders_table f
+            INNER JOIN folder_tree ft ON f.parent_id = ft.id
+        )
+        SELECT f.id, f.file_name, f.folder_id,f.file_path,f.file_type,f.file_size,f.upload_time
+        FROM Department_Files_table f
+        INNER JOIN folder_tree ft ON f.folder_id = ft.id
+        WHERE f.file_name like concat('%', #{fileName}, '%')
+    </select>
+</mapper>

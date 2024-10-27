@@ -62,5 +62,6 @@ public interface ProjectInfoTableMapper
      */
     public int deleteProjectInfoTableByProjectIds(Long[] projectIds);
 
+
     public void batchInsert(@Param("list") List<ProjectInfoTable> marketCarTypes);
 }

@@ -77,6 +77,7 @@ public class ProjectInfoRecycleController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ProjectInfoRecycle projectInfoRecycle)
     {
+        System.out.println("--------"+projectInfoRecycle);
         return toAjax(projectInfoRecycleService.insertProjectInfoRecycle(projectInfoRecycle));
     }
 

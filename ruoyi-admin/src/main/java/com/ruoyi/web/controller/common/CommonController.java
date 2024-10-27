@@ -76,10 +76,11 @@ public class CommonController {
 
 
             // plan 2、本即测试原方法
-//            String url = serverConfig.getUrl() + fileName;
+            String url = serverConfig.getUrl() + fileName;
 
             // plan 3、docker 手动替换ip为当前机方法
-            String url = "http://localhost:8080" + fileName;
+//            String url = "http://10.36.53.24:8080" + fileName;
+//            String url = "http://localhost:8080" + fileName;
 //            String url = "http://172.19.9.156:8080" + fileName;
             System.out.println("上传文件的 url=============>" + url);
 

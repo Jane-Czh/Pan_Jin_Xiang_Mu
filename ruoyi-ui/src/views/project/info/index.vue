@@ -265,10 +265,10 @@
         </template>
       </el-table-column>
       <el-table-column label="项目组成员" align="center" prop="teamMembers" />
-      <el-table-column label="项目现状" align="center" prop="currentStatus" />
+      <el-table-column label="项目现状" align="center" prop="currentStatus" width="200px"/>
 
-      <el-table-column label="项目目标" align="center" prop="goal" />
-      <el-table-column label="项目范围" align="center" prop="scope" />
+      <el-table-column label="项目目标" align="center" prop="goal" width="250px"/>
+      <el-table-column label="项目范围" align="center" prop="scope" width="250px"/>
 
       <!-- <el-table-column label="导入时间" align="center" prop="importDate" width="180">
         <template slot-scope="scope">

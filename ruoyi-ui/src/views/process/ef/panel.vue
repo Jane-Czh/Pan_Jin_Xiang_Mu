@@ -1338,7 +1338,7 @@ export default {
       this.dialogSBDSVisible = false;
       //ori ----> this.dataReload(data);
       //增加对数据的ids转换, 但是保留原始数据间的联系
-     
+
 
       // 创建一个 id 映射，用于保存旧 ID 到新 ID 的映射关系
       let idMapping = {};

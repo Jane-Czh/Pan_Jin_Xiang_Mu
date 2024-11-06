@@ -9,7 +9,7 @@
       label-width="68px"
     >
       <!-- 部门 进行搜索  -->
-      <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
+      <el-form-item label="主责部门" prop="mainResponsibleDepartment">
         <el-select
           v-model="queryParams.mainResponsibleDepartment"
           :placeholder="`总数： ${departments.length}`"
@@ -63,10 +63,12 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-        >搜索</el-button
+        >搜索
+        </el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-        >重置</el-button
+        >重置
+        </el-button
         >
       </el-form-item>
     </el-form>
@@ -74,24 +76,44 @@
 
     <el-row>
       <el-col :span="8">
+        <el-card shadow="hover" class="total-card">
+          <!--          ${modules.length}-->
+          <div class="title">主责部门总数: {{ departments.length }}</div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="hover" class="total-card">
+          <div class="title">业务模块总数: {{ this.modulesList.length }}</div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="hover" class="total-card">
+          <div class="title">细分业务总数: {{ this.subBusinessesList.length }}</div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+
+    <el-row>
+      <el-col :span="8">
         <el-card shadow="hover" class="first-row-card">
           <div class="title">流程</div>
-          <div class="subtitle">A级数量: {{processACounts}}</div>
-          <div class="subtitle">B级数量: {{processBCounts}}</div>
-          <div class="subtitle">C级数量: {{processCCounts}}</div>
+          <div class="subtitle">A级数量: {{ processACounts }}</div>
+          <div class="subtitle">B级数量: {{ processBCounts }}</div>
+          <div class="subtitle">C级数量: {{ processCCounts }}</div>
         </el-card>
       </el-col>
       <el-col :span="8">
         <el-card shadow="hover" class="first-row-card">
           <div class="title">制度</div>
-          <div class="subtitle">公司级数量: {{companyRegulationCounts}}</div>
-          <div class="subtitle">部门级数量: {{departmentRegulationCounts}}</div>
+          <div class="subtitle">公司级数量: {{ companyRegulationCounts }}</div>
+          <div class="subtitle">部门级数量: {{ departmentRegulationCounts }}</div>
         </el-card>
       </el-col>
       <el-col :span="8">
         <el-card shadow="hover" class="first-row-card">
           <div class="title">表单</div>
-          <div class="subtitle">数量: {{formCounts}}</div>
+          <div class="subtitle">数量: {{ formCounts }}</div>
         </el-card>
       </el-col>
     </el-row>
@@ -155,7 +177,8 @@
             <div>部门级</div>
             <br>
             <div class="content" ref="scrollContainer">
-              <el-card v-for="(item, index) in departmentRegulationList" :key="item.id" shadow="hover" class="policy-card">
+              <el-card v-for="(item, index) in departmentRegulationList" :key="item.id" shadow="hover"
+                       class="policy-card">
                 <div class="policy-item">
                   <span>{{ index + 1 }}.  </span>
                   <span>{{ item.regulationsTitle }}</span>
@@ -201,6 +224,10 @@ export default {
       processACounts: 0, //A级流程数量
       processBCounts: 0, //B级流程数量
       processCCounts: 0, //C级流程数量
+
+      totalDepartments: 0,
+      totalModule: 0,
+      totalXifen: 0,
 
       /* ------表单-------- */
       formList: [],  //表单列表
@@ -268,6 +295,8 @@ export default {
   created() {
     this.getList();
     this.getDeptList();
+    this.handleDepartmentChange();
+    this.handleModuleChange();
   },
   methods: {
     /** 查询列表 */
@@ -282,7 +311,7 @@ export default {
         this.departmentRegulationCounts = this.departmentRegulationList.length;
       });
       //表单查询参数
-      const formQueryParams= {
+      const formQueryParams = {
         pageNum: 1,
         pageSize: 10000,
         departmentCategory: this.queryParams.mainResponsibleDepartment,
@@ -310,7 +339,7 @@ export default {
         this.processAList = this.processList.filter(item => item.level === 'A级');
         this.processBList = this.processList.filter(item => item.level === 'B级');
         this.processCList = this.processList.filter(item => item.level === 'C级');
-        console.log("this.processList===>",this.processList);
+        console.log("this.processList===>", this.processList);
         this.processACounts = this.processAList.length;
         this.processBCounts = this.processBList.length;
         this.processCCounts = this.processCList.length;
@@ -331,7 +360,7 @@ export default {
         this.departmentRegulationCounts = this.departmentRegulationList.length;
       });
       //表单查询参数
-      const formQueryParams= {
+      const formQueryParams = {
         pageNum: 1,
         pageSize: 10000,
         departmentCategory: this.queryParams.mainResponsibleDepartment,
@@ -358,11 +387,11 @@ export default {
         console.log("processList123===>", response);
 
         this.processList = response;
-        console.log("this.projectList===>",this.processList);
+        console.log("this.projectList===>", this.processList);
         this.processAList = this.processList.filter(item => item.level === 'A级');
         this.processBList = this.processList.filter(item => item.level === 'B级');
         this.processCList = this.processList.filter(item => item.level === 'C级');
-        console.log("this.processListA===>",this.processAList);
+        console.log("this.processListA===>", this.processAList);
         this.processACounts = this.processAList.length;
         this.processBCounts = this.processBList.length;
         this.processCCounts = this.processCList.length;
@@ -414,16 +443,17 @@ export default {
     async handleDepartmentChange(department) {
       this.formData.businessesModules = ""; // 重置上级业务模块选择
       this.modules = []; // 清空之前的模块
+      await listModuless(this.moduleQueryParams).then((response) => {
+        this.modulesList = response.rows;
+      });
       if (department) {
         try {
-          await listModuless(this.moduleQueryParams).then((response) => {
-            this.modulesList = response.rows;
-          });
-
           for (let i = 0; i < this.modulesList.length; i++) {
             console.log("123===" + this.modulesList[i].parentDepartment);
             // 根据部门字段进行筛选
             if (this.modulesList[i].parentDepartment === department) {
+              this.queryParams.businesses = '';
+              this.queryParams.subBusinesses = '';
               this.modules.push(this.modulesList[i]);
             }
           }
@@ -441,17 +471,18 @@ export default {
       console.log("module===", module);
       this.formData.subBusinesses = ""; // 重置细分业务选择
       this.subBusinesses = []; // 清空之前的细分业务
+
+      // 获取所有细分业务
+      await listBusinessess(this.xifenQueryParams).then((response) => {
+        this.subBusinessesList = response.rows;
+      });
       if (module) {
         try {
-          // 获取所有细分业务
-          await listBusinessess(this.xifenQueryParams).then((response) => {
-            this.subBusinessesList = response.rows;
-          });
-
           for (let i = 0; i < this.subBusinessesList.length; i++) {
             console.log("12321===" + this.subBusinessesList[i]);
             // 根据业务模块字段进行筛选
             if (this.subBusinessesList[i].parentModule === module) {
+              this.queryParams.subBusinesses = '';
               this.subBusinesses.push(this.subBusinessesList[i]);
             }
           }
@@ -476,6 +507,15 @@ export default {
 .title {
   font-size: 1.2em; /* 字体略大 */
 }
+
+.total-card {
+  margin: 10px;
+  width: 90%;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.3s ease;
+  height: 50px; /* 第一行卡片的高度 */
+}
+
 .first-row-card {
   margin: 10px;
   width: 90%;
@@ -504,7 +544,6 @@ export default {
   max-height: 200px; /* 可根据需要调整最大高度，超过则滚动条出现 */
   padding: 10px;
 }
-
 
 
 </style>

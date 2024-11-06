@@ -112,6 +112,28 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
     @Override
     public int insertQualityInspectionRecord(QualityInspectionRecord qualityInspectionRecord) {
         qualityInspectionRecord.setCreateTime(DateUtils.getNowDate());
+        log.info("新增质检表" + qualityInspectionRecord);
+
+        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
+        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
+        if (qualityInspectionRecord.getLargeTonPassRate() == null) {
+            qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) (qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getK2lessthan5tonProblemVehicles())
+                    / (double) (qualityInspectionRecord.getK2largetonnageProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity())) * 100));
+        }
+        if (qualityInspectionRecord.getElectricCarPassRate() == null) {
+            qualityInspectionRecord.setElectricCarPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getElectricCarProblemVehicles() / (double) qualityInspectionRecord.getElectricCarProductionQuantity()) * 100));
+        }
+        if (qualityInspectionRecord.getSingleInspectionPassRate() == null) {
+            qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
+        }
+        if (qualityInspectionRecord.getIcvPassRate() == null) {
+            qualityInspectionRecord.setIcvPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getIcvProblemVehicles() / (double) qualityInspectionRecord.getIcvProductionQuantity()) * 100));
+        }
+        if (qualityInspectionRecord.getAllPassRate() == null) {
+            qualityInspectionRecord.setAllPassRate(BigDecimal.valueOf((1 - (double) (problemNum + qualityInspectionRecord.getIcvProblemVehicles()) / (double) (productionNum + qualityInspectionRecord.getIcvProductionQuantity())) * 100));
+        }
+
+
 //        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
 //        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
 //        qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
@@ -129,6 +151,24 @@ public class QualityInspectionRecordServiceImpl implements IQualityInspectionRec
     @Override
     public int updateQualityInspectionRecord(QualityInspectionRecord qualityInspectionRecord) {
         qualityInspectionRecord.setUpdateTime(DateUtils.getNowDate());
+        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
+        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
+        if (qualityInspectionRecord.getLargeTonPassRate() == null) {
+            qualityInspectionRecord.setLargeTonPassRate(BigDecimal.valueOf((1 - (double) (qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getK2lessthan5tonProblemVehicles())
+                    / (double) (qualityInspectionRecord.getK2largetonnageProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity())) * 100));
+        }
+        if (qualityInspectionRecord.getElectricCarPassRate() == null) {
+            qualityInspectionRecord.setElectricCarPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getElectricCarProblemVehicles() / (double) qualityInspectionRecord.getElectricCarProductionQuantity()) * 100));
+        }
+        if (qualityInspectionRecord.getSingleInspectionPassRate() == null) {
+            qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));
+        }
+        if (qualityInspectionRecord.getIcvPassRate() == null) {
+            qualityInspectionRecord.setIcvPassRate(BigDecimal.valueOf((1 - (double) qualityInspectionRecord.getIcvProblemVehicles() / (double) qualityInspectionRecord.getIcvProductionQuantity()) * 100));
+        }
+        if (qualityInspectionRecord.getAllPassRate() == null) {
+            qualityInspectionRecord.setAllPassRate(BigDecimal.valueOf((1 - (double) (problemNum + qualityInspectionRecord.getIcvProblemVehicles()) / (double) (productionNum + qualityInspectionRecord.getIcvProductionQuantity())) * 100));
+        }
 //        long problemNum = qualityInspectionRecord.getK2lessthan5tonProblemVehicles() + qualityInspectionRecord.getK2largetonnageProblemVehicles() + qualityInspectionRecord.getElectricCarProblemVehicles();
 //        long productionNum = qualityInspectionRecord.getElectricCarProductionQuantity() + qualityInspectionRecord.getK2lessthan5tonProductionQuantity() + qualityInspectionRecord.getK2largetonnageProductionQuantity();
 //        qualityInspectionRecord.setSingleInspectionPassRate(BigDecimal.valueOf((1 - (double) problemNum / (double) productionNum) * 100));

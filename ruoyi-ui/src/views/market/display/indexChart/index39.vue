@@ -402,8 +402,8 @@ export default {
       const currentDate = new Date();
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth() + 1;
-      const startDate = new Date(currentYear, 0, 1);
-      const endDate = new Date(currentYear, currentMonth, 0);
+      const startDate = moment(new Date(currentYear, 0, 1)).format('YYYY-MM-DD');
+      const endDate = moment(new Date(currentYear, currentMonth, 0)).format('YYYY-MM-DD');
       this.selectedDate = [startDate, endDate];
     },
   },

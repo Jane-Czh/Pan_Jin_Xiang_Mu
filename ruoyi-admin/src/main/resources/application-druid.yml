@@ -7,9 +7,11 @@ spring:
             # 主库数据源
             master:
               # 实验室小主机 docker
-#              url: jdbc:mysql://124.222.36.192:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-#              username: root
+              url: jdbc:mysql://172.19.1.189:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+              username: root
+              password: 123456
 #              password: 0bv1Ud7tywl4XiIL
+
 
               # localhsot本机测试
 #                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
@@ -17,9 +19,9 @@ spring:
 #                password: root
 
               # 实验室堡垒机
-                url: jdbc:mysql://172.19.14.180:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: 123456
+#                url: jdbc:mysql://172.19.14.180:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#                username: root
+#                password: 123456
 
             # 从库数据源
             slave:
@@ -27,7 +29,7 @@ spring:
                 enabled: true
 
               # 实验室小主机 docker
-                url: jdbc:mysql://172.19.14.180:3306/panjin_project?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://172.19.1.189:3306/panjin_project?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: 123456
             # 公网部署

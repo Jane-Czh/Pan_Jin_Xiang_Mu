@@ -85,18 +85,20 @@
             <span>{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-
-        <el-table-column label="文件名称" align="center" prop="formName" />
-        <el-table-column
-          label="表单所属科室"
-          align="center"
-          prop="departmentCategory"
-        />
         <el-table-column
           label="表单标题"
           align="center"
           prop="formTitle"
         />
+
+        <el-table-column
+          label="表单所属科室"
+          align="center"
+          prop="departmentCategory"
+        />
+        <el-table-column label="文件名称" align="center" prop="formName" />
+
+       
       </el-table>
     </el-tab-pane>
     <!-- ---------------------------------------------------------------- -->

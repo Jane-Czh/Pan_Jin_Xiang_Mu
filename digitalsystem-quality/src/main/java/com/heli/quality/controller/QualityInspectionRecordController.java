@@ -95,8 +95,12 @@ public class QualityInspectionRecordController extends BaseController {
         return success(qualityInspectionRecordService.selectQualityInspectionRecordByQiId(qiId));
     }
 
+
     /**
-     * 新增质检部分字段
+     * @description: 新增质检表，其中四个计算数据，如果有数据则不计算，直接插入，没有数据则计算
+     * @author: hong
+     * @date: 2024/11/6 16:14
+     * @version: 1.0
      */
     @PreAuthorize("@ss.hasPermi('quality:inspection:add')")
     @Log(title = "质检部分字段", businessType = BusinessType.INSERT)

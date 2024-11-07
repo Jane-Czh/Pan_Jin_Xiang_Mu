@@ -34,7 +34,7 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
     @Autowired
     private MarketSalesTableStorageMapper marketSalesTableStorageMapper;
 
-    private static final int BATCH_COUNT = 5000; // 批处理数量
+    private static final int BATCH_COUNT = 500; // 批处理数量
     //缓存一批数据
     private List<MarketSalesTable> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**

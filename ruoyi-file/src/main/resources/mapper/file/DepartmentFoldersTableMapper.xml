@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.file.mapper.DepartmentFoldersTableMapper">
+    
+    <resultMap type="DepartmentFoldersTable" id="DepartmentFoldersTableResult">
+        <result property="id"    column="id"    />
+        <result property="folderName"    column="folder_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectDepartmentFoldersTableVo">
+        select id, folder_name, parent_id, created_time, updated_time from Department_Folders_table
+    </sql>
+
+    <select id="selectDepartmentFoldersTableList" parameterType="DepartmentFoldersTable" resultMap="DepartmentFoldersTableResult">
+        <include refid="selectDepartmentFoldersTableVo"/>
+        <where>  
+            <if test="folderName != null  and folderName != ''"> and folder_name like concat('%', #{folderName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="updatedTime != null "> and updated_time = #{updatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectDepartmentFoldersTableById" parameterType="Long" resultMap="DepartmentFoldersTableResult">
+        <include refid="selectDepartmentFoldersTableVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDepartmentFoldersTable" parameterType="DepartmentFoldersTable">
+        insert into Department_Folders_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="folderName != null">folder_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="updatedTime != null">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="folderName != null">#{folderName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDepartmentFoldersTable" parameterType="DepartmentFoldersTable">
+        update Department_Folders_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="folderName != null">folder_name = #{folderName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDepartmentFoldersTableById" parameterType="Long">
+        delete from Department_Folders_table where id = #{id}
+    </delete>
+
+    <delete id="deleteDepartmentFoldersTableByIds" parameterType="String">
+        delete from Department_Folders_table where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

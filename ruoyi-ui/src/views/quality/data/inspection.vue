@@ -173,15 +173,6 @@
         <el-form-item label="K2系列5-10t问题车数量" prop="k2largetonnageProblemVehicles">
           <el-input v-model="form.k2largetonnageProblemVehicles" placeholder="请输入K2系列5-10t问题车数量" />
         </el-form-item>
-        <el-form-item label="电车一次交检合格率" prop="electricCarPassRate">
-          <el-input v-model="form.electricCarPassRate" placeholder="请输入电车一次交检合格率" />
-        </el-form-item>
-        <el-form-item label="大吨位一次交检合格率" prop="largeTonPassRate">
-          <el-input v-model="form.largeTonPassRate" placeholder="请输入大吨位一次交检合格率" />
-        </el-form-item>
-        <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
-          <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
-        </el-form-item>
         <el-form-item label="小吨位内燃车检查数量" prop="icvProductionQuantity">
           <el-input v-model="form.icvProductionQuantity" placeholder="请输入小吨位内燃车生产数量" />
         </el-form-item>
@@ -190,6 +181,15 @@
         </el-form-item>
         <el-form-item label="小吨位内燃车一次交检合格率" prop="icvPassRate">
           <el-input v-model="form.icvPassRate" placeholder="请输入小吨位内燃车一次交检合格率" />
+        </el-form-item>
+        <el-form-item label="电车一次交检合格率" prop="electricCarPassRate">
+          <el-input v-model="form.electricCarPassRate" placeholder="请输入电车一次交检合格率" />
+        </el-form-item>
+        <el-form-item label="大吨位一次交检合格率" prop="largeTonPassRate">
+          <el-input v-model="form.largeTonPassRate" placeholder="请输入大吨位一次交检合格率" />
+        </el-form-item>
+        <el-form-item label="电车、大吨位一次交检合格率(%)" prop="singleInspectionPassRate">
+          <el-input v-model="form.singleInspectionPassRate" placeholder="请输入电车、大吨位一次交检合格率(%)" />
         </el-form-item>
         <el-form-item label="一次交检合格率" prop="allPassRate">
           <el-input v-model="form.allPassRate" placeholder="请输入一次交检合格率" />
@@ -206,7 +206,7 @@
 <script>
 import { listInspection, getInspection, delInspection, addInspection, updateInspection } from "@/api/quality/inspection";
 import { uploadFile, handleTrueDownload } from '@/api/financial/excelImport';
-import { numValidatorPercentage, numValidatorNonZeroNature, numValidator } from '@/api/financial/numValidator.js';
+import { numValidatorPercentage, numValidatorNonZeroNature, numValidator,numValidatorEnableEmpty } from '@/api/financial/numValidator.js';
 export default {
 
   name: "Inspection",
@@ -310,22 +310,22 @@ export default {
         ],
         singleInspectionPassRate: [
           {
-            required: true,
-            validator: numValidator,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur"
           }
         ],
         largeTonPassRate: [
           {
-            required: true,
-            validator: numValidator,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur"
           }
         ],
         electricCarPassRate: [
           {
-            required: true,
-            validator: numValidator,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur"
           }
         ],
@@ -346,15 +346,15 @@ export default {
         ],
         icvPassRate: [
           {
-            required: true,
-            validator: numValidator,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur"
           }
         ],
         allPassRate: [
           {
-            required: true,
-            validator: numValidator,
+            // required: true,
+            validator: numValidatorEnableEmpty,
             trigger: "blur"
           }
         ],

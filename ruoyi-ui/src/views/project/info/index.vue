@@ -112,7 +112,7 @@
           v-hasPermi="['project:Info:export']"
         >导出</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button 
           type="primary" 
           plain
@@ -120,16 +120,9 @@
           @click="dialogVisible = true"
            v-hasPermi="['updata_recode:recode:list']"
         >历史记录</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <!--Excel 参数导入 -->
-
-        <!-- <el-button
-          type="primary"
-          @click="showDialog = true"
-        ><i class="fa fa-download"></i>导入Excel文件
-        </el-button> -->
-
         <el-button
           type="warning"
           plain
@@ -165,7 +158,7 @@
       </el-col>
 
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain v-if="true">下载模版文件
+        <el-button type="primary" icon="el-icon-download" @click="handleDownload" size="mini" plain >下载模版文件
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -272,10 +265,10 @@
         </template>
       </el-table-column>
       <el-table-column label="项目组成员" align="center" prop="teamMembers" />
-      <el-table-column label="项目现状" align="center" prop="currentStatus" />
+      <el-table-column label="项目现状" align="center" prop="currentStatus" width="200px"/>
 
-      <el-table-column label="项目目标" align="center" prop="goal" />
-      <el-table-column label="项目范围" align="center" prop="scope" />
+      <el-table-column label="项目目标" align="center" prop="goal" width="250px"/>
+      <el-table-column label="项目范围" align="center" prop="scope" width="250px"/>
 
       <!-- <el-table-column label="导入时间" align="center" prop="importDate" width="180">
         <template slot-scope="scope">
@@ -447,7 +440,7 @@
 </template>
 
 <script>
-import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, uploadImport, handleTrueDownload} from "@/api/project/info";
+import { listInfo, getProjectInfo, delInfo, addInfo, updateInfo, updateInfoHistory, uploadImport, handleTrueDownload, recycle} from "@/api/project/info";
 import { listHistory } from "@/api/project/history";
 import { listRecycle, addRecycle } from "@/api/project/recycle";
 import { listRecode } from "@/api/project/recode";
@@ -936,6 +929,7 @@ export default {
       });
     },
     /** 删除按钮操作 */
+    /** 此删除操作为项目完成或项目终止，将其移入历史项目中 */
     handleDeletefinish(row) {
       const projectIds = row.projectId || this.ids;
       this.$modal.confirm('是否确认移除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
@@ -949,6 +943,8 @@ export default {
       }).catch(() => {});
 
     },
+
+    /** 此删除操作为项目完成或项目终止，将其移入历史项目中 */
     handleDeleteaborted(row) {
       const projectIds = row.projectId || this.ids;
       this.$modal.confirm('是否确认移除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
@@ -962,13 +958,13 @@ export default {
       }).catch(() => {});
 
     },
+
     //将项目移入回收站
     recycleInfo(row){
       const projectIds = row.projectId || this.ids;
       this.$modal.confirm('是否确认移除项目基本信息编号为"' + projectIds + '"的数据项？').then(function() {
         return delInfo(projectIds);
       }).then(function(){
-        row.status = "已取消";
         return addRecycle(row);
       }).then(() => {
         this.getList();
@@ -977,56 +973,22 @@ export default {
       }).catch(() => {});
     },
 
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('project/Info/export', {
-        ...this.queryParams
-      }, `Info_${new Date().getTime()}.xlsx`)
-    },
-
+    //批量移入回收站
     handleBatchRecycle() {
       // 检查是否有项目被选中
       if (!this.ids || this.ids.length === 0) {
         this.$modal.msgWarning('请至少选择一个项目进行操作。');
         return;
       }
-
+      const projectIds = this.ids;
       // 确认删除操作
       this.$modal.confirm('是否确认移除选中的项目信息？').then(() => {
-        // 从选中的项目中提取所有的 projectId
-        // 调用删除接口
-        // return delInfo(this.ids);
+
       }).then(() => {
-        
         console.log("this.ids=="+this.ids);
-        var temp = getProjectInfo(this.ids).data;
+        recycle(projectIds);
 
-        temp = temp.data;
-        console.log("hello +"+temp);
-       
-
-          // 获取每个 projectId 对应的完整项目信息
-          const getInfoPromises = this.ids.map(projectId =>   getProjectInfo(projectId));
-
-      
-
-
-          console.log("--------"+temp);
-
-          console.log("======"+getInfoPromises);
-          // 等待所有项目信息获取完成
-          return Promise.all(getInfoPromises);
-        }).then(fullProjectInfos => {
-          // 使用获取到的完整项目信息来调用 addRecycle
-          const addRecyclePromises = fullProjectInfos.map(projectInfo => {
-            // 假设这里需要设置项目的状态为 "已取消"
-            projectInfo.status = "已取消";
-            return addRecycle(projectInfo);
-          });
-
-          // 等待所有 addRecycle 调用完成
-          return Promise.all(addRecyclePromises);
-      }).then(() => {
+        }).then(() => {
         // 删除和更新操作成功后，重新获取列表
         this.getList();
         // 显示成功消息
@@ -1036,6 +998,14 @@ export default {
         // 处理取消操作或其他错误
         this.$modal.msgError('操作已取消或发生错误。');
       });
+    },
+
+
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('project/Info/export', {
+        ...this.queryParams
+      }, `Info_${new Date().getTime()}.xlsx`)
     },
 
 

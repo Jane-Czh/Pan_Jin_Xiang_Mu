@@ -588,9 +588,9 @@ export default {
       ],
       //项目等级
       levelOptions:[
-        { value: 'A级', label: 'A级' },
-        { value: 'B级', label: 'B级' },
-        { value: 'C级', label: 'C级' },
+        { value: 'A', label: 'A' },
+        { value: 'B', label: 'B' },
+        { value: 'C', label: 'C' },
       ],
       //项目类别
       categoryOptions: [

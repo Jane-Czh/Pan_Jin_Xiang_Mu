@@ -236,6 +236,7 @@ export function listFilemanagement(query) {
     params: query
   })
 }
+
 // 1.2 查询制度文件列表 所有的文件
 export function listFilemanagementAll(query) {
   return request({

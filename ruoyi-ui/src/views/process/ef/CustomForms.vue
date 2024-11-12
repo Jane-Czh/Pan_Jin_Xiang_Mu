@@ -3,13 +3,12 @@
     <!-- 1 -->
     <el-tab-pane
       label="表单文件"
-      name="first"
       style="background-color: #f2f2f2; padding: 2px"
     >
       <!-- 检索框 -->
       <el-input
         v-model="searchQuery"
-        placeholder="请输入[制度文件名称]进行检索"
+        placeholder="输入文件名称自动搜索"
         @input="handleSearch"
         style="margin-bottom: 10px"
       />
@@ -37,13 +36,15 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="文件名称" align="center" prop="formName" />
+        <el-table-column label="表单名称" align="center" prop="formTitle" />
+        
         <el-table-column
           label="表单所属科室"
           align="center"
           prop="departmentCategory"
         />
-        <el-table-column label="表单标题" align="center" prop="formTitle" />
+        <el-table-column label="文件名称" align="center" prop="formName" />
+        
       </el-table>
 
       <!-- 分页功能 -->
@@ -59,7 +60,9 @@
 </template>
 
 <script>
-import { listFormfilemanagementAll } from "@/api/system/project";
+// import { listFormfilemanagementAll } from "@/api/system/project";
+import { listFormfilemanagement } from "@/api/system/project";
+
 
 export default {
   props: {
@@ -88,7 +91,7 @@ export default {
       // 制度查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 100,
         regulationsTitle: null,
         useScope: null,
         uploadDate: null,
@@ -137,7 +140,7 @@ export default {
     },
     /** 查询表单文件列表 */
     getRegularFileData() {
-      listFormfilemanagementAll(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });

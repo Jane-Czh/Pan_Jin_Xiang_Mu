@@ -150,17 +150,26 @@
                       <pre style="white-space: pre-wrap;">组成员: {{ info.teamMembers }}</pre>
                       <pre style="white-space: pre-wrap;">项目状态: {{ info.status }}</pre>
                       <pre style="white-space: pre-wrap;">交付物: </pre>
-                      <div style="white-space: pre-wrap;">
-                        <div v-if="info.progress">
+                      <!-- 下载 -->
+                      <div style="white-space: pre-wrap; display: flex; align-items: center;">
+                        <div v-if="info.progress" style="margin-right: 10px;">
                           <a :href="info.progress" download>
                             <el-button size="small" type="primary">下载</el-button>
                           </a>
+                        </div>
+                        <div v-else style="margin-right: 10px;">
+                          无文件
+                        </div>
+                        <!-- 预览 -->
+                        <div v-if="info.progress">
+                          <el-button size="small" type="primary" @click="handlePreview(info.progress)">预览</el-button>
                         </div>
                         <div v-else>
                           无文件
                         </div>
                       </div>
-                      
+
+
                       <pre style="white-space: pre-wrap;">项目现状: {{ info.currentStatus }}</pre>
                       <pre style="white-space: pre-wrap;">目标: {{ info.goal }}</pre>
                       <pre style="white-space: pre-wrap;">范围: {{ info.scope }}</pre>
@@ -210,7 +219,7 @@
             </el-table-column>
             <el-table-column label="结束时间" align="center" prop="associationDate" width="180">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.importDate, '{y}-{m}-{d}') }}</span>
+                <span>{{ parseTime(scope.row.associationDate, '{y}-{m}-{d}') }}</span>
               </template>
             </el-table-column>
             <el-table-column label="项目总进度" align="center" prop="progressAlloverProgress" />
@@ -579,9 +588,9 @@ export default {
       ],
       //项目等级
       levelOptions:[
-        { value: 'A级', label: 'A级' },
-        { value: 'B级', label: 'B级' },
-        { value: 'C级', label: 'C级' },
+        { value: 'A', label: 'A' },
+        { value: 'B', label: 'B' },
+        { value: 'C', label: 'C' },
       ],
       //项目类别
       categoryOptions: [
@@ -1150,19 +1159,21 @@ export default {
         this.$emit("input", this.fileList.map(file => file.url).join(','));
       }
     },
-    previewImage(photoUrl) {
+
+    // 预览文件
+    handlePreview(Url) {
       // 在这里实现预览图片的逻辑
       // 例如，可以打开一个模态框显示图片
-      console.log('预览图片', photoUrl);
-      if (!photoUrl) {
+      console.log('预览图片', Url);
+      if (!Url) {
         // 如果URL为空，显示提示信息
         this.$message({
-          message: '没有图片可供预览',
+          message: '没有文件可供预览',
           type: 'warning'
         });
         return;
       }
-      window.open(photoUrl, '_blank');
+      window.open(Url, '_blank');
     },
 
 

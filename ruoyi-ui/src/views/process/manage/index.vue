@@ -86,7 +86,7 @@
         >
       </el-form-item>
 
-      <el-form-item class="export-button" style="float: right">
+      <el-form-item class="export-button" >
         <el-button
           type="primary"
           plain

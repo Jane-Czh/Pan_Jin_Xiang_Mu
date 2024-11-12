@@ -7,7 +7,7 @@
       style="background-color: #f2f2f2; padding: 2px"
     >
       <el-input
-        placeholder="输入制度标题自动搜索制度文件"
+        placeholder="输入文件名称自动搜索"
         v-model="queryParams.regulationsTitle"
         @input="getRegularFileData"
         style="margin-bottom: 10px"
@@ -36,16 +36,17 @@
         </el-table-column>
 
         <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
-        <el-table-column label="文件名称" align="center" prop="fileName" />
+        <el-table-column label="制度标题" align="center" prop="regulationsTitle" />
+         <!-- departmentCategory -> mainResponsibleDepartment -->
         <el-table-column
           label="制度所属科室"
           align="center"
-          prop="departmentCategory"
+          prop="mainResponsibleDepartment"
         />
         <el-table-column
-          label="制度标题"
+          label="文件名称"
           align="center"
-          prop="regulationsTitle"
+          prop="fileName"
         />
       </el-table>
     </el-tab-pane>
@@ -85,18 +86,20 @@
             <span>{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-
-        <el-table-column label="文件名称" align="center" prop="formName" />
-        <el-table-column
-          label="表单所属科室"
-          align="center"
-          prop="departmentCategory"
-        />
         <el-table-column
           label="表单标题"
           align="center"
           prop="formTitle"
         />
+
+        <el-table-column
+          label="表单所属科室"
+          align="center"
+          prop="departmentCategory"
+        />
+        <el-table-column label="文件名称" align="center" prop="formName" />
+
+       
       </el-table>
     </el-tab-pane>
     <!-- ---------------------------------------------------------------- -->
@@ -104,7 +107,10 @@
 </template>
 
 <script>
-import { listFilemanagementAll, listFormfilemanagementAll } from "@/api/system/project";
+//listFilemanagementAll 查询all制度文件 --> listFilemanagement 查询newset==1的制度文件 
+//listFormfilemanagementAll 查询all表单文件 --> listFormfilemanagement 查询newset==1的表单文件 
+// import { listFilemanagementAll, listFormfilemanagementAll } from "@/api/system/project";
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 
 export default {
   props: {
@@ -151,7 +157,7 @@ export default {
 
       // 总条数
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 1000,
       totalPage: 0,
     };
   },
@@ -171,7 +177,7 @@ export default {
   methods: {
     /** 1.1 查询制度文件列表 */
     getRegularFileData() {
-      listFilemanagementAll(this.queryParams).then((response) => {
+      listFilemanagement(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });
@@ -214,7 +220,7 @@ export default {
 
     /** 2.1 查询表单文件列表 */
     getFormFileData() {
-      listFormfilemanagementAll(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.formsmanagementList = response.rows;
         this.total = response.total;
       });

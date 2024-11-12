@@ -177,13 +177,16 @@ public class ProjectInfoTableController extends BaseController
     /**
      * 移入回收站
      */
-//    @PreAuthorize("@ss.hasPermi('project:Info:recycle')")
-//    @Log(title = "项目基本信息", businessType = BusinessType.DELETE)
-//    @DeleteMapping("recycle/{projectIds}")
-//    public AjaxResult recycle(@PathVariable Long[] projectIds)
-//    {
-//        System.out.println(projectIds);
-////        return toAjax(projectInfoTableService.deleteProjectInfoTableByProjectIds(projectIds));
+    @PreAuthorize("@ss.hasPermi('project:Info:recycle')")
+    @Log(title = "项目基本信息", businessType = BusinessType.DELETE)
+    @DeleteMapping("recycle/{projectIds}")
+    public AjaxResult recycle(@PathVariable Long[] projectIds)
+    {
+        System.out.println("移入回收站");
+        for (Long ids : projectIds){
+            System.out.println(ids);
+        }
+        return toAjax(projectInfoTableService.recycleProjectInfoTableByProjectIds(projectIds));
 //        return toAjax(1);
-//    }
+    }
 }

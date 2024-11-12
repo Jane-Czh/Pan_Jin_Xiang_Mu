@@ -68,8 +68,8 @@ export default {
 //   const currentMonth = currentDate.getMonth() + 1; // 月份从0开始，所以要加1
 //   const lastDayOfMonth = new Date(currentYear, currentMonth, 0); // 设置为每一年的当前月份的最后一天
 
-  this.timeData.startTime = firstMonthOfYear;
-  this.timeData.endTime = lastDayOfMonth;
+  // this.timeData.startTime = firstMonthOfYear;
+  // this.timeData.endTime = lastDayOfMonth;
     },
     methods: {
 
@@ -112,12 +112,13 @@ export default {
 },
 
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
-                 this.timeData.numberInput=this.numberInput
+             this.timeData.startTime = new Date(this.selectedDate[0]),
+                this.timeData.endTime = new Date(this.selectedDate[1])
+            console.log(this.selectedDate[0],this.selectedDate[1])
             try {
                 this.loading = true
-                console.log(this.timeData)
+                  console.log("测试日期数据"+this.timeData.startTime)
+                console.log("测试日期数据"+this.timeData.endTime)
                 this.result = await getIndex39(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
@@ -131,8 +132,21 @@ export default {
                 this.loading = false
             }
         },
-        handleDateChange(val) {
-            console.log(val, 'val')
+        handleDateChange(value) {
+
+             if (value && value[0]) {
+    let startDate = new Date(value[0]);
+    startDate.setDate(startDate.getDate() + 1); // 将开始日期加1天
+    this.selectedDate[0] = startDate;
+  }
+          
+            if (value && value[1]) {
+                let endDate = new Date(value[1]);
+            
+                endDate.setMonth(endDate.getMonth() + 1);
+                endDate.setDate(0);
+                this.selectedDate[1] = endDate;
+            }
             this.initData()
         },
       updateChart() {

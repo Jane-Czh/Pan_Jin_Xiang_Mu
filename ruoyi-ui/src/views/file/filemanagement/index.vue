@@ -325,7 +325,7 @@
               icon="el-icon-upload"
               @click="handleModify(scope.row)"
               v-hasPermi="['file:filemanagement:edit']"
-              :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+              :disabled="thisDept !== scope.row.mainResponsibleDepartment && (thisDept !== '研发'||'企管'||'总部')"
             >
               更新
             </el-button>
@@ -335,7 +335,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['file:filemanagement:remove']"
-              :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+              :disabled="thisDept !== scope.row.mainResponsibleDepartment && (thisDept !== '研发'||'企管'||'总部')"
             >
               删除
             </el-button>
@@ -839,7 +839,7 @@ import {
   import { saveAs } from "file-saver";
   import {Loading} from "element-ui";
   import { listDept } from "@/api/system/project";
-  import {listFormfilemanagement, updateFormfilemanagement} from "@/api/file/formfilemanagement";  //获取部门列表
+import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagement} from "@/api/file/formfilemanagement";  //获取部门列表
   import { mapActions } from 'vuex';
 
 
@@ -1193,6 +1193,7 @@ import {
       getList() {
         this.loading = true;
         console.log("刷新页面");
+        console.log("thisDept=>",this.thisDept);
         // 如果部门是研发或总部，则不添加departmentCategory到queryParams
         // if (!['研发', '总部'].includes(this.thisDept)) {
         //   this.queryParams.departmentCategory = this.thisDept;
@@ -1204,16 +1205,17 @@ import {
           this.total = response.total;
           this.loading = false;
         });
-        listFormfilemanagement(this.formQueryParams).then(response => {
+        listFormfilemanagement3(this.formQueryParams).then(response => {
           console.log("response:：", response);
           this.formmanagementList = response.rows;
           console.log("formmanagementList=>", this.formmanagementList);
 
-          // 获取filemanagementList中所有formTitle
-          const formTitlesToExclude = this.filemanagementList.map(file => file.formId);
-
-          // 过滤formmanagementList，排除formTitlesToExclude中的记录
-          this.formmanagementList = this.formmanagementList.filter(form => !formTitlesToExclude.includes(form.formTitle));
+          // // 获取filemanagementList中所有formTitle
+          // const formTitlesToExclude = this.filemanagementList.map(file => file.formId);
+          // console.log("formTitlesToExclude=>", formTitlesToExclude);
+          //
+          // // 过滤formmanagementList，排除formTitlesToExclude中的记录
+          // this.formmanagementList = this.formmanagementList.filter(form => !formTitlesToExclude.includes(form.formTitle));
 
           console.log("过滤后的formmanagementList=>", this.formmanagementList);
         });
@@ -1401,23 +1403,25 @@ import {
             });
             // 将字符串拆分成数组
             const formTitles = this.form.formId.split(',');
-            //将制度文件绑定到表单文件
-            formTitles.forEach(formTitle => {
-              const queryParams = {
-                formTitle: formTitle
-              };
-              listFormfilemanagement(queryParams).then(response => {
-                const resultForm = response.rows;
-                console.log("resultForm=>", resultForm);
-                // 将 this.form.regulationsTitle 添加到 resultForm[0].regulationId 中
-                const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
-                if (!existingRegulations.includes(this.form.regulationsTitle)) {
-                  existingRegulations.push(this.form.regulationsTitle);
-                }
-                resultForm[0].regulationId = existingRegulations.join(',');
-                return updateFormfilemanagement(resultForm[0]);
-              });
-            })
+            if (this.form.formId) {
+              //将制度文件绑定到表单文件
+              formTitles.forEach(formTitle => {
+                const queryParams = {
+                  formTitle: formTitle
+                };
+                listFormfilemanagement(queryParams).then(response => {
+                  const resultForm = response.rows;
+                  console.log("resultForm=>", resultForm);
+                  // 将 this.form.regulationsTitle 添加到 resultForm[0].regulationId 中
+                  const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                  if (!existingRegulations.includes(this.form.regulationsTitle)) {
+                    existingRegulations.push(this.form.regulationsTitle);
+                  }
+                  resultForm[0].regulationId = existingRegulations.join(',');
+                  return updateFormfilemanagement(resultForm[0]);
+                });
+              })
+            }
           }
         });
         this.pdfList = [];
@@ -1514,7 +1518,7 @@ import {
             console.log("response------>:", thisForm);
 
             // 检查权限，确保 this.thisDept 与表单的 mainResponsibleDepartment 匹配
-            if (this.thisDept !== thisForm.mainResponsibleDepartment  && this.thisDept !== '研发'&&'企管'&&'总部') {
+            if (this.thisDept !== thisForm.mainResponsibleDepartment  && (this.thisDept !== '研发'||'企管'||'总部')) {
               this.$modal.msgError('没有权限删除该制度!');
               throw new Error('没有权限删除');
             }

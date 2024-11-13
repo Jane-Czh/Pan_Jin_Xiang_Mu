@@ -226,6 +226,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
+            :disabled="thisDept !== scope.row.departmentCategory && (thisDept !== '研发'||'企管'||'总部')"
           >更新
           </el-button>
           <el-button
@@ -234,6 +235,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:formfilemanagement:remove']"
+            :disabled="thisDept !== scope.row.departmentCategory && (thisDept !== '研发'||'企管'||'总部')"
           >删除
           </el-button>
         </template>
@@ -519,7 +521,7 @@ import {
   addFormfilemanagement,
   updateFormfilemanagement
 } from "@/api/file/formfilemanagement";
-import {getUserProfile02} from '@/api/file/filemanagement'
+import {getFilemanagement, getUserProfile02} from '@/api/file/filemanagement'
 import {listDept02} from "../../../api/file/filemanagement";
 import {getDept02} from '@/api/file/filemanagement'
 import {getToken} from "@/utils/auth"
@@ -528,7 +530,7 @@ import {listProject} from "@/api/system/project";
 //业务模块api，
 import { listModules } from "@/api/function/modules";
 //细分业务api
-import { listBusinesses } from "@/api/function/businesses";
+import {listBusinesses, listBusinessess} from "@/api/function/businesses";
 //导出总台账excel功能
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -761,9 +763,9 @@ export default {
     getList() {
       this.loading = true;
       // 如果部门是研发或企管，则不添加departmentCategory到queryParams
-      if (!['研发', '企管'].includes(this.thisDept)) {
-        this.queryParams.departmentCategory = this.thisDept;
-      }
+      // if (!['研发', '企管'].includes(this.thisDept)) {
+      //   this.queryParams.departmentCategory = this.thisDept;
+      // }
       console.log("thisDept=>",this.thisDept);
       console.log("queryParams=>",this.queryParams);
       listFormfilemanagement(this.queryParams).then(response => {
@@ -981,35 +983,51 @@ export default {
       console.log("当前表单1=>",row);
       //将id或ids统一转换为数组
       const formIds = [].concat(row.formId || this.ids);
-      // const regulationsIds = row.regulationsId || this.ids;
       console.log("formIds=>",formIds);
-      this.$modal.confirm('是否确认删除？').then(function () {
-        formIds.forEach(id => {
-          console.log("Processing ID:", id);
-          getFormfilemanagement(id).then(response => {
-            const thisForm = response.data;
-            console.log("response------>:", response);
-            if(thisForm.oldFormId != null) {
-              getFormfilemanagement(thisForm.oldFormId).then(response => {
-                const lastForm = response.data;
-                lastForm.newFlag = 1;
-                console.log("上一表单=>",lastForm);
-                updateFormfilemanagement(lastForm).then(response => {
-                });
-              });
-            }
-          });
+      // 遍历所有需要删除的ID
+      const permissionCheckPromises = formIds.map(id => {
+        return getFormfilemanagement(id).then(response => {
+          const thisForm = response.data;
+          console.log("response------>:", thisForm);
+
+          // 检查权限，确保 this.thisDept 与表单的 departmentCategory 匹配
+          if (this.thisDept !== thisForm.departmentCategory  && (this.thisDept !== '研发'||'企管'||'总部')) {
+            this.$modal.msgError('没有权限删除该表单!');
+            throw new Error('没有权限删除');
+          }
+
+          return thisForm;
         });
-        return delFormfilemanagement(formIds);
-      }).then(() => {
-        this.$modal.msgSuccess("删除成功");
-        this.getList();
-        console.log("删除文件刷新");
-      }).then(() => {
-        this.getList();
-        console.log("删除文件刷新2");
-      }).catch(() => {
       });
+      Promise.all(permissionCheckPromises).then(thisForms => {
+        this.$modal.confirm('是否确认删除？').then(function () {
+          formIds.forEach(id => {
+            console.log("Processing ID:", id);
+            getFormfilemanagement(id).then(response => {
+              const thisForm = response.data;
+              console.log("response------>:", response);
+              if(thisForm.oldFormId != null) {
+                getFormfilemanagement(thisForm.oldFormId).then(response => {
+                  const lastForm = response.data;
+                  lastForm.newFlag = 1;
+                  console.log("上一表单=>",lastForm);
+                  updateFormfilemanagement(lastForm).then(response => {
+                  });
+                });
+              }
+            });
+          });
+          return delFormfilemanagement(formIds);
+        }).then(() => {
+          this.$modal.msgSuccess("删除成功");
+          this.getList();
+          console.log("删除文件刷新");
+        }).then(() => {
+          this.getList();
+          console.log("删除文件刷新2");
+        }).catch(() => {
+        });
+      })
     },
     // /** 删除按钮操作 */
     // handleDelete(row) {
@@ -1299,7 +1317,7 @@ export default {
       if (module) {
         try {
           // 获取所有细分业务
-          await listBusinesses(this.xifenQueryParams).then((response) => {
+          await listBusinessess(this.xifenQueryParams).then((response) => {
             this.subBusinessesList = response.rows;
           });
 

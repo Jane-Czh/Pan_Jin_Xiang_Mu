@@ -139,6 +139,7 @@
           icon="el-icon-download"
           size="small"
           @click="exportAll"
+          v-if="this.departmentCategory == '企业管理科'"
           >总台账导出</el-button
         >
       </el-form-item>
@@ -1000,6 +1001,8 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+
+        
         // for (var i = 0; i < response.length; i++) {
         //   this.projectList.push(response[i]);
         // }

@@ -79,7 +79,7 @@ spring:
 #    password: suRCEu#ZxNT#%Pga
 
     # 实验室堡垒机 地址、端口，默认为6379
-    host: 172.19.14.180
+    host: 172.19.1.189
     port: 6379
     password:
 

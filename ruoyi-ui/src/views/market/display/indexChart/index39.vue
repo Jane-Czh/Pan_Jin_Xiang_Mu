@@ -1,13 +1,13 @@
 <template>
-    
+
     <div>
         <div class="block">
-            
+
     <!-- 添加标签页标题 -->
     <span class="DataSelect" style="margin-right:10px">填写数字</span>
     <!-- 添加输入框 -->
     <!-- <el-input v-model.number="numberInput" placeholder="请输入订单总台数"></el-input> -->
-  
+
             <span class="DataSelect" style="margin-right:10px">日期选择</span>
             <el-date-picker v-model="selectedDate" type="monthrange" unlink-panels range-separator="至"
                 start-placeholder="开始月份" end-placeholder="结束月份" :picker-options="pickerOptions"
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';     
+import * as echarts from 'echarts';
 import moment from 'moment'
 import { getIndex39 } from '@/api/market/index'
 
@@ -35,7 +35,7 @@ export default {
         numbers : [],
             result:[],
             provinces: [],
-          
+
             quantities: [],
              quantitiesForMonth3: [], // 针对月份3的数量数组
             numberInput:null,
@@ -47,7 +47,7 @@ export default {
                 startTime: new Date('2024-01-02'),
                 endTime: new Date('2024-09-01'),
                 numberInput:null
-    
+
             },
             selectedDate: [new Date('2024-01-01'),new Date('2024-10-01')],
             pickerOptions: [],
@@ -68,8 +68,8 @@ export default {
 //   const currentMonth = currentDate.getMonth() + 1; // 月份从0开始，所以要加1
 //   const lastDayOfMonth = new Date(currentYear, currentMonth, 0); // 设置为每一年的当前月份的最后一天
 
-  this.timeData.startTime = firstMonthOfYear;
-  this.timeData.endTime = lastDayOfMonth;
+  // this.timeData.startTime = firstMonthOfYear;
+  // this.timeData.endTime = lastDayOfMonth;
     },
     methods: {
 
@@ -112,12 +112,13 @@ export default {
 },
 
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
-                 this.timeData.numberInput=this.numberInput
+             this.timeData.startTime = new Date(this.selectedDate[0]),
+                this.timeData.endTime = new Date(this.selectedDate[1])
+            console.log(this.selectedDate[0],this.selectedDate[1])
             try {
                 this.loading = true
-                console.log(this.timeData)
+                  console.log("测试日期数据"+this.timeData.startTime)
+                console.log("测试日期数据"+this.timeData.endTime)
                 this.result = await getIndex39(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
@@ -131,8 +132,21 @@ export default {
                 this.loading = false
             }
         },
-        handleDateChange(val) {
-            console.log(val, 'val')
+        handleDateChange(value) {
+
+             if (value && value[0]) {
+    let startDate = new Date(value[0]);
+    startDate.setDate(startDate.getDate() + 1); // 将开始日期加1天
+    this.selectedDate[0] = startDate;
+  }
+
+            if (value && value[1]) {
+                let endDate = new Date(value[1]);
+
+                endDate.setMonth(endDate.getMonth() + 1);
+                endDate.setDate(0);
+                this.selectedDate[1] = endDate;
+            }
             this.initData()
         },
       updateChart() {
@@ -272,11 +286,11 @@ var seriesData = [];
 // 遍历每个 result 中的 minEntity 数据
 this.result.forEach(function (item) {
     var data = [];
-    
+
     // 遍历图例数据
     legendData.forEach(function (legendItem) {
         var found = false;
-        
+
         // 在当前 result 的 minEntity 中查找与图例数据匹配的 branch
         item.minEntity.forEach(function (minEntity) {
             if (minEntity.branch === legendItem) {
@@ -285,13 +299,13 @@ this.result.forEach(function (item) {
                 found = true;
             }
         });
-        
+
         // 如果当前 branch 在当前 result 的 minEntity 中未找到，则将 0 添加到 data 数组中
         if (!found) {
             data.push(0);
         }
     });
-    
+
     // 将当前 result 的 data 添加到 series 数据中
     seriesData.push(data);
 });
@@ -313,7 +327,7 @@ for (var i = 0; i < this.result.length; i++) {
 // 输出转置后的 seriesData，用于调试
 console.log("转置后的 seriesData：", this.transposedSeriesData);
 // 创建一个新数组来存储转换后的数据
-const roundedData =  this.transposedSeriesData.map(innerArray => 
+const roundedData =  this.transposedSeriesData.map(innerArray =>
   innerArray.map(value => parseFloat(value.toFixed(3)))
 );
 // console.log("转换后的百分比 seriesData：", percentageData);
@@ -356,10 +370,10 @@ option = {
    yAxis: [
     {
       type: 'value',
-      axisLabel: {  
-                formatter: function(value) {  
-                    return value * 100 + '%'; // 将Y轴的值乘以100后显示百分比  
-                }  
+      axisLabel: {
+                formatter: function(value) {
+                    return value * 100 + '%'; // 将Y轴的值乘以100后显示百分比
+                }
       }
       // axisLabel: {
       //   formatter: '{value}%' // 在Y轴标签上显示百分比

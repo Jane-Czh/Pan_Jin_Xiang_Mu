@@ -86,7 +86,7 @@
         >
       </el-form-item>
 
-      <el-form-item class="export-button" style="float: right">
+      <el-form-item class="export-button">
         <el-button
           type="primary"
           plain
@@ -102,61 +102,13 @@
           icon="el-icon-download"
           size="small"
           @click="exportAll"
+          v-if="this.departmentCategory == '企业管理科'"
           >总台账导出</el-button
         >
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:project:add']"
-        >新增</el-button>
-      </el-col> -->
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:project:edit']"
-          >修改</el-button
-        >
-      </el-col> -->
-
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:project:remove']"
-          >批量删除</el-button
-        >
-      </el-col> -->
-
-      <!--  v-hasPermi="['system:project:export']" -->
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-
-          >导出</el-button
-        >
-      </el-col> -->
-
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -350,6 +302,7 @@
         align="center"
         class-name="small-padding fixed-width"
       >
+        <!-- disabled="!(this.nickName == scope.row.createBy.split('/')[1])" -->
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -359,6 +312,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:project:edit']"
+            :disabled="departmentCategory !== scope.row.createBy.split('/')[1]"
             >修改</el-button
           >
           <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> -->
@@ -371,6 +325,7 @@
             icon="el-icon-edit-outline"
             @click="edit(scope.row)"
             v-hasPermi="['system:project:update']"
+            :disabled="departmentCategory !== scope.row.createBy.split('/')[1]"
           >
             更新</el-button
           >
@@ -397,6 +352,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:project:delete']"
+            :disabled="departmentCategory !== scope.row.createBy.split('/')[1]"
             >删除</el-button
           >
         </template>
@@ -592,6 +548,9 @@ export default {
   inject: ["reload"],
   data() {
     return {
+      //在userInfo中保留部门信息, 进行权限的设置处理
+      nickName: null,
+
       exportedData: [], // 用于存储从制度页面获取的数据
       modules: [], //过滤后 业务模块 数据
       modulesList: [], //全部的 业务模块 数据
@@ -1018,6 +977,9 @@ export default {
         console.log("成功获取用户信息=======", userInfo);
         this.uploadUsername = userInfo.userName;
 
+        //2024.11.13通过nickName字段来判断部门， 使得由该部门创建的流程只能由该部门进行编辑等操作
+        this.nickName = userInfo.nickName;
+        // console.log("成功获取用户昵称=======", this.nickName);
         const deptResponse = await getDept(userInfo.deptId);
         const deptInfo = deptResponse.data;
         this.departmentCategory = deptInfo.deptName;
@@ -1039,25 +1001,26 @@ export default {
 
       listProject(this.queryParams).then((response) => {
         console.log("manage/index从后端获取的response===>", response);
-        /**0727 对获取的数据进行初步过滤 只能由创建的部门才能才看到对应的数据 departmentCategory*/
+        /** 废弃的修改：0727 对获取的数据进行初步过滤 只能由创建的部门才能才看到对应的数据 departmentCategory */
         //从projectList 获取 createBy 属性 , 与departmentCategory进行对比
         //createBy : "admin/研发" 比对 departmentCategory: "研发"
-        for (var i = 0; i < response.length; i++) {
-          console.log("response[i].createBy===>", response[i].createBy);
 
-          if (
-            this.departmentCategory == response[i].createBy.split("/")[1] ||
-            this.departmentCategory == "研发" ||
-            this.departmentCategory == "总部"
-          ) {
-            this.projectList.push(response[i]);
-          }
-        }
-
-        // 不做过滤
         // for (var i = 0; i < response.length; i++) {
-        //   this.projectList.push(response[i]);
+        //   console.log("response[i].createBy===>", response[i].createBy);
+
+        //   if (
+        //     this.departmentCategory == response[i].createBy.split("/")[1] ||
+        //     this.departmentCategory == "研发" ||
+        //     this.departmentCategory == "总部"
+        //   ) {
+        //     this.projectList.push(response[i]);
+        //   }
         // }
+
+        /** 不做过滤，列表信息全局可见*/
+        for (var i = 0; i < response.length; i++) {
+          this.projectList.push(response[i]);
+        }
 
         // 按照updateDate字段进行排序
         this.projectList.sort((a, b) => {
@@ -1279,20 +1242,20 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
-        // for (var i = 0; i < response.length; i++) {
-        //   this.projectList.push(response[i]);
-        // }
         for (var i = 0; i < response.length; i++) {
-          console.log("response[i].createBy===>", response[i].createBy);
-
-          if (
-            this.departmentCategory == response[i].createBy.split("/")[1] ||
-            this.departmentCategory == "研发" ||
-            this.departmentCategory == "总部"
-          ) {
-            this.projectList.push(response[i]);
-          }
+          this.projectList.push(response[i]);
         }
+        // for (var i = 0; i < response.length; i++) {
+        //   console.log("response[i].createBy===>", response[i].createBy);
+
+        //   if (
+        //     this.departmentCategory == response[i].createBy.split("/")[1] ||
+        //     this.departmentCategory == "研发" ||
+        //     this.departmentCategory == "总部"
+        //   ) {
+        //     this.projectList.push(response[i]);
+        //   }
+        // }
 
         // // 按照updateDate字段进行排序
         // this.projectList.sort((a, b) => {
@@ -1319,21 +1282,23 @@ export default {
       this.loading = true;
       getProjectFileName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
-        // for (var i = 0; i < response.length; i++) {
-        //   this.projectList.push(response[i]);
-        // }
 
         for (var i = 0; i < response.length; i++) {
-          console.log("response[i].createBy===>", response[i].createBy);
-
-          if (
-            this.departmentCategory == response[i].createBy.split("/")[1] ||
-            this.departmentCategory == "研发" ||
-            this.departmentCategory == "总部"
-          ) {
-            this.projectList.push(response[i]);
-          }
+          this.projectList.push(response[i]);
         }
+
+        /** 废止：过滤效果 */
+        // for (var i = 0; i < response.length; i++) {
+        //   console.log("response[i].createBy===>", response[i].createBy);
+
+        //   if (
+        //     this.departmentCategory == response[i].createBy.split("/")[1] ||
+        //     this.departmentCategory == "研发" ||
+        //     this.departmentCategory == "总部"
+        //   ) {
+        //     this.projectList.push(response[i]);
+        //   }
+        // }
 
         // // 按照updateDate字段进行排序
         // this.projectList.sort((a, b) => {

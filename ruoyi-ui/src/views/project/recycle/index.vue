@@ -290,6 +290,31 @@
     </el-row>
 
     <el-table v-loading="loading" :data="recycleList" @selection-change="handleSelectionChange">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <!-- <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['project:recycle:edit']"
+          >修改</el-button> -->
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handlerestore(scope.row)"
+            v-hasPermi="['project:recycle:remove']"
+          >还原</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['project:recycle:remove']"
+          >彻底删除</el-button>
+        </template>
+      </el-table-column>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id(主键)" align="center" prop="projectId" />
       <el-table-column label="项目名称" align="center" prop="projectName" />
@@ -331,31 +356,7 @@
       <el-table-column label="已过天数(自动计算)" align="center" prop="daysPassed" />
       <el-table-column label="剩余天数(自动计算)" align="center" prop="daysRemaining" />
       <el-table-column label="完成内容概述" align="center" prop="completionSummary" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['project:recycle:edit']"
-          >修改</el-button> -->
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handlerestore(scope.row)"
-            v-hasPermi="['project:recycle:remove']"
-          >还原</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['project:recycle:remove']"
-          >彻底删除</el-button>
-        </template>
-      </el-table-column>
+
     </el-table>
     
     <pagination

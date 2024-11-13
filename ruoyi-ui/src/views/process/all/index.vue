@@ -90,7 +90,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item> 
+      </el-form-item>
 
       <!-- 搜索 表单文件名称进行搜索 -->
      <el-form-item prop="formName">
@@ -99,7 +99,7 @@
           placeholder="请输入表单文件名称"
           clearable
         />
-      </el-form-item> 
+      </el-form-item>
 
       <!-- 搜索 流程等级进行搜索-->
     <el-form-item prop="processLevel">
@@ -139,6 +139,7 @@
           icon="el-icon-download"
           size="small"
           @click="exportAll"
+          v-if="this.departmentCategory == '企业管理科'"
           >总台账导出</el-button
         >
       </el-form-item>
@@ -1000,6 +1001,8 @@ export default {
       this.loading = true;
       getProjectByName(this.queryParams).then((response) => {
         // console.log("manage/index从后端获取的response===>", response);
+
+        
         // for (var i = 0; i < response.length; i++) {
         //   this.projectList.push(response[i]);
         // }

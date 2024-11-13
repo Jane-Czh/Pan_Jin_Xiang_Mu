@@ -80,7 +80,7 @@
           v-hasPermi="['project:Info:add']"
         >新增</el-button>
       </el-col>
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -90,7 +90,7 @@
           @click="handleUpdate"
           v-hasPermi="['project:Info:edit']"
         >修改</el-button>
-      </el-col> -->
+      </el-col> 
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -165,7 +165,7 @@
     </el-row>
 
     <!-- 更新历史记录的弹窗 -->
-    <el-dialog title="日志详情" :visible.sync="dialogVisible" width="80%">
+    <!-- <el-dialog title="日志详情" :visible.sync="dialogVisible" width="80%">
       <el-table v-loading="loading" :data="recodeList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="模块标题" align="center" prop="title" />
@@ -201,19 +201,19 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">关 闭</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <el-table v-loading="loading" :data="InfoList" @selection-change="handleSelectionChange">
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px"> 
         <template slot-scope="scope">
           <div class="button-group">
-            <!-- <el-button
+            <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['project:Info:edit']"
-            >修改</el-button> -->
+            >修改</el-button>
             <el-button
               size="mini"
               type="text"
@@ -265,10 +265,10 @@
         </template>
       </el-table-column>
       <el-table-column label="项目组成员" align="center" prop="teamMembers" />
-      <el-table-column label="项目现状" align="center" prop="currentStatus" />
+      <el-table-column label="项目现状" align="center" prop="currentStatus" width="200px"/>
 
-      <el-table-column label="项目目标" align="center" prop="goal" />
-      <el-table-column label="项目范围" align="center" prop="scope" />
+      <el-table-column label="项目目标" align="center" prop="goal" width="250px"/>
+      <el-table-column label="项目范围" align="center" prop="scope" width="250px"/>
 
       <!-- <el-table-column label="导入时间" align="center" prop="importDate" width="180">
         <template slot-scope="scope">
@@ -539,15 +539,15 @@ export default {
       //项目等级选项
       levelOptions:[
         { 
-          value: 'A级',
-          label: 'A级'},
+          value: 'A',
+          label: 'A'},
         {
-          value: 'B级',
-          label: 'B级'
+          value: 'B',
+          label: 'B'
         },
         {
-          value: 'C级',
-          label: 'C级'
+          value: 'C',
+          label: 'C'
         }
       ],
       //项目类别
@@ -659,7 +659,7 @@ export default {
   },
   created() {
     this.getList();
-    this.getrecodeList();
+    // this.getrecodeList();
   },
 
   methods: {

@@ -60,7 +60,9 @@
 </template>
 
 <script>
-import { listFormfilemanagementAll } from "@/api/system/project";
+// import { listFormfilemanagementAll } from "@/api/system/project";
+import { listFormfilemanagement } from "@/api/system/project";
+
 
 export default {
   props: {
@@ -89,7 +91,7 @@ export default {
       // 制度查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 100,
         regulationsTitle: null,
         useScope: null,
         uploadDate: null,
@@ -138,7 +140,7 @@ export default {
     },
     /** 查询表单文件列表 */
     getRegularFileData() {
-      listFormfilemanagementAll(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });

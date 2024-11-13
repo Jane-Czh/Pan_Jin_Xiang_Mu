@@ -42,10 +42,11 @@
           align="center"
           prop="regulationsTitle"
         />
+        <!-- departmentCategory -> mainResponsibleDepartment -->
         <el-table-column
           label="制度所属科室"
           align="center"
-          prop="departmentCategory"
+          prop="mainResponsibleDepartment"
         />
         <el-table-column label="文件名称" align="center" prop="fileName" />
 
@@ -65,7 +66,9 @@
 </template>
 
 <script>
-import { listFilemanagementAll } from "@/api/system/project";
+// import { listFilemanagementAll } from "@/api/system/project";
+import { listFilemanagement } from "@/api/system/project";
+
 
 export default {
   props: {
@@ -88,7 +91,7 @@ export default {
       searchQuery: "", // 检索框绑定的数据属性
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 100,
         regulationsTitle: null,
         useScope: null,
         uploadDate: null,
@@ -109,7 +112,7 @@ export default {
         reviser: null,
       },
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 100,
       totalPage: 0,
     };
   },
@@ -131,7 +134,7 @@ export default {
   },
   methods: {
     getRegularFileData() {
-      listFilemanagementAll(this.queryParams).then((response) => {
+      listFilemanagement(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });

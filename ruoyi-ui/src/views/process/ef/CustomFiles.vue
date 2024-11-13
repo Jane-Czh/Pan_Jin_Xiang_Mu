@@ -37,10 +37,11 @@
 
         <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
         <el-table-column label="制度标题" align="center" prop="regulationsTitle" />
+         <!-- departmentCategory -> mainResponsibleDepartment -->
         <el-table-column
           label="制度所属科室"
           align="center"
-          prop="departmentCategory"
+          prop="mainResponsibleDepartment"
         />
         <el-table-column
           label="文件名称"
@@ -106,7 +107,10 @@
 </template>
 
 <script>
-import { listFilemanagementAll, listFormfilemanagementAll } from "@/api/system/project";
+//listFilemanagementAll 查询all制度文件 --> listFilemanagement 查询newset==1的制度文件 
+//listFormfilemanagementAll 查询all表单文件 --> listFormfilemanagement 查询newset==1的表单文件 
+// import { listFilemanagementAll, listFormfilemanagementAll } from "@/api/system/project";
+import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
 
 export default {
   props: {
@@ -153,7 +157,7 @@ export default {
 
       // 总条数
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 1000,
       totalPage: 0,
     };
   },
@@ -173,7 +177,7 @@ export default {
   methods: {
     /** 1.1 查询制度文件列表 */
     getRegularFileData() {
-      listFilemanagementAll(this.queryParams).then((response) => {
+      listFilemanagement(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
         this.total = response.total;
       });
@@ -216,7 +220,7 @@ export default {
 
     /** 2.1 查询表单文件列表 */
     getFormFileData() {
-      listFormfilemanagementAll(this.queryParams).then((response) => {
+      listFormfilemanagement(this.queryParams).then((response) => {
         this.formsmanagementList = response.rows;
         this.total = response.total;
       });

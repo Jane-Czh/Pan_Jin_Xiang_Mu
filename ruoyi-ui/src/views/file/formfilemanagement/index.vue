@@ -230,7 +230,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
-            :disabled="thisDept !== scope.row.departmentCategory && (thisDept !== '研发'||'企管'||'总部')"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企管', '总部' ].includes(thisDept)"
           >更新
           </el-button>
           <el-button
@@ -239,7 +239,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:formfilemanagement:remove']"
-            :disabled="thisDept !== scope.row.departmentCategory && (thisDept !== '研发'||'企管'||'总部')"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企管', '总部' ].includes(thisDept)"
           >删除
           </el-button>
         </template>
@@ -995,7 +995,7 @@ export default {
           console.log("response------>:", thisForm);
 
           // 检查权限，确保 this.thisDept 与表单的 departmentCategory 匹配
-          if (this.thisDept !== thisForm.departmentCategory  && (this.thisDept !== '研发'||'企管'||'总部')) {
+          if (this.thisDept !== thisForm.departmentCategory  && ![ '研发', '企管', '总部' ].includes(this.thisDept)) {
             this.$modal.msgError('没有权限删除该表单!');
             throw new Error('没有权限删除');
           }

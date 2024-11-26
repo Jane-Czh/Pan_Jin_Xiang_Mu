@@ -39,11 +39,12 @@
         <result property="newRegulationsId"    column="new_regulations_id"    />
         <result property="businesses"    column="businesses"    />
         <result property="subBusinesses"    column="sub_businesses"    />
+        <result property="encryption"    column="encryption"    />
 
     </resultMap>
 
     <sql id="selectRegulationsInfoTableVo">
-        select regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, pdf_path, word_path, file_type, file_size, pdf_size, word_size, file_content, create_date, upload_username, use_state, department_category, main_responsible_department, classification_of_specialties, regulation_leval, regulation_number, file_tag, old_regulations_id, revision_date, revision_content, reviser, form_id, project_ids, new_flag, add_flag, new_regulations_id, businesses, sub_businesses from Regulations_Info_table
+        select regulations_id, regulations_title, use_scope, upload_date, effective_date, file_name, file_path, pdf_path, word_path, file_type, file_size, pdf_size, word_size, file_content, create_date, upload_username, use_state, department_category, main_responsible_department, classification_of_specialties, regulation_leval, regulation_number, file_tag, old_regulations_id, revision_date, revision_content, reviser, form_id, project_ids, new_flag, add_flag, new_regulations_id, businesses, sub_businesses, encryption from Regulations_Info_table
     </sql>
 
     <select id="selectRegulationsInfoTableList" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
@@ -81,6 +82,7 @@
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+             <if test="encryption != null"> and encryption = #{encryption}</if>
         </where>
     </select>
 
@@ -119,6 +121,7 @@
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+            <if test="encryption != null and encryption != ''"> and encryption = #{encryption}</if>
         </where>
     </select>
 
@@ -180,6 +183,7 @@
             <if test="newRegulationsId != null">new_regulations_id,</if>
             <if test="businesses != null">businesses,</if>
             <if test="subBusinesses != null">sub_businesses,</if>
+            <if test="encryption != null">encryption,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="regulationsTitle != null and regulationsTitle != ''">#{regulationsTitle},</if>
@@ -215,6 +219,7 @@
             <if test="newRegulationsId != null">#{newRegulationsId},</if>
             <if test="businesses != null and businesses != ''">#{businesses},</if>
             <if test="subBusinesses != null and subBusinesses != ''">#{subBusinesses},</if>
+            <if test="encryption != null">#{encryption},</if>
         </trim>
     </insert>
 
@@ -254,6 +259,7 @@
             <if test="newRegulationsId != null">new_regulations_id = #{newRegulationsId},</if>
             <if test="businesses != null and businesses != ''">businesses = #{businesses},</if>
             <if test="subBusinesses != null and subBusinesses != ''">sub_businesses = #{subBusinesses},</if>
+            <if test="encryption != null">encryption = #{encryption},</if>
         </trim>
         where regulations_id = #{regulationsId}
     </update>
@@ -348,6 +354,7 @@
             <if test="newRegulationsId != null "> and new_regulations_id = #{newRegulationsId}</if>
             <if test="businesses != null  and businesses != ''"> and businesses = #{businesses}</if>
             <if test="subBusinesses != null  and subBusinesses != ''"> and sub_businesses = #{subBusinesses}</if>
+            <if test="encryption != null and encryption != ''"> and encryption = #{encryption}</if>
         </where>
     </select>
 

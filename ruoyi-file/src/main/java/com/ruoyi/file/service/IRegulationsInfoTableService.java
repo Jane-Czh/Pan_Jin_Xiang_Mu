@@ -40,6 +40,7 @@ public interface IRegulationsInfoTableService {
      */
     public List<RegulationsInfoTable> selectRegulationsInfoTableList(RegulationsInfoTable regulationsInfoTable);
 
+
     /**
      * 查询文件管理列表(全部)
      *

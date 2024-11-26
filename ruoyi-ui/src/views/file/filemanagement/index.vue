@@ -325,7 +325,7 @@
               icon="el-icon-upload"
               @click="handleModify(scope.row)"
               v-hasPermi="['file:filemanagement:edit']"
-              :disabled="thisDept !== scope.row.mainResponsibleDepartment && (thisDept !== '研发'||'企管'||'总部')"
+              :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企管', '总部' ].includes(thisDept)"
             >
               更新
             </el-button>
@@ -335,7 +335,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['file:filemanagement:remove']"
-              :disabled="thisDept !== scope.row.mainResponsibleDepartment && (thisDept !== '研发'||'企管'||'总部')"
+              :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企管', '总部' ].includes(thisDept)"
             >
               删除
             </el-button>
@@ -1518,7 +1518,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
             console.log("response------>:", thisForm);
 
             // 检查权限，确保 this.thisDept 与表单的 mainResponsibleDepartment 匹配
-            if (this.thisDept !== thisForm.mainResponsibleDepartment  && (this.thisDept !== '研发'||'企管'||'总部')) {
+            if (this.thisDept !== thisForm.departmentCategory  && ![ '研发', '企管', '总部' ].includes(this.thisDept)) {
               this.$modal.msgError('没有权限删除该制度!');
               throw new Error('没有权限删除');
             }

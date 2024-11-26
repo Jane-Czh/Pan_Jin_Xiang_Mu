@@ -1,3 +1,4 @@
+<!-- 节点绑定 制度文件 -->
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <!-- 1  :name= this.$props.activeName -->
@@ -8,7 +9,7 @@
     >
       <!-- 检索框 -->
       <el-input
-         v-model="queryParams.regulationsTitle"
+        v-model="queryParams.regulationsTitle"
         placeholder="请输入制度标题进行检索"
         @input="handleSearch"
         style="margin-bottom: 10px"
@@ -49,8 +50,6 @@
           prop="mainResponsibleDepartment"
         />
         <el-table-column label="文件名称" align="center" prop="fileName" />
-
-     
       </el-table>
 
       <!-- 分页功能 -->
@@ -69,6 +68,8 @@
 // import { listFilemanagementAll } from "@/api/system/project";
 import { listFilemanagement } from "@/api/system/project";
 
+//查询用户信息 roles
+import { getUserProfile02 } from "@/api/file/filemanagement";
 
 export default {
   props: {
@@ -114,6 +115,8 @@ export default {
       pageIndex: 1,
       pageSize: 100,
       totalPage: 0,
+
+      roles: [], //当前账号角色信息
     };
   },
   computed: {
@@ -124,8 +127,30 @@ export default {
       );
     },
   },
-  created() {
-    this.getRegularFileData();
+  // created() {
+  //   this.getRegularFileData();
+  // },
+  async created() {
+    await getUserProfile02()
+      .then((response) => {
+        // 处理成功的情况
+        console.log("成功获取用户信息response.data====>", response.data);
+        console.log(
+          "成功获取用户信息response.data.dept.deptName====>",
+          response.data.dept.deptName
+        );
+        // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        this.thisDept = response.data.dept.deptName;
+        this.roles = response.data.roles;
+        console.log("this.roles===>", this.roles);
+
+        //获取制度文件数据
+        this.getRegularFileData();
+      })
+      .catch((error) => {
+        // 处理失败的情况
+        console.error("获取用户信息失败:", error);
+      });
   },
   mounted() {
     this.setFilesSelected(
@@ -134,10 +159,28 @@ export default {
   },
   methods: {
     getRegularFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
-        this.filemanagementList = response.rows;
-        this.total = response.total;
-      });
+      // listFilemanagement(this.queryParams).then((response) => {
+      //   this.filemanagementList = response.rows;
+      //   this.total = response.total;
+      // });
+
+      // 新加：2024/11/26 加密
+      if (this.roles.some((role) => role.roleName === "制度加密")) {
+        listFilemanagement(this.queryParams).then((response) => {
+          this.filemanagementList = response.rows;
+          this.total = response.total;
+        });
+      } else {
+        const query = {
+          ...this.queryParams,
+          encryption: 0,
+        };
+        listFilemanagement(query).then((response) => {
+          this.filemanagementList = response.rows;
+          this.total = response.total;
+        });
+      }
+
       this.filemanagementList = this.filemanagementList.slice(
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize

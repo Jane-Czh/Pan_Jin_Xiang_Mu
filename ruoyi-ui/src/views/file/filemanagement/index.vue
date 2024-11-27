@@ -1361,7 +1361,8 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           addFlag: null,
           newRegulationsId: null,
           businesses: null,
-          subBusinesses: null
+          subBusinesses: null,
+          encryption: null
         };
         this.resetForm("form");
       },
@@ -1563,7 +1564,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
             console.log("response------>:", thisForm);
 
             // 检查权限，确保 this.thisDept 与表单的 mainResponsibleDepartment 匹配
-            if (this.thisDept !== thisForm.departmentCategory  && ![ '研发', '企业管理科', '总部' ].includes(this.thisDept)) {
+            if (this.thisDept !== thisForm.mainResponsibleDepartment  && ![ '研发', '企业管理科', '总部' ].includes(this.thisDept)) {
               this.$modal.msgError('没有权限删除该制度!');
               throw new Error('没有权限删除');
             }

@@ -164,6 +164,9 @@ public class RegulationsInfoTable extends BaseEntity
     /** 绑定的表单id */
     private String formId;
 
+    /** 是否涉密 */
+    private Integer encryption;
+
 //    // startTime和endTime的getter和setter
 //    public Date getStartTime() {
 //        return startTime;

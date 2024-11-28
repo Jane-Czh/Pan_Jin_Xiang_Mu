@@ -204,6 +204,11 @@
       </el-table-column>
 <!--      <el-table-column label="关联表单" align="center" prop="formId" />-->
       <el-table-column label="状态" align="center" prop="revisionContent"/>
+      <el-table-column label="是否加密" align="center" prop="encryption">
+        <template slot-scope="scope">
+          <span>{{ scope.row.encryption === 1 ? '是' : '否' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
@@ -224,9 +229,9 @@
         <template v-slot:default="scope">
           <a
             v-if="scope.row.wordPath"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企管' && thisDept !== '总部'"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企业管理科' && thisDept !== '总部'"
             @click.prevent="downloadFile(scope.row.wordPath)"
-            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? 'auto' : 'none' }"
+            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企业管理科' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企业管理科' || thisDept === '总部') ? 'auto' : 'none' }"
           >
             点击下载
           </a>
@@ -274,7 +279,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:filemanagement:edit']"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企业管理科' && thisDept !== '总部'"
           >
             修改
           </el-button>
@@ -284,7 +289,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企业管理科' && thisDept !== '总部'"
           >
             删除
           </el-button>
@@ -634,7 +639,8 @@
           newRegulationsId: null,
           businesses: null,
           subBusinesses: null,
-          formId: null
+          formId: null,
+          encryption: null,
         },
         //流程查询参数
         projecQueryParams: {
@@ -689,7 +695,8 @@
           addFlag: null,
           newRegulationsId: null,
           businesses: null,
-          subBusinesses: null
+          subBusinesses: null,
+          encryption: null
         },
         // 表单校验
         rules: {
@@ -853,6 +860,7 @@
           revisionContent: null,
           reviser: null,
           newRegulationsId: null,
+          encryption: null
         };
         this.resetForm("form");
       },
@@ -962,7 +970,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         // 检查权限
-        if (this.thisDept !== row.mainResponsibleDepartment  && this.thisDept !== '研发'&&'企管'&&'总部') {
+        if (this.thisDept !== row.mainResponsibleDepartment  && ![ '研发', '企业管理科', '总部' ].includes(this.thisDept)) {
           this.$modal.msgError('没有权限删除该制度!');
           return; // 中止删除操作
         }

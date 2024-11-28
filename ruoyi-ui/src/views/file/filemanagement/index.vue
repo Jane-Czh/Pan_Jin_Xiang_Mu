@@ -286,6 +286,11 @@
       </el-table-column>
       <el-table-column label="关联表单" align="center" prop="formId" />
       <el-table-column label="状态" align="center" prop="revisionContent"/>
+      <el-table-column label="是否加密" align="center" prop="encryption">
+        <template slot-scope="scope">
+          <span>{{ scope.row.encryption === 1 ? '是' : '否' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="最新上传日期" align="center" prop="uploadDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.uploadDate, '{y}-{m}-{d}') }}</span>
@@ -306,9 +311,9 @@
         <template v-slot:default="scope">
           <a
             v-if="scope.row.wordPath"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企管' && thisDept !== '总部'"
+            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企业管理科' && thisDept !== '总部'"
             @click.prevent="downloadFile(scope.row.wordPath)"
-            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? 'auto' : 'none' }"
+            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企业管理科' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企业管理科' || thisDept === '总部') ? 'auto' : 'none' }"
           >
             点击下载
           </a>
@@ -325,7 +330,7 @@
               icon="el-icon-upload"
               @click="handleModify(scope.row)"
               v-hasPermi="['file:filemanagement:edit']"
-              :disabled="thisDept !== scope.row.mainResponsibleDepartment && (thisDept !== '研发'||'企管'||'总部')"
+              :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
             >
               更新
             </el-button>
@@ -335,7 +340,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['file:filemanagement:remove']"
-              :disabled="thisDept !== scope.row.mainResponsibleDepartment && (thisDept !== '研发'||'企管'||'总部')"
+              :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
             >
               删除
             </el-button>
@@ -590,6 +595,14 @@
         </el-row>
         <el-row>
           <el-col>
+            <el-form-item label="是否加密" prop="encryption">
+              <el-radio v-model="form.encryption" label="1">是</el-radio>
+              <el-radio v-model="form.encryption" label="0">否</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
             <el-form-item label="关键字" prop="fileTag">
               <el-input  autosize v-model="form.fileTag" placeholder="请输入关键字" />
             </el-form-item>
@@ -795,6 +808,14 @@
         </el-row>
         <el-row>
           <el-col>
+            <el-form-item label="是否加密" prop="encryption">
+              <el-radio v-model="form.encryption" :label="1">是</el-radio>
+              <el-radio v-model="form.encryption" :label="0">否</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
             <el-form-item label="关键字" prop="fileTag">
               <el-input  autosize v-model="form.fileTag" placeholder="请输入关键字" />
             </el-form-item>
@@ -933,6 +954,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         allProjectList:[],  //所有制度关联的流程名称列表
         //当前账号的dept
         thisDept: null,
+        roles: [], //当前账号角色信息
         //文件上传绑定的部门
         fileDept: null,
         number: 0,
@@ -1010,7 +1032,8 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           addFlag: null,
           newRegulationsId: null,
           businesses: null,
-          subBusinesses: null
+          subBusinesses: null,
+          encryption: null
         },
         // 表单查询参数
         formQueryParams: {
@@ -1086,7 +1109,8 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           addFlag: null,
           newRegulationsId: null,
           businesses: null,
-          subBusinesses: null
+          subBusinesses: null,
+          encryption: null
         },
         // 表单校验
         rules: {
@@ -1123,6 +1147,9 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           regulationNumber: [
             {required: true, message: "制度编号不能为空", trigger: "blur"}
           ],
+          encryption: [
+            {required: true, message: "是否加密选项不能为空", trigger: "blur"}
+          ]
 
         },
         uploadVisible: false,
@@ -1165,13 +1192,15 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         return this.isShowTip && (this.fileType || this.fileSize);
       },
     },
-    created() {
-      getUserProfile02().then(response => {
+    async created() {
+     await getUserProfile02().then(response => {
         // 处理成功的情况
         console.log('成功获取用户信息response.data====>', response.data);
         console.log('成功获取用户信息response.data.dept.deptName====>', response.data.dept.deptName);
         // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
         this.thisDept =  response.data.dept.deptName;
+        this.roles = response.data.roles;
+        console.log("this.roles===>",this.roles);
         this.getList();
       }).catch(error => {
         // 处理失败的情况
@@ -1198,13 +1227,27 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         // if (!['研发', '总部'].includes(this.thisDept)) {
         //   this.queryParams.departmentCategory = this.thisDept;
         // }
-        listFilemanagement(this.queryParams).then(response => {
-          console.log("response:：", response);
-          this.filemanagementList = response.rows;
-          console.log("filemanagementList=>", this.filemanagementList);
-          this.total = response.total;
-          this.loading = false;
-        });
+        if (this.roles.some(role => role.roleName === '制度加密')) {
+          listFilemanagement(this.queryParams).then(response => {
+            console.log("response111:：", response);
+            this.filemanagementList = response.rows;
+            console.log("filemanagementList=>", this.filemanagementList);
+            this.total = response.total;
+            this.loading = false;
+          });
+        } else {
+          const query = {
+            ...this.queryParams,
+            encryption: 0
+          }
+          listFilemanagement(query).then(response => {
+            console.log("response222:：", response);
+            this.filemanagementList = response.rows;
+            console.log("filemanagementList=>", this.filemanagementList);
+            this.total = response.total;
+            this.loading = false;
+          });
+        }
         listFormfilemanagement3(this.formQueryParams).then(response => {
           console.log("response:：", response);
           this.formmanagementList = response.rows;
@@ -1318,7 +1361,8 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           addFlag: null,
           newRegulationsId: null,
           businesses: null,
-          subBusinesses: null
+          subBusinesses: null,
+          encryption: null
         };
         this.resetForm("form");
       },
@@ -1350,6 +1394,8 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         const regulationsId = row.regulationsId || this.ids
         getFilemanagement(regulationsId).then(response => {
           this.form = response.data;
+          this.form.formId = null;
+          console.log("responseqqqqqqqqqqqqqqqqqqqqqqqqq:", response);
           this.fileModifyDialogVisible = true;
           this.title = "更新制度文件";
         });
@@ -1518,7 +1564,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
             console.log("response------>:", thisForm);
 
             // 检查权限，确保 this.thisDept 与表单的 mainResponsibleDepartment 匹配
-            if (this.thisDept !== thisForm.mainResponsibleDepartment  && (this.thisDept !== '研发'||'企管'||'总部')) {
+            if (this.thisDept !== thisForm.mainResponsibleDepartment  && ![ '研发', '企业管理科', '总部' ].includes(this.thisDept)) {
               this.$modal.msgError('没有权限删除该制度!');
               throw new Error('没有权限删除');
             }

@@ -217,9 +217,9 @@
         <template v-slot:default="scope">
           <a
             v-if="scope.row.wordPath"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发' && thisDept !== '企管' && thisDept !== '总部'"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
             @click.prevent="downloadFile(scope.row.wordPath)"
-            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企管' || thisDept === '总部') ? 'auto' : 'none' }"
+            :style="{ color: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企业管理科' || thisDept === '总部') ? '#6495ED' : '#CCC', pointerEvents: (thisDept === scope.row.mainResponsibleDepartment || thisDept === '研发' || thisDept === '企业管理科' || thisDept === '总部') ? 'auto' : 'none' }"
           >
             点击下载
           </a>
@@ -235,7 +235,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
           >
             删除
           </el-button>
@@ -245,7 +245,7 @@
             icon="el-icon-delete"
             @click="handlerestore(scope.row)"
             v-hasPermi="['file:filemanagement:remove']"
-            :disabled="thisDept !== scope.row.mainResponsibleDepartment && thisDept !== '研发'&&'企管'&&'总部'"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
           >
             还原
           </el-button>

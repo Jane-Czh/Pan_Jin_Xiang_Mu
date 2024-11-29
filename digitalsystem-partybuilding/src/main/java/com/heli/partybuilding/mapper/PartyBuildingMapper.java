@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @author: hong
  * @date: 2024/4/9 15:42
  **/
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface PartyBuildingMapper {
 
     boolean checkPartyBuildingDataIsExisted(@Param("yearAndMonth") Date yearAndMonth);

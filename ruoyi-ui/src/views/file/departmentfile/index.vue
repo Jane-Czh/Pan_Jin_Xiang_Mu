@@ -113,8 +113,28 @@
           <el-table-column align="center" prop="uploadTime" label="上传时间" width="180" />
           <el-table-column align="center" label="操作" width="150">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="downloadFile(scope.row.filePath)">下载</el-button>
-              <el-button size="mini" type="danger" @click="deleteFile(scope.row)">删除</el-button>
+              <div>
+                <template v-if="scope.row.fileType === 'word' || scope.row.fileType === 'pdf' || scope.row.fileType === 'jpg' || scope.row.fileType === 'png' ">
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="previewFile(scope.row.filePath, scope.row.fileType)"
+                  >
+                    预览
+                  </el-button>
+                </template>
+                <template v-else-if="scope.row.fileType === 'xlsx'">
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="openExcelPreviewDialog(scope.row.filePath)"
+                  >
+                    预览
+                  </el-button>
+                </template>
+              </div>
+              <el-button size="mini" type="text" @click="downloadFile(scope.row.filePath)">下载</el-button>
+              <el-button size="mini" type="text" @click="deleteFile(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -189,6 +209,18 @@
         <el-button type="primary" @click="uploadOpen = false">关闭</el-button>
       </div>
     </el-dialog>
+
+    <!-- Excel 预览对话框 -->
+    <el-dialog
+      title="Excel 预览"
+      :visible.sync="excelPreviewDialogVisible"
+      width="80%"
+      :center="true"
+      append-to-body
+      :before-close="closeExcelPreviewDialog">
+
+      <vue-office-excel v-if="isExcelPreview" :src="previewSrc" :options="options" style="height: 80vh;"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -202,11 +234,34 @@ import {
   listDepartmentfile
 } from "@/api/file/departmentfiles";
 import {listUser} from "@/api/system/user";
-import {getUserProfile02} from "@/api/file/filemanagement";
+import {getUserProfile02, word2Pdf} from "@/api/file/filemanagement";
+
+//引入相关样式
+import '@vue-office/docx/lib/index.css';
+import '@vue-office/excel/lib/index.css';
+// 引入 VueOffice 组件
+import VueOfficeDocx from '@vue-office/docx';
+import VueOfficeExcel from '@vue-office/excel';
+import VueOfficePdf from '@vue-office/pdf';
+
 export default {
   name: "Folders",
   data() {
     return {
+      //excel预览
+      options:{
+        xls: false,       //预览xlsx文件设为false；预览xls文件设为true
+        minColLength: 0,  // excel最少渲染多少列，如果想实现xlsx文件内容有几列，就渲染几列，可以将此值设置为0.
+        minRowLength: 0,  // excel最少渲染多少行，如果想实现根据xlsx实际函数渲染，可以将此值设置为0.
+        widthOffset: 10,  //如果渲染出来的结果感觉单元格宽度不够，可以在默认渲染的列表宽度上再加 Npx宽
+        heightOffset: 10, //在默认渲染的列表高度上再加 Npx高
+        beforeTransformData: (workbookData) => {return workbookData}, //底层通过exceljs获取excel文件内容，通过该钩子函数，可以对获取的excel文件内容进行修改，比如某个单元格的数据显示不正确，可以在此自行修改每个单元格的value值。
+        transformData: (workbookData) => {return workbookData}, //将获取到的excel数据进行处理之后且渲染到页面之前，可通过transformData对即将渲染的数据及样式进行修改，此时每个单元格的text值就是即将渲染到页面上的内容
+      },
+      excelPreviewDialogVisible: false,
+      isExcelPreview: false,
+      previewSrc: '',
+
       thisDept: null, // 当前账号的dept
       // 文件夹名称
       searchFolderName: undefined,
@@ -288,6 +343,11 @@ export default {
     searchFolderName(val) {
       this.$refs.tree.filter(val);
     }
+  },
+  components: {
+    VueOfficeDocx,
+    VueOfficeExcel,
+    VueOfficePdf
   },
   created() {
     getUserProfile02().then(response => {
@@ -518,8 +578,8 @@ export default {
         this.fileform.filePath = response.url;
         this.fileform.fileSize = file.raw.size;
         this.fileform.folderId = this.selectedFolderId;
-        const fileTypeIndex = response.originalFilename.lastIndexOf('.');
-        this.fileform.fileType = fileTypeIndex !== -1 ? response.originalFilename.substring(fileTypeIndex + 1) : '';
+        // 将文件类型填充到对应的输入框
+        this.fileform.fileType = this.getFileType(this.fileform.filePath);
         this.fileform.uploadTime = new Date().toISOString();
         addDepartmentfile(this.fileform).then(response => {
         })
@@ -573,6 +633,99 @@ export default {
     filterNode(value, data) {
       if (!value) return true;
       return data.folderName.indexOf(value) !== -1;
+    },
+
+    //文件预览
+    previewFile(filePath) {
+      // 获取文件类型
+      const fileType = this.getFileType(filePath);
+
+      // 检查文件类型是否为 'pdf' 或 'word'
+      if (fileType === 'pdf' || fileType === 'word' || fileType === 'jpg' || fileType === 'png') {
+        switch (fileType) {
+          case 'pdf':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
+          case 'jpg':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
+          case 'png':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
+          case 'word':
+            const pdfFilePath = this.convertToPdfPath(filePath);
+            console.log("filePath:",filePath);
+            console.log("pdfFilePath:",pdfFilePath);
+            this.loading = true;
+            word2Pdf(filePath, pdfFilePath).then(response => {
+              this.loading = false;
+              window.open(pdfFilePath, '_blank');
+            });
+            break;
+        }
+      } else {
+        // 如果文件类型既不是 'pdf' 也不是 'word'，给出提示信息
+        this.$message({
+          message: '无法预览此文件类型',
+          type: 'warning'
+        });
+      }
+    },
+    convertToPdfPath(wordFilePath) {
+      // 找到文件路径中的最后一个点的位置
+      const lastDotIndex = wordFilePath.lastIndexOf('.');
+
+      if (lastDotIndex != -1) {
+        // 获取文件路径中最后一个点之前的部分（文件名部分）
+        const prefix = wordFilePath.substring(0, lastDotIndex);
+
+        // 将文件名部分与 .pdf 后缀拼接，形成 PDF 文件路径
+        const pdfFilePath = prefix + ".pdf";
+
+        return pdfFilePath;
+      } else {
+        // 文件路径中没有点，无法更改后缀
+        throw new IllegalArgumentException("文件路径无效：" + wordFilePath);
+      }
+    },
+    // excel预览
+    openExcelPreviewDialog(filePath) {
+      this.previewSrc = filePath;
+      this.isExcelPreview = true;
+      this.excelPreviewDialogVisible = true;
+    },
+    closeExcelPreviewDialog(done) {
+      this.isExcelPreview = false;
+      this.previewSrc = '';
+      done();
+    },
+    //文件类型重命名
+    getFileType(formPath) {
+      const FILE_TYPE_MAP = {
+        'pdf': 'pdf',
+        'doc': 'word',
+        'docx': 'word',
+        'xls': 'xls',
+        'xlsx': 'xlsx',
+        'ppt': 'ppt',
+        'pptx': 'pptx',
+        'txt': 'txt',
+        'jpg': 'jpg',
+        'jpeg': 'jpeg',
+        'png': 'png',
+        'gif': 'gif',
+        'bmp': 'bmp',
+      }
+      // 获取文件名的后缀名
+      const formExtension = formPath.split('.').pop();
+      // 转换为小写并查找映射
+      const type = FILE_TYPE_MAP[formExtension.toLowerCase()];
+
+      // 返回文件类型，如果找不到则返回 'unknown'
+      return type || '未知类型';
     },
   }
 };

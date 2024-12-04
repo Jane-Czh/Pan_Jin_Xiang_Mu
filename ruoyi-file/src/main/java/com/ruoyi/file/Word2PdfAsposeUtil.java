@@ -130,28 +130,28 @@ public class Word2PdfAsposeUtil {
         }
     }
 
-//    public static boolean getLicense() {
-//        boolean result = false;
-//        InputStream is = null;
-//        try {
+//public static boolean getLicense() {
+//    boolean result = false;
+//    InputStream is = null;
+//    try {
 //            Resource resource = new ClassPathResource("license.xml");
 //            is = resource.getInputStream();
 //            License aposeLic = new License();
 //            aposeLic.setLicense(is);
-//            result = true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (is != null) {
-//                try {
-//                    is.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+//        result = true;
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    } finally {
+//        if (is != null) {
+//            try {
+//                is.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
 //            }
 //        }
-//        return result;
 //    }
+//    return result;
+//}
 
 
 public static boolean getLicense() {

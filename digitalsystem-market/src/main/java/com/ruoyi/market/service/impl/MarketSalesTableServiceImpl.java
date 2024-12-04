@@ -53,8 +53,7 @@ public class MarketSalesTableServiceImpl implements IMarketSalesTableService
             List<MarketSalesTable> marketSalesTables = ExcelUtils.parseExcel(excelFile);
 
             //删除
-//            marketSalesTableMapper.deleteAll();
-
+            marketSalesTableMapper.deleteDataByYear(marketSalesTables.get(0).getOrderAcceptanceTime());
             int i = 0;
             while (i < marketSalesTables.size()){
                 marketSalesTable = marketSalesTables.get(i);

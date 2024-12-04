@@ -57,7 +57,6 @@ public class MarketSalesTableController extends BaseController
     {
         startPage();
         List<MarketSalesTable> list = marketSalesTableService.selectMarketSalesTableList(marketSalesTable);
-        System.out.println(list);
         return getDataTable(list);
     }
 //    @GetMapping("/list1")
@@ -65,7 +64,6 @@ public class MarketSalesTableController extends BaseController
 //    {
 ////        startPage();
 //        List<MarketSalesTable> list = marketSalesTableService.selectMarketSalesTableList(marketSalesTable);
-//        System.out.println("测试list"+list.size());
 //        return getDataTable(list);
 //    }
     /**

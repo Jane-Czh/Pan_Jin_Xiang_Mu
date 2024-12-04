@@ -45,7 +45,7 @@ public class RegulationsInfoTableController extends BaseController {
     private IRegulationsInfoTableService regulationsInfoTableService;
 
     /**
-     * 查询文件管理列表
+     * 查询文件管理列表(包含加密文件)
      */
     @PreAuthorize("@ss.hasPermi('file:filemanagement:list')")
     @GetMapping("/list")
@@ -54,6 +54,7 @@ public class RegulationsInfoTableController extends BaseController {
         List<RegulationsInfoTable> list = regulationsInfoTableService.selectRegulationsInfoTableList(regulationsInfoTable);
         return getDataTable(list);
     }
+
 
     /**
      * 查询文件管理列表(无权限 不分页)

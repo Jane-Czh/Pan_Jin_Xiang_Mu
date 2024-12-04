@@ -346,4 +346,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteAll">
         truncate table Market_Sales_table;
     </delete>
+
+    <!-- 根据月份删除数据 -->
+    <delete id="deleteDataByYear" parameterType="java.util.Date">
+        DELETE FROM Market_Sales_table
+        WHERE YEAR(Order_Acceptance_Time) = YEAR(#{datatime})
+    </delete>
+
 </mapper>

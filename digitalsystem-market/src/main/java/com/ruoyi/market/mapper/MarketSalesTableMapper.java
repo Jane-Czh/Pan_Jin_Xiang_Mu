@@ -1,5 +1,6 @@
 package com.ruoyi.market.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.market.domain.AverageResult;
@@ -70,6 +71,8 @@ public interface MarketSalesTableMapper
     public void batchInsert(@Param("list") List<MarketSalesTable> marketSalesTable);
 
     public void deleteAll();
+
+    public void deleteDataByYear(@Param("datatime") Date datatime);
 
     public List<AverageResult> selectcount19();
 }

@@ -242,13 +242,28 @@
       </el-table-column>
       <el-table-column label="查看" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-view"
-            @click="previewFile(scope.row.formPath)"
-          >预览
-          </el-button>
+          <div>
+            <template v-if="scope.row.formType === 'word' || scope.row.formType === 'pdf' || scope.row.formType === 'jpg' || scope.row.formType === 'png' ">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-view"
+                @click="previewFile(scope.row.formPath, scope.row.formType)"
+              >
+                预览
+              </el-button>
+            </template>
+            <template v-else-if="scope.row.formType === 'xlsx'">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-view"
+                @click="openExcelPreviewDialog(scope.row.formPath)"
+              >
+                预览
+              </el-button>
+            </template>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -345,6 +360,17 @@
         <el-button @click="modifyCancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- Excel 预览对话框 -->
+    <el-dialog
+      title="Excel 预览"
+      :visible.sync="excelPreviewDialogVisible"
+      width="80%"
+      :center="true"
+      append-to-body
+      :before-close="closeExcelPreviewDialog">
+
+      <vue-office-excel v-if="isExcelPreview" :src="previewSrc" :options="options" style="height: 80vh;"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -367,10 +393,31 @@
   import {Loading} from "element-ui";
   import * as XLSX from "xlsx";
 
+  //引入相关样式
+  import '@vue-office/docx/lib/index.css';
+  import '@vue-office/excel/lib/index.css';
+  // 引入 VueOffice 组件
+  import VueOfficeDocx from '@vue-office/docx';
+  import VueOfficeExcel from '@vue-office/excel';
+  import VueOfficePdf from '@vue-office/pdf';
+
   export default {
     name: "HistoryVersions",
     data() {
       return {
+        //excel预览
+        options:{
+          xls: false,       //预览xlsx文件设为false；预览xls文件设为true
+          minColLength: 0,  // excel最少渲染多少列，如果想实现xlsx文件内容有几列，就渲染几列，可以将此值设置为0.
+          minRowLength: 0,  // excel最少渲染多少行，如果想实现根据xlsx实际函数渲染，可以将此值设置为0.
+          widthOffset: 10,  //如果渲染出来的结果感觉单元格宽度不够，可以在默认渲染的列表宽度上再加 Npx宽
+          heightOffset: 10, //在默认渲染的列表高度上再加 Npx高
+          beforeTransformData: (workbookData) => {return workbookData}, //底层通过exceljs获取excel文件内容，通过该钩子函数，可以对获取的excel文件内容进行修改，比如某个单元格的数据显示不正确，可以在此自行修改每个单元格的value值。
+          transformData: (workbookData) => {return workbookData}, //将获取到的excel数据进行处理之后且渲染到页面之前，可通过transformData对即将渲染的数据及样式进行修改，此时每个单元格的text值就是即将渲染到页面上的内容
+        },
+        excelPreviewDialogVisible: false,
+        isExcelPreview: false,
+        previewSrc: '',
         //部门列表
         departments: [],
         // 查询参数
@@ -544,6 +591,11 @@
       showTip() {
         return this.isShowTip && (this.formType || this.formSize);
       },
+    },
+    components: {
+      VueOfficeDocx,
+      VueOfficeExcel,
+      VueOfficePdf
     },
     created() {
       this.getList();
@@ -832,26 +884,53 @@
       },
       //文件预览
       previewFile(filePath) {
+        // 获取文件类型
         const fileType = this.getFileType(filePath);
-        console.log("filePath:",filePath);
-        console.log("fileType:",fileType);
-        switch (fileType) {
-          case 'pdf':
-            console.log("fileType1111:",fileType);
-            window.open(filePath, '_blank');
-            break;
-          case 'word':
-            const pdfFilePath = this.convertToPdfPath(filePath);
-            console.log("filePath:",filePath);
-            console.log("pdfFilePath:",pdfFilePath);
-            word2Pdf(filePath,pdfFilePath).then(response => {
-              window.open(pdfFilePath, '_blank');
-            })
 
-            break;
+        // 检查文件类型是否为 'pdf' 或 'word'
+        if (fileType === 'pdf' || fileType === 'word' || fileType === 'jpg' || fileType === 'png') {
+          switch (fileType) {
+            case 'pdf':
+              console.log("fileType1111:",fileType);
+              window.open(filePath, '_blank');
+              break;
+            case 'jpg':
+              console.log("fileType1111:",fileType);
+              window.open(filePath, '_blank');
+              break;
+            case 'png':
+              console.log("fileType1111:",fileType);
+              window.open(filePath, '_blank');
+              break;
+            case 'word':
+              const pdfFilePath = this.convertToPdfPath(filePath);
+              console.log("filePath:",filePath);
+              console.log("pdfFilePath:",pdfFilePath);
+              this.loading = true;
+              word2Pdf(filePath, pdfFilePath).then(response => {
+                this.loading = false;
+                window.open(pdfFilePath, '_blank');
+              });
+              break;
+          }
+        } else {
+          // 如果文件类型既不是 'pdf' 也不是 'word'，给出提示信息
+          this.$message({
+            message: '无法预览此文件类型',
+            type: 'warning'
+          });
         }
-        // 使用 window.open 方法打开一个新窗口，并将文件路径传递给该窗口
-
+      },
+      // excel预览
+      openExcelPreviewDialog(filePath) {
+        this.previewSrc = filePath;
+        this.isExcelPreview = true;
+        this.excelPreviewDialogVisible = true;
+      },
+      closeExcelPreviewDialog(done) {
+        this.isExcelPreview = false;
+        this.previewSrc = '';
+        done();
       },
 
       convertToPdfPath(wordFilePath) {

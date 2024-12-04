@@ -15,7 +15,7 @@
         </el-option>
       </el-select>
 
-      <span class="DataSelect" style="margin-right:10px">日期选择</span>
+     <!-- <span class="DataSelect" style="margin-right:10px">日期选择</span>
       <el-date-picker
         v-model="selectedDate"
         type="daterange"
@@ -27,6 +27,8 @@
         :picker-options="pickerOptions"
         size="small">
       </el-date-picker>
+      -->
+      
     </div>
     
     <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
@@ -401,8 +403,6 @@ export default {
         // 将数据存入对应级别的数组中
         this.ProjectDevelopmentStatusData[item.level].push(item.progressAlloverProgress);
 
-
-
         if (item.hasOwnProperty('department')) {
           // 更新已出现的部门项目数量
           if (this.DepartmentProjectStatisticsData.hasOwnProperty(item.department)) {
@@ -650,9 +650,16 @@ export default {
         return { value: this.ProjectDevelopmentStatusData[key], name: key };
       });
       this.ProjectDevelopmentStatusData = [];
+      // 定义一个包含所需顺序的数组
+      const order = ['A', 'B', 'C'];
+      // 根据预定义的顺序对ChartData进行排序
+      ChartData.sort((a, b) => {
+        return order.indexOf(a.name) - order.indexOf(b.name);
+      });
+  
       ChartData.forEach(item => {
         let total = 0;
-        const values = item.value.map(val => parseFloat(val)); // 将数组中的每个元素解析为整数
+        const values = item.value.map(val => (val === '' || val === null || val === undefined ? 0 : parseFloat(val))); // 将数组中的每个元素解析为浮点数
         const sum = values.reduce((acc, curr) => acc + curr, 0); // 使用 reduce() 方法计算数组的总和
         total += sum; // 将每个对象的值累加到总和中
         const averageValue = total / item.value.length; // 计算平均值
@@ -878,15 +885,6 @@ export default {
         this.InfoList = response.rows;
         this.total = response.total;
 
-        // const filteredInfoList = this.InfoList.filter(item => {
-        //   return this.selectedTime.length > 0 &&
-        //         item.startDate >= this.selectedTime[0] &&
-        //         item.plannedCompletionTime <= this.selectedTime[1];
-        // });
-
-        // this.InfoList = filteredInfoList; // 更新 InfoList 数据
-
-
         this.InfoList.forEach(item => {
           if (item.hasOwnProperty('category') && (this.selectedOption === '' || item.department === this.selectedOption)) {
             this.ProjectCategoriesProportionData[item.category] = (this.ProjectCategoriesProportionData[item.category] || 0) + 1;
@@ -897,8 +895,16 @@ export default {
           if (item.hasOwnProperty('status') && (this.selectedOption === '' || item.department === this.selectedOption)) {
             this.ProjectAverageScheduleData[item.status] = (this.ProjectAverageScheduleData[item.status] || 0) + 1;
           }
+
+          if (!this.ProjectDevelopmentStatusData.hasOwnProperty(item.level)) {
+            this.ProjectDevelopmentStatusData[item.level] = [];
+          }
+          if (this.selectedOption === '' || item.department === this.selectedOption) {
+            this.ProjectDevelopmentStatusData[item.level].push(item.progressAlloverProgress);
+          }
         });
 
+        console.log(this.ProjectDevelopmentStatusData);
         // this.InfoList = [];
         // 判断数据是否全部为零
 
@@ -1075,6 +1081,59 @@ export default {
           ]
         };
 
+        const barChartData = Object.keys(this.ProjectDevelopmentStatusData).map(key => {
+          return { value: this.ProjectDevelopmentStatusData[key], name: key };
+        });
+        this.ProjectDevelopmentStatusData = [];
+        // 定义一个包含所需顺序的数组
+        const order = ['A', 'B', 'C'];
+        // 根据预定义的顺序对ChartData进行排序
+        barChartData.sort((a, b) => {
+          return order.indexOf(a.name) - order.indexOf(b.name);
+        });
+    
+        barChartData.forEach(item => {
+          let total = 0;
+          const values = item.value.map(val => (val === '' || val === null || val === undefined ? 0 : parseFloat(val))); // 将数组中的每个元素解析为浮点数
+          const sum = values.reduce((acc, curr) => acc + curr, 0); // 使用 reduce() 方法计算数组的总和
+          total += sum; // 将每个对象的值累加到总和中
+          const averageValue = total / item.value.length; // 计算平均值
+          item.value = averageValue; // 直接将平均值赋值给 item.value
+        });
+        console.log(barChartData);
+
+        const option4 = {
+          title: {
+            text: '平均进度统计',
+            left: 'center'
+          },
+          xAxis: {
+            type: 'category',
+            data: barChartData.map(item => item.name)
+          },
+          yAxis: {
+            type: 'value'
+          },
+          tooltip: {
+            trigger: 'axis', // 设置触发类型为坐标轴
+            formatter: '{b}: {c}', // 设置提示框内容格式，{b} 表示类目轴的值，{c} 表示数据值
+            axisPointer: { // 设置坐标轴指示器
+              type: 'shadow' // 阴影指示器
+            }
+          },
+          series: [{
+            name: '得分',
+            data: barChartData.map(item => item.value),
+            type: 'bar',
+            label: { // 添加此配置以显示数据标签
+              show: true,
+              position: 'top',
+              formatter: params => params.value.toFixed(2), 
+              color: '#000' // 可以根据需要设置标签颜色
+            }
+          }]
+        };
+console.log(option4);
         this.isAllZeroProjectCategoriesProportion = false;
         this.isAllZeroProjectLevelDistribution = false;
         this.isAllZeroProjectAverageSchedule = false;
@@ -1082,6 +1141,7 @@ export default {
         this.myChart1.setOption(option1);
         this.myChart2.setOption(option2);
         this.myChart3.setOption(option3);
+        this.chart4.setOption(option4);
 
       });
     },

@@ -1,3 +1,5 @@
+<!-- 自定义文件组件: ef/panel 支撑文件绑定 
+ 功能包括：在同一面板中可选择绑定制度文件和表单文件-->
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <!-- 1、制度文件 -->
@@ -36,18 +38,18 @@
         </el-table-column>
 
         <!-- <el-table-column label="id(主键)" align="center" prop="regulationsId" /> -->
-        <el-table-column label="制度标题" align="center" prop="regulationsTitle" />
-         <!-- departmentCategory -> mainResponsibleDepartment -->
+        <el-table-column
+          label="制度标题"
+          align="center"
+          prop="regulationsTitle"
+        />
+        <!-- departmentCategory -> mainResponsibleDepartment -->
         <el-table-column
           label="制度所属科室"
           align="center"
           prop="mainResponsibleDepartment"
         />
-        <el-table-column
-          label="文件名称"
-          align="center"
-          prop="fileName"
-        />
+        <el-table-column label="文件名称" align="center" prop="fileName" />
       </el-table>
     </el-tab-pane>
     <!-- --------------------------------------------- -->
@@ -86,11 +88,7 @@
             <span>{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="表单标题"
-          align="center"
-          prop="formTitle"
-        />
+        <el-table-column label="表单标题" align="center" prop="formTitle" />
 
         <el-table-column
           label="表单所属科室"
@@ -98,8 +96,6 @@
           prop="departmentCategory"
         />
         <el-table-column label="文件名称" align="center" prop="formName" />
-
-       
       </el-table>
     </el-tab-pane>
     <!-- ---------------------------------------------------------------- -->
@@ -107,10 +103,15 @@
 </template>
 
 <script>
-//listFilemanagementAll 查询all制度文件 --> listFilemanagement 查询newset==1的制度文件 
-//listFormfilemanagementAll 查询all表单文件 --> listFormfilemanagement 查询newset==1的表单文件 
+//listFilemanagementAll 查询all制度文件 --> listFilemanagement 查询newset==1的制度文件
+//listFormfilemanagementAll 查询all表单文件 --> listFormfilemanagement 查询newset==1的表单文件
 // import { listFilemanagementAll, listFormfilemanagementAll } from "@/api/system/project";
-import { listFilemanagement, listFormfilemanagement } from "@/api/system/project";
+import {
+  listFilemanagement,
+  listFormfilemanagement,
+} from "@/api/system/project";
+//查询用户信息 roles
+import { getUserProfile02 } from "@/api/file/filemanagement";
 
 export default {
   props: {
@@ -150,7 +151,7 @@ export default {
       // 制度查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 1000,
         regulationsTitle: null,
         formTitle: null,
       },
@@ -159,13 +160,33 @@ export default {
       pageIndex: 1,
       pageSize: 1000,
       totalPage: 0,
+
+      roles: [], //当前账号角色信息
     };
   },
-  created() {
-    //获取制度文件数据
-    this.getRegularFileData();
-    //获取表单文件数据
-    this.getFormFileData();
+  async created() {
+    await getUserProfile02()
+      .then((response) => {
+        // 处理成功的情况
+        console.log("成功获取用户信息response.data====>", response.data);
+        console.log(
+          "成功获取用户信息response.data.dept.deptName====>",
+          response.data.dept.deptName
+        );
+        // const userInfo =; // 假设返回的用户信息对象包含 createUsername 和 departmentCategory 字段
+        this.thisDept = response.data.dept.deptName;
+        this.roles = response.data.roles;
+        console.log("this.roles===>", this.roles);
+
+        //获取制度文件数据
+        this.getRegularFileData();
+        //获取表单文件数据
+        this.getFormFileData();
+      })
+      .catch((error) => {
+        // 处理失败的情况
+        console.error("获取用户信息失败:", error);
+      });
   },
   mounted() {
     // 当组件挂载时，设置已绑定的文件信息为选中状态
@@ -174,13 +195,33 @@ export default {
     );
     this.setSelectedFormNames(Object.assign([], this.$props.selectedFormNames));
   },
+
   methods: {
     /** 1.1 查询制度文件列表 */
     getRegularFileData() {
-      listFilemanagement(this.queryParams).then((response) => {
-        this.filemanagementList = response.rows;
-        this.total = response.total;
-      });
+      // 废弃：获取制度文件
+      // listFilemanagement(this.queryParams).then((response) => {
+      //   this.filemanagementList = response.rows;
+      //   this.total = response.total;
+      // });
+
+      // 新加：2024/11/26 加密
+      if (this.roles.some((role) => role.roleName === "制度加密")) {
+        listFilemanagement(this.queryParams).then((response) => {
+          this.filemanagementList = response.rows;
+          this.total = response.total;
+
+        });
+      } else {
+        const query = {
+          ...this.queryParams,
+          encryption: 0,
+        };
+        listFilemanagement(query).then((response) => {
+          this.filemanagementList = response.rows;
+          this.total = response.total;
+        });
+      }
     },
 
     /** 2.1 保存制度 选择的行数据 */

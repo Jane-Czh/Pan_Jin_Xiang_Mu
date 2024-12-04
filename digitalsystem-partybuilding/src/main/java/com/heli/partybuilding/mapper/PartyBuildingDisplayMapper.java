@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 
-@DataSource(value = DataSourceType.SLAVE)
+//@DataSource(value = DataSourceType.SLAVE)
 public interface PartyBuildingDisplayMapper {
     /**
      * 党建月度考核排名 指标50

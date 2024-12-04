@@ -14,6 +14,20 @@
                 @change="handleDateChange">
             </el-date-picker> -->
             <!-- <p>{{ this.timeData.startTime }},{{ this.timeData.endTime }}</p> -->
+
+
+ <span class="DataSelect" style="margin-right:10px">日期选择</span>  
+
+<el-date-picker   
+  v-model="selectedDate"   
+  type="month"   
+  value-format="yyyy-MM-dd" 
+  start-placeholder="选择月份"   
+  :picker-options="pickerOptions"   
+  @change="handleDateChange"  
+  :default-value="new Date()">  
+</el-date-picker>
+
         </div>
         <div id="main" ref="main"></div>
     </div>
@@ -49,7 +63,7 @@ export default {
                 numberInput:null
     
             },
-            selectedDate: [new Date('2024-01-02'),new Date('2024-10-01')],
+            selectedDate: new Date(), // 
             pickerOptions: [],
             option: {},
             myChart: {}
@@ -68,8 +82,8 @@ export default {
 //   const currentMonth = currentDate.getMonth() + 1; // 月份从0开始，所以要加1
 //   const lastDayOfMonth = new Date(currentYear, currentMonth, 0); // 设置为每一年的当前月份的最后一天
 
-  this.timeData.startTime = firstMonthOfYear;
-  this.timeData.endTime = lastDayOfMonth;
+  // this.timeData.startTime = firstMonthOfYear;
+  // this.timeData.endTime = lastDayOfMonth;
     },
     methods: {
 
@@ -112,12 +126,15 @@ export default {
 },
 
         async initData() {
-            this.timeData.startTime = this.selectedDate[0],
-                this.timeData.endTime = this.selectedDate[1]
+         
+            this.timeData.startTime = this.selectedDate;
+                // this.timeData.endTime = this.selectedDate[1]
                  this.timeData.numberInput=this.numberInput
             try {
                 this.loading = true
-                console.log(this.timeData)
+                //  console.log("测试数据"+this.timeData)
+                console.log("测试时间"+this.selectedDate);
+                console.log("传入时间"+this.timeData.startTime);
                 this.result = await getIndex14(this.timeData);
                 console.log("======>");
                   console.log("后端传过来的数据：", this.result[0]);
@@ -133,6 +150,8 @@ export default {
         },
         handleDateChange(val) {
             console.log(val, 'val')
+             this.selectedDate = val; // 更新 selectedDate  
+
             this.initData()
         },
       updateChart() {

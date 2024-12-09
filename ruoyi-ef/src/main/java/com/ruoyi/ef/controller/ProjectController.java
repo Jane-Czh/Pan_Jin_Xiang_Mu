@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 
-import com.ruoyi.ef.entity.IndicatorRespondEntity;
-import com.ruoyi.ef.entity.LineEntity;
-import com.ruoyi.ef.entity.NodeEntity;
-import com.ruoyi.ef.entity.ProjectEntity;
+import com.ruoyi.ef.entity.*;
 import com.ruoyi.ef.service.IProjectService;
 import com.ruoyi.ef.vo.ProjectVo;
 import com.ruoyi.ef.vo.R;
@@ -304,6 +301,10 @@ public class ProjectController extends SuperController<ProjectEntity> {
         return projectEntitys;
     }
 
+
+
+
+
     @PostMapping("/list/time")
     public List<ProjectEntity> listTime(@RequestBody ProjectEntity time) {
 //        System.out.println("listTime projectEntity ==>" + time);
@@ -356,6 +357,38 @@ public class ProjectController extends SuperController<ProjectEntity> {
         System.out.println("projectEntitys ==>" + projectEntitys);
         return projectEntitys;
     }
+
+
+    /**
+     * 职能体系 按照 部门、业务模块、细分业务进行查询
+     * @param
+     * @return newest == 1
+     */
+    @PostMapping("/searchList2")
+    public List<ProjectEntity> searchList2(@RequestBody ProjectEntity projectEntity) {
+        System.out.println("searchList2 ==>" + projectEntity);
+
+        QueryWrapper<ProjectEntity> queryWrapper = new QueryWrapper<ProjectEntity>()
+                .eq("newest", 1);
+
+        if (projectEntity.getDepartment() != null) {
+            queryWrapper.like("department", projectEntity.getDepartment());
+        }
+
+        if (projectEntity.getBusinessesModules() != null) {
+            queryWrapper.like("businesses_modules", projectEntity.getBusinessesModules());
+        }
+
+        if (projectEntity.getSubBusinesses() != null) {
+            queryWrapper.like("sub_businesses", projectEntity.getSubBusinesses());
+        }
+
+        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(queryWrapper);
+
+        System.out.println("projectEntitys ==>" + projectEntitys);
+        return projectEntitys;
+    }
+
 
     /**
      * 按照制度文件的 file name查询流程

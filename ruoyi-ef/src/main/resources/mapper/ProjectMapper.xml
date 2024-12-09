@@ -16,6 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="newest"    column="newest"    />
         <result property="state"    column="state"    />
         <result property="type"    column="type"    />
+
+        <result property="department"    column="department"    />
+        <result property="businessesModules"    column="businesses_modules"    />
+        <result property="subBusinesses"    column="sub_businesses"    />
+
     </resultMap>
 
     <select id="queryDatas" resultType="com.ruoyi.ef.entity.ProjectEntity">

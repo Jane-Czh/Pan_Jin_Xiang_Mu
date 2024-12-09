@@ -206,7 +206,7 @@
 </template>
 
 <script>
-import {getProjectByName, listDept, listProject2} from "@/api/system/project";
+import {getProjectByName, listDept, listProject2, getProjectByName2} from "@/api/system/project";
 import {addModules, delModules, getModules, listModules, listModuless, updateModules} from "@/api/function/modules";
 import {listBusinessess} from "@/api/function/businesses";
 import {listFilemanagement2} from "@/api/file/filemanagement";
@@ -334,6 +334,7 @@ export default {
       };
 
       //查询所有流程
+      //1209新增 listProject2 无查询接口 --> listProject3 有参数查询接口
       listProject2(processQueryParams).then((response) => {
         this.processList = response;
         this.processAList = this.processList.filter(item => item.level === 'A级');
@@ -383,7 +384,12 @@ export default {
         businessesModules: this.queryParams.businesses,
         subBusinesses: this.queryParams.subBusinesses
       };
-      getProjectByName(processQueryParams).then((response) => {
+      getProjectByName2(processQueryParams).then((response) => {
+        //查询数据之前将之前的数据清空
+        this.processAList = [];
+        this.processBList = [];
+        this.processCList = [];
+
         console.log("processList123===>", response);
 
         this.processList = response;
@@ -395,9 +401,8 @@ export default {
         this.processACounts = this.processAList.length;
         this.processBCounts = this.processBList.length;
         this.processCCounts = this.processCList.length;
-
-
       });
+      
     },
     /** 查询部门列表 */
     getDeptList() {

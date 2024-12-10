@@ -15,7 +15,7 @@
       label-width="40px"
     >
       <!-- 搜索 流程名称进行搜索 -->
-      <el-form-item label="流程标题" prop="name">
+      <el-form-item label="流程名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入流程名称"
@@ -60,7 +60,7 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
+          >流程搜索</el-button
         >
       </el-form-item>
 
@@ -79,7 +79,7 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQueryFile"
-          >搜索</el-button
+          >制度搜索</el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
           >重置</el-button

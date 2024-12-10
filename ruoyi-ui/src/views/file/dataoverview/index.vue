@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
     <div class="block">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="68px">
+      <el-form
+        :model="queryParams"
+        ref="queryForm"
+        size="small"
+        :inline="true"
+        label-width="68px"
+      >
         <el-form-item label="日期" prop="updateDate">
           <el-date-picker
             v-model="selectedDate"
@@ -15,7 +21,7 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="主责部门" prop="mainResponsibleDepartment" >
+        <el-form-item label="主责部门" prop="mainResponsibleDepartment">
           <el-select
             v-model="selectedDepartment"
             placeholder="请选择主责部门"
@@ -31,22 +37,24 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+            >重置</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
     <div class="box1">
       制度总数：{{ totalRegulationCount }}
-      <br>
+      <br />
       公司级数：{{ companyLevelCounts }}
-      <br>
+      <br />
       部门级数：{{ departmentLevelCounts }}
     </div>
     <div class="box2">
       流程总数：{{ pcount }}
-      <br>
+      <br />
       流程A数：{{ pcountA }}
-      <br>
+      <br />
       流程B数：{{ pcountB }}
     </div>
 
@@ -62,17 +70,19 @@ import {
   getRegulationCounts,
   getRegulationCountsByClassification,
   listDept02,
-  listFilemanagement
+  listFilemanagement,
 } from "@/api/file/filemanagement";
-import {listProject2} from "@/api/system/project";
+import { listProject2 } from "@/api/system/project";
 import * as echarts from "echarts";
-import {getRegulationsImplementationRateByData} from "@/api/file/regulationsImplementation";
+import { getRegulationsImplementationRateByData } from "@/api/file/regulationsImplementation";
 import moment from "moment/moment";
 
+//---流程 listProjectWithTime 获取柱状图数据; getProcessCountsByClassification 获取饼状图数据
+import {
+  listProjectWithTime,
+  getProcessCountsByClassification,
+} from "@/api/system/project";
 
-
-//---流程
-import { listProjectWithTime } from "@/api/system/project";
 import {
   ToolboxComponent,
   TooltipComponent,
@@ -95,31 +105,30 @@ export default {
   name: "dataOverview",
   data() {
     return {
-      departments: [],  //部门列表
+      departments: [], //部门列表
       timeData: {
         startTime: new Date(),
         endTime: new Date(),
       },
-      selectedDepartment: [],  //选中的部门
+      selectedDepartment: [], //选中的部门
       selectedDate: [],
       pickerOptions: [],
       option: {},
       myRegulationChart1: {}, //制度柱状图
       myRegulationChart2: {}, //制度饼图
-      myProcessChart2: {},    //流程饼图
-      regulationChart1data: [],  //制度柱状图查询数据
-      regulationChart2data: [],  //制度饼图查询数据
+
+      regulationChart1data: [], //制度柱状图查询数据
+      regulationChart2data: [], //制度饼图查询数据
       data: [],
       //当前时间期间内统计的制度总次数
       totalCounts: 0,
 
-      regulationCount: 0,  //制度总数
+      regulationCount: 0, //制度总数
 
-
-      departmentLevelCounts: 0,  //部门级总数
-      companyLevelCounts: 0,     //公司级总数
-      totalRegulationCount: 0,  //制度总数
-      processCount: 0,     //流程总数
+      departmentLevelCounts: 0, //部门级总数
+      companyLevelCounts: 0, //公司级总数
+      totalRegulationCount: 0, //制度总数
+      processCount: 0, //流程总数
       queryParams: {
         timeData: this.timeData,
         mainResponsibleDepartment: "",
@@ -133,40 +142,51 @@ export default {
       pcountB: 0,
       pcountC: 0,
 
-    }
+      //饼图数据
+      processChart1data: [], //流程柱状图查询数据
+      processChart2data: [], //流程饼图查询数据
+
+      myProcessChart2: {}, //流程饼图
+    };
   },
   mounted() {
     this.getDeptList();
     this.defaultMonth();
-    this.myRegulationChart1 = echarts.init(document.getElementById("regulationchart1"));
-    this.myRegulationChart2 = echarts.init(document.getElementById("regulationchart2"));
-    this.myProcessChart2 = echarts.init(document.getElementById("processchart2"));
+    this.myRegulationChart1 = echarts.init(
+      document.getElementById("regulationchart1")
+    );
+    this.myRegulationChart2 = echarts.init(
+      document.getElementById("regulationchart2")
+    );
+    this.myProcessChart2 = echarts.init(
+      document.getElementById("processchart2")
+    );
     this.getList();
 
     //流程
     this.initPData();
     this.pChartData = echarts.init(document.getElementById("pchart"));
   },
-  created() {
-
-  },
+  created() {},
   methods: {
     getList() {
       this.initRegulationChart1Data();
       this.initPData();
       this.initRegulationChart2Data();
+      //流程饼图
+      this.initProcessChart2Data();
     },
     /** 重置按钮操作 */
     resetQuery() {
       this.selectedDate = [];
-      this.selectedDepartment = '';
+      this.selectedDepartment = "";
       this.defaultMonth();
       this.getList();
     },
     /** 查询部门列表 */
     getDeptList() {
       listDept02().then((response) => {
-        console.log("response======>",response);
+        console.log("response======>", response);
         // 过滤掉 deptName 为 "产品研发"、"研发"、"测试" 和 "总部" 的部门
         const filteredData = response.data.filter(
           (department) =>
@@ -181,46 +201,61 @@ export default {
         this.departments = filteredData.map(
           (department) => department.deptName
         );
-        console.log("this.departments======>",this.departments);
+        console.log("this.departments======>", this.departments);
       });
     },
     handleDateChange() {
       this.initRegulationChart1Data();
       this.initRegulationChart2Data();
       this.initPData();
+      //流程饼图
+      this.initProcessChart2Data();
     },
     handleDepartmentChange() {
       this.updateCounts();
       this.initRegulationChart2Data();
       this.initPData();
+      //流程饼图
+      this.initProcessChart2Data();
     },
+
     updateCounts() {
       // 过滤数据，若未选择部门，则计算全部
       const filteredData = this.selectedDepartment
-        ? this.regulationChart1data.filter(item => item.mainResponsibleDepartment === this.selectedDepartment)
+        ? this.regulationChart1data.filter(
+            (item) => item.mainResponsibleDepartment === this.selectedDepartment
+          )
         : this.regulationChart1data;
 
       // 计算部门级总数
       this.departmentLevelCounts = filteredData
-        .filter(item => item.regulationLevel === '部门级')
+        .filter((item) => item.regulationLevel === "部门级")
         .reduce((acc, item) => acc + item.times, 0);
 
       // 计算公司级总数
       this.companyLevelCounts = filteredData
-        .filter(item => item.regulationLevel === '公司级')
+        .filter((item) => item.regulationLevel === "公司级")
         .reduce((acc, item) => acc + item.times, 0);
 
       // 计算制度总数
-      this.totalRegulationCount = filteredData.reduce((acc, item) => acc + item.times, 0);
+      this.totalRegulationCount = filteredData.reduce(
+        (acc, item) => acc + item.times,
+        0
+      );
     },
+
     async initRegulationChart1Data() {
       this.timeData.startTime = this.selectedDate[0];
       // 获取该月的最后一天
-      const endOfMonth = new Date(this.selectedDate[1].getFullYear(), this.selectedDate[1].getMonth() + 1, 0);
+      const endOfMonth = new Date(
+        this.selectedDate[1].getFullYear(),
+        this.selectedDate[1].getMonth() + 1,
+        0
+      );
       this.timeData.endTime = endOfMonth;
       // this.timeData.endTime = this.selectedDate[1];
-      console.log("startTime=>",this.timeData.startTime);
-      console.log("endTime=>",this.timeData.endTime);
+      console.log("startTime=>", this.timeData.startTime);
+      console.log("endTime=>", this.timeData.endTime);
       try {
         this.loading = true;
         //在选择的时间区间内刷新数据
@@ -249,13 +284,12 @@ export default {
     },
     // 计算制度总数，公司级总数，部门级总数
     processData() {
-
       // 初始化
       this.totalRegulationCount = 0;
       this.departmentLevelCounts = 0;
       this.companyLevelCounts = 0;
 
-      this.regulationChart1data.forEach(item => {
+      this.regulationChart1data.forEach((item) => {
         this.totalRegulationCount += item.times; // 统计制度总数
         if (item.regulationLevel === "部门级") {
           this.departmentLevelCounts += item.times; // 统计部门级制度
@@ -265,19 +299,24 @@ export default {
       });
     },
 
-
     updateRegulationChart1() {
       // 如果查询到的数据为空，默认设置为 0
-      if (!this.regulationChart1data || this.regulationChart1data.length === 0) {
-        this.regulationChart1data = [{
-          mainResponsibleDepartment: '未知部门',
-          regulationLevel: '部门级',
-          times: 0
-        }, {
-          mainResponsibleDepartment: '未知部门',
-          regulationLevel: '公司级',
-          times: 0
-        }];
+      if (
+        !this.regulationChart1data ||
+        this.regulationChart1data.length === 0
+      ) {
+        this.regulationChart1data = [
+          {
+            mainResponsibleDepartment: "未知部门",
+            regulationLevel: "部门级",
+            times: 0,
+          },
+          {
+            mainResponsibleDepartment: "未知部门",
+            regulationLevel: "公司级",
+            times: 0,
+          },
+        ];
       }
       // 按制度等级分组数据
       const groupedData = this.regulationChart1data.reduce((acc, item) => {
@@ -293,7 +332,7 @@ export default {
       const labelOptionInside = {
         show: true,
 
-        position: 'inside',  // 设置数字显示在柱体内部
+        position: "inside", // 设置数字显示在柱体内部
         formatter: function (params) {
           return params.data.times; // 显示各制度等级的数量
         },
@@ -302,10 +341,12 @@ export default {
       };
       const labelOptionTop = {
         show: true,
-        position: 'top',  // 设置数字显示在柱体顶部
+        position: "top", // 设置数字显示在柱体顶部
         formatter: function (params) {
           const total = Object.values(groupedData).reduce((acc, levelData) => {
-            const item = levelData.find(d => d.mainResponsibleDepartment === params.name);
+            const item = levelData.find(
+              (d) => d.mainResponsibleDepartment === params.name
+            );
             return acc + (item ? item.times : 0);
           }, 0);
           return total; // 显示部门总数
@@ -394,7 +435,7 @@ export default {
           axisPointer: { type: "shadow" },
         },
         legend: {
-          orient: "horizontal",   //水平排列
+          orient: "horizontal", //水平排列
           left: "center",
           top: "10%",
         },
@@ -419,22 +460,22 @@ export default {
             interval: 1,
           },
         ],
-        series: Object.keys(groupedData).map(level => {
+        series: Object.keys(groupedData).map((level) => {
           return {
             name: level, // 使用制度等级作为系列名称
             type: "bar",
-            stack: "总数",  // 设置相同的 stack 名称，表示堆叠
-            label: labelOptionInside,  // 堆叠柱体内部显示制度等级的数量
+            stack: "总数", // 设置相同的 stack 名称，表示堆叠
+            label: labelOptionInside, // 堆叠柱体内部显示制度等级的数量
             emphasis: { focus: "series" },
-            data: this.departments.map(department => {
-              const item = groupedData[level].find(d => d.mainResponsibleDepartment === department);
+            data: this.departments.map((department) => {
+              const item = groupedData[level].find(
+                (d) => d.mainResponsibleDepartment === department
+              );
               return item ? item.times : 0; // 如果没有数据，默认设置为 0
             }),
           };
         }),
-
       };
-
 
       this.option && this.myRegulationChart1.setOption(this.option);
     },
@@ -459,17 +500,24 @@ export default {
     async initRegulationChart2Data() {
       this.timeData.startTime = this.selectedDate[0];
       // 获取该月的最后一天
-      const endOfMonth = new Date(this.selectedDate[1].getFullYear(), this.selectedDate[1].getMonth() + 1, 0);
+      const endOfMonth = new Date(
+        this.selectedDate[1].getFullYear(),
+        this.selectedDate[1].getMonth() + 1,
+        0
+      );
       this.timeData.endTime = endOfMonth;
       // this.timeData.endTime = this.selectedDate[1];
-      console.log("startTime=>",this.timeData.startTime);
-      console.log("endTime=>",this.timeData.endTime);
+      console.log("startTime=>", this.timeData.startTime);
+      console.log("endTime=>", this.timeData.endTime);
       try {
         this.loading = true;
         //在选择的时间区间内刷新数据
         // const res = await getMainRevenueData(this.timeData);
 
-        const res = await getRegulationCountsByClassification(this.timeData,this.selectedDepartment);
+        const res = await getRegulationCountsByClassification(
+          this.timeData,
+          this.selectedDepartment
+        );
         console.log("res222===>", res);
         /**
          * 返回的数据格式
@@ -489,6 +537,48 @@ export default {
         this.loading = false;
       }
     },
+
+    //1210修改：流程部分的【饼状图】- 获取流程分类的数据
+    async initProcessChart2Data() {
+      this.timeData.startTime = this.selectedDate[0];
+      // 获取该月的最后一天
+      const endOfMonth = new Date(
+        this.selectedDate[1].getFullYear(),
+        this.selectedDate[1].getMonth() + 1,
+        0
+      );
+      this.timeData.endTime = endOfMonth;
+      // this.timeData.endTime = this.selectedDate[1];
+      console.log("startTime=>", this.timeData.startTime);
+      console.log("endTime=>", this.timeData.endTime);
+      try {
+        this.loading = true;
+        // args: 在选择的时间区间内刷新数据 timeData、对应的主责部门 selectedDepartment
+
+        const res = await getProcessCountsByClassification(
+          this.timeData,
+          this.selectedDepartment
+        );
+        console.log("xht process 1210 ===>", res);
+        /**
+         * 返回的数据格式
+         * times: 2      --数据
+         * yearAndMonth: "2024-01-01"  --时间,展示时只取 年和月
+         * updateDates: 更具体的更新日期
+         */
+
+        // 加载数据
+        this.processChart2data = res;
+        this.loading = false;
+        // 处理数据，确保所有部门都有对应的制度数量，不存在的部门设置为 0
+        // this.processData();
+        // 更新流程分类饼图显示
+        this.updateProcessChart2();
+      } catch (error) {
+        this.loading = false;
+      }
+    },
+
     updateRegulationChart2() {
       const formattedData = this.regulationChart2data.map((item) => {
         return {
@@ -559,14 +649,13 @@ export default {
           // 返回分类名称
           return params.name;
         },
-
       };
       const labelOption2 = {
         formatter: function (params) {
           // 返回数量
           return params.value;
         },
-        position: 'inside',
+        position: "inside",
       };
 
       this.option = {
@@ -575,7 +664,7 @@ export default {
           left: "center", // 居中显示
         },
         tooltip: {
-          trigger: 'item'
+          trigger: "item",
         },
         series: [
           {
@@ -602,12 +691,14 @@ export default {
 
       this.option && this.myRegulationChart2.setOption(this.option);
     },
+
+    //流程分类 渲染 饼图echarts
     updateProcessChart2() {
-      const formattedData = this.regulationChart2data.map((item) => {
+      //TODO 重新装载数据 replace  regulationChart2data --> processChart2data
+      const formattedData = this.processChart2data.map((item) => {
         return {
           classificationOfSpecialties: item.classificationOfSpecialties,
           times: item.times,
-
         };
       });
 
@@ -670,14 +761,13 @@ export default {
           // 返回分类名称
           return params.name;
         },
-
       };
       const labelOption2 = {
         formatter: function (params) {
           // 返回数量
           return params.value;
         },
-        position: 'inside',
+        position: "inside",
       };
       this.option = {
         title: {
@@ -685,7 +775,7 @@ export default {
           left: "center", // 居中显示
         },
         tooltip: {
-          trigger: 'item'
+          trigger: "item",
         },
         series: [
           {
@@ -743,7 +833,6 @@ export default {
           }
         );
         console.log("my xht 流程 this.Pdata1===>", this.Pdata);
-
         this.loading = false;
 
         // 处理数据，确保所有部门都有对应的制度数量，不存在的部门设置为 0
@@ -786,7 +875,6 @@ export default {
       //   this.pcountA += item.A;
       //   this.pcountB += item.B;
       // });
-
 
       // ----------------根据部门筛选计算流程总数--------------------
       let filteredData = this.Pdata;
@@ -831,7 +919,7 @@ export default {
       };
       const labelOptionInside = {
         show: true,
-        position: 'inside',  // 设置数字显示在柱体内部
+        position: "inside", // 设置数字显示在柱体内部
         fontSize: 12,
         rich: { name: {} },
       };
@@ -842,7 +930,7 @@ export default {
           type: "bar",
           label: labelOptionInside,
           data: this.Pdata.map((item) => item.A),
-          stack: "总量",  // 堆叠图设置
+          stack: "总量", // 堆叠图设置
           itemStyle: {
             // color: "#FF5733", // A级的颜色
           },
@@ -855,7 +943,7 @@ export default {
           type: "bar",
           label: labelOptionInside,
           data: this.Pdata.map((item) => item.B),
-          stack: "总量",  // 堆叠图设置
+          stack: "总量", // 堆叠图设置
           itemStyle: {
             // color: "#33FF57", // B级的颜色
           },
@@ -868,7 +956,7 @@ export default {
           type: "bar",
           label: labelOptionInside,
           data: this.Pdata.map((item) => item.C),
-          stack: "总量",  // 堆叠图设置
+          stack: "总量", // 堆叠图设置
           itemStyle: {
             // color: "#3357FF", // C级的颜色
           },
@@ -1043,9 +1131,8 @@ export default {
     //
     //   this.option && this.pChartData.setOption(this.option);
     // },
-
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

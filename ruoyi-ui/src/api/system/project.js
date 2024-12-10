@@ -323,3 +323,17 @@ export function listProjectWithTime(timeData) {
     }
   })
 }
+
+
+// 根据 时间 和 专业分类统计 流程总数
+export function getProcessCountsByClassification(data1,data2) {
+  return request({
+    url: `/project/getDataByclassification`,
+    method: 'post',
+    data: {
+      startTime: data1.startTime,
+      endTime: data1.endTime,
+      mainResponsibleDepartment: data2
+    }
+  })
+}

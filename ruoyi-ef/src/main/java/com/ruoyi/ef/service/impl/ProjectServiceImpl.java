@@ -11,6 +11,10 @@ import com.ruoyi.ef.service.ILineService;
 import com.ruoyi.ef.service.INodeService;
 import com.ruoyi.ef.service.IProjectService;
 import com.ruoyi.ef.vo.ProjectVo;
+import com.ruoyi.file.domain.RegulationsInfoTable;
+import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
+import com.ruoyi.file.mapper.RegulationsInfoTableMapper;
+import com.ruoyi.file.service.IRegulationsInfoTableService;
 import org.apache.maven.surefire.shade.org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     private ILineService lineService;
     @Autowired
     private ProjectDao projectDao;
+
+    //制度文件注入
+    @Autowired
+    private IRegulationsInfoTableService regulationsInfoTableService;
 
 
     @Override
@@ -221,7 +229,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
 
         for (ProjectEntity entity : projectEntities) {
-            if (entity.getNewest() != null && entity.getNewest() == 1 ) {
+            if (entity.getNewest() != null && entity.getNewest() == 1) {
                 //添加在时间区间内的数据
                 String createDate = entity.getCreateDate();
                 //2024-08-03 12:32:06
@@ -305,6 +313,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         }
         return filteredEntities;
     }
+
 
     /**
      * 根据id查询其历史流程+流程自身
@@ -419,6 +428,82 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
         return res;
 
+    }
+
+
+    /**
+     * 获取分类统计数据
+     *
+     * @param startTime
+     * @param endTime
+     * @param mainResponsibleDepartment
+     * @return
+     */
+    @Override
+    public List<regulationCountsByClassificationRespondEntity> getProcessCountsByClassification(Date startTime, Date endTime, String mainResponsibleDepartment) {
+        //先获取所有的流程数据 newest == 1
+        List<ProjectEntity> projectEntities = queryDatasByTime(startTime, endTime);
+
+        // 初始化一个 List<regulationCountsByClassificationRespondEntity> 对应的分类为17个, 初始数量为0
+        //具体的分类包括(17个)："综合管理", "财务管理", "会计核算管理", "法人治理", "成本管理", "质量管理",
+        // "党群管理", "安全管理", "生产管理", "营销管理", "监察管理", "信息管理",
+        // "采购管理", "设备管理", "研发管理", "投资、规划管理", "人力资源管理"
+        String[] classificationOfSpecialtiesList = new String[]{
+                "综合管理", "财务管理", "会计核算管理", "法人治理", "成本管理", "质量管理",
+                "党群管理", "安全管理", "生产管理", "营销管理", "监察管理", "信息管理",
+                "采购管理", "设备管理", "研发管理", "投资、规划管理", "人力资源管理"
+        };
+        List<regulationCountsByClassificationRespondEntity> res = new ArrayList<>();
+        for (String classification : classificationOfSpecialtiesList) {
+            regulationCountsByClassificationRespondEntity entity = new regulationCountsByClassificationRespondEntity();
+            entity.setClassificationOfSpecialties(classification);
+            entity.setTimes(0);
+            res.add(entity);
+        }
+
+        //需要根据其中的state字段(ids:[])来获取对应制度的制度分类,并统计每个分类的数量（states字段可能为一个列表）
+        for (ProjectEntity projectEntity : projectEntities) {
+            String state = projectEntity.getState();
+//            System.out.println("0000 == state = " + state);
+
+            if (state == null || state.length() == 0) {
+                continue;
+            }else{
+                //state 为[178, 11, 12]这类数据, 需要去掉[]
+                state = state.replaceAll("[\\[\\]]", "");
+//                System.out.println("1111 == state = " + state);
+            }
+            //然后根据stateArray去制度文件列表中查询对应的分类，因此来统计数据，对应的制度数据只查询newest == 1的部分数据
+
+            String[] stateArray = state.split(",");
+            for (String stateId : stateArray) {
+                System.out.println("2222 == stateId = " + stateId);
+                // 如果 stateId 为空或空字符串，则跳过本次循环
+                if (stateId == null || stateId.isEmpty()) {
+                    continue;
+                }
+                //查询记录 转换stateId类型为Long
+                RegulationsInfoTable temp = regulationsInfoTableService.selectRegulationsInfoTableByRegulationsId(Long.parseLong(stateId));
+                //根据 mainResponsibleDepartment 的部门信息进行过滤，再找到分类 。 mainResponsibleDepartment 可能为空
+//                System.out.println("2.5 2.5 == temp.getMainResponsibleDepartment() = " + temp.getMainResponsibleDepartment());
+                if (mainResponsibleDepartment != "" && !temp.getMainResponsibleDepartment().equals(mainResponsibleDepartment)) {
+                    continue;
+                } else {
+                    String tempClass = temp.getClassificationOfSpecialties();
+//                    System.out.println("3333 == tempClass = " + tempClass);
+                    //将分类记录到res中
+                    for (regulationCountsByClassificationRespondEntity entity : res) {
+                        if (entity.getClassificationOfSpecialties().equals(tempClass)) {
+                            entity.setTimes(entity.getTimes() + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+//        System.out.println("1210---getProcessCountsByClassification--->"+res);
+        //放回结果
+        return res;
     }
 
 }

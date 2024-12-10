@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.ef.entity.IndicatorRespondEntity;
 import com.ruoyi.ef.entity.ProjectEntity;
 import com.ruoyi.ef.vo.ProjectVo;
+import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
 
 
 import java.util.Date;
@@ -47,6 +48,17 @@ public interface IProjectService extends IService<ProjectEntity> {
      * @return
      */
     List<ProjectEntity> queryHistoryDatas(String projectId);
+
+    /**
+     * 1210 新增修改
+     * 获取指定时间区间内，不同分类下的流程数据统计
+     * @param startTime
+     * @param endTime
+     * @param mainResponsibleDepartment
+     * @return
+     */
+    List<regulationCountsByClassificationRespondEntity> getProcessCountsByClassification(Date startTime, Date endTime,String mainResponsibleDepartment);
+
     /**
      * 获取流程数据,包括 project、node、line
      *

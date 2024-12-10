@@ -37,6 +37,9 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",
+    "@vue-office/docx": "^1.6.2",
+    "@vue-office/excel": "^1.7.11",
+    "@vue-office/pdf": "^2.0.9",
     "axios": "^0.24.0",
     "buefy": "^0.9.29",
     "clipboard": "2.0.8",

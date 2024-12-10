@@ -1448,7 +1448,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
               console.log("上传文件提交按钮=>", this.form);
             });
             // 将字符串拆分成数组
-            const formTitles = this.form.formId.split(',');
+            const formTitles = this.form.formId ? this.form.formId.split(',') : [];
             if (this.form.formId) {
               //将制度文件绑定到表单文件
               formTitles.forEach(formTitle => {
@@ -1485,7 +1485,9 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
               console.log("newform=>", this.form);
               this.form.oldRegulationsId = this.form.regulationsId;
               this.form.addFlag = 0;
-              this.form.formId = this.form.formId.join(','); // 将字符串拆分成数组
+              if(this.form.formId) {
+                this.form.formId = this.form.formId.join(','); // 将字符串拆分成数组
+              }
 
               try {
                 const response = await addFilemanagement(this.form);
@@ -1502,43 +1504,46 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
                 lastForm.revisionContent = "更新";
                 console.log("上一表单=>", lastForm);
 
-                // 将制度文件解绑到表单文件
-                const formTitles = lastForm.formId.split(',');
-                const unbindPromises = formTitles.map(formTitle => {
-                  const queryParams = { formTitle };
-                  return listFormfilemanagement(queryParams).then(response => {
-                    const resultForm = response.rows;
-                    console.log("resultForm=>", resultForm);
-                    const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
-                    const updatedRegulations = existingRegulations.filter(regulation => regulation !== lastForm.regulationsTitle);
-                    resultForm[0].regulationId = updatedRegulations.join(',');
-                    console.log("Updated regulationId=>", resultForm[0].regulationId);
-                    return updateFormfilemanagement(resultForm[0]);
+                if(lastForm.formId) {
+                  // 将制度文件解绑到表单文件
+                  const formTitles = lastForm.formId.split(',');
+                  const unbindPromises = formTitles.map(formTitle => {
+                    const queryParams = { formTitle };
+                    return listFormfilemanagement(queryParams).then(response => {
+                      const resultForm = response.rows;
+                      console.log("resultForm=>", resultForm);
+                      const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                      const updatedRegulations = existingRegulations.filter(regulation => regulation !== lastForm.regulationsTitle);
+                      resultForm[0].regulationId = updatedRegulations.join(',');
+                      console.log("Updated regulationId=>", resultForm[0].regulationId);
+                      return updateFormfilemanagement(resultForm[0]);
+                    });
                   });
-                });
+                  await Promise.all(unbindPromises);
+                }
 
-                await Promise.all(unbindPromises);
                 await updateFilemanagement(lastForm);
                 this.getList();
 
-                // 将制度文件绑定到表单文件
-                const bindPromises = this.form.formId.split(',').map(formTitle => {
-                  const queryParams = { formTitle };
-                  return listFormfilemanagement(queryParams).then(response => {
-                    const resultForm = response.rows;
-                    console.log("更新的resultForm=>", resultForm);
-                    const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
-                    if (!existingRegulations.includes(this.form.regulationsTitle)) {
-                      existingRegulations.push(this.form.regulationsTitle);
-                      console.log("existingRegulations=>", existingRegulations);
-                    }
-                    resultForm[0].regulationId = existingRegulations.join(',');
-                    console.log("resultForm[0]=>", resultForm[0]);
-                    return updateFormfilemanagement(resultForm[0]);
+                if(this.form.formId) {
+                  // 将制度文件绑定到表单文件
+                  const bindPromises = this.form.formId.split(',').map(formTitle => {
+                    const queryParams = { formTitle };
+                    return listFormfilemanagement(queryParams).then(response => {
+                      const resultForm = response.rows;
+                      console.log("更新的resultForm=>", resultForm);
+                      const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                      if (!existingRegulations.includes(this.form.regulationsTitle)) {
+                        existingRegulations.push(this.form.regulationsTitle);
+                        console.log("existingRegulations=>", existingRegulations);
+                      }
+                      resultForm[0].regulationId = existingRegulations.join(',');
+                      console.log("resultForm[0]=>", resultForm[0]);
+                      return updateFormfilemanagement(resultForm[0]);
+                    });
                   });
-                });
-
-                await Promise.all(bindPromises);
+                  await Promise.all(bindPromises);
+                }
               } catch (error) {
                 console.error('处理过程中发生错误', error);
                 this.$modal.msgError("更新失败");
@@ -1583,10 +1588,9 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
                 thisForm.newFlag = 2;
                 thisForm.revisionContent = "删除";
                 // thisForm.formId = '';
-                console.log("更新表单 newFlag 为 2 =>", thisForm);
 
                 // 将字符串拆分成数组
-                const formTitles = thisForm.formId.split(',');
+                const formTitles = thisForm.formId ? thisForm.formId.split(',') : [];
 
                 // 将制度文件解绑到表单文件
                 const unbindPromises = formTitles.map(formTitle => {

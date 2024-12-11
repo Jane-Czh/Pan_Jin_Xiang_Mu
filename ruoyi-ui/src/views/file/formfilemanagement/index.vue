@@ -568,7 +568,7 @@ import {getToken} from "@/utils/auth"
 import {word2Pdf} from "../../../api/file/filemanagement";
 import {listProject} from "@/api/system/project";
 //业务模块api，
-import { listModules } from "@/api/function/modules";
+import {listModules, listModuless} from "@/api/function/modules";
 //细分业务api
 import {listBusinesses, listBusinessess} from "@/api/function/businesses";
 //导出总台账excel功能
@@ -1377,7 +1377,7 @@ export default {
       this.modules = []; // 清空之前的模块
       if (department) {
         try {
-          await listModules(this.moduleQueryParams).then((response) => {
+          await listModuless(this.moduleQueryParams).then((response) => {
             this.modulesList = response.rows;
           });
 

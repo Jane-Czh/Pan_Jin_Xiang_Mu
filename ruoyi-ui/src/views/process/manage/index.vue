@@ -648,7 +648,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10000,
         name: null,
         filename: null,
         department: null,
@@ -1073,6 +1073,7 @@ export default {
     /**根据project的state(制度文件ids)、type(表单文件ids)查找filenames */
     // 1.1 查询制度文件列表
     getRegularFileData(row) {
+      console.log("1211 state id ==="+ row.state);
       //存储制度文件名称
       this.nodeFileNames = [];
       //存储相应的下载地址--pdf
@@ -1083,9 +1084,11 @@ export default {
       console.log("1.1 查询制度文件列表 row=====>", row);
       listFilemanagementAll(this.queryParams).then((response) => {
         this.filemanagementList = response.rows;
+        console.log("1211 制度文件 this.filemanagementList===>", this.filemanagementList);
       });
       //对 filemanagementList 查找符合state中ids的文件 将其放入 nodeFileNames
       JSON.parse(row.state).forEach((stateId) => {
+        
         let row = this.filemanagementList.find(
           (item) =>
             JSON.stringify(item.regulationsId) === JSON.stringify(stateId)
@@ -1098,12 +1101,13 @@ export default {
           this.wordHyperLinks.push(row.wordPath);
         }
       });
-      // console.log("this.nodeFileNames===>", this.nodeFileNames);
-      // console.log("this.fileHyperLinks===>", this.fileHyperLinks);
+      console.log("1211 this.nodeFileNames===>", this.nodeFileNames);
+      console.log("1211 this.fileHyperLinks===>", this.fileHyperLinks);
     },
 
     // 1.2 查询表单文件列表
     getFormFileData(row) {
+      console.log("1211 type id ==="+ row.type);
       //存储表单文件名称
       this.nodeFormNames = [];
       //存储相应的下载地址
@@ -1112,7 +1116,7 @@ export default {
 
       listFormfilemanagementAll(this.queryParams).then((response) => {
         this.formList = response.rows;
-        console.log("this.formList===>", this.formList);
+        console.log("1211 表单文件 this.formList===>", this.formList);
       });
 
       //对 formList 查找符合type中ids的文件 将其放入 nodeFormNames

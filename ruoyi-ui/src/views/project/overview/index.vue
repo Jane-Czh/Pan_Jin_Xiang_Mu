@@ -555,7 +555,7 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
+          formatter: '{a} <br/>{b}: {c} '
         },
         series: [
           {
@@ -565,7 +565,7 @@ export default {
             data: pieChartData,
             label: {
               show: true, // 不显示标签
-              formatter: '{b}: {d}%' // 显示名称和数值
+              formatter: '{b}: {c}' // 显示名称和数值
             },
           }
         ]

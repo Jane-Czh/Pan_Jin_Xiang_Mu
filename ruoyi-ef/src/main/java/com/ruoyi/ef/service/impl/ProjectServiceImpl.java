@@ -477,7 +477,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
             String[] stateArray = state.split(",");
             for (String stateId : stateArray) {
-                System.out.println("2222 == stateId = " + stateId);
+//                System.out.println("2222 == stateId = " + stateId);
                 // 如果 stateId 为空或空字符串，则跳过本次循环
                 if (stateId == null || stateId.isEmpty()) {
                     continue;

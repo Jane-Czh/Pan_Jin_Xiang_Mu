@@ -230,7 +230,7 @@
             icon="el-icon-edit"
             @click="handleModify(scope.row)"
             v-hasPermi="['file:formfilemanagement:edit']"
-            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企管', '总部' ].includes(thisDept)"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
           >更新
           </el-button>
           <el-button
@@ -239,20 +239,44 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['file:formfilemanagement:remove']"
-            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企管', '总部' ].includes(thisDept)"
+            :disabled="thisDept !== scope.row.departmentCategory && ![ '研发', '企业管理科', '总部' ].includes(thisDept)"
           >删除
           </el-button>
         </template>
       </el-table-column>
       <el-table-column label="查看" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-view"
-            @click="previewFile(scope.row.formPath)"
-          >预览
-          </el-button>
+        <template slot-scope="scope" >
+<!--          <template v-if="scope.row.formType === 'word' || scope.row.formType === 'pdf'">-->
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              type="text"-->
+<!--              icon="el-icon-view"-->
+<!--              @click="previewFile(scope.row.formPath)"-->
+<!--            >预览-->
+<!--            </el-button>-->
+<!--          </template>-->
+          <div>
+            <template v-if="scope.row.formType === 'word' || scope.row.formType === 'pdf' || scope.row.formType === 'jpg' || scope.row.formType === 'png' ">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-view"
+                @click="previewFile(scope.row.formPath, scope.row.formType)"
+              >
+                预览
+              </el-button>
+            </template>
+            <template v-else-if="scope.row.formType === 'xlsx'">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-view"
+                @click="openExcelPreviewDialog(scope.row.formPath)"
+              >
+                预览
+              </el-button>
+            </template>
+          </div>
           <el-button
             size="mini"
             type="text"
@@ -514,6 +538,18 @@
         <el-button @click="modifyCancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- Excel 预览对话框 -->
+    <el-dialog
+      title="Excel 预览"
+      :visible.sync="excelPreviewDialogVisible"
+      width="80%"
+      :center="true"
+      append-to-body
+      :before-close="closeExcelPreviewDialog">
+
+      <vue-office-excel v-if="isExcelPreview" :src="previewSrc" :options="options" style="height: 80vh;"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -532,13 +568,22 @@ import {getToken} from "@/utils/auth"
 import {word2Pdf} from "../../../api/file/filemanagement";
 import {listProject} from "@/api/system/project";
 //业务模块api，
-import { listModules } from "@/api/function/modules";
+import {listModules, listModuless} from "@/api/function/modules";
 //细分业务api
 import {listBusinesses, listBusinessess} from "@/api/function/businesses";
 //导出总台账excel功能
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import {Loading} from "element-ui";
+//引入相关样式
+import '@vue-office/docx/lib/index.css';
+import '@vue-office/excel/lib/index.css';
+// 引入 VueOffice 组件
+import VueOfficeDocx from '@vue-office/docx';
+import VueOfficeExcel from '@vue-office/excel';
+import VueOfficePdf from '@vue-office/pdf';
+
+
 
 export default {
   name: "Formfilemanagement",
@@ -563,6 +608,20 @@ export default {
   },
   data() {
     return {
+      //excel预览
+      options:{
+        xls: false,       //预览xlsx文件设为false；预览xls文件设为true
+        minColLength: 0,  // excel最少渲染多少列，如果想实现xlsx文件内容有几列，就渲染几列，可以将此值设置为0.
+        minRowLength: 0,  // excel最少渲染多少行，如果想实现根据xlsx实际函数渲染，可以将此值设置为0.
+        widthOffset: 10,  //如果渲染出来的结果感觉单元格宽度不够，可以在默认渲染的列表宽度上再加 Npx宽
+        heightOffset: 10, //在默认渲染的列表高度上再加 Npx高
+        beforeTransformData: (workbookData) => {return workbookData}, //底层通过exceljs获取excel文件内容，通过该钩子函数，可以对获取的excel文件内容进行修改，比如某个单元格的数据显示不正确，可以在此自行修改每个单元格的value值。
+        transformData: (workbookData) => {return workbookData}, //将获取到的excel数据进行处理之后且渲染到页面之前，可通过transformData对即将渲染的数据及样式进行修改，此时每个单元格的text值就是即将渲染到页面上的内容
+      },
+      excelPreviewDialogVisible: false,
+      isExcelPreview: false,
+      previewSrc: '',
+
       //部门列表
       departments: [],
       // 查询参数
@@ -740,6 +799,11 @@ export default {
       return this.isShowTip && (this.fileType || this.fileSize);
     },
   },
+  components: {
+    VueOfficeDocx,
+    VueOfficeExcel,
+    VueOfficePdf
+  },
   created() {
 
     getUserProfile02().then(response => {
@@ -767,7 +831,7 @@ export default {
     getList() {
       this.loading = true;
       // 如果部门是研发或企管，则不添加departmentCategory到queryParams
-      // if (!['研发', '企管'].includes(this.thisDept)) {
+      // if (!['研发', '企业管理科'].includes(this.thisDept)) {
       //   this.queryParams.departmentCategory = this.thisDept;
       // }
       console.log("thisDept=>",this.thisDept);
@@ -995,7 +1059,7 @@ export default {
           console.log("response------>:", thisForm);
 
           // 检查权限，确保 this.thisDept 与表单的 departmentCategory 匹配
-          if (this.thisDept !== thisForm.departmentCategory  && ![ '研发', '企管', '总部' ].includes(this.thisDept)) {
+          if (this.thisDept !== thisForm.departmentCategory  && ![ '研发', '企业管理科', '总部' ].includes(this.thisDept)) {
             this.$modal.msgError('没有权限删除该表单!');
             throw new Error('没有权限删除');
           }
@@ -1245,9 +1309,17 @@ export default {
       const fileType = this.getFileType(filePath);
 
       // 检查文件类型是否为 'pdf' 或 'word'
-      if (fileType === 'pdf' || fileType === 'word') {
+      if (fileType === 'pdf' || fileType === 'word' || fileType === 'jpg' || fileType === 'png') {
         switch (fileType) {
           case 'pdf':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
+          case 'jpg':
+            console.log("fileType1111:",fileType);
+            window.open(filePath, '_blank');
+            break;
+          case 'png':
             console.log("fileType1111:",fileType);
             window.open(filePath, '_blank');
             break;
@@ -1269,6 +1341,17 @@ export default {
           type: 'warning'
         });
       }
+    },
+    // excel预览
+    openExcelPreviewDialog(filePath) {
+      this.previewSrc = filePath;
+      this.isExcelPreview = true;
+      this.excelPreviewDialogVisible = true;
+    },
+    closeExcelPreviewDialog(done) {
+      this.isExcelPreview = false;
+      this.previewSrc = '';
+      done();
     },
 
     convertToPdfPath(wordFilePath) {
@@ -1294,7 +1377,7 @@ export default {
       this.modules = []; // 清空之前的模块
       if (department) {
         try {
-          await listModules(this.moduleQueryParams).then((response) => {
+          await listModuless(this.moduleQueryParams).then((response) => {
             this.modulesList = response.rows;
           });
 

@@ -1,6 +1,6 @@
+<!-- 节点绑定 表单文件 -->
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <!-- 1 -->
     <el-tab-pane
       label="表单文件"
       style="background-color: #f2f2f2; padding: 2px"
@@ -37,14 +37,13 @@
         </el-table-column>
 
         <el-table-column label="表单名称" align="center" prop="formTitle" />
-        
+
         <el-table-column
           label="表单所属科室"
           align="center"
           prop="departmentCategory"
         />
         <el-table-column label="文件名称" align="center" prop="formName" />
-        
       </el-table>
 
       <!-- 分页功能 -->
@@ -62,7 +61,6 @@
 <script>
 // import { listFormfilemanagementAll } from "@/api/system/project";
 import { listFormfilemanagement } from "@/api/system/project";
-
 
 export default {
   props: {

@@ -394,6 +394,16 @@ public class MarketIndexController extends BaseController {
     public List<VoEntity> ModelGrowthProportion(@RequestBody MarketSalesTable marketSalesTable){
 
         System.out.println("接收对象的起止时间"+marketSalesTable);
+        System.out.println("开始时间"+marketSalesTable.getStartTime());
+         Date startTime1 = marketSalesTable.getStartTime();
+         //前端传进来的日期
+        LocalDate test = startTime1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+
+// 获取月份
+        int newMonth = test.getMonthValue();
+
+        System.out.println("月份是: " + newMonth);
         //获取到全部的数据
         List<MarketSalesTable> marketSalesTables = iMarketSalesTableService.selectMarketSalesTableList1();
 
@@ -407,20 +417,28 @@ public class MarketIndexController extends BaseController {
         int currents = LocalDate.now().getYear();
 
         //取出今年，取出当年的，各个主要车型的各个月的总数
-        System.out.println(marketSalesTables);
+//        System.out.println(marketSalesTables);
         System.out.println("获取到起止时间"+marketSalesTable.getStartTime()+marketSalesTable.getEndTime());
-        List<MarketSalesTable> collect = marketSalesTables.stream().filter(a -> a.getOrderAcceptanceTime().getYear() == currents).collect(Collectors.toList());
+        List<MarketSalesTable> collect = marketSalesTables.stream().filter(a->{
+                    LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                     int year = acceptanceTime.getYear();
+                    return year == currents;
+                }
+
+               ).collect(Collectors.toList());
         System.out.println("获取2024的数据"+collect);
         //规定年月日的格式s
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         int currentYear = Year.now().getValue();
-        int currentmonth = LocalDate.now().getMonthValue();// 获取当前月份
+        //这里只处理前端选择的月份
+        int currentmonth =newMonth;
+//        int currentmonth = LocalDate.now().getMonthValue();// 获取当前月份
         Map<String, Map<String, Long>> curMonth = marketSalesTables.stream()
                 .filter(a -> a.getOrderAcceptanceTime() != null) // 过滤掉 getOrderAcceptanceTime 为空的元素
                 .filter(a -> {
                     LocalDate acceptanceTime = a.getOrderAcceptanceTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//                    LocalDate startTime = marketSalesTable.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//                    LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     int current = LocalDate.now().getYear();// 获取当前年份
 
                     //筛选2024年满足起止时间的数据，在选出年份为2024，且月份是开始那个月的数据
@@ -449,7 +467,7 @@ public class MarketIndexController extends BaseController {
                     LocalDate endTime = marketSalesTable.getEndTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     int current = LocalDate.now().getYear(); // 获取当前年份
                     int previousYear = current - 1; // 获取当前年份的前一年
-                    System.out.println("去年的"+previousYear);
+//                    System.out.println("去年的"+previousYear);
                     // 筛选出时间为前一年的数据，且月份与当前年份相同
                     return acceptanceTime.getYear() == previousYear&&(acceptanceTime.getMonthValue()==currentmonth);
                     //获取去年的，当前月份的数据

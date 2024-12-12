@@ -7,9 +7,10 @@ ruoyi:
   # 版权年份
   copyrightYear: 2023
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath  (docker也用Linux的配置)）
-  profile: D:/ruoyi/uploadPath # 文件保存路径：D:\ruoyi\uploadPath\upload\2024\05\06
+  # profile: D:/ruoyi/uploadPath # 文件保存路径：D:\ruoyi\uploadPath\upload\2024\05\06
 
   #Linux服务器的文件模块配置路径
+  profile: /digital_operations_management_system/file
 #  profile: /mydata/heliDS/file
 
 #  profile: /home/ruoyi/uploadPath # 文件保存路径：/home/ruoyi/uploadPath
@@ -63,9 +64,9 @@ spring:
   servlet:
     multipart:
       # 单个文件大小
-      max-file-size: 100MB
+      max-file-size: 200MB
       # 设置总上传的文件大小
-      max-request-size: 200MB
+      max-request-size: 400MB
   # 服务模块
   devtools:
     restart:
@@ -73,21 +74,14 @@ spring:
       enabled: true
   # redis 配置
   redis:
-    # docker
-#    host: 124.222.36.192
+    # 盘锦服务器部署
+#    host: 10.36.53.24
 #    port: 6379
-#    password: suRCEu#ZxNT#%Pga
-
-    # 实验室堡垒机 地址、端口，默认为6379
-    host: 172.19.1.189
-    port: 6379
+#    password: panjinheli
+    # 实验室堡垒机 地址、端口，默认为6378
+    host: 172.17.101.85
+    port: 6378
     password:
-
-    # 本地测试
-#    host: 192.168.10.132
-#    port: 6379
-#    password: 1234qwer
-
 
     # 数据库索引
     database: 0
@@ -113,7 +107,7 @@ token:
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   # 开发中为方便调试，已修改为600分钟，生产环境应为30分钟
-  expireTime: 600
+  expireTime: 60
 
 # MyBatis配置
 mybatis:

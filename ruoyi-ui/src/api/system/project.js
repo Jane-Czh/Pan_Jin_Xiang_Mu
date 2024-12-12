@@ -97,11 +97,20 @@ export function compareProjects(id) {
 }
 
 
-
 // 按照name查询流程
 export function getProjectByName(query) {
   return request({
     url: '/project/searchList',
+    method: 'post',
+    data: query,
+
+  })
+}
+
+// 职能体系 模块 按照 部门、业务模块、细分业务进行查询
+export function getProjectByName2(query) {
+  return request({
+    url: '/project/searchList2',
     method: 'post',
     data: query,
 
@@ -157,6 +166,15 @@ export function listProject2(query) {
   return request({
     url: '/project/list/list',
     method: 'get',
+    params: query
+  })
+}
+
+// 查询流程列表--职能体系
+export function listProject3(query) {
+  return request({
+    url: '/project/list/query',
+    method: 'post',
     params: query
   })
 }
@@ -302,6 +320,20 @@ export function listProjectWithTime(timeData) {
     data: {
       startTime: timeData.startTime,
       endTime: timeData.endTime,
+    }
+  })
+}
+
+
+// 根据 时间 和 专业分类统计 流程总数
+export function getProcessCountsByClassification(data1,data2) {
+  return request({
+    url: `/project/getDataByclassification`,
+    method: 'post',
+    data: {
+      startTime: data1.startTime,
+      endTime: data1.endTime,
+      mainResponsibleDepartment: data2
     }
   })
 }

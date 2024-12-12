@@ -326,14 +326,14 @@
               <el-form-item label="流程目的">
                 <el-input
                   v-model="formData.purpose"
-                  maxlength="20"
+                  maxlength="50"
                   show-word-limit
                 ></el-input>
               </el-form-item>
               <el-form-item label="适用范围">
                 <el-input
                   v-model="formData.applicationScope"
-                  maxlength="20"
+                  maxlength="50"
                   show-word-limit
                 ></el-input>
               </el-form-item>

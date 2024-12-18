@@ -2251,7 +2251,7 @@ import {
 
       async downloadAllFiles() {
         const zip = new JSZip();
-        const folder = zip.folder('files');
+        const folder = zip.folder('制度文件列表');
 
         // 假设 filemanagementList 是你要下载的文件列表
         for (const file of this.usingFilemanagementList) {
@@ -2261,7 +2261,7 @@ import {
           }
         }
         zip.generateAsync({ type: 'blob' }).then(content => {
-          saveAs(content, 'files.zip');
+          saveAs(content, '制度文件.zip');
         });
       },
       fetchFile(url) {

@@ -128,14 +128,16 @@
     <select id="listaddFilemanagement" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
         <include refid="selectRegulationsInfoTableVo"/>
         <where>
-            add_flag = 1 and new_flag != 2
+            <if test="encryption != null"> and encryption = #{encryption}</if>
+            and add_flag = 1 and new_flag != 2
         </where>
     </select>
 
     <select id="listHistoryFilemanagement" parameterType="RegulationsInfoTable" resultMap="RegulationsInfoTableResult">
         <include refid="selectRegulationsInfoTableVo"/>
         <where>
-            new_flag = 0
+            <if test="encryption != null"> and encryption = #{encryption}</if>
+            and new_flag = 0
         </where>
     </select>
 

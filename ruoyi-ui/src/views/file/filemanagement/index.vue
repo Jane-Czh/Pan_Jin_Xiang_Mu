@@ -212,6 +212,16 @@
           v-hasPermi="['file:filemanagement:export']"
         >历史台账导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="downloadAllFiles"
+          v-hasPermi="['file:filemanagement:export']"
+        >一键下载</el-button>
+      </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="warning"-->
@@ -839,7 +849,7 @@ import {
   getFilemanagement,
   delFilemanagement,
   addFilemanagement,
-  updateFilemanagement, listAllFilemanagement, listHistoryFilemanagement, listAddFilemanagement
+  updateFilemanagement, listAllFilemanagement, listHistoryFilemanagement, listAddFilemanagement, listFilemanagement2
 } from "@/api/file/filemanagement";
   import {
     listProject,
@@ -859,8 +869,9 @@ import {
   import * as XLSX from "xlsx";
   import { saveAs } from "file-saver";
   import {Loading} from "element-ui";
+  import JSZip from 'jszip';
   import { listDept } from "@/api/system/project";
-import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagement} from "@/api/file/formfilemanagement";  //获取部门列表
+  import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagement} from "@/api/file/formfilemanagement";  //获取部门列表
   import { mapActions } from 'vuex';
 
 
@@ -986,6 +997,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         total: 0,
         // 制度文件管理表格数据
         filemanagementList: [],
+        usingFilemanagementList: [], //制度文件列表（不分页）
         addFilemanagementList: [], // 新增文件管理表格数据
         historyFilemanagementList: [], //历史版本制度文件管理表格数据
         // 表单文件管理表格数据
@@ -1229,11 +1241,21 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         // }
         if (this.roles.some(role => role.roleName === '制度加密')) {
           listFilemanagement(this.queryParams).then(response => {
-            console.log("response111:：", response);
             this.filemanagementList = response.rows;
-            console.log("filemanagementList=>", this.filemanagementList);
             this.total = response.total;
             this.loading = false;
+          });
+          //获取使用中的所有制度（不分页）
+          listFilemanagement2(this.queryParams).then(response => {
+            this.usingFilemanagementList = response.rows;
+          });
+          //获取历史制度
+          listHistoryFilemanagement(this.queryParams).then(response => {
+            this.historyFilemanagementList = response;
+          });
+          //获取新增制度
+          listAddFilemanagement(this.queryParams).then(response => {
+            this.addFilemanagementList = response;
           });
         } else {
           const query = {
@@ -1241,43 +1263,32 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
             encryption: 0
           }
           listFilemanagement(query).then(response => {
-            console.log("response222:：", response);
             this.filemanagementList = response.rows;
-            console.log("filemanagementList=>", this.filemanagementList);
             this.total = response.total;
             this.loading = false;
           });
+          //获取使用中的所有制度（不分页）
+          listFilemanagement2(query).then(response => {
+            this.usingFilemanagementList = response.rows;
+          });
+          //获取历史制度
+          listHistoryFilemanagement(query).then(response => {
+            this.historyFilemanagementList = response;
+          });
+          //获取新增制度
+          listAddFilemanagement(query).then(response => {
+            this.addFilemanagementList = response;
+          });
         }
         listFormfilemanagement3(this.formQueryParams).then(response => {
-          console.log("response:：", response);
           this.formmanagementList = response.rows;
-          console.log("formmanagementList=>", this.formmanagementList);
-
           // // 获取filemanagementList中所有formTitle
           // const formTitlesToExclude = this.filemanagementList.map(file => file.formId);
           // console.log("formTitlesToExclude=>", formTitlesToExclude);
           //
           // // 过滤formmanagementList，排除formTitlesToExclude中的记录
           // this.formmanagementList = this.formmanagementList.filter(form => !formTitlesToExclude.includes(form.formTitle));
-
-          console.log("过滤后的formmanagementList=>", this.formmanagementList);
         });
-
-
-        console.log("this.queryParams====>",this.queryParams);
-        //获取历史制度
-        listHistoryFilemanagement(this.queryParams).then(response => {
-          console.log("response:：", response);
-          this.historyFilemanagementList = response;
-          console.log("historyFilemanagementList=>", this.historyFilemanagementList);
-        });
-        //获取新增制度
-        listAddFilemanagement(this.queryParams).then(response => {
-          console.log("response:：", response);
-          this.addFilemanagementList = response;
-          console.log("this.addFilemanagementList=>", this.addFilemanagementList);
-        });
-
       },
 
       // 查询绑定的流程信息
@@ -1435,8 +1446,9 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
         }
         this.$refs["form"].validate(valid => {
           if (valid) {
-            // 将 form.formId 数组转换为字符串
-            this.form.formId = this.form.formId.join(',');
+            if(this.form.formId) {
+              this.form.formId = this.form.formId.join(','); // 将字符串拆分成数组
+            }
             console.log("this.form.formId=>", this.form.formId);
             this.form.newFlag = 1;
             this.form.addFlag = 1;
@@ -2062,7 +2074,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           background: "rgba(0, 0, 0, 0.7)",
         });
 
-        const promises = this.filemanagementList.map((regulation) => {
+        const promises = this.usingFilemanagementList.map((regulation) => {
           return this.handleProjectDetails(regulation).then((projectNames) => {
             return {
               主责部门 : regulation.mainResponsibleDepartment,
@@ -2128,7 +2140,6 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
               关联表单 :regulation.formId,
-              状态 :regulation.revisionContent,
               最新上传日期 : regulation.uploadDate,
             };
           });
@@ -2142,7 +2153,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
             const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
             saveAs(
               new Blob([wbout], { type: "application/octet-stream" }),
-              "制度总台账.xlsx"
+              "新增制度总台账.xlsx"
             );
 
             // 提交数据到Vuex Store
@@ -2196,7 +2207,7 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
             const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
             saveAs(
               new Blob([wbout], { type: "application/octet-stream" }),
-              "制度总台账.xlsx"
+              "历史制度总台账.xlsx"
             );
 
             // 提交数据到Vuex Store
@@ -2214,105 +2225,6 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
 
       },
 
-      // 合并导出制度文件和表单文件
-      exportAllCombined() {
-        const loadingInstance = Loading.service({
-          lock: true,
-          text: "正在导出，请稍后...",
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)",
-        });
-        // 制度文件导出数据
-        const regulationPromises = this.filemanagementList.map((regulation) => {
-          return this.handleProjectDetails(regulation).then(() => {
-            return {
-              主责部门: regulation.mainResponsibleDepartment,
-              业务模块: regulation.businesses || '', // 制度文件没有业务模块字段，设置为空
-              细分业务: regulation.subBusinesses || '', // 制度文件没有细分业务字段，设置为空
-              制度名称: regulation.regulationsTitle,
-              制度等级: regulation.regulationLeval || '', // 如果有制度等级字段，使用它，否则为空
-              表单名称: '', // 制度文件没有表单名称字段，设置为空
-            };
-          });
-        });
-
-        // 表单文件导出数据
-        const formPromises = this.formmanagementList.map((form) => {
-          return this.handleProjectDetails(form).then(() => {
-            return {
-              主责部门: form.departmentCategory,
-              业务模块: form.businesses,
-              细分业务: form.subBusinesses,
-              制度名称: '', // 表单文件没有制度名称字段，设置为空
-              制度等级: '', // 表单文件没有制度等级字段，设置为空
-              表单名称: form.formTitle,
-            };
-          });
-        });
-
-        // 合并两组数据
-        Promise.all([...regulationPromises, ...formPromises])
-          .then((data) => {
-            // 创建合并后的数据结构
-            const mergedData = {};
-
-            // 将制度文件和表单文件数据合并到一个对象中
-            data.forEach((item) => {
-              const key = `${item.主责部门}-${item.业务模块}-${item.细分业务}`;
-              if (!mergedData[key]) {
-                mergedData[key] = {
-                  主责部门: item.主责部门,
-                  业务模块: item.业务模块,
-                  细分业务: item.细分业务,
-                  制度名称: [],
-                  制度等级: [],
-                  表单名称: [],
-                };
-              }
-              if (item.制度名称) {
-                mergedData[key].制度名称.push(item.制度名称);
-              }
-              if (item.制度等级) {
-                mergedData[key].制度等级.push(item.制度等级);
-              }
-              if (item.表单名称) {
-                mergedData[key].表单名称.push(item.表单名称);
-              }
-            });
-
-            // 将合并后的对象转换为数组并格式化字段
-            const mergedArray = Object.values(mergedData).map((entry) => {
-              return {
-                主责部门: entry.主责部门,
-                业务模块: entry.业务模块,
-                细分业务: entry.细分业务,
-                制度名称: entry.制度名称.join(', '),
-                制度等级: entry.制度等级.join(', '),
-                表单名称: entry.表单名称.join(', '),
-              };
-            });
-
-            // 创建 Excel 工作表
-            const ws = XLSX.utils.json_to_sheet(mergedArray);
-            // 创建 Excel 工作簿
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "综合总台账");
-
-            // 写出 Excel 文件
-            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-            saveAs(
-              new Blob([wbout], { type: "application/octet-stream" }),
-              "综合总台账.xlsx"
-            );
-          })
-          .finally(() => {
-            loadingInstance.close();
-          })
-          .catch((error) => {
-            console.error("导出失败:", error);
-            loadingInstance.close();
-          });
-      },
 
 
       /** 查询部门列表 */
@@ -2336,6 +2248,26 @@ import {listFormfilemanagement, listFormfilemanagement3, updateFormfilemanagemen
           console.log("this.departments======>",this.departments);
         });
       },
+
+      async downloadAllFiles() {
+        const zip = new JSZip();
+        const folder = zip.folder('files');
+
+        // 假设 filemanagementList 是你要下载的文件列表
+        for (const file of this.usingFilemanagementList) {
+          if (file.wordPath) {
+            const wordBlob = await this.fetchFile(file.wordPath);
+            folder.file(`${file.regulationsTitle}.docx`, wordBlob);
+          }
+        }
+        zip.generateAsync({ type: 'blob' }).then(content => {
+          saveAs(content, 'files.zip');
+        });
+      },
+      fetchFile(url) {
+        return fetch(url)
+          .then(response => response.blob());
+      }
     }
   };
 </script>

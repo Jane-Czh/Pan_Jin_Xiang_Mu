@@ -74,24 +74,14 @@ spring:
       enabled: true
   # redis 配置
   redis:
-    # docker
-    host: 10.36.53.24
-    port: 6379
-    password: panjinheli
-#    host: localhost
+    # 盘锦服务器部署
+#    host: 10.36.53.24
 #    port: 6379
-#    password:
-
-    # 实验室堡垒机 地址、端口，默认为6379
-#    host: 172.19.6.169
-#    port: 6379
-#    password:
-
-    # 本地测试
-#    host: 192.168.10.132
-#    port: 6379
-#    password: 1234qwer
-
+#    password: panjinheli
+    # 实验室堡垒机 地址、端口，默认为6378
+    host: 172.17.101.85
+    port: 6378
+    password:
 
     # 数据库索引
     database: 0

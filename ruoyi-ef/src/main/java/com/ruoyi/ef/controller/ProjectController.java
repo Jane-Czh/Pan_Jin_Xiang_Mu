@@ -10,6 +10,7 @@ import com.ruoyi.ef.service.IProjectService;
 import com.ruoyi.ef.vo.ProjectVo;
 import com.ruoyi.ef.vo.R;
 import com.ruoyi.file.domain.RegulationsInfoTable;
+import com.ruoyi.file.entity.regulationCountsByClassificationRespondEntity;
 import com.ruoyi.file.service.IFormInfoTableService;
 import com.ruoyi.file.service.IRegulationsInfoTableService;
 import org.apache.ibatis.jdbc.Null;
@@ -293,6 +294,7 @@ public class ProjectController extends SuperController<ProjectEntity> {
 
     /**
      * 给panel无权限使用的
+     *
      * @return
      */
     @GetMapping("/list/list")
@@ -300,9 +302,6 @@ public class ProjectController extends SuperController<ProjectEntity> {
         List<ProjectEntity> projectEntitys = projectService.queryDatas();
         return projectEntitys;
     }
-
-
-
 
 
     @PostMapping("/list/time")
@@ -333,34 +332,41 @@ public class ProjectController extends SuperController<ProjectEntity> {
     public List<ProjectEntity> searchList(@RequestBody ProjectEntity projectEntity) {
         System.out.println("searchList projectEntity ==>" + projectEntity);
         //精准查询
-//        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().eq("name", projectEntity.getName()).eq("newest", 1));
-        //模糊查询
+
+        //对 name 进行模糊查询
+        //List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().like("name", projectEntity.getName()).eq("newest", 1));
+
+        //对 流程名称-name、主责部门-department、流程等级level三个字段 进行模糊查询
 
 
-//对name 进行模糊查询
-//        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(new QueryWrapper<ProjectEntity>().like("name", projectEntity.getName()).eq("newest", 1));
+        QueryWrapper<ProjectEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("newest", 1);  // 固定条件
 
-        //对name、department、level三个字段 进行模糊查询
-        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(
-                new QueryWrapper<ProjectEntity>()
-                        .eq("newest", 1)
-                        .and(wrapper ->
-                                wrapper.like("name", projectEntity.getName())
-                                        .or()
-                                        .like("department", projectEntity.getDepartment())
-                                        .or()
-                                        .like("level", projectEntity.getLevel())
-                        )
-        );
+        // 检查每个字段是否为null，并根据情况添加到查询中
+        if (projectEntity.getName() != null && !projectEntity.getName().isEmpty()) {
+            queryWrapper.like("name", projectEntity.getName());
+        }
 
+        if (projectEntity.getDepartment() != null && !projectEntity.getDepartment().isEmpty()) {
+            queryWrapper.like("department", projectEntity.getDepartment());
+        }
+
+        if (projectEntity.getLevel() != null && !projectEntity.getLevel().isEmpty()) {
+            queryWrapper.like("level", projectEntity.getLevel());
+        }
+
+        // 执行查询
+        List<ProjectEntity> projectEntitys = projectService.getBaseMapper().selectList(queryWrapper);
 
         System.out.println("projectEntitys ==>" + projectEntitys);
         return projectEntitys;
+
     }
 
 
     /**
      * 职能体系 按照 部门、业务模块、细分业务进行查询
+     *
      * @param
      * @return newest == 1
      */
@@ -636,7 +642,6 @@ public class ProjectController extends SuperController<ProjectEntity> {
         getByIdEntity.setSubBusinesses(projectEntity.getSubBusinesses());
 
 
-
         projectService.updateById(getByIdEntity);
 
         return success();
@@ -652,6 +657,19 @@ public class ProjectController extends SuperController<ProjectEntity> {
         System.out.println("find by by entity ==>" + byId);
         String name = byId.getName();
         return name;
+    }
+
+
+    /**
+     *  根据专业分类
+     *  统计流程数据
+     *  @params startTime, endTime, mainResponsibleDepartment
+     *  @return List<regulationCountsByClassificationRespondEntity>
+     *      regulationCountsByClassificationRespondEntity：<类比, 数量>
+     */
+    @PostMapping("/getDataByclassification")
+    public List<regulationCountsByClassificationRespondEntity> getProcessCountsByClassification(@RequestBody RegulationsInfoTable regulationsInfoTable) {
+        return projectService.getProcessCountsByClassification(regulationsInfoTable.getStartTime(), regulationsInfoTable.getEndTime(), regulationsInfoTable.getMainResponsibleDepartment());
     }
 
 

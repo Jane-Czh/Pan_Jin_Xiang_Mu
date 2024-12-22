@@ -158,6 +158,8 @@
       </el-table-column>
       <el-table-column label="专业分类" align="center" prop="classificationOfSpecialties" />
       <el-table-column label="制度编号" align="center" prop="regulationNumber" />
+      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
+      <el-table-column label="关键字" align="center" prop="fileTag" />
       <el-table-column label="发布日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
@@ -202,7 +204,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-<!--      <el-table-column label="关联表单" align="center" prop="formId" />-->
+      <el-table-column label="关联表单" align="center" prop="formId" />
       <el-table-column label="状态" align="center" prop="revisionContent"/>
       <el-table-column label="是否加密" align="center" prop="encryption">
         <template slot-scope="scope">
@@ -243,8 +245,6 @@
       <!--      <el-table-column label="word文件大小" align="center" prop="wordSize"/>-->
       <!--      <el-table-column label="制度上传人" align="center" prop="uploadUsername"/>-->
       <!--      <el-table-column label="制度使用状态" align="center" prop="useState"/>-->
-      <el-table-column label="制度等级" align="center" prop="regulationLeval" />
-      <el-table-column label="关键字" align="center" prop="fileTag" />
       <!--      <el-table-column label="历史版本制度" align="center" prop="oldRegulationsId"/>-->
       <!--      <el-table-column label="新版本制度" align="center" prop="newRegulationsId"/>-->
       <!--      <el-table-column label="标志位" align="center" prop="newFlag"/>-->
@@ -1178,14 +1178,16 @@
         const promises = this.filemanagementList.map((regulation) => {
           return this.handleProjectDetails(regulation).then((projectNames) => {
             return {
-              主责部门 : regulation.departmentCategory,
+              主责部门 : regulation.mainResponsibleDepartment,
               制度名称 : regulation.regulationsTitle,
               专业分类 : regulation.classificationOfSpecialties,
-              制度范围 : regulation.useScope,
               制度编号 : regulation.regulationNumber,
+              制度等级 : regulation.regulationLeval,
+              关键字 : regulation.fileTag,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
+              关联表单 :regulation.formId,
               状态 :regulation.revisionContent,
               最新上传日期 : regulation.uploadDate,
             };

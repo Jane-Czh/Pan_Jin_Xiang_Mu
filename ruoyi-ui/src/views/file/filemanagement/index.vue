@@ -250,6 +250,7 @@
       <el-table-column label="专业分类" align="center" prop="classificationOfSpecialties" />
       <el-table-column label="制度编号" align="center" prop="regulationNumber" />
       <el-table-column label="制度等级" align="center" prop="regulationLeval" />
+      <el-table-column label="关键字" align="center" prop="fileTag" />
       <el-table-column label="发布日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
@@ -2085,6 +2086,7 @@ import {
               专业分类 : regulation.classificationOfSpecialties,
               制度编号 : regulation.regulationNumber,
               制度等级 : regulation.regulationLeval,
+              关键字 : regulation.fileTag,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
@@ -2139,6 +2141,7 @@ import {
               专业分类 : regulation.classificationOfSpecialties,
               制度编号 : regulation.regulationNumber,
               制度等级 : regulation.regulationLeval,
+              关键字 : regulation.fileTag,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
@@ -2192,6 +2195,7 @@ import {
               专业分类 : regulation.classificationOfSpecialties,
               制度编号 : regulation.regulationNumber,
               制度等级 : regulation.regulationLeval,
+              关键字 : regulation.fileTag,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,

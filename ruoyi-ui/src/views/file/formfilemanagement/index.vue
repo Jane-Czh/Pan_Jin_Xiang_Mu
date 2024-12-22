@@ -559,7 +559,7 @@ import {
   getFormfilemanagement,
   delFormfilemanagement,
   addFormfilemanagement,
-  updateFormfilemanagement
+  updateFormfilemanagement, listFormfilemanagement3
 } from "@/api/file/formfilemanagement";
 import {getFilemanagement, getUserProfile02} from '@/api/file/filemanagement'
 import {listDept02} from "../../../api/file/filemanagement";
@@ -695,6 +695,7 @@ export default {
       total: 0,
       // 文件管理表格数据
       formmanagementList: [],
+      formmanagementList01: [], //不分页
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -842,6 +843,9 @@ export default {
         console.log("formmanagementList=>",this.formmanagementList);
         this.total = response.total;
         this.loading = false;
+      });
+      listFormfilemanagement3(this.queryParams).then(response => {
+        this.formmanagementList01 = response.rows;
       });
     },
     // 查询绑定的流程信息
@@ -1432,7 +1436,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
 
-      const promises = this.formmanagementList.map((form) => {
+      const promises = this.formmanagementList01.map((form) => {
         return this.handleProjectDetails(form).then((projectNames) => {
           return {
             主责部门 : form.departmentCategory,
@@ -1442,6 +1446,8 @@ export default {
             存储表单内容 : form.scope,
             表单类型 : form.formType,
             关联流程 :this.projectNamesString,
+            关联制度: form.regulationId,
+            关键字 : form.remark,
             表单上传日期 : form.effectiveDate,
           };
         });

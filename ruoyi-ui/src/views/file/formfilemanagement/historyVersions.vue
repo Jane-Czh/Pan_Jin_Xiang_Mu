@@ -199,6 +199,11 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="关联制度" align="center" prop="regulationId" width="250px">
+        <template slot-scope="scope">
+          <div class="ellipsis">{{ scope.row.regulationId }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="关键字" align="center" prop="remark" />
       <el-table-column label="表单上传时间" align="center" prop="effectiveDate" width="180">
         <template slot-scope="scope">
@@ -1021,6 +1026,8 @@
               存储表单内容 : form.scope,
               表单类型 : form.formType,
               关联流程 :this.projectNamesString,
+              关联制度: form.regulationId,
+              关键字 : form.remark,
               表单上传日期 : form.effectiveDate,
             };
           });

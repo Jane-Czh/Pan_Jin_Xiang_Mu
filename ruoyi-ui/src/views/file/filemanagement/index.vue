@@ -1504,8 +1504,6 @@ import {
               try {
                 const response = await addFilemanagement(this.form);
                 const newId = response.data;
-                this.$modal.msgSuccess("更新成功");
-                this.fileModifyDialogVisible = false;
                 this.form.newRegulationsId = null;
 
                 // 更新历史版本制度
@@ -1524,11 +1522,14 @@ import {
                     return listFormfilemanagement(queryParams).then(response => {
                       const resultForm = response.rows;
                       console.log("resultForm=>", resultForm);
-                      const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
-                      const updatedRegulations = existingRegulations.filter(regulation => regulation !== lastForm.regulationsTitle);
-                      resultForm[0].regulationId = updatedRegulations.join(',');
-                      console.log("Updated regulationId=>", resultForm[0].regulationId);
-                      return updateFormfilemanagement(resultForm[0]);
+                      // 检查 resultForm 是否为空或不包含元素
+                      if (resultForm && resultForm.length > 0) {
+                        const existingRegulations = resultForm[0].regulationId ? resultForm[0].regulationId.split(',') : [];
+                        const updatedRegulations = existingRegulations.filter(regulation => regulation !== lastForm.regulationsTitle);
+                        resultForm[0].regulationId = updatedRegulations.join(',');
+                        console.log("Updated regulationId=>", resultForm[0].regulationId);
+                        return updateFormfilemanagement(resultForm[0]);
+                      }
                     });
                   });
                   await Promise.all(unbindPromises);
@@ -1556,6 +1557,8 @@ import {
                   });
                   await Promise.all(bindPromises);
                 }
+                this.$modal.msgSuccess("更新成功");
+                this.fileModifyDialogVisible = false;
               } catch (error) {
                 console.error('处理过程中发生错误', error);
                 this.$modal.msgError("更新失败");
@@ -2080,8 +2083,8 @@ import {
               主责部门 : regulation.mainResponsibleDepartment,
               制度名称 : regulation.regulationsTitle,
               专业分类 : regulation.classificationOfSpecialties,
-              制度范围 : regulation.useScope,
               制度编号 : regulation.regulationNumber,
+              制度等级 : regulation.regulationLeval,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
@@ -2134,8 +2137,8 @@ import {
               主责部门 : regulation.mainResponsibleDepartment,
               制度名称 : regulation.regulationsTitle,
               专业分类 : regulation.classificationOfSpecialties,
-              制度范围 : regulation.useScope,
               制度编号 : regulation.regulationNumber,
+              制度等级 : regulation.regulationLeval,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,
@@ -2187,8 +2190,8 @@ import {
               主责部门 : regulation.mainResponsibleDepartment,
               制度名称 : regulation.regulationsTitle,
               专业分类 : regulation.classificationOfSpecialties,
-              制度范围 : regulation.useScope,
               制度编号 : regulation.regulationNumber,
+              制度等级 : regulation.regulationLeval,
               发布日期 : regulation.createDate,
               实施日期 : regulation.effectiveDate,
               关联流程 :this.projectNamesString,

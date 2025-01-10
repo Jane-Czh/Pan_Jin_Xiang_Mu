@@ -51,6 +51,9 @@ public class TechNonStandardOrderListener implements ReadListener<TechNonStandar
 //        }
         if (registerInfoExcel.getOrderId() != null){
             registerInfoExcel.setYearAndMonth(yearAndMonth);
+            if(registerInfoExcel.getTotalDurationHours() == null){
+                registerInfoExcel.setTotalDurationHours(new BigDecimal(0));
+            }
             registerInfoExcel.setTotalDurationDays(registerInfoExcel.getTotalDurationHours().divide(new BigDecimal(8), 4, RoundingMode.HALF_UP));
             cacheDataList.add(registerInfoExcel);
         }

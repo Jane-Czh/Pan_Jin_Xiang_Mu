@@ -135,7 +135,7 @@ public class TechNonStandardOrderServiceImpl implements ITechNonStandardOrderSer
      */
     @Override
     public int insertTechNonStandardOrder(TechNonStandardOrder techNonStandardOrder) {
-        techNonStandardOrder.setCreateTime(DateUtils.getNowDate());
+//        techNonStandardOrder.setCreateTime(DateUtils.getNowDate());
         return techNonStandardOrderMapper.insertTechNonStandardOrder(techNonStandardOrder);
     }
 
@@ -147,7 +147,7 @@ public class TechNonStandardOrderServiceImpl implements ITechNonStandardOrderSer
      */
     @Override
     public int updateTechNonStandardOrder(TechNonStandardOrder techNonStandardOrder) {
-        techNonStandardOrder.setUpdateTime(DateUtils.getNowDate());
+//        techNonStandardOrder.setUpdateTime(DateUtils.getNowDate());
         return techNonStandardOrderMapper.updateTechNonStandardOrder(techNonStandardOrder);
     }
 

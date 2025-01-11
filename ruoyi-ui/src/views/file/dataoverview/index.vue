@@ -112,6 +112,7 @@ export default {
       },
       selectedDepartment: [], //选中的部门
       selectedDate: [],
+     
       pickerOptions: [],
       option: {},
       myRegulationChart1: {}, //制度柱状图
@@ -480,15 +481,33 @@ export default {
       this.option && this.myRegulationChart1.setOption(this.option);
     },
 
-    //时间选择器的默认月份设置
+    // //时间选择器的默认月份设置
+    // defaultMonth() {
+    //   const currentDate = new Date();
+    //   const currentYear = currentDate.getFullYear();
+    //   const currentMonth = currentDate.getMonth() + 1;
+    //   const startDate = new Date(currentYear, 0, 1);
+    //   const endDate = new Date(currentYear, currentMonth, 0);
+    //   this.selectedDate = [startDate, endDate];
+
+    //   console.log("xhtxht selectedDate===>", this.selectedDate);
+      
+    // },
     defaultMonth() {
       const currentDate = new Date();
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth() + 1;
-      const startDate = new Date(currentYear, 0, 1);
+
+      // 设置开始日期为 2023 年 12 月 31 日
+      const startDate = new Date("2023-12-31T00:00:00+08:00");
+
+      // 设置结束日期为当前月份的最后一天
       const endDate = new Date(currentYear, currentMonth, 0);
 
+      // 将 selectedDate 初始化为指定的开始和结束日期
       this.selectedDate = [startDate, endDate];
+
+      // console.log("xhtxht selectedDate===>", this.selectedDate);
     },
 
     // getProcessCounts() {

@@ -484,11 +484,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
                 }
                 //查询记录 转换stateId类型为Long
                 RegulationsInfoTable temp = regulationsInfoTableService.selectRegulationsInfoTableByRegulationsId(Long.parseLong(stateId));
+                System.out.println("111 == temp() = " + temp);
+                if(temp == null){
+                    continue;
+                }
                 //根据 mainResponsibleDepartment 的部门信息进行过滤，再找到分类 。 mainResponsibleDepartment 可能为空
 //                System.out.println("2.5 2.5 == temp.getMainResponsibleDepartment() = " + temp.getMainResponsibleDepartment());
                 if (mainResponsibleDepartment != "" && !temp.getMainResponsibleDepartment().equals(mainResponsibleDepartment)) {
                     continue;
                 } else {
+//                    System.out.println("2.5 2.5 == mainResponsibleDepartment = " + mainResponsibleDepartment);
+//                    System.out.println("2.5 2.5 == temp.getMainResponsibleDepartment() = " + temp.getMainResponsibleDepartment());
                     String tempClass = temp.getClassificationOfSpecialties();
 //                    System.out.println("3333 == tempClass = " + tempClass);
                     //将分类记录到res中

@@ -1441,7 +1441,7 @@ import {
       /** 上传文件提交按钮 */
       uploadSubmitForm() {
         // 首先检查 fileList 是否为空
-        if (!this.form.wordPath && !this.form.pdfPath) {
+        if (!this.form.wordPath || !this.form.pdfPath) {
           this.$message.error("请上传文件！");
           return;
         }

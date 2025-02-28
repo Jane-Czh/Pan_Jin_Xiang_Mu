@@ -242,90 +242,90 @@ export default {
         flag: [
           { required: true, message: "类别不能为空", trigger: "blur" }
         ],
-        orderEntryDelayRatio: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        orderEntryDelayScore: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        shipmentDelayRatio: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        shipmentDelayScore: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        productionReportDelayRatio: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        productionReportDelayScore: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        inspectionDelayRate: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        inspectionDelayScore: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        invoicePostingDelayRate: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        invoicePostingDelayScore: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        unsettledAccountsRatio: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        unsettledAccountsScore: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
+        // orderEntryDelayRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // orderEntryDelayScore: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // shipmentDelayRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // shipmentDelayScore: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // productionReportDelayRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // productionReportDelayScore: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // inspectionDelayRate: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // inspectionDelayScore: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // invoicePostingDelayRate: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // invoicePostingDelayScore: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // unsettledAccountsRatio: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // unsettledAccountsScore: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
       }
     };
   },

@@ -34,8 +34,8 @@
       <!-- <el-table-column label="id" align="center" prop="emasId" /> -->
       <el-table-column fixed label="年份" align="center" prop="naturalYear" sortable="custom" />
       <el-table-column label="工资总额年度值" align="center" prop="annualTotalSalary" />
-      <el-table-column label="日清日结-股份目标值" align="center" prop="stockTargetValue" />
-      <el-table-column label="日清日结-盘锦目标值" align="center" prop="panjinTargetValue" />
+<!--      <el-table-column label="日清日结-股份目标值" align="center" prop="stockTargetValue" />-->
+<!--      <el-table-column label="日清日结-盘锦目标值" align="center" prop="panjinTargetValue" />-->
       <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -63,12 +63,12 @@
         <el-form-item label="工资总额年度值" prop="annualTotalSalary">
           <el-input v-model="form.annualTotalSalary" placeholder="请输入工资总额年度值" />
         </el-form-item>
-        <el-form-item label="日清日结-股份目标值" prop="stockTargetValue">
-          <el-input v-model="form.stockTargetValue" placeholder="请输入日清日结-股份目标值" />
-        </el-form-item>
-        <el-form-item label="日清日结-盘锦目标值" prop="panjinTargetValue">
-          <el-input v-model="form.panjinTargetValue" placeholder="请输入日清日结-盘锦目标值" />
-        </el-form-item>
+<!--        <el-form-item label="日清日结-股份目标值" prop="stockTargetValue">-->
+<!--          <el-input v-model="form.stockTargetValue" placeholder="请输入日清日结-股份目标值" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="日清日结-盘锦目标值" prop="panjinTargetValue">-->
+<!--          <el-input v-model="form.panjinTargetValue" placeholder="请输入日清日结-盘锦目标值" />-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -127,20 +127,20 @@ export default {
             trigger: "blur",
           }
         ],
-        stockTargetValue: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
-        panjinTargetValue: [
-          {
-            required: true,
-            validator: numValidator,
-            trigger: "blur",
-          }
-        ],
+        // stockTargetValue: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
+        // panjinTargetValue: [
+        //   {
+        //     required: true,
+        //     validator: numValidator,
+        //     trigger: "blur",
+        //   }
+        // ],
 
       }
     };

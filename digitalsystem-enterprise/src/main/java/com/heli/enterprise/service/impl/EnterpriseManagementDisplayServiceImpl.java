@@ -86,6 +86,7 @@ public class EnterpriseManagementDisplayServiceImpl implements IEnterpriseManage
         Date date = new Date(DateUtils.getYear(startTime) - 1900, 0, 1);
         log.info("date: " + date);
         dailyClearingSettlement.setFlag(1);
+        dailyClearingSettlement.setYearAndMonth(date);
         List<EnterpriseManagementIndicatorsDailyClearingSettlement> target = dailyClearingSettlementService.selectEnterpriseManagementIndicatorsDailyClearingSettlementList(dailyClearingSettlement);
 
         list.add(target.get(0));

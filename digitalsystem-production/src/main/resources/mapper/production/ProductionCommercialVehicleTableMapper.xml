@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heli.production.mapper.ProductionCommercialVehicleTableMapper">
+
+    <!--  批量插入数据库  -->
+    <insert id="batchInsertProductionCommercialVehicleTable">
+        insert into
+        Production_Commercial_Vehicle_Table(Car_Number,Acceptance_Date,Launch_Date,Amount,Planned_Completion_Period,Precision_Completion_Period)
+        values
+        <foreach collection="productionTableList" item="e" separator=",">
+            (#{e.carNumber},#{e.acceptanceDate},#{e.launchDate},#{e.amount},
+            #{e.plannedCompletionPeriod},#{e.precisionCompletionPeriod})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        Car_Number = values(Car_Number),Acceptance_Date = values(Acceptance_Date),Launch_Date =values(Launch_Date),
+        Amount =values(Amount),Planned_Completion_Period =values(Planned_Completion_Period),
+        Precision_Completion_Period =values(Precision_Completion_Period)
+    </insert>
+</mapper>

@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSON;
 import com.heli.production.domain.ProductionCountNumberEntity;
 import com.heli.production.domain.ProductionTable;
 import com.heli.production.listener.ProductionTableListener;
+import com.heli.production.mapper.ProductionCommercialVehicleTableMapper;
 import com.heli.production.mapper.ProductionTableMapper;
 import com.heli.production.service.IProductionTableService;
 import com.ruoyi.common.core.domain.R;
@@ -25,6 +26,8 @@ public class ProductionTableServiceImpl implements IProductionTableService {
 
     @Autowired
     private ProductionTableMapper productionTableMapper;
+    @Autowired
+    private ProductionCommercialVehicleTableMapper commercialVehicleTableMapper;
 
     private static final Logger log = LoggerFactory.getLogger(ProductionTableServiceImpl.class);
 
@@ -32,7 +35,7 @@ public class ProductionTableServiceImpl implements IProductionTableService {
     public R<String> readProductionExcelToDB(String fileName, InputStream inputStream) {
         try {
             // 读取文件内容
-            EasyExcel.read(inputStream, ProductionTable.class, new ProductionTableListener(productionTableMapper)).sheet().doRead();
+            EasyExcel.read(inputStream, ProductionTable.class, new ProductionTableListener(productionTableMapper,commercialVehicleTableMapper)).sheet().doRead();
 
             // 计算前先清空表
             productionTableMapper.truncateAnnualTable();

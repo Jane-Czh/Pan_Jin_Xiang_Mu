@@ -1121,6 +1121,14 @@ public class MarketIndexController extends BaseController {
     /*
      * 指标39 商品车计划兑现率
      * */
+    /**
+     * @description: 更新，将此处指标select数据从市场科商品车台账 -> 生产科商品车台账，避免生产科数据不全问题。
+     * 此处有不规范操作，将直接使用市场科商品车台账mapper 直接查询生产科商品车台账表
+     * @author: hong
+     * @date: 2025/5/8 12:17
+     * @version: 1.0
+     */
+
     @PostMapping("/CommercialVehicleRate")
     public  List<VoEntity> CommercialVehicleRate(@RequestBody MarketCommercialVehicleTable marketCommercialVehicleTable){
 
@@ -1129,8 +1137,9 @@ public class MarketIndexController extends BaseController {
         System.out.println("获取到起止时间"+marketCommercialVehicleTable.getStartTime()+marketCommercialVehicleTable.getEndTime());
 
         //获取到全部的数据
-        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
-
+//        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectMarketCommercialVehicleTableList1();
+        // 将原本从市场科的商品车台账，修改为生产科商品车台账。
+        List<MarketCommercialVehicleTable> marketCommercialVehicleTables = iMarketCommercialVehicleTableService.selectListByProductionDept();
         //规定年月日的格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");

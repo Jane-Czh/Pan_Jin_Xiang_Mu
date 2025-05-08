@@ -70,4 +70,12 @@ public interface IMarketCommercialVehicleTableService
     List<AverageResult> selectLightWeight();
 
     List<AverageResult> selectBigWeight();
+
+    /**
+     * @description: 查询生产科的商品车台账
+     * @author: hong
+     * @date: 2025/5/8 12:23
+     * @version: 1.0
+     */
+    List<MarketCommercialVehicleTable> selectListByProductionDept();
 }

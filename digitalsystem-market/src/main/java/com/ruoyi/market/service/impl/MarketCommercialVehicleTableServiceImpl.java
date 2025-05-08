@@ -213,6 +213,11 @@ public int CVimportInterests(MultipartFile excelFile) throws IOException {
     }
 
     @Override
+    public List<MarketCommercialVehicleTable> selectListByProductionDept() {
+        return marketCommercialVehicleTableMapper.selectListByProductionDept();
+    }
+
+    @Override
     public List<MarketCommercialVehicleTable> selectMarketCommercialVehicleTableList1() {
         return marketCommercialVehicleTableMapper.selectMarketCommercialVehicleTableList1();
     }

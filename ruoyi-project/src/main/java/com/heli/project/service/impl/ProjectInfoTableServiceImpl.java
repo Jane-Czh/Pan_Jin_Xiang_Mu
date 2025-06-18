@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.alibaba.excel.util.ListUtils;
 import com.heli.project.domain.ProjectInfoRecycle;
@@ -20,13 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 项目基本信息Service业务层处理
- * 
+ *
  * @author Teandron
  * @date 2024-05-08
  */
 @Service
-public class ProjectInfoTableServiceImpl implements IProjectInfoTableService 
-{
+public class ProjectInfoTableServiceImpl implements IProjectInfoTableService {
     @Autowired
     private ProjectInfoTableMapper projectInfoTableMapper;
 
@@ -46,10 +46,13 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
             List<ProjectInfoTable> marketCarTypes = ExcelUtils.parseExcel2ProjectInfoTable(excelFile);
 
             int i = 0;
-            while (i < marketCarTypes.size()){
+            while (i < marketCarTypes.size()) {
                 marketCarType = marketCarTypes.get(i);
 //                insertMarketCarType(marketCarType);
-                cachedDataList.add(marketCarType);
+                if (!Objects.equals(marketCarType.getProjectName(), "") && marketCarType.getProjectName() != null) {
+                    cachedDataList.add(marketCarType);
+                }
+
                 if (cachedDataList.size() >= BATCH_COUNT) {
                     projectInfoTableMapper.batchInsert(cachedDataList);
                     cachedDataList.clear();
@@ -57,7 +60,7 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
                 }
                 i++;
             }
-            if (cachedDataList.size() > 0){
+            if (cachedDataList.size() > 0) {
                 projectInfoTableMapper.batchInsert(cachedDataList);
                 cachedDataList.clear();
             }
@@ -75,75 +78,70 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
 
     /**
      * 查询项目基本信息
-     * 
+     *
      * @param projectId 项目基本信息主键
      * @return 项目基本信息
      */
     @Override
-    public ProjectInfoTable selectProjectInfoTableByProjectId(Long projectId)
-    {
+    public ProjectInfoTable selectProjectInfoTableByProjectId(Long projectId) {
         return projectInfoTableMapper.selectProjectInfoTableByProjectId(projectId);
     }
 
     @Override
-    public List<ProjectInfoRecode> selectProjectRecodingByProjectName(String projectName){
+    public List<ProjectInfoRecode> selectProjectRecodingByProjectName(String projectName) {
         return projectInfoTableMapper.selectProjectRecodingByProjectName(projectName);
     }
 
     /**
      * 查询项目基本信息列表
-     * 
+     *
      * @param projectInfoTable 项目基本信息
      * @return 项目基本信息
      */
     @Override
-    public List<ProjectInfoTable> selectProjectInfoTableList(ProjectInfoTable projectInfoTable)
-    {
+    public List<ProjectInfoTable> selectProjectInfoTableList(ProjectInfoTable projectInfoTable) {
         return projectInfoTableMapper.selectProjectInfoTableList(projectInfoTable);
     }
 
     /**
      * 新增项目基本信息
-     * 
+     *
      * @param projectInfoTable 项目基本信息
      * @return 结果
      */
     @Override
-    public int insertProjectInfoTable(ProjectInfoTable projectInfoTable)
-    {
+    public int insertProjectInfoTable(ProjectInfoTable projectInfoTable) {
         return projectInfoTableMapper.insertProjectInfoTable(projectInfoTable);
     }
 
     /**
      * 修改项目基本信息
-     * 
+     *
      * @param projectInfoTable 项目基本信息
      * @return 结果
      */
     @Override
-    public int updateProjectInfoTable(ProjectInfoTable projectInfoTable)
-    {
+    public int updateProjectInfoTable(ProjectInfoTable projectInfoTable) {
         return projectInfoTableMapper.updateProjectInfoTable(projectInfoTable);
     }
 
     /**
      * 批量删除项目基本信息
-     * 
+     *
      * @param projectIds 需要删除的项目基本信息主键
      * @return 结果
      */
     @Override
-    public int deleteProjectInfoTableByProjectIds(Long[] projectIds)
-    {
+    public int deleteProjectInfoTableByProjectIds(Long[] projectIds) {
         return projectInfoTableMapper.deleteProjectInfoTableByProjectIds(projectIds);
     }
 
     @Override
-    public int recycleProjectInfoTableByProjectIds(Long[] projectIds){
+    public int recycleProjectInfoTableByProjectIds(Long[] projectIds) {
 
         //根据ids查询出所有信息
         List<ProjectInfoTable> list = new ArrayList<>();
-        for (Long ids : projectIds){
+        for (Long ids : projectIds) {
             list.add(projectInfoTableMapper.selectProjectInfoTableByProjectId(ids));
         }
         System.out.println(list);
@@ -152,7 +150,7 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
         projectInfoTableMapper.deleteProjectInfoTableByProjectIds(projectIds);
 
         //移入信息回收表中
-        for (ProjectInfoTable projectInfoTable : list){
+        for (ProjectInfoTable projectInfoTable : list) {
             ProjectInfoRecycle projectInfoRecycle = new ProjectInfoRecycle();
 
             //对应两者参数，进行赋值
@@ -187,13 +185,12 @@ public class ProjectInfoTableServiceImpl implements IProjectInfoTableService
 
     /**
      * 删除项目基本信息信息
-     * 
+     *
      * @param projectId 项目基本信息主键
      * @return 结果
      */
     @Override
-    public int deleteProjectInfoTableByProjectId(Long projectId)
-    {
+    public int deleteProjectInfoTableByProjectId(Long projectId) {
         return projectInfoTableMapper.deleteProjectInfoTableByProjectId(projectId);
     }
 }
